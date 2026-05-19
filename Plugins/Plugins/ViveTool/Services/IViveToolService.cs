@@ -73,6 +73,11 @@ public interface IViveToolService
     /// Get the ViVeTool version
     /// </summary>
     Task<string?> GetViveToolVersionAsync();
+
+    /// <summary>
+    /// Export feature flags to a file
+    /// </summary>
+    Task<bool> ExportFeaturesToFileAsync(string filePath, IReadOnlyCollection<FeatureFlagInfo> features);
 }
 
 /// <summary>

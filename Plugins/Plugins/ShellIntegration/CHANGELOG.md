@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.12] - 2026-05-20
+
+### Added / 新增
+- Added managed Shell config sync/reset, profile import/export, managed-config folder access, and built-in style presets from the settings page / 在设置页新增托管 Shell 配置同步/重置、配置档导入/导出、托管配置目录入口和内置样式预设
+
+### Improved / 改进
+- Refined the settings status summary so registration, version, and config state wrap cleanly in narrower host settings windows while keeping every Shell action entry point stable / 优化设置页状态摘要，使注册状态、版本和配置状态在较窄的宿主设置窗口中也能自然换行，同时保持所有 Shell 操作入口稳定
+
 ## [1.0.11] - 2026-04-29
 
 ### Improved / 改进

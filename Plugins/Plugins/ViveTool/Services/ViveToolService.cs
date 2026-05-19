@@ -183,4 +183,15 @@ public class ViveToolService : IViveToolService
 
         return version;
     }
+
+    public async Task<bool> ExportFeaturesToFileAsync(string filePath, IReadOnlyCollection<FeatureFlagInfo> features)
+    {
+        ArgumentNullException.ThrowIfNull(features);
+
+        var success = await _downloadService.ExportFeaturesToFileAsync(filePath, features).ConfigureAwait(false);
+
+        PluginLog.Trace($"ViveTool: Exported {features.Count} features to '{filePath}', success: {success}");
+
+        return success;
+    }
 }

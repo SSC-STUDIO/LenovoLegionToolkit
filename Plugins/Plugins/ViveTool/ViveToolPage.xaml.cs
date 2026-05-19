@@ -11,6 +11,8 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Plugins;
@@ -34,9 +36,11 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
     private string _featureCountDescription = string.Empty;
+    private string _featureSummaryDescription = string.Empty;
     private string _viveToolPath = string.Empty;
     private string? _viveToolVersion;
     private bool _isLoading;
+    private bool _isFeatureUiReady;
     private CancellationTokenSource? _searchDebounceCts;
 
     public ObservableCollection<FeatureFlagInfo> Features
@@ -65,6 +69,17 @@ public partial class ViveToolPage : INotifyPropertyChanged
         set
         {
             _featureCountDescription = value;
+            OnPropertyChanged();
+            UpdateFeatureSummary();
+        }
+    }
+
+    public string FeatureSummaryDescription
+    {
+        get => _featureSummaryDescription;
+        set
+        {
+            _featureSummaryDescription = value;
             OnPropertyChanged();
             UpdateFeatureSummary();
         }
@@ -141,6 +156,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     }
 
     private string _downloadProgressTextValue = string.Empty;
+    private FeatureFlagStatus? _selectedStatusFilter;
 
     public string DownloadProgressText
     {
@@ -160,6 +176,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         var initialized = WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
+        InitializeFeatureUi();
 
         if (!initialized)
         {
@@ -176,28 +193,53 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
         _searchTextBox = new Wpf.Ui.Controls.TextBox
         {
-            PlaceholderText = Resource.ViveTool_SearchPlaceholder
+            PlaceholderText = Resource.ViveTool_SearchPlaceholder,
+            Height = 34,
+            Margin = new Thickness(0, 0, 12, 0)
         };
         AutomationProperties.SetAutomationId(_searchTextBox, "ViveToolSearchTextBox");
         _searchTextBox.TextChanged += SearchTextBox_TextChanged;
 
+        _statusFilterComboBox = new ComboBox
+        {
+            Height = 34,
+            MinWidth = 170,
+            Margin = new Thickness(0, 0, 12, 0)
+        };
+        AutomationProperties.SetAutomationId(_statusFilterComboBox, "ViveToolStatusFilterComboBox");
+        _statusFilterComboBox.SelectionChanged += StatusFilterComboBox_SelectionChanged;
+
         _importButton = new Wpf.Ui.Controls.Button
         {
-            Content = Resource.ViveTool_Import
+            Content = Resource.ViveTool_Import,
+            Padding = new Thickness(12, 5, 12, 5),
+            Margin = new Thickness(0, 0, 8, 0)
         };
         AutomationProperties.SetAutomationId(_importButton, "ViveToolImportButton");
         _importButton.Click += ImportButton_Click;
 
+        _exportButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_Export,
+            Padding = new Thickness(12, 5, 12, 5),
+            Margin = new Thickness(0, 0, 8, 0)
+        };
+        AutomationProperties.SetAutomationId(_exportButton, "ViveToolExportButton");
+        _exportButton.Click += ExportButton_Click;
+
         _refreshListButton = new Wpf.Ui.Controls.Button
         {
-            Content = Resource.ViveTool_RefreshList
+            Content = Resource.ViveTool_RefreshList,
+            Padding = new Thickness(12, 5, 12, 5),
+            Margin = new Thickness(0, 0, 8, 0)
         };
         AutomationProperties.SetAutomationId(_refreshListButton, "ViveToolRefreshListButton");
         _refreshListButton.Click += RefreshListButton_Click;
 
         var settingsButton = new Wpf.Ui.Controls.Button
         {
-            Content = Resource.ViveTool_GoToSettings
+            Content = Resource.ViveTool_GoToSettings,
+            Padding = new Thickness(12, 5, 12, 5)
         };
         AutomationProperties.SetAutomationId(settingsButton, "ViveToolFeatureGoToSettingsButton");
         settingsButton.Click += GoToSettingsButton_Click;
@@ -205,6 +247,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         var missingSettingsButton = new Wpf.Ui.Controls.Button
         {
             Content = Resource.ViveTool_GoToSettings,
+            Padding = new Thickness(12, 5, 12, 5),
             Margin = new Thickness(0, 0, 8, 0)
         };
         AutomationProperties.SetAutomationId(missingSettingsButton, "ViveToolMissingGoToSettingsButton");
@@ -212,7 +255,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
         var missingRefreshStatusButton = new Wpf.Ui.Controls.Button
         {
-            Content = Resource.ViveTool_Refresh
+            Content = Resource.ViveTool_Refresh,
+            Padding = new Thickness(12, 5, 12, 5)
         };
         AutomationProperties.SetAutomationId(missingRefreshStatusButton, "ViveToolMissingRefreshStatusButton");
         missingRefreshStatusButton.Click += RefreshStatusButton_Click;
@@ -220,31 +264,47 @@ public partial class ViveToolPage : INotifyPropertyChanged
         _loadingPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Visibility = Visibility.Collapsed
         };
         AutomationProperties.SetAutomationId(_loadingPanel, "ViveToolLoadingPanel");
         _loadingPanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_Loading,
-            Margin = new Thickness(0, 0, 0, 8)
+            Margin = new Thickness(0, 0, 0, 8),
+            TextWrapping = TextWrapping.Wrap
         });
 
         _featuresDataGrid = new System.Windows.Controls.DataGrid
         {
             AutoGenerateColumns = false,
-            IsReadOnly = true
+            IsReadOnly = true,
+            MinHeight = 360,
+            MaxHeight = 700,
+            RowHeight = 46,
+            ColumnHeaderHeight = 36,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            GridLinesVisibility = DataGridGridLinesVisibility.None,
+            BorderThickness = new Thickness(1),
+            Background = Brushes.Transparent,
+            AlternationCount = 2,
+            CanUserReorderColumns = false
         };
+        _featuresDataGrid.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        _featuresDataGrid.SetResourceReference(DataGrid.AlternatingRowBackgroundProperty, "ControlFillColorSecondaryBrush");
         AutomationProperties.SetAutomationId(_featuresDataGrid, "ViveToolFeaturesDataGrid");
         _featuresDataGrid.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(nameof(Features)));
         _featuresDataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Resource.ViveTool_FeatureId,
-            Binding = new Binding(nameof(FeatureFlagInfo.Id))
+            Binding = new Binding(nameof(FeatureFlagInfo.Id)),
+            Width = new DataGridLength(110)
         });
         _featuresDataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Resource.ViveTool_FeatureName,
-            Binding = new Binding(nameof(FeatureFlagInfo.Name))
+            Binding = new Binding(nameof(FeatureFlagInfo.Name)),
+            Width = new DataGridLength(1, DataGridLengthUnitType.Star)
         });
         _featuresDataGrid.Columns.Add(new DataGridTextColumn
         {
@@ -252,31 +312,61 @@ public partial class ViveToolPage : INotifyPropertyChanged
             Binding = new Binding(nameof(FeatureFlagInfo.Status))
             {
                 Converter = new FeatureStatusConverter()
-            }
+            },
+            Width = new DataGridLength(110)
         });
         _featuresDataGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Resource.ViveTool_Actions,
-            CellTemplate = BuildFeatureActionsTemplate()
+            CellTemplate = BuildFeatureActionsTemplate(),
+            Width = new DataGridLength(230)
         });
 
         _emptyStatePanel = new StackPanel
         {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(0, 48, 0, 40),
             Visibility = Visibility.Collapsed
         };
         AutomationProperties.SetAutomationId(_emptyStatePanel, "ViveToolEmptyStatePanel");
         _emptyStatePanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_NoFeaturesFound,
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            TextAlignment = TextAlignment.Center,
+            FontSize = 14
         });
+
+        var searchRow = new Grid();
+        searchRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        searchRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        searchRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        Grid.SetColumn(_searchTextBox, 0);
+        Grid.SetColumn(_statusFilterComboBox, 1);
+        _featureCountTextBlock = new TextBlock
+        {
+            MinWidth = 220,
+            MaxWidth = 360,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextAlignment = TextAlignment.Right,
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = 12
+        };
+        _featureCountTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
+        AutomationProperties.SetAutomationId(_featureCountTextBlock, "ViveToolFeatureCountText");
+        Grid.SetColumn(_featureCountTextBlock, 2);
+        searchRow.Children.Add(_searchTextBox);
+        searchRow.Children.Add(_statusFilterComboBox);
+        searchRow.Children.Add(_featureCountTextBlock);
 
         var buttonRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 8)
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(0, 10, 0, 0)
         };
         buttonRow.Children.Add(_importButton);
+        buttonRow.Children.Add(_exportButton);
         buttonRow.Children.Add(_refreshListButton);
         buttonRow.Children.Add(settingsButton);
 
@@ -288,28 +378,50 @@ public partial class ViveToolPage : INotifyPropertyChanged
         missingToolButtonRow.Children.Add(missingSettingsButton);
         missingToolButtonRow.Children.Add(missingRefreshStatusButton);
 
-        var missingToolPanel = new StackPanel
+        var missingToolPanel = new Border
         {
-            Margin = new Thickness(0, 0, 0, 12)
+            Padding = new Thickness(16, 14, 16, 14),
+            Margin = new Thickness(0, 0, 0, 16),
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(1)
         };
+        missingToolPanel.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");
+        missingToolPanel.SetResourceReference(Border.BorderBrushProperty, "SystemFillColorCautionBrush");
         missingToolPanel.SetBinding(
             UIElement.VisibilityProperty,
             new Binding(nameof(IsViveToolAvailable))
             {
                 Converter = inverseAvailabilityVisibilityConverter
             });
-        missingToolPanel.Children.Add(new TextBlock
+        var missingToolStack = new StackPanel();
+        missingToolStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_MissingToolMessage,
+            FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         });
-        missingToolPanel.Children.Add(new TextBlock
+        missingToolStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_PathDescription,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 4, 0, 0)
         });
-        missingToolPanel.Children.Add(missingToolButtonRow);
+        missingToolStack.Children.Add(missingToolButtonRow);
+        missingToolPanel.Child = missingToolStack;
+
+        var toolbarCard = new Border
+        {
+            Padding = new Thickness(12, 10, 12, 10),
+            Margin = new Thickness(0, 0, 0, 12),
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(1)
+        };
+        toolbarCard.SetResourceReference(Border.BackgroundProperty, "ControlFillColorDefaultBrush");
+        toolbarCard.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        var toolbarStack = new StackPanel();
+        toolbarStack.Children.Add(searchRow);
+        toolbarStack.Children.Add(buttonRow);
+        toolbarCard.Child = toolbarStack;
 
         var featurePanel = new StackPanel();
         featurePanel.SetBinding(
@@ -318,30 +430,115 @@ public partial class ViveToolPage : INotifyPropertyChanged
             {
                 Converter = availabilityVisibilityConverter
             });
-        featurePanel.Children.Add(buttonRow);
-        featurePanel.Children.Add(_searchTextBox);
+        featurePanel.Children.Add(toolbarCard);
         featurePanel.Children.Add(_loadingPanel);
         featurePanel.Children.Add(_featuresDataGrid);
         featurePanel.Children.Add(_emptyStatePanel);
 
-        var root = new StackPanel
+        var rootStack = new StackPanel
         {
-            Margin = new Thickness(16)
+            Margin = new Thickness(20)
         };
         AutomationProperties.SetAutomationId(this, "ViveToolPageRoot");
-        AutomationProperties.SetAutomationId(root, "ViveToolPageRoot");
-        root.Children.Add(new TextBlock
+        AutomationProperties.SetAutomationId(rootStack, "ViveToolPageRoot");
+
+        var heroCard = new Border
         {
-            Text = Resource.ViveTool_PageDescription,
-            Margin = new Thickness(0, 0, 0, 12),
+            Padding = new Thickness(16, 14, 16, 14),
+            Margin = new Thickness(0, 0, 0, 16),
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(1)
+        };
+        heroCard.SetResourceReference(Border.BackgroundProperty, "ControlFillColorDefaultBrush");
+        heroCard.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        var heroStack = new StackPanel();
+        heroStack.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PageTitle,
+            FontSize = 20,
+            FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         });
-        root.Children.Add(missingToolPanel);
-        root.Children.Add(featurePanel);
+        heroStack.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PageDescription,
+            Margin = new Thickness(0, 6, 0, 0),
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = 12
+        });
+        heroCard.Child = heroStack;
 
-        Content = root;
+        var warningCard = new Border
+        {
+            Padding = new Thickness(14, 10, 14, 10),
+            Margin = new Thickness(0, 0, 0, 16),
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(1)
+        };
+        warningCard.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");
+        warningCard.SetResourceReference(Border.BorderBrushProperty, "SystemFillColorCautionBrush");
+        warningCard.Child = new TextBlock
+        {
+            Text = Resource.ViveTool_WarningMessage,
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = 12
+        };
+
+        rootStack.Children.Add(heroCard);
+        rootStack.Children.Add(warningCard);
+        rootStack.Children.Add(missingToolPanel);
+        rootStack.Children.Add(featurePanel);
+
+        Content = new ScrollViewer
+        {
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Content = rootStack
+        };
+    }
+
+    private void InitializeFeatureUi()
+    {
+        if (_isFeatureUiReady ||
+            _searchTextBox is null ||
+            _statusFilterComboBox is null ||
+            _featuresDataGrid is null ||
+            _emptyStatePanel is null)
+        {
+            return;
+        }
+
+        _isFeatureUiReady = true;
+        PopulateStatusFilterOptions();
         UpdateFeatureSummary();
         UpdateFeaturesVisibility();
+    }
+
+    private void PopulateStatusFilterOptions()
+    {
+        if (_statusFilterComboBox is null)
+            return;
+
+        var selectedTag = (_statusFilterComboBox.SelectedItem as ComboBoxItem)?.Tag;
+
+        _statusFilterComboBox.Items.Clear();
+        _statusFilterComboBox.Items.Add(new ComboBoxItem { Content = Resource.ViveTool_StatusFilterAll, Tag = null });
+        _statusFilterComboBox.Items.Add(new ComboBoxItem { Content = Resource.ViveTool_StatusEnabled, Tag = FeatureFlagStatus.Enabled });
+        _statusFilterComboBox.Items.Add(new ComboBoxItem { Content = Resource.ViveTool_StatusDisabled, Tag = FeatureFlagStatus.Disabled });
+        _statusFilterComboBox.Items.Add(new ComboBoxItem { Content = Resource.ViveTool_StatusDefault, Tag = FeatureFlagStatus.Default });
+        _statusFilterComboBox.Items.Add(new ComboBoxItem { Content = Resource.ViveTool_StatusUnknown, Tag = FeatureFlagStatus.Unknown });
+
+        foreach (var item in _statusFilterComboBox.Items.OfType<ComboBoxItem>())
+        {
+            if ((selectedTag is null && item.Tag is null) || Equals(item.Tag, selectedTag))
+            {
+                _statusFilterComboBox.SelectedItem = item;
+                break;
+            }
+        }
+
+        if (_statusFilterComboBox.SelectedItem is null)
+            _statusFilterComboBox.SelectedIndex = 0;
     }
 
     private DataTemplate BuildFeatureActionsTemplate()
@@ -506,6 +703,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 }
 
                 FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
+                FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
                 UpdateFeaturesVisibility();
                 IsLoading = false;
             });
@@ -650,6 +848,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             Features.Clear();
             _allFeatures.Clear();
             FeatureCountDescription = 0.ToString(CultureInfo.CurrentCulture);
+            FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
             UpdateFeaturesVisibility();
         });
     }
@@ -706,6 +905,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 {
                     FeatureMerger.MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
+                    FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
+                    FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
                     UpdateFeaturesVisibility();
                     IsLoading = false;
 
@@ -756,6 +957,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
             {
                 FeatureMerger.MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
+                FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
+                FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
                 UpdateFeaturesVisibility();
                 IsLoading = false;
 
@@ -774,6 +977,69 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 SnackbarHelper.Show(
                     Resource.ViveTool_Error,
                     string.Format(Resource.ViveTool_ImportFailed, ex.Message),
+                    SnackbarType.Error);
+            });
+        }
+    }
+
+    private async void ExportButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var featuresToExport = Features.ToList();
+            if (featuresToExport.Count == 0)
+            {
+                SnackbarHelper.Show(Resource.ViveTool_Error, Resource.ViveTool_ExportNoFeatures, SnackbarType.Error);
+                return;
+            }
+
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = Resource.ViveTool_Export,
+                Filter = Resource.ViveTool_ExportFileDialogFilter,
+                DefaultExt = ".json",
+                FileName = "vivetool-features.json",
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+
+            if (saveFileDialog.ShowDialog() != true)
+                return;
+
+            IsLoading = true;
+            _emptyStatePanel.Visibility = Visibility.Collapsed;
+
+            var exported = await _viveToolService.ExportFeaturesToFileAsync(saveFileDialog.FileName, featuresToExport).ConfigureAwait(false);
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                IsLoading = false;
+
+                if (exported)
+                {
+                    SnackbarHelper.Show(
+                        Resource.ViveTool_ExportSuccess,
+                        string.Format(Resource.ViveTool_ExportSuccessMessage, featuresToExport.Count, saveFileDialog.FileName));
+                }
+                else
+                {
+                    SnackbarHelper.Show(
+                        Resource.ViveTool_Error,
+                        Resource.ViveTool_ExportFailed,
+                        SnackbarType.Error);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"Error exporting features: {ex.Message}", ex);
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                IsLoading = false;
+                SnackbarHelper.Show(
+                    Resource.ViveTool_Error,
+                    string.Format(Resource.ViveTool_ExportFailedWithMessage, ex.Message),
                     SnackbarType.Error);
             });
         }
@@ -813,12 +1079,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            _emptyStatePanel.Visibility = Visibility.Collapsed;
+            if (!_isFeatureUiReady)
+                return;
 
             // Use local cache for fast searching instead of service calls
             await Dispatcher.InvokeAsync(() =>
             {
-                var filteredFeatures = FeatureFilter.FilterFeatures(_allFeatures, _searchTextBox.Text);
+                _emptyStatePanel.Visibility = Visibility.Collapsed;
+
+                var filteredFeatures = FeatureFilter.FilterFeatures(_allFeatures, _searchTextBox.Text, _selectedStatusFilter);
 
                 Features.Clear();
 
@@ -828,6 +1097,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 }
 
                 FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
+                FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
                 UpdateFeaturesVisibility();
             });
         }
@@ -840,6 +1110,19 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 UpdateFeaturesVisibility();
             });
         }
+    }
+
+    private async void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem item)
+            _selectedStatusFilter = item.Tag is FeatureFlagStatus status ? status : null;
+        else
+            _selectedStatusFilter = null;
+
+        if (!_isFeatureUiReady)
+            return;
+
+        await SearchFeaturesAsync().ConfigureAwait(false);
     }
 
     private async void EnableFeatureButton_Click(object sender, RoutedEventArgs e)
@@ -925,6 +1208,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 {
                     feature.Status = status.Value;
                 }
+
+                var sourceFeature = _allFeatures.FirstOrDefault(f => f.Id == featureId);
+                if (sourceFeature != null && status.HasValue)
+                {
+                    sourceFeature.Status = status.Value;
+                }
+
+                FeatureSummaryDescription = BuildFeatureSummaryText(FeatureFilter.SummarizeFeatures(Features));
             });
         }
         catch (Exception ex)
@@ -935,6 +1226,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private void UpdateLoadingVisibility()
     {
+        if (!_isFeatureUiReady)
+            return;
+
         _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
         _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
     }
@@ -944,13 +1238,38 @@ public partial class ViveToolPage : INotifyPropertyChanged
         if (_featureCountTextBlock is null)
             return;
 
+        if (!string.IsNullOrWhiteSpace(FeatureSummaryDescription))
+        {
+            _featureCountTextBlock.Text = FeatureSummaryDescription;
+            return;
+        }
+
         _featureCountTextBlock.Text = string.IsNullOrWhiteSpace(FeatureCountDescription)
             ? "0"
             : FeatureCountDescription;
     }
 
+    private static string BuildFeatureSummaryText(FeatureStatusSummary summary)
+    {
+        return string.Format(
+            CultureInfo.CurrentCulture,
+            "{0} total | {1}: {2} | {3}: {4} | {5}: {6} | {7}: {8}",
+            summary.Total,
+            Resource.ViveTool_StatusEnabled,
+            summary.Enabled,
+            Resource.ViveTool_StatusDisabled,
+            summary.Disabled,
+            Resource.ViveTool_StatusDefault,
+            summary.Default,
+            Resource.ViveTool_StatusUnknown,
+            summary.Unknown);
+    }
+
     private void UpdateFeaturesVisibility()
     {
+        if (!_isFeatureUiReady)
+            return;
+
         if (Features.Count == 0 && !IsLoading)
         {
             _emptyStatePanel.Visibility = Visibility.Visible;

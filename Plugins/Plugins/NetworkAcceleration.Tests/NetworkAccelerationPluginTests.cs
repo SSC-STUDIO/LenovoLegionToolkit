@@ -140,4 +140,48 @@ public class NetworkAccelerationPluginTests
         PluginPageAssertions.AssertPluginPage(plugin.GetFeatureExtension(), NetworkAccelerationText.PageTitle, "Rocket24");
         PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), NetworkAccelerationText.SettingsPageTitle, "Settings24");
     }
+
+    [Fact]
+    public void GetOptimizationPlan_BalancedMode_ContainsDnsAndConfiguredWinsock()
+    {
+        var settings = new NetworkAccelerationSettings
+        {
+            PreferredMode = NetworkAccelerationMode.Balanced,
+            ResetWinsockOnOptimize = true,
+            ResetTcpIpOnOptimize = false
+        };
+
+        var plan = NetworkAccelerationPlugin.GetOptimizationPlan(settings);
+
+        Assert.Equal(NetworkAccelerationMode.Balanced, plan.Mode);
+        Assert.Collection(
+            plan.Steps,
+            step =>
+            {
+                Assert.Equal("FlushDns", step.Key);
+                Assert.True(step.Required);
+            },
+            step =>
+            {
+                Assert.Equal("ResetWinsock", step.Key);
+                Assert.True(step.Required);
+            });
+    }
+
+    [Fact]
+    public void GetOptimizationPlan_StreamingMode_AddsTcpResetEvenWhenToggleOff()
+    {
+        var settings = new NetworkAccelerationSettings
+        {
+            PreferredMode = NetworkAccelerationMode.Streaming,
+            ResetWinsockOnOptimize = false,
+            ResetTcpIpOnOptimize = false
+        };
+
+        var plan = NetworkAccelerationPlugin.GetOptimizationPlan(settings);
+
+        Assert.Contains(plan.Steps, step => step.Key == "FlushDns");
+        Assert.Contains(plan.Steps, step => step.Key == "ResetTcpIp" && !step.Required);
+        Assert.DoesNotContain(plan.Steps, step => step.Key == "ResetWinsock");
+    }
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Plugins.Shared;
@@ -14,6 +16,7 @@ public class ViveToolPathService
 {
     public const string ViveToolExeName = "ViVeTool.exe";
     private const string BundledViveToolDirectoryName = "Bundled";
+    private const string PluginsDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
     private static readonly string[] BuiltInRequiredFileNames =
     [
         ViveToolExeName,
@@ -79,8 +82,61 @@ public class ViveToolPathService
 
     public string GetBundledViveToolPath()
     {
-        var assemblyDirectory = Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location) ?? AppContext.BaseDirectory;
-        return Path.Combine(assemblyDirectory, BundledViveToolDirectoryName, ViveToolExeName);
+        var bundledPath = EnumerateBundledViveToolPathCandidates().FirstOrDefault(path =>
+            IsInstallComplete(Path.GetDirectoryName(path)));
+
+        if (!string.IsNullOrWhiteSpace(bundledPath))
+            return bundledPath;
+
+        return EnumerateBundledViveToolPathCandidates().First();
+    }
+
+    private static IEnumerable<string> EnumerateBundledViveToolPathCandidates()
+    {
+        var overridePluginsDirectory = GetPluginsDirectoryOverride();
+        var directories = new List<string?>();
+
+        if (!string.IsNullOrWhiteSpace(overridePluginsDirectory))
+        {
+            directories.Add(Path.Combine(overridePluginsDirectory, "local", "vive-tool"));
+            directories.Add(Path.Combine(overridePluginsDirectory, "vive-tool"));
+            directories.Add(Path.Combine(overridePluginsDirectory, "LenovoLegionToolkit.Plugins.ViveTool"));
+        }
+
+        directories.Add(Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location));
+        directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
+        if (string.IsNullOrWhiteSpace(overridePluginsDirectory))
+        {
+            var pluginsDirectory = GetDefaultPluginsDirectory();
+            directories.Add(Path.Combine(pluginsDirectory, "local", "vive-tool"));
+            directories.Add(Path.Combine(pluginsDirectory, "vive-tool"));
+            directories.Add(Path.Combine(pluginsDirectory, "LenovoLegionToolkit.Plugins.ViveTool"));
+        }
+
+        directories.Add(AppContext.BaseDirectory);
+
+        var distinctDirectories = directories
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => Path.GetFullPath(path!))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var directory in distinctDirectories)
+            yield return Path.Combine(directory, BundledViveToolDirectoryName, ViveToolExeName);
+    }
+
+    private static string? GetPluginsDirectoryOverride()
+    {
+        var overridePath = Environment.GetEnvironmentVariable(PluginsDirectoryOverrideEnvironmentVariable);
+        return string.IsNullOrWhiteSpace(overridePath)
+            ? null
+            : Path.GetFullPath(overridePath);
+    }
+
+    private static string GetDefaultPluginsDirectory()
+    {
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        return Path.Combine(appDataPath, "LenovoLegionToolkit", "plugins");
     }
 
     public async Task<bool> SetViveToolPathAsync(string filePath)
@@ -135,7 +191,7 @@ public class ViveToolPathService
         try
         {
             var bundledPath = GetBundledViveToolPath();
-            if (File.Exists(bundledPath))
+            if (IsInstallComplete(Path.GetDirectoryName(bundledPath)))
             {
                 _cachedViveToolPath = bundledPath;
                 return true;

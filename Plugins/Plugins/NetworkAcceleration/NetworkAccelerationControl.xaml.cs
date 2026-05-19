@@ -68,6 +68,7 @@ public partial class NetworkAccelerationControl : UserControl
         _presetStateTextBlock = CreateValueTextBlock();
         _presetRecommendationTextBlock = CreateValueTextBlock();
         _presetActionsTextBlock = CreateValueTextBlock();
+        _plannedStepsTextBlock = CreateValueTextBlock();
         _detailSessionTextBlock = CreateValueTextBlock();
         _modeDescriptionTextBlock = CreateDescriptionTextBlock();
         _downloadValueTextBlock = CreateMetricValueTextBlock();
@@ -299,6 +300,9 @@ public partial class NetworkAccelerationControl : UserControl
         stack.Children.Add(_autoOptimizeOnStartupCheckBox);
         stack.Children.Add(_resetWinsockCheckBox);
         stack.Children.Add(_resetTcpIpCheckBox);
+        stack.Children.Add(CreateDescriptionTextBlock(NetworkAccelerationText.PlannedStepsTitle, new Thickness(0, 14, 0, 6)));
+        _plannedStepsTextBlock.Margin = new Thickness(0, 0, 0, 0);
+        stack.Children.Add(_plannedStepsTextBlock);
         return stack;
     }
 
@@ -665,6 +669,7 @@ public partial class NetworkAccelerationControl : UserControl
 
         UpdateModeDescription();
         UpdatePresetDetails();
+        UpdateOptimizationPlanPreview();
     }
 
     private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -678,12 +683,14 @@ public partial class NetworkAccelerationControl : UserControl
 
         UpdateModeDescription();
         UpdatePresetDetails();
+        UpdateOptimizationPlanPreview();
     }
 
     private void SettingsCheckBox_Changed(object sender, RoutedEventArgs e)
     {
         SetStatus(NetworkAccelerationText.SettingsPendingSave, false);
         UpdatePresetDetails();
+        UpdateOptimizationPlanPreview();
     }
 
     private async void ServiceToggleButton_Click(object sender, RoutedEventArgs e)
@@ -785,6 +792,7 @@ public partial class NetworkAccelerationControl : UserControl
             UpdateModeDescription();
             UpdateSavedModeSummary();
             UpdatePresetDetails();
+            UpdateOptimizationPlanPreview();
             SetStatus(NetworkAccelerationText.StatusModeSaved, false);
         }
         catch (Exception ex)
@@ -842,6 +850,22 @@ public partial class NetworkAccelerationControl : UserControl
             : NetworkAccelerationText.PresetStateReady;
 
         UpdateSessionPresentation();
+    }
+
+    private void UpdateOptimizationPlanPreview()
+    {
+        if (_plannedStepsTextBlock is null)
+            return;
+
+        var mode = ParseSelectedMode() ?? _plugin.Settings.PreferredMode;
+        var settings = NetworkAccelerationSettingsBinding.BuildUpdatedSettings(
+            _plugin.Settings,
+            _autoOptimizeOnStartupCheckBox,
+            _resetWinsockCheckBox,
+            _resetTcpIpCheckBox,
+            preferredMode: mode);
+        var plan = NetworkAccelerationPlugin.GetOptimizationPlan(settings);
+        _plannedStepsTextBlock.Text = NetworkAccelerationPresentation.GetPlanSummary(plan);
     }
 
     private void UpdateSessionPresentation()

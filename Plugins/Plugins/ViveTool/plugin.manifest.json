@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "vive-tool",
   "name": "ViVeTool",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "minHostVersion": "3.6.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
@@ -21,7 +21,7 @@
     "optimizationActions": []
   },
   "package": {
-    "assetName": "vive-tool-v1.2.1.zip",
+    "assetName": "vive-tool-v1.2.2.zip",
     "requiredFiles": [
       "LenovoLegionToolkit.Plugins.ViveTool.dll",
       "LenovoLegionToolkit.Plugins.SDK.dll",

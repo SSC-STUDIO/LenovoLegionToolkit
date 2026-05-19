@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -258,6 +259,50 @@ public class ViveToolDownloadService
         {
             PluginLog.Trace($"ViveTool: Error importing features from URL: {ex.Message}", ex);
             return new List<FeatureFlagInfo>();
+        }
+    }
+
+    public async Task<bool> ExportFeaturesToFileAsync(string filePath, IReadOnlyCollection<FeatureFlagInfo> features)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return false;
+
+            ArgumentNullException.ThrowIfNull(features);
+
+            var directoryPath = Path.GetDirectoryName(filePath);
+            if (string.IsNullOrWhiteSpace(directoryPath))
+                return false;
+
+            Directory.CreateDirectory(directoryPath);
+
+            var exportPayload = features
+                .OrderBy(feature => feature.Id)
+                .Select(feature => new
+                {
+                    id = feature.Id,
+                    name = feature.Name,
+                    description = feature.Description,
+                    status = feature.Status.ToString()
+                })
+                .ToArray();
+
+            var json = JsonSerializer.Serialize(
+                exportPayload,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
+
+            await File.WriteAllTextAsync(filePath, json).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ViveTool: Error exporting features to file: {ex.Message}", ex);
+            return false;
         }
     }
 

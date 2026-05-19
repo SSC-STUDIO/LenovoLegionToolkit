@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 [Plugin(
     id: "network-acceleration",
     name: "Network Acceleration",
-    version: "1.1.8",
+    version: "1.1.9",
     description: "Real-time network acceleration and optimization features",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -104,6 +105,29 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         return true;
     }
 
+    public NetworkOptimizationPlan GetOptimizationPlan()
+    {
+        return GetOptimizationPlan(_settings);
+    }
+
+    internal static NetworkOptimizationPlan GetOptimizationPlan(NetworkAccelerationSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var steps = new List<NetworkOptimizationStep>
+        {
+            new("FlushDns", "ipconfig.exe", "/flushdns", true)
+        };
+
+        if (settings.ResetWinsockOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Gaming)
+            steps.Add(new("ResetWinsock", "netsh.exe", "winsock reset", settings.ResetWinsockOnOptimize));
+
+        if (settings.ResetTcpIpOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Streaming)
+            steps.Add(new("ResetTcpIp", "netsh.exe", "int ip reset", settings.ResetTcpIpOnOptimize));
+
+        return new NetworkOptimizationPlan(settings.PreferredMode, steps);
+    }
+
     public Task<bool> RunQuickOptimizationAsync()
     {
         return RunQuickOptimizationAsync(CancellationToken.None);
@@ -111,21 +135,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public async Task<bool> RunQuickOptimizationAsync(CancellationToken cancellationToken)
     {
-        var flushResult = await RunCommandAsync("ipconfig.exe", "/flushdns", cancellationToken).ConfigureAwait(false);
-        if (!flushResult)
-            return false;
-
-        if (ShouldResetWinsockDuringQuickOptimization())
+        foreach (var step in GetOptimizationPlan().Steps)
         {
-            var winsockResult = await RunCommandAsync("netsh.exe", "winsock reset", cancellationToken).ConfigureAwait(false);
-            if (!winsockResult)
-                return false;
-        }
-
-        if (ShouldResetTcpIpDuringQuickOptimization())
-        {
-            var tcpResult = await RunCommandAsync("netsh.exe", "int ip reset", cancellationToken).ConfigureAwait(false);
-            if (!tcpResult)
+            var result = await RunCommandAsync(step.ExecutableName, step.Arguments, cancellationToken).ConfigureAwait(false);
+            if (!result)
                 return false;
         }
 
@@ -175,16 +188,6 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             ResetWinsockOnOptimize = Configuration.GetValue(nameof(NetworkAccelerationSettings.ResetWinsockOnOptimize), true),
             ResetTcpIpOnOptimize = Configuration.GetValue(nameof(NetworkAccelerationSettings.ResetTcpIpOnOptimize), false),
         };
-    }
-
-    private bool ShouldResetWinsockDuringQuickOptimization()
-    {
-        return _settings.ResetWinsockOnOptimize || _settings.PreferredMode == NetworkAccelerationMode.Gaming;
-    }
-
-    private bool ShouldResetTcpIpDuringQuickOptimization()
-    {
-        return _settings.ResetTcpIpOnOptimize || _settings.PreferredMode == NetworkAccelerationMode.Streaming;
     }
 
     private static async Task<bool> RunCommandAsync(string executableName, string arguments, CancellationToken cancellationToken)
@@ -247,6 +250,16 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         });
     }
 }
+
+public sealed record NetworkOptimizationStep(
+    string Key,
+    string ExecutableName,
+    string Arguments,
+    bool Required);
+
+public sealed record NetworkOptimizationPlan(
+    NetworkAccelerationMode Mode,
+    IReadOnlyList<NetworkOptimizationStep> Steps);
 
 public class NetworkAccelerationPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {

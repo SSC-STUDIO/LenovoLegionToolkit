@@ -302,6 +302,25 @@ public class ViveToolServiceTests
     }
 
     [Fact]
+    public async Task ExportFeaturesToFileAsync_WithValidPath_DelegatesToDownloadService()
+    {
+        await using var harness = await CreateServiceAsync();
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json", "vivetool-service-export-");
+        FeatureFlagInfo[] features =
+        [
+            CreateFeature(100, "AlphaFeature", "First", FeatureFlagStatus.Enabled),
+            CreateFeature(200, "BetaFeature", "Second", FeatureFlagStatus.Default)
+        ];
+
+        var result = await harness.Service.ExportFeaturesToFileAsync(tempFile.FilePath, features);
+        var content = await File.ReadAllTextAsync(tempFile.FilePath);
+
+        Assert.True(result);
+        Assert.Contains(@"""name"": ""AlphaFeature""", content);
+        Assert.Contains(@"""status"": ""Enabled""", content);
+    }
+
+    [Fact]
     public async Task MultipleOperations_ConcurrentCalls_ReturnConsistentConfiguredResults()
     {
         await using var harness = await CreateCommandBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");

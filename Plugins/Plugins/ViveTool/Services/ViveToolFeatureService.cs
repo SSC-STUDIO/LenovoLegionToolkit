@@ -295,7 +295,10 @@ public class ViveToolFeatureService
         if (configuredFeatures is null || configuredFeatures.Count == 0)
             return;
 
-        var configuredById = configuredFeatures.ToDictionary(feature => feature.Id);
+        var configuredById = new Dictionary<int, FeatureFlagInfo>();
+        foreach (var configuredFeature in configuredFeatures)
+            configuredById[configuredFeature.Id] = configuredFeature;
+
         for (var i = 0; i < features.Count; i++)
         {
             if (!configuredById.TryGetValue(features[i].Id, out var configuredFeature))

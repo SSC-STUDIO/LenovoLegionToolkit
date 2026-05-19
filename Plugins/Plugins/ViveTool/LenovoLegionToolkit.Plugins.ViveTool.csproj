@@ -7,9 +7,9 @@
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
-    <Version>1.2.1</Version>
-    <FileVersion>1.2.1</FileVersion>
-    <AssemblyVersion>1.2.1</AssemblyVersion>
+    <Version>1.2.2</Version>
+    <FileVersion>1.2.2</FileVersion>
+    <AssemblyVersion>1.2.2</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 

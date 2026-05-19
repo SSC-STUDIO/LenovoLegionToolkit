@@ -192,6 +192,97 @@ public class ShellIntegrationConfigServiceTests
         Assert.NotNull(loaded.BackgroundColor);
     }
 
+    [Fact]
+    public void ResetProfile_OverwritesExistingProfileWithDefaults()
+    {
+        var service = CreateService();
+        service.SaveProfile(new ShellIntegrationProfile
+        {
+            ThemeName = "custom",
+            BackgroundColor = "#101010",
+            AccentColor = "#FFFFFF"
+        });
+
+        var reset = service.ResetProfile();
+        var loaded = service.LoadProfile();
+
+        Assert.Equal("modern", reset.ThemeName);
+        Assert.Equal("modern", loaded.ThemeName);
+        Assert.Equal(ShellIntegrationProfile.CreateDefault().BackgroundColor, loaded.BackgroundColor);
+    }
+
+    [Fact]
+    public void ApplyPreset_CompactDark_PersistsPresetProfile()
+    {
+        var service = CreateService();
+
+        var applied = service.ApplyPreset(ShellIntegrationPreset.CompactDark);
+        var loaded = service.LoadProfile();
+
+        Assert.Equal("compact-dark", applied.ThemeName);
+        Assert.True(applied.UseCompactView);
+        Assert.Equal(ShellColorScheme.Dark, applied.ColorScheme);
+        Assert.Equal("compact-dark", loaded.ThemeName);
+        Assert.Equal("#111827", loaded.BackgroundColor);
+    }
+
+    [Fact]
+    public void ApplyPreset_MinimalLight_DisablesEffectsAndShadow()
+    {
+        var service = CreateService();
+
+        var applied = service.ApplyPreset(ShellIntegrationPreset.MinimalLight);
+
+        Assert.False(applied.EnableMotionEffects);
+        Assert.False(applied.EnableShadow);
+        Assert.Equal(ShellVisualEffect.None, applied.BackgroundEffect);
+        Assert.Equal(ShellColorScheme.Light, applied.ColorScheme);
+    }
+
+    [Fact]
+    public void ExportProfile_WritesNormalizedJsonToTargetFile()
+    {
+        var service = CreateService();
+        var exportPath = Path.Combine(_testDirectory, "export", "profile.json");
+        var profile = new ShellIntegrationProfile
+        {
+            ThemeName = " custom ",
+            AccentColor = "4f7cff"
+        };
+
+        var result = service.ExportProfile(exportPath, profile, out var errorMessage);
+        var content = File.ReadAllText(exportPath);
+
+        Assert.True(result);
+        Assert.Null(errorMessage);
+        Assert.Contains(@"""ThemeName"": ""custom""", content);
+        Assert.Contains(@"""AccentColor"": ""#4F7CFF""", content);
+    }
+
+    [Fact]
+    public void ImportProfile_LoadsAndPersistsProfileFromExternalFile()
+    {
+        var service = CreateService();
+        var importPath = Path.Combine(_testDirectory, "import-profile.json");
+        File.WriteAllText(importPath,
+            """
+            {
+              "ThemeName": "imported",
+              "AccentColor": "#123456",
+              "BackgroundColor": "#ABCDEF"
+            }
+            """);
+
+        var result = service.ImportProfile(importPath, out var profile, out var errorMessage);
+        var persisted = service.LoadProfile();
+
+        Assert.True(result);
+        Assert.Null(errorMessage);
+        Assert.Equal("imported", profile.ThemeName);
+        Assert.Equal("#123456", persisted.AccentColor);
+        Assert.Equal("#ABCDEF", persisted.BackgroundColor);
+    }
+
     #endregion
 
     #region ResolveManagedPaths Tests
@@ -1039,6 +1130,15 @@ old2
         Assert.NotNull(profile.AccentColor);
         Assert.True(profile.BackgroundOpacity >= 0 && profile.BackgroundOpacity <= 100);
         Assert.True(profile.BorderRadius >= 0);
+    }
+
+    [Fact]
+    public void ShellIntegrationProfile_CreatePreset_Default_ReturnsDefaultProfile()
+    {
+        var preset = ShellIntegrationProfile.CreatePreset(ShellIntegrationPreset.Default);
+
+        Assert.Equal(ShellIntegrationProfile.CreateDefault().ThemeName, preset.ThemeName);
+        Assert.Equal(ShellIntegrationProfile.CreateDefault().BackgroundColor, preset.BackgroundColor);
     }
 
     [Fact]

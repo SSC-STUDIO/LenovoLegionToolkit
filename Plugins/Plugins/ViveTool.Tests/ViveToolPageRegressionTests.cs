@@ -47,4 +47,41 @@ public class ViveToolPageRegressionTests
         Assert.Single(result);
         Assert.Equal(300, result[0].Id);
     }
+
+    [Fact]
+    public void FilterFeatures_WithStatusFilter_ReturnsOnlyMatchingStatuses()
+    {
+        var allFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 100, Name = "Alpha", Description = "Enabled feature", Status = FeatureFlagStatus.Enabled },
+            new() { Id = 200, Name = "Beta", Description = "Disabled feature", Status = FeatureFlagStatus.Disabled },
+            new() { Id = 300, Name = "Gamma", Description = "Default feature", Status = FeatureFlagStatus.Default },
+        };
+
+        var result = FeatureFilter.FilterFeatures(allFeatures, string.Empty, FeatureFlagStatus.Disabled);
+
+        var feature = Assert.Single(result);
+        Assert.Equal(200, feature.Id);
+    }
+
+    [Fact]
+    public void SummarizeFeatures_ReturnsCountsPerStatus()
+    {
+        var allFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 100, Name = "Alpha", Status = FeatureFlagStatus.Enabled },
+            new() { Id = 200, Name = "Beta", Status = FeatureFlagStatus.Disabled },
+            new() { Id = 300, Name = "Gamma", Status = FeatureFlagStatus.Default },
+            new() { Id = 400, Name = "Delta", Status = FeatureFlagStatus.Unknown },
+            new() { Id = 500, Name = "Epsilon", Status = FeatureFlagStatus.Enabled },
+        };
+
+        var summary = FeatureFilter.SummarizeFeatures(allFeatures);
+
+        Assert.Equal(5, summary.Total);
+        Assert.Equal(2, summary.Enabled);
+        Assert.Equal(1, summary.Disabled);
+        Assert.Equal(1, summary.Default);
+        Assert.Equal(1, summary.Unknown);
+    }
 }

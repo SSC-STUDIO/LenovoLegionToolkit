@@ -18,7 +18,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Shell Integration",
-    version: "1.0.11",
+    version: "1.0.12",
     description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -263,6 +263,84 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public bool OpenShellConfigFile()
     {
         return TryOpenShellPath(GetShellConfigPath());
+    }
+
+    public bool OpenManagedConfigFolder()
+    {
+        try
+        {
+            _configService.OpenManagedConfigFolder(GetShellInstallPath());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to open managed config folder: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    public bool ResetManagedConfiguration()
+    {
+        try
+        {
+            _configService.ResetProfile();
+            return SyncManagedConfiguration();
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to reset managed configuration: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    public bool ApplyPreset(ShellIntegrationPreset preset)
+    {
+        try
+        {
+            _configService.ApplyPreset(preset);
+            return SyncManagedConfiguration();
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to apply preset '{preset}': {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    public bool ExportProfile(string filePath, out string? errorMessage)
+    {
+        errorMessage = null;
+
+        try
+        {
+            var profile = _configService.LoadProfile();
+            return _configService.ExportProfile(filePath, profile, out errorMessage);
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to export profile: {ex.Message}", ex);
+            errorMessage = ex.Message;
+            return false;
+        }
+    }
+
+    public bool ImportProfile(string filePath, out string? errorMessage)
+    {
+        errorMessage = null;
+
+        try
+        {
+            if (!_configService.ImportProfile(filePath, out _, out errorMessage))
+                return false;
+
+            return SyncManagedConfiguration();
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to import profile: {ex.Message}", ex);
+            errorMessage = ex.Message;
+            return false;
+        }
     }
 
     private static bool TryOpenShellPath(string? path)

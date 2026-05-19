@@ -372,6 +372,69 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
                 return ResourceManager.GetString("ViveTool_Import", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string ViveTool_Export {
+            get {
+                return ResourceManager.GetString("ViveTool_Export", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to JSON Files (*.json)|*.json|All Files (*.*)|*.*.
+        /// </summary>
+        public static string ViveTool_ExportFileDialogFilter {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportFileDialogFilter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Export Successful.
+        /// </summary>
+        public static string ViveTool_ExportSuccess {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully exported {0} feature flag(s) to {1}.
+        /// </summary>
+        public static string ViveTool_ExportSuccessMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportSuccessMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export feature list..
+        /// </summary>
+        public static string ViveTool_ExportFailed {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export feature list: {0}.
+        /// </summary>
+        public static string ViveTool_ExportFailedWithMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportFailedWithMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No features available to export..
+        /// </summary>
+        public static string ViveTool_ExportNoFeatures {
+            get {
+                return ResourceManager.GetString("ViveTool_ExportNoFeatures", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Import from File.
@@ -586,6 +649,15 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
         public static string ViveTool_StatusUnknown {
             get {
                 return ResourceManager.GetString("ViveTool_StatusUnknown", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All Statuses.
+        /// </summary>
+        public static string ViveTool_StatusFilterAll {
+            get {
+                return ResourceManager.GetString("ViveTool_StatusFilterAll", resourceCulture);
             }
         }
         

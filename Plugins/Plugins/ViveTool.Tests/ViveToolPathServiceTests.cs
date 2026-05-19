@@ -109,6 +109,35 @@ public class ViveToolPathServiceTests
     }
 
     [Fact]
+    public async Task GetBundledViveToolPath_WithLocalPluginDirectoryOverride_ReturnsLocalPackageRuntime()
+    {
+        const string overrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
+        var originalOverride = Environment.GetEnvironmentVariable(overrideEnvironmentVariable);
+        var pluginsDirectoryPath = Path.Combine(Path.GetTempPath(), $"llt-vivetool-plugins-{Guid.NewGuid():N}");
+        var bundledDirectoryPath = Path.Combine(pluginsDirectoryPath, "local", "vive-tool", "Bundled");
+
+        try
+        {
+            await ViveToolTestRuntimeHelper.CreateCompleteRuntimeAsync(bundledDirectoryPath);
+            Environment.SetEnvironmentVariable(overrideEnvironmentVariable, pluginsDirectoryPath);
+
+            await using var harness = await CreateHarnessAsync();
+
+            var path = harness.Service.GetBundledViveToolPath();
+
+            Assert.Equal(
+                Path.GetFullPath(Path.Combine(bundledDirectoryPath, ViveToolPathService.ViveToolExeName)),
+                Path.GetFullPath(path));
+            AssertRuntimeFilesExist(path);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(overrideEnvironmentVariable, originalOverride);
+            ViveToolTestRuntimeHelper.DeleteDirectoryBestEffort(pluginsDirectoryPath);
+        }
+    }
+
+    [Fact]
     public async Task GetBuiltInViveToolPath_ReturnsAppDataViveToolExePath()
     {
         await using var harness = await CreateHarnessAsync();

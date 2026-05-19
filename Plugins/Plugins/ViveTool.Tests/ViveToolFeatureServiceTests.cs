@@ -466,6 +466,25 @@ public class ViveToolFeatureServiceTests
         Assert.Equal("BetterBetaName", dictionaryFeatures[1].Name);
     }
 
+    [Fact]
+    public void ApplyConfiguredStatuses_WithDuplicateConfiguredIds_UsesLastStatus()
+    {
+        var dictionaryFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 100, Name = "AlphaFeature", Status = FeatureFlagStatus.Default }
+        };
+        var configuredFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 100, Name = "AlphaEnabled", Status = FeatureFlagStatus.Enabled },
+            new() { Id = 100, Name = "AlphaDisabled", Status = FeatureFlagStatus.Disabled }
+        };
+
+        ApplyConfiguredStatusesMethod.Invoke(null, new object?[] { dictionaryFeatures, configuredFeatures });
+
+        Assert.Equal(FeatureFlagStatus.Disabled, dictionaryFeatures[0].Status);
+        Assert.Equal("AlphaDisabled", dictionaryFeatures[0].Name);
+    }
+
     #endregion
 
     #region SearchFeaturesAsync Tests

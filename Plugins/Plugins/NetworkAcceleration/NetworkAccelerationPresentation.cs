@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
 internal static class NetworkAccelerationPresentation
@@ -35,6 +38,36 @@ internal static class NetworkAccelerationPresentation
         return enabled
             ? NetworkAccelerationText.StateEnabled
             : NetworkAccelerationText.StateDisabled;
+    }
+
+    public static string GetPlanSummary(NetworkOptimizationPlan plan)
+    {
+        ArgumentNullException.ThrowIfNull(plan);
+
+        if (plan.Steps.Count == 0)
+            return NetworkAccelerationText.NoPlannedOptimizationSteps;
+
+        return string.Join(
+            Environment.NewLine,
+            plan.Steps.Select((step, index) =>
+                string.Format(
+                    NetworkAccelerationText.Culture,
+                    NetworkAccelerationText.OptimizationPlanStepFormat,
+                    index + 1,
+                    GetStepLabel(step),
+                    $"{step.ExecutableName} {step.Arguments}".Trim(),
+                    step.Required ? NetworkAccelerationText.StepSourceRequired : NetworkAccelerationText.StepSourceModeDriven)));
+    }
+
+    private static string GetStepLabel(NetworkOptimizationStep step)
+    {
+        return step.Key switch
+        {
+            "FlushDns" => NetworkAccelerationText.StepFlushDns,
+            "ResetWinsock" => NetworkAccelerationText.StepResetWinsock,
+            "ResetTcpIp" => NetworkAccelerationText.StepResetTcpIp,
+            _ => step.Key
+        };
     }
 }
 

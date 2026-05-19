@@ -43,16 +43,8 @@
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="24" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="24" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <WrapPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
                                 <TextBlock Text="{x:Static text:NetworkAccelerationText.ServiceStateLabel}"
                                            FontSize="12"
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -63,7 +55,7 @@
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
 
-                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
                                 <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentModeLabel}"
                                            FontSize="12"
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -74,7 +66,7 @@
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
 
-                            <StackPanel Grid.Column="4" Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
                                 <TextBlock Text="{x:Static text:NetworkAccelerationText.SessionLabel}"
                                            FontSize="12"
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -84,7 +76,7 @@
                                            FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
-                        </Grid>
+                        </WrapPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2"
@@ -154,21 +146,36 @@
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     <Setter Property="Padding" Value="0" />
-                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Margin" Value="0,0,0,8" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
                             </ListBox.ItemContainerStyle>
 
                             <ListBoxItem Tag="Balanced">
-                                <Border Padding="0,10,0,12"
+                                <Border Padding="12,10"
+                                        CornerRadius="8"
                                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                        BorderThickness="0,0,0,1"
-                                        Background="Transparent">
+                                        BorderThickness="1"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Margin="0,0,12,0">
+                                        <Border Width="3"
+                                                CornerRadius="2"
+                                                Margin="0,1,10,1"
+                                                Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
                                             <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeBalancedTargetTitle}"
                                                        FontSize="13"
                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -178,7 +185,7 @@
                                                        FontSize="11"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1"
+                                        <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
@@ -189,16 +196,22 @@
                             </ListBoxItem>
 
                             <ListBoxItem Tag="Gaming">
-                                <Border Padding="0,10,0,12"
+                                <Border Padding="12,10"
+                                        CornerRadius="8"
                                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                        BorderThickness="0,0,0,1"
-                                        Background="Transparent">
+                                        BorderThickness="1"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Margin="0,0,12,0">
+                                        <Border Width="3"
+                                                CornerRadius="2"
+                                                Margin="0,1,10,1"
+                                                Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
                                             <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetTitle}"
                                                        FontSize="13"
                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -208,7 +221,7 @@
                                                        FontSize="11"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1"
+                                        <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
@@ -219,14 +232,22 @@
                             </ListBoxItem>
 
                             <ListBoxItem Tag="Streaming">
-                                <Border Padding="0,10,0,12"
-                                        Background="Transparent">
+                                <Border Padding="12,10"
+                                        CornerRadius="8"
+                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Margin="0,0,12,0">
+                                        <Border Width="3"
+                                                CornerRadius="2"
+                                                Margin="0,1,10,1"
+                                                Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
                                             <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetTitle}"
                                                        FontSize="13"
                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -236,7 +257,7 @@
                                                        FontSize="11"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1"
+                                        <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
@@ -326,6 +347,27 @@
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </Grid>
+
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.PlannedStepsTitle}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Margin="0,4,0,16"
+                                   Text="{x:Static text:NetworkAccelerationText.PlannedStepsDescription}"
+                                   TextWrapping="Wrap"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <Border Margin="0,0,0,16"
+                                Padding="12,10"
+                                CornerRadius="8"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <TextBlock x:Name="_plannedStepsTextBlock"
+                                       TextWrapping="Wrap"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Border>
 
                         <!-- Action Buttons -->
                         <wpfui:Button HorizontalAlignment="Stretch"

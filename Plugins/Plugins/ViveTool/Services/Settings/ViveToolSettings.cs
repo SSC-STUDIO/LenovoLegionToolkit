@@ -124,6 +124,13 @@ public class ViveToolSettings
 
     public async Task SaveAsync()
     {
+        lock (_saveLock)
+        {
+            _saveCancellationTokenSource?.Cancel();
+            _saveCancellationTokenSource?.Dispose();
+            _saveCancellationTokenSource = null;
+        }
+
         SettingsData dataToSave;
         using (await _dataLock.LockAsync().ConfigureAwait(false))
         {

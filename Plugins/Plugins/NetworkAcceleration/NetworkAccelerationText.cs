@@ -44,6 +44,9 @@ public static class NetworkAccelerationText
     public static string ModeStreamingTargetDescription => T(nameof(ModeStreamingTargetDescription), "Prioritize sustained bandwidth for streaming, updates, and large file transfers.");
     public static string RecommendedForLabel => T(nameof(RecommendedForLabel), "Recommended For");
     public static string OptimizationFocusLabel => T(nameof(OptimizationFocusLabel), "Optimization Focus");
+    public static string PlannedStepsLabel => T(nameof(PlannedStepsLabel), "Planned Steps");
+    public static string PlannedStepsTitle => T(nameof(PlannedStepsTitle), "Optimization Plan");
+    public static string PlannedStepsDescription => T(nameof(PlannedStepsDescription), "Preview the exact commands quick optimization will run with the current mode and toggles.");
     public static string ModeBalancedRecommendedFor => T(nameof(ModeBalancedRecommendedFor), "General daily use");
     public static string ModeBalancedFocus => T(nameof(ModeBalancedFocus), "Balanced DNS & socket cleanup");
     public static string ModeGamingRecommendedFor => T(nameof(ModeGamingRecommendedFor), "Online Gaming");
@@ -89,6 +92,13 @@ public static class NetworkAccelerationText
     public static string SettingsSaved => T(nameof(SettingsSaved), "Network acceleration settings saved.");
     public static string StateEnabled => T(nameof(StateEnabled), "Enabled");
     public static string StateDisabled => T(nameof(StateDisabled), "Disabled");
+    public static string StepFlushDns => T(nameof(StepFlushDns), "Flush DNS cache");
+    public static string StepResetWinsock => T(nameof(StepResetWinsock), "Reset Winsock catalog");
+    public static string StepResetTcpIp => T(nameof(StepResetTcpIp), "Reset TCP/IP stack");
+    public static string StepSourceRequired => T(nameof(StepSourceRequired), "explicitly enabled");
+    public static string StepSourceModeDriven => T(nameof(StepSourceModeDriven), "included by selected mode");
+    public static string OptimizationPlanStepFormat => T(nameof(OptimizationPlanStepFormat), "{0}. {1}  [{3}]\n{2}");
+    public static string NoPlannedOptimizationSteps => T(nameof(NoPlannedOptimizationSteps), "No optimization steps are currently planned.");
     public static string MbpsValueFormat => T(nameof(MbpsValueFormat), "{0:0.0} Mbps");
     public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
 

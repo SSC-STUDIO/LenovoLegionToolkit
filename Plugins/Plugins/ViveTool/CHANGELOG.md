@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-05-20
+
+### Added / 新增
+- Added feature-list export and a status filter with a live enabled/disabled/default/unknown summary for faster feature-flag review / 新增功能列表导出与状态筛选，并显示启用、禁用、默认、未知状态的实时摘要，便于快速审查功能标志
+
+### Improved / 改进
+- Reworked the feature toolbar into separate search/count and command rows, and tightened the DataGrid header and row styling so feature-flag management is less cramped in the host page / 将功能页工具栏拆分为搜索/计数和命令两行，并收紧 DataGrid 表头与行样式，使功能标志管理在宿主页中不再拥挤
+- Polished the code-built fallback feature page with host-aligned cards, warning/status blocks, toolbar controls, and a full feature DataGrid so the page remains usable if XAML resource loading falls back / 优化代码构建的功能页回退界面，补齐与宿主一致的卡片、警告/状态区、工具栏控件和完整功能表格，使 XAML 资源回退时界面仍可正常使用
+
+### Fixed / 修复
+- Delayed feature-filter initialization until the host page controls are ready, preventing a null reference when the status filter raises its first selection event during page creation / 将功能筛选初始化延后到宿主页控件就绪后执行，避免状态筛选框在页面创建时首次触发选择事件导致空引用
+- Resolved bundled ViVeTool discovery when the host loads the plugin from the local plugin directory or a stream-loaded assembly, without depending on host-internal plugin path types / 修复宿主从本地插件目录或流加载程序集时无法发现内置 ViVeTool 的问题，并避免依赖宿主内部插件路径类型
+- Tolerated duplicate configured feature IDs when overlaying `/query` output and fixed search filtering to stay on the UI dispatcher / 合并 `/query` 输出时容忍重复功能 ID，并修复搜索筛选过程中的 UI 线程访问问题
+- Cancelled pending delayed settings saves before explicit saves so user-selected ViVeTool paths are not overwritten by stale background writes / 显式保存设置前取消挂起的延迟保存，避免用户选择的 ViVeTool 路径被旧的后台写入覆盖
+
 ## [1.2.1] - 2026-04-29
 
 ### Improved / 改进

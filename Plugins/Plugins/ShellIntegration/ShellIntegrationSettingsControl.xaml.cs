@@ -66,11 +66,43 @@ public partial class ShellIntegrationSettingsControl : UserControl
         _openConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenConfigButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
         AutomationProperties.SetAutomationId(_openConfigButton, "OpenConfigButton");
         _openConfigButton.Click += OpenConfigButton_Click;
+        _syncManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.SyncManagedConfigButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_syncManagedConfigButton, "SyncManagedConfigButton");
+        _syncManagedConfigButton.Click += SyncManagedConfigButton_Click;
+        _resetManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ResetManagedConfigButton, Width = 170, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_resetManagedConfigButton, "ResetManagedConfigButton");
+        _resetManagedConfigButton.Click += ResetManagedConfigButton_Click;
+        _openManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenManagedConfigButton, Width = 170, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_openManagedConfigButton, "OpenManagedConfigButton");
+        _openManagedConfigButton.Click += OpenManagedConfigButton_Click;
+        _exportProfileButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ExportProfileButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_exportProfileButton, "ExportProfileButton");
+        _exportProfileButton.Click += ExportProfileButton_Click;
+        _importProfileButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ImportProfileButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_importProfileButton, "ImportProfileButton");
+        _importProfileButton.Click += ImportProfileButton_Click;
+        _applyDefaultPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetDefaultButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_applyDefaultPresetButton, "ApplyDefaultPresetButton");
+        _applyDefaultPresetButton.Click += ApplyDefaultPresetButton_Click;
+        _applyCompactDarkPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetCompactDarkButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_applyCompactDarkPresetButton, "ApplyCompactDarkPresetButton");
+        _applyCompactDarkPresetButton.Click += ApplyCompactDarkPresetButton_Click;
+        _applyMinimalLightPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetMinimalLightButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_applyMinimalLightPresetButton, "ApplyMinimalLightPresetButton");
+        _applyMinimalLightPresetButton.Click += ApplyMinimalLightPresetButton_Click;
         buttonPanel.Children.Add(_enableButton);
         buttonPanel.Children.Add(_disableButton);
         buttonPanel.Children.Add(_openStyleSettingsButton);
         buttonPanel.Children.Add(_openShellFolderButton);
         buttonPanel.Children.Add(_openConfigButton);
+        buttonPanel.Children.Add(_syncManagedConfigButton);
+        buttonPanel.Children.Add(_resetManagedConfigButton);
+        buttonPanel.Children.Add(_openManagedConfigButton);
+        buttonPanel.Children.Add(_exportProfileButton);
+        buttonPanel.Children.Add(_importProfileButton);
+        buttonPanel.Children.Add(_applyDefaultPresetButton);
+        buttonPanel.Children.Add(_applyCompactDarkPresetButton);
+        buttonPanel.Children.Add(_applyMinimalLightPresetButton);
 
         Grid.SetRow(buttonPanel, 2);
         root.Children.Add(buttonPanel);
@@ -100,6 +132,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         var canManageShell = installed && allowSystemActions;
         var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
         var canOpenConfig = configExists;
+        var canManageConfig = installed;
         var canOpenStyleSettings = canManageShell || LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.Mode == LenovoLegionToolkit.Plugins.SDK.PluginHostMode.Preview;
 
         if (_registrationValueTextBlock != null)
@@ -137,6 +170,30 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
         if (_openConfigButton != null)
             _openConfigButton.IsEnabled = canOpenConfig;
+
+        if (_syncManagedConfigButton != null)
+            _syncManagedConfigButton.IsEnabled = canManageConfig;
+
+        if (_resetManagedConfigButton != null)
+            _resetManagedConfigButton.IsEnabled = canManageConfig;
+
+        if (_openManagedConfigButton != null)
+            _openManagedConfigButton.IsEnabled = canManageConfig;
+
+        if (_exportProfileButton != null)
+            _exportProfileButton.IsEnabled = true;
+
+        if (_importProfileButton != null)
+            _importProfileButton.IsEnabled = canManageConfig;
+
+        if (_applyDefaultPresetButton != null)
+            _applyDefaultPresetButton.IsEnabled = canManageConfig;
+
+        if (_applyCompactDarkPresetButton != null)
+            _applyCompactDarkPresetButton.IsEnabled = canManageConfig;
+
+        if (_applyMinimalLightPresetButton != null)
+            _applyMinimalLightPresetButton.IsEnabled = canManageConfig;
 
         _statusTextBlock.Text = $"{prefix}\n{ShellIntegrationText.PathLabel}: {path}";
         if (!string.IsNullOrWhiteSpace(version) && version != ShellIntegrationText.NotFound)
@@ -229,5 +286,83 @@ public partial class ShellIntegrationSettingsControl : UserControl
     {
         var success = _plugin.OpenShellConfigFile();
         RefreshStatus(success ? ShellIntegrationText.StatusOpenedConfig : ShellIntegrationText.StatusConfigNotFound, !success);
+    }
+
+    private void OpenManagedConfigButton_Click(object sender, RoutedEventArgs e)
+    {
+        var success = _plugin.OpenManagedConfigFolder();
+        RefreshStatus(success ? ShellIntegrationText.StatusOpenedManagedConfig : ShellIntegrationText.StatusManagedConfigFolderUnavailable, !success);
+    }
+
+    private void SyncManagedConfigButton_Click(object sender, RoutedEventArgs e)
+    {
+        var success = _plugin.SyncManagedConfiguration();
+        RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigSyncCompleted : ShellIntegrationText.StatusManagedConfigSyncFailed, !success);
+    }
+
+    private void ResetManagedConfigButton_Click(object sender, RoutedEventArgs e)
+    {
+        var success = _plugin.ResetManagedConfiguration();
+        RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigResetCompleted : ShellIntegrationText.StatusManagedConfigResetFailed, !success);
+    }
+
+    private void ExportProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Title = ShellIntegrationText.ExportProfileButton,
+            Filter = ShellIntegrationText.ProfileFileDialogFilter,
+            DefaultExt = ".json",
+            FileName = "shell-integration-profile.json",
+            AddExtension = true,
+            OverwritePrompt = true
+        };
+
+        if (saveFileDialog.ShowDialog() != true)
+            return;
+
+        var success = _plugin.ExportProfile(saveFileDialog.FileName, out var errorMessage);
+        RefreshStatus(
+            success ? ShellIntegrationText.StatusProfileExportCompleted : $"{ShellIntegrationText.StatusProfileExportFailed} {errorMessage}".Trim(),
+            !success);
+    }
+
+    private void ImportProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = ShellIntegrationText.ImportProfileButton,
+            Filter = ShellIntegrationText.ProfileFileDialogFilter,
+            FilterIndex = 1
+        };
+
+        if (openFileDialog.ShowDialog() != true)
+            return;
+
+        var success = _plugin.ImportProfile(openFileDialog.FileName, out var errorMessage);
+        RefreshStatus(
+            success ? ShellIntegrationText.StatusProfileImportCompleted : $"{ShellIntegrationText.StatusProfileImportFailed} {errorMessage}".Trim(),
+            !success);
+    }
+
+    private void ApplyDefaultPresetButton_Click(object sender, RoutedEventArgs e)
+    {
+        ApplyPreset(ShellIntegrationPreset.Default, ShellIntegrationText.StatusPresetAppliedDefault);
+    }
+
+    private void ApplyCompactDarkPresetButton_Click(object sender, RoutedEventArgs e)
+    {
+        ApplyPreset(ShellIntegrationPreset.CompactDark, ShellIntegrationText.StatusPresetAppliedCompactDark);
+    }
+
+    private void ApplyMinimalLightPresetButton_Click(object sender, RoutedEventArgs e)
+    {
+        ApplyPreset(ShellIntegrationPreset.MinimalLight, ShellIntegrationText.StatusPresetAppliedMinimalLight);
+    }
+
+    private void ApplyPreset(ShellIntegrationPreset preset, string successMessage)
+    {
+        var success = _plugin.ApplyPreset(preset);
+        RefreshStatus(success ? successMessage : ShellIntegrationText.StatusPresetApplyFailed, !success);
     }
 }

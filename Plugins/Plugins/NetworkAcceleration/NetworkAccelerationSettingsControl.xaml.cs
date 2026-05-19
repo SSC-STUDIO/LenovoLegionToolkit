@@ -45,6 +45,7 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         _startupSummaryTextBlock = CreateValueTextBlock();
         _winsockSummaryTextBlock = CreateValueTextBlock();
         _tcpSummaryTextBlock = CreateValueTextBlock();
+        _plannedStepsSummaryTextBlock = CreateValueTextBlock();
 
         _statusIcon = new Wpf.Ui.Controls.SymbolIcon
         {
@@ -128,11 +129,13 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         summaryGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         summaryGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         summaryGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        summaryGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         summaryGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         summaryGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         AddSummaryRow(summaryGrid, 0, NetworkAccelerationText.AutoOptimizeOnStartup, _startupSummaryTextBlock!);
         AddSummaryRow(summaryGrid, 1, NetworkAccelerationText.ResetWinsockOnOptimize, _winsockSummaryTextBlock!);
         AddSummaryRow(summaryGrid, 2, NetworkAccelerationText.ResetTcpIpOnOptimize, _tcpSummaryTextBlock!);
+        AddSummaryRow(summaryGrid, 3, NetworkAccelerationText.PlannedStepsLabel, _plannedStepsSummaryTextBlock!);
         rightStack.Children.Add(summaryGrid);
 
         Grid.SetColumn(rightStack, 2);
@@ -270,6 +273,17 @@ public partial class NetworkAccelerationSettingsControl : UserControl
 
         foreach (var toggleSummary in GetToggleSummaries())
             toggleSummary.SummaryTextBlock.Text = NetworkAccelerationPresentation.GetToggleLabel(toggleSummary.CheckBox?.IsChecked == true);
+
+        if (_plannedStepsSummaryTextBlock != null)
+        {
+            var updatedSettings = NetworkAccelerationSettingsBinding.BuildUpdatedSettings(
+                _plugin.Settings,
+                _autoOptimizeOnStartupCheckBox,
+                _resetWinsockCheckBox,
+                _resetTcpIpCheckBox);
+            _plannedStepsSummaryTextBlock.Text = NetworkAccelerationPresentation.GetPlanSummary(
+                NetworkAccelerationPlugin.GetOptimizationPlan(updatedSettings));
+        }
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)

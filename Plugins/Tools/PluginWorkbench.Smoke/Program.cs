@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
@@ -113,6 +115,7 @@ internal static class Program
                 throw new InvalidOperationException("Optimization action button should be disabled in Preview mode.");
 
             Console.WriteLine("[workbench-smoke] Preview mode verified");
+            CaptureAndValidateVisual(window, options, plugin, "preview");
 
             var settingsTab = WaitForAutomationId(window, "SettingsTabItem", TimeSpan.FromSeconds(5));
             Select(settingsTab);
@@ -122,6 +125,7 @@ internal static class Program
                 TimeSpan.FromSeconds(10),
                 TimeSpan.FromMilliseconds(250));
             Console.WriteLine("[workbench-smoke] Settings host shell verified");
+            CaptureAndValidateVisual(window, options, plugin, "settings");
 
             if (plugin.Id.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
             {
@@ -140,6 +144,7 @@ internal static class Program
                         TimeSpan.FromSeconds(15),
                         settingsWindowHandle);
                     Console.WriteLine($"[workbench-smoke] Shell style window opened: {styleWindow.Current.Name}");
+                    CaptureAndValidateVisual(styleWindow, options, plugin, "shell-style-settings");
                     CloseWindow(styleWindow);
                 }
                 else
@@ -169,6 +174,7 @@ internal static class Program
             }
 
             Console.WriteLine("[workbench-smoke] Real Runtime mode verified");
+            CaptureAndValidateVisual(window, options, plugin, "real-runtime");
 
             CloseWindow(window);
             process.WaitForExit(5000);
@@ -416,6 +422,91 @@ internal static class Program
         var logTextBox = TryWaitForAutomationId(window, "LogTextBox", TimeSpan.FromSeconds(10));
         if (logTextBox is not null)
             Console.WriteLine($"[workbench-smoke] Workbench log:\n{ReadElementText(logTextBox)}");
+    }
+
+    private static void CaptureAndValidateVisual(AutomationElement window, SmokeOptions options, PluginDescriptor plugin, string stage)
+    {
+        var bounds = window.Current.BoundingRectangle;
+        if (bounds.Width <= 0 || bounds.Height <= 0)
+            throw new InvalidOperationException($"Visual capture target has invalid bounds for {plugin.Id}/{options.Theme}/{stage}: {bounds}.");
+
+        var left = (int)Math.Floor(bounds.Left);
+        var top = (int)Math.Floor(bounds.Top);
+        var width = Math.Max(1, (int)Math.Ceiling(bounds.Width));
+        var height = Math.Max(1, (int)Math.Ceiling(bounds.Height));
+
+        using var bitmap = new Bitmap(width, height);
+        using (var graphics = Graphics.FromImage(bitmap))
+        {
+            graphics.CopyFromScreen(left, top, 0, 0, new Size(width, height));
+        }
+
+        var stats = AnalyzeBitmap(bitmap);
+        if (stats.SampleCount == 0 || stats.LuminanceRange < 20 || stats.StandardDeviation < 6)
+        {
+            throw new InvalidOperationException(
+                $"Visual capture appears blank or unreadable for {plugin.Id}/{options.Theme}/{stage}. " +
+                $"Samples={stats.SampleCount}, range={stats.LuminanceRange:0.0}, stddev={stats.StandardDeviation:0.0}.");
+        }
+
+        var outputDirectory = Path.Combine(
+            options.RepositoryRoot,
+            "artifacts",
+            "workbench-visual",
+            $"{plugin.Id}-{options.Theme.ToLowerInvariant()}");
+        Directory.CreateDirectory(outputDirectory);
+
+        var screenshotPath = Path.Combine(outputDirectory, $"{stage}.png");
+        bitmap.Save(screenshotPath, ImageFormat.Png);
+
+        var statsPath = Path.Combine(outputDirectory, $"{stage}.json");
+        var report = new
+        {
+            plugin = plugin.Id,
+            pluginVersion = plugin.Version,
+            options.Theme,
+            stage,
+            screenshotPath,
+            bounds = new { left, top, width, height },
+            stats.SampleCount,
+            stats.MinLuminance,
+            stats.MaxLuminance,
+            stats.LuminanceRange,
+            stats.StandardDeviation
+        };
+        File.WriteAllText(statsPath, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine($"[workbench-smoke] Visual capture saved: {screenshotPath} (range={stats.LuminanceRange:0.0}, stddev={stats.StandardDeviation:0.0})");
+    }
+
+    private static VisualStats AnalyzeBitmap(Bitmap bitmap)
+    {
+        var stride = Math.Max(1, Math.Min(bitmap.Width, bitmap.Height) / 180);
+        var min = double.MaxValue;
+        var max = double.MinValue;
+        var sum = 0d;
+        var sumSquared = 0d;
+        var count = 0;
+
+        for (var y = 0; y < bitmap.Height; y += stride)
+        {
+            for (var x = 0; x < bitmap.Width; x += stride)
+            {
+                var pixel = bitmap.GetPixel(x, y);
+                var luminance = 0.2126 * pixel.R + 0.7152 * pixel.G + 0.0722 * pixel.B;
+                min = Math.Min(min, luminance);
+                max = Math.Max(max, luminance);
+                sum += luminance;
+                sumSquared += luminance * luminance;
+                count++;
+            }
+        }
+
+        if (count == 0)
+            return new VisualStats(0, 0, 0, 0, 0);
+
+        var mean = sum / count;
+        var variance = Math.Max(0, (sumSquared / count) - (mean * mean));
+        return new VisualStats(count, min, max, max - min, Math.Sqrt(variance));
     }
 
     private static AutomationElement WaitForMainWindow(int processId, TimeSpan timeout)
@@ -719,4 +810,10 @@ internal static class Program
 
     private sealed record SmokeOptions(string RepositoryRoot, string PluginId, string Theme);
     private sealed record PluginDescriptor(string FolderName, string Id, string Name, string Version);
+    private sealed record VisualStats(
+        int SampleCount,
+        double MinLuminance,
+        double MaxLuminance,
+        double LuminanceRange,
+        double StandardDeviation);
 }

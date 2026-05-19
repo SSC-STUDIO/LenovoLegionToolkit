@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.9] - 2026-05-20
+
+### Improved / 改进
+- Polished the feature dashboard with a wrapping status summary, stronger selectable preset rows, and a framed optimization plan area so network actions are easier to scan in the host plugin page / 打磨功能仪表盘，加入可换行状态摘要、更清晰的可选预设行和独立的优化计划区域，使网络操作在宿主插件页中更易扫描
+- Added an optimization-plan preview that shows the exact quick-optimization commands derived from the selected mode and toggles / 新增优化计划预览，展示当前模式与开关将触发的快速优化命令
+
 ## [1.1.8] - 2026-04-29
 
 ### Improved / 改进

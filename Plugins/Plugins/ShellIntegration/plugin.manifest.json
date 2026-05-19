@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "shell-integration",
   "name": "Shell Integration",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "minHostVersion": "3.6.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
@@ -18,7 +18,7 @@
     "optimizationActions": []
   },
   "package": {
-    "assetName": "shell-integration-v1.0.11.zip",
+    "assetName": "shell-integration-v1.0.12.zip",
     "requiredFiles": [
       "LenovoLegionToolkit.Plugins.ShellIntegration.dll",
       "LenovoLegionToolkit.Plugins.SDK.dll",

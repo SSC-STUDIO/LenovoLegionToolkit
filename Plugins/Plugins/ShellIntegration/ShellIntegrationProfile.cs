@@ -20,6 +20,13 @@ public enum ShellColorScheme
     Dark
 }
 
+public enum ShellIntegrationPreset
+{
+    Default,
+    CompactDark,
+    MinimalLight
+}
+
 public sealed class ShellIntegrationProfile
 {
     public bool EnableShellIntegration { get; set; } = true;
@@ -46,6 +53,61 @@ public sealed class ShellIntegrationProfile
     public string TintColor { get; set; } = "#DCE6FF";
 
     public static ShellIntegrationProfile CreateDefault() => new();
+
+    public static ShellIntegrationProfile CreatePreset(ShellIntegrationPreset preset) => preset switch
+    {
+        ShellIntegrationPreset.CompactDark => new ShellIntegrationProfile
+        {
+            EnableShellIntegration = true,
+            EnableMotionEffects = true,
+            EnableShadow = true,
+            UseCompactView = true,
+            BackgroundEffect = ShellVisualEffect.Acrylic,
+            ColorScheme = ShellColorScheme.Dark,
+            BackgroundOpacity = 84,
+            ShowDelay = 80,
+            ShadowSize = 12,
+            ShadowOpacity = 26,
+            ShadowOffset = 5,
+            ItemRadius = 1,
+            BorderRadius = 1,
+            TipTimeSeconds = 1.0,
+            ThemeName = "compact-dark",
+            AccentColor = "#5B8CFF",
+            BackgroundColor = "#111827",
+            HoverColor = "#1F2937",
+            TextColor = "#F9FAFB",
+            MutedTextColor = "#9CA3AF",
+            SelectedTextColor = "#FFFFFF",
+            TintColor = "#1D4ED8"
+        },
+        ShellIntegrationPreset.MinimalLight => new ShellIntegrationProfile
+        {
+            EnableShellIntegration = true,
+            EnableMotionEffects = false,
+            EnableShadow = false,
+            UseCompactView = false,
+            BackgroundEffect = ShellVisualEffect.None,
+            ColorScheme = ShellColorScheme.Light,
+            BackgroundOpacity = 100,
+            ShowDelay = 160,
+            ShadowSize = 0,
+            ShadowOpacity = 0,
+            ShadowOffset = 0,
+            ItemRadius = 0,
+            BorderRadius = 0,
+            TipTimeSeconds = 0.8,
+            ThemeName = "minimal-light",
+            AccentColor = "#2563EB",
+            BackgroundColor = "#FFFFFF",
+            HoverColor = "#E5E7EB",
+            TextColor = "#111827",
+            MutedTextColor = "#6B7280",
+            SelectedTextColor = "#FFFFFF",
+            TintColor = "#BFDBFE"
+        },
+        _ => CreateDefault()
+    };
 
     public ShellIntegrationProfile Normalize()
     {

@@ -270,6 +270,40 @@ public class ViveToolDownloadServiceTests
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task ExportFeaturesToFileAsync_WithValidPath_WritesOrderedJsonPayload()
+    {
+        var (_, service) = CreateService();
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json", "vivetool-export-");
+        FeatureFlagInfo[] features =
+        [
+            new FeatureFlagInfo { Id = 200, Name = "Beta", Description = "Second", Status = FeatureFlagStatus.Enabled },
+            new FeatureFlagInfo { Id = 100, Name = "Alpha", Description = "First", Status = FeatureFlagStatus.Disabled }
+        ];
+
+        var result = await service.ExportFeaturesToFileAsync(tempFile.FilePath, features);
+        var content = await File.ReadAllTextAsync(tempFile.FilePath);
+
+        Assert.True(result);
+        Assert.Contains(@"""id"": 100", content);
+        Assert.Contains(@"""name"": ""Alpha""", content);
+        Assert.Contains(@"""status"": ""Disabled""", content);
+        Assert.True(content.IndexOf(@"""id"": 100", StringComparison.Ordinal) < content.IndexOf(@"""id"": 200", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task ExportFeaturesToFileAsync_WithInvalidPath_ReturnsFalse(string? filePath)
+    {
+        var (_, service) = CreateService();
+
+        var result = await service.ExportFeaturesToFileAsync(filePath!, Array.Empty<FeatureFlagInfo>());
+
+        Assert.False(result);
+    }
+
     private static (ViveToolPathService PathService, ViveToolDownloadService Service) CreateService()
     {
         var pathService = new ViveToolPathService();

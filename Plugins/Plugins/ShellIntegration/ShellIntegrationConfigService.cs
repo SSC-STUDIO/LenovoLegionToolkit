@@ -87,6 +87,34 @@ public sealed class ShellIntegrationConfigService
         }
     }
 
+    public bool TryLoadProfileFromFile(string filePath, out ShellIntegrationProfile profile, out string? errorMessage)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("Profile file path is required.", nameof(filePath));
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Profile file was not found.", filePath);
+
+            var json = File.ReadAllText(filePath, Encoding.UTF8);
+            var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
+            if (loaded is null)
+                throw new InvalidDataException("Profile file is empty or invalid.");
+
+            profile = loaded.Normalize();
+            errorMessage = null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to load profile from '{filePath}': {ex.Message}", ex);
+            profile = ShellIntegrationProfile.CreateDefault();
+            errorMessage = ex.Message;
+            return false;
+        }
+    }
+
     public void SaveProfile(ShellIntegrationProfile profile)
     {
         ArgumentNullException.ThrowIfNull(profile);
@@ -94,6 +122,66 @@ public sealed class ShellIntegrationConfigService
         Directory.CreateDirectory(LocalProfileRoot);
         var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
         File.WriteAllText(LocalProfilePath, json, new UTF8Encoding(false));
+    }
+
+    public ShellIntegrationProfile ResetProfile()
+    {
+        var profile = ShellIntegrationProfile.CreateDefault();
+        SaveProfile(profile);
+        return profile;
+    }
+
+    public ShellIntegrationProfile ApplyPreset(ShellIntegrationPreset preset)
+    {
+        var profile = ShellIntegrationProfile.CreatePreset(preset).Normalize();
+        SaveProfile(profile);
+        return profile;
+    }
+
+    public bool ExportProfile(string filePath, ShellIntegrationProfile profile, out string? errorMessage)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("Export file path is required.", nameof(filePath));
+
+            var directoryPath = Path.GetDirectoryName(filePath);
+            if (string.IsNullOrWhiteSpace(directoryPath))
+                throw new ArgumentException("Export file path must include a directory.", nameof(filePath));
+
+            Directory.CreateDirectory(directoryPath);
+            var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
+            File.WriteAllText(filePath, json, new UTF8Encoding(false));
+            errorMessage = null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to export profile to '{filePath}': {ex.Message}", ex);
+            errorMessage = ex.Message;
+            return false;
+        }
+    }
+
+    public bool ImportProfile(string filePath, out ShellIntegrationProfile profile, out string? errorMessage)
+    {
+        if (!TryLoadProfileFromFile(filePath, out profile, out errorMessage))
+            return false;
+
+        try
+        {
+            SaveProfile(profile);
+            errorMessage = null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to import profile from '{filePath}': {ex.Message}", ex);
+            errorMessage = ex.Message;
+            return false;
+        }
     }
 
     public ShellManagedConfigPaths? ResolveManagedPaths(string? shellInstallPath)
