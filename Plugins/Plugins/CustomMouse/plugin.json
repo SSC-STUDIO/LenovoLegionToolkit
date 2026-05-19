@@ -1,1 +1,10 @@
-@D:\EliuaK_Csy\Working-Paper\My-Program\LenovoLegionToolkit-Plugins\Plugins\CustomMouse\plugin.json
+{
+  "Id": "custom-mouse",
+  "Name": "Custom Mouse",
+  "Version": "1.0.16",
+  "MinLltVersion": "3.6.1",
+  "Author": "SSC-STUDIO",
+  "IsSystemPlugin": false,
+  "Repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "Issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
+}
