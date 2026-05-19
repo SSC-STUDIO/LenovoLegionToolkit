@@ -64,6 +64,12 @@
   <data name="ApplyCursorThemeNowButton" xml:space="preserve">
     <value>Apply Cursor Theme Now</value>
   </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Sync from Windows</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Restore Windows Default</value>
+  </data>
   <data name="ApplyToWindowsButton" xml:space="preserve">
     <value>Apply to Windows</value>
   </data>
@@ -118,6 +124,15 @@
   <data name="StatusReloaded" xml:space="preserve">
     <value>Current plugin settings reloaded.</value>
   </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>Current Windows mouse state synced.</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Windows default cursor scheme restored.</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>Failed to restore the Windows default cursor scheme.</value>
+  </data>
   <data name="StatusResetDefaults" xml:space="preserve">
     <value>Mouse profile reset to defaults.</value>
   </data>
@@ -153,6 +168,9 @@
   </data>
   <data name="CursorThemeModeDark" xml:space="preserve">
     <value>Dark</value>
+  </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Windows Default</value>
   </data>
   <data name="CursorThemeModeApplied" xml:space="preserve">
     <value>Cursor theme mode set to: {0}.</value>

@@ -46,17 +46,23 @@ public static class CustomMouseText
     public static string CursorHint => T(nameof(CursorHint), "Cursor appearance can be applied from this page or from System Optimization extension actions.");
     public static string ApplyToWindowsButton => T(nameof(ApplyToWindowsButton), "Apply to Windows");
     public static string ApplyCursorThemeNowButton => T(nameof(ApplyCursorThemeNowButton), "Apply Cursor Theme Now");
+    public static string SyncFromWindowsButton => T(nameof(SyncFromWindowsButton), "Sync from Windows");
+    public static string RestoreWindowsDefaultButton => T(nameof(RestoreWindowsDefaultButton), "Restore Windows Default");
     public static string ReloadButton => T(nameof(ReloadButton), "Reload");
     public static string StatusApplyPointerFail => T(nameof(StatusApplyPointerFail), "Failed to apply pointer speed.");
     public static string StatusApplySwapFail => T(nameof(StatusApplySwapFail), "Failed to apply button swap setting.");
     public static string StatusWindowsApplied => T(nameof(StatusWindowsApplied), "Windows mouse settings applied.");
     public static string StatusCursorApplyFailed => T(nameof(StatusCursorApplyFailed), "Failed to apply custom cursor style. Try running as administrator if your system blocks INF installation.");
     public static string StatusReloaded => T(nameof(StatusReloaded), "Current plugin settings reloaded.");
+    public static string StatusSyncedFromWindows => T(nameof(StatusSyncedFromWindows), "Current Windows mouse state synced.");
+    public static string StatusWindowsDefaultRestored => T(nameof(StatusWindowsDefaultRestored), "Windows default cursor scheme restored.");
+    public static string StatusRestoreWindowsDefaultFailed => T(nameof(StatusRestoreWindowsDefaultFailed), "Failed to restore the Windows default cursor scheme.");
 
     public static string CursorThemeModeLabel => T(nameof(CursorThemeModeLabel), "Cursor Theme Mode");
     public static string CursorThemeModeAuto => T(nameof(CursorThemeModeAuto), "Follow System");
     public static string CursorThemeModeLight => T(nameof(CursorThemeModeLight), "Light");
     public static string CursorThemeModeDark => T(nameof(CursorThemeModeDark), "Dark");
+    public static string CursorThemeModeWindowsDefault => T(nameof(CursorThemeModeWindowsDefault), "Windows Default");
     public static string CursorThemeModeApplied => T(nameof(CursorThemeModeApplied), "Cursor theme mode set to: {0}.");
 
     public static string FormatCursorApplied(string? theme)
