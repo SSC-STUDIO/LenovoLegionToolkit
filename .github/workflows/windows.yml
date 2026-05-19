@@ -1,0 +1,50 @@
+name: Windows CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test-windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore NuGet packages
+        run: dotnet restore --locked-mode
+
+      - name: Build Debug configuration
+        run: dotnet build --configuration Debug --no-restore -warnaserror -v:minimal
+
+      - name: Build Release configuration
+        run: dotnet build --configuration Release --no-restore -warnaserror -v:minimal
+
+      - name: Run test suite
+        run: dotnet test --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=TestResults/windows-test-results.xml"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults/*.xml
+
+      - name: Publish test results to GitHub Checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-merge
+          reportgenerator -reports:TestResults/*.xml -targetdir:TestReportsReports -reporttypes:Summary
+          # Optionally post comments or analysis using GitHub CLI if needed
