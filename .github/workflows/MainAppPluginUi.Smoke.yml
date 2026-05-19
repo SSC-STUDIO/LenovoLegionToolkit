@@ -19,7 +19,7 @@ on:
       plugin_sources:
         description: Comma-separated plugin install sources (<pluginId>=online|local)
         required: false
-        default: *=online
+        default: '*=online'
       screenshot_mode:
         description: Screenshot capture policy
         type: choice
