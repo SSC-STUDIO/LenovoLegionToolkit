@@ -30,11 +30,20 @@ public partial class GodModeSettingsWindow
     private GodModeState? _state;
     private Dictionary<PowerModeState, GodModeDefaults>? _defaults;
     private bool _isRefreshing;
+    private bool _initialDefaultsApplied;
     private readonly Snackbar _snackBar;
+    private readonly PowerModeState? _initialDefaultsSourceMode;
 
-    public GodModeSettingsWindow()
+    public GodModeSettingsWindow(PowerModeState? initialDefaultsSourceMode = null)
     {
         InitializeComponent();
+        _initialDefaultsSourceMode = initialDefaultsSourceMode switch
+        {
+            PowerModeState.Performance => PowerModeState.Performance,
+            PowerModeState.Extreme => PowerModeState.Performance,
+            _ => null
+        };
+
         _snackBar = new Snackbar(_snackBarPresenter)
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -76,6 +85,14 @@ public partial class GodModeSettingsWindow
                 throw new InvalidOperationException($"{nameof(_defaults)} are null");
 
             await SetStateAsync(_state.Value);
+
+            if (!_initialDefaultsApplied
+                && _initialDefaultsSourceMode is { } initialDefaultsSourceMode
+                && _defaults.TryGetValue(initialDefaultsSourceMode, out var defaults))
+            {
+                SetDefaults(defaults);
+                _initialDefaultsApplied = true;
+            }
 
             await loadingTask;
 

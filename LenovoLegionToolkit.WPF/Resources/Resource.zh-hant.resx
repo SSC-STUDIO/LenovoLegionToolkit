@@ -575,24 +575,22 @@
     <value>鎖定 Fn 鍵</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>警告！
-一些筆記本可以使用更低的功耗限制，但【一定小心】，這個選項可能會導致未知後果！除非你瞭解【此選項的準確意義】，否則請保持這個選項爲 0。</value>
+    <value>允許把可設的最小功耗限制繼續下探。很多人會把這裡當作「降壓」入口，但它調整的是功耗限制範圍，不是電壓；不了解含義時請保持為 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>最小功耗限制偏移量</value>
+    <value>更低功耗限制偏移量</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>警告！
-一些筆記本可以使用更高的功耗限制，但【一定小心】，這個選項可能會導致未知後果！除非你瞭解【此選項的準確意義】，否則請保持這個選項爲 0。</value>
+    <value>允許把可設的最大功耗限制繼續上探。這個選項可能導致不穩定或額外發熱；不了解含義時請保持為 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>最大功耗限制偏移量</value>
+    <value>更高功耗限制偏移量</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>請謹慎修改下方選項！在你不知道下方選項的準確意義前，請勿修改！</value>
+    <value>這裡包含功耗限制下探/上探偏移。你想找的「降壓」入口就在這裡；不了解含義時請保持為 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
-    <value>高級選項</value>
+    <value>高級功耗調校</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
     <value>長時負載功耗限制 (Cross Loading)</value>
@@ -1029,7 +1027,7 @@
     <value>設置</value>
   </data>
   <data name="PowerModeControl_Title" xml:space="preserve">
-    <value>性能模式</value>
+    <value>功耗模式</value>
   </data>
   <data name="PowerModeControl_Warning" xml:space="preserve">
     <value>在未插入電源適配器的情況下，性能模式可能無法正常生效。</value>

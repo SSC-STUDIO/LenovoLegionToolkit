@@ -23,6 +23,10 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
     private readonly PowerModeListener _powerModeListener = IoCContainer.Resolve<PowerModeListener>();
 
     private readonly ThrottleLastDispatcher _throttleDispatcher = new(TimeSpan.FromMilliseconds(500), nameof(PowerModeControl));
+    private readonly StackPanel _accessoryStackPanel = new()
+    {
+        Orientation = Orientation.Horizontal,
+    };
 
     private readonly Button _configButton = new()
     {
@@ -39,6 +43,8 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
         Subtitle = Resource.PowerModeControl_Message;
 
         AutomationProperties.SetName(_configButton, Resource.PowerModeControl_Title);
+        AutomationProperties.SetHelpText(_configButton, Resource.PowerModeControl_Settings);
+        _configButton.Click += ConfigButton_Click;
 
         _thermalModeListener.Changed += ThermalModeListener_Changed;
         _powerModeListener.Changed += PowerModeListener_Changed;
@@ -83,6 +89,8 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
         switch (newValue)
         {
             case PowerModeState.Balance when mi.Properties.SupportsAIMode:
+            case PowerModeState.Performance when mi.Properties.SupportsGodMode:
+            case PowerModeState.Extreme when mi.Properties.SupportsGodMode:
             case PowerModeState.GodMode when mi.Properties.SupportsGodMode:
                 _configButton.ToolTip = Resource.PowerModeControl_Settings;
                 _configButton.Visibility = Visibility.Visible;
@@ -106,16 +114,13 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     protected override FrameworkElement GetAccessory(ComboBox comboBox)
     {
-        _configButton.Click += ConfigButton_Click;
-
-        var stackPanel = new StackPanel
+        if (_accessoryStackPanel.Children.Count == 0)
         {
-            Orientation = Orientation.Horizontal,
-        };
-        stackPanel.Children.Add(_configButton);
-        stackPanel.Children.Add(comboBox);
+            _accessoryStackPanel.Children.Add(_configButton);
+            _accessoryStackPanel.Children.Add(comboBox);
+        }
 
-        return stackPanel;
+        return _accessoryStackPanel;
     }
 
     private void ConfigButton_Click(object sender, RoutedEventArgs e)
@@ -131,9 +136,11 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
                     window.ShowDialog();
                     break;
                 }
+            case PowerModeState.Performance:
+            case PowerModeState.Extreme:
             case PowerModeState.GodMode:
                 {
-                    var window = new GodModeSettingsWindow { Owner = Window.GetWindow(this) };
+                    var window = new GodModeSettingsWindow(state) { Owner = Window.GetWindow(this) };
                     window.ShowDialog();
                     break;
                 }
