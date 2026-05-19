@@ -298,7 +298,8 @@ After downloading translations:
    - Automatic updates via Windows Package Manager
 
 3. **Scoop**
-   - `scoop install extras/lenovolegiontoolkit`
+   - `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`
+   - `scoop install ssc-studio/lenovolegiontoolkit`
    - Community maintained bucket
 
 ### Alternative Channels
@@ -329,21 +330,21 @@ Use the GitHub Release URL as the winget installer source. Do not use mirror URL
 
 ### Scoop Submission
 
-The maintainer workflow for Scoop lives under `Packaging/scoop`. The canonical submission target is the upstream `ScoopInstaller/Extras` bucket.
+The maintainer workflow for Scoop lives under `Packaging/scoop`. The authoritative distribution target is the custom `SSC-STUDIO/scoop-bucket` repository.
 
 Before submitting a new version:
 
 1. Publish a stable GitHub Release with the final installer and checksum file.
 2. Do not draft or submit a Scoop manifest update until the installer URL and SHA256 are final.
-3. Update the community `lenovolegiontoolkit` manifest in `ScoopInstaller/Extras` with the new version, URL, and hash.
+3. Update the `lenovolegiontoolkit` manifest in `SSC-STUDIO/scoop-bucket` with the new version, URL, and hash.
 4. Validate on a clean machine:
    ```powershell
-   scoop bucket add extras
-   scoop install extras/lenovolegiontoolkit
-   scoop update extras/lenovolegiontoolkit
+   scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
+   scoop install ssc-studio/lenovolegiontoolkit
+   scoop update ssc-studio/lenovolegiontoolkit
    scoop uninstall lenovolegiontoolkit
    ```
-5. Submit the manifest update to `ScoopInstaller/Extras`.
+5. Push the manifest update to `SSC-STUDIO/scoop-bucket`.
 
 ### High-Traffic Release Readiness
 
@@ -352,7 +353,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 - Pin the current GitHub Release URL, winget command, and SHA256 file in all announcement posts.
 - Link to the active `SSC-STUDIO/LenovoLegionToolkit` repository in all promotion content.
 - Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
-- Mention Scoop as a community-maintained channel, not the canonical release source.
+- Mention Scoop as a maintained package channel backed by `SSC-STUDIO/scoop-bucket`.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
 - Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.

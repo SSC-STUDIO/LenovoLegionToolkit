@@ -48,7 +48,7 @@ Lenovo Legion Toolkit (LLT) 是为联想和摩托罗拉游戏设备打造的轻�
 
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest) 下载最新版安装包。
 - **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
-- **Scoop**：使用社区维护 bucket 时可执行 `scoop install extras/lenovolegiontoolkit`。
+- **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。
 - **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
 
 #### 接下来的步骤

@@ -53,7 +53,7 @@ Use the current `SSC-STUDIO/LenovoLegionToolkit` releases for maintained builds.
 
 - **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest).
 - **winget**: Once the package is accepted by Windows Package Manager, install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`.
-- **Scoop**: `scoop install extras/lenovolegiontoolkit` when using the community-maintained Scoop bucket.
+- **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
 #### Next steps
