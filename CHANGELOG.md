@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.7.0] - 2026-05-19
+
 ### Fixed / 修复
 - 修复传感器 CPU 功耗 WMI 查询和单位归一化，并在 Lenovo 温度传感器不可用时回退读取 ACPI thermal zone，提升 CPU 温度与功耗显示可用性 / Fixed sensor CPU wattage WMI query and unit normalization, and added ACPI thermal-zone fallback when Lenovo temperature sensors are unavailable to improve CPU temperature and power readouts
 - 修复插件 ZIP 提取中的路径遍历漏洞（Zip Slip），防止恶意插件包在提取过程中写入目标目录之外的文件 / Fixed Zip Slip path traversal vulnerability during plugin ZIP extraction to prevent malicious packages from writing files outside the intended extraction directory

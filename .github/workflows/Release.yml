@@ -199,15 +199,15 @@ jobs:
 
         $section
 
-        ## Downloads / 下载
+        ## Downloads
         - $env:SETUP_ASSET
         - $env:ZIP_ASSET
         - $env:HASH_ASSET
 
-        ## Compatibility / 兼容性
+        ## Compatibility
         - OS: Windows 10/11 x64
 
-        ## Verification / 校验
+        ## Verification
         - `CertUtil -hashfile <file> SHA256`
         "@
         Set-Content -Path (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md") -Value $releaseNotes

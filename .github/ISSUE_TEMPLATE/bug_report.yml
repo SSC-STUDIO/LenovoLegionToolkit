@@ -29,7 +29,7 @@ body:
     id: version
     attributes:
       label: LLT Version
-      placeholder: "3.6.15"
+      placeholder: "3.7.0"
     validations:
       required: true
   - type: input
