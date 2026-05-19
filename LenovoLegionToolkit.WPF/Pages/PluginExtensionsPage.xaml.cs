@@ -81,28 +81,10 @@ private string _currentSearchText = string.Empty;
             descriptionTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Description", "Install and manage plugins to extend functionality", Resource.Culture);
         }
 
-        var detailsLabelTextBlock = this.FindName("_detailsLabelTextBlock") as System.Windows.Controls.TextBlock;
-        if (detailsLabelTextBlock != null)
-        {
-            detailsLabelTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DetailsLabel", "Details", Resource.Culture);
-        }
-
-        var usageGuideLabelTextBlock = this.FindName("_usageGuideLabelTextBlock") as System.Windows.Controls.TextBlock;
-        if (usageGuideLabelTextBlock != null)
-        {
-            usageGuideLabelTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_UsageGuideLabel", "Usage Guide", Resource.Culture);
-        }
-
         if (_bulkInstallButton != null)
         {
             _bulkInstallButton.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAll", "Install All", Resource.Culture);
             _bulkInstallButton.ToolTip = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAllTooltip", "Install all available plugins", Resource.Culture);
-        }
-
-        if (_deprecationNotice != null)
-        {
-            _deprecationNotice.Title = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DeprecationTitle", "Toolkit Deprecated", Resource.Culture);
-            _deprecationNotice.Message = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DeprecationMessage", "The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools.", Resource.Culture);
         }
 
         UpdateSummaryMetrics();
@@ -168,9 +150,6 @@ private string _currentSearchText = string.Empty;
         if (_pluginListPanel != null)
             _pluginListPanel.Visibility = isLoading ? Visibility.Hidden : Visibility.Visible;
 
-        if (_pluginDetailsPanel != null)
-            _pluginDetailsPanel.Visibility = isLoading ? Visibility.Hidden : Visibility.Visible;
-
         if (!isLoading)
             return;
 
@@ -186,12 +165,14 @@ private string _currentSearchText = string.Empty;
 
     private void UpdateBulkActionButtonsVisibility()
     {
+        ReconcileAvailableUpdatesWithInstalledVersions();
+
         if (_bulkUpdateButton != null)
-            _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
+            _bulkUpdateButton.Visibility = Visibility.Collapsed;
 
         if (_bulkInstallButton != null)
         {
-            _bulkInstallButton.Visibility = GetInstallableOnlinePluginCount() > 0 ? Visibility.Visible : Visibility.Collapsed;
+            _bulkInstallButton.Visibility = Visibility.Collapsed;
             _bulkInstallButton.ToolTip = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAllTooltip", "Install all available plugins", Resource.Culture);
         }
 
@@ -620,8 +601,8 @@ private string _currentSearchText = string.Empty;
                     Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - IsInstalled check returned {isInstalled}");
                 }
 
-                var updateAvailable = isInstalled && _availableUpdates.Any(au => au.Id == plugin.Id);
-                var updatePlugin = updateAvailable ? _availableUpdates.FirstOrDefault(au => au.Id == plugin.Id) : null;
+                PluginManifest? updatePlugin = null;
+                var updateAvailable = isInstalled && TryGetAvailableUpdate(plugin.Id, out updatePlugin);
 
                 // Get changelog info
                 var changelog = updateAvailable ? (updatePlugin?.Changelog ?? string.Empty) : string.Empty;
@@ -1086,21 +1067,60 @@ private string _currentSearchText = string.Empty;
         if (plugin == null)
             return false;
 
+        return TryGetAvailableUpdate(pluginId, out _);
+    }
+
+    private bool TryGetAvailableUpdate(string pluginId, out PluginManifest? updatePlugin)
+    {
+        updatePlugin = _availableUpdates.FirstOrDefault(update =>
+            string.Equals(update.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+
+        if (updatePlugin == null)
+            return false;
+
+        return IsAvailableUpdateNewerThanInstalled(pluginId, updatePlugin.Version);
+    }
+
+    private bool IsAvailableUpdateNewerThanInstalled(string pluginId, string? availableVersion)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId) || !_pluginManager.IsInstalled(pluginId))
+            return false;
+
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
         if (metadata == null || string.IsNullOrWhiteSpace(metadata.Version))
-            return false;
+            return true;
 
-        var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
-        if (onlinePlugin == null || string.IsNullOrWhiteSpace(onlinePlugin.Version))
-            return false;
-
-        if (Version.TryParse(onlinePlugin.Version, out var onlineVersion) &&
-            Version.TryParse(metadata.Version, out var installedVersion))
+        if (string.IsNullOrWhiteSpace(availableVersion))
         {
-            return onlineVersion > installedVersion;
+            availableVersion = _onlinePlugins
+                .FirstOrDefault(plugin => string.Equals(plugin.Id, pluginId, StringComparison.OrdinalIgnoreCase))
+                ?.Version;
         }
 
-        return false;
+        return Version.TryParse(availableVersion, out var onlineVersion) &&
+               Version.TryParse(metadata.Version, out var installedVersion) &&
+               onlineVersion > installedVersion;
+    }
+
+    private void ReconcileAvailableUpdatesWithInstalledVersions()
+    {
+        if (_availableUpdates.Count == 0)
+            return;
+
+        var removedCount = _availableUpdates.RemoveAll(update =>
+            !IsAvailableUpdateNewerThanInstalled(update.Id, update.Version));
+
+        if (removedCount > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
+            Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: removed {removedCount} stale plugin update marker(s)");
+    }
+
+    private void RemoveAvailableUpdate(string pluginId)
+    {
+        var removedCount = _availableUpdates.RemoveAll(update =>
+            string.Equals(update.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+
+        if (removedCount > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
+            Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: cleared update marker for {pluginId}");
     }
 
     private async void PluginUpdateButton_Click(object sender, RoutedEventArgs e)
@@ -1175,6 +1195,8 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
+                RemoveAvailableUpdate(pluginId);
+                ReconcileAvailableUpdatesWithInstalledVersions();
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
 
@@ -1312,7 +1334,7 @@ private string _currentSearchText = string.Empty;
             if (viewModel != null)
             {
                 var isInstalled = _pluginManager.IsInstalled(pluginId);
-                var updateAvailable = isInstalled && _availableUpdates.Any(au => au.Id == pluginId);
+                var updateAvailable = isInstalled && TryGetAvailableUpdate(pluginId, out _);
 
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
@@ -1606,10 +1628,10 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
+                RemoveAvailableUpdate(manifest.Id);
+                ReconcileAvailableUpdatesWithInstalledVersions();
                 LocalizationHelper.SetPluginResourceCultures();
-
-                // After rescanning plugins, immediately update specific plugin's UI state
-                UpdateSpecificPluginUI(manifest.Id);
+                UpdateAllPluginsUI();
 
                 // Refresh navigation items so the plugin appears in the sidebar
                 if (Application.Current.MainWindow is MainWindow mainWindow)

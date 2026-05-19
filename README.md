@@ -12,9 +12,11 @@
 
 <br />
 
-Lenovo Legion Toolkit (LLT) is an actively developed, independent project under GPL-3.0. It focuses on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensions, and ongoing Windows support.
+Lenovo Legion Toolkit (LLT) is a lightweight Lenovo Vantage alternative for Lenovo and Motorola gaming devices. It keeps hardware control direct, runs without background services, uses very little memory and CPU, and contains no telemetry.
 
-It runs no background services, uses less memory, uses virtually no CPU, and contains no telemetry. Just like Lenovo Vantage, this application is Windows only.
+Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add tools and device-specific workflows without bloating the base application.
+
+LLT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Just like Lenovo Vantage, this application is Windows only.
 
 
 <img src="Assets/Screenshot_main.png" width="700" />
@@ -137,12 +139,11 @@ The app allows to:
 - Disable/enable Lenovo Vantage, Legion Zone and Lenovo Hotkeys service without uninstalling them.
 - ... and more!
 
-### Tools
+### Plugin Extensions
 
-> [!DEPRECATED]
-> The Tools feature has been deprecated in favor of the Plugin System. Please use the Plugin Extensions page to install and manage tools.
+The Plugin Extensions page is the primary way to grow LLT beyond the built-in runtime. It lets you browse available plugins, install or update them directly from the online repository, open plugin pages, configure supported plugins, and remove them cleanly when they are no longer needed.
 
-The Tools feature provided a collection of system tools organized by categories such as CPU, GPU, Memory, Storage, Gaming, Display, Peripherals, System Diagnostic, Stress Testing, and Other tools. These tools are now available as plugins that can be installed and managed through the Plugin Extensions page.
+Plugins are used to deliver tools and workflows that used to live in separate sections. This keeps the main app focused while still allowing CPU, GPU, networking, shell integration, mouse customization, and other add-ons to evolve independently.
 
 ### Custom Mode
 

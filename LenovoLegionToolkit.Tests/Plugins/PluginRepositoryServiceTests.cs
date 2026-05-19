@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -161,6 +162,38 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
+    }
+
+    [Fact]
+    public void LocalPackageFallbackVersionGate_ShouldRejectOlderLocalPackage()
+    {
+        // Arrange
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "IsLocalPackageVersionUsableForFallback",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        // Act
+        var result = method!.Invoke(null, ["1.0.16", "1.0.15"]);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Theory]
+    [InlineData("1.0.16", "1.0.16")]
+    [InlineData("1.0.16", "1.0.17")]
+    public void LocalPackageFallbackVersionGate_ShouldAcceptSameOrNewerLocalPackage(string requestedVersion, string localVersion)
+    {
+        // Arrange
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "IsLocalPackageVersionUsableForFallback",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        // Act
+        var result = method!.Invoke(null, [requestedVersion, localVersion]);
+
+        // Assert
+        result.Should().Be(true);
     }
 
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)

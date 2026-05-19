@@ -603,6 +603,15 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
+            var localVersion = TryReadLocalPluginVersion(localPluginDirectory);
+            if (!IsLocalPackageVersionUsableForFallback(manifest.Version, localVersion))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Local package fallback aborted for {manifest.Id}: local version '{localVersion ?? "<unknown>"}' is older than requested version '{manifest.Version}'");
+
+                return false;
+            }
+
             var destinationDirectory = Path.GetDirectoryName(destinationPath);
             if (!string.IsNullOrWhiteSpace(destinationDirectory))
                 Directory.CreateDirectory(destinationDirectory);
@@ -629,6 +638,75 @@ public class PluginRepositoryService : IDisposable
                 Log.Instance.Trace($"Local package fallback failed for {manifest.Id}: {ex.Message}", ex);
             return false;
         }
+    }
+
+    private static bool IsLocalPackageVersionUsableForFallback(string requestedVersion, string? localVersion)
+    {
+        if (string.IsNullOrWhiteSpace(requestedVersion))
+            return true;
+
+        if (string.IsNullOrWhiteSpace(localVersion))
+            return false;
+
+        if (Version.TryParse(localVersion, out var parsedLocalVersion) &&
+            Version.TryParse(requestedVersion, out var parsedRequestedVersion))
+        {
+            return parsedLocalVersion >= parsedRequestedVersion;
+        }
+
+        return string.Equals(localVersion.Trim(), requestedVersion.Trim(), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string? TryReadLocalPluginVersion(string pluginDirectory)
+    {
+        foreach (var manifestPath in EnumerateLocalVersionManifestPaths(pluginDirectory))
+        {
+            try
+            {
+                using var stream = File.OpenRead(manifestPath);
+                using var document = JsonDocument.Parse(stream);
+
+                var version = TryGetJsonStringProperty(document.RootElement, "version");
+                if (!string.IsNullOrWhiteSpace(version))
+                    return version;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to read local plugin version from {manifestPath}: {ex.Message}", ex);
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> EnumerateLocalVersionManifestPaths(string pluginDirectory)
+    {
+        var candidateNames = new[]
+        {
+            "plugin.manifest.json",
+            "plugin.json",
+            "Plugin.json"
+        };
+
+        return candidateNames
+            .Select(fileName => Path.Combine(pluginDirectory, fileName))
+            .Where(File.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static string? TryGetJsonStringProperty(JsonElement element, string propertyName)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase) &&
+                property.Value.ValueKind == JsonValueKind.String)
+            {
+                return property.Value.GetString();
+            }
+        }
+
+        return null;
     }
 
     private string? FindLocalPluginDirectory(string pluginId)
