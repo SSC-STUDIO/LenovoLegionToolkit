@@ -75,19 +75,17 @@ public class UpdateChecker
                     Log.Instance.Trace($"Checking...");
 
                 var adapter = new HttpClientAdapter(_httpClientFactory.CreateHandler);
-                var productInformation = new ProductHeaderValue("LenovoLegionToolkit-UpdateChecker");
+                var productInformation = new ProductHeaderValue($"{AppIdentity.CompactName}-UpdateChecker");
                 var connection = new Connection(productInformation, adapter);
                 var githubClient = new GitHubClient(connection);
                 
                 // Get update repository from settings, fallback to default if not configured
-                const string DefaultUpdateRepositoryOwner = "SSC-STUDIO";
-                const string DefaultUpdateRepositoryName = "LenovoLegionToolkit";
                 var repositoryOwner = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) 
                     ? _updateCheckSettings.Store.UpdateRepositoryOwner 
-                    : DefaultUpdateRepositoryOwner;
+                    : AppIdentity.RepositoryOwner;
                 var repositoryName = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryName) 
                     ? _updateCheckSettings.Store.UpdateRepositoryName 
-                    : DefaultUpdateRepositoryName;
+                    : AppIdentity.RepositoryName;
                 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking updates from repository: {repositoryOwner}/{repositoryName}");
@@ -184,7 +182,7 @@ public class UpdateChecker
     {
         using (await _updateSemaphore.LockAsync(cancellationToken).ConfigureAwait(false))
         {
-            var tempPath = Path.Combine(Folders.Temp, $"LenovoLegionToolkitSetup_{Guid.NewGuid()}.exe");
+            var tempPath = Path.Combine(Folders.Temp, $"{AppIdentity.CompactName}Setup_{Guid.NewGuid()}.exe");
             var latestUpdate = _updates.OrderByDescending(u => u.Version).FirstOrDefault();
 
             if (latestUpdate.Equals(default))

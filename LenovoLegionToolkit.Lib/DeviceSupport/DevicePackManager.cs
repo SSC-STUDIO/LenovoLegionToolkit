@@ -1,0 +1,191 @@
+using System;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.ResourcesCatalog;
+using LenovoLegionToolkit.Lib.Serialization;
+using LenovoLegionToolkit.Lib.Utils;
+
+namespace LenovoLegionToolkit.Lib.DeviceSupport;
+
+public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalogClient)
+{
+    private const string ManifestFileName = "device-pack.json";
+    private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
+    private static readonly string[] AllowedExtensions = [".json"];
+    private static readonly string[] BlockedExtensions =
+    [
+        ".exe", ".dll", ".msi", ".msp", ".bat", ".cmd", ".ps1", ".psm1", ".vbs", ".js", ".jar", ".scr", ".com", ".sys"
+    ];
+
+    public string DevicePacksRoot => Path.Combine(Folders.AppData, "device-packs");
+
+    public bool IsInstalled(string packId)
+    {
+        if (!PathSecurity.IsValidPluginId(packId))
+            return false;
+
+        var manifestPath = GetInstalledManifestPath(packId);
+        return File.Exists(manifestPath);
+    }
+
+    public async Task<DevicePack> InstallAsync(string packId, IProgress<float>? progress = null, CancellationToken token = default)
+    {
+        if (!PathSecurity.IsValidPluginId(packId))
+            throw new ArgumentException("Device pack id contains unsafe characters.", nameof(packId));
+
+        var catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
+        var resource = catalog.DevicePacks.FirstOrDefault(pack =>
+            pack.Id.Equals(packId, StringComparison.OrdinalIgnoreCase));
+
+        if (resource is null)
+            throw new InvalidDataException($"Device pack '{packId}' is not available in the online resource catalog.");
+
+        ValidateResource(resource);
+
+        var tempRoot = Path.Combine(Path.GetTempPath(), $"{AppIdentity.CompactName}-device-pack-{packId}-{Guid.NewGuid():N}");
+        var tempZipPath = Path.Combine(tempRoot, "device-pack.zip");
+        var extractPath = Path.Combine(tempRoot, "extract");
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            Directory.CreateDirectory(extractPath);
+
+            await resourceCatalogClient.DownloadAndVerifyAsync(resource.Url, resource.Sha256, tempZipPath, progress, token).ConfigureAwait(false);
+            ExtractDataOnlyZip(tempZipPath, extractPath);
+
+            var manifestPath = Path.Combine(extractPath, ManifestFileName);
+            if (!File.Exists(manifestPath))
+                throw new InvalidDataException($"Device pack '{packId}' does not contain {ManifestFileName}.");
+
+            await using var stream = File.OpenRead(manifestPath);
+            var pack = await JsonSerializer.DeserializeAsync<DevicePack>(stream, JsonOptions, token).ConfigureAwait(false)
+                       ?? throw new InvalidDataException($"Device pack '{packId}' manifest is empty.");
+
+            if (!pack.Id.Equals(resource.Id, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Device pack id mismatch. Expected '{resource.Id}', got '{pack.Id}'.");
+
+            if (!pack.Vendor.Equals(resource.Vendor, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Device pack vendor mismatch. Expected '{resource.Vendor}', got '{pack.Vendor}'.");
+
+            var destination = GetInstalledPackDirectory(pack.Id);
+            var pendingDestination = $"{destination}.pending";
+
+            TryDeleteDirectory(pendingDestination);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+            CopyDirectory(extractPath, pendingDestination);
+
+            TryDeleteDirectory(destination);
+            Directory.Move(pendingDestination, destination);
+
+            return pack;
+        }
+        finally
+        {
+            TryDeleteDirectory(tempRoot);
+        }
+    }
+
+    public void Uninstall(string packId)
+    {
+        if (!PathSecurity.IsValidPluginId(packId))
+            return;
+
+        TryDeleteDirectory(GetInstalledPackDirectory(packId));
+    }
+
+    private static void ValidateResource(OnlineDevicePackResource resource)
+    {
+        if (string.IsNullOrWhiteSpace(resource.Url))
+            throw new InvalidDataException($"Device pack '{resource.Id}' has an empty download URL.");
+
+        if (string.IsNullOrWhiteSpace(resource.Sha256))
+            throw new InvalidDataException($"Device pack '{resource.Id}' is missing SHA256 metadata.");
+    }
+
+    private static JsonSerializerOptions CreateJsonOptions()
+    {
+        var options = LltJson.CreateSettingsOptions();
+        options.PropertyNameCaseInsensitive = true;
+        return options;
+    }
+
+    private string GetInstalledPackDirectory(string packId) =>
+        Path.Combine(DevicePacksRoot, PathSecurity.SanitizeFileName(packId));
+
+    private string GetInstalledManifestPath(string packId) =>
+        Path.Combine(GetInstalledPackDirectory(packId), ManifestFileName);
+
+    private static void ExtractDataOnlyZip(string zipPath, string destinationDirectory)
+    {
+        var destinationRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(destinationDirectory));
+
+        using var archive = ZipFile.OpenRead(zipPath);
+        foreach (var entry in archive.Entries)
+        {
+            if (entry.FullName.Contains('\\'))
+                throw new InvalidDataException($"Device pack contains a Windows-style path separator: {entry.FullName}");
+
+            var destinationPath = Path.GetFullPath(Path.Combine(destinationRoot, entry.FullName));
+            if (!destinationPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Device pack contains an unsafe path: {entry.FullName}");
+
+            if (string.IsNullOrEmpty(entry.Name))
+            {
+                Directory.CreateDirectory(destinationPath);
+                continue;
+            }
+
+            var extension = Path.GetExtension(entry.Name);
+            if (BlockedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase) ||
+                !AllowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Device pack contains unsupported file type: {entry.FullName}");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+            entry.ExtractToFile(destinationPath, true);
+        }
+    }
+
+    private static string EnsureTrailingDirectorySeparator(string path) =>
+        path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar)
+            ? path
+            : path + Path.DirectorySeparatorChar;
+
+    private static void CopyDirectory(string sourceDirectory, string destinationDirectory)
+    {
+        Directory.CreateDirectory(destinationDirectory);
+
+        foreach (var directory in Directory.EnumerateDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            var relativePath = Path.GetRelativePath(sourceDirectory, directory);
+            var destinationPath = Path.Combine(destinationDirectory, relativePath);
+            Directory.CreateDirectory(destinationPath);
+        }
+
+        foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            var relativePath = Path.GetRelativePath(sourceDirectory, file);
+            var destinationPath = Path.Combine(destinationDirectory, relativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+            File.Copy(file, destinationPath, true);
+        }
+    }
+
+    private static void TryDeleteDirectory(string directory)
+    {
+        try
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to delete directory: {directory}", ex);
+        }
+    }
+}

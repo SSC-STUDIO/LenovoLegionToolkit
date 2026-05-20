@@ -24,7 +24,7 @@
             Padding="0,0,0,8"
             Focusable="True"
             Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
-            Text="{x:Static resources:Resource.AboutPage_AppName}" />
+            Text="{x:Static utils:AppDisplayName.Value}" />
         <TextBlock
             x:Name="_version"
             Padding="0,0,0,8"
@@ -134,5 +134,4 @@
         </StackPanel>
     </wpfui:DynamicScrollViewer>
 </Page>
-
 

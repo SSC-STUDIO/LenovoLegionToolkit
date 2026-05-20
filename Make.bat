@@ -3,8 +3,9 @@ setlocal enabledelayedexpansion
 
 set ERROR_COUNT=0
 set BUILD_DIR=Build
-set BUILD_ENGLISH_DIR=Build-English
+set BUILD_ONLINE_DIR=Build-English
 set RELEASE_ASSET_DIR=release-assets
+set PAGES_ASSET_DIR=%RELEASE_ASSET_DIR%\pages
 
 REM Check build mode
 IF "%1"=="-d" (
@@ -25,8 +26,9 @@ IF "%VERSION%"=="" (
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
 
 if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
-if exist "%BUILD_ENGLISH_DIR%" rmdir /s /q "%BUILD_ENGLISH_DIR%"
+if exist "%BUILD_ONLINE_DIR%" rmdir /s /q "%BUILD_ONLINE_DIR%"
 if exist "%RELEASE_ASSET_DIR%" rmdir /s /q "%RELEASE_ASSET_DIR%"
+if exist "%PAGES_ASSET_DIR%" rmdir /s /q "%PAGES_ASSET_DIR%"
 
 dotnet publish LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
@@ -38,44 +40,28 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 
 CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -BuildDir "%BUILD_DIR%" -EnglishBuildDir "%BUILD_ENGLISH_DIR%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -Version "%VERSION%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -BuildDir "%BUILD_DIR%" -OnlineBuildDir "%BUILD_ONLINE_DIR%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%"
 IF %ERRORLEVEL% NEQ 0 (
-    echo Language asset preparation failed.
+    echo Release asset preparation failed.
     set ERROR_COUNT=1
 )
 
-iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_DIR%" /DMyAppOutputBaseFilename=LenovoLegionToolkitSetup
+iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_DIR%" /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Full
 IF %ERRORLEVEL% NEQ 0 (
     echo Inno Setup failed for full installer.
     set ERROR_COUNT=1
 )
 
-if not exist "BuildInstaller\LenovoLegionToolkitSetup.exe" (
-    echo Full installer release asset was not produced.
-    set ERROR_COUNT=1
-) else (
-    copy /y "BuildInstaller\LenovoLegionToolkitSetup.exe" "%RELEASE_ASSET_DIR%\LenovoLegionToolkit_v%VERSION%_Setup.exe" >nul
-    IF ERRORLEVEL 1 (
-        echo Failed to copy full installer release asset.
-        set ERROR_COUNT=1
-    )
-)
-
-iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_ENGLISH_DIR%" /DMyAppOutputBaseFilename=LenovoLegionToolkitSetup-English
+iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_ONLINE_DIR%" /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Online
 IF %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup failed for English-only installer.
+    echo Inno Setup failed for online installer.
     set ERROR_COUNT=1
 )
 
-if not exist "BuildInstaller\LenovoLegionToolkitSetup-English.exe" (
-    echo English-only installer release asset was not produced.
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Full.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Online.exe"
+IF %ERRORLEVEL% NEQ 0 (
+    echo Release asset finalization failed.
     set ERROR_COUNT=1
-) else (
-    copy /y "BuildInstaller\LenovoLegionToolkitSetup-English.exe" "%RELEASE_ASSET_DIR%\LenovoLegionToolkit_v%VERSION%_English_Setup.exe" >nul
-    IF ERRORLEVEL 1 (
-        echo Failed to copy English-only installer release asset.
-        set ERROR_COUNT=1
-    )
 )
 
 GOTO END

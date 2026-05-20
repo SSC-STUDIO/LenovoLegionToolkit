@@ -241,7 +241,7 @@ public class IpcServer(
             : "enabled";
 
         return string.Join(Environment.NewLine,
-            "Lenovo Legion Toolkit is running.",
+            $"{AppIdentity.DisplayName} is running.",
             $"Version: {version}",
             "CLI IPC: enabled",
             $"Update checker: {updateStatus}",

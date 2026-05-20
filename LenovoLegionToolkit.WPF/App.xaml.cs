@@ -50,15 +50,20 @@ public partial class App
         [LibraryImport("kernel32.dll")]
         private static partial void ExitProcess(uint uExitCode);
 
-        private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+        private const string MUTEX_NAME = AppIdentity.CompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string EVENT_NAME = AppIdentity.CompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string LEGACY_MUTEX_NAME = AppIdentity.LegacyCompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string LEGACY_EVENT_NAME = AppIdentity.LegacyCompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE = "LLT_SINGLE_INSTANCE_KEY";
     private const string SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "LLT_SMOKE_AUTOMATION";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
     private Mutex? _singleInstanceMutex;
+    private Mutex? _legacySingleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
+    private EventWaitHandle? _legacySingleInstanceWaitHandle;
     private bool _singleInstanceMutexOwned;
+    private bool _legacySingleInstanceMutexOwned;
     private Thread? _singleInstanceThread;
     private Task? _backgroundInitializationTask;
     private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
@@ -575,6 +580,8 @@ public partial class App
 
         try { _singleInstanceMutex?.Close(); }
         catch { /* Mutex cleanup failed - continue with exit */ }
+        try { _legacySingleInstanceMutex?.Close(); }
+        catch { /* Legacy mutex cleanup failed - continue with exit */ }
 
         StopMacroControllerSafely();
         StopSingleInstanceThreadSafely();
@@ -643,6 +650,8 @@ public partial class App
 
                 _singleInstanceWaitHandle?.Dispose();
                 _singleInstanceWaitHandle = null;
+                _legacySingleInstanceWaitHandle?.Dispose();
+                _legacySingleInstanceWaitHandle = null;
 
                 if (!_singleInstanceThread.Join(500))
                 {
@@ -692,12 +701,23 @@ public partial class App
 
             _singleInstanceMutex?.Close();
             _singleInstanceMutex = null;
+            if (_legacySingleInstanceMutexOwned && _legacySingleInstanceMutex != null)
+            {
+                _legacySingleInstanceMutex.ReleaseMutex();
+                _legacySingleInstanceMutexOwned = false;
+            }
+
+            _legacySingleInstanceMutex?.Close();
+            _legacySingleInstanceMutex = null;
         }
         catch (ApplicationException ex) when (ex.Message.Contains("Object synchronization method", StringComparison.OrdinalIgnoreCase))
         {
             _singleInstanceMutexOwned = false;
             _singleInstanceMutex?.Close();
             _singleInstanceMutex = null;
+            _legacySingleInstanceMutexOwned = false;
+            _legacySingleInstanceMutex?.Close();
+            _legacySingleInstanceMutex = null;
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("Single instance mutex was not owned by the current thread; closed without explicit release.");
@@ -712,6 +732,8 @@ public partial class App
         {
             _singleInstanceWaitHandle?.Dispose();
             _singleInstanceWaitHandle = null;
+            _legacySingleInstanceWaitHandle?.Dispose();
+            _legacySingleInstanceWaitHandle = null;
         }
         catch (Exception ex)
         {
@@ -1038,16 +1060,22 @@ public partial class App
 
         var mutexName = ResolveSingleInstanceObjectName(MUTEX_NAME);
         var eventName = ResolveSingleInstanceObjectName(EVENT_NAME);
+        var legacyMutexName = ResolveSingleInstanceObjectName(LEGACY_MUTEX_NAME);
+        var legacyEventName = ResolveSingleInstanceObjectName(LEGACY_EVENT_NAME);
         _singleInstanceMutex = new Mutex(true, mutexName, out var isOwned);
         _singleInstanceMutexOwned = isOwned;
         _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
+        _legacySingleInstanceMutex = new Mutex(true, legacyMutexName, out var legacyIsOwned);
+        _legacySingleInstanceMutexOwned = legacyIsOwned;
+        _legacySingleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, legacyEventName);
 
-        if (!isOwned)
+        if (!isOwned || !legacyIsOwned)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Another instance running, closing...");
 
             _singleInstanceWaitHandle.Set();
+            _legacySingleInstanceWaitHandle.Set();
             Shutdown();
             return;
         }
@@ -1056,38 +1084,8 @@ public partial class App
         {
             try
             {
-                while (_singleInstanceWaitHandle != null && _singleInstanceWaitHandle.WaitOne(1000))
-                {
-                    if (Current == null || Current.Dispatcher == null)
-                        break;
-
-                    try
-                    {
-                        Current.Dispatcher.BeginInvoke(async () =>
-                        {
-                            if (Current.MainWindow is { } window)
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
-
-                                window.BringToForeground();
-                            }
-                            else
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
-
-                                await ShutdownAsync(true);
-                            }
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Error in single instance thread dispatcher invoke.", ex);
-                        break;
-                    }
-                }
+                while (WaitForSingleInstanceSignal())
+                    BringMainWindowToForegroundFromSingleInstanceThread();
             }
             catch (ObjectDisposedException)
             {
@@ -1104,6 +1102,51 @@ public partial class App
             Name = "SingleInstanceThread"
         };
         _singleInstanceThread.Start();
+    }
+
+    private bool WaitForSingleInstanceSignal()
+    {
+        var handles = new[] { _singleInstanceWaitHandle, _legacySingleInstanceWaitHandle }
+            .Where(handle => handle is not null)
+            .Cast<WaitHandle>()
+            .ToArray();
+
+        if (handles.Length == 0)
+            return false;
+
+        return WaitHandle.WaitAny(handles, 1000) != WaitHandle.WaitTimeout;
+    }
+
+    private void BringMainWindowToForegroundFromSingleInstanceThread()
+    {
+        if (Current == null || Current.Dispatcher == null)
+            return;
+
+        try
+        {
+            Current.Dispatcher.BeginInvoke(async () =>
+            {
+                if (Current.MainWindow is { } window)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
+
+                    window.BringToForeground();
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
+
+                    await ShutdownAsync(true);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in single instance thread dispatcher invoke.", ex);
+        }
     }
 
     private static string ResolveSingleInstanceObjectName(string baseName)

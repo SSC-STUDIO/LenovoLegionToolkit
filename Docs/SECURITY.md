@@ -12,7 +12,7 @@
 
 ### Responsible Disclosure
 
-We take security seriously. If you believe you have found a security vulnerability in Lenovo Legion Toolkit, please report it responsibly through our coordinated disclosure process.
+We take security seriously. If you believe you have found a security vulnerability in Universal Device Toolkit, please report it responsibly through our coordinated disclosure process.
 
 ### Reporting Process
 
@@ -42,14 +42,14 @@ Your report should include:
 
 ### Our Promises
 
-1. **No Telemetry**: LLT contains no data collection or tracking
+1. **No Telemetry**: UDT contains no data collection or tracking
 2. **No Background Services**: Application only runs when actively used
 3. **Local-Only Operation**: No cloud dependencies or remote servers
 4. **Privacy-First Design**: User data stays on the user's machine
 
 ### Data Collection
 
-LLT does NOT collect:
+UDT does NOT collect:
 - ❌ Usage statistics
 - ❌ Hardware identifiers
 - ❌ Software inventory
@@ -180,7 +180,7 @@ The update mechanism:
 
 ## Acknowledgments
 
-We thank the security research community for helping us keep Lenovo Legion Toolkit secure. Responsible disclosure allows us to address vulnerabilities before they affect users.
+We thank the security research community for helping us keep Universal Device Toolkit secure. Responsible disclosure allows us to address vulnerabilities before they affect users.
 
 ## Security Updates
 

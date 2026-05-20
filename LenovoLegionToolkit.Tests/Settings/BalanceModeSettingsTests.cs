@@ -10,6 +10,7 @@ public class BalanceModeSettingsTests : IDisposable
 {
     public BalanceModeSettingsTests()
     {
+        SettingsCleanupHelper.UseIsolatedAppData();
         // Clean up any existing settings file before tests
         SettingsCleanupHelper.CleanupSettingsFile(SettingsCleanupHelper.SettingsFiles.BalanceMode);
     }

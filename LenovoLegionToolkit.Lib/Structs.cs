@@ -988,7 +988,7 @@ public readonly struct Update(Release release)
     public DateTimeOffset Date { get; } = release.PublishedAt ?? release.CreatedAt;
     public string? Url { get; } = release.Assets
         .Where(IsSetupAsset)
-        .OrderBy(IsEnglishOnlyAsset)
+        .OrderBy(GetSetupAssetPriority)
         .Select(ra => ra.BrowserDownloadUrl)
         .FirstOrDefault();
 
@@ -1008,12 +1008,41 @@ public readonly struct Update(Release release)
 
     private static bool IsSetupAsset(ReleaseAsset releaseAsset) =>
         releaseAsset.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) ||
+        releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) ||
         (releaseAsset.Name.EndsWith("setup.exe", StringComparison.InvariantCultureIgnoreCase) &&
          !releaseAsset.Name.Contains("_lang_", StringComparison.InvariantCultureIgnoreCase));
 
     private static bool IsEnglishOnlyAsset(ReleaseAsset releaseAsset) =>
         releaseAsset.Name.Contains("_English_", StringComparison.InvariantCultureIgnoreCase) ||
         releaseAsset.Name.Contains("-English", StringComparison.InvariantCultureIgnoreCase);
+
+    private static bool IsOnlineOnlyAsset(ReleaseAsset releaseAsset) =>
+        releaseAsset.Name.Contains("_Online_", StringComparison.InvariantCultureIgnoreCase) ||
+        releaseAsset.Name.Contains("-Online", StringComparison.InvariantCultureIgnoreCase);
+
+    private static bool IsUniversalFullAsset(ReleaseAsset releaseAsset) =>
+        releaseAsset.Name.Contains("UniversalDeviceToolkit", StringComparison.InvariantCultureIgnoreCase) &&
+        releaseAsset.Name.Contains("_Full_", StringComparison.InvariantCultureIgnoreCase);
+
+    private static bool IsLegacyBridgeAsset(ReleaseAsset releaseAsset) =>
+        releaseAsset.Name.Contains("LenovoLegionToolkit", StringComparison.InvariantCultureIgnoreCase) &&
+        releaseAsset.Name.EndsWith("_Setup.exe", StringComparison.InvariantCultureIgnoreCase) &&
+        !IsEnglishOnlyAsset(releaseAsset) &&
+        !IsOnlineOnlyAsset(releaseAsset);
+
+    private static int GetSetupAssetPriority(ReleaseAsset releaseAsset)
+    {
+        if (IsUniversalFullAsset(releaseAsset))
+            return 0;
+
+        if (IsLegacyBridgeAsset(releaseAsset))
+            return 1;
+
+        if (IsOnlineOnlyAsset(releaseAsset) || IsEnglishOnlyAsset(releaseAsset))
+            return 3;
+
+        return 2;
+    }
 
     private static bool IsSha256Asset(ReleaseAsset releaseAsset) =>
         releaseAsset.Name.EndsWith(".sha256", StringComparison.InvariantCultureIgnoreCase) ||

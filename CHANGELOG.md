@@ -12,6 +12,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 暂无待发布变更 / No unreleased changes yet.
 
+## [3.8.0] - 2026-05-20
+
+### Added / 新增
+- Added the Universal Device Toolkit identity layer with new public display names, new update/resource repository defaults, and legacy Lenovo Legion Toolkit names kept for upgrade compatibility.
+- Added Lenovo-first device support data for Legion, LOQ, IdeaPad, ThinkBook, YOGA, Lenovo Slim, legacy Lenovo gaming families, and Motorola Lenovo devices, plus a basic mode for unsupported PCs.
+- Added a data-only online device-pack manager and GitHub Pages device-pack catalog generation. Device packs are JSON manifests only and reject executable/script content.
+
+### Changed / 变更
+- Release packaging now produces Full and Online installers/portable ZIPs under UniversalDeviceToolkit names, plus the LenovoLegionToolkit setup alias for the first bridge release.
+- Language and device resources now publish through GitHub Pages catalogs instead of per-language GitHub Release assets; English remains built into Online packages.
+- Runtime paths migrate from `%LOCALAPPDATA%\LenovoLegionToolkit` to `%LOCALAPPDATA%\UniversalDeviceToolkit` without deleting the legacy directory.
+- Autorun tasks and single-instance guards now use the new name while also handling legacy LenovoLegionToolkit identifiers.
+
+### Improved / 改进
+- Documentation, release notes, promotion copy, winget drafts, and Scoop guidance now lead with Universal Device Toolkit and plugin-extension positioning while preserving old package identifiers during the transition.
+- Update selection now prefers UniversalDeviceToolkit Full assets and uses the new repository defaults, with the LenovoLegionToolkit alias retained for older update/package-manager paths.
+- Consolidated release verification around `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
+
 ## [3.7.1] - 2026-05-20
 
 ### Added / 新增

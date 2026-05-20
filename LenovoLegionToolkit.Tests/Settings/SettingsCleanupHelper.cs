@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -9,6 +10,22 @@ namespace LenovoLegionToolkit.Tests.Settings
     /// </summary>
     public static class SettingsCleanupHelper
     {
+        private static readonly object AppDataOverrideLock = new();
+        private static string? _temporaryAppDataRoot;
+
+        public static void UseIsolatedAppData()
+        {
+            lock (AppDataOverrideLock)
+            {
+                if (_temporaryAppDataRoot is not null)
+                    return;
+
+                _temporaryAppDataRoot = Path.Combine(Path.GetTempPath(), $"udt-settings-tests-{Guid.NewGuid():N}");
+                Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _temporaryAppDataRoot);
+                AppDomain.CurrentDomain.ProcessExit += (_, _) => TryDeleteTemporaryAppDataRoot();
+            }
+        }
+
         /// <summary>
         /// Deletes all settings files from the AppData folder
         /// </summary>
@@ -16,6 +33,7 @@ namespace LenovoLegionToolkit.Tests.Settings
         {
             try
             {
+                UseIsolatedAppData();
                 var appData = Folders.AppData;
                 if (Directory.Exists(appData))
                 {
@@ -45,6 +63,7 @@ namespace LenovoLegionToolkit.Tests.Settings
         {
             try
             {
+                UseIsolatedAppData();
                 var filePath = Path.Combine(Folders.AppData, fileName);
                 if (File.Exists(filePath))
                 {
@@ -71,6 +90,19 @@ namespace LenovoLegionToolkit.Tests.Settings
             public const string BalanceMode = "balancemode.json";
             public const string SpectrumKeyboard = "spectrum_keyboard.json";
             public const string SunriseSunset = "sunrise_sunset.json";
+        }
+
+        private static void TryDeleteTemporaryAppDataRoot()
+        {
+            try
+            {
+                if (_temporaryAppDataRoot is not null && Directory.Exists(_temporaryAppDataRoot))
+                    Directory.Delete(_temporaryAppDataRoot, recursive: true);
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
         }
     }
 }

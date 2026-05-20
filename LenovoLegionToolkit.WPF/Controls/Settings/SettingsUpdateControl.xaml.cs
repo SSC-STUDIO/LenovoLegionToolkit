@@ -44,7 +44,7 @@ public partial class SettingsUpdateControl
         _updateDisabledInfoBar.Title = T("SettingsPage_UpdateDisabled_Title", "Update checks are disabled for this session");
         _updateDisabledInfoBar.Message = string.Format(
             T("SettingsPage_UpdateDisabled_Message",
-                "Lenovo Legion Toolkit was started with {0}. Automatic and manual update checks are disabled until you relaunch without that startup argument."),
+                "Universal Device Toolkit was started with {0}. Automatic and manual update checks are disabled until you relaunch without that startup argument."),
             disabledReason);
         _updateDisabledInfoBar.IsOpen = isDisabledByStartupFlag;
         _updateDisabledInfoBar.Visibility = isDisabledByStartupFlag ? Visibility.Visible : Visibility.Collapsed;

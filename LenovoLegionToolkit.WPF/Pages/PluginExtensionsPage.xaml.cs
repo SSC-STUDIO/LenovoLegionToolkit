@@ -2262,13 +2262,13 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
         return plugin.Id.ToLowerInvariant() switch
         {
             "custom-mouse" =>
-                "Provides a focused mouse customization workflow inside Lenovo Legion Toolkit. You can manage pointer speed, button behavior, and theme-aware cursor schemes without leaving the host app. This plugin also integrates with Windows Optimization so cursor-related actions stay grouped with the rest of your system tweaks.",
+                "Provides a focused mouse customization workflow inside Universal Device Toolkit. You can manage pointer speed, button behavior, and theme-aware cursor schemes without leaving the host app. This plugin also integrates with Windows Optimization so cursor-related actions stay grouped with the rest of your system tweaks.",
             "shell-integration" =>
-                "Adds Lenovo Legion Toolkit hooks into the Windows shell workflow. It helps manage Nilesoft Shell registration, packaged shell assets, and related configuration files so context-menu customization stays accessible from the plugin system instead of being scattered across external folders.",
+                "Adds Universal Device Toolkit hooks into the Windows shell workflow. It helps manage Nilesoft Shell registration, packaged shell assets, and related configuration files so context-menu customization stays accessible from the plugin system instead of being scattered across external folders.",
             "network-acceleration" =>
                 "Adds an interactive network tuning surface with live telemetry, optimization targets, and saved operating modes. It is designed for quick switching between balanced, gaming, and streaming priorities while keeping the underlying actions visible before you apply them.",
             "vive-tool" =>
-                "Brings Windows feature flag management into Lenovo Legion Toolkit. It can download or use a trusted ViVeTool runtime, import feature definitions, and expose enable or disable actions for advanced Windows experiments from a single UI surface.",
+                "Brings Windows feature flag management into Universal Device Toolkit. It can download or use a trusted ViVeTool runtime, import feature definitions, and expose enable or disable actions for advanced Windows experiments from a single UI surface.",
             _ => BuildFallbackDetailedDescription(fallbackDescription, capabilities)
         };
     }
@@ -2296,7 +2296,7 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
     private static string BuildFallbackDetailedDescription(string fallbackDescription, PluginUiCapabilities capabilities)
     {
         var detail = string.IsNullOrWhiteSpace(fallbackDescription)
-            ? "This plugin extends Lenovo Legion Toolkit with additional functionality."
+            ? "This plugin extends Universal Device Toolkit with additional functionality."
             : fallbackDescription.Trim();
 
         var capabilityNotes = new List<string>();

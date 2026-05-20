@@ -49,7 +49,7 @@ public class TrayHelper : IDisposable
         var notifyIcon = new NotifyIcon
         {
             Icon = AssetResources.icon,
-            Text = Resource.AppName
+            Text = AppIdentity.DisplayName
         };
 
 

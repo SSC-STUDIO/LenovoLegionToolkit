@@ -60,7 +60,7 @@ public class Log : IDisposable
 
         _logger = new LoggerConfiguration()
             .MinimumLevel.ControlledBy(_levelSwitch)
-            .Enrich.WithProperty("Application", "LenovoLegionToolkit")
+            .Enrich.WithProperty("Application", AppIdentity.CompactName)
             .WriteTo.Async(wt => wt.File(
                 new Serilog.Formatting.Json.JsonFormatter(),
                 Path.Combine(_folderPath, "log-.json"),

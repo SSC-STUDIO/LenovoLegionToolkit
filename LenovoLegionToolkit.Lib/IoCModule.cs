@@ -3,6 +3,7 @@ using LenovoLegionToolkit.Lib.AutoListeners;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
+using LenovoLegionToolkit.Lib.DeviceSupport;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.FlipToStart;
@@ -17,6 +18,7 @@ using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
+using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
@@ -31,9 +33,12 @@ public class IoCModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.Register<HttpClientFactory>();
+        builder.Register<OnlineResourceCatalogClient>();
 
         // Register compatibility service
         builder.Register<CompatibilityService>().As<ICompatibilityService>().SingleInstance();
+        builder.RegisterInstance(LenovoDeviceSupportProvider.Instance).As<IDeviceSupportProvider>().SingleInstance();
+        builder.Register<DevicePackManager>();
 
         // Register hardware abstraction wrappers
         builder.Register<WMIWrapper>().As<IWMIWrapper>().SingleInstance();

@@ -9,13 +9,14 @@ namespace LenovoLegionToolkit.Lib.System;
 
 public static class Autorun
 {
-    private const string TASK_NAME = "LenovoLegionToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string TASK_NAME = AppIdentity.CompactName + "_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string LEGACY_TASK_NAME = AppIdentity.LegacyCompactName + "_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98";
 
     public static AutorunState State
     {
         get
         {
-            var task = TaskService.Instance.GetTask(TASK_NAME);
+            var task = TaskService.Instance.GetTask(TASK_NAME) ?? TaskService.Instance.GetTask(LEGACY_TASK_NAME);
             if (task is null)
                 return AutorunState.Disabled;
 
@@ -29,7 +30,7 @@ public static class Autorun
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Validating autorun...");
 
-        var currentTask = TaskService.Instance.GetTask(TASK_NAME);
+        var currentTask = TaskService.Instance.GetTask(TASK_NAME) ?? TaskService.Instance.GetTask(LEGACY_TASK_NAME);
         if (currentTask is null)
         {
             if (Log.Instance.IsTraceEnabled)
@@ -78,8 +79,6 @@ public static class Autorun
 
     private static void Enable(bool delayed)
     {
-        Disable();
-
         var mainModule = Process.GetCurrentProcess().MainModule ?? throw new InvalidOperationException("Main Module cannot be null");
         var filename = mainModule.FileName ?? throw new InvalidOperationException("Current process file name cannot be null");
         var fileVersion = mainModule.FileVersionInfo.FileVersion ?? throw new InvalidOperationException("Current process file version cannot be null");
@@ -96,6 +95,7 @@ public static class Autorun
         td.Settings.StopIfGoingOnBatteries = false;
         td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
         ts.RootFolder.RegisterTaskDefinition(TASK_NAME, td);
+        DeleteTask(LEGACY_TASK_NAME, "Legacy autorun disabled");
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Autorun enabled");
@@ -103,17 +103,27 @@ public static class Autorun
 
     private static void Disable()
     {
+        var deleted = DeleteTask(TASK_NAME, "Autorun disabled");
+        var legacyDeleted = DeleteTask(LEGACY_TASK_NAME, "Legacy autorun disabled");
+
+        if (!deleted && !legacyDeleted && Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Autorun was not enabled");
+    }
+
+    private static bool DeleteTask(string taskName, string successMessage)
+    {
         try
         {
-            TaskService.Instance.RootFolder.DeleteTask(TASK_NAME);
+            TaskService.Instance.RootFolder.DeleteTask(taskName);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Autorun disabled");
+                Log.Instance.Trace(successMessage);
+
+            return true;
         }
         catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Autorun was not enabled");
+            return false;
         }
     }
 }

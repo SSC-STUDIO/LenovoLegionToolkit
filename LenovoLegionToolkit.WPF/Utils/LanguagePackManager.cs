@@ -7,16 +7,14 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
-public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateCheckSettings updateCheckSettings)
+public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClient)
 {
-    private const string AssetPrefix = "LenovoLegionToolkit";
-    private const string AssetLanguageMarker = "_lang_";
+    private const string AssetPrefix = AppIdentity.CompactName;
     private static readonly string PendingUninstallPath = Path.Combine(
         Folders.AppData,
         "pending_language_uninstall.txt");
@@ -38,16 +36,8 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
 
     public string GetInstallUrl(CultureInfo cultureInfo)
     {
-        var owner = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryOwner)
-            ? updateCheckSettings.Store.UpdateRepositoryOwner
-            : Constants.UpdateRepositoryOwner;
-        var name = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryName)
-            ? updateCheckSettings.Store.UpdateRepositoryName
-            : Constants.UpdateRepositoryName;
         var version = GetCurrentVersion();
-        var assetName = GetLanguagePackAssetName(version, cultureInfo);
-
-        return $"https://github.com/{owner}/{name}/releases/download/v{version}/{assetName}";
+        return $"{AppIdentity.ResourcesBaseUrl}/{version}/languages/{NormalizeAssetCultureName(cultureInfo)}.zip";
     }
 
     public async Task InstallAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default)
@@ -55,7 +45,6 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
         if (IsEnglish(cultureInfo))
             return;
 
-        var url = GetInstallUrl(cultureInfo);
         var tempRoot = Path.Combine(Path.GetTempPath(), $"{AssetPrefix}-lang-{cultureInfo.Name}-{Guid.NewGuid():N}");
         var tempZipPath = Path.Combine(tempRoot, "language.zip");
         var extractPath = Path.Combine(tempRoot, "extract");
@@ -65,11 +54,8 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
             Directory.CreateDirectory(tempRoot);
             Directory.CreateDirectory(extractPath);
 
-            await using (var stream = File.Create(tempZipPath))
-            {
-                using var httpClient = httpClientFactory.Create();
-                await httpClient.DownloadAsync(url, stream, progress, token).ConfigureAwait(false);
-            }
+            var languageResource = await GetLanguageResourceAsync(cultureInfo, token).ConfigureAwait(false);
+            await resourceCatalogClient.DownloadAndVerifyAsync(languageResource.Url, languageResource.Sha256, tempZipPath, progress, token).ConfigureAwait(false);
 
             ExtractZipSafely(tempZipPath, extractPath);
             CopyLanguageDirectories(extractPath, cultureInfo);
@@ -129,7 +115,7 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
     }
 
     public static string GetLanguagePackAssetName(string version, CultureInfo cultureInfo) =>
-        $"{AssetPrefix}_v{version}{AssetLanguageMarker}{NormalizeAssetCultureName(cultureInfo)}.zip";
+        $"{AssetPrefix}_v{version}_lang_{NormalizeAssetCultureName(cultureInfo)}.zip";
 
     public static string NormalizeAssetCultureName(CultureInfo cultureInfo) =>
         cultureInfo.Name.ToLowerInvariant();
@@ -141,6 +127,27 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
             return "0.0.0";
 
         return $"{version.Major}.{version.Minor}.{version.Build}";
+    }
+
+    private async Task<OnlineLanguageResource> GetLanguageResourceAsync(CultureInfo cultureInfo, CancellationToken token)
+    {
+        var catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
+        var normalizedCulture = NormalizeAssetCultureName(cultureInfo);
+
+        var resource = catalog.Languages.FirstOrDefault(language =>
+            language.Culture.Equals(normalizedCulture, StringComparison.OrdinalIgnoreCase) ||
+            language.Culture.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
+
+        if (resource is null)
+            throw new InvalidDataException($"Language '{cultureInfo.Name}' is not available in the online resource catalog.");
+
+        if (string.IsNullOrWhiteSpace(resource.Url))
+            throw new InvalidDataException($"Language '{cultureInfo.Name}' has an empty download URL.");
+
+        if (string.IsNullOrWhiteSpace(resource.Sha256))
+            throw new InvalidDataException($"Language '{cultureInfo.Name}' is missing SHA256 metadata.");
+
+        return resource;
     }
 
     private static void CopyLanguageDirectories(string extractPath, CultureInfo cultureInfo)
@@ -177,7 +184,7 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
 
     private static void ExtractZipSafely(string zipPath, string destinationDirectory)
     {
-        var destinationRoot = Path.GetFullPath(destinationDirectory);
+        var destinationRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(destinationDirectory));
 
         using var archive = ZipFile.OpenRead(zipPath);
         foreach (var entry in archive.Entries)
@@ -196,6 +203,11 @@ public class LanguagePackManager(HttpClientFactory httpClientFactory, UpdateChec
             entry.ExtractToFile(destinationPath, true);
         }
     }
+
+    private static string EnsureTrailingDirectorySeparator(string path) =>
+        path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar)
+            ? path
+            : path + Path.DirectorySeparatorChar;
 
     private static void CopyDirectory(string sourceDirectory, string destinationDirectory)
     {

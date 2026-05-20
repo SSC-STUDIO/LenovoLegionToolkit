@@ -5,8 +5,8 @@
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
-		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
-		<Copyright>© 2026 Lenovo Legion Toolkit Contributors</Copyright>
+		<AssemblyName>Universal Device Toolkit</AssemblyName>
+		<Copyright>© 2026 Universal Device Toolkit Contributors</Copyright>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>

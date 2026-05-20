@@ -9,13 +9,16 @@ jobs:
   build:
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     runs-on: windows-2022
     env:
       BUILD_OUTPUT: Build
-      ENGLISH_BUILD_OUTPUT: Build-English
+      ONLINE_BUILD_OUTPUT: Build-English
       INSTALLER_OUTPUT: BuildInstaller
       RELEASE_OUTPUT: release-assets
+      PAGES_OUTPUT: release-assets/pages
 
     steps:
     - name: Checkout
@@ -61,11 +64,12 @@ jobs:
         }
 
         "VERSION=$releaseVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "SETUP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "SETUP_ENGLISH_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_English_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "ZIP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "ZIP_ENGLISH_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_English_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "HASH_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_SHA256.txt" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "SETUP_FULL_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Full_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "SETUP_ONLINE_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Online_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "ZIP_FULL_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Full_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "ZIP_ONLINE_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Online_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "HASH_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_SHA256.txt" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Restore solution
       run: dotnet restore LenovoLegionToolkit.sln
@@ -79,12 +83,12 @@ jobs:
     - name: Publish release payload
       shell: pwsh
       run: |
-        Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ENGLISH_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT -ErrorAction SilentlyContinue
+        Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ONLINE_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT, $env:PAGES_OUTPUT -ErrorAction SilentlyContinue
 
-        dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
+        dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "WPF publish failed." }
 
-        dotnet publish LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
+        dotnet publish LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
 
         $prunePaths = @(
@@ -130,51 +134,35 @@ jobs:
           throw "CLI version '$version' does not start with expected '$env:VERSION'."
         }
 
-    - name: Prepare split release assets
+    - name: Prepare release and Pages resources
       shell: pwsh
       run: |
-        ./Scripts/Build-LanguageAssets.ps1 -BuildDir $env:BUILD_OUTPUT -EnglishBuildDir $env:ENGLISH_BUILD_OUTPUT -ReleaseOutput $env:RELEASE_OUTPUT -Version $env:VERSION
+        ./Scripts/Build-LanguageAssets.ps1 -BuildDir $env:BUILD_OUTPUT -OnlineBuildDir $env:ONLINE_BUILD_OUTPUT -ReleaseOutput $env:RELEASE_OUTPUT -PagesOutput $env:PAGES_OUTPUT -Version $env:VERSION -Repository '${{ github.repository }}'
 
     - name: Build installers
       shell: pwsh
       run: |
-        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:BUILD_OUTPUT /DMyAppOutputBaseFilename=LenovoLegionToolkitSetup
+        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:BUILD_OUTPUT /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Full
         if ($LASTEXITCODE -ne 0) {
           throw "Full Inno Setup build failed."
         }
 
-        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:ENGLISH_BUILD_OUTPUT /DMyAppOutputBaseFilename=LenovoLegionToolkitSetup-English
+        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:ONLINE_BUILD_OUTPUT /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Online
         if ($LASTEXITCODE -ne 0) {
-          throw "English-only Inno Setup build failed."
+          throw "Online Inno Setup build failed."
         }
 
-    - name: Package release assets
+    - name: Finalize release assets
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Path $env:RELEASE_OUTPUT -Force | Out-Null
-
-        $setupSource = Join-Path $PWD "$env:INSTALLER_OUTPUT\LenovoLegionToolkitSetup.exe"
-        if (-not (Test-Path $setupSource)) {
-          throw "Installer not found at $setupSource"
-        }
-
-        $setupTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:SETUP_ASSET"
-        Copy-Item $setupSource $setupTarget
-
-        $englishSetupSource = Join-Path $PWD "$env:INSTALLER_OUTPUT\LenovoLegionToolkitSetup-English.exe"
-        if (-not (Test-Path $englishSetupSource)) {
-          throw "English-only installer not found at $englishSetupSource"
-        }
-
-        $englishSetupTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:SETUP_ENGLISH_ASSET"
-        Copy-Item $englishSetupSource $englishSetupTarget
-
-        $hashTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:HASH_ASSET"
-        $hashLines = Get-ChildItem -LiteralPath $env:RELEASE_OUTPUT -File |
-          Where-Object { $_.Name -ne $env:HASH_ASSET -and $_.Name -ne 'release-notes.md' } |
-          Sort-Object Name |
-          ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash, $_.Name }
-        Set-Content -Path $hashTarget -Value $hashLines
+        ./Scripts/Build-LanguageAssets.ps1 `
+          -FinalizeOnly `
+          -ReleaseOutput $env:RELEASE_OUTPUT `
+          -PagesOutput $env:PAGES_OUTPUT `
+          -Version $env:VERSION `
+          -FullInstallerPath "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Full.exe" `
+          -OnlineInstallerPath "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Online.exe" `
+          -Repository '${{ github.repository }}'
 
     - name: Generate release notes
       shell: pwsh
@@ -206,19 +194,24 @@ jobs:
 
         $section = ($lines[$startIndex..($endIndex - 1)] -join "`n").Trim()
         $releaseNotes = @"
-        # Lenovo Legion Toolkit v$env:VERSION
+        # Universal Device Toolkit v$env:VERSION
 
         Release date: $releaseDate
 
         $section
 
         ## Downloads
-        - $env:SETUP_ASSET - full installer with all languages
-        - $env:ZIP_ASSET - full portable package with all languages
-        - $env:SETUP_ENGLISH_ASSET - English-only installer; install other languages from Settings
-        - $env:ZIP_ENGLISH_ASSET - English-only portable package; install other languages from Settings
-        - LenovoLegionToolkit_v$($env:VERSION)_lang_<culture>.zip - optional language packs for online installation
+        - $env:SETUP_FULL_ASSET - full installer with all bundled languages
+        - $env:ZIP_FULL_ASSET - full portable package with all bundled languages
+        - $env:SETUP_ONLINE_ASSET - online installer with English bundled; install other languages from online resources
+        - $env:ZIP_ONLINE_ASSET - online portable package with English bundled; install other languages from online resources
+        - $env:LEGACY_SETUP_ASSET - compatibility alias for the first renamed full installer
         - $env:HASH_ASSET
+
+        ## Online resources
+        - Language packs are published to GitHub Pages under resources/$env:VERSION/languages.
+        - Device resources are published to GitHub Pages under resources/$env:VERSION/devices.
+        - The stable resource catalog is published at resources/stable/catalog.json, with stable/catalog.json kept as a compatibility copy.
 
         ## Compatibility
         - OS: Windows 10/11 x64
@@ -231,7 +224,7 @@ jobs:
     - name: Create GitHub release
       uses: softprops/action-gh-release@v3
       with:
-        name: Lenovo Legion Toolkit v${{ env.VERSION }}
+        name: Universal Device Toolkit v${{ env.VERSION }}
         body_path: release-assets/release-notes.md
         files: |
           release-assets/*.exe
@@ -240,8 +233,25 @@ jobs:
         fail_on_unmatched_files: true
         prerelease: ${{ contains(github.ref_name, '-') }}
 
-    - name: Upload artifact
+    - name: Setup Pages
+      uses: actions/configure-pages@v6
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v4
+      with:
+        path: release-assets/pages
+
+    - name: Deploy Pages resources
+      uses: actions/deploy-pages@v4
+
+    - name: Upload release artifact
       uses: actions/upload-artifact@v7
       with:
         name: release-assets-v${{ env.VERSION }}
         path: release-assets/
+
+    - name: Upload Pages resources artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: pages-resources-v${{ env.VERSION }}
+        path: release-assets/pages/

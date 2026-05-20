@@ -141,7 +141,7 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
 
             System.Windows.MessageBox.Show(
                 string.Format(T("CompatibilityCheckErrorWindow_OpenLogFailed", "Failed to open log file: {0}"), ex.Message),
-                Resource.AppName,
+                AppIdentity.DisplayName,
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Warning);
         }

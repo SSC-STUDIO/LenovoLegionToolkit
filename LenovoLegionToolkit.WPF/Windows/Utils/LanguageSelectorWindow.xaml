@@ -5,7 +5,7 @@
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Lenovo Legion Toolkit"
+    Title="{x:Static utils:AppDisplayName.Value}"
     MinWidth="450"
     MinHeight="220"
     MaxWidth="450"
@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
-            Title="Lenovo Legion Toolkit"
+            Title="{x:Static utils:AppDisplayName.Value}"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"

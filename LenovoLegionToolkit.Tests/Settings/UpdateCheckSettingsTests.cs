@@ -11,6 +11,7 @@ public class UpdateCheckSettingsTests : IDisposable
 {
     public UpdateCheckSettingsTests()
     {
+        SettingsCleanupHelper.UseIsolatedAppData();
         // Clean up any existing settings file before tests
         SettingsCleanupHelper.CleanupSettingsFile(SettingsCleanupHelper.SettingsFiles.UpdateCheck);
     }

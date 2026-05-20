@@ -8,7 +8,7 @@ The authoritative Scoop manifest is published in the custom bucket repository: [
 
 1. Publish a stable GitHub release with:
    - `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
-   - `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`
+   - `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 2. Confirm the installer URL is the final GitHub Release asset URL.
 3. Update the `lenovolegiontoolkit.json` manifest in `SSC-STUDIO/scoop-bucket`:
    - `version`

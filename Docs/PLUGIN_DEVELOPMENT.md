@@ -1,6 +1,6 @@
 # 插件开发指南
 
-本文档详细介绍如何为 Lenovo Legion Toolkit 开发插件。
+本文档详细介绍如何为 Universal Device Toolkit（原 Lenovo Legion Toolkit）开发插件。
 
 ## 目录
 
@@ -18,7 +18,7 @@
 
 ## 概述
 
-Lenovo Legion Toolkit 支持通过插件系统扩展功能。插件可以：
+Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
 - 添加新的功能页面
 - 集成到 Windows 优化功能
@@ -339,7 +339,7 @@ Resources/
   <value>My Plugin</value>
 </data>
 <data name="PluginDescription" xml:space="preserve">
-  <value>A sample plugin for Lenovo Legion Toolkit</value>
+  <value>A sample plugin for Universal Device Toolkit</value>
 </data>
 ```
 
@@ -349,7 +349,7 @@ Resources/
   <value>我的插件</value>
 </data>
 <data name="PluginDescription" xml:space="preserve">
-  <value>Lenovo Legion Toolkit 示例插件</value>
+  <value>Universal Device Toolkit 示例插件</value>
 </data>
 ```
 

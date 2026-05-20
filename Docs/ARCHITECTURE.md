@@ -1,22 +1,22 @@
-# Lenovo Legion Toolkit Architecture
+# Universal Device Toolkit Architecture
 
 ## Overview
 
-Lenovo Legion Toolkit (LLT) is a lightweight Windows WPF desktop application designed to replace Lenovo Vantage for advanced hardware control on Legion series laptops. The application follows a modular architecture pattern with clear separation of concerns.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows WPF desktop application designed to replace Lenovo Vantage for advanced hardware control on supported Lenovo and Motorola gaming devices. The application follows a modular architecture pattern with clear separation of concerns and treats plugin extensions as a primary expansion path.
 
 ## Quick Start
 
 ### For Users
 
-1. **Download** the latest release from [GitHub Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases)
+1. **Download** the latest release from [GitHub Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
 2. **Install** the application by running the installer
-3. **Launch** LLT and configure your preferred settings
+3. **Launch** UDT and configure your preferred settings
 4. **Enjoy** enhanced control over your Legion laptop hardware
 
 ### For Developers
 
 1. **Prerequisites**: Install .NET 10 SDK and Visual Studio 2022
-2. **Clone** the repository: `git clone https://github.com/SSC-STUDIO/LenovoLegionToolkit.git`
+2. **Clone** the repository: `git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git`
 3. **Build** the solution: `dotnet build LenovoLegionToolkit.sln`
 4. **Run** tests: `dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj`
 5. **Start** developing! See [AGENTS.md](../AGENTS.md) for detailed development guidelines.
@@ -25,7 +25,7 @@ Lenovo Legion Toolkit (LLT) is a lightweight Windows WPF desktop application des
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         Lenovo Legion Toolkit                             │
+│                         Universal Device Toolkit                          │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  Presentation Layer                                                       │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
@@ -128,7 +128,7 @@ Command-line interface for headless operation:
 
 ## Plugin System Architecture
 
-LLT supports dynamic plugin loading through a structured API:
+UDT supports dynamic plugin loading through a structured API:
 
 ```
 Plugin Structure:
@@ -211,7 +211,7 @@ Automatic Actions Execution
 1. **No Background Service**: Application runs only when user is logged in
 2. **No Telemetry**: Complete user privacy
 3. **Lightweight**: Minimal resource footprint
-4. **Plugin Extensibility**: Dynamic module loading
+4. **Plugin Extensibility**: Dynamic module loading for device-specific workflows
 5. **Cross-Generation Support**: Unified API across Legion Gen 6-9
 
 ## Platform Compatibility

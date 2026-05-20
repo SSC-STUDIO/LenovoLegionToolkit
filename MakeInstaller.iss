@@ -1,10 +1,11 @@
 #include "InnoDependencies\Install_dotnet.iss"
 
-#define MyAppName "Lenovo Legion Toolkit"
-#define MyAppNameCompact "LenovoLegionToolkit"
+#define MyAppName "Universal Device Toolkit"
+#define MyAppNameCompact "UniversalDeviceToolkit"
+#define MyAppNameCompactLegacy "LenovoLegionToolkit"
 #define MyAppPublisher "ChenRunsen"
-#define MyAppURL "https://github.com/SSC-STUDIO/LenovoLegionToolkit"
-#define MyAppExeName "Lenovo Legion Toolkit.exe"
+#define MyAppURL "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
+#define MyAppExeName "Universal Device Toolkit.exe"
 
 #ifndef MyAppVersion
   #define MyAppVersion "0.0.0"
@@ -15,7 +16,7 @@
 #endif
 
 #ifndef MyAppOutputBaseFilename
-  #define MyAppOutputBaseFilename "LenovoLegionToolkitSetup"
+  #define MyAppOutputBaseFilename "UniversalDeviceToolkitSetup-Full"
 #endif
 
 [Setup]
@@ -28,6 +29,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={userpf}\{#MyAppNameCompact}
+AppendDefaultDirName=no
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
 PrivilegesRequired=admin
@@ -126,10 +128,11 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [UninstallDelete]
 Type: files; Name: "{app}\Shell.exe"
-Type: files; Name: "{app}\Shell.dll" 
+Type: files; Name: "{app}\Shell.dll"
 Type: files; Name: "{app}\Shell.nss"
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 
 [UninstallRun]
 ; Delete scheduled task
-RunOnceId: "DelAutorun"; Filename: "schtasks"; Parameters: "/Delete /TN ""LenovoLegionToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden 
+RunOnceId: "DelAutorunNew"; Filename: "schtasks"; Parameters: "/Delete /TN ""UniversalDeviceToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden
+RunOnceId: "DelAutorun"; Filename: "schtasks"; Parameters: "/Delete /TN ""LenovoLegionToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden

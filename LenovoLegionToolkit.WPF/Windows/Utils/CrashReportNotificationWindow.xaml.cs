@@ -139,7 +139,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
                 System.Windows.MessageBox.Show(
                     string.Format(T("CrashReportNotification_OpenFailed", "Failed to open crash report: {0}"), ex.Message),
-                    Resource.AppName,
+                    AppIdentity.DisplayName,
                     System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Warning);
             }

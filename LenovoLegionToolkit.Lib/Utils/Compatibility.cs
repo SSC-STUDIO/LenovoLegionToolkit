@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.DeviceSupport;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
@@ -22,69 +23,6 @@ public static partial class Compatibility
 
     [GeneratedRegex("[0-9]{2}")]
     private static partial Regex BiosVersionRegex();
-
-    private static readonly string[] AllowedVendors = ["LENOVO", "MOTOROLA"];
-
-    private static readonly string[] AllowedModelsPrefix = [
-        // Worldwide variants
-        "18IAX",
-        "NX",
-
-        "17ACH",
-        "17ARH",
-        "17IRX",
-        "17ITH",
-        "17IMH",
-
-        "16ACH",
-        "16ADR",
-        "16AFR",
-        "16AHP",
-        "16APH",
-        "16ARH",
-        "16ARP",
-        "16ARX",
-        "16IAH",
-        "16IAX",
-        "16IRH",
-        "16IRX",
-        "16ITH",
-
-        "15ACH",
-        "15AKP",
-        "15AHP",
-        "15APH",
-        "15ARH",
-        "15ARP",
-        "15IAH",
-        "15IAX",
-        "15IHU",
-        "15IMH",
-        "15IRH",
-        "15IRX",
-        "15ITH",
-
-        "14AHP",
-        "14APH",
-        "14AKP",
-        "14IRP",
-
-        // ThinkBooks
-        "ThinkBook",
-
-        // Chinese variants
-        "G5000",
-        "R9000",
-        "R7000",
-        "Y9000",
-        "Y7000",
-            
-        // Limited compatibility
-        "17IR",
-        "15IR",
-        "15IC",
-        "15IK"
-    ];
 
     private static readonly Dictionary<string, LegionSeries> MachineTypeMap = new()
     {
@@ -138,13 +76,8 @@ public static partial class Compatibility
 
     public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
     {
-        if (string.IsNullOrEmpty(machineInformation.Vendor) || !AllowedVendors.Contains(machineInformation.Vendor, StringComparer.InvariantCultureIgnoreCase))
-            return false;
-
-        if (string.IsNullOrEmpty(machineInformation.Model))
-            return false;
-
-        return AllowedModelsPrefix.Any(allowedModel => machineInformation.Model.Contains(allowedModel, StringComparison.InvariantCultureIgnoreCase));
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+        return availability.IsSupported;
     }
 
     public static async Task<(bool isCompatible, MachineInformation machineInformation)> IsCompatibleAsync()
@@ -160,13 +93,14 @@ public static partial class Compatibility
             return (true, mi);
         }
 
-        if (!await CheckBasicCompatibilityAsync().ConfigureAwait(false))
+        var isSupportedLenovoDevice = IsSupportedLegionMachine(mi);
+        if (isSupportedLenovoDevice && !await CheckBasicCompatibilityAsync().ConfigureAwait(false))
         {
-            _isCompatible = false;
-            return (false, mi);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Supported Lenovo device detected without LenovoGameZoneData; continuing in basic mode.");
         }
 
-        _isCompatible = IsSupportedLegionMachine(mi);
+        _isCompatible = true;
         return (_isCompatible.Value, mi);
     }
 

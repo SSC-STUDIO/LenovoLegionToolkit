@@ -4,30 +4,30 @@
 
 ## 短版
 
-Lenovo Legion Toolkit vX.Y.Z 已发布。此版本重点修复了控制台传感器卡片、性能模式显示稳定性、插件扩展页布局和在线插件安装流程，同时补强了 .NET 10/WPF 运行时兼容和视觉/插件烟测链路。下载请以 GitHub Releases、winget 和社区 Scoop 包为准，并优先校验随附的 `SHA256.txt`。
+Universal Device Toolkit vX.Y.Z 已发布。此版本继续延续 Lenovo Legion Toolkit 的轻量、无后台服务、低资源占用和无遥测优势，并把插件扩展作为核心能力：可通过插件扩展页安装、更新、配置和移除设备专用工具。旧 Lenovo Legion Toolkit 用户可直接升级。下载请以 GitHub Releases、winget 和社区 Scoop 包为准，并优先校验随附的 `SHA256.txt`。
 
 ## 详细版
 
-Lenovo Legion Toolkit vX.Y.Z 已发布。
+Universal Device Toolkit vX.Y.Z 已发布。
 
 本次更新重点包括：
 
-- 恢复并优化控制台首页的 CPU / Battery / GPU 传感器大卡片布局
-- 传感器详情默认折叠，支持双击展开，并补充悬浮提示
-- 性能模式卡片在 Lenovo WMI 短时失败时不再整块消失
-- 修复部分 CPU / GPU 传感器读数缺失、假值和细节刷新路径问题
-- 优化插件扩展页留白、默认选中行为、说明文案和使用指南
-- 完整打通在线插件安装、设置、打开、卸载烟测流程
-- 修复启动期未观察任务异常和部分 WMI 瞬态失败导致的稳定性问题
+- 公开品牌改为 Universal Device Toolkit，旧 Lenovo Legion Toolkit 用户可直接升级
+- 保留轻量、无后台服务、低资源占用和无遥测定位
+- 突出插件扩展页：支持在线安装、更新、配置、打开和卸载插件
+- 插件可承载 CPU、GPU、网络、Shell、鼠标和其他设备专用工作流
+- winget `PackageIdentifier` 暂保留 `SSC-STUDIO.LenovoLegionToolkit`
+- Scoop manifest 暂保留 `lenovolegiontoolkit`
 
 下载方式：
 
-- GitHub Releases: <https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest>
+- GitHub Releases: <https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest>
 - winget: `winget install SSC-STUDIO.LenovoLegionToolkit`
-- Scoop: `scoop install extras/lenovolegiontoolkit`
+- Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`
 
 校验建议：
 
-- 优先使用 GitHub Release 中的 `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`
+- 优先使用 GitHub Release 中的 `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 - 转发镜像时同步附带校验文件
 - 对外说明中明确 GitHub Releases 和 winget 为权威下载源
+- 对外说明中使用 Universal Device Toolkit 作为产品名，并注明 winget / Scoop 命令暂留旧标识以保证升级兼容

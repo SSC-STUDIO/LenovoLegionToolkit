@@ -35,13 +35,13 @@ public class CompatibilityTests
     }
 
     [Fact]
-    public void IsSupportedLegionMachine_WithUnsupportedModel_ShouldReturnFalse()
+    public void IsSupportedLegionMachine_WithUnsupportedLenovoModel_ShouldReturnBasicMode()
     {
         var machineInformation = CreateMachineInformation("IdeaPad Pro 5 16AKP10");
 
         var result = Compatibility.IsSupportedLegionMachine(machineInformation);
 
-        result.Should().BeFalse();
+        result.Should().BeTrue();
     }
 
     [Theory]
@@ -146,7 +146,7 @@ public class CompatibilityTests
     }
 
     [Fact]
-    public void IsSupportedLegionMachine_WithMotorolaVendor_ShouldReturnTrue()
+    public void IsSupportedLegionMachine_WithMotorolaLegionVendor_ShouldReturnTrue()
     {
         var machineInformation = CreateMachineInformation("Legion 5 15ACH6", vendor: "MOTOROLA");
 

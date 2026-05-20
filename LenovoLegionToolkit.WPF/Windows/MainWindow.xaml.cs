@@ -169,7 +169,7 @@ public partial class MainWindow
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // When page navigation is complete, update window title to: App Name - Page Title
-        var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", "Lenovo Legion Toolkit", Resource.Culture);
+        var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", AppIdentity.DisplayName, Resource.Culture);
 
         if (e.Content is Page page && !string.IsNullOrWhiteSpace(page.Title))
         {

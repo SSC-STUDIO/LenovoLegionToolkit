@@ -1,8 +1,10 @@
-# Lenovo Legion Toolkit Deployment Guide
+# Universal Device Toolkit Deployment Guide
 
 ## Overview
 
-This document describes the build, test, and deployment processes for Lenovo Legion Toolkit (LLT). It covers development workflows, CI/CD pipelines, and release procedures.
+This document describes the build, test, and deployment processes for Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit). It covers development workflows, CI/CD pipelines, and release procedures.
+
+Public release copy should use Universal Device Toolkit. Repository paths, assembly names, installer asset names, winget identifiers, and Scoop manifest names may still contain `LenovoLegionToolkit` during the compatibility transition so existing Lenovo Legion Toolkit users can upgrade directly.
 
 ## Prerequisites
 
@@ -242,7 +244,7 @@ The installer packages:
 
 ### Semantic Versioning
 
-LLT follows SemVer format: `MAJOR.MINOR.PATCH`
+UDT follows SemVer format: `MAJOR.MINOR.PATCH`
 
 - **MAJOR**: Breaking changes or architecture updates
 - **MINOR**: New features (backward compatible)
@@ -259,13 +261,13 @@ git push origin vX.Y.Z
 
 # Create GitHub Release
 gh release create vX.Y.Z \
-    --title "Lenovo Legion Toolkit vX.Y.Z" \
+    --title "Universal Device Toolkit vX.Y.Z" \
     --notes-file release-notes.md
 ```
 
 ## Localization Delivery (Crowdin)
 
-LLT translations are managed by `crowdin.yml` at repository root.
+UDT translations are managed by `crowdin.yml` at repository root.
 
 ```bash
 # Upload base source strings from all resource modules
@@ -293,14 +295,14 @@ After downloading translations:
    - Auto-updater support
 
 2. **winget Package Manager**
-   - Target package ID: `SSC-STUDIO.LenovoLegionToolkit`
+   - Target package ID: `SSC-STUDIO.LenovoLegionToolkit` (kept under the old name during the Universal Device Toolkit rename)
    - After acceptance: `winget install SSC-STUDIO.LenovoLegionToolkit`
    - Automatic updates via Windows Package Manager
 
 3. **Scoop**
    - `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`
    - `scoop install ssc-studio/lenovolegiontoolkit`
-   - Community maintained bucket
+   - Manifest name remains `lenovolegiontoolkit` for now so existing installs keep upgrading cleanly
 
 ### Alternative Channels
 
@@ -314,10 +316,10 @@ The maintainer-side manifest draft lives under `Packaging/winget`. The canonical
 
 Before submitting a new version:
 
-1. Publish a stable GitHub Release with `LenovoLegionToolkit_vX.Y.Z_Setup.exe` and `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`.
+1. Publish a stable GitHub Release with `UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, the compatibility alias `LenovoLegionToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
 2. Do not draft a new version manifest until the release asset URL and installer SHA256 are final.
 3. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
-4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` unless winget review requires a rename before first acceptance.
+4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.
 5. Validate locally on Windows:
    ```powershell
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
@@ -336,7 +338,7 @@ Before submitting a new version:
 
 1. Publish a stable GitHub Release with the final installer and checksum file.
 2. Do not draft or submit a Scoop manifest update until the installer URL and SHA256 are final.
-3. Update the `lenovolegiontoolkit` manifest in `SSC-STUDIO/scoop-bucket` with the new version, URL, and hash.
+3. Update the `lenovolegiontoolkit` manifest in `SSC-STUDIO/scoop-bucket` with the new version, URL, and hash. Do not rename the manifest during the Universal Device Toolkit transition.
 4. Validate on a clean machine:
    ```powershell
    scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
@@ -351,9 +353,10 @@ Before submitting a new version:
 When promoting a release on Chinese social platforms or after winget acceptance:
 
 - Pin the current GitHub Release URL, winget command, and SHA256 file in all announcement posts.
-- Link to the active `SSC-STUDIO/LenovoLegionToolkit` repository in all promotion content.
+- Link to the active `SSC-STUDIO/UniversalDeviceToolkit` repository in all promotion content.
+- Use Universal Device Toolkit as the public product name, and mention that former Lenovo Legion Toolkit users can upgrade directly.
 - Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
-- Mention Scoop as a maintained package channel backed by `SSC-STUDIO/scoop-bucket`.
+- Mention that winget and Scoop commands temporarily retain the old LenovoLegionToolkit identifiers for compatibility.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
 - Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
@@ -397,7 +400,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
    # Revert to previous version
    gh release delete vX.Y.Z --yes
    gh release create vA.B.C \
-       --title "Lenovo Legion Toolkit vA.B.C (Hotfix)" \
+       --title "Universal Device Toolkit vA.B.C (Hotfix)" \
        --notes "Emergency rollback from vX.Y.Z"
    ```
 

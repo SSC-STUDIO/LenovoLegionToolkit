@@ -66,13 +66,16 @@ public class FoldersTests
     }
 
     [Fact]
-    public void AppData_ShouldContainLenovoLegionToolkit()
+    public void AppData_ShouldContainUniversalDeviceToolkit()
     {
-        // Act
-        var path = Folders.AppData;
+        WithDefaultAppData(() =>
+        {
+            // Act
+            var path = Folders.AppData;
 
-        // Assert
-        path.Should().Contain("LenovoLegionToolkit");
+            // Assert
+            path.Should().Contain("UniversalDeviceToolkit");
+        });
     }
 
     [Fact]
@@ -141,6 +144,47 @@ public class FoldersTests
         }
     }
 
+    [Fact]
+    public void AppDataMigration_ShouldCopyMissingLegacyEntriesWithoutOverwritingNewData()
+    {
+        WithDefaultAppData(() =>
+        {
+            // Arrange
+            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var newDirectory = Path.Combine(localAppData, AppIdentity.CompactName);
+            var legacyDirectory = Path.Combine(localAppData, AppIdentity.LegacyCompactName);
+            var migratedFile = Path.Combine(newDirectory, "udt_migration_test", "legacy.txt");
+            var legacyFile = Path.Combine(legacyDirectory, "udt_migration_test", "legacy.txt");
+            var existingFile = Path.Combine(newDirectory, "udt_migration_test", "existing.txt");
+            var legacyExistingFile = Path.Combine(legacyDirectory, "udt_migration_test", "existing.txt");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(legacyFile)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(existingFile)!);
+            File.WriteAllText(legacyFile, "legacy");
+            File.WriteAllText(legacyExistingFile, "legacy should not overwrite");
+            File.WriteAllText(existingFile, "new");
+
+            try
+            {
+                // Act
+                _ = Folders.AppData;
+
+                // Assert
+                File.ReadAllText(migratedFile).Should().Be("legacy");
+                File.ReadAllText(existingFile).Should().Be("new");
+            }
+            finally
+            {
+                SafeDeleteFile(migratedFile);
+                SafeDeleteFile(legacyFile);
+                SafeDeleteFile(existingFile);
+                SafeDeleteFile(legacyExistingFile);
+                SafeDeleteDirectory(Path.Combine(newDirectory, "udt_migration_test"));
+                SafeDeleteDirectory(Path.Combine(legacyDirectory, "udt_migration_test"));
+            }
+        });
+    }
+
     #endregion
 
     #region Temp Property Tests
@@ -166,13 +210,13 @@ public class FoldersTests
     }
 
     [Fact]
-    public void Temp_ShouldContainLenovoLegionToolkit()
+    public void Temp_ShouldContainUniversalDeviceToolkit()
     {
         // Act
         var path = Folders.Temp;
 
         // Assert
-        path.Should().Contain("LenovoLegionToolkit");
+        path.Should().Contain("UniversalDeviceToolkit");
     }
 
     [Fact]
@@ -292,4 +336,45 @@ public class FoldersTests
     }
 
     #endregion
+
+    private static void SafeDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch
+        {
+            // best-effort cleanup
+        }
+    }
+
+    private static void WithDefaultAppData(Action action)
+    {
+        var originalValue = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, null);
+
+        try
+        {
+            action();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, originalValue);
+        }
+    }
+
+    private static void SafeDeleteDirectory(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, recursive: true);
+        }
+        catch
+        {
+            // best-effort cleanup
+        }
+    }
 }

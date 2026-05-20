@@ -60,6 +60,26 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void Update_ShouldPreferUniversalFullInstallerOverOnlineAndLegacyAlias()
+    {
+        // Arrange
+        const string onlinePackageUrl = "https://example.com/UniversalDeviceToolkit_v3.8.0_Online_Setup.exe";
+        const string legacyPackageUrl = "https://example.com/LenovoLegionToolkit_v3.8.0_Setup.exe";
+        const string fullPackageUrl = "https://example.com/UniversalDeviceToolkit_v3.8.0_Full_Setup.exe";
+        var release = CreateRelease(
+            body: string.Empty,
+            ("UniversalDeviceToolkit_v3.8.0_Online_Setup.exe", onlinePackageUrl),
+            ("LenovoLegionToolkit_v3.8.0_Setup.exe", legacyPackageUrl),
+            ("UniversalDeviceToolkit_v3.8.0_Full_Setup.exe", fullPackageUrl));
+
+        // Act
+        var update = new Update(release);
+
+        // Assert
+        update.Url.Should().Be(fullPackageUrl);
+    }
+
+    [Fact]
     public void Update_ShouldParsePackageSpecificHashFromReleaseBody()
     {
         // Arrange
