@@ -14,6 +14,8 @@ The authoritative Scoop manifest is published in the custom bucket repository: [
    - `version`
    - `url`
    - `hash`
+   - `homepage`, `checkver`, and `autoupdate` repository URLs during the Universal Device Toolkit transition
+   - `shortcuts` so the executable is `Universal Device Toolkit.exe` and the shortcut name is `Universal Device Toolkit`
    - any release notes or homepage metadata if needed
 4. Validate locally with Scoop on a clean machine:
    ```powershell
