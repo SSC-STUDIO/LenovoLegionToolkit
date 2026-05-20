@@ -45,6 +45,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dotnet tool install --global dotnet-reportgenerator-merge
-          reportgenerator -reports:TestResults/*.xml -targetdir:TestReportsReports -reporttypes:Summary
+          dotnet tool install dotnet-reportgenerator-globaltool --tool-path ./.tools
+          ./.tools/reportgenerator -reports:TestResults/*.xml -targetdir:TestReports -reporttypes:Summary
           # Optionally post comments or analysis using GitHub CLI if needed

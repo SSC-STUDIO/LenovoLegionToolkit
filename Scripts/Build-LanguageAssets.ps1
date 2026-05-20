@@ -49,6 +49,31 @@ function ConvertTo-UrlPath {
     return $Path.Replace('\', '/')
 }
 
+function Get-Sha256Hash {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        throw "Cannot hash missing file '$Path'."
+    }
+
+    $resolvedPath = (Resolve-Path -LiteralPath $Path).ProviderPath
+    $stream = [System.IO.File]::OpenRead($resolvedPath)
+    try {
+        $sha256 = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            $bytes = $sha256.ComputeHash($stream)
+        }
+        finally {
+            $sha256.Dispose()
+        }
+    }
+    finally {
+        $stream.Dispose()
+    }
+
+    return -join ($bytes | ForEach-Object { $_.ToString('x2') })
+}
+
 function Get-FullSetupAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Full_Setup.exe" }
 function Get-OnlineSetupAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Online_Setup.exe" }
 function Get-FullZipAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Full_win-x64.zip" }
@@ -104,7 +129,7 @@ function New-FileMetadata {
         name = $Name
         path = ConvertTo-UrlPath $CatalogPath
         size = $file.Length
-        sha256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
+        sha256 = Get-Sha256Hash -Path $file.FullName
     }
 
     if (-not [string]::IsNullOrWhiteSpace($Url)) {
@@ -152,7 +177,7 @@ function Write-HashFile {
             throw "Cannot write '$HashFileName' because '$assetName' is missing."
         }
 
-        "{0}  {1}" -f (Get-FileHash -LiteralPath $assetPath -Algorithm SHA256).Hash, $assetName
+        "{0}  {1}" -f (Get-Sha256Hash -Path $assetPath), $assetName
     }
 
     Set-Content -LiteralPath (Join-Path $ReleaseOutputPath $HashFileName) -Value $lines -Encoding ASCII
@@ -568,7 +593,7 @@ function Prepare-ReleaseAssets {
                 culture = $culture
                 displayName = Get-LanguageDisplayName $culture
                 url = "$ResourcesBaseUrl/$Version/languages/$packName"
-                sha256 = (Get-FileHash -LiteralPath $packZip -Algorithm SHA256).Hash.ToLowerInvariant()
+                sha256 = Get-Sha256Hash -Path $packZip
                 size = (Get-Item -LiteralPath $packZip).Length
                 asset = New-FileMetadata `
                     -FilePath $packZip `
@@ -629,7 +654,7 @@ function Prepare-ReleaseAssets {
                 modelKeywords = @(Get-ListValue $pack.ModelKeywords)
                 machineTypes = @(Get-ListValue $pack.MachineTypes)
                 url = "$ResourcesBaseUrl/$Version/devices/$packName"
-                sha256 = (Get-FileHash -LiteralPath $packZip -Algorithm SHA256).Hash.ToLowerInvariant()
+                sha256 = Get-Sha256Hash -Path $packZip
                 size = (Get-Item -LiteralPath $packZip).Length
                 asset = New-FileMetadata `
                     -FilePath $packZip `
