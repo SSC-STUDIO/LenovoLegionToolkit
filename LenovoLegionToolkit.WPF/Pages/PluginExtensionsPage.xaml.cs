@@ -49,6 +49,7 @@ private string _currentSearchText = string.Empty;
     private bool _onlineMetadataLoadCompleted = false;
     private bool _onlineMetadataLoadFailed = false;
     private string _currentDownloadingPluginId = string.Empty;
+    private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _onlinePluginInstallGate = new(1, 1);
 
     public PluginExtensionsPage()
@@ -397,7 +398,9 @@ private string _currentSearchText = string.Empty;
                 var iconBackground = updatePlugin?.IconBackground ?? onlinePlugin?.IconBackground ?? string.Empty;
 
                 string version = "1.0.0";
-                if (!string.IsNullOrWhiteSpace(newVersion))
+                if (isInstalled && metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
+                    version = metadata.Version;
+                else if (!string.IsNullOrWhiteSpace(newVersion))
                     version = newVersion;
                 else if (onlinePlugin != null && !string.IsNullOrWhiteSpace(onlinePlugin.Version))
                     version = onlinePlugin.Version;
@@ -870,7 +873,14 @@ private string _currentSearchText = string.Empty;
 
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
         if (metadata == null || string.IsNullOrWhiteSpace(metadata.Version))
-            return true;
+        {
+            if (_recentInstalledVersions.TryGetValue(pluginId, out var recentVersion))
+                return TryParsePluginVersion(availableVersion, out var recentOnlineVersion) &&
+                       TryParsePluginVersion(recentVersion, out var installedFromRecentInstall) &&
+                       recentOnlineVersion > installedFromRecentInstall;
+
+            return false;
+        }
 
         if (string.IsNullOrWhiteSpace(availableVersion))
         {
@@ -879,9 +889,32 @@ private string _currentSearchText = string.Empty;
                 ?.Version;
         }
 
-        return Version.TryParse(availableVersion, out var onlineVersion) &&
-               Version.TryParse(metadata.Version, out var installedVersion) &&
-               onlineVersion > installedVersion;
+        if (!TryParsePluginVersion(availableVersion, out var onlineVersion))
+            return false;
+
+        if (!TryParsePluginVersion(metadata.Version, out var installedVersion))
+            return true;
+
+        return onlineVersion > installedVersion;
+    }
+
+    private static bool TryParsePluginVersion(string? rawVersion, out Version version)
+    {
+        version = new Version(0, 0, 0, 0);
+        if (string.IsNullOrWhiteSpace(rawVersion))
+            return false;
+
+        var normalized = rawVersion.Trim();
+        if (normalized.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+            normalized = normalized[1..];
+
+        if (Version.TryParse(normalized, out var parsedVersion))
+        {
+            version = parsedVersion;
+            return true;
+        }
+
+        return false;
     }
 
     private void ReconcileAvailableUpdatesWithInstalledVersions()
@@ -977,6 +1010,7 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
+                _recentInstalledVersions[pluginId] = onlinePlugin.Version;
                 RemoveAvailableUpdate(pluginId);
                 ReconcileAvailableUpdatesWithInstalledVersions();
                 LocalizationHelper.SetPluginResourceCultures();
@@ -1057,26 +1091,47 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            var pluginType = plugin.GetType();
-            var getSettingsPage = pluginType.GetMethod("GetSettingsPage", BindingFlags.Public | BindingFlags.Instance);
-            if (getSettingsPage != null)
+            if (plugin is LenovoLegionToolkit.Lib.Plugins.PluginBase pluginBase)
             {
-                var settingsPage = getSettingsPage.Invoke(plugin, null);
+                var settingsPage = pluginBase.GetSettingsPage();
                 supportsSettingsPage = settingsPage != null;
-            }
 
-            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", BindingFlags.Public | BindingFlags.Instance);
-            if (getFeatureExtension != null)
-            {
-                var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                var featureExtension = pluginBase.GetFeatureExtension();
                 supportsFeaturePage = PluginPageWrapper.TryCreateHostedPluginPage(featureExtension, out _);
-            }
 
-            var getOptimizationCategory = pluginType.GetMethod("GetOptimizationCategory", BindingFlags.Public | BindingFlags.Instance);
-            if (getOptimizationCategory != null)
-            {
-                var optimizationCategory = getOptimizationCategory.Invoke(plugin, null);
+                var optimizationCategory = pluginBase.GetOptimizationCategory();
                 supportsOptimizationCategory = optimizationCategory != null;
+            }
+            else
+            {
+                var pluginType = plugin.GetType();
+                var getSettingsPage = pluginType.GetMethod("GetSettingsPage", BindingFlags.Public | BindingFlags.Instance);
+                if (getSettingsPage != null)
+                {
+                    var settingsPage = getSettingsPage.Invoke(plugin, null);
+                    supportsSettingsPage = settingsPage != null;
+                }
+
+                var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", BindingFlags.Public | BindingFlags.Instance);
+                if (getFeatureExtension != null)
+                {
+                    var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                    supportsFeaturePage = PluginPageWrapper.TryCreateHostedPluginPage(featureExtension, out _);
+                }
+
+                if (plugin is IOptimizationCategoryProvider provider)
+                {
+                    supportsOptimizationCategory = provider.GetOptimizationCategory() != null;
+                }
+                else
+                {
+                    var getOptimizationCategory = pluginType.GetMethod("GetOptimizationCategory", BindingFlags.Public | BindingFlags.Instance);
+                    if (getOptimizationCategory != null)
+                    {
+                        var optimizationCategory = getOptimizationCategory.Invoke(plugin, null);
+                        supportsOptimizationCategory = optimizationCategory != null;
+                    }
+                }
             }
         }
         catch (Exception ex)
@@ -1410,6 +1465,7 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
+                _recentInstalledVersions[manifest.Id] = manifest.Version;
                 RemoveAvailableUpdate(manifest.Id);
                 ReconcileAvailableUpdatesWithInstalledVersions();
                 LocalizationHelper.SetPluginResourceCultures();
@@ -2427,7 +2483,11 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
 
-            if (isInstalled)
+            if (selectedViewModel.HasExpandableContent)
+            {
+                selectedViewModel.ToggleDetails();
+            }
+            else if (isInstalled)
             {
                 OpenPluginConfiguration(selectedViewModel.PluginId);
             }
@@ -2450,6 +2510,16 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             UpdateSpecificPluginUI(e.PluginId);
             UpdateAllPluginsUI();
         });
+    }
+
+    private void PluginDetailsToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
+            return;
+
+        var viewModel = _pluginViewModels.FirstOrDefault(vm =>
+            string.Equals(vm.PluginId, pluginId, StringComparison.OrdinalIgnoreCase));
+        viewModel?.ToggleDetails();
     }
 
     private void ContextMenu_OpenFolder_Click(object sender, RoutedEventArgs e)

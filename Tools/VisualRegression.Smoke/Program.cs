@@ -27,6 +27,7 @@ internal static partial class Program
     private const int WindowHeight = 850;
     private const int MinWindowWidth = 1000;
     private const int MinWindowHeight = 650;
+    private static readonly string[] MainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
 
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
     private static readonly List<CaptureRecord> Captures = new();
@@ -76,6 +77,29 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
             CapturePage(currentDirectory, mainWindow, "dashboard");
 
+            if (options.PluginOnly)
+            {
+                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                    "pluginExtensions",
+                    ["PluginExtensionsNavItem"],
+                    ["Plugin Extensions"],
+                    IsPluginExtensionsPageReady));
+
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+                if (options.KeepApp)
+                {
+                    Console.WriteLine("[visual-smoke] Leaving app running for inspection.");
+                    process = null;
+                    return 0;
+                }
+
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
+
             if (options.SettingsOnly)
             {
                 NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
@@ -105,9 +129,10 @@ internal static partial class Program
                     "keyboard",
                     ["_keyboardItem"],
                     ["Keyboard", "Keyboard Backlight"],
-                    root => root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
+                    root => (root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
+                             && !root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase))
                             || FindVisibleTextContains(root, "No compatible keyboards")
-                            || FindVisibleTextContains(root, "Keyboard Backlight")));
+                            || IsVisible(FindByAutomationId(root, "KeyboardBacklightPageRoot"))));
             }
 
             NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
@@ -402,9 +427,6 @@ internal static partial class Program
         if (TryInvokePattern(element))
             return;
 
-        if (TrySelectionItemPattern(element))
-            return;
-
         if (TryExpandCollapsePattern(element))
             return;
 
@@ -418,26 +440,6 @@ internal static partial class Program
             if (element.TryGetCurrentPattern(InvokePattern.Pattern, out var pattern))
             {
                 ((InvokePattern)pattern).Invoke();
-                return true;
-            }
-        }
-        catch (InvalidOperationException)
-        {
-        }
-        catch (ElementNotAvailableException)
-        {
-        }
-
-        return false;
-    }
-
-    private static bool TrySelectionItemPattern(AutomationElement element)
-    {
-        try
-        {
-            if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var pattern))
-            {
-                ((SelectionItemPattern)pattern).Select();
                 return true;
             }
         }
@@ -842,9 +844,17 @@ internal static partial class Program
 
     private static Process StartApp(string runtimeDirectory, string appDataDirectory, string pluginsDirectory, string sandboxKey, bool keepUnsupportedNavigationItems)
     {
-        var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
-        var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
-        var exePath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.exe");
+        var appBaseName = MainAppBaseNames.FirstOrDefault(name =>
+            File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
+            File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json")))
+            ?? MainAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
+
+        if (string.IsNullOrWhiteSpace(appBaseName))
+            throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
+
+        var dllPath = Path.Combine(runtimeDirectory, $"{appBaseName}.dll");
+        var runtimeConfigPath = Path.Combine(runtimeDirectory, $"{appBaseName}.runtimeconfig.json");
+        var exePath = Path.Combine(runtimeDirectory, $"{appBaseName}.exe");
 
         ProcessStartInfo startInfo;
         if (File.Exists(dllPath) && File.Exists(runtimeConfigPath))
@@ -868,9 +878,7 @@ internal static partial class Program
             };
         }
         else
-        {
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
-        }
 
         startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = appDataDirectory;
         startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = pluginsDirectory;
@@ -1034,7 +1042,7 @@ internal static partial class Program
 
         foreach (var candidate in directCandidates)
         {
-            if (Directory.Exists(candidate))
+            if (Directory.Exists(candidate) && ContainsMainAppStartupEntry(candidate))
                 return candidate;
         }
 
@@ -1043,13 +1051,24 @@ internal static partial class Program
             var discovered = Directory
                 .EnumerateDirectories(runtimeRoot, "net10.0-windows*", SearchOption.TopDirectoryOnly)
                 .Select(path => Path.Combine(path, "win-x64"))
-                .FirstOrDefault(Directory.Exists);
+                .Where(Directory.Exists)
+                .Where(ContainsMainAppStartupEntry)
+                .OrderByDescending(Directory.GetLastWriteTimeUtc)
+                .FirstOrDefault();
 
             if (discovered is not null)
                 return discovered;
         }
 
         throw new DirectoryNotFoundException($"Runtime directory not found under: {runtimeRoot}");
+    }
+
+    private static bool ContainsMainAppStartupEntry(string runtimeDirectory)
+    {
+        return MainAppBaseNames.Any(name =>
+            (File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
+             File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json"))) ||
+            File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
     }
 
     private static void TryWaitForInputIdle(Process process, int milliseconds)
@@ -1286,6 +1305,7 @@ internal static partial class Program
         string Configuration,
         string Theme,
         string ThemeStyle,
+        bool PluginOnly,
         bool SettingsOnly,
         bool KeepApp,
         bool KeepUnsupportedNavigationItems,
@@ -1299,11 +1319,12 @@ internal static partial class Program
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
             var theme = ReadOption(args, "--theme") ?? "Dark";
             var themeStyle = ReadOption(args, "--theme-style") ?? "Default";
+            var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, settingsOnly, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

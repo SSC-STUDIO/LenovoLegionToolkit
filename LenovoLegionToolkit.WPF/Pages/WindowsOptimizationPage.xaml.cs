@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.ViewModels;
 using LenovoLegionToolkit.WPF.Windows.Utils;
@@ -32,6 +33,7 @@ public partial class WindowsOptimizationPage : Page
     public WindowsOptimizationViewModel ViewModel => _viewModel;
 
     private readonly WindowsOptimizationService _windowsOptimizationService = IoCContainer.Resolve<WindowsOptimizationService>();
+    private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
     private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
@@ -69,6 +71,8 @@ public partial class WindowsOptimizationPage : Page
 
     private void WindowsOptimizationPage_Loaded(object sender, RoutedEventArgs e)
     {
+        _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
+        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
         SyncNavButtonToCurrentMode();
         TryApplyPendingPluginFocusRequest();
     }
@@ -92,6 +96,8 @@ public partial class WindowsOptimizationPage : Page
 
     private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
+
         // Close windows
         _actionDetailsWindow?.Close();
         _selectedActionsWindow?.Close();
@@ -112,10 +118,11 @@ public partial class WindowsOptimizationPage : Page
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
-        FocusPluginCategory(pluginId);
+        if (!FocusPluginCategory(pluginId))
+            RequestPluginCategoryFocus(pluginId);
     }
 
-    private void FocusPluginCategory(string pluginId)
+    private bool FocusPluginCategory(string pluginId)
     {
         ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.Optimization;
         var targetCategory = ViewModel.OptimizationCategories.FirstOrDefault(category =>
@@ -125,7 +132,7 @@ public partial class WindowsOptimizationPage : Page
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace((FormattableString)$"Windows optimization category not found for plugin '{pluginId}'.");
-            return;
+            return false;
         }
 
         foreach (var category in ViewModel.OptimizationCategories)
@@ -138,6 +145,22 @@ public partial class WindowsOptimizationPage : Page
             expander?.BringIntoView();
             expander?.Focus();
         }, DispatcherPriority.Loaded);
+
+        return true;
+    }
+
+    private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
+    {
+        Dispatcher.InvokeAsync(async () =>
+        {
+            await Task.Delay(300);
+            ViewModel.Initialize();
+
+            if (e.IsInstalled)
+                RequestPluginCategoryFocus(e.PluginId);
+
+            TryApplyPendingPluginFocusRequest();
+        }, DispatcherPriority.Background);
     }
 
     private Expander? FindCategoryExpander(OptimizationCategoryViewModel categoryVm)

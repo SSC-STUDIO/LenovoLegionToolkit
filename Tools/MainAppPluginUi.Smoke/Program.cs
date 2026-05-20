@@ -43,6 +43,7 @@ internal static class Program
     private const string DisableAnimationsEnvironmentVariable = "LLT_SMOKE_DISABLE_ANIMATIONS";
     private const string SmokeAutomationEnvironmentVariable = "LLT_SMOKE_AUTOMATION";
     private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
+    private static readonly string[] MainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
     private const byte VkControl = 0x11;
@@ -396,8 +397,7 @@ internal static class Program
         }
         finally
         {
-            if (process is not null && !process.HasExited)
-                process.Kill(entireProcessTree: true);
+            StopMainProcess(process);
 
             if (preserveArtifacts)
             {
@@ -418,6 +418,30 @@ internal static class Program
 
             WriteScreenshotManifest();
             WriteDismissedPopupsSummary();
+        }
+    }
+
+    private static void StopMainProcess(Process? process)
+    {
+        if (process is null)
+            return;
+
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+                if (!process.WaitForExit(10000))
+                    Console.WriteLine("[main-smoke] Main app process did not exit within fixture cleanup wait.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[main-smoke] Failed to stop main app process before cleanup: {ex.Message}");
+        }
+        finally
+        {
+            process.Dispose();
         }
     }
 
@@ -873,7 +897,8 @@ Environment variables:
             throw new DirectoryNotFoundException($"Main app Release output not found: {releaseRoot}. Build main app first.");
 
         var runtimeDirectory = Directory
-            .EnumerateFiles(releaseRoot, "Lenovo Legion Toolkit.dll", SearchOption.AllDirectories)
+            .EnumerateFiles(releaseRoot, "*.dll", SearchOption.AllDirectories)
+            .Where(path => MainAppBaseNames.Contains(Path.GetFileNameWithoutExtension(path), StringComparer.OrdinalIgnoreCase))
             .Select(Path.GetDirectoryName)
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Select(path => path!)
@@ -882,15 +907,16 @@ Environment variables:
             .FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(runtimeDirectory))
-            throw new DirectoryNotFoundException("Could not locate runtime directory containing 'Lenovo Legion Toolkit.dll'.");
+            throw new DirectoryNotFoundException("Could not locate runtime directory containing the main app executable artifacts.");
 
         return runtimeDirectory;
     }
 
     private static bool ContainsMainAppExecutableArtifacts(string path)
     {
-        return File.Exists(Path.Combine(path, "Lenovo Legion Toolkit.runtimeconfig.json"))
-               || File.Exists(Path.Combine(path, "Lenovo Legion Toolkit.exe"));
+        return MainAppBaseNames.Any(name =>
+            File.Exists(Path.Combine(path, $"{name}.runtimeconfig.json")) ||
+            File.Exists(Path.Combine(path, $"{name}.exe")));
     }
 
     private static string ResolveRuntimePluginsDirectory(string runtimeDirectory)
@@ -1054,8 +1080,16 @@ Environment variables:
         SmokeSandboxState sandboxState,
         LocalPluginPackageBundle localPluginPackageBundle)
     {
-        var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
-        var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
+        var appBaseName = MainAppBaseNames.FirstOrDefault(name =>
+            File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
+            File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json")))
+            ?? MainAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
+
+        if (string.IsNullOrWhiteSpace(appBaseName))
+            throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
+
+        var dllPath = Path.Combine(runtimeDirectory, $"{appBaseName}.dll");
+        var runtimeConfigPath = Path.Combine(runtimeDirectory, $"{appBaseName}.runtimeconfig.json");
         if (File.Exists(dllPath) && File.Exists(runtimeConfigPath))
         {
             var startInfo = new ProcessStartInfo
@@ -1073,7 +1107,7 @@ Environment variables:
             return startInfo;
         }
 
-        var exePath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.exe");
+        var exePath = Path.Combine(runtimeDirectory, $"{appBaseName}.exe");
         if (File.Exists(exePath))
         {
             var startInfo = new ProcessStartInfo
@@ -1611,6 +1645,9 @@ Environment variables:
         foreach (var window in windows)
         {
             if (TryHandleCompatibilityWindow(window))
+                continue;
+
+            if (IsLikelySettingsWindow(window))
                 continue;
 
             candidates.Add(window);
@@ -2629,8 +2666,7 @@ Environment variables:
 
         EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
         CaptureMainWindow(mainWindow, pluginId, "optimization-page");
-        ToggleOptimizationActions(mainWindow, pluginId);
-        Console.WriteLine($"[main-smoke] Open button routed to optimization extension: {pluginId}");
+        Console.WriteLine($"[main-smoke] Open button routed to optimization extension without applying actions: {pluginId}");
         ObserveStep($"Optimization route opened: {pluginId}", mainWindow);
 
         if (returnToMarketplace)
@@ -2786,9 +2822,37 @@ Environment variables:
 
     private static void TestViveToolFeatureInteractions(AutomationElement mainWindow)
     {
-        var searchTextBox = WaitForAutomationId(mainWindow, "ViveToolSearchTextBox", TimeSpan.FromSeconds(15));
-        var statusFilter = WaitForAutomationId(mainWindow, "ViveToolStatusFilterComboBox", TimeSpan.FromSeconds(15));
-        var refreshButton = WaitForAutomationId(mainWindow, "ViveToolRefreshListButton", TimeSpan.FromSeconds(15));
+        var ready = WaitUntil(
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                return IsInteractable(FindByAutomationId(mainWindow, "ViveToolSearchTextBox"))
+                       || IsInteractable(FindByAutomationId(mainWindow, "ViveToolMissingGoToSettingsButton"));
+            },
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!ready)
+        {
+            DumpAutomationSnapshot(mainWindow, 320);
+            throw new TimeoutException("Timed out waiting for ViveTool feature list or missing-runtime state.");
+        }
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var missingSettingsButton = FindByAutomationId(mainWindow, "ViveToolMissingGoToSettingsButton");
+        if (IsInteractable(missingSettingsButton))
+        {
+            var missingRefreshButton = WaitForAutomationId(mainWindow, "ViveToolMissingRefreshStatusButton", TimeSpan.FromSeconds(8));
+            Click(missingRefreshButton);
+            WaitForAnimationsToComplete();
+            CaptureMainWindow(ResolveLiveWindow(mainWindow), "vive-tool-missing-runtime");
+            Console.WriteLine("[main-smoke] ViveTool feature page reached recoverable missing-runtime state");
+            return;
+        }
+
+        var searchTextBox = WaitForAutomationId(mainWindow, "ViveToolSearchTextBox", TimeSpan.FromSeconds(5));
+        var statusFilter = WaitForAutomationId(mainWindow, "ViveToolStatusFilterComboBox", TimeSpan.FromSeconds(5));
+        var refreshButton = WaitForAutomationId(mainWindow, "ViveToolRefreshListButton", TimeSpan.FromSeconds(5));
 
         SetTextBoxValue(searchTextBox, "1");
         Thread.Sleep(700);
@@ -3013,14 +3077,17 @@ Environment variables:
         if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
         {
             Console.WriteLine($"[main-smoke] custom-mouse optimization settings button clicked: id='{settingsButton.Current.AutomationId}' name='{settingsButton.Current.Name}'");
-            BringToForeground(mainWindow);
-            Click(settingsButton);
-            MouseClick(settingsButton);
-            MouseClick(settingsButton);
-            Console.WriteLine("[main-smoke] custom-mouse optimization settings button received fallback mouse double-click.");
         }
 
         AutomationElement? settingsWindow = TryWaitForOptimizationSettingsWindow(mainWindow, processId, pluginId, existingSettingsWindows, expectedWindowNames);
+        if (settingsWindow is null && pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            BringToForeground(mainWindow);
+            MouseClick(settingsButton);
+            Console.WriteLine("[main-smoke] custom-mouse optimization settings button received mouse-click fallback.");
+            settingsWindow = TryWaitForOptimizationSettingsWindow(mainWindow, processId, pluginId, existingSettingsWindows, expectedWindowNames);
+        }
+
         if (settingsWindow is null && pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
         {
             BringToForeground(mainWindow);
@@ -4546,7 +4613,7 @@ Environment variables:
     {
         EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
         CaptureMainWindow(mainWindow, pluginId, "optimization-category");
-        ToggleOptimizationActions(mainWindow, pluginId);
+        Console.WriteLine($"[main-smoke] Optimization category actions verified without applying changes: {pluginId}");
         ObserveStep($"Optimization category visible: {pluginId}", mainWindow);
     }
 

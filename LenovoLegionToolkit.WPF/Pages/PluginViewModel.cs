@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
@@ -36,6 +37,7 @@ namespace LenovoLegionToolkit.WPF.Pages
         private string _author = string.Empty;
         private string _detailedDescription = string.Empty;
         private string _usageGuide = string.Empty;
+        private bool _isDetailsExpanded;
 
         public string NewVersion
         {
@@ -47,6 +49,8 @@ namespace LenovoLegionToolkit.WPF.Pages
                     _newVersion = value;
                     OnPropertyChanged(nameof(NewVersion));
                     OnPropertyChanged(nameof(HasUpdateDetails));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                 }
             }
         }
@@ -62,6 +66,8 @@ namespace LenovoLegionToolkit.WPF.Pages
                     OnPropertyChanged(nameof(ReleaseDate));
                     OnPropertyChanged(nameof(HasReleaseDate));
                     OnPropertyChanged(nameof(HasUpdateDetails));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                 }
             }
         }
@@ -78,6 +84,8 @@ namespace LenovoLegionToolkit.WPF.Pages
                     OnPropertyChanged(nameof(HasChangelog));
                     OnPropertyChanged(nameof(HasChangelogUrl));
                     OnPropertyChanged(nameof(HasUpdateDetails));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                 }
             }
         }
@@ -106,6 +114,8 @@ namespace LenovoLegionToolkit.WPF.Pages
                     _detailedDescription = value;
                     OnPropertyChanged(nameof(DetailedDescription));
                     OnPropertyChanged(nameof(HasDetailedDescription));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                 }
             }
         }
@@ -122,11 +132,48 @@ namespace LenovoLegionToolkit.WPF.Pages
                     _usageGuide = value;
                     OnPropertyChanged(nameof(UsageGuide));
                     OnPropertyChanged(nameof(HasUsageGuide));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                 }
             }
         }
 
         public bool HasUsageGuide => !string.IsNullOrWhiteSpace(_usageGuide);
+
+        public bool IsDetailsExpanded
+        {
+            get => _isDetailsExpanded;
+            set
+            {
+                if (_isDetailsExpanded != value)
+                {
+                    _isDetailsExpanded = value;
+                    OnPropertyChanged(nameof(IsDetailsExpanded));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
+                    OnPropertyChanged(nameof(ToggleDetailsText));
+                    OnPropertyChanged(nameof(ToggleDetailsTooltip));
+                    OnPropertyChanged(nameof(ToggleDetailsSymbol));
+                }
+            }
+        }
+
+        public bool HasExpandableContent => HasDetailedDescription || HasUsageGuide || HasUpdateDetails;
+
+        public bool ShowExpandedDetails => IsDetailsExpanded && HasExpandableContent;
+
+        public string DetailsLabel => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DetailsLabel", "Details", Resource.Culture);
+
+        public string UsageGuideLabel => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_UsageGuideLabel", "Usage Guide", Resource.Culture);
+
+        public string ToggleDetailsText => IsDetailsExpanded
+            ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_CollapseDetails", "Hide details", Resource.Culture)
+            : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_ShowDetails", "Show details", Resource.Culture);
+
+        public string ToggleDetailsTooltip => ToggleDetailsText;
+
+        public string ToggleDetailsSymbol => IsDetailsExpanded ? "ChevronUp24" : "ChevronDown24";
+
+        public bool ShouldShowStatusBadge => IsInstalled || UpdateAvailable || IsLocal;
 
         public string StatusText
         {
@@ -160,9 +207,12 @@ namespace LenovoLegionToolkit.WPF.Pages
                 if (_updateAvailable)
                     capabilities.Add(Resource.PluginExtensionsPage_CapabilityUpdate);
 
+                if (IsInstalled && capabilities.Count == 0)
+                    return Resource.PluginExtensionsPage_PluginInstalled;
+
                 return capabilities.Count > 0
                     ? string.Join(" / ", capabilities)
-                    : Resource.PluginExtensionsPage_InstallPlugin;
+                    : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Available", "Available", Resource.Culture);
             }
         }
 
@@ -312,8 +362,11 @@ public string PluginId
                 {
                     _isInstalled = value;
                     OnPropertyChanged(nameof(IsInstalled));
+                    OnPropertyChanged(nameof(ShouldShowStatusBadge));
                     OnPropertyChanged(nameof(UpdateInfoVisible));
                     OnPropertyChanged(nameof(HasUpdateDetails));
+                    OnPropertyChanged(nameof(HasExpandableContent));
+                    OnPropertyChanged(nameof(ShowExpandedDetails));
                     OnPropertyChanged(nameof(StatusText));
                     
                     // Update button text when installation status changes
@@ -477,12 +530,23 @@ public string PluginId
             {
                 _updateAvailable = updateAvailable;
                 OnPropertyChanged(nameof(UpdateAvailable));
+                OnPropertyChanged(nameof(ShouldShowStatusBadge));
                 OnPropertyChanged(nameof(UpdateInfoVisible));
                 OnPropertyChanged(nameof(HasUpdateDetails));
+                OnPropertyChanged(nameof(HasExpandableContent));
+                OnPropertyChanged(nameof(ShowExpandedDetails));
                 OnPropertyChanged(nameof(StatusText));
                 OnPropertyChanged(nameof(CapabilitySummary));
                 UpdateInstallButtonText();
             }
+        }
+
+        public void ToggleDetails()
+        {
+            if (!HasExpandableContent)
+                return;
+
+            IsDetailsExpanded = !IsDetailsExpanded;
         }
 
         public void SetIconBackgroundFromStore(string? iconBackgroundValue)
