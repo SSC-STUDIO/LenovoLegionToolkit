@@ -48,6 +48,48 @@ begin
   Result := True;
 end;
 
+function SetupLanguageToAppCulture(LanguageName: String): String;
+begin
+  if LanguageName = 'ptbr' then
+    Result := 'pt-br'
+  else if LanguageName = 'nlnl' then
+    Result := 'nl-nl'
+  else if LanguageName = 'ukr' then
+    Result := 'uk'
+  else if LanguageName = 'zhhans' then
+    Result := 'zh-hans'
+  else if LanguageName = 'zhhant' then
+    Result := 'zh-hant'
+  else
+    Result := LanguageName;
+end;
+
+procedure SaveInitialAppLanguage;
+var
+  AppDataDir: String;
+  LangPath: String;
+  AppCulture: String;
+begin
+  AppDataDir := ExpandConstant('{localappdata}\{#MyAppNameCompact}');
+  LangPath := AppDataDir + '\lang';
+
+  if FileExists(LangPath) then
+    Exit;
+
+  AppCulture := SetupLanguageToAppCulture(ActiveLanguage);
+  if AppCulture = '' then
+    Exit;
+
+  ForceDirectories(AppDataDir);
+  SaveStringToFile(LangPath, AppCulture, False);
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+    SaveInitialAppLanguage;
+end;
+
 function InitializeUninstall(): Boolean;
 var
   ShellExePath: String;
