@@ -1112,6 +1112,42 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("DeviceInformationWindow_Device_Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hardware.
+        /// </summary>
+        public static string DeviceInformationWindow_Hardware_Title {
+            get {
+                return ResourceManager.GetString("DeviceInformationWindow_Hardware_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Baseboard.
+        /// </summary>
+        public static string DeviceInformationWindow_BaseBoard_Title {
+            get {
+                return ResourceManager.GetString("DeviceInformationWindow_BaseBoard_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Chassis.
+        /// </summary>
+        public static string DeviceInformationWindow_Chassis_Title {
+            get {
+                return ResourceManager.GetString("DeviceInformationWindow_Chassis_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Memory.
+        /// </summary>
+        public static string DeviceInformationWindow_Memory_Title {
+            get {
+                return ResourceManager.GetString("DeviceInformationWindow_Memory_Title", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Lenovo Support.

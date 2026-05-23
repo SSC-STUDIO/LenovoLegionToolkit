@@ -35,6 +35,77 @@ public class CompatibilityTests
     }
 
     [Fact]
+    public void IsSupportedDevice_WithUnsupportedVendor_ShouldReturnFalse()
+    {
+        var machineInformation = CreateMachineInformation("Generic Laptop", vendor: "OTHER");
+
+        var result = Compatibility.IsSupportedDevice(machineInformation);
+
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void GetDeviceFeatureAvailability_WithUnsupportedVendor_ShouldReturnGenericBasicPack()
+    {
+        var machineInformation = CreateMachineInformation("Generic Laptop", vendor: "OTHER");
+
+        var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
+
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be("generic-pc-basic");
+        availability.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
+    }
+
+    [Theory]
+    [InlineData("ASRock", "B650M Pro RS", "universal-motherboard-basic")]
+    [InlineData("Unknown", "Desktop PC", "universal-desktop-basic")]
+    [InlineData("", "", "generic-pc-basic")]
+    public void GetDeviceFeatureAvailability_WithGenericDevice_ShouldReturnNamedBasicPack(string vendor, string model, string expectedPackId)
+    {
+        var machineInformation = CreateMachineInformation(model, vendor: vendor);
+
+        var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
+
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be(expectedPackId);
+        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization"]);
+        availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "keyboard-backlight"]);
+    }
+
+    [Fact]
+    public void GetDeviceFeatureAvailability_WithHardwareInventorySignals_ShouldReturnNamedBasicPack()
+    {
+        var machineInformation = new MachineInformation
+        {
+            Vendor = "",
+            MachineType = "",
+            Model = "",
+            SerialNumber = "TEST",
+            SupportedPowerModes = [],
+            Features = MachineInformation.FeatureData.Unknown,
+            Properties = new MachineInformation.PropertyData(),
+            Hardware = new()
+            {
+                ComputerSystem = new()
+                {
+                    Manufacturer = "To Be Filled By O.E.M.",
+                    Model = "System Product Name"
+                },
+                BaseBoard = new()
+                {
+                    Manufacturer = "ASRock",
+                    Product = "B650M Pro RS"
+                }
+            }
+        };
+
+        var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
+
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be("universal-motherboard-basic");
+    }
+
+    [Fact]
     public void IsSupportedLegionMachine_WithUnsupportedLenovoModel_ShouldReturnBasicMode()
     {
         var machineInformation = CreateMachineInformation("IdeaPad Pro 5 16AKP10");
@@ -146,13 +217,13 @@ public class CompatibilityTests
     }
 
     [Fact]
-    public void IsSupportedLegionMachine_WithMotorolaLegionVendor_ShouldReturnTrue()
+    public void IsSupportedLegionMachine_WithMotorolaLegionVendor_ShouldReturnBasicMode()
     {
         var machineInformation = CreateMachineInformation("Legion 5 15ACH6", vendor: "MOTOROLA");
 
         var result = Compatibility.IsSupportedLegionMachine(machineInformation);
 
-        result.Should().BeTrue();
+        result.Should().BeFalse();
     }
 
     [Theory]

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +31,8 @@ public partial class SettingsPage
     private SettingsPowerControl? _powerControl;
     private SettingsIntegrationsControl? _integrationsControl;
 
+    private bool _supportsLenovoHardwareControls;
+
     private bool _isInitialized;
 
     public SettingsPage()
@@ -44,7 +47,8 @@ public partial class SettingsPage
     private async void InitializeNavigationItems()
     {
         var mi = await MachineCompatibility.GetMachineInformationAsync();
-        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
+        var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
+        _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
 
         var navigationItems = new List<NavigationItem>
         {
@@ -52,7 +56,7 @@ public partial class SettingsPage
             new() { Key = "Application", Title = T("SettingsPage_Navigation_Application", "Application"), Icon = SymbolRegular.Apps24 }
         };
 
-        if (isSupportedLegionMachine)
+        if (_supportsLenovoHardwareControls)
         {
             navigationItems.Add(new() { Key = "SmartKeys", Title = T("SettingsPage_Navigation_SmartKeys", "Smart Keys"), Icon = SymbolRegular.Keyboard24 });
             navigationItems.Add(new() { Key = "Display", Title = T("SettingsPage_Navigation_Display", "Display"), Icon = SymbolRegular.Desktop24 });
@@ -60,7 +64,7 @@ public partial class SettingsPage
 
         navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
 
-        if (isSupportedLegionMachine)
+        if (_supportsLenovoHardwareControls)
         {
             navigationItems.Add(new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 });
         }
@@ -85,10 +89,10 @@ public partial class SettingsPage
         // Initialize all controls first
         _appearanceControl = new SettingsAppearanceControl();
         _applicationBehaviorControl = new SettingsApplicationBehaviorControl();
-        _smartKeysControl = new SettingsSmartKeysControl();
-        _displayControl = new SettingsDisplayControl();
+        _smartKeysControl = _supportsLenovoHardwareControls ? new SettingsSmartKeysControl() : null;
+        _displayControl = _supportsLenovoHardwareControls ? new SettingsDisplayControl() : null;
         _updateControl = new SettingsUpdateControl();
-        _powerControl = new SettingsPowerControl();
+        _powerControl = _supportsLenovoHardwareControls ? new SettingsPowerControl() : null;
         _integrationsControl = new SettingsIntegrationsControl();
 
         // Wire up FnKeys toggle change event
@@ -115,13 +119,13 @@ public partial class SettingsPage
     {
         try
         {
-            await Task.WhenAll(
-                _applicationBehaviorControl!.RefreshAsync(),
-                _smartKeysControl!.RefreshAsync(),
-                _displayControl!.RefreshAsync(),
-                _powerControl!.RefreshAsync(),
-                _integrationsControl!.RefreshAsync()
-            );
+        await Task.WhenAll(
+            _applicationBehaviorControl!.RefreshAsync(),
+            _smartKeysControl?.RefreshAsync() ?? Task.CompletedTask,
+            _displayControl?.RefreshAsync() ?? Task.CompletedTask,
+            _powerControl?.RefreshAsync() ?? Task.CompletedTask,
+            _integrationsControl!.RefreshAsync()
+        );
 
             _updateControl?.Refresh();
 
@@ -209,4 +213,3 @@ public partial class SettingsPage
     }
 }
 }
-

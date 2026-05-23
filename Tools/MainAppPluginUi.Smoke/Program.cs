@@ -1672,7 +1672,8 @@ Environment variables:
     {
         try
         {
-            return (window.Current.Name ?? string.Empty).Contains("Lenovo Legion Toolkit", StringComparison.OrdinalIgnoreCase);
+            var title = window.Current.Name ?? string.Empty;
+            return MainAppBaseNames.Any(baseName => title.Contains(baseName, StringComparison.OrdinalIgnoreCase));
         }
         catch (Exception ex) when (IsRecoverableAutomationException(ex))
         {
@@ -5208,16 +5209,20 @@ Environment variables:
 
     private static void VerifySelectedActionsWindow(AutomationElement mainWindow)
     {
+        mainWindow = ResolveLiveWindow(mainWindow);
         var selectedActionsButton = WaitForAutomationId(mainWindow, "WindowsOptimizationSelectedActionsButton", TimeSpan.FromSeconds(8));
-        Click(selectedActionsButton);
-
         var processId = mainWindow.Current.ProcessId;
-        var selectedActionsWindow = WaitForOwnedWindow(
-            processId,
-            mainWindow.Current.NativeWindowHandle,
-            window => IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar")),
-            TimeSpan.FromSeconds(10),
-            "selected actions window");
+        var mainWindowHandle = mainWindow.Current.NativeWindowHandle;
+        BringToForeground(mainWindow);
+        LogAutomationElement("Selected actions button", selectedActionsButton);
+
+        var selectedActionsWindow = TryOpenSelectedActionsWindow(processId, mainWindowHandle, selectedActionsButton);
+        if (selectedActionsWindow is null)
+        {
+            DumpProcessTopLevelElements(processId);
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 120);
+            throw new TimeoutException("Timed out waiting for selected actions window.");
+        }
 
         CapturePluginSettingsWindow(selectedActionsWindow, "system-optimization", "selected-actions");
         var closeButton = FindByAutomationId(selectedActionsWindow, "SelectedActionsWindowCloseButton");
@@ -5228,6 +5233,126 @@ Environment variables:
 
         Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
         Console.WriteLine("[main-smoke] Selected actions window verified.");
+    }
+
+    private static AutomationElement? TryOpenSelectedActionsWindow(int processId, int mainWindowHandle, AutomationElement selectedActionsButton)
+    {
+        var attempts = new (string Description, Action Activate)[]
+        {
+            ("InvokePattern/default click", () => Click(selectedActionsButton)),
+            ("keyboard Space", () => FocusAndPress(selectedActionsButton, VkSpace)),
+            ("keyboard Enter", () => FocusAndPress(selectedActionsButton, VkEnter)),
+            ("mouse click", () => MouseClick(selectedActionsButton)),
+            ("mouse double-click", () => DoubleClick(selectedActionsButton))
+        };
+
+        foreach (var attempt in attempts)
+        {
+            try
+            {
+                Console.WriteLine($"[main-smoke] Opening selected actions window via {attempt.Description}");
+                attempt.Activate();
+            }
+            catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException)
+            {
+                Console.WriteLine($"[main-smoke] Selected actions activation failed via {attempt.Description}: {ex.GetType().Name}: {ex.Message}");
+                continue;
+            }
+
+            var selectedActionsWindow = TryWaitForOwnedWindow(
+                processId,
+                mainWindowHandle,
+                IsSelectedActionsWindow,
+                TimeSpan.FromSeconds(4),
+                "selected actions window");
+
+            if (selectedActionsWindow is not null)
+            {
+                Console.WriteLine($"[main-smoke] Selected actions window detected after {attempt.Description}: handle={selectedActionsWindow.Current.NativeWindowHandle} name='{selectedActionsWindow.Current.Name}'");
+                return selectedActionsWindow;
+            }
+        }
+
+        return null;
+    }
+
+    private static void FocusAndPress(AutomationElement element, byte virtualKey)
+    {
+        element.SetFocus();
+        Thread.Sleep(140);
+        PressVirtualKey(virtualKey);
+    }
+
+    private static bool IsSelectedActionsWindow(AutomationElement window)
+    {
+        return AutomationIdEquals(window, "SelectedActionsWindow")
+               || IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar"))
+               || IsVisible(FindByAutomationId(window, "SelectedActionsWindowCloseButton"))
+               || WindowNameContains(window, "Selected actions")
+               || WindowNameContains(window, "已选择");
+    }
+
+    private static bool AutomationIdEquals(AutomationElement element, string automationId)
+    {
+        try
+        {
+            return string.Equals(element.Current.AutomationId, automationId, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
+    }
+
+    private static bool WindowNameContains(AutomationElement window, string expected)
+    {
+        try
+        {
+            return (window.Current.Name ?? string.Empty).Contains(expected, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
+    }
+
+    private static void LogAutomationElement(string label, AutomationElement element)
+    {
+        try
+        {
+            var rect = element.Current.BoundingRectangle;
+            var patterns = new List<string>();
+            if (element.TryGetCurrentPattern(InvokePattern.Pattern, out _))
+                patterns.Add("Invoke");
+            if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out _))
+                patterns.Add("SelectionItem");
+            if (element.TryGetCurrentPattern(TogglePattern.Pattern, out _))
+                patterns.Add("Toggle");
+
+            Console.WriteLine(
+                $"[main-smoke] {label}: id='{element.Current.AutomationId}' name='{element.Current.Name}' type='{element.Current.ControlType?.ProgrammaticName}' enabled={element.Current.IsEnabled} offscreen={element.Current.IsOffscreen} bounds=({rect.Left:0},{rect.Top:0},{rect.Width:0},{rect.Height:0}) patterns=[{string.Join(",", patterns)}]");
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            Console.WriteLine($"[main-smoke] {label}: failed to read element details: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    private static AutomationElement? TryWaitForOwnedWindow(
+        int processId,
+        int mainWindowHandle,
+        Func<AutomationElement, bool> predicate,
+        TimeSpan timeout,
+        string description)
+    {
+        try
+        {
+            return WaitForOwnedWindow(processId, mainWindowHandle, predicate, timeout, description);
+        }
+        catch (TimeoutException)
+        {
+            return null;
+        }
     }
 
     private static AutomationElement WaitForOwnedWindow(
@@ -5248,6 +5373,9 @@ Environment variables:
                     .Where(window => window.Current.ControlType == ControlType.Window)
                     .Where(window => window.Current.NativeWindowHandle != 0)
                     .Where(window => window.Current.NativeWindowHandle != mainWindowHandle)
+                    .Concat(FindDescendantWindows(mainWindowHandle))
+                    .GroupBy(window => window.Current.NativeWindowHandle)
+                    .Select(group => group.First())
                     .ToArray();
 
                 foreach (var window in windows)
@@ -5265,6 +5393,26 @@ Environment variables:
         }
 
         throw new TimeoutException($"Timed out waiting for {description} window.");
+    }
+
+    private static IEnumerable<AutomationElement> FindDescendantWindows(int mainWindowHandle)
+    {
+        try
+        {
+            var mainWindow = AutomationElement.FromHandle((IntPtr)mainWindowHandle);
+            if (mainWindow is null)
+                return [];
+
+            return mainWindow.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window))
+                .Cast<AutomationElement>()
+                .Where(window => window.Current.NativeWindowHandle != 0)
+                .Where(window => window.Current.NativeWindowHandle != mainWindowHandle)
+                .ToArray();
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return [];
+        }
     }
 
     private static void NavigateToDriverDownloadTab(AutomationElement mainWindow)

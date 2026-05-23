@@ -1684,6 +1684,11 @@ private string _currentSearchText = string.Empty;
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
+        OpenPluginEntryPoint(pluginId);
+    }
+
+    private void OpenPluginEntryPoint(string pluginId)
+    {
         try
         {
             // Ensure plugin is installed
@@ -2483,13 +2488,9 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
 
-            if (selectedViewModel.HasExpandableContent)
+            if (isInstalled)
             {
-                selectedViewModel.ToggleDetails();
-            }
-            else if (isInstalled)
-            {
-                OpenPluginConfiguration(selectedViewModel.PluginId);
+                OpenPluginEntryPoint(selectedViewModel.PluginId);
             }
             else
             {

@@ -19,9 +19,17 @@
   #define MyAppOutputBaseFilename "UniversalDeviceToolkitSetup-Full"
 #endif
 
+#ifndef MyAppId
+  #define MyAppId "{{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}"
+#endif
+
+#ifndef MyAppPrivilegesRequired
+  #define MyAppPrivilegesRequired "admin"
+#endif
+
 [Setup]
 UsedUserAreasWarning=false
-AppId={{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}
+AppId={#MyAppId}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
@@ -32,7 +40,7 @@ DefaultDirName={userpf}\{#MyAppNameCompact}
 AppendDefaultDirName=no
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
-PrivilegesRequired=admin
+PrivilegesRequired={#MyAppPrivilegesRequired}
 OutputBaseFilename={#MyAppOutputBaseFilename}
 Compression=lzma2/ultra64  
 SolidCompression=yes
@@ -46,48 +54,6 @@ function InitializeSetup: Boolean;
 begin
   InstallDotNetDesktopRuntime;
   Result := True;
-end;
-
-function SetupLanguageToAppCulture(LanguageName: String): String;
-begin
-  if LanguageName = 'ptbr' then
-    Result := 'pt-br'
-  else if LanguageName = 'nlnl' then
-    Result := 'nl-nl'
-  else if LanguageName = 'ukr' then
-    Result := 'uk'
-  else if LanguageName = 'zhhans' then
-    Result := 'zh-hans'
-  else if LanguageName = 'zhhant' then
-    Result := 'zh-hant'
-  else
-    Result := LanguageName;
-end;
-
-procedure SaveInitialAppLanguage;
-var
-  AppDataDir: String;
-  LangPath: String;
-  AppCulture: String;
-begin
-  AppDataDir := ExpandConstant('{localappdata}\{#MyAppNameCompact}');
-  LangPath := AppDataDir + '\lang';
-
-  if FileExists(LangPath) then
-    Exit;
-
-  AppCulture := SetupLanguageToAppCulture(ActiveLanguage);
-  if AppCulture = '' then
-    Exit;
-
-  ForceDirectories(AppDataDir);
-  SaveStringToFile(LangPath, AppCulture, False);
-end;
-
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if CurStep = ssPostInstall then
-    SaveInitialAppLanguage;
 end;
 
 function InitializeUninstall(): Boolean;
@@ -125,56 +91,76 @@ begin
   end;
 end;
 
-[Languages]
-Name: "en";      MessagesFile: "compiler:Default.isl"
-Name: "ptbr";    MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "bg";      MessagesFile: "compiler:Languages\Bulgarian.isl" 
-Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl" 
-Name: "nlnl";    MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
-Name: "de";      MessagesFile: "compiler:Languages\German.isl"
-Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt";      MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl"
-Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "tr";      MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "ukr";     MessagesFile: "compiler:Languages\Ukrainian.isl"
-Name: "ar";      MessagesFile: "InnoDependencies\Arabic.isl"
-Name: "lv";      MessagesFile: "InnoDependencies\Latvian.isl"
-Name: "zhhans";  MessagesFile: "InnoDependencies\ChineseSimplified.isl"
-Name: "zhhant";  MessagesFile: "InnoDependencies\ChineseTraditional.isl"
-Name: "el";      MessagesFile: "InnoDependencies\Greek.isl"
-Name: "ro";      MessagesFile: "InnoDependencies\Romanian.isl"
-Name: "vi";      MessagesFile: "InnoDependencies\Vietnamese.isl"
-
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "{#MyAppSourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "NOTICE"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
+#ifndef MyAppSkipIcons
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+#endif
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}"
 
 [Run]
+#ifndef MyAppSkipPostInstallRun
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall
+#endif
 
 [UninstallDelete]
 Type: files; Name: "{app}\Shell.exe"
 Type: files; Name: "{app}\Shell.dll"
 Type: files; Name: "{app}\Shell.nss"
+Type: filesandordirs; Name: "{app}\ar"
+Type: filesandordirs; Name: "{app}\bg"
+Type: filesandordirs; Name: "{app}\bs"
+Type: filesandordirs; Name: "{app}\ca"
+Type: filesandordirs; Name: "{app}\cs"
+Type: filesandordirs; Name: "{app}\de"
+Type: filesandordirs; Name: "{app}\el"
+Type: filesandordirs; Name: "{app}\en"
+Type: filesandordirs; Name: "{app}\es"
+Type: filesandordirs; Name: "{app}\fr"
+Type: filesandordirs; Name: "{app}\hu"
+Type: filesandordirs; Name: "{app}\it"
+Type: filesandordirs; Name: "{app}\ja"
+Type: filesandordirs; Name: "{app}\ko"
+Type: filesandordirs; Name: "{app}\lv"
+Type: filesandordirs; Name: "{app}\nl"
+Type: filesandordirs; Name: "{app}\nl-nl"
+Type: filesandordirs; Name: "{app}\nl-NL"
+Type: filesandordirs; Name: "{app}\no"
+Type: filesandordirs; Name: "{app}\pl"
+Type: filesandordirs; Name: "{app}\pt"
+Type: filesandordirs; Name: "{app}\pt-br"
+Type: filesandordirs; Name: "{app}\pt-BR"
+Type: filesandordirs; Name: "{app}\ro"
+Type: filesandordirs; Name: "{app}\ru"
+Type: filesandordirs; Name: "{app}\sk"
+Type: filesandordirs; Name: "{app}\tr"
+Type: filesandordirs; Name: "{app}\uk"
+Type: filesandordirs; Name: "{app}\uz"
+Type: filesandordirs; Name: "{app}\uz-latn-uz"
+Type: filesandordirs; Name: "{app}\uz-Latn-UZ"
+Type: filesandordirs; Name: "{app}\vi"
+Type: filesandordirs; Name: "{app}\zh"
+Type: filesandordirs; Name: "{app}\zh-hans"
+Type: filesandordirs; Name: "{app}\zh-Hans"
+Type: filesandordirs; Name: "{app}\zh-hant"
+Type: filesandordirs; Name: "{app}\zh-Hant"
+#ifndef MyAppSkipLocalAppDataDelete
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
+#endif
 
 [UninstallRun]
 ; Delete scheduled task
+#ifndef MyAppSkipUninstallTasks
 RunOnceId: "DelAutorunNew"; Filename: "schtasks"; Parameters: "/Delete /TN ""UniversalDeviceToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden
 RunOnceId: "DelAutorun"; Filename: "schtasks"; Parameters: "/Delete /TN ""LenovoLegionToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden
+#endif

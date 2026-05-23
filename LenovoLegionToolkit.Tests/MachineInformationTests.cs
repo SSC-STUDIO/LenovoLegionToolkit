@@ -122,4 +122,41 @@ public class MachineInformationTests
     }
 
     #endregion
+
+    #region HardwareInventory
+
+    [Fact]
+    public void HardwareInventory_Empty_ShouldHaveNoSignal()
+    {
+        HardwareInventory.Empty.HasAnySignal.Should().BeFalse();
+    }
+
+    [Fact]
+    public void HardwareInventory_WithBaseBoard_ShouldExposeMatchSignals()
+    {
+        var hardware = new HardwareInventory
+        {
+            BaseBoard = new()
+            {
+                Manufacturer = "ASRock",
+                Product = "B650M Pro RS"
+            }
+        };
+
+        hardware.HasAnySignal.Should().BeTrue();
+        hardware.MatchSignals.Should().Contain(["ASRock", "B650M Pro RS"]);
+    }
+
+    [Fact]
+    public void ChassisHardware_ChassisTypeNames_ShouldMapKnownDesktopType()
+    {
+        var chassis = new ChassisHardware
+        {
+            ChassisTypes = [3]
+        };
+
+        chassis.ChassisTypeNames.Should().Contain("Desktop");
+    }
+
+    #endregion
 }

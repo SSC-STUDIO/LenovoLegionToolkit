@@ -74,11 +74,14 @@ public static partial class Compatibility
         ? Task.FromResult(true)
         : WMI.LenovoGameZoneData.ExistsAsync();
 
-    public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
-    {
-        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
-        return availability.IsSupported;
-    }
+    public static DeviceFeatureAvailability GetDeviceFeatureAvailability(MachineInformation machineInformation) =>
+        LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+    public static bool IsSupportedDevice(MachineInformation machineInformation) =>
+        GetDeviceFeatureAvailability(machineInformation).IsSupported;
+
+    public static bool IsSupportedLegionMachine(MachineInformation machineInformation) =>
+        IsSupportedDevice(machineInformation);
 
     public static async Task<(bool isCompatible, MachineInformation machineInformation)> IsCompatibleAsync()
     {
@@ -115,6 +118,7 @@ public static partial class Compatibility
             return (_machineInformation = GetSmokeMachineInformation()).Value;
 
         var (vendor, machineType, model, serialNumber) = await GetModelDataAsync().ConfigureAwait(false);
+        var hardware = await HardwareInventoryProvider.ReadAsync().ConfigureAwait(false);
         var generation = GetMachineGeneration(model);
         var legionSeries = GetLegionSeries(model, machineType);
         var (biosVersion, biosVersionRaw) = GetBIOSVersion();
@@ -137,6 +141,7 @@ public static partial class Compatibility
             SmartFanVersion = smartFanVersion,
             LegionZoneVersion = legionZoneVersion,
             Features = features,
+            Hardware = hardware,
             Properties = new()
             {
                 SupportsAlwaysOnAc = GetAlwaysOnAcStatus(),
@@ -173,6 +178,7 @@ public static partial class Compatibility
             Log.Instance.Trace($" * SmartFanVersion: '{machineInformation.SmartFanVersion}'");
             Log.Instance.Trace($" * LegionZoneVersion: '{machineInformation.LegionZoneVersion}'");
             Log.Instance.Trace($" * Features: {machineInformation.Features.Source}:{string.Join(',', machineInformation.Features.All)}");
+            LogHardwareInventory(machineInformation.Hardware);
             Log.Instance.Trace($" * Properties:");
             Log.Instance.Trace($"     * SupportsAlwaysOnAc: '{machineInformation.Properties.SupportsAlwaysOnAc.status}, {machineInformation.Properties.SupportsAlwaysOnAc.connectivity}'");
             Log.Instance.Trace($"     * SupportsExtremeMode: '{machineInformation.Properties.SupportsExtremeMode}'");
@@ -199,6 +205,18 @@ public static partial class Compatibility
         return (_machineInformation = machineInformation).Value;
     }
 
+    private static void LogHardwareInventory(HardwareInventory hardware)
+    {
+        Log.Instance.Trace($" * Hardware:");
+        Log.Instance.Trace($"     * ComputerSystem: '{hardware.ComputerSystem.Manufacturer}' '{hardware.ComputerSystem.Model}' '{hardware.ComputerSystem.SystemFamily}' '{hardware.ComputerSystem.SystemType}'");
+        Log.Instance.Trace($"     * BaseBoard: '{hardware.BaseBoard.Manufacturer}' '{hardware.BaseBoard.Product}' '{hardware.BaseBoard.Version}'");
+        Log.Instance.Trace($"     * Chassis: '{hardware.Chassis.Manufacturer}' '{string.Join(",", hardware.Chassis.ChassisTypeNames)}'");
+        Log.Instance.Trace($"     * CPU: '{string.Join(" | ", hardware.Processors.Select(processor => processor.Name).Where(name => !string.IsNullOrWhiteSpace(name)))}'");
+        Log.Instance.Trace($"     * GPU: '{string.Join(" | ", hardware.VideoControllers.Select(videoController => videoController.Name).Where(name => !string.IsNullOrWhiteSpace(name)))}'");
+        Log.Instance.Trace($"     * Memory: '{FormatCapacity(hardware.Memory.TotalCapacityBytes)}' modules='{hardware.Memory.ModuleCount}' speed='{hardware.Memory.ConfiguredClockSpeedMHz ?? hardware.Memory.SpeedMHz}'");
+        Log.Instance.Trace($"     * Battery: '{string.Join(" | ", hardware.Batteries.Select(battery => battery.Name).Where(name => !string.IsNullOrWhiteSpace(name)))}'");
+    }
+
     private static MachineInformation GetSmokeMachineInformation() => new()
     {
         Generation = 9,
@@ -220,6 +238,57 @@ public static partial class Compatibility
         SmartFanVersion = 6,
         LegionZoneVersion = 3,
         Features = MachineInformation.FeatureData.Unknown,
+        Hardware = new()
+        {
+            ComputerSystem = new()
+            {
+                Manufacturer = "LENOVO",
+                Model = "Legion Y9000P IRX9",
+                SystemFamily = "Legion"
+            },
+            BaseBoard = new()
+            {
+                Manufacturer = "LENOVO",
+                Product = "83DE"
+            },
+            Chassis = new()
+            {
+                Manufacturer = "LENOVO",
+                ChassisTypes = [10]
+            },
+            Processors =
+            [
+                new()
+                {
+                    Name = "Intel(R) Core(TM) i9-14900HX",
+                    Manufacturer = "GenuineIntel",
+                    NumberOfCores = 24,
+                    NumberOfLogicalProcessors = 32
+                }
+            ],
+            VideoControllers =
+            [
+                new()
+                {
+                    Name = "NVIDIA GeForce RTX 4060 Laptop GPU",
+                    AdapterCompatibility = "NVIDIA"
+                }
+            ],
+            Memory = new()
+            {
+                TotalCapacityBytes = 32UL * 1024 * 1024 * 1024,
+                ModuleCount = 2,
+                ConfiguredClockSpeedMHz = 5600
+            },
+            Batteries =
+            [
+                new()
+                {
+                    Name = "L22B4PC0",
+                    Status = "OK"
+                }
+            ]
+        },
         Properties = new()
         {
             SupportsAlwaysOnAc = (false, false),
@@ -277,6 +346,15 @@ public static partial class Compatibility
 
         var value = match.Value;
         return value.StartsWith("A") || value.StartsWith("R");
+    }
+
+    private static string FormatCapacity(ulong bytes)
+    {
+        if (bytes == 0)
+            return string.Empty;
+
+        const double gibibyte = 1024d * 1024d * 1024d;
+        return $"{bytes / gibibyte:0.#} GiB";
     }
 
     private static async Task<MachineInformation.FeatureData> GetFeaturesAsync()

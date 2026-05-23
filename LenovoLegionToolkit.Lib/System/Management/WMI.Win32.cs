@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo
@@ -56,11 +57,62 @@ public static partial class WMI
             }
         }
 
+        public static class ComputerSystem
+        {
+            public static async Task<ComputerSystemHardware> ReadAsync()
+            {
+                var result = await WMI.ReadAsync("root\\CIMV2",
+                    $"SELECT Manufacturer, Model, SystemFamily, SystemType, ChassisSKUNumber, PCSystemType, PCSystemTypeEx FROM Win32_ComputerSystem",
+                    pdc => new ComputerSystemHardware
+                    {
+                        Manufacturer = GetString(pdc, "Manufacturer"),
+                        Model = GetString(pdc, "Model"),
+                        SystemFamily = GetString(pdc, "SystemFamily"),
+                        SystemType = GetString(pdc, "SystemType"),
+                        ChassisSkuNumber = GetString(pdc, "ChassisSKUNumber"),
+                        PcSystemType = GetNullableInt32(pdc, "PCSystemType"),
+                        PcSystemTypeEx = GetNullableInt32(pdc, "PCSystemTypeEx")
+                    }).ConfigureAwait(false);
+                return result.FirstOrDefault() ?? ComputerSystemHardware.Empty;
+            }
+        }
+
+        public static class BaseBoard
+        {
+            public static async Task<BaseBoardHardware> ReadAsync()
+            {
+                var result = await WMI.ReadAsync("root\\CIMV2",
+                    $"SELECT Manufacturer, Product, Version FROM Win32_BaseBoard",
+                    pdc => new BaseBoardHardware
+                    {
+                        Manufacturer = GetString(pdc, "Manufacturer"),
+                        Product = GetString(pdc, "Product"),
+                        Version = GetString(pdc, "Version")
+                    }).ConfigureAwait(false);
+                return result.FirstOrDefault() ?? BaseBoardHardware.Empty;
+            }
+        }
+
+        public static class SystemEnclosure
+        {
+            public static async Task<ChassisHardware> ReadAsync()
+            {
+                var result = await WMI.ReadAsync("root\\CIMV2",
+                    $"SELECT Manufacturer, ChassisTypes FROM Win32_SystemEnclosure",
+                    pdc => new ChassisHardware
+                    {
+                        Manufacturer = GetString(pdc, "Manufacturer"),
+                        ChassisTypes = GetUInt16Array(pdc, "ChassisTypes")
+                    }).ConfigureAwait(false);
+                return result.FirstOrDefault() ?? ChassisHardware.Empty;
+            }
+        }
+
         public static class Processor
         {
             public static async Task<string> GetNameAsync()
             {
-                var result = await ReadAsync("root\\CIMV2",
+                var result = await WMI.ReadAsync("root\\CIMV2",
                     $"SELECT * FROM Win32_Processor",
                     pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
                 return result.FirstOrDefault() ?? "Unknown CPU";
@@ -68,7 +120,7 @@ public static partial class WMI
 
             public static async Task<int> GetAddressWidthAsync()
             {
-                var result = await ReadAsync("root\\CIMV2",
+                var result = await WMI.ReadAsync("root\\CIMV2",
                     $"SELECT * FROM Win32_Processor",
                     pdc => Convert.ToInt32(pdc["AddressWidth"].Value)).ConfigureAwait(false);
                 return result.First();
@@ -76,7 +128,7 @@ public static partial class WMI
 
             public static async Task<double> GetVoltageAsync()
             {
-                var result = await ReadAsync("root\\CIMV2",
+                var result = await WMI.ReadAsync("root\\CIMV2",
                     $"SELECT CurrentVoltage FROM Win32_Processor",
                     pdc =>
                     {
@@ -93,9 +145,22 @@ public static partial class WMI
                             return 0.0;
                         }
                         return 0.0;
-                    }).ConfigureAwait(false);
+                }).ConfigureAwait(false);
                 return result.FirstOrDefault();
             }
+
+            public static Task<IEnumerable<ProcessorHardware>> ReadAsync() => WMI.ReadAsync("root\\CIMV2",
+                $"SELECT Name, Manufacturer, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed, AddressWidth, Architecture FROM Win32_Processor",
+                pdc => new ProcessorHardware
+                {
+                    Name = GetString(pdc, "Name"),
+                    Manufacturer = GetString(pdc, "Manufacturer"),
+                    NumberOfCores = GetNullableInt32(pdc, "NumberOfCores"),
+                    NumberOfLogicalProcessors = GetNullableInt32(pdc, "NumberOfLogicalProcessors"),
+                    MaxClockSpeedMHz = GetNullableInt32(pdc, "MaxClockSpeed"),
+                    AddressWidth = GetNullableInt32(pdc, "AddressWidth"),
+                    Architecture = GetNullableInt32(pdc, "Architecture")
+                });
         }
 
         public static class VideoController
@@ -103,7 +168,7 @@ public static partial class WMI
             public static async Task<string> GetNameAsync()
             {
                 // Prioritize discrete GPU if possible, or return the first one that is not "Microsoft Basic Display Adapter"
-                var result = await ReadAsync("root\\CIMV2",
+                var result = await WMI.ReadAsync("root\\CIMV2",
                     $"SELECT * FROM Win32_VideoController",
                     pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
                 
@@ -115,6 +180,44 @@ public static partial class WMI
                 var discrete = result.FirstOrDefault(n => n.Contains("NVIDIA") || n.Contains("Radeon") || n.Contains("Arc"));
                 return discrete ?? result.FirstOrDefault() ?? "Unknown GPU";
             }
+
+            public static Task<IEnumerable<VideoControllerHardware>> ReadAsync() => WMI.ReadAsync("root\\CIMV2",
+                $"SELECT Name, AdapterCompatibility, VideoProcessor, AdapterRAM FROM Win32_VideoController",
+                pdc => new VideoControllerHardware
+                {
+                    Name = GetString(pdc, "Name"),
+                    AdapterCompatibility = GetString(pdc, "AdapterCompatibility"),
+                    VideoProcessor = GetString(pdc, "VideoProcessor"),
+                    AdapterRamBytes = GetNullableUInt64(pdc, "AdapterRAM")
+                });
+        }
+
+        public static class PhysicalMemory
+        {
+            public static Task<IEnumerable<MemoryModuleHardware>> ReadAsync() => WMI.ReadAsync("root\\CIMV2",
+                $"SELECT Capacity, Manufacturer, Speed, ConfiguredClockSpeed, PartNumber FROM Win32_PhysicalMemory",
+                pdc => new MemoryModuleHardware
+                {
+                    CapacityBytes = GetNullableUInt64(pdc, "Capacity") ?? 0,
+                    Manufacturer = GetString(pdc, "Manufacturer"),
+                    SpeedMHz = GetNullableInt32(pdc, "Speed"),
+                    ConfiguredClockSpeedMHz = GetNullableInt32(pdc, "ConfiguredClockSpeed"),
+                    PartNumber = GetString(pdc, "PartNumber")
+                });
+        }
+
+        public static class Battery
+        {
+            public static Task<IEnumerable<BatteryHardware>> ReadAsync() => WMI.ReadAsync("root\\CIMV2",
+                $"SELECT Name, Status, Chemistry, DesignCapacity, FullChargeCapacity FROM Win32_Battery",
+                pdc => new BatteryHardware
+                {
+                    Name = GetString(pdc, "Name"),
+                    Status = GetString(pdc, "Status"),
+                    Chemistry = GetNullableInt32(pdc, "Chemistry"),
+                    DesignCapacity = GetNullableInt32(pdc, "DesignCapacity"),
+                    FullChargeCapacity = GetNullableInt32(pdc, "FullChargeCapacity")
+                });
         }
 
         public static class OperatingSystem
@@ -161,5 +264,17 @@ public static partial class WMI
                     return new DriverInfo(deviceId, hardwareId, driverVersion, driverDate);
                 });
         }
+
+        private static string GetString(PropertyDataCollection properties, string name) =>
+            properties[name].Value as string ?? string.Empty;
+
+        private static int? GetNullableInt32(PropertyDataCollection properties, string name) =>
+            properties[name].Value is null ? null : Convert.ToInt32(properties[name].Value);
+
+        private static ulong? GetNullableUInt64(PropertyDataCollection properties, string name) =>
+            properties[name].Value is null ? null : Convert.ToUInt64(properties[name].Value);
+
+        private static IReadOnlyCollection<ushort> GetUInt16Array(PropertyDataCollection properties, string name) =>
+            properties[name].Value as ushort[] ?? [];
     }
 }

@@ -13,7 +13,9 @@
     MinHeight="500"
     MaxWidth="600"
     MaxHeight="500"
+    AutomationProperties.AutomationId="SelectedActionsWindow"
     ResizeMode="CanMinimize"
+    ShowInTaskbar="False"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     WindowStartupLocation="CenterOwner">
 

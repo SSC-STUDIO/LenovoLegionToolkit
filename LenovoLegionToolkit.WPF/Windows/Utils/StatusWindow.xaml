@@ -25,7 +25,7 @@
             Margin="16,16,16,0"
             Style="{StaticResource AppCaptionTextBlockStyle}"
             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-            Text="{x:Static resources:Resource.AppName}" />
+            Text="{x:Static utils:AppDisplayName.Value}" />
 
         <Grid Margin="16,16,16,0">
             <Grid.ColumnDefinitions>
@@ -361,5 +361,4 @@
 
     </StackPanel>
 </wpfui:FluentWindow>
-
 

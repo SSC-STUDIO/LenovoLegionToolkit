@@ -91,6 +91,76 @@
                     <TextBlock x:Name="_biosLabel" Focusable="True" />
                 </custom:CardControl>
 
+                <StackPanel x:Name="_hardwareInfo" Visibility="Collapsed">
+                    <TextBlock
+                        Margin="0,16,0,24"
+                        Focusable="True"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
+                        Text="{x:Static resources:Resource.DeviceInformationWindow_Hardware_Title}" />
+
+                    <custom:CardControl
+                        x:Name="_cpuCard"
+                        Margin="0,0,0,8"
+                        Click="DeviceCardControl_Click">
+                        <custom:CardControl.Header>
+                            <controls:CardHeaderControl Title="{x:Static resources:Resource.FanCurveControl_CPU}" />
+                        </custom:CardControl.Header>
+                        <TextBlock
+                            x:Name="_cpuLabel"
+                            Focusable="True"
+                            TextWrapping="Wrap" />
+                    </custom:CardControl>
+
+                    <custom:CardControl
+                        x:Name="_gpuCard"
+                        Margin="0,0,0,8"
+                        Click="DeviceCardControl_Click">
+                        <custom:CardControl.Header>
+                            <controls:CardHeaderControl Title="{x:Static resources:Resource.FanCurveControl_GPU}" />
+                        </custom:CardControl.Header>
+                        <TextBlock
+                            x:Name="_gpuLabel"
+                            Focusable="True"
+                            TextWrapping="Wrap" />
+                    </custom:CardControl>
+
+                    <custom:CardControl
+                        x:Name="_memoryCard"
+                        Margin="0,0,0,8"
+                        Click="DeviceCardControl_Click">
+                        <custom:CardControl.Header>
+                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Memory_Title}" />
+                        </custom:CardControl.Header>
+                        <TextBlock x:Name="_memoryLabel" Focusable="True" />
+                    </custom:CardControl>
+
+                    <custom:CardControl
+                        x:Name="_baseBoardCard"
+                        Margin="0,0,0,8"
+                        Click="DeviceCardControl_Click">
+                        <custom:CardControl.Header>
+                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_BaseBoard_Title}" />
+                        </custom:CardControl.Header>
+                        <TextBlock
+                            x:Name="_baseBoardLabel"
+                            Focusable="True"
+                            TextWrapping="Wrap" />
+                    </custom:CardControl>
+
+                    <custom:CardControl
+                        x:Name="_chassisCard"
+                        Margin="0,0,0,8"
+                        Click="DeviceCardControl_Click">
+                        <custom:CardControl.Header>
+                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Chassis_Title}" />
+                        </custom:CardControl.Header>
+                        <TextBlock
+                            x:Name="_chassisLabel"
+                            Focusable="True"
+                            TextWrapping="Wrap" />
+                    </custom:CardControl>
+                </StackPanel>
+
                 <StackPanel x:Name="_warrantyInfo" Visibility="Hidden">
                     <Grid Margin="0,16,0,24">
 
@@ -153,6 +223,5 @@
             HorizontalAlignment="Center" />
     </Grid>
 </local:BaseWindow>
-
 
 

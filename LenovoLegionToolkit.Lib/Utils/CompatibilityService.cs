@@ -13,6 +13,11 @@ public class CompatibilityService : ICompatibilityService
         return Compatibility.GetMachineInformationAsync();
     }
 
+    public bool IsSupportedDevice(MachineInformation machineInformation)
+    {
+        return Compatibility.IsSupportedDevice(machineInformation);
+    }
+
     public bool IsSupportedLegionMachine(MachineInformation machineInformation)
     {
         return Compatibility.IsSupportedLegionMachine(machineInformation);

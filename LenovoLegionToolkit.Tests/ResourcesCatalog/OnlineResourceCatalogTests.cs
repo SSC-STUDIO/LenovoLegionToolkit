@@ -17,6 +17,16 @@ public sealed class OnlineResourceCatalogTests
                             {
                               "schemaVersion": 1,
                               "appVersion": "3.8.0",
+                              "downloads": {
+                                "full": {
+                                  "portable": {
+                                    "name": "UniversalDeviceToolkit_v3.8.0_Full_win-x64.zip",
+                                    "url": "https://example.com/releases/UniversalDeviceToolkit_v3.8.0_Full_win-x64.zip",
+                                    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                                    "size": 4096
+                                  }
+                                }
+                              },
                               "languages": [
                                 {
                                   "culture": "zh-hans",
@@ -31,6 +41,7 @@ public sealed class OnlineResourceCatalogTests
                                   "id": "lenovo-legion-pro-7",
                                   "displayName": "Lenovo Legion Pro 7",
                                   "vendor": "LENOVO",
+                                  "vendorAliases": ["Lenovo"],
                                   "families": ["Legion"],
                                   "modelPrefixes": ["16IRX"],
                                   "modelKeywords": ["Legion Pro 7"],
@@ -50,12 +61,16 @@ public sealed class OnlineResourceCatalogTests
         catalog.Should().NotBeNull();
         catalog!.SchemaVersion.Should().Be(1);
         catalog.AppVersion.Should().Be("3.8.0");
+        catalog.Downloads?.Full?.Portable.Should().NotBeNull();
+        catalog.Downloads!.Full!.Portable!.Name.Should().Be("UniversalDeviceToolkit_v3.8.0_Full_win-x64.zip");
+        catalog.Downloads.Full.Portable.Sha256.Should().HaveLength(64);
         catalog.Languages.Should().ContainSingle(language =>
             language.Culture == "zh-hans" &&
             language.Sha256.Length == 64 &&
             language.Size == 1024);
         catalog.DevicePacks.Should().ContainSingle(devicePack =>
             devicePack.Id == "lenovo-legion-pro-7" &&
+            devicePack.VendorAliases.Contains("Lenovo") &&
             devicePack.ModelKeywords.Contains("Legion Pro 7") &&
             devicePack.MachineTypes.Contains("83DE"));
     }

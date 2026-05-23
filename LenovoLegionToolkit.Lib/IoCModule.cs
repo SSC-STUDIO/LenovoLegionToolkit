@@ -37,7 +37,10 @@ public class IoCModule : Module
 
         // Register compatibility service
         builder.Register<CompatibilityService>().As<ICompatibilityService>().SingleInstance();
-        builder.RegisterInstance(LenovoDeviceSupportProvider.Instance).As<IDeviceSupportProvider>().SingleInstance();
+        builder.RegisterInstance(LenovoDeviceSupportProvider.Instance)
+            .As<IDeviceSupportProvider>()
+            .As<IInstalledDeviceSupportProvider>()
+            .SingleInstance();
         builder.Register<DevicePackManager>();
 
         // Register hardware abstraction wrappers

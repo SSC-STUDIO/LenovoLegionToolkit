@@ -196,6 +196,31 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         result.Should().Be(true);
     }
 
+    [Fact]
+    public void NativeCurlDownloadArguments_ShouldUseBestEffortRevocationOnWindows()
+    {
+        // Arrange
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "AddNativeCurlDownloadArguments",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        var startInfo = new System.Diagnostics.ProcessStartInfo();
+
+        // Act
+        method!.Invoke(null, [startInfo, @"C:\Temp\plugin.zip", "https://github.com/example/repo/releases/download/v1/plugin.zip"]);
+
+        // Assert
+        var arguments = startInfo.ArgumentList.ToArray();
+        arguments.Should().ContainInOrder("--location", "--fail", "--silent", "--show-error");
+        arguments.Should().Contain("--output");
+        arguments.Should().Contain(@"C:\Temp\plugin.zip");
+        arguments.Should().Contain("https://github.com/example/repo/releases/download/v1/plugin.zip");
+
+        if (OperatingSystem.IsWindows())
+            arguments.Should().Contain("--ssl-revoke-best-effort");
+        else
+            arguments.Should().NotContain("--ssl-revoke-best-effort");
+    }
+
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));

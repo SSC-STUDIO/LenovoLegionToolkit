@@ -38,6 +38,9 @@ bld/
 [Ll]ogs/
 Build/
 Build-English/
+BuildInstaller/
+BuildPages/
+BuildRelease/
 release-assets/
 
 # Visual Studio 2015/2017 cache/options directory

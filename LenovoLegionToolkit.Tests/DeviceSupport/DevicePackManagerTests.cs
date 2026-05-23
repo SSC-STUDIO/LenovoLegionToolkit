@@ -80,6 +80,34 @@ public sealed class DevicePackManagerTests : IDisposable
         manager.IsInstalled("lenovo-legion-pro-7").Should().BeFalse();
     }
 
+    [Fact]
+    public async Task GetInstalledCatalog_WithInstalledPack_ShouldReturnPack()
+    {
+        // Arrange
+        var manifestJson = """
+                           {
+                             "id": "lenovo-legion-pro-7",
+                             "displayName": "Lenovo Legion Pro 7",
+                             "vendor": "LENOVO",
+                             "families": ["Legion"],
+                             "machineTypes": ["83DE"],
+                             "enabledFeatures": ["lenovo-hardware-controls"]
+                           }
+                           """;
+        var zip = CreateZip(("device-pack.json", manifestJson));
+        var manager = CreateManager(zip);
+        await manager.InstallAsync("lenovo-legion-pro-7");
+
+        // Act
+        var catalog = manager.GetInstalledCatalog();
+
+        // Assert
+        catalog.DevicePacks.Should().ContainSingle(pack =>
+            pack.Id == "lenovo-legion-pro-7" &&
+            pack.DisplayName == "Lenovo Legion Pro 7" &&
+            pack.MachineTypes.Contains("83DE"));
+    }
+
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);

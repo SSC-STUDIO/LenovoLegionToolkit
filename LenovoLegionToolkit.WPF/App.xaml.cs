@@ -28,6 +28,7 @@ using LenovoLegionToolkit.Lib.Macro;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
@@ -110,7 +111,7 @@ public partial class App
 
         EnsureSingleInstance();
 
-        await LocalizationHelper.SetLanguageAsync(true);
+        await LocalizationHelper.SetLanguageAsync(true, CreateStartupLanguagePackManager(flags));
 
         // Note: ApplicationSettings is created here before IoC initialization for compatibility check.
         // This is safe because ApplicationSettings uses a shared storage mechanism, so changes will
@@ -122,6 +123,9 @@ public partial class App
         {
             try
             {
+                var machineInformation = await Compatibility.GetMachineInformationAsync();
+                await RunStartupDeviceSetupIfNeededAsync(machineInformation, flags);
+
                 // Check compatibility - IsCompatibleAsync already includes basic compatibility check
                 var (isCompatible, mi) = await MachineCompatibility.IsCompatibleAsync();
 
@@ -311,6 +315,32 @@ public partial class App
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to initialize plugins.", ex);
         }
+    }
+
+    private static async Task RunStartupDeviceSetupIfNeededAsync(MachineInformation machineInformation, Flags flags)
+    {
+        if (flags.SkipCompatibilityCheck || IsSmokeAutomationRun())
+            return;
+
+        try
+        {
+            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Startup device setup failed; continuing with current compatibility state.", ex);
+        }
+    }
+
+    private static LanguagePackManager CreateStartupLanguagePackManager(Flags flags) =>
+        new(new OnlineResourceCatalogClient(CreateStartupHttpClientFactory(flags)));
+
+    private static HttpClientFactory CreateStartupHttpClientFactory(Flags flags)
+    {
+        var httpClientFactory = new HttpClientFactory();
+        httpClientFactory.SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
+        return httpClientFactory;
     }
 
     private static void CheckPendingCrashReports()

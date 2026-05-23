@@ -525,6 +525,7 @@ public readonly struct MachineInformation
     public int LegionZoneVersion { get; init; }
     public FeatureData Features { get; init; }
     public PropertyData Properties { get; init; }
+    public HardwareInventory Hardware { get; init; }
 }
 
 public struct Package

@@ -10,7 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 暂无待发布变更 / No unreleased changes yet.
+## [3.8.1] - 2026-05-23
+
+### Added
+- Added a neutral catalog-backed device support provider while keeping the legacy Lenovo provider facade for compatibility.
+- Expanded built-in and generated device packs for ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, Y-series legacy, V-series, Slim, Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, and generic PC basic mode.
+- Added vendor alias matching and additional basic-mode packs for GIGABYTE/AORUS, Razer, Samsung, HUAWEI, Xiaomi/Redmi, HONOR, LG, Framework, Panasonic, Dynabook/Toshiba, Fujitsu, VAIO, MEDION, XMG/SCHENKER, Clevo/Tongfang, and related barebone vendors.
+
+### Changed
+- Startup device setup now evaluates recommendations through the injected device-support provider instead of hard-coding the Lenovo singleton.
+- Non-Lenovo and unsupported Lenovo systems now keep hardware-specific controls hidden while basic workflows such as plugins, system optimization, language, theme, updates, and logs remain available.
+- Device-pack vendor matching now normalizes common BIOS/DMI vendor formatting differences, including punctuation, spacing, casing, diacritics, and common company suffix variants such as Inc./Incorporated, Corp./Corporation, and Ltd./Limited.
 
 ## [3.8.0] - 2026-05-20
 

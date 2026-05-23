@@ -12,7 +12,7 @@
 
 <br />
 
-Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Lenovo Vantage alternative for Lenovo and Motorola gaming devices. It keeps hardware control direct, runs without background services, uses very little memory and CPU, contains no telemetry, and is built around plugin extensions for device-specific workflows.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps Lenovo hardware control direct on supported machines and still remains useful on other PCs through basic mode. It runs without background services, uses very little memory and CPU, contains no telemetry, and is built around plugin extensions for device-specific workflows.
 
 Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add CPU, GPU, network, shell, mouse, and other specialized tools without bloating the base application.
 
@@ -70,14 +70,14 @@ UDT works best when it's running in the background, so go to Settings and enable
 1. **Install UDT** - Download from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) or upgrade directly from an existing Lenovo Legion Toolkit installation
 2. **Configure Settings** - Enable "Autorun" and "Minimize on close" in Settings
 3. **Disable Conflicts** - Uninstall or disable Lenovo Vantage and Hotkeys
-4. **Explore Features** - Power modes, RGB lighting, fan curves, and more!
+4. **Explore Features** - Supported Lenovo hardware controls, plugin extensions, system optimization, language packs, themes, and logs
 
 > [!TIP]
 > First time? Check out the [User Guide](Docs/ARCHITECTURE.md#quick-start) for detailed walkthroughs.
 
 #### Required drivers
 
-If you installed UDT on a clean Windows install, make sure to have necessary drivers installed. If drivers are missing, some options might not be available. Especially make sure that these two are installed on your system:
+If you installed UDT on a clean Windows install and want Lenovo hardware controls, make sure to have necessary Lenovo drivers installed. If drivers are missing, hardware-specific options might not be available. Especially make sure that these two are installed on supported Lenovo systems:
 1. Lenovo Energy Management
 2. Lenovo Vantage Gaming Feature Driver
 
@@ -96,24 +96,23 @@ After following these steps, you can open Terminal and type: `dotnet --info`. In
 
 ## Compatibility
 
-Universal Device Toolkit targets Lenovo/Motorola gaming devices recognized by the built-in compatibility logic in `LenovoLegionToolkit.Lib/Utils/Compatibility.cs`.
+Universal Device Toolkit now uses catalog-backed device support. Supported Lenovo gaming and creator machines get hardware controls; unsupported Lenovo models and non-Lenovo PCs enter basic mode so unavailable hardware entries stay hidden while plugins, system optimization, language, theme, update, log, and safety workflows remain available.
 
-Main supported families:
+Hardware-control families:
 - Legion 5, Legion Slim 5, Legion Pro 5
 - Legion 7, Legion Pro 7, Legion 9
 - Legion Go
 - LOQ
-- IdeaPad Gaming (including Chinese variants such as R7000/R9000/Y7000/Y9000)
+- IdeaPad Gaming, ThinkBook, YOGA, and selected legacy Lenovo gaming families
+- Chinese variants such as R7000/R9000/Y7000/Y9000
 
-Compatibility check requires:
-- Vendor reported as `LENOVO` or `MOTOROLA`
-- Model matching one of the supported model prefixes/keywords (for example `16IRX`, `16IAX`, `15ACH`, `14IRP`, `17ACH`, `18IAX`, `ThinkBook`, `LOQ`, `IdeaPad Gaming`)
+Basic-mode families:
+- Lenovo ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Slim, and other unmatched Lenovo models
+- Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung Galaxy Book, HUAWEI MateBook, Xiaomi/RedmiBook, HONOR MagicBook, LG gram, Framework, Panasonic TOUGHBOOK, Dynabook/Toshiba, Fujitsu, VAIO, MEDION/ERAZER, XMG/SCHENKER, Clevo/Tongfang barebones, and generic PCs
 
-Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary support target. Some features may also work on selected 5th generation (MY2020) devices.
+Hardware-control matching is driven by `LenovoLegionToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` and online data-only device packs. Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary Lenovo hardware-control target. Some features may also work on selected 5th generation (MY2020) devices. Basic-mode vendor matching normalizes common BIOS/DMI formatting differences, so punctuation, casing, spacing, diacritics, and company suffix variants do not usually block a match.
 
-If you are getting an incompatible message on startup, you can check the *Contribution* section down at the bottom, to see how can you help. Keep in mind, that not always I can make all options compatible with all hardware since I do not have access to it.
-
-**Support for other laptops is not planned.**
+If UDT starts in basic mode, it is doing that intentionally to avoid showing unsupported hardware controls. You can still use plugins and general system tools, and you can contribute logs or device-pack data for broader support.
 
 ### Lenovo's software
 
@@ -705,8 +704,8 @@ Additional documentation is available in the `Docs/` directory:
 - **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
 - **Still need help?** Open a [GitHub Issue](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
 
-## Acknowledgment
+## License and Attribution
 
-Special thanks to Bartosz Cichecki, the original creator of Lenovo Legion Toolkit, for the foundational work behind Universal Device Toolkit.
+Universal Device Toolkit is distributed under the GNU GPL v3.0. See [LICENSE](LICENSE).
 
-Thanks in advance!
+This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.

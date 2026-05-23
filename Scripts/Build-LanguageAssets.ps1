@@ -227,7 +227,7 @@ function Get-ListValue {
 }
 
 function Get-DevicePackDefinitions {
-    $defaultEnabledFeatures = @(
+    $lenovoHardwareEnabledFeatures = @(
         'lenovo-hardware-controls',
         'sensors',
         'power-modes',
@@ -236,150 +236,164 @@ function Get-DevicePackDefinitions {
         'system-optimization'
     )
 
+    $universalBasicEnabledFeatures = @(
+        'plugins',
+        'system-optimization',
+        'language',
+        'theme',
+        'updates',
+        'logs'
+    )
+
+    $universalBasicHiddenFeatures = @(
+        'lenovo-hardware-controls',
+        'power-modes',
+        'keyboard-backlight',
+        'god-mode',
+        'gpu-overclock',
+        'fan-curve'
+    )
+
+    function New-DevicePackDefinition {
+        param(
+            [Parameter(Mandatory = $true)][string]$Id,
+            [Parameter(Mandatory = $true)][string]$DisplayName,
+            [Parameter(Mandatory = $true)][string]$Vendor,
+            [string[]]$VendorAliases = @(),
+            [string[]]$Families = @(),
+            [string[]]$ModelPrefixes = @(),
+            [string[]]$MachineTypes = @(),
+            [string[]]$ModelKeywords = @(),
+            [string[]]$EnabledFeatures = @(),
+            [string[]]$HiddenFeatures = @()
+        )
+
+        [ordered]@{
+            Id = $Id
+            DisplayName = $DisplayName
+            Vendor = $Vendor
+            VendorAliases = $VendorAliases
+            Families = $Families
+            ModelPrefixes = $ModelPrefixes
+            MachineTypes = $MachineTypes
+            ModelKeywords = $ModelKeywords
+            EnabledFeatures = $EnabledFeatures
+            HiddenFeatures = $HiddenFeatures
+        }
+    }
+
+    function New-LenovoHardwarePackDefinition {
+        param(
+            [Parameter(Mandatory = $true)][string]$Id,
+            [Parameter(Mandatory = $true)][string]$DisplayName,
+            [string[]]$Families = @(),
+            [string[]]$ModelPrefixes = @(),
+            [string[]]$MachineTypes = @(),
+            [string[]]$ModelKeywords = @()
+        )
+
+        New-DevicePackDefinition `
+            -Id $Id `
+            -DisplayName $DisplayName `
+            -Vendor 'LENOVO' `
+            -Families $Families `
+            -ModelPrefixes $ModelPrefixes `
+            -MachineTypes $MachineTypes `
+            -ModelKeywords $ModelKeywords `
+            -EnabledFeatures $lenovoHardwareEnabledFeatures `
+            -HiddenFeatures @()
+    }
+
+    function New-BasicPackDefinition {
+        param(
+            [Parameter(Mandatory = $true)][string]$Id,
+            [Parameter(Mandatory = $true)][string]$DisplayName,
+            [Parameter(Mandatory = $true)][string]$Vendor,
+            [string[]]$VendorAliases = @(),
+            [string[]]$Families = @(),
+            [string[]]$ModelPrefixes = @(),
+            [string[]]$MachineTypes = @(),
+            [string[]]$ModelKeywords = @()
+        )
+
+        New-DevicePackDefinition `
+            -Id $Id `
+            -DisplayName $DisplayName `
+            -Vendor $Vendor `
+            -VendorAliases $VendorAliases `
+            -Families $Families `
+            -ModelPrefixes $ModelPrefixes `
+            -MachineTypes $MachineTypes `
+            -ModelKeywords $ModelKeywords `
+            -EnabledFeatures $universalBasicEnabledFeatures `
+            -HiddenFeatures $universalBasicHiddenFeatures
+    }
+
+    function New-LenovoBasicPackDefinition {
+        param(
+            [Parameter(Mandatory = $true)][string]$Id,
+            [Parameter(Mandatory = $true)][string]$DisplayName,
+            [string[]]$Families = @(),
+            [string[]]$ModelPrefixes = @(),
+            [string[]]$MachineTypes = @(),
+            [string[]]$ModelKeywords = @()
+        )
+
+        New-BasicPackDefinition `
+            -Id $Id `
+            -DisplayName $DisplayName `
+            -Vendor 'LENOVO' `
+            -Families $Families `
+            -ModelPrefixes $ModelPrefixes `
+            -MachineTypes $MachineTypes `
+            -ModelKeywords $ModelKeywords
+    }
+
     @(
-        [ordered]@{
-            Id = 'lenovo-legion-5'
-            DisplayName = 'Lenovo Legion 5'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('15ACH', '15AKP', '15AHP', '15APH', '15ARH', '15ARP', '15IAH', '15IAX', '15IHU', '15IMH', '15IRH', '15IRX', '15ITH', '16ACH', '16ADR', '16AFR', '16AHP', '16APH', '16ARH', '16ARP', '16ARX', '16IAH', '16IAX', '16IRH', '16IRX', '16ITH', '17ACH', '17ARH', '17IRX', '17ITH', '17IMH')
-            MachineTypes = @('83F0', '83F1', '83M0', '83NX', '83N2', '83LY', '83DG', '83EW', '83EG', '83JJ', '82RC', '82RB', '82TB', '83EF', '82RE', '82RD')
-            ModelKeywords = @('Legion 5', 'Y7000', 'R7000')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-slim-5'
-            DisplayName = 'Lenovo Legion Slim 5'
-            Vendor = 'LENOVO'
-            Families = @('Legion', 'Lenovo Slim')
-            ModelPrefixes = @('14AHP', '14APH', '14AKP', '14IRP')
-            MachineTypes = @('83DH', '83EX', '82Y5', '82Y9', '82YA', '83D6')
-            ModelKeywords = @('Legion Slim 5', 'Lenovo Slim')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-pro-5'
-            DisplayName = 'Lenovo Legion Pro 5'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('16IAX', '16IRX', '16ARX')
-            MachineTypes = @('83LT', '83F3', '83DF', '83F2', '83LU', '82WM', '83NN', '82WK', '82JQ')
-            ModelKeywords = @('Legion Pro 5', 'Y9000P', 'R9000P')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-7'
-            DisplayName = 'Lenovo Legion 7'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('16ACH', '16ARH', '16IAH', '16IAX', '16IRH')
-            MachineTypes = @('83KY', '83FD', '82UH', '82TD', '82N6')
-            ModelKeywords = @('Legion 7')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-pro-7'
-            DisplayName = 'Lenovo Legion Pro 7'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('16IAX', '16IRX', '16ARX')
-            MachineTypes = @('83RU', '83F5', '83DE', '82WR', '82WQ', '82WS')
-            ModelKeywords = @('Legion Pro 7', 'Y9000P', 'R9000P')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-9'
-            DisplayName = 'Lenovo Legion 9'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('16IRX', '16IAX')
-            MachineTypes = @('83G0', '83EY')
-            ModelKeywords = @('Legion 9')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legion-go'
-            DisplayName = 'Lenovo Legion Go'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('NX')
-            MachineTypes = @('83E1')
-            ModelKeywords = @('Legion Go')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-loq'
-            DisplayName = 'Lenovo LOQ'
-            Vendor = 'LENOVO'
-            Families = @('LOQ')
-            ModelPrefixes = @('15IAX', '15IRH', '15IRX', '15ARP', '15APH', '16IRH', '16IAX', '16APH')
-            MachineTypes = @()
-            ModelKeywords = @('LOQ')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-ideapad'
-            DisplayName = 'Lenovo IdeaPad'
-            Vendor = 'LENOVO'
-            Families = @('IdeaPad', 'IdeaPad Gaming', 'XiaoXin')
-            ModelPrefixes = @()
-            MachineTypes = @()
-            ModelKeywords = @('IdeaPad Gaming', 'IdeaPad', 'XiaoXin')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-thinkbook'
-            DisplayName = 'Lenovo ThinkBook'
-            Vendor = 'LENOVO'
-            Families = @('ThinkBook')
-            ModelPrefixes = @('ThinkBook')
-            MachineTypes = @()
-            ModelKeywords = @('ThinkBook')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-yoga'
-            DisplayName = 'Lenovo YOGA'
-            Vendor = 'LENOVO'
-            Families = @('YOGA')
-            ModelPrefixes = @()
-            MachineTypes = @()
-            ModelKeywords = @('YOGA', 'Yoga')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'lenovo-legacy-limited'
-            DisplayName = 'Lenovo Legacy Limited'
-            Vendor = 'LENOVO'
-            Families = @('Legion')
-            ModelPrefixes = @('18IAX', '17IR', '15IR', '15IC', '15IK', 'G5000', 'R9000', 'R7000', 'Y9000', 'Y7000')
-            MachineTypes = @()
-            ModelKeywords = @('Legion')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
-        [ordered]@{
-            Id = 'motorola-lenovo-basic'
-            DisplayName = 'Motorola Lenovo Basic'
-            Vendor = 'MOTOROLA'
-            Families = @('Motorola')
-            ModelPrefixes = @()
-            MachineTypes = @()
-            ModelKeywords = @('Legion')
-            EnabledFeatures = $defaultEnabledFeatures
-            HiddenFeatures = @()
-        }
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-5' -DisplayName 'Lenovo Legion 5' -Families @('Legion') -ModelPrefixes @('15ACH', '15AKP', '15AHP', '15APH', '15ARH', '15ARP', '15IAH', '15IAX', '15IHU', '15IMH', '15IRH', '15IRX', '15ITH', '16ACH', '16ADR', '16AFR', '16AHP', '16APH', '16ARH', '16ARP', '16ARX', '16IAH', '16IAX', '16IRH', '16IRX', '16ITH', '17ACH', '17ARH', '17IRX', '17ITH', '17IMH') -MachineTypes @('83F0', '83F1', '83M0', '83NX', '83N2', '83LY', '83DG', '83EW', '83EG', '83JJ', '82RC', '82RB', '82TB', '83EF', '82RE', '82RD') -ModelKeywords @('Legion 5', 'Y7000', 'R7000')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-slim-5' -DisplayName 'Lenovo Legion Slim 5' -Families @('Legion', 'Lenovo Slim') -ModelPrefixes @('14AHP', '14APH', '14AKP', '14IRP') -MachineTypes @('83DH', '83EX', '82Y5', '82Y9', '82YA', '83D6') -ModelKeywords @('Legion Slim 5')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-pro-5' -DisplayName 'Lenovo Legion Pro 5' -Families @('Legion') -ModelPrefixes @('16IAX', '16IRX', '16ARX') -MachineTypes @('83LT', '83F3', '83DF', '83F2', '83LU', '82WM', '83NN', '82WK', '82JQ') -ModelKeywords @('Legion Pro 5', 'Y9000P', 'R9000P')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-7' -DisplayName 'Lenovo Legion 7' -Families @('Legion') -ModelPrefixes @('16ACH', '16ARH', '16IAH', '16IAX', '16IRH') -MachineTypes @('83KY', '83FD', '82UH', '82TD', '82N6') -ModelKeywords @('Legion 7')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-pro-7' -DisplayName 'Lenovo Legion Pro 7' -Families @('Legion') -ModelPrefixes @('16IAX', '16IRX', '16ARX') -MachineTypes @('83RU', '83F5', '83DE', '82WR', '82WQ', '82WS') -ModelKeywords @('Legion Pro 7', 'Y9000P', 'R9000P')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-9' -DisplayName 'Lenovo Legion 9' -Families @('Legion') -ModelPrefixes @('16IRX', '16IAX', '18IAX') -MachineTypes @('83G0', '83EY') -ModelKeywords @('Legion 9')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legion-go' -DisplayName 'Lenovo Legion Go' -Families @('Legion') -ModelPrefixes @('NX') -MachineTypes @('83E1') -ModelKeywords @('Legion Go')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-loq' -DisplayName 'Lenovo LOQ' -Families @('LOQ') -ModelPrefixes @('15IAX', '15IRH', '15IRX', '15ARP', '15APH', '16IRH', '16IAX', '16APH', '17IRX', '17IAX') -ModelKeywords @('LOQ', 'G5000')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-ideapad' -DisplayName 'Lenovo IdeaPad' -Families @('IdeaPad', 'IdeaPad Gaming') -ModelKeywords @('IdeaPad Gaming', 'IdeaPad')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-thinkbook' -DisplayName 'Lenovo ThinkBook' -Families @('ThinkBook') -ModelPrefixes @('ThinkBook') -ModelKeywords @('ThinkBook')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-yoga' -DisplayName 'Lenovo YOGA' -Families @('YOGA') -ModelKeywords @('YOGA', 'Yoga')
+        New-LenovoBasicPackDefinition -Id 'lenovo-legion-desktop-basic' -DisplayName 'Lenovo Legion Desktop Basic' -Families @('Legion') -ModelKeywords @('Legion T', 'Legion Tower', 'Legion C', 'Legion Desktop')
+        New-LenovoHardwarePackDefinition -Id 'lenovo-legacy-limited' -DisplayName 'Lenovo Legacy Limited' -Families @('Legion') -ModelPrefixes @('18IAX', '17IR', '15IR', '15IC', '15IK', 'G5000', 'R9000', 'R7000', 'Y9000', 'Y7000') -ModelKeywords @('Legion')
+        New-LenovoBasicPackDefinition -Id 'lenovo-thinkpad-basic' -DisplayName 'Lenovo ThinkPad Basic' -Families @('ThinkPad') -ModelKeywords @('ThinkPad', 'ThinkPad P', 'ThinkPad T', 'ThinkPad X', 'ThinkPad E', 'ThinkPad L', 'ThinkPad Z')
+        New-LenovoBasicPackDefinition -Id 'lenovo-thinkcentre-basic' -DisplayName 'Lenovo ThinkCentre Basic' -Families @('ThinkCentre') -ModelKeywords @('ThinkCentre', 'ThinkCentre M', 'ThinkCentre Neo')
+        New-LenovoBasicPackDefinition -Id 'lenovo-thinkstation-basic' -DisplayName 'Lenovo ThinkStation Basic' -Families @('ThinkStation') -ModelKeywords @('ThinkStation', 'ThinkStation P')
+        New-LenovoBasicPackDefinition -Id 'lenovo-ideacentre-basic' -DisplayName 'Lenovo IdeaCentre Basic' -Families @('IdeaCentre') -ModelKeywords @('IdeaCentre', 'Yoga AIO')
+        New-LenovoBasicPackDefinition -Id 'lenovo-xiaoxin-basic' -DisplayName 'Lenovo XiaoXin Basic' -Families @('XiaoXin') -ModelKeywords @('XiaoXin', 'Xiaoxin', '小新')
+        New-LenovoBasicPackDefinition -Id 'lenovo-y-series-legacy' -DisplayName 'Lenovo Y Series Legacy' -Families @('IdeaPad', 'Legion') -ModelPrefixes @('Y520', 'Y530', 'Y540', 'Y545', 'Y700', 'Y7000', 'Y9000') -ModelKeywords @('Lenovo Y', 'Y Series')
+        New-LenovoBasicPackDefinition -Id 'lenovo-v-series-basic' -DisplayName 'Lenovo V Series Basic' -Families @('Lenovo V') -ModelPrefixes @('V14', 'V15', 'V17') -ModelKeywords @('Lenovo V', 'V14', 'V15', 'V17')
+        New-LenovoBasicPackDefinition -Id 'lenovo-slim-basic' -DisplayName 'Lenovo Slim Basic' -Families @('Lenovo Slim', 'IdeaPad Slim') -ModelKeywords @('Lenovo Slim', 'IdeaPad Slim', 'Slim 7', 'Slim 5')
+        New-BasicPackDefinition -Id 'motorola-lenovo-basic' -DisplayName 'Motorola Lenovo Basic' -Vendor 'MOTOROLA' -Families @('Motorola') -ModelKeywords @('Legion', 'ThinkPhone', 'Moto')
+        New-BasicPackDefinition -Id 'asus-basic' -DisplayName 'ASUS Basic' -Vendor 'ASUSTeK COMPUTER INC.' -VendorAliases @('ASUS', 'ASUSTeK COMPUTER INC') -Families @('ASUS', 'ROG', 'TUF', 'ProArt') -ModelKeywords @('ROG', 'TUF', 'Zephyrus', 'Strix', 'VivoBook', 'Zenbook', 'ProArt', 'ExpertBook')
+        New-BasicPackDefinition -Id 'dell-basic' -DisplayName 'Dell Basic' -Vendor 'Dell Inc.' -VendorAliases @('Dell', 'Dell Computer Corporation') -Families @('Dell', 'Alienware', 'Inspiron', 'XPS', 'Precision', 'G Series') -ModelKeywords @('Alienware', 'XPS', 'Inspiron', 'Precision', 'Latitude', 'Dell G', 'OptiPlex', 'Vostro')
+        New-BasicPackDefinition -Id 'hp-basic' -DisplayName 'HP Basic' -Vendor 'HP' -VendorAliases @('HP Inc.', 'Hewlett-Packard', 'Hewlett-Packard Company') -Families @('HP', 'OMEN', 'Victus', 'Pavilion', 'Envy', 'EliteBook', 'ProBook') -ModelKeywords @('OMEN', 'Victus', 'Pavilion', 'Envy', 'EliteBook', 'ProBook', 'ZBook', 'Spectre')
+        New-BasicPackDefinition -Id 'acer-basic' -DisplayName 'Acer Basic' -Vendor 'Acer' -VendorAliases @('Acer Incorporated', 'Acer Inc.') -Families @('Acer', 'Predator', 'Nitro', 'Swift', 'Aspire') -ModelKeywords @('Predator', 'Nitro', 'Swift', 'Aspire', 'TravelMate', 'ConceptD')
+        New-BasicPackDefinition -Id 'msi-basic' -DisplayName 'MSI Basic' -Vendor 'Micro-Star International Co., Ltd.' -VendorAliases @('MSI', 'Micro-Star International', 'MICRO-STAR INTERNATIONAL CO., LTD') -Families @('MSI') -ModelKeywords @('MSI', 'Raider', 'Stealth', 'Vector', 'Katana', 'Cyborg', 'Creator', 'Prestige', 'Modern', 'Summit')
+        New-BasicPackDefinition -Id 'microsoft-surface-basic' -DisplayName 'Microsoft Surface Basic' -Vendor 'Microsoft Corporation' -VendorAliases @('Microsoft') -Families @('Surface') -ModelKeywords @('Surface Laptop', 'Surface Pro', 'Surface Book', 'Surface Studio', 'Surface Go')
+        New-BasicPackDefinition -Id 'gigabyte-basic' -DisplayName 'GIGABYTE Basic' -Vendor 'GIGABYTE' -VendorAliases @('Gigabyte Technology Co., Ltd.', 'Gigabyte Technology Co., Ltd') -Families @('GIGABYTE', 'AORUS', 'AERO') -ModelKeywords @('AORUS', 'AERO', 'GIGABYTE G')
+        New-BasicPackDefinition -Id 'razer-basic' -DisplayName 'Razer Basic' -Vendor 'Razer' -VendorAliases @('Razer Inc.', 'Razer Inc') -Families @('Razer Blade') -ModelKeywords @('Blade', 'Razer Book')
+        New-BasicPackDefinition -Id 'samsung-basic' -DisplayName 'Samsung Basic' -Vendor 'SAMSUNG ELECTRONICS CO., LTD.' -VendorAliases @('Samsung', 'Samsung Electronics', 'SAMSUNG ELECTRONICS CO., LTD') -Families @('Samsung', 'Galaxy Book') -ModelKeywords @('Galaxy Book', 'Notebook 9')
+        New-BasicPackDefinition -Id 'huawei-basic' -DisplayName 'HUAWEI Basic' -Vendor 'HUAWEI' -VendorAliases @('Huawei Technologies Co., Ltd.', 'Huawei Technologies Co., Ltd') -Families @('HUAWEI', 'MateBook') -ModelKeywords @('MateBook')
+        New-BasicPackDefinition -Id 'xiaomi-basic' -DisplayName 'Xiaomi Basic' -Vendor 'Xiaomi' -VendorAliases @('Xiaomi Inc.', 'Xiaomi Corporation', 'Redmi') -Families @('Xiaomi', 'RedmiBook') -ModelKeywords @('Mi Notebook', 'RedmiBook', 'Xiaomi Book')
+        New-BasicPackDefinition -Id 'honor-basic' -DisplayName 'HONOR Basic' -Vendor 'HONOR' -VendorAliases @('Honor Device Co., Ltd.', 'Honor Device Co., Ltd') -Families @('HONOR', 'MagicBook') -ModelKeywords @('MagicBook')
+        New-BasicPackDefinition -Id 'lg-basic' -DisplayName 'LG Basic' -Vendor 'LG Electronics' -VendorAliases @('LG Electronics Inc.', 'LG Electronics Inc', 'LG') -Families @('LG gram', 'LG') -ModelKeywords @('gram', 'UltraPC')
+        New-BasicPackDefinition -Id 'framework-basic' -DisplayName 'Framework Basic' -Vendor 'Framework' -VendorAliases @('Framework Computer Inc.', 'Framework Computer') -Families @('Framework Laptop') -ModelKeywords @('Framework Laptop')
+        New-BasicPackDefinition -Id 'panasonic-basic' -DisplayName 'Panasonic Basic' -Vendor 'Panasonic' -VendorAliases @('Panasonic Corporation') -Families @('Panasonic', 'TOUGHBOOK', 'Lets note') -ModelKeywords @('TOUGHBOOK', 'Let''s note', 'Lets note')
+        New-BasicPackDefinition -Id 'dynabook-basic' -DisplayName 'Dynabook Basic' -Vendor 'Dynabook Inc.' -VendorAliases @('Dynabook', 'TOSHIBA', 'TOSHIBA CORPORATION') -Families @('Dynabook', 'Toshiba') -ModelKeywords @('Portégé', 'Portege', 'Tecra', 'Satellite')
+        New-BasicPackDefinition -Id 'fujitsu-basic' -DisplayName 'Fujitsu Basic' -Vendor 'FUJITSU' -VendorAliases @('FUJITSU CLIENT COMPUTING LIMITED', 'Fujitsu Client Computing Limited') -Families @('Fujitsu', 'LIFEBOOK') -ModelKeywords @('LIFEBOOK', 'CELSIUS')
+        New-BasicPackDefinition -Id 'vaio-basic' -DisplayName 'VAIO Basic' -Vendor 'VAIO Corporation' -VendorAliases @('VAIO') -Families @('VAIO') -ModelKeywords @('VAIO')
+        New-BasicPackDefinition -Id 'medion-basic' -DisplayName 'MEDION Basic' -Vendor 'MEDION' -VendorAliases @('MEDION AG') -Families @('MEDION', 'ERAZER') -ModelKeywords @('ERAZER', 'AKOYA')
+        New-BasicPackDefinition -Id 'xmg-schenker-basic' -DisplayName 'XMG/SCHENKER Basic' -Vendor 'SCHENKER' -VendorAliases @('Schenker Technologies GmbH', 'XMG', 'TUXEDO') -Families @('XMG', 'SCHENKER', 'TUXEDO') -ModelKeywords @('XMG', 'SCHENKER', 'TUXEDO')
+        New-BasicPackDefinition -Id 'clevo-tongfang-basic' -DisplayName 'Clevo/Tongfang Basic' -Vendor 'CLEVO' -VendorAliases @('Notebook', 'Tongfang', 'Eluktronics', 'MECHREVO', 'THUNDEROBOT', 'Hasee', 'SAGER') -Families @('Clevo', 'Tongfang', 'Barebone') -ModelKeywords @('MECHREVO', 'THUNDEROBOT', 'Hasee', 'SAGER', 'Eluktronics', 'Maingear')
+        New-BasicPackDefinition -Id 'generic-pc-basic' -DisplayName 'Generic PC Basic' -Vendor '*' -Families @('Generic PC')
     )
 }
 
@@ -631,6 +645,7 @@ function Prepare-ReleaseAssets {
                 id = $packId
                 displayName = [string]$pack.DisplayName
                 vendor = [string]$pack.Vendor
+                vendorAliases = @(Get-ListValue $pack.VendorAliases)
                 families = @(Get-ListValue $pack.Families)
                 modelPrefixes = @(Get-ListValue $pack.ModelPrefixes)
                 modelKeywords = @(Get-ListValue $pack.ModelKeywords)
@@ -649,6 +664,7 @@ function Prepare-ReleaseAssets {
                 id = $packId
                 displayName = [string]$pack.DisplayName
                 vendor = [string]$pack.Vendor
+                vendorAliases = @(Get-ListValue $pack.VendorAliases)
                 families = @(Get-ListValue $pack.Families)
                 modelPrefixes = @(Get-ListValue $pack.ModelPrefixes)
                 modelKeywords = @(Get-ListValue $pack.ModelKeywords)

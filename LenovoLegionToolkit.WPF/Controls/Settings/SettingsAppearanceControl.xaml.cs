@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -239,7 +240,7 @@ public partial class SettingsAppearanceControl
         }
         catch (Exception ex)
         {
-            await SnackbarHelper.ShowAsync(errorTitle, ex.Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error);
             RestoreCurrentLanguageSelection();
         }
         finally
@@ -284,6 +285,22 @@ public partial class SettingsAppearanceControl
             LocalizationHelper.LanguageDisplayName);
         _isRefreshing = false;
         UpdateLanguagePackButtons();
+    }
+
+    private static string FormatExceptionMessage(Exception exception)
+    {
+        if (exception is HttpRequestException || exception.GetBaseException() is HttpRequestException)
+            return LocalizationHelper.GetStringOrEnglish(
+                Resource.ResourceManager,
+                "SettingsPage_Language_DownloadFailed_Message",
+                "Could not download the language pack. Check your network connection, proxy, or TLS settings, then try again.",
+                Resource.Culture);
+
+        var baseException = exception.GetBaseException();
+        if (!ReferenceEquals(baseException, exception) && !string.IsNullOrWhiteSpace(baseException.Message))
+            return $"{exception.Message} ({baseException.Message})";
+
+        return exception.Message;
     }
 }
 }

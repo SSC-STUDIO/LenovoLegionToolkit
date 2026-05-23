@@ -32,6 +32,25 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
         return File.Exists(manifestPath);
     }
 
+    public DeviceSupportCatalog GetInstalledCatalog()
+    {
+        if (!Directory.Exists(DevicePacksRoot))
+            return new DeviceSupportCatalog();
+
+        var packs = Directory.EnumerateFiles(DevicePacksRoot, ManifestFileName, SearchOption.AllDirectories)
+            .Select(ReadInstalledPack)
+            .Where(pack => pack is not null)
+            .Cast<DevicePack>()
+            .ToArray();
+
+        return new DeviceSupportCatalog
+        {
+            SchemaVersion = 1,
+            AppVersion = "installed",
+            DevicePacks = packs
+        };
+    }
+
     public async Task<DevicePack> InstallAsync(string packId, IProgress<float>? progress = null, CancellationToken token = default)
     {
         if (!PathSecurity.IsValidPluginId(packId))
@@ -119,6 +138,22 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
 
     private string GetInstalledManifestPath(string packId) =>
         Path.Combine(GetInstalledPackDirectory(packId), ManifestFileName);
+
+    private static DevicePack? ReadInstalledPack(string manifestPath)
+    {
+        try
+        {
+            using var stream = File.OpenRead(manifestPath);
+            return JsonSerializer.Deserialize<DevicePack>(stream, JsonOptions);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read installed device pack: {manifestPath}", ex);
+
+            return null;
+        }
+    }
 
     private static void ExtractDataOnlyZip(string zipPath, string destinationDirectory)
     {

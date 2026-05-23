@@ -169,7 +169,7 @@ public partial class MainWindow
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // When page navigation is complete, update window title to: App Name - Page Title
-        var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", AppIdentity.DisplayName, Resource.Culture);
+        var appName = AppIdentity.DisplayName;
 
         if (e.Content is Page page && !string.IsNullOrWhiteSpace(page.Title))
         {
@@ -196,18 +196,11 @@ public partial class MainWindow
         _contentGrid.Visibility = Visibility.Hidden;
 
         var mi = await MachineCompatibility.GetMachineInformationAsync();
-        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
+        var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
 
-        if (!isSupportedLegionMachine && !ShouldKeepUnsupportedNavigationItems())
+        if (deviceAvailability.HiddenFeatures.Contains("keyboard-backlight") && !ShouldKeepUnsupportedNavigationItems())
         {
-            // Keep dashboard visible in compatibility mode for basic functionality
-            // _navigationStore.Items.Remove(_dashboardItem);
-            _navigationStore.Items.Remove(_automationItem);
             _navigationStore.Items.Remove(_keyboardItem);
-            _navigationStore.Items.Remove(_macroItem);
-
-            // Navigate to dashboard instead of windowsOptimization for better UX
-            _navigationStore.Navigate("dashboard");
         }
         else if (!await KeyboardBacklightPage.IsSupportedAsync() && !ShouldKeepUnsupportedNavigationItems())
         {

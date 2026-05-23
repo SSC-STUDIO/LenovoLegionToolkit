@@ -7,9 +7,9 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static utils:AppDisplayName.Value}"
     MinWidth="450"
-    MinHeight="220"
+    MinHeight="260"
     MaxWidth="450"
-    MaxHeight="220"
+    MaxHeight="260"
     Closed="LanguageSelectorWindow_OnClosed"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -60,6 +60,13 @@
 
                 <ComboBox x:Name="_languageComboBox" MaxDropDownHeight="Auto" />
 
+                <TextBlock
+                    x:Name="_statusText"
+                    Margin="0,12,0,0"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap"
+                    Visibility="Collapsed" />
+
             </StackPanel>
 
             <Grid
@@ -70,6 +77,7 @@
                 HorizontalAlignment="Center">
 
                 <wpfui:Button
+                    x:Name="_okButton"
                     Grid.Column="0"
                     MinWidth="120"
                     Appearance="Primary"

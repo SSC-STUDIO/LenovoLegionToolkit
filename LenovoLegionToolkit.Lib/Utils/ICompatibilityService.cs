@@ -14,7 +14,12 @@ public interface ICompatibilityService
     Task<MachineInformation> GetMachineInformationAsync();
 
     /// <summary>
-    /// Check if the machine is a supported Legion device
+    /// Check if the machine has a supported hardware-control device profile
+    /// </summary>
+    bool IsSupportedDevice(MachineInformation machineInformation);
+
+    /// <summary>
+    /// Legacy alias for hardware-control device support
     /// </summary>
     bool IsSupportedLegionMachine(MachineInformation machineInformation);
 

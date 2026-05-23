@@ -490,13 +490,7 @@ public class PluginRepositoryService : IDisposable
                 CreateNoWindow = true
             };
 
-            startInfo.ArgumentList.Add("--location");
-            startInfo.ArgumentList.Add("--fail");
-            startInfo.ArgumentList.Add("--silent");
-            startInfo.ArgumentList.Add("--show-error");
-            startInfo.ArgumentList.Add("--output");
-            startInfo.ArgumentList.Add(destinationPath);
-            startInfo.ArgumentList.Add(candidateUrl);
+            AddNativeCurlDownloadArguments(startInfo, destinationPath, candidateUrl);
 
             process = Process.Start(startInfo);
             if (process is null)
@@ -581,6 +575,21 @@ public class PluginRepositoryService : IDisposable
         {
             process?.Dispose();
         }
+    }
+
+    private static void AddNativeCurlDownloadArguments(ProcessStartInfo startInfo, string destinationPath, string candidateUrl)
+    {
+        startInfo.ArgumentList.Add("--location");
+        startInfo.ArgumentList.Add("--fail");
+        startInfo.ArgumentList.Add("--silent");
+        startInfo.ArgumentList.Add("--show-error");
+
+        if (OperatingSystem.IsWindows())
+            startInfo.ArgumentList.Add("--ssl-revoke-best-effort");
+
+        startInfo.ArgumentList.Add("--output");
+        startInfo.ArgumentList.Add(destinationPath);
+        startInfo.ArgumentList.Add(candidateUrl);
     }
 
     private bool TryCreateLocalPackageFromInstalledFiles(PluginManifest manifest, string destinationPath)

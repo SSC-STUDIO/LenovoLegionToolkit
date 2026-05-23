@@ -4,7 +4,7 @@
         <TargetFramework>$(LLTTargetFramework)</TargetFramework>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <Nullable>enable</Nullable>
-        <Copyright>© 2026 Lenovo Legion Toolkit Contributors</Copyright>
+        <Copyright>$(ProjectCopyright)</Copyright>
         <AssemblyName>llt</AssemblyName>
         <Platforms>x64</Platforms>
         <NeutralLanguage>en</NeutralLanguage>

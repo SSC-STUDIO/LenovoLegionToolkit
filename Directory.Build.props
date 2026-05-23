@@ -3,10 +3,14 @@
   <PropertyGroup>
     <MajorVersion>3</MajorVersion>
     <MinorVersion>8</MinorVersion>
-    <PatchVersion>0</PatchVersion>
+    <PatchVersion>1</PatchVersion>
     <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
     <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
     <GitCommitHash>unknown</GitCommitHash>
+    <Authors>Bartosz Cichecki; Universal Device Toolkit Contributors</Authors>
+    <Company>Universal Device Toolkit Contributors</Company>
+    <ProjectCopyright>Lenovo Legion Toolkit copyright retained by Bartosz Cichecki and contributors; Universal Device Toolkit modifications Copyright (C) 2026 Universal Device Toolkit Contributors</ProjectCopyright>
+    <Copyright Condition="'$(Copyright)' == ''">$(ProjectCopyright)</Copyright>
 
     <Version Condition="'$(Version)' == ''">$(ReleaseVersion)</Version>
     <FileVersion Condition="'$(FileVersion)' == ''">$(WindowsVersion)</FileVersion>

@@ -6,7 +6,7 @@
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
 		<AssemblyName>Universal Device Toolkit</AssemblyName>
-		<Copyright>© 2026 Universal Device Toolkit Contributors</Copyright>
+		<Copyright>$(ProjectCopyright)</Copyright>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>

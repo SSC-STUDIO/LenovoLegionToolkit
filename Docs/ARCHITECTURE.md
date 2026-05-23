@@ -2,7 +2,7 @@
 
 ## Overview
 
-Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows WPF desktop application designed to replace Lenovo Vantage for advanced hardware control on supported Lenovo and Motorola gaming devices. The application follows a modular architecture pattern with clear separation of concerns and treats plugin extensions as a primary expansion path.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows WPF desktop application for supported Lenovo hardware control, plugin extensions, and safe basic-mode workflows on other PCs. The application follows a modular architecture pattern with clear separation of concerns and treats plugin extensions as a primary expansion path.
 
 ## Quick Start
 
@@ -11,7 +11,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 1. **Download** the latest release from [GitHub Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
 2. **Install** the application by running the installer
 3. **Launch** UDT and configure your preferred settings
-4. **Enjoy** enhanced control over your Legion laptop hardware
+4. **Use** supported hardware controls or basic-mode plugin and system tools
 
 ### For Developers
 
@@ -212,17 +212,18 @@ Automatic Actions Execution
 2. **No Telemetry**: Complete user privacy
 3. **Lightweight**: Minimal resource footprint
 4. **Plugin Extensibility**: Dynamic module loading for device-specific workflows
-5. **Cross-Generation Support**: Unified API across Legion Gen 6-9
+5. **Catalog-backed Device Support**: Data-driven hardware/basic-mode profiles across Lenovo families and common PC vendors
 
 ## Platform Compatibility
 
 - **Windows**: 10 (1809+), 11 (x64 only)
 - **Hardware (code-driven detection)**:
-  - Vendor: `LENOVO` or `MOTOROLA`
-  - Primary families: Legion 5/Slim 5/Pro 5, Legion 7/Pro 7/9, Legion Go, LOQ, IdeaPad Gaming
-  - Chinese model naming variants are recognized (for example `R7000`, `R9000`, `Y7000`, `Y9000`)
-  - Detection source: `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` (`AllowedModelsPrefix`, `MachineTypeMap`, `ModelKeywordMap`)
-- **Dependencies**: .NET 10.0 Desktop Runtime, Lenovo drivers
+  - Hardware-control profiles: Legion 5/Slim 5/Pro 5, Legion 7/Pro 7/9, Legion Go, LOQ, IdeaPad Gaming, ThinkBook, YOGA, Lenovo Slim, selected legacy Lenovo gaming families
+  - Basic-mode profiles: ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung, HUAWEI, Xiaomi/Redmi, HONOR, LG, Framework, Panasonic, Dynabook/Toshiba, Fujitsu, VAIO, MEDION, XMG/SCHENKER, Clevo/Tongfang, and generic PCs
+  - Chinese model naming variants are recognized where hardware control is supported (for example `R7000`, `R9000`, `Y7000`, `Y9000`)
+  - Vendor matching normalizes common BIOS/DMI formatting differences so punctuation, casing, spacing, diacritics, and company suffix variants do not block a basic-mode match
+  - Detection source: `LenovoLegionToolkit.Lib/DeviceSupport/CatalogDeviceSupportProvider.cs` and `LenovoLegionToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs`
+- **Dependencies**: .NET 10.0 Desktop Runtime; Lenovo drivers are required only for Lenovo hardware-specific controls
 
 ## Performance Characteristics
 

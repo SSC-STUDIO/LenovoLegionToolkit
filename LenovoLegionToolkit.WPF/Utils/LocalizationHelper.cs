@@ -132,14 +132,19 @@ public static class LocalizationHelper
         return string.IsNullOrWhiteSpace(invariant) ? fallback : invariant;
     }
 
-    public static async Task SetLanguageAsync(bool interactive = false)
+    public static Task SetLanguageAsync(bool interactive = false) =>
+        SetLanguageAsync(interactive, null);
+
+    public static async Task SetLanguageAsync(bool interactive, LanguagePackManager? languagePackManager)
     {
         var savedCultureInfo = await GetLanguageFromFile();
         CultureInfo? cultureInfo = savedCultureInfo;
 
         if (interactive && savedCultureInfo is null)
         {
-            var window = new LanguageSelectorWindow(Languages, GetPreferredStartupLanguage(savedCultureInfo));
+            var window = languagePackManager is null
+                ? new LanguageSelectorWindow(Languages, GetPreferredStartupLanguage(savedCultureInfo))
+                : new LanguageSelectorWindow(Languages, GetPreferredStartupLanguage(savedCultureInfo), languagePackManager);
             ApplyStartupTheme(window);
             window.Show();
             cultureInfo = await window.ShouldContinue;
@@ -195,7 +200,7 @@ public static class LocalizationHelper
         return DefaultLanguage;
     }
 
-    private static void ApplyStartupTheme(Window window)
+    public static void ApplyStartupTheme(Window window)
     {
         try
         {

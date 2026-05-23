@@ -11,6 +11,8 @@ public static class HttpClientExtensions
     public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         using var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
         var contentLength = response.Content.Headers.ContentLength;
 
         await using var download = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);

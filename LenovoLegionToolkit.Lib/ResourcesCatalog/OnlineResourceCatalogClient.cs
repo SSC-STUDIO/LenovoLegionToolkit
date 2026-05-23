@@ -29,16 +29,35 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
 
     public async Task DownloadAndVerifyAsync(string url, string expectedSha256, string destinationPath, IProgress<float>? progress = null, CancellationToken token = default)
     {
-        await using (var stream = File.Create(destinationPath))
-        {
-            using var httpClient = httpClientFactory.Create();
-            await httpClient.DownloadAsync(url, stream, progress, token).ConfigureAwait(false);
-        }
+        await DownloadAsync(url, destinationPath, progress, token).ConfigureAwait(false);
+        await VerifySha256Async(destinationPath, expectedSha256, token).ConfigureAwait(false);
+    }
 
-        var actualSha256 = await ComputeSha256Async(destinationPath, token).ConfigureAwait(false);
-        if (!actualSha256.Equals(expectedSha256, StringComparison.OrdinalIgnoreCase))
+    public async Task DownloadAsync(string url, string destinationPath, IProgress<float>? progress = null, CancellationToken token = default)
+    {
+        try
+        {
+            await using (var stream = File.Create(destinationPath))
+            {
+                using var httpClient = httpClientFactory.Create();
+                await httpClient.DownloadAsync(url, stream, progress, token).ConfigureAwait(false);
+            }
+        }
+        catch
         {
             try { File.Delete(destinationPath); }
+            catch { /* ignore cleanup failure */ }
+
+            throw;
+        }
+    }
+
+    public async Task VerifySha256Async(string path, string expectedSha256, CancellationToken token = default)
+    {
+        var actualSha256 = await ComputeSha256Async(path, token).ConfigureAwait(false);
+        if (!actualSha256.Equals(expectedSha256, StringComparison.OrdinalIgnoreCase))
+        {
+            try { File.Delete(path); }
             catch { /* ignore cleanup failure */ }
 
             throw new InvalidDataException($"Downloaded resource failed SHA256 validation. Expected {expectedSha256}, got {actualSha256}.");

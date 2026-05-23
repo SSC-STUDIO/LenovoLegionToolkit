@@ -16,6 +16,45 @@ public sealed record OnlineResourceCatalog
 
     [JsonPropertyName("devicePacks")]
     public IReadOnlyCollection<OnlineDevicePackResource> DevicePacks { get; init; } = [];
+
+    [JsonPropertyName("downloads")]
+    public OnlineDownloads? Downloads { get; init; }
+
+    [JsonPropertyName("sha256")]
+    public OnlineFileResource? Sha256 { get; init; }
+}
+
+public sealed record OnlineDownloads
+{
+    [JsonPropertyName("full")]
+    public OnlineDownloadGroup? Full { get; init; }
+
+    [JsonPropertyName("online")]
+    public OnlineDownloadGroup? Online { get; init; }
+}
+
+public sealed record OnlineDownloadGroup
+{
+    [JsonPropertyName("portable")]
+    public OnlineFileResource? Portable { get; init; }
+
+    [JsonPropertyName("installer")]
+    public OnlineFileResource? Installer { get; init; }
+}
+
+public sealed record OnlineFileResource
+{
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("url")]
+    public string Url { get; init; } = string.Empty;
+
+    [JsonPropertyName("sha256")]
+    public string Sha256 { get; init; } = string.Empty;
+
+    [JsonPropertyName("size")]
+    public long Size { get; init; }
 }
 
 public sealed record OnlineLanguageResource
@@ -46,6 +85,9 @@ public sealed record OnlineDevicePackResource
 
     [JsonPropertyName("vendor")]
     public string Vendor { get; init; } = string.Empty;
+
+    [JsonPropertyName("vendorAliases")]
+    public IReadOnlyCollection<string> VendorAliases { get; init; } = [];
 
     [JsonPropertyName("families")]
     public IReadOnlyCollection<string> Families { get; init; } = [];

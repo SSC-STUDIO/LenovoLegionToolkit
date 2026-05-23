@@ -47,18 +47,31 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
         var tempRoot = Path.Combine(Path.GetTempPath(), $"{AssetPrefix}-lang-{cultureInfo.Name}-{Guid.NewGuid():N}");
         var tempZipPath = Path.Combine(tempRoot, "language.zip");
+        var fallbackZipPath = Path.Combine(tempRoot, "full-portable.zip");
         var extractPath = Path.Combine(tempRoot, "extract");
+        var fallbackExtractPath = Path.Combine(tempRoot, "fallback-extract");
 
         try
         {
             Directory.CreateDirectory(tempRoot);
             Directory.CreateDirectory(extractPath);
 
-            var languageResource = await GetLanguageResourceAsync(cultureInfo, token).ConfigureAwait(false);
-            await resourceCatalogClient.DownloadAndVerifyAsync(languageResource.Url, languageResource.Sha256, tempZipPath, progress, token).ConfigureAwait(false);
+            OnlineResourceCatalog? catalog = null;
+            try
+            {
+                catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
+                var languageResource = GetLanguageResource(catalog, cultureInfo);
+                await resourceCatalogClient.DownloadAndVerifyAsync(languageResource.Url, languageResource.Sha256, tempZipPath, progress, token).ConfigureAwait(false);
+                ExtractZipSafely(tempZipPath, extractPath);
+                CopyLanguageDirectories(extractPath, cultureInfo);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Language pack download failed for '{cultureInfo.Name}'. Falling back to full portable package.", ex);
 
-            ExtractZipSafely(tempZipPath, extractPath);
-            CopyLanguageDirectories(extractPath, cultureInfo);
+                await InstallFromFullPortableAsync(cultureInfo, catalog, fallbackZipPath, fallbackExtractPath, progress, token).ConfigureAwait(false);
+            }
         }
         finally
         {
@@ -129,9 +142,8 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         return $"{version.Major}.{version.Minor}.{version.Build}";
     }
 
-    private async Task<OnlineLanguageResource> GetLanguageResourceAsync(CultureInfo cultureInfo, CancellationToken token)
+    private static OnlineLanguageResource GetLanguageResource(OnlineResourceCatalog catalog, CultureInfo cultureInfo)
     {
-        var catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
         var normalizedCulture = NormalizeAssetCultureName(cultureInfo);
 
         var resource = catalog.Languages.FirstOrDefault(language =>
@@ -148,6 +160,117 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             throw new InvalidDataException($"Language '{cultureInfo.Name}' is missing SHA256 metadata.");
 
         return resource;
+    }
+
+    private async Task InstallFromFullPortableAsync(CultureInfo cultureInfo, OnlineResourceCatalog? catalog, string zipPath, string extractPath, IProgress<float>? progress, CancellationToken token)
+    {
+        var fullPortable = await GetFullPortableResourceAsync(catalog, token).ConfigureAwait(false);
+
+        if (string.IsNullOrWhiteSpace(fullPortable.Url))
+            throw new InvalidDataException("Full portable fallback has an empty download URL.");
+
+        if (string.IsNullOrWhiteSpace(fullPortable.Sha256))
+            throw new InvalidDataException("Full portable fallback is missing SHA256 metadata.");
+
+        Directory.CreateDirectory(extractPath);
+        await resourceCatalogClient.DownloadAsync(fullPortable.Url, zipPath, progress, token).ConfigureAwait(false);
+        await resourceCatalogClient.VerifySha256Async(zipPath, fullPortable.Sha256, token).ConfigureAwait(false);
+        ExtractMatchingLanguageDirectories(zipPath, extractPath, cultureInfo);
+        CopyLanguageDirectories(extractPath, cultureInfo);
+    }
+
+    private async Task<OnlineFileResource> GetFullPortableResourceAsync(OnlineResourceCatalog? catalog, CancellationToken token)
+    {
+        if (catalog?.Downloads?.Full?.Portable is { } catalogPortable &&
+            !string.IsNullOrWhiteSpace(catalogPortable.Url) &&
+            !string.IsNullOrWhiteSpace(catalogPortable.Sha256))
+        {
+            return catalogPortable;
+        }
+
+        return await CreateReleaseFullPortableResourceAsync(token).ConfigureAwait(false);
+    }
+
+    private async Task<OnlineFileResource> CreateReleaseFullPortableResourceAsync(CancellationToken token)
+    {
+        var version = GetCurrentVersion();
+        var assetName = $"{AssetPrefix}_v{version}_Full_win-x64.zip";
+        var hashAssetName = $"{AssetPrefix}_v{version}_SHA256.txt";
+        var releaseBaseUrl = $"{AppIdentity.RepositoryUrl}/releases/download/v{version}";
+        var hashUrl = $"{releaseBaseUrl}/{hashAssetName}";
+        var hashTempPath = Path.Combine(Path.GetTempPath(), $"{AssetPrefix}-sha256-{Guid.NewGuid():N}.txt");
+
+        try
+        {
+            await resourceCatalogClient.DownloadAsync(hashUrl, hashTempPath, token: token).ConfigureAwait(false);
+            var hashText = await File.ReadAllTextAsync(hashTempPath, token).ConfigureAwait(false);
+            var sha256 = ResolveHash(hashText, assetName);
+            if (string.IsNullOrWhiteSpace(sha256))
+                throw new InvalidDataException($"SHA256 file does not contain an entry for '{assetName}'.");
+
+            return new OnlineFileResource
+            {
+                Name = assetName,
+                Url = $"{releaseBaseUrl}/{assetName}",
+                Sha256 = sha256
+            };
+        }
+        finally
+        {
+            try { File.Delete(hashTempPath); }
+            catch { /* best-effort cleanup */ }
+        }
+    }
+
+    private static string ResolveHash(string hashText, string assetName)
+    {
+        foreach (var line in hashText.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries))
+        {
+            var trimmed = line.Trim();
+            if (trimmed.Length < 64 || !trimmed.Contains(assetName, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var hash = trimmed[..64];
+            if (hash.All(Uri.IsHexDigit))
+                return hash.ToLowerInvariant();
+        }
+
+        return string.Empty;
+    }
+
+    private static void ExtractMatchingLanguageDirectories(string zipPath, string destinationDirectory, CultureInfo cultureInfo)
+    {
+        var destinationRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(destinationDirectory));
+        var expectedDirectoryNames = GetResourceDirectoryNames(cultureInfo).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var extracted = false;
+
+        using var archive = ZipFile.OpenRead(zipPath);
+        foreach (var entry in archive.Entries)
+        {
+            var normalizedEntryName = entry.FullName.Replace('\\', '/');
+            var separatorIndex = normalizedEntryName.IndexOf('/');
+            if (separatorIndex <= 0 || string.IsNullOrEmpty(entry.Name))
+                continue;
+
+            var topLevelDirectory = normalizedEntryName[..separatorIndex];
+            if (!expectedDirectoryNames.Contains(topLevelDirectory))
+                continue;
+
+            var relativePath = normalizedEntryName[(separatorIndex + 1)..];
+            if (string.IsNullOrWhiteSpace(relativePath))
+                continue;
+
+            var destinationPath = Path.GetFullPath(Path.Combine(destinationRoot, topLevelDirectory, relativePath));
+            if (!destinationPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Full portable package contains an unsafe path: {entry.FullName}");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+            entry.ExtractToFile(destinationPath, true);
+            extracted = true;
+        }
+
+        if (!extracted)
+            throw new InvalidDataException($"Full portable package does not contain language resources for '{cultureInfo.Name}'.");
     }
 
     private static void CopyLanguageDirectories(string extractPath, CultureInfo cultureInfo)
