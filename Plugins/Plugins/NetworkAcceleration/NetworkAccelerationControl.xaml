@@ -10,6 +10,38 @@
              Unloaded="UserControl_Unloaded"
              d:DesignHeight="860"
              d:DesignWidth="980">
+    <UserControl.Resources>
+        <Style x:Key="NetworkAccelerationPresetItemStyle" TargetType="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.56" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -140,31 +172,16 @@
                         <ListBox x:Name="_presetListBox"
                                  BorderThickness="0"
                                  Background="Transparent"
+                                 ItemContainerStyle="{StaticResource NetworkAccelerationPresetItemStyle}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  SelectionChanged="PresetListBox_SelectionChanged"
                                  AutomationProperties.AutomationId="NetworkAcceleration_TargetsList">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="Margin" Value="0,0,0,8" />
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-
                             <ListBoxItem Tag="Balanced">
                                 <Border Padding="12,10"
                                         CornerRadius="8"
-                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                        Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                        BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -183,12 +200,14 @@
                                                        Text="{x:Static text:NetworkAccelerationText.ModeBalancedTargetDescription}"
                                                        TextWrapping="Wrap"
                                                        FontSize="11"
+                                                       MaxWidth="340"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                         <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"
                                                    Text="{x:Static text:NetworkAccelerationText.ModeBalanced}"
                                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                     </Grid>
@@ -198,9 +217,9 @@
                             <ListBoxItem Tag="Gaming">
                                 <Border Padding="12,10"
                                         CornerRadius="8"
-                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                        Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                        BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -219,12 +238,14 @@
                                                        Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetDescription}"
                                                        TextWrapping="Wrap"
                                                        FontSize="11"
+                                                       MaxWidth="340"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                         <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"
                                                    Text="{x:Static text:NetworkAccelerationText.ModeGaming}"
                                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                     </Grid>
@@ -234,9 +255,9 @@
                             <ListBoxItem Tag="Streaming">
                                 <Border Padding="12,10"
                                         CornerRadius="8"
-                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                        Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                        BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -255,12 +276,14 @@
                                                        Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetDescription}"
                                                        TextWrapping="Wrap"
                                                        FontSize="11"
+                                                       MaxWidth="340"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                         <TextBlock Grid.Column="2"
                                                    VerticalAlignment="Top"
                                                    FontSize="11"
                                                    FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"
                                                    Text="{x:Static text:NetworkAccelerationText.ModeStreaming}"
                                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                     </Grid>

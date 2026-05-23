@@ -95,7 +95,7 @@ public partial class MainWindow : Window
         };
         _suppressThemeSelectionChanged = false;
 
-        LogExpander.IsExpanded = _uiState.IsLogExpanded;
+        LogExpander.IsExpanded = _launchOptions.ThemeMode is null && _uiState.IsLogExpanded;
     }
 
     private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -271,7 +271,7 @@ public partial class MainWindow : Window
         {
             ThemeMode = CurrentTheme,
             LastView = CurrentView,
-            IsLogExpanded = LogExpander.IsExpanded,
+            IsLogExpanded = _launchOptions.ThemeMode is null && LogExpander.IsExpanded,
         };
         _themeService.SaveState(_uiState);
         UnloadCurrentSession();
@@ -531,8 +531,10 @@ public partial class MainWindow : Window
         SettingsPreviewHintBorder.Visibility = isPreview ? Visibility.Visible : Visibility.Collapsed;
         OptimizationPreviewHintBorder.Visibility = isPreview ? Visibility.Visible : Visibility.Collapsed;
 
-        FeatureContentHost.IsEnabled = !isPreview;
-        SettingsContentHost.IsEnabled = !isPreview;
+        FeatureContentHost.IsEnabled = true;
+        SettingsContentHost.IsEnabled = true;
+        FeatureContentHost.IsHitTestVisible = !isPreview;
+        SettingsContentHost.IsHitTestVisible = !isPreview;
 
         foreach (var row in _optimizationActions)
             row.CanExecute = !isPreview;

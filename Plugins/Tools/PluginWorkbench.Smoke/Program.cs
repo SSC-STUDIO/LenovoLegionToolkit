@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using System.Windows.Automation;
@@ -13,6 +14,13 @@ namespace PluginWorkbench.Smoke;
 internal static class Program
 {
     private const string DefaultPluginId = "custom-mouse";
+    private const int SwRestore = 9;
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     private static int Main(string[] args)
     {
@@ -31,6 +39,7 @@ internal static class Program
             var (startInfo, appDirectory) = ResolveWorkbenchStartInfo(repositoryRoot);
             startInfo.Arguments = AppendArgument(startInfo.Arguments, $"--repository-root \"{repositoryRoot}\"");
             startInfo.Arguments = AppendArgument(startInfo.Arguments, $"--theme {options.Theme.ToLowerInvariant()}");
+            startInfo.Arguments = AppendArgument(startInfo.Arguments, "--view feature");
             startInfo.Arguments = AppendArgument(startInfo.Arguments, "--auto-accept-runtime-confirmation");
 
             Console.WriteLine($"[workbench-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
@@ -113,6 +122,10 @@ internal static class Program
 
             if (runButton is not null && runButton.Current.IsEnabled)
                 throw new InvalidOperationException("Optimization action button should be disabled in Preview mode.");
+
+            var featureTab = TryWaitForAutomationId(window, "FeatureTabItem", TimeSpan.FromSeconds(2));
+            if (IsInteractable(featureTab))
+                Select(featureTab!);
 
             Console.WriteLine("[workbench-smoke] Preview mode verified");
             CaptureAndValidateVisual(window, options, plugin, "preview");
@@ -426,6 +439,8 @@ internal static class Program
 
     private static void CaptureAndValidateVisual(AutomationElement window, SmokeOptions options, PluginDescriptor plugin, string stage)
     {
+        BringWindowToForeground(window);
+
         var bounds = window.Current.BoundingRectangle;
         if (bounds.Width <= 0 || bounds.Height <= 0)
             throw new InvalidOperationException($"Visual capture target has invalid bounds for {plugin.Id}/{options.Theme}/{stage}: {bounds}.");
@@ -476,6 +491,17 @@ internal static class Program
         };
         File.WriteAllText(statsPath, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine($"[workbench-smoke] Visual capture saved: {screenshotPath} (range={stats.LuminanceRange:0.0}, stddev={stats.StandardDeviation:0.0})");
+    }
+
+    private static void BringWindowToForeground(AutomationElement window)
+    {
+        var handle = window.Current.NativeWindowHandle;
+        if (handle == 0)
+            return;
+
+        ShowWindow((IntPtr)handle, SwRestore);
+        SetForegroundWindow((IntPtr)handle);
+        Thread.Sleep(350);
     }
 
     private static VisualStats AnalyzeBitmap(Bitmap bitmap)

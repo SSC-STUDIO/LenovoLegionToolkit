@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using LenovoLegionToolkit.Plugins.Shared;
@@ -95,7 +96,8 @@ public partial class NetworkAccelerationControl : UserControl
         _presetListBox = new ListBox
         {
             BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent
+            Background = Brushes.Transparent,
+            ItemContainerStyle = CreatePresetItemContainerStyle()
         };
         _presetListBox.SelectionChanged += PresetListBox_SelectionChanged;
         AutomationProperties.SetAutomationId(_presetListBox, "NetworkAcceleration_TargetsList");
@@ -395,11 +397,18 @@ public partial class NetworkAccelerationControl : UserControl
     {
         var row = new Border
         {
-            Padding = new Thickness(0, 10, 0, 12),
-            Background = Brushes.Transparent,
-            BorderThickness = addBottomBorder ? new Thickness(0, 0, 0, 1) : new Thickness(0)
+            Padding = new Thickness(10, 9, 10, 10),
+            CornerRadius = new CornerRadius(7),
+            BorderThickness = new Thickness(1)
         };
-        row.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        row.SetBinding(Border.BackgroundProperty, new Binding(nameof(Control.Background))
+        {
+            RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ListBoxItem), 1)
+        });
+        row.SetBinding(Border.BorderBrushProperty, new Binding(nameof(Control.BorderBrush))
+        {
+            RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ListBoxItem), 1)
+        });
 
         var grid = new Grid();
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
@@ -425,6 +434,48 @@ public partial class NetworkAccelerationControl : UserControl
             Padding = new Thickness(0),
             Margin = new Thickness(0)
         };
+    }
+
+    private static Style CreatePresetItemContainerStyle()
+    {
+        var style = new Style(typeof(ListBoxItem));
+        style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch));
+        style.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(0)));
+        style.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0, 0, 0, 8)));
+        style.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+        style.Setters.Add(new Setter(Control.BorderBrushProperty, new DynamicResourceExtension("ControlStrokeColorDefaultBrush")));
+        style.Setters.Add(new Setter(Control.TemplateProperty, CreatePresetItemContainerTemplate()));
+
+        var hoverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
+        hoverTrigger.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ControlFillColorSecondaryBrush")));
+        hoverTrigger.Setters.Add(new Setter(Control.BorderBrushProperty, new DynamicResourceExtension("SystemAccentColorPrimaryBrush")));
+        style.Triggers.Add(hoverTrigger);
+
+        var selectedTrigger = new Trigger { Property = ListBoxItem.IsSelectedProperty, Value = true };
+        selectedTrigger.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ControlFillColorSecondaryBrush")));
+        selectedTrigger.Setters.Add(new Setter(Control.BorderBrushProperty, new DynamicResourceExtension("SystemAccentColorPrimaryBrush")));
+        style.Triggers.Add(selectedTrigger);
+
+        return style;
+    }
+
+    private static ControlTemplate CreatePresetItemContainerTemplate()
+    {
+        var presenter = new FrameworkElementFactory(typeof(ContentPresenter));
+        presenter.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
+        presenter.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Stretch);
+        presenter.SetValue(UIElement.SnapsToDevicePixelsProperty, true);
+
+        var template = new ControlTemplate(typeof(ListBoxItem))
+        {
+            VisualTree = presenter
+        };
+
+        var disabledTrigger = new Trigger { Property = UIElement.IsEnabledProperty, Value = false };
+        disabledTrigger.Setters.Add(new Setter(UIElement.OpacityProperty, 0.56));
+        template.Triggers.Add(disabledTrigger);
+
+        return template;
     }
 
     private static Grid CreateTwoColumnRowsGrid(int rowCount, Thickness margin)

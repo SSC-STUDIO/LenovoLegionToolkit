@@ -58,9 +58,6 @@ internal sealed class PluginWorkbenchThemeService
 
     public ThemeApplyResult Apply(PluginWorkbenchThemeMode mode)
     {
-        if (!TryEnsureHostResources(out var errorMessage))
-            return new ThemeApplyResult(false, errorMessage);
-
         var isDark = mode switch
         {
             PluginWorkbenchThemeMode.Dark => true,
@@ -78,6 +75,13 @@ internal sealed class PluginWorkbenchThemeService
         var modeLabel = mode == PluginWorkbenchThemeMode.System
             ? $"System ({(isDark ? "Dark" : "Light")})"
             : mode.ToString();
+
+        if (!TryEnsureHostResources(out var hostResourceMessage))
+        {
+            return new ThemeApplyResult(
+                false,
+                $"{modeLabel} workbench theme active. Host resources unavailable: {hostResourceMessage}");
+        }
 
         return new ThemeApplyResult(true, $"{modeLabel} host preview active");
     }
@@ -113,7 +117,7 @@ internal sealed class PluginWorkbenchThemeService
         }
         catch (Exception ex)
         {
-            message = $"Unable to load host theme resources. Run Bootstrap Host and confirm Dependencies/Host matches the main app baseline. Details: {ex.Message}";
+            message = $"Run Bootstrap Host and confirm Dependencies/Host matches the main app baseline. Details: {ex.Message}";
             return false;
         }
     }
