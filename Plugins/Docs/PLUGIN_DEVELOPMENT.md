@@ -1,4 +1,4 @@
-# Lenovo Legion Toolkit Plugin Development Guide
+# Universal Device Toolkit Plugin Development Guide
 
 This repository now supports two clear paths:
 
@@ -116,7 +116,7 @@ Arguments:
 
 The tooling now follows the same shape as VS Code extension authoring:
 
-| VS Code extension flow | LLT plugin flow |
+| VS Code extension flow | Universal Device Toolkit plugin flow |
 |---|---|
 | `package.json` is the authoring manifest | `plugin.manifest.json` is the authoring manifest |
 | `contributes` declares commands/views | `contributes` declares feature/settings/runtime/optimization entry points |

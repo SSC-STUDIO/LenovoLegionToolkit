@@ -496,7 +496,7 @@ public sealed class StoreGenerationRequest
 {
     public string RepositoryRoot { get; init; } = string.Empty;
     public string? OutputPath { get; init; }
-    public string ReleaseRepositoryUrl { get; init; } = "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases";
+    public string ReleaseRepositoryUrl { get; init; } = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases";
     public string? AssetRoot { get; init; }
     public IReadOnlyList<string> PluginIds { get; init; } = Array.Empty<string>();
     public DateTimeOffset? ReleaseDate { get; init; }

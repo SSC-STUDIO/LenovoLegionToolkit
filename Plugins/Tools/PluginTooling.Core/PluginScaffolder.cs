@@ -46,7 +46,7 @@ public sealed class PluginScaffolder
         unifiedManifest.Store.Tags = request.Official ? ["new-plugin", "official-candidate"] : [];
         unifiedManifest.Store.Dependencies = [];
         unifiedManifest.Store.SupportedLanguages = ["en", "zh-Hans"];
-        unifiedManifest.Store.RepositoryUrl = request.Official ? "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins" : null;
+        unifiedManifest.Store.RepositoryUrl = request.Official ? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins" : null;
 
         File.WriteAllText(pluginProjectPath, PluginRepository.NormalizeLineEndings(BuildProjectFile(request)));
         File.WriteAllText(testProjectPath, PluginRepository.NormalizeLineEndings(BuildTestProjectFile(request, namespaceSegment)));
@@ -124,7 +124,7 @@ public sealed class PluginScaffolder
         var resourceDirectory = Path.Combine(pluginDirectory, "Resources");
         File.WriteAllText(Path.Combine(resourceDirectory, "Resource.resx"), PluginRepository.NormalizeLineEndings(BuildResourceFile(displayName, displayName, $"{displayName} Settings", $"{displayName} feature preview", $"{displayName} settings preview")));
         File.WriteAllText(Path.Combine(resourceDirectory, "Resource.en.resx"), PluginRepository.NormalizeLineEndings(BuildResourceFile(displayName, displayName, $"{displayName} Settings", $"{displayName} feature preview", $"{displayName} settings preview")));
-        File.WriteAllText(Path.Combine(resourceDirectory, "Resource.zh-Hans.resx"), PluginRepository.NormalizeLineEndings(BuildResourceFile(displayName, displayName, $"{displayName} 设置", $"{displayName} 功能预览", $"{displayName} 设置预览")));
+        File.WriteAllText(Path.Combine(resourceDirectory, "Resource.zh-Hans.resx"), PluginRepository.NormalizeLineEndings(BuildResourceFile(displayName, displayName, $"{displayName} 璁剧疆", $"{displayName} 鍔熻兘棰勮", $"{displayName} 璁剧疆棰勮")));
     }
 
     private static string BuildProjectFile(ScaffoldRequest request)
@@ -256,7 +256,7 @@ public sealed class PluginScaffolder
 ## [Unreleased]
 
 ### Added
-- Initial plugin scaffold / 初始插件骨架
+- Initial plugin scaffold / 鍒濆鎻掍欢楠ㄦ灦
 """;
     }
 

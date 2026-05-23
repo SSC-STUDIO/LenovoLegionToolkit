@@ -6,8 +6,8 @@
   "minHostVersion": "3.6.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
-  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.ViveTool.ViveToolPage",
@@ -73,6 +73,6 @@
       "zh-Hans",
       "zh-Hant"
     ],
-    "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   }
 }

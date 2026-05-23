@@ -6,8 +6,8 @@
   "minHostVersion": "3.6.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
-  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
   "contributes": {
     "featurePage": null,
     "settingsPage": {
@@ -70,6 +70,6 @@
       "zh-Hans",
       "zh-Hant"
     ],
-    "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   }
 }

@@ -1,4 +1,4 @@
-# Lenovo Legion Toolkit Plugin Quick Start
+# Universal Device Toolkit Plugin Quick Start
 
 This is the shortest path for creating a new plugin in this repository.
 

@@ -537,7 +537,7 @@ internal static class Program
 
     private static AutomationElement WaitForMainWindow(int processId, TimeSpan timeout)
     {
-        return WaitForWindow(processId, "Plugin Workbench", timeout, automationId: "PluginWorkbenchMainWindow");
+        return WaitForWindow(processId, "Universal Device Toolkit Plugin Workbench - TEST", timeout, automationId: "PluginWorkbenchMainWindow");
     }
 
     private static AutomationElement WaitForWindow(int processId, string windowName, TimeSpan timeout, string? automationId = null)

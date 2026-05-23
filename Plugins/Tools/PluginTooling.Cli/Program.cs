@@ -271,7 +271,7 @@ static async Task<int> ProgramMainAsync(string[] args)
         {
             RepositoryRoot = repositoryRoot,
             OutputPath = OptionalValue(argv, "--output"),
-            ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases",
+            ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases",
             AssetRoot = OptionalValue(argv, "--asset-root"),
             PluginIds = pluginIds,
             ReleaseDate = ParseReleaseDate(OptionalValue(argv, "--release-date")),
