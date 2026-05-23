@@ -167,59 +167,21 @@ jobs:
     - name: Generate release notes
       shell: pwsh
       run: |
-        $lines = Get-Content 'CHANGELOG.md'
-        $versionPattern = '^## \[' + [regex]::Escape($env:VERSION) + '\] - (?<date>\d{4}-\d{2}-\d{2})$'
-        $startIndex = -1
-        $endIndex = $lines.Count
-        $releaseDate = $null
+        $assetNames = @(
+          $env:SETUP_FULL_ASSET,
+          $env:SETUP_ONLINE_ASSET,
+          $env:ZIP_FULL_ASSET,
+          $env:ZIP_ONLINE_ASSET,
+          $env:LEGACY_SETUP_ASSET,
+          $env:HASH_ASSET
+        )
 
-        for ($i = 0; $i -lt $lines.Count; $i++) {
-          if ($lines[$i] -match $versionPattern) {
-            $startIndex = $i + 1
-            $releaseDate = $Matches['date']
-            break
-          }
-        }
-
-        if ($startIndex -lt 0 -or [string]::IsNullOrWhiteSpace($releaseDate)) {
-          throw "Could not find CHANGELOG section for version $env:VERSION"
-        }
-
-        for ($i = $startIndex; $i -lt $lines.Count; $i++) {
-          if ($lines[$i] -match '^## \[') {
-            $endIndex = $i
-            break
-          }
-        }
-
-        $section = ($lines[$startIndex..($endIndex - 1)] -join "`n").Trim()
-        $releaseNotes = @"
-        # Universal Device Toolkit v$env:VERSION
-
-        Release date: $releaseDate
-
-        $section
-
-        ## Downloads
-        - $env:SETUP_FULL_ASSET - full installer with all bundled languages
-        - $env:ZIP_FULL_ASSET - full portable package with all bundled languages
-        - $env:SETUP_ONLINE_ASSET - online installer with English bundled; install other languages from online resources
-        - $env:ZIP_ONLINE_ASSET - online portable package with English bundled; install other languages from online resources
-        - $env:LEGACY_SETUP_ASSET - compatibility alias for the first renamed full installer
-        - $env:HASH_ASSET
-
-        ## Online resources
-        - Language packs are published to GitHub Pages under resources/$env:VERSION/languages.
-        - Device resources are published to GitHub Pages under resources/$env:VERSION/devices.
-        - The stable resource catalog is published at resources/stable/catalog.json, with stable/catalog.json kept as a compatibility copy.
-
-        ## Compatibility
-        - OS: Windows 10/11 x64
-
-        ## Verification
-        - `CertUtil -hashfile <file> SHA256`
-        "@
-        Set-Content -Path (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md") -Value $releaseNotes
+        ./Scripts/New-ReleaseNotes.ps1 `
+          -Version $env:VERSION `
+          -ChangelogPath 'CHANGELOG.md' `
+          -AssetNames $assetNames `
+          -ProductName 'Universal Device Toolkit' `
+          -OutputPath (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md")
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@v3
