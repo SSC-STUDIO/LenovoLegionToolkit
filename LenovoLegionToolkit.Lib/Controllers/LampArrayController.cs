@@ -1,3 +1,8 @@
+// Derived from Lenovo Legion Toolkit.
+// Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
+// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

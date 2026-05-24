@@ -8,6 +8,13 @@ Original project:
   Original author: Bartosz Cichecki
   Notice: Lenovo Legion Toolkit Copyright (C) Bartosz Cichecki and contributors.
 
+Upstream backend synchronization:
+  Portions of backend/runtime code were synchronized from the LenovoLegionToolkit-Team
+  continuation of Lenovo Legion Toolkit:
+  https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit
+  Notice: Copyright (C) 2026 LenovoLegionToolkit-Team.
+  The synchronized files retain source-level attribution notices where applicable.
+
 Modifications and continued maintenance:
   Universal Device Toolkit
   Copyright (C) 2026 Universal Device Toolkit Contributors.
