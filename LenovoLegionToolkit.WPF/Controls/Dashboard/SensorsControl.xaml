@@ -34,7 +34,10 @@
         </Style>
     </UserControl.Resources>
 
-    <wpfui:CardControl Focusable="False" MouseDoubleClick="CardControl_MouseDoubleClick">
+    <wpfui:CardControl
+        Background="{DynamicResource AppSurfaceCardBrush}"
+        Focusable="False"
+        MouseDoubleClick="CardControl_MouseDoubleClick">
         <wpfui:CardControl.Header>
             <StackPanel Margin="16,8">
                 <Grid>

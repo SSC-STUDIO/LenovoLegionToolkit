@@ -16,7 +16,7 @@ namespace LenovoLegionToolkit.WPF.Utils;
 public class ThemeManager
 {
     private static readonly RGBColor DefaultAccentColor = new(255, 33, 33);
-    private static readonly string[] OverridableBrushKeys =
+    private static readonly string[] StylePresetBrushKeys =
     [
         "ApplicationBackgroundBrush",
         "ControlFillColorDefaultBrush",
@@ -26,12 +26,13 @@ public class ThemeManager
         "ControlStrokeColorSecondaryBrush",
         "ControlElevationBorderBrush",
         "CardStrokeColorDefaultBrush",
-        "TextFillColorSecondaryBrush"
+        "TextFillColorSecondaryBrush",
+        "AppSurfaceBackgroundBrush",
+        "AppSurfaceCardBrush"
     ];
 
     private readonly ApplicationSettings _settings;
     private readonly SystemThemeListener _listener;
-    private readonly Dictionary<string, object?> _baseResources = new(StringComparer.Ordinal);
 
     public event EventHandler? ThemeApplied;
 
@@ -45,11 +46,11 @@ public class ThemeManager
 
     public void Apply()
     {
-        RestoreBaseStyleResources();
+        ClearStylePresetBrushes();
         SetTheme();
         SetColor();
-        CaptureBaseStyleResources();
         ApplyStylePreset();
+        ApplySurfaceResources();
 
         ThemeApplied?.Invoke(this, EventArgs.Empty);
     }
@@ -146,21 +147,14 @@ public class ThemeManager
         EnsureColorContrast();
     }
 
-    private void CaptureBaseStyleResources()
+    private void ClearStylePresetBrushes()
     {
-        foreach (var key in OverridableBrushKeys)
-        {
-            if (!Application.Current.Resources.Contains(key))
-                continue;
-
-            _baseResources[key] = CloneResourceValue(Application.Current.Resources[key]);
-        }
+        foreach (var key in StylePresetBrushKeys)
+            Application.Current.Resources.Remove(key);
     }
 
     private void ApplyStylePreset()
     {
-        RestoreBaseStyleResources();
-
         var palette = GetPresetPalette(_settings.Store.ThemeStylePreset, IsDarkMode());
         if (palette is null)
             return;
@@ -177,20 +171,11 @@ public class ThemeManager
         Application.Current.Resources["SnackbarShadowColor"] = palette.SnackbarShadow;
     }
 
-    private void RestoreBaseStyleResources()
+    private void ApplySurfaceResources()
     {
-        foreach (var pair in _baseResources)
-            Application.Current.Resources[pair.Key] = CloneResourceValue(pair.Value);
-    }
-
-    private static object? CloneResourceValue(object? value)
-    {
-        return value switch
-        {
-            SolidColorBrush brush => CreateBrush(brush.Color, brush.Opacity),
-            Color color => color,
-            _ => value
-        };
+        var isDark = IsDarkMode();
+        SetBrush("AppSurfaceBackgroundBrush", isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246));
+        SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)

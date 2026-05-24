@@ -34,6 +34,8 @@ internal static partial class Program
     private static int _captureSequence;
     private static string _pipeName = string.Empty;
     private static int _processId;
+    private static bool _assertDarkThemeSurface;
+    private static string _appDataDirectory = string.Empty;
 
     public static int Main(string[] args)
     {
@@ -42,12 +44,14 @@ internal static partial class Program
         try
         {
             var options = SmokeOptions.Parse(args);
+            _assertDarkThemeSurface = options.Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
             var repoRoot = Path.GetFullPath(options.RepoRoot);
             var outputRoot = Path.GetFullPath(options.OutputDirectory);
             var currentDirectory = Path.Combine(outputRoot, "current");
             var sandboxRoot = Path.Combine(outputRoot, "sandbox");
             var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
             var pluginsDirectory = Path.Combine(sandboxRoot, "plugins");
+            _appDataDirectory = appDataDirectory;
 
             ResetDirectory(currentDirectory);
             ResetDirectory(sandboxRoot);
@@ -76,6 +80,38 @@ internal static partial class Program
 
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
             CapturePage(currentDirectory, mainWindow, "dashboard");
+
+            if (options.SwitchTheme is { } switchTheme)
+            {
+                UpdateSandboxTheme(switchTheme);
+                _assertDarkThemeSurface = switchTheme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
+                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                    "settings",
+                    [],
+                    ["Settings"],
+                    root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+                SelectComboBoxItemByNames(WaitForNamedComboBox(ResolveLiveWindow(mainWindow), "Theme", TimeSpan.FromSeconds(10)), switchTheme);
+                WaitForAnimationsToComplete();
+                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                    $"dashboard-after-{switchTheme.ToLowerInvariant()}-switch",
+                    ["_dashboardItem"],
+                    ["Dashboard"],
+                    root => root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase) || FindVisibleTextContains(root, "Power Mode")));
+
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+                if (options.KeepApp)
+                {
+                    Console.WriteLine("[visual-smoke] Leaving app running for inspection.");
+                    process = null;
+                    return 0;
+                }
+
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
 
             if (options.PluginOnly)
             {
@@ -234,9 +270,15 @@ internal static partial class Program
             mainWindow = ResolveLiveWindow(mainWindow);
             var nav = FindNavigationElement(mainWindow, target);
             if (nav is not null)
-                ActivateElement(nav);
+            {
+                Console.WriteLine($"[visual-smoke] Activating {DescribeElement(nav)}");
+                ActivateNavigationElement(nav);
+            }
             else
+            {
+                Console.WriteLine($"[visual-smoke] Navigation target {target.Label} not found, pressing Ctrl+Tab.");
                 PressCtrlTab();
+            }
 
             arrived = WaitUntil(
                 () =>
@@ -302,12 +344,58 @@ internal static partial class Program
         if (!TryCaptureWindowToFileViaIpc(windowHandle, outputPath, label))
             CaptureWindowFromScreen(windowHandle, outputPath);
 
+        AssertThemeSurface(outputPath, label);
+
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
         var snapshot = BuildSnapshot(label, mainWindow);
         File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, JsonOptions));
 
         Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
+    }
+
+    private static void AssertThemeSurface(string outputPath, string label)
+    {
+        if (!_assertDarkThemeSurface)
+            return;
+
+        if (!label.Equals("dashboard", StringComparison.OrdinalIgnoreCase) &&
+            !label.Equals("main-window-ready", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        using var bitmap = new Bitmap(outputPath);
+        var sample = SampleRegion(bitmap,
+            x: (int)Math.Round(bitmap.Width * 0.24),
+            y: (int)Math.Round(bitmap.Height * 0.10),
+            width: (int)Math.Round(bitmap.Width * 0.70),
+            height: (int)Math.Round(bitmap.Height * 0.42));
+
+        if (sample.AverageLuminance > 120)
+            throw new InvalidOperationException($"Dark theme surface regression detected in '{label}'. Average luminance {sample.AverageLuminance:F1} is too bright. Screenshot: {outputPath}");
+    }
+
+    private static RegionSample SampleRegion(Bitmap bitmap, int x, int y, int width, int height)
+    {
+        var left = Math.Clamp(x, 0, bitmap.Width - 1);
+        var top = Math.Clamp(y, 0, bitmap.Height - 1);
+        var right = Math.Clamp(x + width, left + 1, bitmap.Width);
+        var bottom = Math.Clamp(y + height, top + 1, bitmap.Height);
+        double luminance = 0;
+        var count = 0;
+
+        for (var sampleY = top; sampleY < bottom; sampleY += 12)
+        {
+            for (var sampleX = left; sampleX < right; sampleX += 12)
+            {
+                var color = bitmap.GetPixel(sampleX, sampleY);
+                luminance += 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B;
+                count++;
+            }
+        }
+
+        return new RegionSample(count == 0 ? 0 : luminance / count);
     }
 
     private static object BuildSnapshot(string label, AutomationElement root)
@@ -387,7 +475,7 @@ internal static partial class Program
         {
             var byName = FindByName(root, name);
             if (IsVisible(byName))
-            return byName is null ? null : FindClickableAncestor(byName) ?? byName;
+                return byName is null ? null : FindClickableAncestor(byName) ?? byName;
         }
 
         return null;
@@ -430,6 +518,12 @@ internal static partial class Program
         if (TryExpandCollapsePattern(element))
             return;
 
+        MouseClick(element);
+    }
+
+    private static void ActivateNavigationElement(AutomationElement element)
+    {
+        BringToForeground(ResolveLiveWindowByProcessId(_processId));
         MouseClick(element);
     }
 
@@ -502,14 +596,29 @@ internal static partial class Program
             if (TryHandleCompatibilityWindow(window))
                 continue;
 
+            var name = GetElementName(window);
             if (FindByAutomationId(window, "MainNavigationStore") is not null
-                || FindByAutomationId(window, "MainRootFrame") is not null)
+                || FindByAutomationId(window, "MainRootFrame") is not null
+                || name.Contains("Universal Device Toolkit", StringComparison.OrdinalIgnoreCase)
+                || name.Contains("Lenovo Legion Toolkit", StringComparison.OrdinalIgnoreCase))
             {
                 return window;
             }
         }
 
         return null;
+    }
+
+    private static string GetElementName(AutomationElement element)
+    {
+        try
+        {
+            return element.Current.Name ?? string.Empty;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return string.Empty;
+        }
     }
 
     private static bool TryHandleCompatibilityWindow(AutomationElement window)
@@ -613,6 +722,35 @@ internal static partial class Program
                || IsVisible(FindByAutomationId(root, "PluginNoResultsMessage"))
                || FindVisibleTextContains(root, "Found 4 plugins")
                || FindVisibleTextContains(root, "Available to install");
+    }
+
+    private static AutomationElement WaitForNamedComboBox(AutomationElement root, string name, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => FindNamedComboBox(ResolveLiveWindow(root), name) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(200));
+
+        var comboBox = FindNamedComboBox(ResolveLiveWindow(root), name);
+        if (!found || comboBox is null)
+            throw new TimeoutException($"Timed out waiting for combo box '{name}'.");
+
+        return comboBox;
+    }
+
+    private static AutomationElement? FindNamedComboBox(AutomationElement root, string name)
+    {
+        try
+        {
+            return root.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox))
+                .Cast<AutomationElement>()
+                .Where(IsVisible)
+                .FirstOrDefault(element => string.Equals(element.Current.Name, name, StringComparison.OrdinalIgnoreCase));
+        }
+        catch (ElementNotAvailableException)
+        {
+            return null;
+        }
     }
 
     private static bool IsVisible(AutomationElement? element)
@@ -827,6 +965,41 @@ internal static partial class Program
         mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
     }
 
+    private static void SelectComboBoxItemByNames(AutomationElement comboBox, params string[] itemNames)
+    {
+        if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
+            ((ExpandCollapsePattern)expandPattern).Expand();
+
+        Thread.Sleep(250);
+
+        var listItemCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem);
+        var items = comboBox.FindAll(TreeScope.Descendants, listItemCondition)
+            .Cast<AutomationElement>()
+            .Concat(AutomationElement.RootElement.FindAll(TreeScope.Descendants, listItemCondition).Cast<AutomationElement>())
+            .Where(IsVisible)
+            .ToArray();
+
+        var item = items.FirstOrDefault(candidate =>
+            itemNames.Any(itemName =>
+                string.Equals(candidate.Current.Name, itemName, StringComparison.OrdinalIgnoreCase)));
+
+        if (item is null)
+            throw new InvalidOperationException($"ComboBox option was not found. Expected one of: [{string.Join(", ", itemNames)}].");
+
+        MouseClick(item);
+        Thread.Sleep(500);
+
+        if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var collapsePattern))
+        {
+            var expander = (ExpandCollapsePattern)collapsePattern;
+            if (expander.Current.ExpandCollapseState == ExpandCollapseState.Expanded ||
+                expander.Current.ExpandCollapseState == ExpandCollapseState.PartiallyExpanded)
+            {
+                expander.Collapse();
+            }
+        }
+    }
+
     private static void PressCtrlTab()
     {
         keybd_event(0x11, 0, 0, UIntPtr.Zero);
@@ -926,6 +1099,21 @@ internal static partial class Program
         var langPath = Path.Combine(appDataDirectory, "lang");
         if (!File.Exists(langPath))
             File.WriteAllText(langPath, "en");
+    }
+
+    private static void UpdateSandboxTheme(string theme)
+    {
+        if (string.IsNullOrWhiteSpace(_appDataDirectory))
+            return;
+
+        var settingsPath = Path.Combine(_appDataDirectory, "settings.json");
+        var root = File.Exists(settingsPath)
+            ? JsonNode.Parse(File.ReadAllText(settingsPath))?.AsObject() ?? new JsonObject()
+            : new JsonObject();
+
+        root["Theme"] = theme;
+        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+        Console.WriteLine($"[visual-smoke] Updated sandbox theme to {theme}");
     }
 
     private static void ResetDirectory(string directory)
@@ -1245,6 +1433,18 @@ internal static partial class Program
         }
     }
 
+    private static string DescribeElement(AutomationElement element)
+    {
+        try
+        {
+            return $"id='{element.Current.AutomationId}' name='{element.Current.Name}' class='{element.Current.ClassName}'";
+        }
+        catch (ElementNotAvailableException)
+        {
+            return "<unavailable element>";
+        }
+    }
+
     private static string SanitizeFileNameSegment(string value)
     {
         var invalidChars = Path.GetInvalidFileNameChars().ToHashSet();
@@ -1278,6 +1478,8 @@ internal static partial class Program
 
     private sealed record CaptureRecord(int Sequence, string Label, string FileName, string SnapshotFileName, DateTimeOffset CapturedAt);
 
+    private sealed record RegionSample(double AverageLuminance);
+
     private sealed record ElementSnapshot(
         string Type,
         string? Name,
@@ -1307,6 +1509,7 @@ internal static partial class Program
         string ThemeStyle,
         bool PluginOnly,
         bool SettingsOnly,
+        string? SwitchTheme,
         bool KeepApp,
         bool KeepUnsupportedNavigationItems,
         bool ExpectKeyboardNavigation)
@@ -1319,12 +1522,13 @@ internal static partial class Program
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
             var theme = ReadOption(args, "--theme") ?? "Dark";
             var themeStyle = ReadOption(args, "--theme-style") ?? "Default";
+            var switchTheme = ReadOption(args, "--switch-theme");
             var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)
