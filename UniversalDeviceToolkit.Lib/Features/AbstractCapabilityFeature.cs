@@ -1,4 +1,5 @@
 using System;
+using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -32,7 +33,16 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state... [feature={GetType().Name}]");
 
-        var value = await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityID).ConfigureAwait(false);
+        int value;
+        try
+        {
+            value = await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityID).ConfigureAwait(false);
+        }
+        catch (ManagementException ex)
+        {
+            throw new InvalidOperationException($"WMI feature value is unavailable for {capabilityID}.", ex);
+        }
+
         var result = (T)Enum.ToObject(typeof(T), value);
         if (!Enum.IsDefined(result))
             throw new InvalidOperationException($"Undefined value received: {result} [type={typeof(T)}, feature={GetType().Name}]");

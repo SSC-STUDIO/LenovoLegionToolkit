@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -105,7 +106,7 @@ public class HybridModeFeature(
         if (!await igpuModeFeature.IsSupportedAsync().ConfigureAwait(false) || !await dgpuNotify.IsSupportedAsync().ConfigureAwait(false))
             return;
 
-        _ = Task.Run(async () =>
+        Task.Run(async () =>
         {
             try
             {
@@ -154,7 +155,7 @@ public class HybridModeFeature(
             {
                 Log.Instance.Error($"Failed to ensure dGPU is ejected", ex);
             }
-        });
+        }).Forget("ensure dGPU ejected if needed");
     }
 
     private static (GSyncState, IGPUModeState) Unpack(HybridModeState state) => state switch

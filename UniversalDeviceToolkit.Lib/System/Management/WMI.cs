@@ -154,6 +154,15 @@ public static partial class WMI
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"WMI call hit an invalid object, retrying. [scope={scope}, query={queryFormatted}, methodName={methodName}, attempt={attempt}]", ex);
             }
+            catch (ManagementException ex) when (IsInvalidObject(ex))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"WMI call unavailable (invalid object). [scope={scope}, query={queryFormatted}, methodName={methodName}]", ex);
+
+                throw new ManagementException(
+                    $"Call failed: {ex.Message} [scope={scope}, query={queryFormatted}, methodName={methodName}]",
+                    ex);
+            }
         }
     }
 

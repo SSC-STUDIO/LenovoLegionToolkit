@@ -115,6 +115,51 @@ public partial class GodModeSettingsWindow
         }
     }
 
+    private GodModePreset BuildActivePresetFromControls(GodModePreset preset) => new()
+    {
+        Name = preset.Name,
+        CPULongTermPowerLimit = preset.CPULongTermPowerLimit?.WithValue(_cpuLongTermPowerLimitControl.Value),
+        CPUShortTermPowerLimit = preset.CPUShortTermPowerLimit?.WithValue(_cpuShortTermPowerLimitControl.Value),
+        CPUPeakPowerLimit = preset.CPUPeakPowerLimit?.WithValue(_cpuPeakPowerLimitControl.Value),
+        CPUCrossLoadingPowerLimit = preset.CPUCrossLoadingPowerLimit?.WithValue(_cpuCrossLoadingLimitControl.Value),
+        CPUPL1Tau = preset.CPUPL1Tau?.WithValue(_cpuPL1TauControl.Value),
+        APUsPPTPowerLimit = preset.APUsPPTPowerLimit?.WithValue(_apuSPPTPowerLimitControl.Value),
+        CPUTemperatureLimit = preset.CPUTemperatureLimit?.WithValue(_cpuTemperatureLimitControl.Value),
+        GPUPowerBoost = preset.GPUPowerBoost?.WithValue(_gpuPowerBoostControl.Value),
+        GPUConfigurableTGP = preset.GPUConfigurableTGP?.WithValue(_gpuConfigurableTGPControl.Value),
+        GPUTemperatureLimit = preset.GPUTemperatureLimit?.WithValue(_gpuTemperatureLimitControl.Value),
+        GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline = preset.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline?.WithValue(_gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Value),
+        GPUToCPUDynamicBoost = preset.GPUToCPUDynamicBoost?.WithValue(_gpuToCpuDynamicBoostControl.Value),
+        FanTableInfo = preset.FanTableInfo is not null ? _fanCurveControl.GetFanTableInfo() : null,
+        FanFullSpeed = preset.FanFullSpeed is not null ? _fanFullSpeedToggle.IsChecked : null,
+        MaxValueOffset = preset.MaxValueOffset is not null ? (int?)_maxValueOffsetNumberBox.Value : null,
+        MinValueOffset = preset.MinValueOffset is not null ? (int?)_minValueOffsetNumberBox.Value : null
+    };
+
+    private void FlushActivePresetToState()
+    {
+        if (!_state.HasValue)
+            return;
+
+        var activePresetId = _state.Value.ActivePresetId;
+        var presets = _state.Value.Presets;
+        var preset = presets[activePresetId];
+        var newPresets = new Dictionary<Guid, GodModePreset>(presets)
+        {
+            [activePresetId] = BuildActivePresetFromControls(preset)
+        };
+
+        _state = _state.Value with { Presets = newPresets.AsReadOnlyDictionary() };
+    }
+
+    private async Task PersistStateAsync()
+    {
+        if (!_state.HasValue)
+            return;
+
+        await _godModeController.SetStateAsync(_state.Value);
+    }
+
     private async Task<bool> ApplyAsync()
     {
         try
@@ -122,46 +167,12 @@ public partial class GodModeSettingsWindow
             if (!_state.HasValue)
                 throw new InvalidOperationException("State is null");
 
-            var activePresetId = _state.Value.ActivePresetId;
-            var presets = _state.Value.Presets;
-            var preset = presets[activePresetId];
-
-            var newPreset = new GodModePreset
-            {
-                Name = preset.Name,
-                CPULongTermPowerLimit = preset.CPULongTermPowerLimit?.WithValue(_cpuLongTermPowerLimitControl.Value),
-                CPUShortTermPowerLimit = preset.CPUShortTermPowerLimit?.WithValue(_cpuShortTermPowerLimitControl.Value),
-                CPUPeakPowerLimit = preset.CPUPeakPowerLimit?.WithValue(_cpuPeakPowerLimitControl.Value),
-                CPUCrossLoadingPowerLimit = preset.CPUCrossLoadingPowerLimit?.WithValue(_cpuCrossLoadingLimitControl.Value),
-                CPUPL1Tau = preset.CPUPL1Tau?.WithValue(_cpuPL1TauControl.Value),
-                APUsPPTPowerLimit = preset.APUsPPTPowerLimit?.WithValue(_apuSPPTPowerLimitControl.Value),
-                CPUTemperatureLimit = preset.CPUTemperatureLimit?.WithValue(_cpuTemperatureLimitControl.Value),
-                GPUPowerBoost = preset.GPUPowerBoost?.WithValue(_gpuPowerBoostControl.Value),
-                GPUConfigurableTGP = preset.GPUConfigurableTGP?.WithValue(_gpuConfigurableTGPControl.Value),
-                GPUTemperatureLimit = preset.GPUTemperatureLimit?.WithValue(_gpuTemperatureLimitControl.Value),
-                GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline = preset.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline?.WithValue(_gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Value),
-                GPUToCPUDynamicBoost = preset.GPUToCPUDynamicBoost?.WithValue(_gpuToCpuDynamicBoostControl.Value),
-                FanTableInfo = preset.FanTableInfo is not null ? _fanCurveControl.GetFanTableInfo() : null,
-                FanFullSpeed = preset.FanFullSpeed is not null ? _fanFullSpeedToggle.IsChecked : null,
-                MaxValueOffset = preset.MaxValueOffset is not null ? (int?)_maxValueOffsetNumberBox.Value : null,
-                MinValueOffset = preset.MinValueOffset is not null ? (int?)_minValueOffsetNumberBox.Value : null
-            };
-
-            var newPresets = new Dictionary<Guid, GodModePreset>(presets)
-            {
-                [activePresetId] = newPreset
-            };
-
-            var newState = new GodModeState
-            {
-                ActivePresetId = activePresetId,
-                Presets = newPresets.AsReadOnlyDictionary(),
-            };
+            FlushActivePresetToState();
 
             if (await _powerModeFeature.GetStateAsync() != PowerModeState.GodMode)
                 await _powerModeFeature.SetStateAsync(PowerModeState.GodMode);
 
-            await _godModeController.SetStateAsync(newState);
+            await PersistStateAsync();
             await _godModeController.ApplyStateAsync();
 
             return true;
@@ -354,7 +365,7 @@ public partial class GodModeSettingsWindow
 
     private async void PresetsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (!_state.HasValue)
+        if (_isRefreshing || !_state.HasValue)
             return;
 
         if (!_presetsComboBox.TryGetSelectedItem<KeyValuePair<Guid, GodModePreset>>(out var item))
@@ -363,7 +374,25 @@ public partial class GodModeSettingsWindow
         if (_state.Value.ActivePresetId == item.Key)
             return;
 
+        FlushActivePresetToState();
         _state = _state.Value with { ActivePresetId = item.Key };
+
+        try
+        {
+            await PersistStateAsync();
+
+            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
+                await _godModeController.ApplyStateAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't switch preset.", ex);
+
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            return;
+        }
+
         await SetStateAsync(_state.Value);
     }
 
@@ -372,19 +401,35 @@ public partial class GodModeSettingsWindow
         if (!_state.HasValue)
             return;
 
+        FlushActivePresetToState();
+
         var activePresetId = _state.Value.ActivePresetId;
         var presets = _state.Value.Presets;
         var preset = presets[activePresetId];
 
         var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name);
-        if (string.IsNullOrEmpty(result))
+        if (string.IsNullOrWhiteSpace(result))
             return;
 
         var newPresets = new Dictionary<Guid, GodModePreset>(presets)
         {
-            [activePresetId] = preset with { Name = result }
+            [activePresetId] = preset with { Name = result.Trim() }
         };
         _state = _state.Value with { Presets = newPresets.AsReadOnlyDictionary() };
+
+        try
+        {
+            await PersistStateAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't rename preset.", ex);
+
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            return;
+        }
+
         await SetStateAsync(_state.Value);
     }
 
@@ -410,6 +455,23 @@ public partial class GodModeSettingsWindow
             ActivePresetId = newActivePresetId,
             Presets = newPresets.AsReadOnlyDictionary()
         };
+
+        try
+        {
+            await PersistStateAsync();
+
+            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
+                await _godModeController.ApplyStateAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't delete preset.", ex);
+
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            return;
+        }
+
         await SetStateAsync(_state.Value);
     }
 
@@ -419,15 +481,17 @@ public partial class GodModeSettingsWindow
             return;
 
         var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message);
-        if (string.IsNullOrEmpty(result))
+        if (string.IsNullOrWhiteSpace(result))
             return;
+
+        FlushActivePresetToState();
 
         var activePresetId = _state.Value.ActivePresetId;
         var presets = _state.Value.Presets;
         var preset = presets[activePresetId];
 
         var newActivePresetId = Guid.NewGuid();
-        var newPreset = preset with { Name = result };
+        var newPreset = preset with { Name = result.Trim() };
         var newPresets = new Dictionary<Guid, GodModePreset>(presets)
         {
             [newActivePresetId] = newPreset
@@ -438,6 +502,19 @@ public partial class GodModeSettingsWindow
             ActivePresetId = newActivePresetId,
             Presets = newPresets.AsReadOnlyDictionary()
         };
+
+        try
+        {
+            await PersistStateAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't add preset.", ex);
+
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            return;
+        }
 
         await SetStateAsync(_state.Value);
     }

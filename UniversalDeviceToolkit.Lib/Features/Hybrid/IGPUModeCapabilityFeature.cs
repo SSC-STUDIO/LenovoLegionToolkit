@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -27,7 +28,8 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
-        var value = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.IGPUMode).ConfigureAwait(false);
+        var value = await TryGetFeatureValueAsync(CapabilityID.IGPUMode).ConfigureAwait(false)
+                    ?? throw CreateUnavailableException(CapabilityID.IGPUMode);
         var result = (IGPUModeState)value;
 
         if (Log.Instance.IsTraceEnabled)
@@ -42,7 +44,7 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
             Log.Instance.Trace($"Setting state to {state}...");
 
         await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.IGPUMode, (int)state).ConfigureAwait(false);
-        if (await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.IGPUModeChangeStatus).ConfigureAwait(false) == 0)
+        if (await TryGetFeatureValueAsync(CapabilityID.IGPUModeChangeStatus).ConfigureAwait(false) == 0)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Set state to {state}, but dGPU check failed.");
@@ -53,4 +55,22 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
     }
+
+    private static async Task<int?> TryGetFeatureValueAsync(CapabilityID capabilityId)
+    {
+        try
+        {
+            return await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityId).ConfigureAwait(false);
+        }
+        catch (ManagementException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetFeatureValue({capabilityId}) is unavailable.", ex);
+
+            return null;
+        }
+    }
+
+    private static InvalidOperationException CreateUnavailableException(CapabilityID capabilityId) =>
+        new($"WMI feature value is unavailable for {capabilityId}.");
 }

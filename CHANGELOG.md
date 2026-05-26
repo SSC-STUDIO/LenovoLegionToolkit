@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a generic CPU/GPU sensor fallback for basic-mode non-Lenovo devices, using Windows performance counters, ACPI thermal zones, NVAPI, and `nvidia-smi` where available.
 
 ### Fixed
+- 修复启动约 47 秒后因未观察的 WMI `GetFeatureValue` 任务异常写入崩溃报告的问题：后台混合显卡/延迟通知任务改为 `Forget` 观察异常，`OrNullIfException` 改为 await 捕获，并在 iGPU 能力读取失败时优雅降级 / Fixed unobserved `GetFeatureValue` WMI task exceptions (~47s after startup) by observing background hybrid-GPU tasks via `Forget`, awaiting `OrNullIfException`, and degrading gracefully when iGPU capability reads are unavailable.
 - 修复首次安装或未完成机型设置时不再弹出语言选择窗的问题：即使已有 `lang` 配置（例如从旧版迁移），在 `device-setup` 完成前仍会显示语言选择与语言包安装 / Fixed missing first-run language selector when a `lang` file already exists (e.g. migrated from a previous install): the language picker and pack install now show until device setup is completed.
 - 修复插件扩展页「从文件导入」不弹出文件选择框的问题：仅自动化测试读取 `LLT_PLUGIN_IMPORT_FILES`，正常使用时始终打开文件对话框 / Fixed plugin Extensions “Import from Files” not showing the file picker by honoring `LLT_PLUGIN_IMPORT_FILES` only during smoke automation and always opening the dialog for normal use.
 - 恢复插件市场「从文件导入」按钮，本地 ZIP 插件包可再次通过 UI 与冒烟测试点击导入 / Restored the Plugin Extensions “Import from Files” button so local ZIP plugin packages can be imported again via the UI and smoke automation.
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复插件扩展页切换导航后在线插件下载进度条消失、且下载中误显示 Open/Uninstall 的问题；下载在后台继续，返回插件页会恢复进度并隐藏已安装操作按钮 / Fixed online plugin download progress disappearing when leaving Plugin Extensions and Open/Uninstall showing during an in-flight download; progress is restored and installed actions stay hidden until completion.
 - 在线插件安装改为串行队列：同时只下载一个，其余显示「等待安装」进度状态，避免点击多个 Install 时只有第一个有进度条 / Online plugin installs now run one at a time with a visible queued state for additional Install clicks instead of silent background installs.
 - Fixed main sidebar compact mode to match the repository screenshots, left-align the expanded toggle, and use a straight content divider.
+- 修复自定义模式（God Mode）预设命名、新增、删除与切换不持久化，以及切换预设时丢失当前编辑参数的问题 / Fixed God Mode preset rename, add, delete, and switch not persisting, and losing in-progress edits when changing presets.
 - 修复自定义模式（God Mode）设置中恢复默认按钮无图标、重命名/新建预设后下拉框无法选中的问题 / Fixed missing reset icons in God Mode settings and preset combo selection after rename or create.
 - Fixed a startup `XamlParseException` caused by the main-window update banner binding `UpdateIndicator_Click` through XAML mouse events.
 - Fixed startup argument parsing for space-separated string options such as `--single-instance-key value` and `--ipc-pipe-name value`.

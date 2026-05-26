@@ -77,14 +77,22 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
             token = _notifyLaterCancellationTokenSource.Token;
         }
 
-        _ = Task.Delay(TimeSpan.FromSeconds(5), token)
-            .ContinueWith(t =>
+        Task.Run(async () =>
+        {
+            try
             {
-                if (!t.IsCompletedSuccessfully)
-                    return;
-
-                NotifyLaterAsync().Forget("notify dGPU later after missing event");
-            }, token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+                await Task.Delay(TimeSpan.FromSeconds(5), token).ConfigureAwait(false);
+                await NotifyLaterAsync().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when a newer notify request cancels this delayed callback.
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Warning("Failed to run delayed dGPU notify.", ex);
+            }
+        }, token).Forget("notify dGPU later after missing event");
 
         return Task.CompletedTask;
     }
