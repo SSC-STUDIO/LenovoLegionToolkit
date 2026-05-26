@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.0.0] - 2026-05-26
+## [4.0.0-preview] - 2026-05-26
 
 ### Added
 - Added a local device-support simulation matrix for ASUS, MECHREVO/Mechanical Revolution, HP, Dell, Acer, Xiaomi, and Huawei machine profiles.
