@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+        <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+		<RootNamespace>LenovoLegionToolkit.Lib</RootNamespace>
+		<AssemblyName>LenovoLegionToolkit.Lib</AssemblyName>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<Platforms>x64</Platforms>
+		<Nullable>enable</Nullable>
+		<Copyright>$(ProjectCopyright)</Copyright>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NeutralLanguage>en</NeutralLanguage>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Autofac" />
+		<PackageReference Include="Ben.Demystifier" />
+		<PackageReference Include="ManagedNativeWifi" />
+		<PackageReference Include="Microsoft.Windows.CsWin32">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools">
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="NAudio.Wasapi" />
+		<PackageReference Include="PubSub" />
+		<PackageReference Include="LibreHardwareMonitorLib" />
+		<PackageReference Include="System.Management" />
+		<PackageReference Include="System.ServiceProcess.ServiceController" />
+		<PackageReference Include="NeoSmart.AsyncLock" />
+		<PackageReference Include="NvAPIWrapper.Net" />
+		<PackageReference Include="Octokit" />
+		<PackageReference Include="PresentMonFps-Modified" />
+		<PackageReference Include="RAMSPDToolkit-NDD" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.Sinks.Async" />
+		<PackageReference Include="Serilog.Sinks.File" />
+		<PackageReference Include="TaskScheduler" />
+		<PackageReference Include="UniversalFanControl.Lib" />
+		<PackageReference Include="WindowsDisplayAPI" />
+		<PackageReference Include="ZenStates-Core" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Resources\Resource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resource.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Resource.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+</Project>

@@ -43,10 +43,10 @@ jobs:
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Restore solution
-        run: dotnet restore LenovoLegionToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln
 
       - name: Build solution
-        run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

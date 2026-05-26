@@ -72,23 +72,23 @@ jobs:
         "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Restore solution
-      run: dotnet restore LenovoLegionToolkit.sln
+      run: dotnet restore UniversalDeviceToolkit.sln
 
     - name: Build solution
-      run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
+      run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
 
     - name: Test solution
-      run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage"
+      run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage"
 
     - name: Publish release payload
       shell: pwsh
       run: |
         Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ONLINE_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT, $env:PAGES_OUTPUT -ErrorAction SilentlyContinue
 
-        dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
+        dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "WPF publish failed." }
 
-        dotnet publish LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
+        dotnet publish UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
 
         $prunePaths = @(

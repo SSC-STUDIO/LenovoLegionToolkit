@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.WPF.Controls.Shell.AppStatusBanner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shell="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Shell"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Focusable="False"
+    Visibility="Collapsed">
+    <Border
+        x:Name="RootBorder"
+        Margin="12,0,12,6"
+        Padding="10,8"
+        Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+        CornerRadius="{StaticResource CornerRadiusMD}"
+        SnapsToDevicePixels="True">
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <wpfui:SymbolIcon
+                x:Name="Icon"
+                Margin="0,0,8,0"
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                Symbol="Warning24" />
+            <TextBlock
+                x:Name="MessageText"
+                VerticalAlignment="Center"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Style="{StaticResource AppBodyTextBlockStyle}"
+                Text="{Binding Message, RelativeSource={RelativeSource AncestorType=shell:AppStatusBanner}}"
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="NoWrap" />
+        </StackPanel>
+    </Border>
+</UserControl>

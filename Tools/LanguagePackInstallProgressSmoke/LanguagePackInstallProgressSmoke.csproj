@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>LanguagePackInstallProgressSmoke</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+    <Compile Include="..\..\UniversalDeviceToolkit.WPF\Utils\LanguagePackManager.cs" Link="LanguagePackManager.cs" />
+  </ItemGroup>
+
+</Project>

@@ -10,6 +10,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added a local device-support simulation matrix for ASUS, MECHREVO/Mechanical Revolution, HP, Dell, Acer, Xiaomi, and Huawei machine profiles.
+- Added explicit MECHREVO basic-mode device pack matching alongside the existing Clevo/Tongfang fallback.
+- Added a generic CPU/GPU sensor fallback for basic-mode non-Lenovo devices, using Windows performance counters, ACPI thermal zones, NVAPI, and `nvidia-smi` where available.
+
+### Fixed
+- 修复首次安装或未完成机型设置时不再弹出语言选择窗的问题：即使已有 `lang` 配置（例如从旧版迁移），在 `device-setup` 完成前仍会显示语言选择与语言包安装 / Fixed missing first-run language selector when a `lang` file already exists (e.g. migrated from a previous install): the language picker and pack install now show until device setup is completed.
+- 修复插件扩展页「从文件导入」不弹出文件选择框的问题：仅自动化测试读取 `LLT_PLUGIN_IMPORT_FILES`，正常使用时始终打开文件对话框 / Fixed plugin Extensions “Import from Files” not showing the file picker by honoring `LLT_PLUGIN_IMPORT_FILES` only during smoke automation and always opening the dialog for normal use.
+- 恢复插件市场「从文件导入」按钮，本地 ZIP 插件包可再次通过 UI 与冒烟测试点击导入 / Restored the Plugin Extensions “Import from Files” button so local ZIP plugin packages can be imported again via the UI and smoke automation.
+- 修复语言包下载完成后仍显示未安装的问题：安装目录与程序目录对齐、复制逻辑更稳健、安装后校验主程序 UI 资源并在不完整时回退完整包 / Fixed language packs still showing as not installed after download by aligning install paths with the app directory, hardening satellite copy logic, verifying UI resources after install, and falling back to the full portable package when the language zip is incomplete.
+- 修复在线安装插件后仅显示 Installed/Uninstall、双击提示 No UI 的问题：补充官方在线包哈希信任后的运行时重载，并按设置页/功能页/系统优化分类回退打开入口 / Fixed online-installed plugins showing only Installed/Uninstall and "No UI" on double-click by reloading trusted plugin runtimes and falling back to settings, feature, or optimization entry points.
+- 修复设置页切换其它界面后语言包下载进度消失的问题；安装任务在后台继续，返回外观页会恢复进度显示 / Fixed language pack install progress disappearing when leaving Settings; the download continues in the background and progress is restored when returning to Appearance.
+- 修复插件扩展页切换导航后在线插件下载进度条消失、且下载中误显示 Open/Uninstall 的问题；下载在后台继续，返回插件页会恢复进度并隐藏已安装操作按钮 / Fixed online plugin download progress disappearing when leaving Plugin Extensions and Open/Uninstall showing during an in-flight download; progress is restored and installed actions stay hidden until completion.
+- 在线插件安装改为串行队列：同时只下载一个，其余显示「等待安装」进度状态，避免点击多个 Install 时只有第一个有进度条 / Online plugin installs now run one at a time with a visible queued state for additional Install clicks instead of silent background installs.
+- Fixed main sidebar compact mode to match the repository screenshots, left-align the expanded toggle, and use a straight content divider.
+- 修复自定义模式（God Mode）设置中恢复默认按钮无图标、重命名/新建预设后下拉框无法选中的问题 / Fixed missing reset icons in God Mode settings and preset combo selection after rename or create.
+- Fixed a startup `XamlParseException` caused by the main-window update banner binding `UpdateIndicator_Click` through XAML mouse events.
+- Fixed startup argument parsing for space-separated string options such as `--single-instance-key value` and `--ipc-pipe-name value`.
+
+### Improved / 改进
+- 性能模式不再提供 Extreme 选项；若硬件当前为 Extreme 将自动切换为 Performance / Removed Extreme from selectable power modes; hardware still on Extreme is migrated to Performance on read.
+- Expanded built-in basic-mode aliases and model keywords for ASUS, Dell, HP, Acer, Xiaomi, and Huawei systems.
+- Non-Lenovo dashboard sensor cards now keep showing any available generic CPU/GPU telemetry instead of requiring Lenovo fan-table support.
+- 语言包安装显示下载与安装进度（设置页与首次启动语言窗口）/ Language pack installation shows download and install progress in Settings and the startup language selector.
+
 ## [3.8.1] - 2026-05-23
 
 ### Added
@@ -169,7 +194,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Plugin Marketplace / 插件市场**: Verified end-to-end download, install, and load of `shell-integration v1.0.4` through the main app plugin system after the store-source correction / 在修正商店源之后，已通过主程序插件系统端到端验证 `shell-integration v1.0.4` 的下载、安装与加载流程
 
 ### Improved / 改进
-- **Plugin Documentation / 插件文档**: Added README links to the official `LenovoLegionToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project / 在 README 中补充官方 `LenovoLegionToolkit-Plugins` 仓库链接，便于从主项目直接查找插件源码、清单与发布元数据
+- **Plugin Documentation / 插件文档**: Added README links to the official `UniversalDeviceToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project / 在 README 中补充官方 `UniversalDeviceToolkit-Plugins` 仓库链接，便于从主项目直接查找插件源码、清单与发布元数据
 
 ### Fixed / 修复
 - **Remote Desktop Rendering / 远程桌面渲染**: Added a software-rendering fallback toggle for RDP/headless sessions to avoid blank UI when no physical display is active / 为远程桌面或无显示器场景新增“软件渲染”开关与兜底策略，避免界面空白
@@ -209,7 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.6.3] - 2026-02-26
 
 ### Improved / 改进
-- **Plugin Tooling / 插件工具链**: Added a standalone plugin completion UI tool in the sibling `LenovoLegionToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓库 `LenovoLegionToolkit-Plugins` 中新增独立的插件完成度可视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化验证
+- **Plugin Tooling / 插件工具链**: Added a standalone plugin completion UI tool in the sibling `UniversalDeviceToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓库 `UniversalDeviceToolkit-Plugins` 中新增独立的插件完成度可视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化验证
 
 ## [3.6.2] - 2026-02-26
 
@@ -1488,7 +1513,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Support / 支持
 
-- **GitHub Issues**: [Report bugs and request features](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues)
+- **GitHub Issues**: [Report bugs and request features](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
 - **Discord**: [Community support and discussions](https://discord.com/invite/legionseries)
 
 ---

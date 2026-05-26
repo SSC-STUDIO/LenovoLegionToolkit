@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+    <RootNamespace>LenovoLegionToolkit.Lib.Plugins</RootNamespace>
+    <AssemblyName>LenovoLegionToolkit.Lib.Plugins</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="IAppStartupPlugin.cs" />
+    <Compile Remove="IOptimizationCategoryProvider.cs" />
+    <Compile Remove="IPlugin.cs" />
+    <Compile Remove="IPluginConfiguration.cs" />
+    <Compile Remove="IPluginHostContext.cs" />
+    <Compile Remove="IPluginPage.cs" />
+    <Compile Remove="PluginBase.cs" />
+    <Compile Remove="PluginConfiguration.cs" />
+    <Compile Remove="PluginHostContext.cs" />
+    <Compile Remove="PluginHostMode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+  </ItemGroup>
+</Project>

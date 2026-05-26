@@ -1,0 +1,66 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Wpf.Ui.Controls;
+
+namespace UniversalDeviceToolkit.WPF.Controls.Shell;
+
+public enum AppStatusBannerSeverity
+{
+    Warning,
+    Success
+}
+
+public partial class AppStatusBanner : UserControl
+{
+    public static readonly DependencyProperty SeverityProperty = DependencyProperty.Register(
+        nameof(Severity),
+        typeof(AppStatusBannerSeverity),
+        typeof(AppStatusBanner),
+        new PropertyMetadata(AppStatusBannerSeverity.Warning, OnSeverityChanged));
+
+    public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
+        nameof(Message),
+        typeof(string),
+        typeof(AppStatusBanner),
+        new PropertyMetadata(string.Empty));
+
+    public AppStatusBannerSeverity Severity
+    {
+        get => (AppStatusBannerSeverity)GetValue(SeverityProperty);
+        set => SetValue(SeverityProperty, value);
+    }
+
+    public string Message
+    {
+        get => (string)GetValue(MessageProperty);
+        set => SetValue(MessageProperty, value);
+    }
+
+    public AppStatusBanner()
+    {
+        InitializeComponent();
+        ApplySeverity();
+    }
+
+    private static void OnSeverityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AppStatusBanner banner)
+            banner.ApplySeverity();
+    }
+
+    private void ApplySeverity()
+    {
+        if (Severity == AppStatusBannerSeverity.Success)
+        {
+            RootBorder.SetResourceReference(Border.BackgroundProperty, "SystemFillColorSuccessBrush");
+            Icon.Symbol = SymbolRegular.ArrowSync24;
+            Icon.SetResourceReference(Control.ForegroundProperty, "TextFillColorPrimaryBrush");
+            return;
+        }
+
+        RootBorder.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");
+        Icon.Symbol = SymbolRegular.Warning24;
+        Icon.SetResourceReference(Control.ForegroundProperty, "SystemFillColorCautionBrush");
+    }
+}

@@ -1,16 +1,21 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Usage:
+REM   Make.bat [version]       Release publish + installers (full clean first)
+REM   Make.bat -clean          Clean workspace only (same as legacy Clean.bat)
+REM   Make.bat -c              Alias for -clean
+REM   Make.bat -d [version]    Debug publish to Build\Debug (no full clean)
+
 set ERROR_COUNT=0
 set BUILD_DIR=Build
 set BUILD_ONLINE_DIR=Build-English
 set RELEASE_ASSET_DIR=release-assets
 set PAGES_ASSET_DIR=%RELEASE_ASSET_DIR%\pages
 
-REM Check build mode
-IF "%1"=="-d" (
-    GOTO BUILD_DEBUG
-)
+IF /I "%1"=="-clean" GOTO CLEAN_ONLY
+IF /I "%1"=="-c" GOTO CLEAN_ONLY
+IF "%1"=="-d" GOTO BUILD_DEBUG
 
 IF "%1"=="" (
     CALL :RESOLVE_VERSION
@@ -25,15 +30,16 @@ IF "%VERSION%"=="" (
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
 
-if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
-if exist "%BUILD_ONLINE_DIR%" rmdir /s /q "%BUILD_ONLINE_DIR%"
-if exist "%RELEASE_ASSET_DIR%" rmdir /s /q "%RELEASE_ASSET_DIR%"
-if exist "%PAGES_ASSET_DIR%" rmdir /s /q "%PAGES_ASSET_DIR%"
+CALL :CLEAN_WORKSPACE
+IF %ERROR_COUNT% NEQ 0 GOTO END
 
-dotnet publish LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+CALL :VALIDATE_MAIN_WINDOW_XAML
+IF %ERROR_COUNT% NEQ 0 GOTO END
+
+dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
-dotnet publish LenovoLegionToolkit.CLI\LenovoLegionToolkit.CLI.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 IF %ERROR_COUNT% NEQ 0 GOTO END
@@ -66,10 +72,11 @@ IF %ERRORLEVEL% NEQ 0 (
 
 GOTO END
 
-:BUILD_DEBUG
-REM Debug build mode
-REM Usage: Make.bat -d [version]
+:CLEAN_ONLY
+CALL :CLEAN_WORKSPACE
+GOTO END
 
+:BUILD_DEBUG
 echo Building DEBUG version...
 
 IF "%2"=="" (
@@ -85,17 +92,17 @@ IF "%VERSION%"=="" (
 
 echo.
 echo Building WPF Application (Debug)...
-dotnet publish LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
+dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
 echo Building Spectrum Tester (Debug)...
-dotnet publish LenovoLegionToolkit.SpectrumTester\LenovoLegionToolkit.SpectrumTester.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
+dotnet publish UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolkit.SpectrumTester.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
 echo Building CLI (Debug)...
-dotnet publish LenovoLegionToolkit.CLI\LenovoLegionToolkit.CLI.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
+dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
@@ -110,6 +117,59 @@ echo To debug: Open solution in VS 2022 and attach to process
 echo.
 
 GOTO END
+
+:CLEAN_WORKSPACE
+echo Cleaning workspace...
+
+if exist ".vs" rmdir /s /q ".vs"
+if exist "_ReSharper.Caches" rmdir /s /q "_ReSharper.Caches"
+if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
+if exist "%BUILD_ONLINE_DIR%" rmdir /s /q "%BUILD_ONLINE_DIR%"
+if exist "BuildInstaller" rmdir /s /q "BuildInstaller"
+if exist "%RELEASE_ASSET_DIR%" rmdir /s /q "%RELEASE_ASSET_DIR%"
+if exist "%PAGES_ASSET_DIR%" rmdir /s /q "%PAGES_ASSET_DIR%"
+
+for %%p in (
+    UniversalDeviceToolkit.CLI
+    UniversalDeviceToolkit.CLI.Lib
+    UniversalDeviceToolkit.Lib
+    UniversalDeviceToolkit.Lib.Automation
+    UniversalDeviceToolkit.Lib.Macro
+    UniversalDeviceToolkit.Lib.Plugins
+    UniversalDeviceToolkit.WPF
+    UniversalDeviceToolkit.SpectrumTester
+    UniversalDeviceToolkit.PerformanceTest
+    UniversalDeviceToolkit.Tests
+) do (
+    if exist "%%p\bin" rmdir /s /q "%%p\bin"
+    if exist "%%p\obj" rmdir /s /q "%%p\obj"
+)
+
+if exist "UniversalDeviceToolkit.sln" (
+    dotnet clean UniversalDeviceToolkit.sln -v q
+    IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+)
+
+exit /b 0
+
+:VALIDATE_MAIN_WINDOW_XAML
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$xamlPath = 'UniversalDeviceToolkit.WPF\Windows\MainWindow.xaml';" ^
+  "$csPath = 'UniversalDeviceToolkit.WPF\Windows\MainWindow.xaml.cs';" ^
+  "if (-not (Test-Path $xamlPath)) { Write-Error 'Missing MainWindow.xaml'; exit 1 };" ^
+  "if (-not (Test-Path $csPath)) { Write-Error 'Missing MainWindow.xaml.cs'; exit 1 };" ^
+  "$xaml = Get-Content -Raw $xamlPath;" ^
+  "$cs = Get-Content -Raw $csPath;" ^
+  "if ($xaml -match 'MouseLeftButtonDown\s*=\s*\"UpdateIndicator_Click\"' -or $xaml -match 'MouseRightButtonDown\s*=\s*\"UpdateIndicator_Click\"') {" ^
+  "  Write-Error 'MainWindow.xaml still binds UpdateIndicator_Click to mouse events. Remove those XAML bindings and wire mouse handlers in MainWindow.xaml.cs.'; exit 1 };" ^
+  "if ($cs -match 'UpdateIndicator_Click\(object sender,\s*RoutedEventArgs') {" ^
+  "  Write-Error 'UpdateIndicator_Click must use MouseButtonEventArgs when handling mouse input.'; exit 1 };" ^
+  "exit 0"
+IF %ERRORLEVEL% NEQ 0 (
+    echo MainWindow update-banner validation failed.
+    set ERROR_COUNT=1
+)
+exit /b 0
 
 :PRUNE_RELEASE_OUTPUT
 set TARGET_DIR=%~1
@@ -127,17 +187,37 @@ exit /b 0
 
 :END
 echo.
-IF %ERROR_COUNT% EQU 0 (
-    echo Build completed! Exiting in 5 seconds...
+IF "%1"=="-clean" (
+    IF %ERROR_COUNT% EQU 0 (
+        echo Clean completed!
+    ) ELSE (
+        echo Clean completed with errors!
+    )
+) ELSE IF /I "%1"=="-c" (
+    IF %ERROR_COUNT% EQU 0 (
+        echo Clean completed!
+    ) ELSE (
+        echo Clean completed with errors!
+    )
+) ELSE IF "%1"=="-d" (
+    IF %ERROR_COUNT% EQU 0 (
+        echo Debug build completed! Exiting in 5 seconds...
+    ) ELSE (
+        echo Debug build completed with errors! Exiting in 5 seconds...
+    )
 ) ELSE (
-    echo Build completed with errors! Exiting in 5 seconds...
+    IF %ERROR_COUNT% EQU 0 (
+        echo Build completed! Exiting in 5 seconds...
+    ) ELSE (
+        echo Build completed with errors! Exiting in 5 seconds...
+    )
 )
 ping -n 6 127.0.0.1 >nul 2>&1
 endlocal & exit /b %ERROR_COUNT%
 
 :RESOLVE_VERSION
 REM MajorVersion, MinorVersion, PatchVersion are plain numeric text nodes.
-REM Reading them directly avoids the '$(â€¦)' MSBuild-expression interpolation
+REM Reading them directly avoids the '$(â€?' MSBuild-expression interpolation
 REM trap that causes NuGet to see '..' as a version string on some runners.
 for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$props=[xml](Get-Content -Raw 'Directory.Build.props'); $group=$props.Project.PropertyGroup | Where-Object { $_.MajorVersion -ne $null } | Select-Object -First 1; $maj=[string]$group.MajorVersion; $min=[string]$group.MinorVersion; $pat=[string]$group.PatchVersion; if ([string]::IsNullOrWhiteSpace($maj) -or [string]::IsNullOrWhiteSpace($min) -or [string]::IsNullOrWhiteSpace($pat)) { exit 1 }; '{0}.{1}.{2}' -f $maj,$min,$pat"`) do SET VERSION=%%v
 exit /b %ERRORLEVEL%

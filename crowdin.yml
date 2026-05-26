@@ -5,8 +5,8 @@ base_path: .
 preserve_hierarchy: true
 
 files:
-  - source: /LenovoLegionToolkit.WPF/Resources/Resource.resx
-    translation: /LenovoLegionToolkit.WPF/Resources/Resource.%locale%.resx
+  - source: /UniversalDeviceToolkit.WPF/Resources/Resource.resx
+    translation: /UniversalDeviceToolkit.WPF/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
         nl: nl-nl
@@ -19,8 +19,8 @@ files:
         uz-UZ: uz-latn-uz
         uz@Latn: uz-latn-uz
 
-  - source: /LenovoLegionToolkit.Lib/Resources/Resource.resx
-    translation: /LenovoLegionToolkit.Lib/Resources/Resource.%locale%.resx
+  - source: /UniversalDeviceToolkit.Lib/Resources/Resource.resx
+    translation: /UniversalDeviceToolkit.Lib/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
         nl: nl-nl
@@ -33,8 +33,8 @@ files:
         uz-UZ: uz-latn-uz
         uz@Latn: uz-latn-uz
 
-  - source: /LenovoLegionToolkit.Lib.Automation/Resources/Resource.resx
-    translation: /LenovoLegionToolkit.Lib.Automation/Resources/Resource.%locale%.resx
+  - source: /UniversalDeviceToolkit.Lib.Automation/Resources/Resource.resx
+    translation: /UniversalDeviceToolkit.Lib.Automation/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
         nl: nl-nl
@@ -47,8 +47,8 @@ files:
         uz-UZ: uz-latn-uz
         uz@Latn: uz-latn-uz
 
-  - source: /LenovoLegionToolkit.Lib.Macro/Resources/Resource.resx
-    translation: /LenovoLegionToolkit.Lib.Macro/Resources/Resource.%locale%.resx
+  - source: /UniversalDeviceToolkit.Lib.Macro/Resources/Resource.resx
+    translation: /UniversalDeviceToolkit.Lib.Macro/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
         nl: nl-nl

@@ -1,0 +1,500 @@
+namespace LenovoLegionToolkit.Lib.DeviceSupport;
+
+public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
+{
+    private static readonly string[] LenovoHardwareEnabledFeatures =
+    [
+        "lenovo-hardware-controls",
+        "sensors",
+        "power-modes",
+        "battery",
+        "plugins",
+        "system-optimization"
+    ];
+
+    private static readonly string[] UniversalBasicEnabledFeatures =
+    [
+        "plugins",
+        "system-optimization",
+        "language",
+        "theme",
+        "updates",
+        "logs"
+    ];
+
+    private static readonly string[] UniversalBasicHiddenFeatures =
+    [
+        "lenovo-hardware-controls",
+        "power-modes",
+        "keyboard-backlight",
+        "god-mode",
+        "gpu-overclock",
+        "fan-curve"
+    ];
+
+    private static readonly DeviceSupportCatalog BuiltInCatalog = new()
+    {
+        SchemaVersion = 1,
+        AppVersion = "built-in",
+        DevicePacks =
+        [
+            LenovoHardwarePack(
+                "lenovo-legion-5",
+                "Lenovo Legion 5",
+                ["Legion"],
+                ["15ACH", "15AKP", "15AHP", "15APH", "15ARH", "15ARP", "15IAH", "15IAX", "15IHU", "15IMH", "15IRH", "15IRX", "15ITH", "16ACH", "16ADR", "16AFR", "16AHP", "16APH", "16ARH", "16ARP", "16ARX", "16IAH", "16IAX", "16IRH", "16IRX", "16ITH", "17ACH", "17ARH", "17IRX", "17ITH", "17IMH"],
+                ["83F0", "83F1", "83M0", "83NX", "83N2", "83LY", "83DG", "83EW", "83EG", "83JJ", "82RC", "82RB", "82TB", "83EF", "82RE", "82RD", "82AX", "82B0", "82GR"],
+                ["Legion 5", "Y7000", "Y7000P", "Y7000P 2020H", "Y7000P2020H", "R7000", "R7000P"]),
+            LenovoHardwarePack(
+                "lenovo-legion-slim-5",
+                "Lenovo Legion Slim 5",
+                ["Legion", "Lenovo Slim"],
+                ["14AHP", "14APH", "14AKP", "14IRP"],
+                ["83DH", "83EX", "82Y5", "82Y9", "82YA", "83D6"],
+                ["Legion Slim 5"]),
+            LenovoHardwarePack(
+                "lenovo-legion-pro-5",
+                "Lenovo Legion Pro 5",
+                ["Legion"],
+                ["16IAX", "16IRX", "16ARX"],
+                ["83LT", "83F3", "83DF", "83F2", "83LU", "82WM", "83NN", "82WK", "82JQ"],
+                ["Legion Pro 5", "Y9000P", "R9000P"]),
+            LenovoHardwarePack(
+                "lenovo-legion-7",
+                "Lenovo Legion 7",
+                ["Legion"],
+                ["16ACH", "16ARH", "16IAH", "16IAX", "16IRH"],
+                ["83KY", "83FD", "82UH", "82TD", "82N6"],
+                ["Legion 7"]),
+            LenovoHardwarePack(
+                "lenovo-legion-pro-7",
+                "Lenovo Legion Pro 7",
+                ["Legion"],
+                ["16IAX", "16IRX", "16ARX"],
+                ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS"],
+                ["Legion Pro 7", "Y9000P", "R9000P"]),
+            LenovoHardwarePack(
+                "lenovo-legion-9",
+                "Lenovo Legion 9",
+                ["Legion"],
+                ["16IRX", "16IAX", "18IAX"],
+                ["83G0", "83EY"],
+                ["Legion 9"]),
+            LenovoHardwarePack(
+                "lenovo-legion-go",
+                "Lenovo Legion Go",
+                ["Legion"],
+                ["NX"],
+                ["83E1"],
+                ["Legion Go"]),
+            LenovoHardwarePack(
+                "lenovo-loq",
+                "Lenovo LOQ",
+                ["LOQ"],
+                ["15IAX", "15IRH", "15IRX", "15ARP", "15APH", "16IRH", "16IAX", "16APH", "17IRX", "17IAX"],
+                [],
+                ["LOQ", "G5000"]),
+            LenovoHardwarePack(
+                "lenovo-ideapad",
+                "Lenovo IdeaPad",
+                ["IdeaPad", "IdeaPad Gaming"],
+                [],
+                [],
+                ["IdeaPad Gaming", "IdeaPad"]),
+            LenovoHardwarePack(
+                "lenovo-thinkbook",
+                "Lenovo ThinkBook",
+                ["ThinkBook"],
+                ["ThinkBook"],
+                [],
+                ["ThinkBook"]),
+            LenovoHardwarePack(
+                "lenovo-yoga",
+                "Lenovo YOGA",
+                ["YOGA"],
+                [],
+                [],
+                ["YOGA", "Yoga"]),
+            LenovoBasicPack(
+                "lenovo-legion-desktop-basic",
+                "Lenovo Legion Desktop Basic",
+                ["Legion"],
+                [],
+                [],
+                ["Legion T", "Legion Tower", "Legion C", "Legion Desktop"]),
+            LenovoHardwarePack(
+                "lenovo-legacy-limited",
+                "Lenovo Legacy Limited",
+                ["Legion"],
+                ["18IAX", "17IR", "15IR", "15IC", "15IK", "G5000", "R9000", "R7000", "Y9000", "Y7000"],
+                [],
+                ["Legion"]),
+            LenovoBasicPack(
+                "lenovo-thinkpad-basic",
+                "Lenovo ThinkPad Basic",
+                ["ThinkPad"],
+                [],
+                [],
+                ["ThinkPad", "ThinkPad P", "ThinkPad T", "ThinkPad X", "ThinkPad E", "ThinkPad L", "ThinkPad Z"]),
+            LenovoBasicPack(
+                "lenovo-thinkcentre-basic",
+                "Lenovo ThinkCentre Basic",
+                ["ThinkCentre"],
+                [],
+                [],
+                ["ThinkCentre", "ThinkCentre M", "ThinkCentre Neo"]),
+            LenovoBasicPack(
+                "lenovo-thinkstation-basic",
+                "Lenovo ThinkStation Basic",
+                ["ThinkStation"],
+                [],
+                [],
+                ["ThinkStation", "ThinkStation P"]),
+            LenovoBasicPack(
+                "lenovo-ideacentre-basic",
+                "Lenovo IdeaCentre Basic",
+                ["IdeaCentre"],
+                [],
+                [],
+                ["IdeaCentre", "Yoga AIO"]),
+            LenovoBasicPack(
+                "lenovo-xiaoxin-basic",
+                "Lenovo XiaoXin Basic",
+                ["XiaoXin"],
+                [],
+                [],
+                ["XiaoXin", "Xiaoxin", "小新"]),
+            LenovoBasicPack(
+                "lenovo-y-series-legacy",
+                "Lenovo Y Series Legacy",
+                ["IdeaPad", "Legion"],
+                ["Y520", "Y530", "Y540", "Y545", "Y700", "Y7000", "Y9000"],
+                [],
+                ["Lenovo Y", "Y Series"]),
+            LenovoBasicPack(
+                "lenovo-v-series-basic",
+                "Lenovo V Series Basic",
+                ["Lenovo V"],
+                ["V14", "V15", "V17"],
+                [],
+                ["Lenovo V", "V14", "V15", "V17"]),
+            LenovoBasicPack(
+                "lenovo-slim-basic",
+                "Lenovo Slim Basic",
+                ["Lenovo Slim", "IdeaPad Slim"],
+                [],
+                [],
+                ["Lenovo Slim", "IdeaPad Slim", "Slim 7", "Slim 5"]),
+            BasicPack(
+                "motorola-lenovo-basic",
+                "Motorola Lenovo Basic",
+                "MOTOROLA",
+                [],
+                ["Motorola"],
+                [],
+                [],
+                ["Legion", "ThinkPhone", "Moto"]),
+            BasicPack(
+                "asus-basic",
+                "ASUS Basic",
+                "ASUSTeK COMPUTER INC.",
+                ["ASUS", "ASUSTeK COMPUTER INC", "ASUSTeK COMPUTER INCORPORATED"],
+                ["ASUS", "ROG", "TUF", "ProArt", "Zenbook", "Vivobook", "ExpertBook"],
+                [],
+                [],
+                ["ROG", "ROG Strix", "ROG Flow", "ROG Zephyrus", "TUF", "TUF Gaming", "Zephyrus", "Strix", "VivoBook", "Vivobook", "Zenbook", "ProArt", "ExpertBook"]),
+            BasicPack(
+                "dell-basic",
+                "Dell Basic",
+                "Dell Inc.",
+                ["Dell", "Dell Computer Corporation"],
+                ["Dell", "Alienware", "Inspiron", "XPS", "Precision", "G Series", "Latitude", "OptiPlex"],
+                [],
+                [],
+                ["Alienware", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "OptiPlex", "Vostro"]),
+            BasicPack(
+                "hp-basic",
+                "HP Basic",
+                "HP",
+                ["HP Inc.", "Hewlett-Packard", "Hewlett-Packard Company"],
+                ["HP", "OMEN", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook"],
+                [],
+                [],
+                ["OMEN", "Omen Max", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook", "Spectre", "Dragonfly"]),
+            BasicPack(
+                "acer-basic",
+                "Acer Basic",
+                "Acer",
+                ["Acer Incorporated", "Acer Inc."],
+                ["Acer", "Predator", "Nitro", "Swift", "Aspire", "TravelMate"],
+                [],
+                [],
+                ["Predator", "Predator Helios", "Nitro", "Swift", "Aspire", "TravelMate", "ConceptD", "Extensa", "Spin"]),
+            BasicPack(
+                "msi-basic",
+                "MSI Basic",
+                "Micro-Star International Co., Ltd.",
+                ["MSI", "Micro-Star International", "MICRO-STAR INTERNATIONAL CO., LTD"],
+                ["MSI"],
+                [],
+                [],
+                ["MSI", "Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit"]),
+            BasicPack(
+                "microsoft-surface-basic",
+                "Microsoft Surface Basic",
+                "Microsoft Corporation",
+                ["Microsoft"],
+                ["Surface"],
+                [],
+                [],
+                ["Surface Laptop", "Surface Pro", "Surface Book", "Surface Studio", "Surface Go"]),
+            BasicPack(
+                "gigabyte-basic",
+                "GIGABYTE Basic",
+                "GIGABYTE",
+                ["Gigabyte Technology Co., Ltd.", "Gigabyte Technology Co., Ltd"],
+                ["GIGABYTE", "AORUS", "AERO"],
+                [],
+                [],
+                ["AORUS", "AERO", "GIGABYTE G"]),
+            BasicPack(
+                "razer-basic",
+                "Razer Basic",
+                "Razer",
+                ["Razer Inc.", "Razer Inc"],
+                ["Razer Blade"],
+                [],
+                [],
+                ["Blade", "Razer Book"]),
+            BasicPack(
+                "samsung-basic",
+                "Samsung Basic",
+                "SAMSUNG ELECTRONICS CO., LTD.",
+                ["Samsung", "Samsung Electronics", "SAMSUNG ELECTRONICS CO., LTD"],
+                ["Samsung", "Galaxy Book"],
+                [],
+                [],
+                ["Galaxy Book", "Notebook 9"]),
+            BasicPack(
+                "huawei-basic",
+                "HUAWEI Basic",
+                "HUAWEI",
+                ["Huawei", "Huawei Technologies", "Huawei Technologies Co., Ltd.", "Huawei Technologies Co., Ltd"],
+                ["HUAWEI", "MateBook"],
+                [],
+                [],
+                ["MateBook", "MateBook X", "MateBook D", "MateBook E", "MateBook GT", "Qingyun"]),
+            BasicPack(
+                "xiaomi-basic",
+                "Xiaomi Basic",
+                "Xiaomi",
+                ["Xiaomi Inc.", "Xiaomi Corporation", "Redmi", "TIMI"],
+                ["Xiaomi", "RedmiBook", "Mi Notebook"],
+                [],
+                [],
+                ["Mi Notebook", "RedmiBook", "Redmi G", "Xiaomi Book", "Xiaomi Book Pro", "Book Pro"]),
+            BasicPack(
+                "honor-basic",
+                "HONOR Basic",
+                "HONOR",
+                ["Honor Device Co., Ltd.", "Honor Device Co., Ltd"],
+                ["HONOR", "MagicBook"],
+                [],
+                [],
+                ["MagicBook"]),
+            BasicPack(
+                "lg-basic",
+                "LG Basic",
+                "LG Electronics",
+                ["LG Electronics Inc.", "LG Electronics Inc", "LG"],
+                ["LG gram", "LG"],
+                [],
+                [],
+                ["gram", "UltraPC"]),
+            BasicPack(
+                "framework-basic",
+                "Framework Basic",
+                "Framework",
+                ["Framework Computer Inc.", "Framework Computer"],
+                ["Framework Laptop"],
+                [],
+                [],
+                ["Framework Laptop"]),
+            BasicPack(
+                "panasonic-basic",
+                "Panasonic Basic",
+                "Panasonic",
+                ["Panasonic Corporation"],
+                ["Panasonic", "TOUGHBOOK", "Lets note"],
+                [],
+                [],
+                ["TOUGHBOOK", "Let's note", "Lets note"]),
+            BasicPack(
+                "dynabook-basic",
+                "Dynabook Basic",
+                "Dynabook Inc.",
+                ["Dynabook", "TOSHIBA", "TOSHIBA CORPORATION"],
+                ["Dynabook", "Toshiba"],
+                [],
+                [],
+                ["Portégé", "Portege", "Tecra", "Satellite"]),
+            BasicPack(
+                "fujitsu-basic",
+                "Fujitsu Basic",
+                "FUJITSU",
+                ["FUJITSU CLIENT COMPUTING LIMITED", "Fujitsu Client Computing Limited"],
+                ["Fujitsu", "LIFEBOOK"],
+                [],
+                [],
+                ["LIFEBOOK", "CELSIUS"]),
+            BasicPack(
+                "vaio-basic",
+                "VAIO Basic",
+                "VAIO Corporation",
+                ["VAIO"],
+                ["VAIO"],
+                [],
+                [],
+                ["VAIO"]),
+            BasicPack(
+                "medion-basic",
+                "MEDION Basic",
+                "MEDION",
+                ["MEDION AG"],
+                ["MEDION", "ERAZER"],
+                [],
+                [],
+                ["ERAZER", "AKOYA"]),
+            BasicPack(
+                "xmg-schenker-basic",
+                "XMG/SCHENKER Basic",
+                "SCHENKER",
+                ["Schenker Technologies GmbH", "XMG", "TUXEDO"],
+                ["XMG", "SCHENKER", "TUXEDO"],
+                [],
+                [],
+                ["XMG", "SCHENKER", "TUXEDO"]),
+            BasicPack(
+                "mechrevo-basic",
+                "MECHREVO Basic",
+                "MECHREVO",
+                ["Mechanical Revolution", "MECHREVO INC.", "Tongfang", "THTF", "Tsinghua Tongfang"],
+                ["MECHREVO", "Mechanical Revolution"],
+                [],
+                [],
+                ["MECHREVO", "Mechanical Revolution", "Jiaolong", "Kuangshi", "Code", "Unbounded", "F1"]),
+            BasicPack(
+                "clevo-tongfang-basic",
+                "Clevo/Tongfang Basic",
+                "CLEVO",
+                ["Notebook", "Tongfang", "Eluktronics", "MECHREVO", "THUNDEROBOT", "Hasee", "SAGER"],
+                ["Clevo", "Tongfang", "Barebone"],
+                [],
+                [],
+                ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear"]),
+            BasicPack(
+                "universal-workstation-basic",
+                "Universal Workstation Basic",
+                "*",
+                [],
+                ["Workstation"],
+                [],
+                [],
+                ["Workstation", "Precision", "ZBook", "ThinkStation", "ProArt Station", "Creator Workstation"]),
+            BasicPack(
+                "universal-motherboard-basic",
+                "Universal Motherboard Basic",
+                "*",
+                ["ASUSTeK COMPUTER INC.", "ASUS", "Gigabyte Technology Co., Ltd.", "GIGABYTE", "Micro-Star International Co., Ltd.", "MSI", "ASRock", "ASRock Inc.", "BIOSTAR", "EVGA", "NZXT", "Supermicro", "Super Micro Computer, Inc.", "Intel Corporation"],
+                ["Motherboard", "Custom PC"],
+                [],
+                [],
+                ["To Be Filled By O.E.M.", "SYS-", "MS-7", "B650", "X670", "Z690", "Z790", "B760", "X570", "B550", "TRX40", "WRX80"]),
+            BasicPack(
+                "universal-desktop-basic",
+                "Universal Desktop Basic",
+                "*",
+                [],
+                ["Desktop", "Tower", "Mini PC", "All-in-One"],
+                [],
+                [],
+                ["Desktop", "Tower", "Mini PC", "MiniPC", "AIO", "All-in-One", "All in One", "System Product Name"]),
+            BasicPack(
+                "universal-barebone-basic",
+                "Universal Barebone Basic",
+                "*",
+                ["CLEVO", "Tongfang", "Notebook", "Hasee", "SAGER", "Eluktronics", "MECHREVO", "THUNDEROBOT"],
+                ["Barebone"],
+                [],
+                [],
+                ["Barebone", "Notebook", "To Be Filled By O.E.M.", "Default string"]),
+            BasicPack(
+                CatalogDeviceSupportProvider.GenericBasicPackId,
+                "Universal PC Basic",
+                "*",
+                [],
+                ["Generic PC", "Windows PC"],
+                [],
+                [],
+                [])
+        ]
+    };
+
+    public static readonly LenovoDeviceSupportProvider Instance = new();
+
+    private LenovoDeviceSupportProvider()
+        : base("universal", BuiltInCatalog)
+    {
+    }
+
+    private static DevicePack LenovoHardwarePack(
+        string id,
+        string displayName,
+        string[] families,
+        string[] modelPrefixes,
+        string[] machineTypes,
+        string[] modelKeywords) =>
+        new()
+        {
+            Id = id,
+            DisplayName = displayName,
+            Vendor = "LENOVO",
+            Families = families,
+            ModelPrefixes = modelPrefixes,
+            MachineTypes = machineTypes,
+            ModelKeywords = modelKeywords,
+            EnabledFeatures = LenovoHardwareEnabledFeatures
+        };
+
+    private static DevicePack LenovoBasicPack(
+        string id,
+        string displayName,
+        string[] families,
+        string[] modelPrefixes,
+        string[] machineTypes,
+        string[] modelKeywords) =>
+        BasicPack(id, displayName, "LENOVO", [], families, modelPrefixes, machineTypes, modelKeywords);
+
+    private static DevicePack BasicPack(
+        string id,
+        string displayName,
+        string vendor,
+        string[] vendorAliases,
+        string[] families,
+        string[] modelPrefixes,
+        string[] machineTypes,
+        string[] modelKeywords) =>
+        new()
+        {
+            Id = id,
+            DisplayName = displayName,
+            Vendor = vendor,
+            VendorAliases = vendorAliases,
+            Families = families,
+            ModelPrefixes = modelPrefixes,
+            MachineTypes = machineTypes,
+            ModelKeywords = modelKeywords,
+            EnabledFeatures = UniversalBasicEnabledFeatures,
+            HiddenFeatures = UniversalBasicHiddenFeatures
+        };
+}

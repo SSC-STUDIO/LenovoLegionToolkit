@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows.Automation;
-using LenovoLegionToolkit.CLI.Lib;
+using UniversalDeviceToolkit.CLI.Lib;
 
 namespace VisualRegression.Smoke;
 
@@ -21,6 +21,27 @@ internal static partial class Program
     private const string IpcPipeNameSwitch = "--ipc-pipe-name";
     private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
     private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+
+    private static string? GetEnvVar(string legacyName)
+    {
+        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
+        {
+            var udtName = "UDT_" + legacyName[4..];
+            var udtValue = Environment.GetEnvironmentVariable(udtName);
+            if (!string.IsNullOrWhiteSpace(udtValue))
+                return udtValue;
+        }
+
+        return Environment.GetEnvironmentVariable(legacyName);
+    }
+
+    private static void SetDualEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string legacyName, string value)
+    {
+        environmentVariables[legacyName] = value;
+        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
+            environmentVariables["UDT_" + legacyName[4..]] = value;
+    }
+
     private const int WindowX = 80;
     private const int WindowY = 80;
     private const int WindowWidth = 1300;
@@ -75,10 +96,21 @@ internal static partial class Program
             Console.WriteLine($"[visual-smoke] IPC pipe: {_pipeName}");
 
             TryWaitForInputIdle(process, 10_000);
-            var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(45));
+            var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(90));
             NormalizeWindow(mainWindow);
 
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
+            CaptureNavigationSidebarStates(currentDirectory, mainWindow);
+
+            if (options.NavigationSidebarOnly)
+            {
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
+
             CapturePage(currentDirectory, mainWindow, "dashboard");
 
             if (options.SwitchTheme is { } switchTheme)
@@ -250,6 +282,77 @@ internal static partial class Program
             if (process is not null && !process.HasExited)
                 TryCloseProcess(process);
         }
+    }
+
+    private static void CaptureNavigationSidebarStates(string currentDirectory, AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        BringToForeground(mainWindow);
+        WaitForAnimationsToComplete();
+
+        var initialWidth = MeasureNavigationPaneWidth(mainWindow);
+        Console.WriteLine($"[visual-smoke] Navigation pane width (initial): {initialWidth:F1}px");
+
+        if (initialWidth >= 150)
+            CapturePage(currentDirectory, mainWindow, "nav-sidebar-expanded");
+        else
+            CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact");
+
+        var toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
+        ActivateElement(toggle);
+        WaitForAnimationsToComplete();
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var afterToggleWidth = MeasureNavigationPaneWidth(mainWindow);
+        Console.WriteLine($"[visual-smoke] Navigation pane width (after toggle): {afterToggleWidth:F1}px");
+
+        if (afterToggleWidth >= 150)
+            CapturePage(currentDirectory, mainWindow, "nav-sidebar-expanded-after-toggle");
+        else
+            CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact-after-toggle");
+
+        if (Math.Abs(afterToggleWidth - initialWidth) < 20)
+            throw new InvalidOperationException(
+                $"Navigation pane toggle did not change width. Before={initialWidth:F1}px, after={afterToggleWidth:F1}px.");
+
+        toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
+        ActivateElement(toggle);
+        WaitForAnimationsToComplete();
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var restoredWidth = MeasureNavigationPaneWidth(mainWindow);
+        Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
+        CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
+
+        if (Math.Abs(restoredWidth - initialWidth) > 12)
+            throw new InvalidOperationException(
+                $"Navigation pane toggle did not restore width. Initial={initialWidth:F1}px, restored={restoredWidth:F1}px.");
+    }
+
+    private static double MeasureNavigationPaneWidth(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var windowRect = mainWindow.Current.BoundingRectangle;
+        var dashboard = FindByAutomationId(mainWindow, "_dashboardItem");
+
+        if (dashboard is not null && IsVisible(dashboard))
+        {
+            var dashboardRect = dashboard.Current.BoundingRectangle;
+            return Math.Max(0, dashboardRect.Right - windowRect.Left + 12);
+        }
+
+        var toggle = FindByAutomationId(mainWindow, "NavigationPaneToggle");
+        if (toggle is not null && IsVisible(toggle))
+        {
+            var toggleRect = toggle.Current.BoundingRectangle;
+            return Math.Max(0, toggleRect.Right - windowRect.Left);
+        }
+
+        var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
+        if (navStore is not null && IsVisible(navStore))
+            return navStore.Current.BoundingRectangle.Width;
+
+        throw new InvalidOperationException("Could not measure navigation pane width from automation tree.");
     }
 
     private static void NavigateAndCapture(string currentDirectory, AutomationElement mainWindow, PageTarget target)
@@ -1035,7 +1138,7 @@ internal static partial class Program
             startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip",
+                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip {SingleInstanceKeySwitch}={sandboxKey} {IpcPipeNameSwitch}={_pipeName}",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
@@ -1053,13 +1156,15 @@ internal static partial class Program
         else
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
 
-        startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = appDataDirectory;
-        startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = pluginsDirectory;
-        startInfo.EnvironmentVariables[SingleInstanceKeyEnvironmentVariable] = sandboxKey;
         startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = _pipeName;
-        startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
+        SetDualEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, appDataDirectory);
+        SetDualEnvVar(startInfo.EnvironmentVariables, PluginDirectoryOverrideEnvironmentVariable, pluginsDirectory);
+        SetDualEnvVar(startInfo.EnvironmentVariables, SingleInstanceKeyEnvironmentVariable, sandboxKey);
+        SetDualEnvVar(startInfo.EnvironmentVariables, RelaxedIpcAclEnvironmentVariable, "1");
         if (keepUnsupportedNavigationItems)
-            startInfo.EnvironmentVariables[KeepUnsupportedNavigationItemsEnvironmentVariable] = "1";
+            SetDualEnvVar(startInfo.EnvironmentVariables, KeepUnsupportedNavigationItemsEnvironmentVariable, "1");
+
+        SetDualEnvVar(startInfo.EnvironmentVariables, "LLT_SMOKE_AUTOMATION", "1");
 
         return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
     }
@@ -1088,7 +1193,7 @@ internal static partial class Program
         root["ForceSoftwareRendering"] = true;
         root["ExtensionsEnabled"] = false;
         root["AnimationsEnabled"] = false;
-        root["CheckPluginUpdatesOnStartup"] = false;
+        root["NavigationPaneExpanded"] = true;
 
         Directory.CreateDirectory(appDataDirectory);
         File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
@@ -1151,8 +1256,8 @@ internal static partial class Program
                     "author": "SSC-STUDIO",
                     "version": "1.0.15",
                     "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.15/custom-mouse-v1.0.15.zip",
-                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.15",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.15/custom-mouse-v1.0.15.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.15",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Pen24",
                     "iconBackground": "#2563EB",
@@ -1166,8 +1271,8 @@ internal static partial class Program
                     "author": "SSC-STUDIO",
                     "version": "1.1.8",
                     "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.8/network-acceleration-v1.1.8.zip",
-                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.8",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.1.8/network-acceleration-v1.1.8.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.1.8",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Globe24",
                     "iconBackground": "#DC2626",
@@ -1182,8 +1287,8 @@ internal static partial class Program
                     "version": "1.0.11",
                     "minLLTVersion": "3.6.1",
                     "isSystemPlugin": true,
-                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.11/shell-integration-v1.0.11.zip",
-                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.11",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.11/shell-integration-v1.0.11.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.11",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Folder24",
                     "iconBackground": "#0F766E",
@@ -1197,8 +1302,8 @@ internal static partial class Program
                     "author": "SSC-STUDIO",
                     "version": "1.2.1",
                     "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.2.1/vive-tool-v1.2.1.zip",
-                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.2.1",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.1/vive-tool-v1.2.1.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.1",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Code24",
                     "iconBackground": "#7C3AED",
@@ -1218,7 +1323,7 @@ internal static partial class Program
     {
         var runtimeRoot = Path.Combine(
             repoRoot,
-            "LenovoLegionToolkit.WPF",
+            "UniversalDeviceToolkit.WPF",
             "bin",
             configuration);
 
@@ -1512,7 +1617,8 @@ internal static partial class Program
         string? SwitchTheme,
         bool KeepApp,
         bool KeepUnsupportedNavigationItems,
-        bool ExpectKeyboardNavigation)
+        bool ExpectKeyboardNavigation,
+        bool NavigationSidebarOnly)
     {
         public static SmokeOptions Parse(IReadOnlyList<string> args)
         {
@@ -1525,10 +1631,11 @@ internal static partial class Program
             var switchTheme = ReadOption(args, "--switch-theme");
             var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
+            var navigationSidebarOnly = args.Contains("--navigation-sidebar-only", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation, navigationSidebarOnly);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

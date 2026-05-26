@@ -1,0 +1,215 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Controls.Settings;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
+
+namespace UniversalDeviceToolkit.WPF.Pages
+{
+public partial class SettingsPage
+{
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
+
+    private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
+    private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
+
+    private SettingsAppearanceControl? _appearanceControl;
+    private SettingsApplicationBehaviorControl? _applicationBehaviorControl;
+    private SettingsSmartKeysControl? _smartKeysControl;
+    private SettingsDisplayControl? _displayControl;
+    private SettingsUpdateControl? _updateControl;
+    private SettingsPowerControl? _powerControl;
+    private SettingsIntegrationsControl? _integrationsControl;
+
+    private bool _supportsLenovoHardwareControls;
+
+    private bool _isInitialized;
+
+    public SettingsPage()
+    {
+        InitializeComponent();
+
+        IsVisibleChanged += SettingsPage_IsVisibleChanged;
+
+        InitializeNavigationItems();
+    }
+
+    private async void InitializeNavigationItems()
+    {
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
+        _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
+
+        var navigationItems = new List<NavigationItem>
+        {
+            new() { Key = "Appearance", Title = T("SettingsPage_Navigation_Appearance", "Appearance"), Icon = SymbolRegular.PaintBrush24 },
+            new() { Key = "Application", Title = T("SettingsPage_Navigation_Application", "Application"), Icon = SymbolRegular.Apps24 }
+        };
+
+        if (_supportsLenovoHardwareControls)
+        {
+            navigationItems.Add(new() { Key = "SmartKeys", Title = T("SettingsPage_Navigation_SmartKeys", "Smart Keys"), Icon = SymbolRegular.Keyboard24 });
+            navigationItems.Add(new() { Key = "Display", Title = T("SettingsPage_Navigation_Display", "Display"), Icon = SymbolRegular.Desktop24 });
+        }
+
+        navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
+
+        if (_supportsLenovoHardwareControls)
+        {
+            navigationItems.Add(new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 });
+        }
+
+        navigationItems.Add(new() { Key = "Integrations", Title = Resource.SettingsPage_Integrations_Title, Icon = SymbolRegular.PlugConnected24 });
+
+        _navigationListBox.ItemsSource = navigationItems;
+        _navigationListBox.SelectedIndex = 0;
+    }
+
+    private async void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (IsVisible && !_isInitialized)
+        {
+            _isInitialized = true;
+            await RefreshAsync();
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        // Initialize all controls first
+        _appearanceControl = new SettingsAppearanceControl();
+        _applicationBehaviorControl = new SettingsApplicationBehaviorControl();
+        _smartKeysControl = _supportsLenovoHardwareControls ? new SettingsSmartKeysControl() : null;
+        _displayControl = _supportsLenovoHardwareControls ? new SettingsDisplayControl() : null;
+        _updateControl = new SettingsUpdateControl();
+        _powerControl = _supportsLenovoHardwareControls ? new SettingsPowerControl() : null;
+        _integrationsControl = new SettingsIntegrationsControl();
+
+        // Wire up FnKeys toggle change event
+        _applicationBehaviorControl.FnKeysStatusChanged += (sender, status) =>
+        {
+            if (_smartKeysControl != null)
+                _smartKeysControl.UpdateVisibilityBasedOnFnKeys(status);
+            if (_displayControl != null)
+                _displayControl.UpdateVisibilityBasedOnFnKeys(status);
+        };
+
+        // Show first item immediately (Appearance control) - don't wait for loading
+        _contentControl.Content = _appearanceControl;
+        PlayTransitionAnimation();
+
+        // Priority load: refresh the first visible control (Appearance) immediately
+        await _appearanceControl.RefreshAsync();
+
+        // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
+        _ = RefreshRemainingControlsAsync();
+    }
+
+    private async Task RefreshRemainingControlsAsync()
+    {
+        try
+        {
+        await Task.WhenAll(
+            _applicationBehaviorControl!.RefreshAsync(),
+            _smartKeysControl?.RefreshAsync() ?? Task.CompletedTask,
+            _displayControl?.RefreshAsync() ?? Task.CompletedTask,
+            _powerControl?.RefreshAsync() ?? Task.CompletedTask,
+            _integrationsControl!.RefreshAsync()
+        );
+
+            _updateControl?.Refresh();
+
+            // Update visibility based on FnKeys status
+            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+            _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+            _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background settings refresh failed.", ex);
+        }
+    }
+
+    private async void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)
+    {
+        if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
+            return;
+
+        UserControl? controlToShow = selectedItem.Key switch
+        {
+            "Appearance" => _appearanceControl,
+            "Application" => _applicationBehaviorControl,
+            "SmartKeys" => _smartKeysControl,
+            "Display" => _displayControl,
+            "Update" => _updateControl,
+            "Power" => _powerControl,
+            "Integrations" => _integrationsControl,
+            _ => null
+        };
+
+        if (controlToShow != null)
+        {
+            _contentControl.Content = controlToShow;
+            PlayTransitionAnimation();
+        }
+
+        // Refresh the selected control immediately if it's not the first one (Appearance)
+        if (selectedItem.Key != "Appearance")
+        {
+            switch (selectedItem.Key)
+            {
+                case "Application":
+                    if (_applicationBehaviorControl != null)
+                        await _applicationBehaviorControl.RefreshAsync();
+                    break;
+                case "SmartKeys":
+                    if (_smartKeysControl != null)
+                        await _smartKeysControl.RefreshAsync();
+                    break;
+                case "Display":
+                    if (_displayControl != null)
+                        await _displayControl.RefreshAsync();
+                    break;
+                case "Update":
+                    if (_updateControl != null)
+                        _updateControl.Refresh();
+                    break;
+                case "Power":
+                    if (_powerControl != null)
+                        await _powerControl.RefreshAsync();
+                    break;
+                case "Integrations":
+                    if (_integrationsControl != null)
+                        await _integrationsControl.RefreshAsync();
+                    break;
+            }
+        }
+    }
+
+    private void PlayTransitionAnimation()
+    {
+        if (Resources["ContentTransitionAnimation"] is Storyboard storyboard)
+        {
+            storyboard.Begin();
+        }
+    }
+
+    private class NavigationItem
+    {
+        public string Key { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public SymbolRegular Icon { get; set; }
+    }
+}
+}

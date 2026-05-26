@@ -117,7 +117,7 @@ The following classes of files were reviewed and intentionally preserved:
 
 Verification was run before final build-artifact cleanup:
 
-- `dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --no-build`
+- `dotnet test LenovoLegionToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --configuration Release --no-build`
 
 Post-cleanup validation:
 

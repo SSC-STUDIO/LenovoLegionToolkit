@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+        <RootNamespace>UniversalDeviceToolkit.CLI.Lib</RootNamespace>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <Platforms>x64</Platforms>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+	    <Copyright>$(ProjectCopyright)</Copyright>
+        <NeutralLanguage>en</NeutralLanguage>
+    </PropertyGroup>
+</Project>

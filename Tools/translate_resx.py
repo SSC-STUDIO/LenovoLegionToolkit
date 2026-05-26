@@ -17,10 +17,10 @@ import xml.etree.ElementTree as ET
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULES = {
-    "WPF": "LenovoLegionToolkit.WPF/Resources",
-    "Lib": "LenovoLegionToolkit.Lib/Resources",
-    "Automation": "LenovoLegionToolkit.Lib.Automation/Resources",
-    "Macro": "LenovoLegionToolkit.Lib.Macro/Resources",
+    "WPF": "UniversalDeviceToolkit.WPF/Resources",
+    "Lib": "UniversalDeviceToolkit.Lib/Resources",
+    "Automation": "UniversalDeviceToolkit.Lib.Automation/Resources",
+    "Macro": "UniversalDeviceToolkit.Lib.Macro/Resources",
 }
 
 

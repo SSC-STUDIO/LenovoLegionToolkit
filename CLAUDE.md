@@ -13,7 +13,7 @@ Open-source Lenovo Legion laptop management toolkit. Large C# .NET solution with
 - **Changelog**: Record **user-visible** changes that will ship in the next release under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md); when cutting a release, move that section under the version heading. Pre-release or pre-merge self-corrections (bugs fixed before the behavior ever shipped, or iterative fixes on the same unreleased feature) do **not** need a separate line each time—see the bilingual **「更新日志维护指南」** / changelog section in [AGENTS.md](AGENTS.md).
 - Follow [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
 - Build with Visual Studio or `dotnet build`
-- Run Clean.bat before fresh builds
+- Run `Make.bat` for release builds (includes a full clean); use `Make.bat -clean` or `Clean.bat` for clean-only
 
 ## Code Style
 - Follow .NET/C# conventions per CONTRIBUTING.md
@@ -21,8 +21,10 @@ Open-source Lenovo Legion laptop management toolkit. Large C# .NET solution with
 - Keep CLI and UI logic separated
 
 ## Key Paths
-- `LenovoLegionToolkit.CLI/` — CLI application
-- `LenovoLegionToolkit.CLI.Lib/` — CLI library
+- `UniversalDeviceToolkit.sln` — solution file
+- `UniversalDeviceToolkit.WPF/` — WPF UI application
+- `UniversalDeviceToolkit.CLI/` — CLI application
+- `UniversalDeviceToolkit.Lib/` — core library (assembly: `LenovoLegionToolkit.Lib.dll` for plugin ABI)
 - `Assets/` — UI assets
 - `Build/` — build output
 - `Docs/` — documentation

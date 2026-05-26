@@ -50,7 +50,7 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="path\to\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="path\to\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
   </ItemGroup>
 </Project>
 ```
@@ -495,7 +495,7 @@ public class MyPlugin : PluginBase
 - **NetworkAcceleration**: 网络加速插件
 - **ShellIntegration**: Shell 集成插件（系统插件）
 
-插件仓库地址：[LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins)
+插件仓库地址：[UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
 
 ---
 
@@ -506,7 +506,7 @@ public class MyPlugin : PluginBase
 1. 构建插件项目
 2. 将输出文件复制到主程序的 `plugins` 目录：
    - 开发环境：`Build/plugins/`
-   - 安装环境：`%APPDATA%/LenovoLegionToolkit/plugins/`
+   - 安装环境：`%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`
 3. 启动主程序进行调试
 
 ### 调试配置
@@ -517,7 +517,7 @@ public class MyPlugin : PluginBase
 <!-- 在插件项目文件中添加 -->
 <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
   <StartAction>Program</StartAction>
-  <StartProgram>path\to\LenovoLegionToolkit.WPF.exe</StartProgram>
+  <StartProgram>path\to\Universal Device Toolkit.exe</StartProgram>
 </PropertyGroup>
 ```
 

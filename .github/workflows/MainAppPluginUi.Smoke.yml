@@ -87,11 +87,11 @@ jobs:
 
       - name: Restore solution
         shell: pwsh
-        run: dotnet restore LenovoLegionToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln
 
       - name: Build main app
         shell: pwsh
-        run: dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore
 
       - name: Build UI smoke tool
         shell: pwsh
@@ -168,6 +168,7 @@ jobs:
 
           $sourceCandidates = @(
             (Join-Path $PWD 'Build\plugins'),
+            (Join-Path $PWD '..\UniversalDeviceToolkit-Plugins\Build\plugins'),
             (Join-Path $PWD '..\LenovoLegionToolkit-Plugins\Build\plugins')
           )
           $sourceRoot = $sourceCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1

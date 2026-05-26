@@ -1,0 +1,154 @@
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Extensions;
+using UniversalDeviceToolkit.WPF.Windows.Settings;
+
+namespace UniversalDeviceToolkit.WPF.Controls.Settings
+{
+public partial class SettingsPowerControl
+{
+    private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
+    private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
+    private bool _isRefreshing;
+
+    public SettingsPowerControl()
+    {
+        InitializeComponent();
+    }
+
+    public async Task RefreshAsync()
+    {
+        _isRefreshing = true;
+
+        // Run all async operations in parallel
+        var miTask = MachineCompatibility.GetMachineInformationAsync();
+        var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
+
+        await Task.WhenAll(miTask, powerModeSupportedTask);
+
+        var mi = await miTask;
+        var isPowerModeFeatureSupported = await powerModeSupportedTask;
+
+        // Check GodModeFnQSwitchable capability and get value if supported
+        // Note: If WMI call fails, the card will be hidden to avoid showing broken UI
+        var hasGodModeFnQ = mi.Features[CapabilityID.GodModeFnQSwitchable];
+        int? fnQValue = null;
+
+        if (hasGodModeFnQ)
+        {
+            try
+            {
+                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
+            }
+            catch (Exception ex)
+            {
+                // Log failure but continue - card will be hidden since fnQValue remains null
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
+            }
+        }
+
+        _godModeFnQSwitchableCard.Visibility = hasGodModeFnQ && fnQValue.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        _godModeFnQSwitchableToggle.IsChecked = fnQValue == 1;
+
+        _powerModeMappingComboBox.SetItems(Enum.GetValues<PowerModeMappingMode>(), _settings.Store.PowerModeMappingMode, t => t.GetDisplayName());
+
+        _powerModeMappingCard.Visibility = isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+
+        _onBatterySinceResetToggle.IsChecked = _settings.Store.ResetBatteryOnSinceTimerOnReboot;
+
+        _isRefreshing = false;
+    }
+
+    private async void GodModeFnQSwitchableToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var state = _godModeFnQSwitchableToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _godModeFnQSwitchableToggle.IsEnabled = false;
+
+        try
+        {
+            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set GodModeFnQSwitchable.", ex);
+        }
+        finally
+        {
+            _godModeFnQSwitchableToggle.IsEnabled = true;
+        }
+    }
+
+    private async void PowerModeMappingComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_powerModeMappingComboBox.TryGetSelectedItem(out PowerModeMappingMode powerModeMappingMode))
+            return;
+
+        _settings.Store.PowerModeMappingMode = powerModeMappingMode;
+        _settings.SynchronizeStore();
+
+        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
+        _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void WindowsPowerPlans_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var window = new WindowsPowerPlansWindow { Owner = Window.GetWindow(this) };
+        window.ShowDialog();
+    }
+
+    private void PowerModes_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var window = new WindowsPowerModesWindow { Owner = Window.GetWindow(this) };
+        window.ShowDialog();
+    }
+
+    private void WindowsPowerPlansControlPanel_Click(object sender, RoutedEventArgs e)
+    {
+        Process.Start("control", "/name Microsoft.PowerOptions");
+    }
+
+    private void OnBatterySinceResetToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var state = _onBatterySinceResetToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _settings.Store.ResetBatteryOnSinceTimerOnReboot = state.Value;
+        _settings.SynchronizeStore();
+    }
+}
+}

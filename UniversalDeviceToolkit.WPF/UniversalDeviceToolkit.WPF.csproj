@@ -1,0 +1,115 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+        <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+		<RootNamespace>UniversalDeviceToolkit.WPF</RootNamespace>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<Platforms>x64</Platforms>
+		<OutputType>WinExe</OutputType>
+		<ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
+		<AssemblyName>Universal Device Toolkit</AssemblyName>
+		<Copyright>$(ProjectCopyright)</Copyright>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<SelfContained>false</SelfContained>
+		<PublishSingleFile>false</PublishSingleFile>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<PublishUrl>publish\</PublishUrl>
+		<IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+		<RollForward>Major</RollForward>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ApplicationManifest>App.manifest</ApplicationManifest>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<NeutralLanguage>en</NeutralLanguage>
+		<SatelliteResourceLanguages>ar;bg;cs;de;en;el;es;fr;hu;it;ja;lv;nl;nl-nl;pl;pt;pt-br;ro;ru;sk;uk;tr;vi;zh;zh-hans;zh-hant;uz</SatelliteResourceLanguages>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DebugType>embedded</DebugType>
+	</PropertyGroup>
+	<Target Name="ValidateMainWindowUpdateIndicatorBindings" BeforeTargets="MarkupCompilePass1">
+		<Error
+			Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\Windows\MainWindow.xaml').Contains('MouseLeftButtonDown=&quot;UpdateIndicator_Click&quot;'))"
+			Text="MainWindow.xaml must not bind UpdateIndicator_Click to MouseLeftButtonDown. Wire mouse handlers in MainWindow.xaml.cs instead." />
+		<Error
+			Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\Windows\MainWindow.xaml').Contains('MouseRightButtonDown=&quot;UpdateIndicator_Click&quot;'))"
+			Text="MainWindow.xaml must not bind UpdateIndicator_Click to MouseRightButtonDown. Wire mouse handlers in MainWindow.xaml.cs instead." />
+	</Target>
+	<ItemGroup>
+		<PackageReference Include="Autofac" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Humanizer" />
+		<PackageReference Include="Markdig" />
+		<PackageReference Include="Markdig.Wpf" />
+		<PackageReference Include="PixiEditor.ColorPicker" />
+		<PackageReference Include="WPF-UI" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
+		         Link="LenovoLegionToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll')" />
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
+		         Link="LenovoLegionToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll')" />
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="LenovoLegionToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="LenovoLegionToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\Icon.ico" />
+		<None Remove="Assets\Default_exe.png" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Assets\Default_exe.png" />
+		<Resource Include="Assets\Icon.ico" />
+
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Assets\AssetResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AssetResources.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Resource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resource.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Assets\AssetResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AssetResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Resource.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<Target Name="CreateSatelliteResourceOutputDirectories" BeforeTargets="_CopyFilesMarkedCopyLocal;CopyFilesToOutputDirectory">
+		<ItemGroup>
+			<SatelliteResourceOutputDirectory Include="$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubDirectory)" Condition="'%(ReferenceCopyLocalPaths.DestinationSubDirectory)' != ''" />
+		</ItemGroup>
+		<MakeDir Directories="@(SatelliteResourceOutputDirectory)" Condition="'@(SatelliteResourceOutputDirectory)' != ''" />
+	</Target>
+
+</Project>

@@ -17,52 +17,53 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 
 1. **Prerequisites**: Install .NET 10 SDK and Visual Studio 2022
 2. **Clone** the repository: `git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git`
-3. **Build** the solution: `dotnet build LenovoLegionToolkit.sln`
-4. **Run** tests: `dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj`
+3. **Build** the solution: `dotnet build UniversalDeviceToolkit.sln`
+4. **Run** tests: `dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj`
 5. **Start** developing! See [AGENTS.md](../AGENTS.md) for detailed development guidelines.
 
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         Universal Device Toolkit                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Presentation Layer                                                       │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  LenovoLegionToolkit.WPF                                         │   │
-│  │  ├── Views (Pages, Windows, Controls)                           │   │
-│  │  ├── ViewModels (MVVM Pattern)                                  │   │
-│  │  └── Resources (Styles, Templates, Assets)                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Application Layer                                                       │
-│  ┌───────────────────┬───────────────────┬─────────────────────────┐  │
-│  │ CLI               │ Automation        │ Macro                   │  │
-│  │ LenovoLegionToolkit│ LenovoLegionToolkit│ LenovoLegionToolkit    │  │
-│  │ .CLI              │ .Lib.Automation   │ .Lib.Macro              │  │
-│  └───────────────────┴───────────────────┴─────────────────────────┘  │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Core Library Layer                                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  LenovoLegionToolkit.Lib                                         │   │
-│  │  ├── Hardware Controllers (34 modules)                          │   │
-│  │  ├── Services (Settings, Messaging, IoC)                        │   │
-│  │  ├── Game Detection System                                      │   │
-│  │  ├── Plugin System                                              │   │
-│  │  └── Native Interop (WMI, ACPI, USB/HID)                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Infrastructure                                                          │
-│  ├── Autofac (Dependency Injection)                                    │
-│  ├── HID Sharp (Hardware Interface)                                   │
-│  ├── LibreHardwareMonitorLib (System Monitoring)                       │
-│  └── Native Windows APIs (WMI, Power, etc.)                          │
-└─────────────────────────────────────────────────────────────────────────┘
+???????????????????????????????????????????????????????????????????????????
+?                        Universal Device Toolkit                          ?
+???????????????????????????????????????????????????????????????????????????
+? Presentation Layer                                                       ?
+? ???????????????????????????????????????????????????????????????????  ?
+? ? UniversalDeviceToolkit.WPF                                      ?  ?
+? ? ??? Views (Pages, Windows, Controls)                           ?  ?
+? ? ??? ViewModels (MVVM Pattern)                                  ?  ?
+? ? ??? Resources (Styles, Templates, Assets)                      ?  ?
+? ???????????????????????????????????????????????????????????????????  ?
+???????????????????????????????????????????????????????????????????????????
+? Application Layer                                                       ?
+? ??????????????????????????????????????????????????????????????????? ?
+? ? CLI               ? Automation        ? Macro                   ? ?
+? ? UniversalDevice   ? UniversalDevice   ? UniversalDevice         ? ?
+? ? Toolkit.CLI       ? Toolkit.Lib.      ? Toolkit.Lib.Macro       ? ?
+? ?                   ? Automation        ?                         ? ?
+? ??????????????????????????????????????????????????????????????????? ?
+???????????????????????????????????????????????????????????????????????????
+? Core Library Layer                                                      ?
+? ???????????????????????????????????????????????????????????????????  ?
+? ? UniversalDeviceToolkit.Lib (assembly: LenovoLegionToolkit.Lib)  ?  ?
+? ? ??? Hardware Controllers (34 modules)                          ?  ?
+? ? ??? Services (Settings, Messaging, IoC)                        ?  ?
+? ? ??? Game Detection System                                      ?  ?
+? ? ??? Plugin System                                              ?  ?
+? ? ??? Native Interop (WMI, ACPI, USB/HID)                      ?  ?
+? ???????????????????????????????????????????????????????????????????  ?
+???????????????????????????????????????????????????????????????????????????
+? Infrastructure                                                          ?
+? ??? Autofac (Dependency Injection)                                    ?
+? ??? HID Sharp (Hardware Interface)                                   ?
+? ??? LibreHardwareMonitorLib (System Monitoring)                       ?
+? ??? Native Windows APIs (WMI, Power, etc.)                          ?
+???????????????????????????????????????????????????????????????????????????
 ```
 
 ## Core Components
 
-### 1. LenovoLegionToolkit.WPF (Presentation Layer)
+### 1. UniversalDeviceToolkit.WPF (Presentation Layer)
 
 The main WPF application implementing MVVM architecture:
 
@@ -73,7 +74,7 @@ The main WPF application implementing MVVM architecture:
 - **Behaviors/**: Attached behaviors for XAML
 - **Utils/**: UI-related utilities
 
-### 2. LenovoLegionToolkit.Lib (Core Library)
+### 2. UniversalDeviceToolkit.Lib (Core Library; assembly `LenovoLegionToolkit.Lib`)
 
 The heart of the application containing:
 
@@ -102,7 +103,7 @@ The heart of the application containing:
 - WMI integration for hardware queries
 - ACPI communication for firmware access
 
-### 3. LenovoLegionToolkit.Lib.Automation
+### 3. UniversalDeviceToolkit.Lib.Automation
 
 Automation system implementing a rule-based engine:
 
@@ -110,7 +111,7 @@ Automation system implementing a rule-based engine:
 - **Conditions**: Time-based, power state, user presence
 - **Actions**: Power mode change, fan curve, RGB profile, macro activation
 
-### 4. LenovoLegionToolkit.Lib.Macro
+### 4. UniversalDeviceToolkit.Lib.Macro
 
 Macro recording and playback system:
 
@@ -118,7 +119,7 @@ Macro recording and playback system:
 - Macro storage and management
 - Integration with hardware macro keys
 
-### 5. LenovoLegionToolkit.CLI
+### 5. UniversalDeviceToolkit.CLI
 
 Command-line interface for headless operation:
 
@@ -132,10 +133,10 @@ UDT supports dynamic plugin loading through a structured API:
 
 ```
 Plugin Structure:
-├── Plugin.json              # Plugin manifest
-├── plugin.dll              # Main plugin assembly
-├── [dependencies]          # Additional assemblies
-└── [resources]             # Plugin resources
+??? Plugin.json              # Plugin manifest
+??? plugin.dll              # Main plugin assembly
+??? [dependencies]          # Additional assemblies
+??? [resources]             # Plugin resources
 ```
 
 ### Plugin Types
@@ -147,12 +148,9 @@ Plugin Structure:
 ### Plugin Lifecycle
 
 ```
-Loading → Initialization → Registration → Activation → Shutdown
-  │            │              │              │           │
-  │            └──────────────┴──────────────┴───────────┘
-  │                         Active State
-  │
-  └─→ Disabled/Failed → Unloaded
+Loading �?Initialization �?Registration �?Activation �?Shutdown
+  �?           �?             �?             �?          �?  �?           ??????????????????????????????????????????�?  �?                        Active State
+  �?  ??�?Disabled/Failed �?Unloaded
 ```
 
 ## Data Flow
@@ -161,36 +159,24 @@ Loading → Initialization → Registration → Activation → Shutdown
 
 ```
 User Action (UI)
-      ↓
-PowerModeSelectorViewModel
-      ↓
-PowerModeController.SetModeAsync()
-      ↓
-WMI Call (\\ROOT\WMI\Lenovo_Path)
-      ↓
-ACPI Communication
-      ↓
-Hardware Response
-      ↓
-Windows Power Plan Sync
-      ↓
-State Update Broadcast
-      ↓
-UI Refresh
+      �?PowerModeSelectorViewModel
+      �?PowerModeController.SetModeAsync()
+      �?WMI Call (\\ROOT\WMI\Lenovo_Path)
+      �?ACPI Communication
+      �?Hardware Response
+      �?Windows Power Plan Sync
+      �?State Update Broadcast
+      �?UI Refresh
 ```
 
 ### Game Detection Flow
 
 ```
 GameDetectionService (Background Monitor)
-      ↓
-Window Title / Process Matching
-      ↓
-Plugin Notifications
-      ↓
-Automation Rules Evaluation
-      ↓
-Automatic Actions Execution
+      �?Window Title / Process Matching
+      �?Plugin Notifications
+      �?Automation Rules Evaluation
+      �?Automatic Actions Execution
 ```
 
 ## Technology Stack
@@ -222,7 +208,7 @@ Automatic Actions Execution
   - Basic-mode profiles: ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung, HUAWEI, Xiaomi/Redmi, HONOR, LG, Framework, Panasonic, Dynabook/Toshiba, Fujitsu, VAIO, MEDION, XMG/SCHENKER, Clevo/Tongfang, and generic PCs
   - Chinese model naming variants are recognized where hardware control is supported (for example `R7000`, `R9000`, `Y7000`, `Y9000`)
   - Vendor matching normalizes common BIOS/DMI formatting differences so punctuation, casing, spacing, diacritics, and company suffix variants do not block a basic-mode match
-  - Detection source: `LenovoLegionToolkit.Lib/DeviceSupport/CatalogDeviceSupportProvider.cs` and `LenovoLegionToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs`
+  - Detection source: `UniversalDeviceToolkit.Lib/DeviceSupport/CatalogDeviceSupportProvider.cs` and `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs`
 - **Dependencies**: .NET 10.0 Desktop Runtime; Lenovo drivers are required only for Lenovo hardware-specific controls
 
 ## Performance Characteristics

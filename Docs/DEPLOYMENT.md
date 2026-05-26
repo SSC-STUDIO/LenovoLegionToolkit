@@ -32,16 +32,16 @@ dotnet --info
 ### Solution Structure
 
 ```
-LenovoLegionToolkit.sln
-├── LenovoLegionToolkit.WPF/           # Main application
-├── LenovoLegionToolkit.Lib/            # Core library
-├── LenovoLegionToolkit.Lib.Automation/ # Automation features
-├── LenovoLegionToolkit.Lib.Macro/      # Macro system
-├── LenovoLegionToolkit.CLI/            # Command-line tool
-├── LenovoLegionToolkit.CLI.Lib/        # CLI core
-├── LenovoLegionToolkit.Tests/          # Unit tests
-├── LenovoLegionToolkit.PerformanceTest/ # Performance benchmarks
-└── LenovoLegionToolkit.SpectrumTester/ # Hardware testing
+UniversalDeviceToolkit.sln
+├── UniversalDeviceToolkit.WPF/           # Main application
+├── UniversalDeviceToolkit.Lib/            # Core library (assembly: LenovoLegionToolkit.Lib)
+├── UniversalDeviceToolkit.Lib.Automation/ # Automation features
+├── UniversalDeviceToolkit.Lib.Macro/      # Macro system
+├── UniversalDeviceToolkit.CLI/            # Command-line tool
+├── UniversalDeviceToolkit.CLI.Lib/        # CLI core
+├── UniversalDeviceToolkit.Tests/          # Unit tests
+├── UniversalDeviceToolkit.PerformanceTest/ # Performance benchmarks
+└── UniversalDeviceToolkit.SpectrumTester/ # Hardware testing
 ```
 
 ### Build Properties
@@ -63,41 +63,41 @@ Key configurations in `Directory.Build.props`:
 
 ```bash
 # Debug build (development)
-dotnet build LenovoLegionToolkit.sln --configuration Debug
+dotnet build UniversalDeviceToolkit.sln --configuration Debug
 
 # Release build (production)
-dotnet build LenovoLegionToolkit.sln --configuration Release
+dotnet build UniversalDeviceToolkit.sln --configuration Release
 
 # Clean rebuild
-dotnet clean LenovoLegionToolkit.sln
-dotnet build LenovoLegionToolkit.sln --configuration Release --no-incremental
+dotnet clean UniversalDeviceToolkit.sln
+dotnet build UniversalDeviceToolkit.sln --configuration Release --no-incremental
 ```
 
 ### Specific Project Build
 
 ```bash
 # Build main application only
-dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj \
+dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
     --configuration Release
 
 # Build CLI tool
-dotnet build LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj \
+dotnet build UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj \
     --configuration Release
 
 # Build and run tests
-dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
+dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj
 ```
 
 ### Release Build with Publish
 
 ```bash
 # Framework-dependent deployment (requires .NET runtime)
-dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj \
+dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
     --configuration Release \
     --output ./Build/framework-dependent
 
 # Self-contained deployment (no runtime required)
-dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj \
+dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
     --configuration Release \
     --runtime win-x64 \
     --self-contained true \
@@ -124,7 +124,7 @@ dotnet test --filter "TestCategory=Integration"
 
 ```bash
 # Run performance benchmarks
-dotnet run --project LenovoLegionToolkit.PerformanceTest/ \
+dotnet run --project UniversalDeviceToolkit.PerformanceTest/ \
     --configuration Release
 ```
 
@@ -446,8 +446,8 @@ dotnet build --configuration Release
 Before a release candidate, verify the centrally managed package set from the repository root:
 
 ```bash
-dotnet list LenovoLegionToolkit.sln package --outdated --include-transitive --no-restore
-dotnet list LenovoLegionToolkit.sln package --vulnerable --include-transitive --no-restore
+dotnet list UniversalDeviceToolkit.sln package --outdated --include-transitive --no-restore
+dotnet list UniversalDeviceToolkit.sln package --vulnerable --include-transitive --no-restore
 ```
 
 On Windows builds from a WSL UNC path, prefer `--no-restore` after a successful restore/build to avoid repeating slow restore work over `\\wsl.localhost`. CsWin32 metadata packages may appear as transitive packages whose latest version is not found in the configured sources; treat those as generated-tool metadata, not as direct application dependencies.
@@ -467,7 +467,7 @@ On Windows builds from a WSL UNC path, prefer `--no-restore` after a successful 
 dotnet nuget locals all --clear
 
 # Restore packages
-dotnet restore LenovoLegionToolkit.sln
+dotnet restore UniversalDeviceToolkit.sln
 
 # Clear obj/bin folders
 dotnet clean

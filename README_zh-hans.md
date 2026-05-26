@@ -1,13 +1,13 @@
 <img height="128" align="left" src="Assets/Logo.png" alt="Logo">
 
-# Lenovo Legion Toolkit
+# Universal Device Toolkit
 
-[![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
+[![Build](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
 
-Lenovo Legion Toolkit (LLT) 是为联想和摩托罗拉游戏设备打造的轻量化 Lenovo Vantage 替代方案，可提供更直接、更可控的硬件调校体验。
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩托罗拉游戏设备打造的轻量化 Lenovo Vantage 替代方案，也为其他电脑提供通用基础模式，可提供更直接、更可控的硬件调校体验。
 
 插件扩展是本项目的核心能力之一。你可以在“插件扩展”页面直接安装、更新、配置、打开和卸载插件，按需扩展工具与工作流，而不必让主程序持续膨胀。
 
@@ -44,9 +44,9 @@ Lenovo Legion Toolkit (LLT) 是为联想和摩托罗拉游戏设备打造的轻�
 
 ## 下载
 
-请认准当前维护仓库 `SSC-STUDIO/LenovoLegionToolkit` 的发布页下载版本。
+请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest) 下载最新版安装包。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版安装包。
 - **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
 - **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。
 - **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
@@ -82,7 +82,7 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 
 ## 兼容性
 
-LLT 按 `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性逻辑识别设备，目标适配 Lenovo/Motorola 的相关游戏设备。
+UDT 按 `UniversalDeviceToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性逻辑识别设备，目标适配 Lenovo/Motorola 的相关游戏设备。
 
 主要支持系列包括：
 - Legion 5、Legion Slim 5、Legion Pro 5
@@ -95,7 +95,7 @@ LLT 按 `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性�
 - 设备厂商为 `LENOVO` 或 `MOTOROLA`
 - 机型匹配支持的前缀或关键字（如 `16IRX`、`16IAX`、`15ACH`、`14IRP`、`17ACH`、`18IAX`、`ThinkBook`、`LOQ`、`IdeaPad Gaming`）
 
-目前重点支持 6 代（MY2021）到 9 代（MY2024）及更新机型；部分 5 代（MY2020）机型的部分功能也可使用。支持型号的实时代码清单见 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
+目前重点支持 6 代（MY2021）到 9 代（MY2024）及更新机型；部分 5 代（MY2020）机型的部分功能也可使用。支持型号的实时代码清单见 [Compatibility.cs](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/UniversalDeviceToolkit.Lib/Utils/Compatibility.cs)。
 
 如果你在启动时看到不兼容弹窗，你可以查看底部的*贡献*部分，查看你能否帮助我适配你的机型。谨记我没有那么多的笔记本型号，所以一些功能我无法适配。
 
@@ -128,7 +128,7 @@ LLT 可以做到：
 
 ### 插件扩展
 
-LLT 的官方插件维护在独立的 [LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
+UDT 的官方插件维护在独立的 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
 
 插件扩展页面提供了现代化、用户友好的插件管理界面：
 
@@ -672,10 +672,10 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 LLT 的本地化通过 Crowdin 管理，仓库配置文件为 `crowdin.yml`。
 
 - 源文件：4 个模块下的中立资源 `Resource.resx`
-  - `LenovoLegionToolkit.WPF/Resources`
-  - `LenovoLegionToolkit.Lib/Resources`
-  - `LenovoLegionToolkit.Lib.Automation/Resources`
-  - `LenovoLegionToolkit.Lib.Macro/Resources`
+  - `UniversalDeviceToolkit.WPF/Resources`
+  - `UniversalDeviceToolkit.Lib/Resources`
+  - `UniversalDeviceToolkit.Lib.Automation/Resources`
+  - `UniversalDeviceToolkit.Lib.Macro/Resources`
 - 目标文件：与源文件同目录的 `Resource.<locale>.resx`
 - 语言映射：在 `crowdin.yml` 内定义（例如 `zh-CN -> zh-hans`、`zh-TW -> zh-hant`、`pt-BR -> pt-br`）。
 

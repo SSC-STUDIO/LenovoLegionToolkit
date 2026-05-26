@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -13,8 +13,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Windows.Automation;
-using LenovoLegionToolkit.CLI.Lib;
-using LenovoLegionToolkit.CLI.Lib.Extensions;
+using UniversalDeviceToolkit.CLI.Lib;
+using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using Microsoft.Win32;
 
 namespace MainAppPluginUi.Smoke;
@@ -43,6 +43,27 @@ internal static class Program
     private const string DisableAnimationsEnvironmentVariable = "LLT_SMOKE_DISABLE_ANIMATIONS";
     private const string SmokeAutomationEnvironmentVariable = "LLT_SMOKE_AUTOMATION";
     private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
+
+    private static string? GetEnvVar(string legacyName)
+    {
+        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
+        {
+            var udtName = "UDT_" + legacyName[4..];
+            var udtValue = Environment.GetEnvironmentVariable(udtName);
+            if (!string.IsNullOrWhiteSpace(udtValue))
+                return udtValue;
+        }
+
+        return Environment.GetEnvironmentVariable(legacyName);
+    }
+
+    private static void SetDualEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string legacyName, string value)
+    {
+        environmentVariables[legacyName] = value;
+        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
+            environmentVariables["UDT_" + legacyName[4..]] = value;
+    }
+
     private static readonly string[] MainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
@@ -477,8 +498,8 @@ internal static class Program
         var current = new DirectoryInfo(Environment.CurrentDirectory);
         for (var i = 0; i < 10 && current is not null; i++)
         {
-            var solutionPath = Path.Combine(current.FullName, "LenovoLegionToolkit.sln");
-            var wpfProjectPath = Path.Combine(current.FullName, @"LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj");
+            var solutionPath = Path.Combine(current.FullName, "UniversalDeviceToolkit.sln");
+            var wpfProjectPath = Path.Combine(current.FullName, @"UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj");
             if (File.Exists(solutionPath) && File.Exists(wpfProjectPath))
                 return current.FullName;
 
@@ -563,7 +584,7 @@ internal static class Program
     private static SmokeScenario ResolveScenario(IReadOnlyList<string> args)
     {
         var rawValue = TryReadOptionValue(args, "--scenario")
-                       ?? Environment.GetEnvironmentVariable(ScenarioEnvironmentVariable);
+                       ?? GetEnvVar(ScenarioEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return SmokeScenario.None;
 
@@ -580,7 +601,7 @@ internal static class Program
     private static SmokeTheme ResolveTheme(IReadOnlyList<string> args)
     {
         var rawValue = TryReadOptionValue(args, "--theme")
-                       ?? Environment.GetEnvironmentVariable(ThemeEnvironmentVariable);
+                       ?? GetEnvVar(ThemeEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return SmokeTheme.System;
 
@@ -619,7 +640,7 @@ internal static class Program
     private static ScreenshotMode ResolveScreenshotMode(IReadOnlyList<string> args)
     {
         var rawValue = TryReadOptionValue(args, "--screenshots")
-                       ?? Environment.GetEnvironmentVariable(ScreenshotModeEnvironmentVariable);
+                       ?? GetEnvVar(ScreenshotModeEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return ScreenshotMode.Failures;
 
@@ -637,7 +658,7 @@ internal static class Program
     private static string? ResolveScreenshotOutputDirectory(IReadOnlyList<string> args)
     {
         var rawValue = TryReadOptionValue(args, "--screenshot-dir")
-                       ?? Environment.GetEnvironmentVariable(ScreenshotDirectoryEnvironmentVariable);
+                       ?? GetEnvVar(ScreenshotDirectoryEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return null;
 
@@ -649,7 +670,7 @@ internal static class Program
         if (HasOption(args, optionName))
             return true;
 
-        var rawValue = Environment.GetEnvironmentVariable(environmentVariableName);
+        var rawValue = GetEnvVar(environmentVariableName);
         if (string.IsNullOrWhiteSpace(rawValue))
             return false;
 
@@ -663,7 +684,7 @@ internal static class Program
         int defaultMilliseconds)
     {
         var rawValue = TryReadOptionValue(args, optionName)
-                       ?? Environment.GetEnvironmentVariable(environmentVariableName);
+                       ?? GetEnvVar(environmentVariableName);
         if (string.IsNullOrWhiteSpace(rawValue))
             return TimeSpan.FromMilliseconds(defaultMilliseconds);
 
@@ -678,7 +699,7 @@ internal static class Program
         if (HasOption(args, "--keep-artifacts"))
             return true;
 
-        var rawValue = Environment.GetEnvironmentVariable(KeepArtifactsEnvironmentVariable);
+        var rawValue = GetEnvVar(KeepArtifactsEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return false;
 
@@ -781,7 +802,7 @@ Environment variables:
         }
 
         // Fall back to environment variable
-        var fromEnvironment = Environment.GetEnvironmentVariable("LLT_SMOKE_PLUGIN_IDS");
+        var fromEnvironment = GetEnvVar("LLT_SMOKE_PLUGIN_IDS");
         if (!string.IsNullOrWhiteSpace(fromEnvironment))
         {
             var requested = fromEnvironment
@@ -808,7 +829,7 @@ Environment variables:
         }
 
         var rawValue = TryReadOptionValue(args, "--plugin-source")
-                       ?? Environment.GetEnvironmentVariable(PluginSourcesEnvironmentVariable);
+                       ?? GetEnvVar(PluginSourcesEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(rawValue))
             return new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase);
 
@@ -884,15 +905,15 @@ Environment variables:
 
     private static void EnsureRepositoryRoot(string repositoryRoot)
     {
-        var solutionPath = Path.Combine(repositoryRoot, "LenovoLegionToolkit.sln");
-        var wpfProjectPath = Path.Combine(repositoryRoot, @"LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj");
+        var solutionPath = Path.Combine(repositoryRoot, "UniversalDeviceToolkit.sln");
+        var wpfProjectPath = Path.Combine(repositoryRoot, @"UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj");
         if (!File.Exists(solutionPath) || !File.Exists(wpfProjectPath))
             throw new DirectoryNotFoundException($"Path is not main repository root: {repositoryRoot}");
     }
 
     private static string ResolveMainAppRuntimeDirectory(string repositoryRoot)
     {
-        var releaseRoot = Path.Combine(repositoryRoot, @"LenovoLegionToolkit.WPF\bin\Release");
+        var releaseRoot = Path.Combine(repositoryRoot, @"UniversalDeviceToolkit.WPF\bin\Release");
         if (!Directory.Exists(releaseRoot))
             throw new DirectoryNotFoundException($"Main app Release output not found: {releaseRoot}. Build main app first.");
 
@@ -943,6 +964,9 @@ Environment variables:
         Directory.CreateDirectory(appDataDirectory);
         Directory.CreateDirectory(pluginsDirectory);
         File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "en");
+        File.WriteAllLines(
+            Path.Combine(appDataDirectory, "device-setup"),
+            ["devicePackId=", "basicMode=false", $"confirmedAtUtc={DateTimeOffset.UtcNow:O}"]);
 
         Console.WriteLine($"[main-smoke] Smoke sandbox appdata: {appDataDirectory}");
         Console.WriteLine($"[main-smoke] Smoke sandbox plugins: {pluginsDirectory}");
@@ -1019,6 +1043,7 @@ Environment variables:
 
         var sourceCandidates = new[]
         {
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
             Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
             Path.Combine(repositoryRoot, "Build", "plugins")
         };
@@ -1131,12 +1156,12 @@ Environment variables:
         SmokeSandboxState sandboxState,
         LocalPluginPackageBundle localPluginPackageBundle)
     {
-        startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = sandboxState.AppDataDirectory;
-        startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = sandboxState.PluginsDirectory;
-        startInfo.EnvironmentVariables[SingleInstanceKeyEnvironmentVariable] = Path.GetFileName(sandboxState.RootDirectory);
         startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = Constants.PIPE_NAME;
-        startInfo.EnvironmentVariables[SmokeAutomationEnvironmentVariable] = "1";
-        startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
+        SetDualEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, sandboxState.AppDataDirectory);
+        SetDualEnvVar(startInfo.EnvironmentVariables, PluginDirectoryOverrideEnvironmentVariable, sandboxState.PluginsDirectory);
+        SetDualEnvVar(startInfo.EnvironmentVariables, SingleInstanceKeyEnvironmentVariable, Path.GetFileName(sandboxState.RootDirectory));
+        SetDualEnvVar(startInfo.EnvironmentVariables, SmokeAutomationEnvironmentVariable, "1");
+        SetDualEnvVar(startInfo.EnvironmentVariables, RelaxedIpcAclEnvironmentVariable, "1");
 
         var singleInstanceKey = Path.GetFileName(sandboxState.RootDirectory);
         startInfo.Arguments = string.IsNullOrWhiteSpace(startInfo.Arguments)
@@ -1145,8 +1170,8 @@ Environment variables:
 
         if (localPluginPackageBundle.Packages.Count > 0)
         {
-            startInfo.EnvironmentVariables[PluginImportFilesEnvironmentVariable] =
-                string.Join(Path.PathSeparator, localPluginPackageBundle.Packages.Select(package => package.PackagePath));
+            SetDualEnvVar(startInfo.EnvironmentVariables, PluginImportFilesEnvironmentVariable,
+                string.Join(Path.PathSeparator, localPluginPackageBundle.Packages.Select(package => package.PackagePath)));
         }
     }
 
@@ -1318,6 +1343,7 @@ Environment variables:
     {
         var sourceCandidates = new[]
         {
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
             Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
             Path.Combine(repositoryRoot, "Build", "plugins")
         };
@@ -1560,7 +1586,11 @@ Environment variables:
         params string[] sourceDirectories)
     {
         var sourceCandidates = sourceDirectories
-            .Select(directoryName => Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", directoryName, fileName)))
+            .SelectMany(directoryName => new[]
+            {
+                Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", directoryName, fileName)),
+                Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", directoryName, fileName))
+            })
             .Concat(sourceDirectories.Select(directoryName => Path.Combine(repositoryRoot, "Build", directoryName, fileName)))
             .ToArray();
 
@@ -2301,6 +2331,13 @@ Environment variables:
         if (localPlans.Count == 0)
             return;
 
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var bulkImportButton = TryWaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(12));
+        if (bulkImportButton is null || !IsVisible(bulkImportButton))
+            throw new InvalidOperationException("PluginBulkImportButton is not visible on the Plugin Extensions page.");
+
+        Console.WriteLine("[main-smoke] PluginBulkImportButton is visible for local import flow");
+
         var pendingPlans = localPlans
             .Where(plan => !IsPluginInstalled(mainWindow, sandboxState, plan.PluginId))
             .ToArray();
@@ -2311,20 +2348,8 @@ Environment variables:
         }
         else
         {
-            mainWindow = ResolveLiveWindow(mainWindow);
-            var bulkImportButton = TryWaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(12));
-
-            if (bulkImportButton is not null)
-            {
-                Click(bulkImportButton);
-                Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", pendingPlans.Select(plan => plan.PluginId))}]");
-            }
-            else
-            {
-                Console.WriteLine("[main-smoke] Local bulk import button was not available; installing local plugins through individual marketplace cards.");
-                foreach (var plan in pendingPlans)
-                    InstallPluginFromMarketplace(mainWindow, sandboxState, plan.PluginId);
-            }
+            Click(bulkImportButton);
+            Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", pendingPlans.Select(plan => plan.PluginId))}]");
         }
 
         foreach (var plan in localPlans)
@@ -2784,8 +2809,8 @@ Environment variables:
             mainWindow,
             "Failed to load plugin page",
             "Could not load file or assembly",
-            "无法加载插件页面",
-            "找不到指定的文件");
+            "????????",
+            "????????");
     }
 
     private static bool PluginPageShowsCompatibilityFallback(AutomationElement mainWindow)
@@ -2800,7 +2825,7 @@ Environment variables:
     private static void TestNetworkAccelerationFeatureInteractions(AutomationElement mainWindow)
     {
         var modeCombo = WaitForAutomationId(mainWindow, "NetworkAcceleration_ModeComboBox", TimeSpan.FromSeconds(12));
-        SelectComboBoxItemByNames(modeCombo, "Gaming", "游戏");
+        SelectComboBoxItemByNames(modeCombo, "Gaming", "??");
 
         var saveModeButton = WaitForAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton", TimeSpan.FromSeconds(8));
         Click(saveModeButton);
@@ -2921,7 +2946,7 @@ Environment variables:
                 existingSettingsWindows,
                 TimeSpan.FromSeconds(12),
                 "network-acceleration double-click",
-                new[] { "Network Acceleration Settings", "Network Acceleration 设置" })
+                new[] { "Network Acceleration Settings", "Network Acceleration ??" })
             : WaitForPluginSettingsWindow(
                 processId,
                 mainWindowHandle,
@@ -2950,7 +2975,7 @@ Environment variables:
         var mainWindowHandle = GetWindowHandle(mainWindow);
         var existingSettingsWindows = GetSettingsWindowHandles(processId, mainWindowHandle);
         var expectedWindowNames = pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
-            ? new[] { "ViVeTool Settings", "ViVeTool 设置" }
+            ? new[] { "ViVeTool Settings", "ViVeTool ??" }
             : GetPluginSettingsWindowExpectedNames(pluginId);
 
         AutomationElement? settingsWindow = null;
@@ -3167,10 +3192,10 @@ Environment variables:
     private static string[] GetPluginSettingsWindowExpectedNames(string pluginId)
     {
         if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-            return new[] { "自定义鼠标 设置", "Custom Mouse Settings" };
+            return new[] { "????????", "Custom Mouse Settings" };
 
         if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
-            return new[] { "Shell Integration Settings", "Shell Integration 设置" };
+            return new[] { "Shell Integration Settings", "Shell Integration ??" };
 
         if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
             return new[] { "Network Acceleration Settings" };
@@ -3184,7 +3209,7 @@ Environment variables:
         var reentryWindow = WaitForTopLevelSettingsWindowByName(
             processId,
             mainWindow.Current.NativeWindowHandle,
-            new[] { "自定义鼠标 设置", "Custom Mouse Settings" },
+            new[] { "????????", "Custom Mouse Settings" },
             timeout);
 
         if (reentryWindow is null)
@@ -3215,7 +3240,7 @@ Environment variables:
     {
         Console.WriteLine("[main-smoke] Waiting for custom-mouse marketplace reentry readiness");
         mainWindow = ResolveLiveWindow(mainWindow);
-        var namedWindows = new[] { "自定义鼠标 设置", "Custom Mouse Settings" };
+        var namedWindows = new[] { "????????", "Custom Mouse Settings" };
         var drainWindow = WaitForTopLevelSettingsWindowByName(
             processId,
             mainWindow.Current.NativeWindowHandle,
@@ -3293,7 +3318,7 @@ Environment variables:
         var styleButton = WaitForShellIntegrationActionButton(
             settingsWindow,
             new[] { "OpenStyleSettingsButton", "_openStyleSettingsButton" },
-            new[] { "Open Style Settings", "Open Style", "打开样式设置", "打开样式" },
+            new[] { "Open Style Settings", "Open Style", "??????", "????" },
             TimeSpan.FromSeconds(15));
 
         if (!IsInteractable(styleButton))
@@ -3313,7 +3338,7 @@ Environment variables:
         var styleWindow = WaitForTopLevelSettingsWindowByName(
             processId,
             mainWindowHandle,
-            new[] { "Menu Style Settings", "样式设置", "菜单样式设置", "Shell Integration" },
+            new[] { "Menu Style Settings", "????", "??????", "Shell Integration" },
             TimeSpan.FromSeconds(15),
             excludedHandles);
 
@@ -3471,7 +3496,7 @@ Environment variables:
                 if (status is not null && IsVisible(status) && !string.IsNullOrWhiteSpace(ReadElementText(status)))
                     return true;
 
-                return FindVisibleTextContainsAny(liveSettingsWindow, "saved", "已保存", "保存");
+                return FindVisibleTextContainsAny(liveSettingsWindow, "saved", "\u5df2\u4fdd\u5b58", "\u4fdd\u5b58");
             },
             TimeSpan.FromSeconds(10),
             TimeSpan.FromMilliseconds(250));
@@ -3700,7 +3725,7 @@ Environment variables:
                || FindByAutomationId(window, "NetworkAcceleration_SaveSettingsButton") is not null
                || FindByAutomationId(window, "NetworkAcceleration_AutoOptimizeCheckBox") is not null
                || (window.Current.Name?.Contains("settings", StringComparison.OrdinalIgnoreCase) ?? false)
-               || (window.Current.Name?.Contains("设置", StringComparison.Ordinal) ?? false);
+               || (window.Current.Name?.Contains("??", StringComparison.Ordinal) ?? false);
     }
 
     private static void CloseWindowAndWait(AutomationElement window, int processId, TimeSpan timeout)
@@ -3734,7 +3759,7 @@ Environment variables:
         if (window is null)
             return false;
 
-        if (string.Equals(window.Current.Name, "自定义鼠标 设置", StringComparison.OrdinalIgnoreCase)
+        if (string.Equals(window.Current.Name, "????????", StringComparison.OrdinalIgnoreCase)
             || string.Equals(window.Current.Name, "Custom Mouse Settings", StringComparison.OrdinalIgnoreCase))
         {
             return true;
@@ -3839,7 +3864,7 @@ Environment variables:
                     ?? WaitForTopLevelSettingsWindowByName(
                         processId,
                         0,
-                        new[] { "自定义鼠标 设置", "Custom Mouse Settings" },
+                        new[] { "????????", "Custom Mouse Settings" },
                         TimeSpan.FromMilliseconds(1),
                         handle);
                 if (liveWindow is null)
@@ -3872,9 +3897,9 @@ Environment variables:
                ?? FindByAutomationId(window, "CloseButton")
                ?? FindByAutomationId(window, "PluginSettingsCloseButton")
                ?? FindByName(window, "Close")
-               ?? FindByName(window, "关闭")
+               ?? FindByName(window, "??")
                ?? FindByName(window, "OK")
-               ?? FindByName(window, "确定");
+               ?? FindByName(window, "??");
     }
 
     private static void CloseStalePluginSettingsWindows(AutomationElement mainWindow)
@@ -4025,7 +4050,7 @@ Environment variables:
         {
             var rightButton = FindByAutomationId(messageBox, "ButtonRight")
                               ?? FindByName(messageBox, "No")
-                              ?? FindByName(messageBox, "取消")
+                              ?? FindByName(messageBox, "??")
                               ?? FindByName(messageBox, "Cancel");
 
             if (rightButton is not null && IsVisible(rightButton))
@@ -4040,8 +4065,8 @@ Environment variables:
             var leftButton = FindByAutomationId(messageBox, "ButtonLeft")
                              ?? FindByName(messageBox, "Yes")
                              ?? FindByName(messageBox, "OK")
-                             ?? FindByName(messageBox, "确定")
-                             ?? FindByName(messageBox, "是");
+                             ?? FindByName(messageBox, "\u786e\u5b9a")
+                             ?? FindByName(messageBox, "\u662f");
 
             if (leftButton is not null && IsVisible(leftButton))
             {
@@ -4505,8 +4530,8 @@ Environment variables:
                || (IsVisible(installButton)
                    && (installButtonText.Contains("Installed", StringComparison.OrdinalIgnoreCase)
                        || installButtonText.Contains("Update", StringComparison.OrdinalIgnoreCase)
-                       || installButtonText.Contains("已安装", StringComparison.OrdinalIgnoreCase)
-                       || installButtonText.Contains("更新", StringComparison.OrdinalIgnoreCase)));
+                       || installButtonText.Contains("\u5df2\u5b89\u88c5", StringComparison.OrdinalIgnoreCase)
+                       || installButtonText.Contains("\u66f4\u65b0", StringComparison.OrdinalIgnoreCase)));
     }
 
     private static bool IsPluginInstalled(AutomationElement root, SmokeSandboxState? sandboxState, string pluginId)
@@ -5289,7 +5314,7 @@ Environment variables:
                || IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar"))
                || IsVisible(FindByAutomationId(window, "SelectedActionsWindowCloseButton"))
                || WindowNameContains(window, "Selected actions")
-               || WindowNameContains(window, "已选择");
+               || WindowNameContains(window, "???");
     }
 
     private static bool AutomationIdEquals(AutomationElement element, string automationId)
@@ -6317,7 +6342,7 @@ Environment variables:
             })
             .ToArray();
         var itemsJson = JsonSerializer.Serialize(items);
-        var title = WebUtility.HtmlEncode($"MainAppPluginUi.Smoke Storyboard · {_activeScenario} · {_activeTheme}");
+        var title = WebUtility.HtmlEncode($"MainAppPluginUi.Smoke Storyboard ? {_activeScenario} ? {_activeTheme}");
 
         return $$"""
 <!DOCTYPE html>
@@ -6573,7 +6598,7 @@ Environment variables:
         button.dataset.index = String(index);
         button.innerHTML = `
           <span class="capture-seq">#${capture.sequence}</span>${capture.label}
-          <span class="capture-file">${capture.fileName} · ${capture.capturedAt}</span>
+          <span class="capture-file">${capture.fileName} ? ${capture.capturedAt}</span>
         `;
         button.addEventListener('click', () => {
           stopPlayback();
@@ -6589,7 +6614,7 @@ Environment variables:
       const capture = captures[currentIndex];
       frameTitle.textContent = capture.label;
       frameFile.textContent = capture.fileName;
-      frameTime.textContent = `${currentIndex + 1} / ${captures.length} · ${capture.capturedAt}`;
+      frameTime.textContent = `${currentIndex + 1} / ${captures.length} ? ${capture.capturedAt}`;
       frameImage.src = encodeURI(capture.fileName);
       frameImage.alt = capture.label;
 
@@ -7148,7 +7173,7 @@ Environment variables:
 
         var text = ReadElementText(element);
         return text.Contains("saved", StringComparison.OrdinalIgnoreCase)
-               || text.Contains("已保存", StringComparison.OrdinalIgnoreCase);
+               || text.Contains("\u5df2\u4fdd\u5b58", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, TimeSpan interval)

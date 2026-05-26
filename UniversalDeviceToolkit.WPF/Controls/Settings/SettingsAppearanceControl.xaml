@@ -1,0 +1,158 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.WPF.Controls.Settings.SettingsAppearanceControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
+    xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,12">
+            <custom:CardControl
+                x:Name="_langCardControl"
+                Margin="0,0,0,8"
+                Icon="LocalLanguage24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Language_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Language_Message}" />
+                </custom:CardControl.Header>
+                <StackPanel Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox
+                            x:Name="_langComboBox"
+                            Grid.Column="0"
+                            MinWidth="160"
+                            AutomationProperties.AutomationId="LanguageComboBox"
+                            AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Language_Title}"
+                            MaxDropDownHeight="Auto"
+                            SelectionChanged="LangComboBox_SelectionChanged" />
+
+                    <wpfui:Button
+                        x:Name="_installLanguageButton"
+                        Grid.Column="2"
+                        MinWidth="40"
+                        Appearance="Secondary"
+                        AutomationProperties.AutomationId="InstallLanguageButton"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Language_Install}"
+                        Click="InstallLanguageButton_Click"
+                        ToolTip="{x:Static resources:Resource.SettingsPage_Language_Install}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
+
+                        <wpfui:Button
+                            x:Name="_uninstallLanguageButton"
+                            Grid.Column="4"
+                            MinWidth="40"
+                            Appearance="Secondary"
+                            Click="UninstallLanguageButton_Click"
+                            ToolTip="{x:Static resources:Resource.SettingsPage_Language_Uninstall}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Delete24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
+                    </Grid>
+
+                    <StackPanel
+                        x:Name="_languageOperationPanel"
+                        Margin="0,12,0,0"
+                        AutomationProperties.AutomationId="LanguageOperationPanel"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            x:Name="_languageOperationStatusText"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap" />
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ProgressBar
+                                x:Name="_languageOperationProgressBar"
+                                Grid.Column="0"
+                                Height="6"
+                                AutomationProperties.AutomationId="LanguageOperationProgressBar"
+                                IsIndeterminate="True"
+                                Maximum="1"
+                                Minimum="0" />
+                            <TextBlock
+                                x:Name="_languageOperationPercentText"
+                                Grid.Column="1"
+                                MinWidth="40"
+                                Margin="12,0,0,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8" Icon="Temperature24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Temperature_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Temperature_Message}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_temperatureComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Temperature_Title}"
+                    MaxDropDownHeight="Auto"
+                    SelectionChanged="TemperatureComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8" Icon="DarkTheme24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Theme_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Theme_Description}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_themeComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Theme_Title}"
+                    MaxDropDownHeight="Auto"
+                    SelectionChanged="ThemeComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8" Icon="PaintBrush24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_ThemeStyle_Description}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_themeStylePresetComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}"
+                    MaxDropDownHeight="Auto"
+                    SelectionChanged="ThemeStylePresetComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8" Icon="Color24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_AccentColor_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_AccentColor_Description}" />
+                </custom:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ColorPickerControl x:Name="_accentColorPicker" ColorChangedDelayed="AccentColorPicker_Changed" />
+                    <ComboBox
+                        x:Name="_accentColorSourceComboBox"
+                        MinWidth="160"
+                        Margin="8,0,0,0"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_AccentColor_Title}"
+                        MaxDropDownHeight="Auto"
+                        SelectionChanged="AccentColorSourceComboBox_SelectionChanged" />
+                </StackPanel>
+            </custom:CardControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

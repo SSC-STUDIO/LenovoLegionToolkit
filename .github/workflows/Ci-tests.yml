@@ -30,17 +30,17 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore solution
-        run: dotnet restore LenovoLegionToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln
 
       - name: Build solution
-        run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
 
       # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
       - name: Test (Unit category — fail fast)
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=LenovoLegionToolkit.Tests.Unit.trx"
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Unit.trx"
 
       - name: Test stable paths (full suite + coverage)
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings LenovoLegionToolkit.Tests/coverlet.runsettings
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Check for vulnerable packages
         shell: pwsh
@@ -55,7 +55,7 @@ jobs:
         continue-on-error: true
         with:
           name: Test results
-          path: '**/LenovoLegionToolkit.Tests.trx'
+          path: '**/UniversalDeviceToolkit.Tests.trx'
           reporter: dotnet-trx
 
       - name: Smoke CLI help and version
@@ -77,8 +77,8 @@ jobs:
             $expectedVersion = "$majorVersion.$minorVersion.$patchVersion"
           }
 
-          $cliExePath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe'
-          $cliDllPath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.dll'
+          $cliExePath = Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe'
+          $cliDllPath = Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.dll'
           if (-not (Test-Path $cliExePath)) {
             throw "CLI executable not found at $cliExePath"
           }

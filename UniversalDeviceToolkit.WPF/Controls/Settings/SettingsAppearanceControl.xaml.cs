@@ -1,0 +1,402 @@
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Extensions;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
+
+namespace UniversalDeviceToolkit.WPF.Controls.Settings
+{
+public partial class SettingsAppearanceControl
+{
+    private const string CelsiusUnit = "\u00B0C";
+    private const string FahrenheitUnit = "\u00B0F";
+
+    private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
+    private readonly ThemeManager _themeManager = IoCContainer.Resolve<ThemeManager>();
+    private readonly LanguagePackManager _languagePackManager = IoCContainer.Resolve<LanguagePackManager>();
+    private readonly LanguagePackInstallCoordinator _languagePackInstallCoordinator = IoCContainer.Resolve<LanguagePackInstallCoordinator>();
+    private bool _isRefreshing;
+    private bool _isLanguagePackOperationInProgress;
+    private CultureInfo? _currentLanguage;
+
+    public SettingsAppearanceControl()
+    {
+        InitializeComponent();
+        _themeManager.ThemeApplied += ThemeManager_ThemeApplied;
+        _languagePackInstallCoordinator.Changed += LanguagePackInstallCoordinator_Changed;
+        Loaded += (_, _) => SyncLanguageInstallUi();
+        IsVisibleChanged += (_, e) =>
+        {
+            if (e.NewValue is true)
+                SyncLanguageInstallUi();
+        };
+    }
+
+    public async Task RefreshAsync()
+    {
+        _isRefreshing = true;
+
+        var languages = LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray();
+        var languageTask = LocalizationHelper.GetLanguageAsync();
+
+        _temperatureComboBox.SetItems(Enum.GetValues<TemperatureUnit>(), _settings.Store.TemperatureUnit, t => t switch
+        {
+            TemperatureUnit.C => CelsiusUnit,
+            TemperatureUnit.F => FahrenheitUnit,
+            _ => new ArgumentOutOfRangeException(nameof(t))
+        });
+        _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
+        _themeStylePresetComboBox.SetItems(Enum.GetValues<ThemeStylePreset>(), _settings.Store.ThemeStylePreset, t => t.GetDisplayName());
+
+        UpdateAccentColorPicker();
+        _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
+
+        // Show controls immediately
+        _temperatureComboBox.Visibility = Visibility.Visible;
+        _themeComboBox.Visibility = Visibility.Visible;
+        _themeStylePresetComboBox.Visibility = Visibility.Visible;
+
+        var language = await languageTask;
+        _currentLanguage = language;
+        if (languages.Length > 1)
+        {
+            _langComboBox.SetItems(languages, language, LocalizationHelper.LanguageDisplayName);
+            _langComboBox.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            _langCardControl.Visibility = Visibility.Collapsed;
+        }
+
+        if (_languagePackInstallCoordinator.IsActive)
+            SyncLanguageInstallUi();
+        else
+            UpdateLanguagePackButtons();
+
+        _isRefreshing = false;
+    }
+
+    private void ThemeManager_ThemeApplied(object? sender, EventArgs e)
+    {
+        if (!_isRefreshing)
+            UpdateAccentColorPicker();
+    }
+
+    private async void LangComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+            return;
+
+        UpdateLanguagePackButtons();
+
+        if (!_languagePackManager.IsInstalled(cultureInfo))
+        {
+            await SnackbarHelper.ShowAsync(
+                Resource.SettingsPage_Language_NotInstalled_Title,
+                Resource.SettingsPage_Language_NotInstalled_Message,
+                SnackbarType.Info);
+            return;
+        }
+
+        await LocalizationHelper.SetLanguageAsync(cultureInfo);
+        App.Current.RestartMainWindow();
+    }
+
+    private async void InstallLanguageButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isLanguagePackOperationInProgress || _languagePackInstallCoordinator.IsActive)
+            return;
+
+        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+            return;
+
+        if (_languagePackManager.IsInstalled(cultureInfo))
+            return;
+
+        await RunLanguagePackOperationAsync(
+            cultureInfo,
+            Resource.SettingsPage_Language_Installing,
+            async (_, token) =>
+            {
+                await _languagePackInstallCoordinator.InstallAsync(cultureInfo, token);
+                _currentLanguage = cultureInfo;
+                await LocalizationHelper.SetLanguageAsync(cultureInfo);
+                UpdateLanguagePackButtons();
+                App.Current.RestartMainWindow();
+            },
+            Resource.SettingsPage_Language_InstallFailed,
+            reportInstallProgress: true);
+    }
+
+    private async void UninstallLanguageButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isLanguagePackOperationInProgress)
+            return;
+
+        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+            return;
+
+        if (_languagePackManager.IsEnglish(cultureInfo) || !_languagePackManager.IsInstalled(cultureInfo))
+            return;
+
+        await RunLanguagePackOperationAsync(
+            cultureInfo,
+            Resource.SettingsPage_Language_Uninstalling,
+            async (_, _) =>
+            {
+                if (_currentLanguage is not null && _currentLanguage.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    _languagePackManager.QueueUninstall(cultureInfo);
+                    await LocalizationHelper.SetLanguageAsync(new CultureInfo("en"));
+                    App.Current.RestartMainWindow();
+                    return;
+                }
+
+                _languagePackManager.Uninstall(cultureInfo);
+                await RefreshAsync();
+            },
+            Resource.SettingsPage_Language_UninstallFailed,
+            reportInstallProgress: false);
+    }
+
+    private void TemperatureComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_temperatureComboBox.TryGetSelectedItem(out TemperatureUnit temperatureUnit))
+            return;
+
+        _settings.Store.TemperatureUnit = temperatureUnit;
+        _settings.SynchronizeStore();
+    }
+
+    private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_themeComboBox.TryGetSelectedItem(out Theme state))
+            return;
+
+        _settings.Store.Theme = state;
+        _settings.SynchronizeStore();
+        _themeManager.Apply();
+    }
+
+    private void AccentColorPicker_Changed(object sender, EventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (_settings.Store.AccentColorSource != AccentColorSource.Custom)
+            return;
+
+        _settings.Store.AccentColor = _accentColorPicker.SelectedColor.ToRGBColor();
+        _settings.SynchronizeStore();
+        _themeManager.Apply();
+    }
+
+    private void ThemeStylePresetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_themeStylePresetComboBox.TryGetSelectedItem(out ThemeStylePreset state))
+            return;
+
+        _settings.Store.ThemeStylePreset = state;
+        _settings.SynchronizeStore();
+        _themeManager.Apply();
+    }
+
+    private void AccentColorSourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_accentColorSourceComboBox.TryGetSelectedItem(out AccentColorSource state))
+            return;
+
+        _settings.Store.AccentColorSource = state;
+        _settings.SynchronizeStore();
+        UpdateAccentColorPicker();
+        _themeManager.Apply();
+    }
+
+    private void UpdateAccentColorPicker()
+    {
+        _accentColorPicker.Visibility = _settings.Store.AccentColorSource == AccentColorSource.Custom ? Visibility.Visible : Visibility.Collapsed;
+        _accentColorPicker.SelectedColor = _themeManager.GetAccentColor().ToColor();
+    }
+
+    private async Task RunLanguagePackOperationAsync(
+        CultureInfo cultureInfo,
+        string title,
+        Func<IProgress<float>?, CancellationToken, Task> operation,
+        string errorTitle,
+        bool reportInstallProgress)
+    {
+        _isLanguagePackOperationInProgress = true;
+        SetLanguagePackControlsEnabled(false);
+        ShowLanguageOperationProgress(title, reportInstallProgress);
+
+        var progress = reportInstallProgress ? new Progress<float>(ReportLanguageOperationProgress) : null;
+
+        try
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+            await operation(progress, cts.Token);
+        }
+        catch (Exception ex)
+        {
+            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error);
+            RestoreCurrentLanguageSelection();
+        }
+        finally
+        {
+            if (!_languagePackInstallCoordinator.IsActive)
+            {
+                HideLanguageOperationProgress();
+                _isLanguagePackOperationInProgress = false;
+                UpdateLanguagePackButtons();
+            }
+        }
+    }
+
+    private void LanguagePackInstallCoordinator_Changed(object? sender, EventArgs e)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.Invoke(() => LanguagePackInstallCoordinator_Changed(sender, e));
+            return;
+        }
+
+        SyncLanguageInstallUi();
+    }
+
+    private void SyncLanguageInstallUi()
+    {
+        if (_languagePackInstallCoordinator.IsActive)
+        {
+            _isLanguagePackOperationInProgress = true;
+            SetLanguagePackControlsEnabled(false);
+
+            if (_languageOperationPanel.Visibility != Visibility.Visible)
+                ShowLanguageOperationProgress(Resource.SettingsPage_Language_Installing, reportInstallProgress: true);
+
+            ReportLanguageOperationProgress(_languagePackInstallCoordinator.Progress);
+            return;
+        }
+
+        if (_isLanguagePackOperationInProgress)
+        {
+            HideLanguageOperationProgress();
+            _isLanguagePackOperationInProgress = false;
+        }
+
+        UpdateLanguagePackButtons();
+    }
+
+    private void ShowLanguageOperationProgress(string statusText, bool reportInstallProgress)
+    {
+        _languageOperationStatusText.Text = statusText;
+        _languageOperationProgressBar.Value = 0;
+        _languageOperationProgressBar.IsIndeterminate = !reportInstallProgress;
+        _languageOperationPercentText.Visibility = reportInstallProgress ? Visibility.Visible : Visibility.Collapsed;
+        _languageOperationPercentText.Text = string.Empty;
+        _languageOperationPanel.Visibility = Visibility.Visible;
+    }
+
+    private void HideLanguageOperationProgress() => _languageOperationPanel.Visibility = Visibility.Collapsed;
+
+    private void ReportLanguageOperationProgress(float value)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.Invoke(() => ReportLanguageOperationProgress(value));
+            return;
+        }
+
+        _languageOperationProgressBar.IsIndeterminate = !(value > 0);
+        _languageOperationProgressBar.Value = value;
+
+        _languageOperationStatusText.Text = value >= 0.85f
+            ? Resource.SettingsPage_Language_Installing_Applying
+            : Resource.SettingsPage_Language_Installing_Download;
+
+        if (value > 0)
+            _languageOperationPercentText.Text = string.Format(Resource.SettingsPage_Language_Installing_Percent, (int)Math.Round(value * 100));
+        else
+            _languageOperationPercentText.Text = string.Empty;
+    }
+
+    private void UpdateLanguagePackButtons()
+    {
+        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+        {
+            SetLanguagePackControlsEnabled(false);
+            return;
+        }
+
+        var isEnglish = _languagePackManager.IsEnglish(cultureInfo);
+        var isInstalled = _languagePackManager.IsInstalled(cultureInfo);
+
+        var operationInProgress = _isLanguagePackOperationInProgress || _languagePackInstallCoordinator.IsActive;
+
+        _langComboBox.IsEnabled = !operationInProgress;
+        _installLanguageButton.IsEnabled = !operationInProgress && !isEnglish && !isInstalled;
+        _uninstallLanguageButton.IsEnabled = !operationInProgress && !isEnglish && isInstalled;
+    }
+
+    private void SetLanguagePackControlsEnabled(bool isEnabled)
+    {
+        _langComboBox.IsEnabled = isEnabled;
+        _installLanguageButton.IsEnabled = isEnabled;
+        _uninstallLanguageButton.IsEnabled = isEnabled;
+    }
+
+    private void RestoreCurrentLanguageSelection()
+    {
+        if (_currentLanguage is null)
+            return;
+
+        _isRefreshing = true;
+        _langComboBox.SetItems(
+            LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray(),
+            _currentLanguage,
+            LocalizationHelper.LanguageDisplayName);
+        _isRefreshing = false;
+        UpdateLanguagePackButtons();
+    }
+
+    private static string FormatExceptionMessage(Exception exception)
+    {
+        if (exception is HttpRequestException || exception.GetBaseException() is HttpRequestException)
+            return LocalizationHelper.GetStringOrEnglish(
+                Resource.ResourceManager,
+                "SettingsPage_Language_DownloadFailed_Message",
+                "Could not download the language pack. Check your network connection, proxy, or TLS settings, then try again.",
+                Resource.Culture);
+
+        var baseException = exception.GetBaseException();
+        if (!ReferenceEquals(baseException, exception) && !string.IsNullOrWhiteSpace(baseException.Message))
+            return $"{exception.Message} ({baseException.Message})";
+
+        return exception.Message;
+    }
+}
+}

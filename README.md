@@ -58,6 +58,8 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 
 Some local paths, CLI names, and automation environment variables still use `LenovoLegionToolkit`, `llt.exe`, or `LLT_*` for compatibility during the rename.
 
+Repository project folders use `UniversalDeviceToolkit.*`; core and plugin assemblies/namespaces remain `LenovoLegionToolkit.*` for plugin ABI compatibility.
+
 #### Next steps
 
 UDT works best when it's running in the background, so go to Settings and enable _Autorun_ and _Minimize on close_. Next thing is to either disable Vantage and Hotkeys or just uninstall them. After that UDT will always run on startup and will take over all functions that were handled by Vantage and Hotkeys.
@@ -104,13 +106,13 @@ Hardware-control families:
 - Legion Go
 - LOQ
 - IdeaPad Gaming, ThinkBook, YOGA, and selected legacy Lenovo gaming families
-- Chinese variants such as R7000/R9000/Y7000/Y9000
+- Chinese variants such as R7000/R7000P/R9000/Y7000/Y7000P/Y9000, including Y7000P 2020H
 
 Basic-mode families:
 - Lenovo ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Slim, and other unmatched Lenovo models
 - Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung Galaxy Book, HUAWEI MateBook, Xiaomi/RedmiBook, HONOR MagicBook, LG gram, Framework, Panasonic TOUGHBOOK, Dynabook/Toshiba, Fujitsu, VAIO, MEDION/ERAZER, XMG/SCHENKER, Clevo/Tongfang barebones, and generic PCs
 
-Hardware-control matching is driven by `LenovoLegionToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` and online data-only device packs. Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary Lenovo hardware-control target. Some features may also work on selected 5th generation (MY2020) devices. Basic-mode vendor matching normalizes common BIOS/DMI formatting differences, so punctuation, casing, spacing, diacritics, and company suffix variants do not usually block a match.
+Hardware-control matching is driven by `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` and online data-only device packs. Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary Lenovo hardware-control target. Some features may also work on selected 5th generation (MY2020) devices. Basic-mode vendor matching normalizes common BIOS/DMI formatting differences, so punctuation, casing, spacing, diacritics, and company suffix variants do not usually block a match.
 
 If UDT starts in basic mode, it is doing that intentionally to avoid showing unsupported hardware controls. You can still use plugins and general system tools, and you can contribute logs or device-pack data for broader support.
 
@@ -366,7 +368,7 @@ CLI does not need to be ran as Administrator.
 
 UDT supports a comprehensive plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically with full UI support.
 
-Official plugins for UDT are maintained in the separate [LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins) repository, which keeps its existing name during the transition. That repository contains plugin source code, manifests, release metadata, and integration-specific assets that are distributed through the Plugin Extensions page.
+Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository. That repository contains plugin source code, manifests, release metadata, and integration-specific assets that are distributed through the Plugin Extensions page.
 
 ### Core Features
 
@@ -658,10 +660,10 @@ The more info you add, the better the app will get over time. If anything seems 
 UDT localization is managed through Crowdin with a repository-level config at `crowdin.yml`.
 
 - Source files: neutral `Resource.resx` in four modules:
-  - `LenovoLegionToolkit.WPF/Resources`
-  - `LenovoLegionToolkit.Lib/Resources`
-  - `LenovoLegionToolkit.Lib.Automation/Resources`
-  - `LenovoLegionToolkit.Lib.Macro/Resources`
+  - `UniversalDeviceToolkit.WPF/Resources`
+  - `UniversalDeviceToolkit.Lib/Resources`
+  - `UniversalDeviceToolkit.Lib.Automation/Resources`
+  - `UniversalDeviceToolkit.Lib.Macro/Resources`
 - Target files: `Resource.<locale>.resx` beside each source file.
 - Locale mapping is defined in `crowdin.yml` (for example `zh-CN -> zh-hans`, `zh-TW -> zh-hant`, `pt-BR -> pt-br`).
 
