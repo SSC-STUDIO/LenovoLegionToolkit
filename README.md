@@ -51,7 +51,7 @@ Please be patient and read through this readme carefully - it contains important
 
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
 
-- **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest).
+- **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). v4.0.0 is published as a pre-release preview while multi-vendor basic mode and the Universal Device Toolkit rebrand continue to stabilize.
 - **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
@@ -694,10 +694,12 @@ Additional documentation is available in the `Docs/` directory:
 
 ### Screenshots
 
+Captured at **1300×850** logical window size via `Tools/VisualRegression.Smoke` (IPC render; pixel dimensions follow Windows display scale). README images are displayed at 700 px width.
+
 | File | Description |
 |------|-------------|
-| `Assets/Screenshot_main.png` | Main application interface |
-| `Assets/Screenshot_zh-hans.png` | Chinese localization interface |
+| `Assets/Screenshot_main.png` | Main application interface (English, Dark theme) |
+| `Assets/Screenshot_zh-hans.png` | Chinese localization interface (Dark theme) |
 
 ### Troubleshooting
 

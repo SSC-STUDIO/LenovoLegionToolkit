@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.0.0-preview] - 2026-05-26
+### Improved
+- 刷新 v4.0.0 README 截图：统一 1300×850 逻辑窗口与 IPC 截图流程，并补充 DEPLOYMENT 分辨率说明 / Refreshed v4.0.0 README screenshots at the standard 1300×850 logical window via IPC capture and documented the resolution workflow in DEPLOYMENT.md
+
+## [4.0.0] - 2026-05-26
 
 ### Added
 - Added a local device-support simulation matrix for ASUS, MECHREVO/Mechanical Revolution, HP, Dell, Acer, Xiaomi, and Huawei machine profiles.

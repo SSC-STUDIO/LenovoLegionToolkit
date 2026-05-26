@@ -7,7 +7,7 @@
 
 ---
 
-Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩托罗拉游戏设备打造的轻量化 Lenovo Vantage 替代方案，也为其他电脑提供通用基础模式，可提供更直接、更可控的硬件调校体验。
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩托罗拉游戏设备打造的轻量化 Lenovo Vantage 替代方案，也为 ASUS、机械革命、戴尔、惠普、宏碁、小米、华为等常见 PC 提供基础模式，可提供更直接、更可控的硬件调校与插件扩展体验。
 
 插件扩展是本项目的核心能力之一。你可以在“插件扩展”页面直接安装、更新、配置、打开和卸载插件，按需扩展工具与工作流，而不必让主程序持续膨胀。
 
@@ -46,7 +46,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩�
 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版安装包。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版安装包。v4.0.0 目前以预发布预览形式提供，用于验证多厂商基础模式与 UDT 品牌迁移。
 - **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
 - **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。
 - **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。

@@ -80,13 +80,13 @@ internal static partial class Program
             Directory.CreateDirectory(appDataDirectory);
             Directory.CreateDirectory(pluginsDirectory);
 
-            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle);
+            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle, options.Language);
             SeedPluginStoreCache(repoRoot, appDataDirectory);
 
             _pipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(outputRoot)}-{Environment.ProcessId}";
 
             var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
-            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(sandboxRoot), options.KeepUnsupportedNavigationItems);
+            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(outputRoot), options.KeepUnsupportedNavigationItems);
             _processId = process.Id;
 
             Console.WriteLine($"[visual-smoke] Process: {_processId}");
@@ -98,6 +98,18 @@ internal static partial class Program
             TryWaitForInputIdle(process, 10_000);
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(90));
             NormalizeWindow(mainWindow);
+            WaitForIpcReady(TimeSpan.FromSeconds(30));
+
+            if (options.ReadmeScreenshots)
+            {
+                WaitForAnimationsToComplete();
+                CapturePage(currentDirectory, mainWindow, "dashboard");
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
 
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
             CaptureNavigationSidebarStates(currentDirectory, mainWindow);
@@ -447,6 +459,7 @@ internal static partial class Program
         if (!TryCaptureWindowToFileViaIpc(windowHandle, outputPath, label))
             CaptureWindowFromScreen(windowHandle, outputPath);
 
+        AssertCaptureDimensions(outputPath, label);
         AssertThemeSurface(outputPath, label);
 
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
@@ -455,6 +468,19 @@ internal static partial class Program
 
         Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
+    }
+
+    private static void AssertCaptureDimensions(string outputPath, string label)
+    {
+        using var bitmap = new Bitmap(outputPath);
+        if (bitmap.Width < MinWindowWidth || bitmap.Height < MinWindowHeight)
+        {
+            throw new InvalidOperationException(
+                $"Screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}). Expected at least {MinWindowWidth}x{MinWindowHeight}. " +
+                $"Ensure IPC capture succeeded and the main window was normalized to {WindowWidth}x{WindowHeight}.");
+        }
+
+        Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {WindowWidth}x{WindowHeight})");
     }
 
     private static void AssertThemeSurface(string outputPath, string label)
@@ -977,31 +1003,68 @@ internal static partial class Program
         }
     }
 
-    private static bool TryCaptureWindowToFileViaIpc(int windowHandle, string outputPath, string label)
+    private static void WaitForIpcReady(TimeSpan timeout)
     {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            if (TrySendIpcRequest(IpcRequest.OperationType.GetAppStatus, out var response) && response?.Success == true)
+            {
+                Console.WriteLine("[visual-smoke] IPC ready.");
+                return;
+            }
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException($"Timed out waiting for IPC readiness on pipe '{_pipeName}'.");
+    }
+
+    private static bool TrySendIpcRequest(IpcRequest.OperationType operation, out IpcResponse? response, string? name = null, string? value = null)
+    {
+        response = null;
+
         try
         {
             using var pipe = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut, PipeOptions.None);
-            pipe.Connect(3000);
+            pipe.Connect(5000);
             pipe.ReadMode = PipeTransmissionMode.Message;
 
             var request = new IpcRequest
             {
-                Operation = IpcRequest.OperationType.CaptureWindowVisual,
-                Name = windowHandle.ToString(CultureInfo.InvariantCulture),
-                Value = outputPath
+                Operation = operation,
+                Name = name,
+                Value = value
             };
 
             WritePipeObject(pipe, request);
-            var response = ReadPipeObject<IpcResponse>(pipe);
-            if (response?.Success == true && File.Exists(outputPath))
-                return true;
-
-            Console.WriteLine($"[visual-smoke] IPC capture skipped for {label}: {response?.Message ?? "unknown error"}");
+            response = ReadPipeObject<IpcResponse>(pipe);
+            return response?.Success == true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[visual-smoke] IPC capture unavailable for {label}: {ex.Message}");
+            Console.WriteLine($"[visual-smoke] IPC request '{operation}' unavailable: {ex.Message}");
+            return false;
+        }
+    }
+
+    private static bool TryCaptureWindowToFileViaIpc(int windowHandle, string outputPath, string label)
+    {
+        var handleValue = windowHandle.ToString(CultureInfo.InvariantCulture);
+        for (var attempt = 1; attempt <= 5; attempt++)
+        {
+            if (TrySendIpcRequest(
+                    IpcRequest.OperationType.CaptureWindowVisual,
+                    out var response,
+                    handleValue,
+                    outputPath) &&
+                File.Exists(outputPath))
+            {
+                return true;
+            }
+
+            Console.WriteLine($"[visual-smoke] IPC capture attempt {attempt}/5 failed for {label}: {response?.Message ?? "unknown error"}");
+            Thread.Sleep(500);
         }
 
         return false;
@@ -1169,7 +1232,7 @@ internal static partial class Program
         return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
     }
 
-    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle)
+    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle, string language)
     {
         var baselineAppData = Path.Combine(repoRoot, "Build", "wpf-navigation-smoke-2026-05-08", "sandbox", "appdata");
         CopyIfExists(Path.Combine(baselineAppData, "settings.json"), Path.Combine(appDataDirectory, "settings.json"));
@@ -1202,8 +1265,18 @@ internal static partial class Program
         File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(JsonOptions));
 
         var langPath = Path.Combine(appDataDirectory, "lang");
-        if (!File.Exists(langPath))
-            File.WriteAllText(langPath, "en");
+        File.WriteAllText(langPath, string.IsNullOrWhiteSpace(language) ? "en" : language);
+
+        var deviceSetupPath = Path.Combine(appDataDirectory, "device-setup");
+        if (!File.Exists(deviceSetupPath))
+        {
+            File.WriteAllLines(deviceSetupPath,
+            [
+                "devicePackId=",
+                "basicMode=false",
+                $"confirmedAtUtc={DateTimeOffset.UtcNow:O}"
+            ]);
+        }
     }
 
     private static void UpdateSandboxTheme(string theme)
@@ -1612,13 +1685,15 @@ internal static partial class Program
         string Configuration,
         string Theme,
         string ThemeStyle,
+        string Language,
         bool PluginOnly,
         bool SettingsOnly,
         string? SwitchTheme,
         bool KeepApp,
         bool KeepUnsupportedNavigationItems,
         bool ExpectKeyboardNavigation,
-        bool NavigationSidebarOnly)
+        bool NavigationSidebarOnly,
+        bool ReadmeScreenshots)
     {
         public static SmokeOptions Parse(IReadOnlyList<string> args)
         {
@@ -1628,14 +1703,16 @@ internal static partial class Program
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
             var theme = ReadOption(args, "--theme") ?? "Dark";
             var themeStyle = ReadOption(args, "--theme-style") ?? "Default";
+            var language = ReadOption(args, "--lang") ?? "en";
             var switchTheme = ReadOption(args, "--switch-theme");
             var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
             var navigationSidebarOnly = args.Contains("--navigation-sidebar-only", StringComparer.OrdinalIgnoreCase);
+            var readmeScreenshots = args.Contains("--readme-screenshots", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation, navigationSidebarOnly);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

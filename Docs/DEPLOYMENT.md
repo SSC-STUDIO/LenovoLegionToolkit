@@ -54,7 +54,7 @@ Key configurations in `Directory.Build.props`:
 <Nullable>enable</Nullable>
 <OutputType>WinExe</OutputType>
 <AssemblyName>LenovoLegionToolkit</AssemblyName>
-<Version>3.x.x</Version>
+<Version>4.x.x</Version>
 ```
 
 ## Build Commands
@@ -127,6 +127,46 @@ dotnet test --filter "TestCategory=Integration"
 dotnet run --project UniversalDeviceToolkit.PerformanceTest/ \
     --configuration Release
 ```
+
+### README Screenshot Refresh
+
+Regenerate repository README screenshots on an interactive Windows desktop session after major UI changes.
+
+**Target resolution**
+
+| Setting | Value |
+|---------|-------|
+| Main window (logical) | 1300×850 px — enforced by `Tools/VisualRegression.Smoke` (`WindowWidth` / `WindowHeight`) |
+| Capture method | In-app IPC `CaptureWindowVisual` (preferred; DPI-aware WPF render) |
+| Expected pixel size | Logical size × Windows display scale (1300×850 at 100% DPI; ~1625×1063 at 125% DPI) |
+| README display width | 700 px (`width="700"` in README markdown) |
+
+All README screenshots must use the same window size and capture method so aspect ratio and UI density stay consistent.
+
+```powershell
+dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release
+
+dotnet run --project Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release -- `
+  --repo-root . `
+  --output-dir Build/readme-screenshots-en `
+  --configuration Release `
+  --theme Dark `
+  --readme-screenshots
+
+Copy-Item Build/readme-screenshots-en/current/*dashboard*.png Assets/Screenshot_main.png -Force
+
+dotnet run --project Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release -- `
+  --repo-root . `
+  --output-dir Build/readme-screenshots-zh `
+  --configuration Release `
+  --theme Dark `
+  --lang zh-hans `
+  --readme-screenshots
+
+Copy-Item Build/readme-screenshots-zh/current/*dashboard*.png Assets/Screenshot_zh-hans.png -Force
+```
+
+Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
 
 ### Manual Testing Checklist
 

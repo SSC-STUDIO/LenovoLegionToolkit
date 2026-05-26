@@ -180,7 +180,7 @@ jobs:
         )
 
         ./Scripts/New-ReleaseNotes.ps1 `
-          -Version $env:VERSION `
+          -Version $env:BUILD_VERSION `
           -ChangelogPath 'CHANGELOG.md' `
           -AssetNames $assetNames `
           -ProductName 'Universal Device Toolkit' `
