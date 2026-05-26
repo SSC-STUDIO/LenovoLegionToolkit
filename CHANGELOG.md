@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-05-26
+
 ### Added
 - Added a local device-support simulation matrix for ASUS, MECHREVO/Mechanical Revolution, HP, Dell, Acer, Xiaomi, and Huawei machine profiles.
 - Added explicit MECHREVO basic-mode device pack matching alongside the existing Clevo/Tongfang fallback.
