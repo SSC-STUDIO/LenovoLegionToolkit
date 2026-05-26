@@ -87,6 +87,7 @@ public class PluginInstallationService
             Directory.CreateDirectory(Path.GetDirectoryName(targetDir)!);
             Directory.Move(tempDir, targetDir);
             TryStageCanonicalPluginSharedAssembly(targetDir);
+            RemovePluginSdkPayloadFiles(targetDir);
 
             // Validate the installed plugin
             if (!await ValidatePluginAsync(targetDir).ConfigureAwait(false))
@@ -347,6 +348,24 @@ public class PluginInstallationService
         }
     }
 
+    private static void RemovePluginSdkPayloadFiles(string rootDirectory)
+    {
+        if (!Directory.Exists(rootDirectory))
+            return;
+
+        foreach (var file in Directory.GetFiles(rootDirectory, "LenovoLegionToolkit.Plugins.SDK.dll", SearchOption.AllDirectories))
+        {
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to remove plugin SDK payload file {file}: {ex.Message}", ex);
+            }
+        }
+    }
     private static void TryStageCanonicalPluginSharedAssembly(string pluginDirectory)
     {
         var sourceCandidates = new[]
