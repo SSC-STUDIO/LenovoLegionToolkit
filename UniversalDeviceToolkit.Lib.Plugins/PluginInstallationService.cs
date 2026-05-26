@@ -87,7 +87,6 @@ public class PluginInstallationService
             Directory.CreateDirectory(Path.GetDirectoryName(targetDir)!);
             Directory.Move(tempDir, targetDir);
             TryStageCanonicalPluginSharedAssembly(targetDir);
-            TryStageCanonicalPluginSdkAssembly(targetDir);
 
             // Validate the installed plugin
             if (!await ValidatePluginAsync(targetDir).ConfigureAwait(false))
@@ -322,7 +321,8 @@ public class PluginInstallationService
     private static bool ShouldSkipPluginPayloadFile(string filePath)
     {
         var fileName = Path.GetFileName(filePath);
-        return fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+        return fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void RemoveSharedRuntimePayloadFiles(string rootDirectory)
@@ -367,29 +367,6 @@ public class PluginInstallationService
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to stage canonical plugin shared runtime into {pluginDirectory}: {ex.Message}", ex);
-        }
-    }
-
-    private static void TryStageCanonicalPluginSdkAssembly(string pluginDirectory)
-    {
-        var sourceCandidates = new[]
-        {
-            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.SDK.dll"),
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")
-        };
-
-        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
-        if (string.IsNullOrWhiteSpace(sourcePath))
-            return;
-
-        try
-        {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll"), overwrite: true);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to stage canonical plugin SDK runtime into {pluginDirectory}: {ex.Message}", ex);
         }
     }
 
