@@ -75,21 +75,103 @@ public partial class CustomMouseSettingsControl : UserControl
         AutomationProperties.SetAutomationId(_cursorThemeValueTextBlock, "CustomMouseCursorThemeText");
         _pointerSpeedValueLabel = CreateFallbackValueTextBlock();
 
-        var root = new StackPanel { Margin = new Thickness(20, 10, 20, 18) };
+        var root = new StackPanel { Margin = new Thickness(20, 14, 20, 18) };
         AutomationProperties.SetAutomationId(root, "CustomMouseSettingsRoot");
 
-        var summaryStrip = CreateFallbackSurface(new Thickness(14, 12, 14, 10), new Thickness(0, 0, 0, 12));
-        var summaryPanel = new WrapPanel { VerticalAlignment = VerticalAlignment.Center };
-        summaryPanel.Children.Add(CreateFallbackMetric(CustomMouseText.PointerPreviewLabel, _pointerPreviewValueTextBlock));
-        summaryPanel.Children.Add(CreateFallbackMetric(CustomMouseText.ButtonLayoutLabel, _buttonLayoutValueTextBlock));
-        summaryPanel.Children.Add(CreateFallbackMetric(CustomMouseText.CursorThemeStatusLabel, _cursorThemeValueTextBlock));
-        summaryStrip.Child = summaryPanel;
-        root.Children.Add(summaryStrip);
+        var overviewCard = CreateFallbackSurface(new Thickness(18, 16, 18, 16), new Thickness(0, 0, 0, 14));
+        var overviewGrid = new Grid();
+        overviewGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        overviewGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        overviewGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        var pointerCard = CreateFallbackSurface(new Thickness(16), new Thickness(0, 0, 0, 12));
+        var overviewIcon = CreateFallbackIconBadge(Wpf.Ui.Controls.SymbolRegular.Cursor24);
+        Grid.SetColumn(overviewIcon, 0);
+        overviewGrid.Children.Add(overviewIcon);
+
+        var overviewTextPanel = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+        var overviewTitle = new TextBlock
+        {
+            Text = CustomMouseText.SettingsOverviewTitle,
+            FontSize = 16,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap
+        };
+        overviewTitle.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
+        overviewTextPanel.Children.Add(overviewTitle);
+        overviewTextPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.WindowsSettingsDescription, new Thickness(0, 4, 0, 0)));
+        Grid.SetColumn(overviewTextPanel, 1);
+        overviewGrid.Children.Add(overviewTextPanel);
+
+        var statusPill = new Border
+        {
+            Padding = new Thickness(10, 6, 10, 6),
+            Margin = new Thickness(18, 0, 0, 0),
+            CornerRadius = new CornerRadius(8),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        statusPill.SetResourceReference(Border.BackgroundProperty, "ControlFillColorSecondaryBrush");
+
+        var statusPillPanel = new StackPanel { Orientation = Orientation.Horizontal };
+        _statusIcon = new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24,
+            FontSize = 15,
+            Margin = new Thickness(0, 0, 6, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = ResolveBrush("SystemFillColorSuccessBrush", Brushes.Green)
+        };
+        statusPillPanel.Children.Add(_statusIcon);
+
+        var readyText = new TextBlock
+        {
+            Text = CustomMouseText.ProfileReady,
+            FontSize = 12,
+            FontWeight = FontWeights.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        readyText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
+        statusPillPanel.Children.Add(readyText);
+        statusPill.Child = statusPillPanel;
+        Grid.SetColumn(statusPill, 2);
+        overviewGrid.Children.Add(statusPill);
+        overviewCard.Child = overviewGrid;
+        root.Children.Add(overviewCard);
+
+        var metricsGrid = new Grid { Margin = new Thickness(0, 0, 0, 14) };
+        metricsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        metricsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(12) });
+        metricsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        metricsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(12) });
+        metricsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var pointerMetric = CreateFallbackMetric(CustomMouseText.PointerPreviewLabel, _pointerPreviewValueTextBlock);
+        Grid.SetColumn(pointerMetric, 0);
+        metricsGrid.Children.Add(pointerMetric);
+
+        var buttonMetric = CreateFallbackMetric(CustomMouseText.ButtonLayoutLabel, _buttonLayoutValueTextBlock);
+        Grid.SetColumn(buttonMetric, 2);
+        metricsGrid.Children.Add(buttonMetric);
+
+        var cursorMetric = CreateFallbackMetric(CustomMouseText.CursorThemeStatusLabel, _cursorThemeValueTextBlock);
+        Grid.SetColumn(cursorMetric, 4);
+        metricsGrid.Children.Add(cursorMetric);
+        root.Children.Add(metricsGrid);
+
+        var settingsGrid = new Grid { Margin = new Thickness(0, 0, 0, 14) };
+        settingsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        settingsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
+        settingsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var pointerCard = CreateFallbackSurface(new Thickness(18, 16, 18, 16), new Thickness(0));
         var pointerPanel = new StackPanel();
-        pointerPanel.Children.Add(CreateFallbackSectionTitle(CustomMouseText.WindowsSettingsTitle));
-        pointerPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.WindowsSettingsDescription, new Thickness(0, 4, 0, 14)));
+        var pointerHeader = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 14)
+        };
+        pointerHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Cursor24, 18, new Thickness(0, 0, 10, 0)));
+        pointerHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.WindowsSettingsTitle));
+        pointerPanel.Children.Add(pointerHeader);
 
         var speedHeader = new Grid();
         speedHeader.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
@@ -98,45 +180,74 @@ public partial class CustomMouseSettingsControl : UserControl
         Grid.SetColumn(_pointerSpeedValueLabel, 1);
         speedHeader.Children.Add(_pointerSpeedValueLabel);
         pointerPanel.Children.Add(speedHeader);
+        _pointerSpeedSlider.Margin = new Thickness(0, 10, 0, 0);
         pointerPanel.Children.Add(_pointerSpeedSlider);
-        pointerPanel.Children.Add(_swapButtonsCheckBox);
-        pointerCard.Child = pointerPanel;
-        root.Children.Add(pointerCard);
 
-        var cursorCard = CreateFallbackSurface(new Thickness(16), new Thickness(0, 0, 0, 12));
+        _swapButtonsCheckBox.Margin = new Thickness(0);
+        var swapSurface = CreateFallbackSurface(new Thickness(12, 10, 12, 10), new Thickness(0, 18, 0, 0));
+        swapSurface.SetResourceReference(Border.BackgroundProperty, "ControlFillColorSecondaryBrush");
+        swapSurface.Child = _swapButtonsCheckBox;
+        pointerPanel.Children.Add(swapSurface);
+        pointerCard.Child = pointerPanel;
+        Grid.SetColumn(pointerCard, 0);
+        settingsGrid.Children.Add(pointerCard);
+
+        var cursorCard = CreateFallbackSurface(new Thickness(18, 16, 18, 16), new Thickness(0));
         var cursorPanel = new StackPanel();
-        cursorPanel.Children.Add(CreateFallbackSectionTitle(CustomMouseText.CursorThemeModeLabel));
-        cursorPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.CursorHint, new Thickness(0, 4, 0, 12)));
-        cursorPanel.Children.Add(CreateFallbackLabel(CustomMouseText.CursorThemeModeLabel));
+        var cursorHeader = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 10)
+        };
+        cursorHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.PaintBrush24, 18, new Thickness(0, 0, 10, 0)));
+        cursorHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.CursorThemeModeLabel));
+        cursorPanel.Children.Add(cursorHeader);
+        cursorPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.CursorHint, new Thickness(0)));
+        _cursorThemeModeComboBox.Margin = new Thickness(0, 14, 0, 0);
         cursorPanel.Children.Add(_cursorThemeModeComboBox);
 
         var cursorActionsPanel = new WrapPanel
         {
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 12, 0, 0)
+            Margin = new Thickness(0, 14, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Right
         };
-        cursorActionsPanel.Children.Add(CreateFallbackButton(CustomMouseText.ApplyCursorThemeNowButton, "ApplyCursorThemeNowButton", ApplyCursorThemeNowButton_Click, false));
-        cursorActionsPanel.Children.Add(CreateFallbackButton(CustomMouseText.RestoreWindowsDefaultButton, "RestoreWindowsDefaultButton", RestoreWindowsDefaultButton_Click, false));
+        var applyCursorButton = CreateFallbackButton(CustomMouseText.ApplyCursorThemeNowButton, "ApplyCursorThemeNowButton", ApplyCursorThemeNowButton_Click, false);
+        applyCursorButton.Margin = new Thickness(0, 0, 8, 0);
+        applyCursorButton.MinWidth = 196;
+        cursorActionsPanel.Children.Add(applyCursorButton);
+        var restoreCursorButton = CreateFallbackButton(CustomMouseText.RestoreWindowsDefaultButton, "RestoreWindowsDefaultButton", RestoreWindowsDefaultButton_Click, false);
+        restoreCursorButton.Margin = new Thickness(0);
+        restoreCursorButton.MinWidth = 196;
+        cursorActionsPanel.Children.Add(restoreCursorButton);
         cursorPanel.Children.Add(cursorActionsPanel);
         cursorCard.Child = cursorPanel;
-        root.Children.Add(cursorCard);
+        Grid.SetColumn(cursorCard, 2);
+        settingsGrid.Children.Add(cursorCard);
+        root.Children.Add(settingsGrid);
 
-        var actionBar = CreateFallbackSurface(new Thickness(14, 12, 14, 12), new Thickness(0));
+        var actionBar = CreateFallbackSurface(new Thickness(16, 12, 16, 12), new Thickness(0));
         var actionGrid = new Grid();
-        actionGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        actionGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        Grid.SetRow(_statusTextBlock, 0);
+        actionGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        actionGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        actionGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        var infoIcon = CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Info24, 16, new Thickness(0, 1, 10, 0));
+        infoIcon.Foreground = ResolveBrush("TextFillColorTertiaryBrush", SystemColors.ControlTextBrush);
+        Grid.SetColumn(infoIcon, 0);
+        actionGrid.Children.Add(infoIcon);
+
+        Grid.SetColumn(_statusTextBlock, 1);
         actionGrid.Children.Add(_statusTextBlock);
 
         var mainActionsPanel = new WrapPanel
         {
             HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 10, 0, 0)
+            Margin = new Thickness(18, 0, 0, 0)
         };
         mainActionsPanel.Children.Add(CreateFallbackButton(CustomMouseText.SyncFromWindowsButton, "SyncFromWindowsButton", SyncFromWindowsButton_Click, false));
         mainActionsPanel.Children.Add(CreateFallbackButton(CustomMouseText.ReloadButton, "ReloadButton", ReloadButton_Click, false));
         mainActionsPanel.Children.Add(CreateFallbackButton(CustomMouseText.ApplyToWindowsButton, "ApplyToWindowsButton", ApplyButton_Click, true));
-        Grid.SetRow(mainActionsPanel, 1);
+        Grid.SetColumn(mainActionsPanel, 2);
         actionGrid.Children.Add(mainActionsPanel);
         actionBar.Child = actionGrid;
         root.Children.Add(actionBar);
@@ -217,25 +328,61 @@ public partial class CustomMouseSettingsControl : UserControl
         return textBlock;
     }
 
+    private static Border CreateFallbackIconBadge(Wpf.Ui.Controls.SymbolRegular symbol)
+    {
+        var icon = new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = symbol,
+            FontSize = 21,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = Brushes.White
+        };
+
+        return new Border
+        {
+            Width = 42,
+            Height = 42,
+            Margin = new Thickness(0, 0, 16, 0),
+            CornerRadius = new CornerRadius(8),
+            Background = ResolveBrush("SystemAccentColorPrimaryBrush", SystemColors.HighlightBrush),
+            Child = icon
+        };
+    }
+
+    private static Wpf.Ui.Controls.SymbolIcon CreateFallbackSymbol(
+        Wpf.Ui.Controls.SymbolRegular symbol,
+        double fontSize,
+        Thickness margin)
+    {
+        return new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = symbol,
+            FontSize = fontSize,
+            Margin = margin,
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = ResolveBrush("SystemAccentColorPrimaryBrush", SystemColors.HighlightBrush)
+        };
+    }
+
     private static Border CreateFallbackMetric(string label, TextBlock valueTextBlock)
     {
-        valueTextBlock.Margin = new Thickness(6, 0, 0, 0);
+        valueTextBlock.Margin = new Thickness(0, 5, 0, 0);
+        valueTextBlock.MinWidth = 0;
+        valueTextBlock.TextAlignment = TextAlignment.Left;
+        valueTextBlock.FontSize = 15;
 
-        var panel = new StackPanel { Orientation = Orientation.Horizontal };
-        panel.Children.Add(CreateFallbackBodyText(label, new Thickness(0)));
+        var labelText = CreateFallbackBodyText(label, new Thickness(0));
+        labelText.FontSize = 11;
+        labelText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
+
+        var panel = new StackPanel();
+        panel.Children.Add(labelText);
         panel.Children.Add(valueTextBlock);
 
-        var chip = new Border
-        {
-            Child = panel,
-            Padding = new Thickness(10, 6, 10, 6),
-            Margin = new Thickness(0, 0, 8, 6),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1)
-        };
-        chip.SetResourceReference(Border.BackgroundProperty, "ControlFillColorSecondaryBrush");
-        chip.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
-        return chip;
+        var card = CreateFallbackSurface(new Thickness(14, 12, 14, 12), new Thickness(0));
+        card.Child = panel;
+        return card;
     }
 
     private static Button CreateFallbackButton(string text, string automationId, RoutedEventHandler handler, bool primary)
