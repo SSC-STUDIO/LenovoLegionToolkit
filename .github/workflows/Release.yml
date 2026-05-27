@@ -190,13 +190,26 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         name: Universal Device Toolkit v${{ env.VERSION }}
-        body_path: release-assets/release-notes.md
         files: |
           release-assets/*.exe
           release-assets/*.zip
           release-assets/*_SHA256.txt
         fail_on_unmatched_files: true
         prerelease: ${{ contains(github.ref_name, '-') }}
+
+    - name: Apply release notes (UTF-8)
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $notesPath = Join-Path $PWD "$env:RELEASE_OUTPUT/release-notes.md"
+        if (-not (Test-Path -LiteralPath $notesPath)) {
+          throw "Release notes file not found at $notesPath"
+        }
+
+        gh release edit "${{ github.ref_name }}" `
+          --repo "${{ github.repository }}" `
+          --notes-file $notesPath
 
     - name: Setup Pages
       uses: actions/configure-pages@v6

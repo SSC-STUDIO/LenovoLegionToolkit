@@ -25,7 +25,8 @@ function Get-ReleaseSection {
     [string]$ReleaseVersion
   )
 
-  $lines = Get-Content -LiteralPath $Path
+  # Always read changelog as UTF-8 (no BOM). Default Get-Content encoding is locale-dependent on Windows.
+  $lines = [System.IO.File]::ReadAllLines($Path, [System.Text.UTF8Encoding]::new($false))
   $versionPattern = '^## \[' + [regex]::Escape($ReleaseVersion) + '\] - (?<date>\d{4}-\d{2}-\d{2})$'
   $startIndex = -1
   $endIndex = $lines.Count
