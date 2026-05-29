@@ -51,8 +51,12 @@ public class DashboardGroupControl : UserControl
             {
                 try
                 {
-                    var itemControls = await item.GetControlAsync();
+                    var itemControls = await item.GetControlAsync().WaitAsync(TimeSpan.FromSeconds(6));
                     controls.AddRange(itemControls);
+                }
+                catch (TimeoutException ex)
+                {
+                    Log.Instance.Error($"Timed out creating dashboard control for {item}: {ex.Message}");
                 }
                 catch (Exception ex)
                 {

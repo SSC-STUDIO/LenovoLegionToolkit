@@ -53,16 +53,23 @@ public partial class App
 
         private const string MUTEX_NAME = AppIdentity.CompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = AppIdentity.CompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string ACK_EVENT_NAME = AppIdentity.CompactName + "_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string LEGACY_MUTEX_NAME = AppIdentity.LegacyCompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string LEGACY_EVENT_NAME = AppIdentity.LegacyCompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string LEGACY_ACK_EVENT_NAME = AppIdentity.LegacyCompactName + "_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE = "LLT_SINGLE_INSTANCE_KEY";
     private const string SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "LLT_SMOKE_AUTOMATION";
+    private const string UDT_SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "UDT_SMOKE_AUTOMATION";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
+    private const int SINGLE_INSTANCE_ACTIVATION_TIMEOUT_MS = 1200;
+    private const string RECOVERY_SINGLE_INSTANCE_SUFFIX = "_Recovery";
 
     private Mutex? _singleInstanceMutex;
     private Mutex? _legacySingleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
     private EventWaitHandle? _legacySingleInstanceWaitHandle;
+    private EventWaitHandle? _singleInstanceAckWaitHandle;
+    private EventWaitHandle? _legacySingleInstanceAckWaitHandle;
     private bool _singleInstanceMutexOwned;
     private bool _legacySingleInstanceMutexOwned;
     private Thread? _singleInstanceThread;
@@ -109,7 +116,11 @@ public partial class App
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Flags: {flags}");
 
-        EnsureSingleInstance();
+        if (!EnsureSingleInstance())
+        {
+            ExitDuplicateInstance();
+            return;
+        }
 
         await LocalizationHelper.SetLanguageAsync(true, CreateStartupLanguagePackManager(flags));
 
@@ -684,6 +695,10 @@ public partial class App
                 _singleInstanceWaitHandle = null;
                 _legacySingleInstanceWaitHandle?.Dispose();
                 _legacySingleInstanceWaitHandle = null;
+                _singleInstanceAckWaitHandle?.Dispose();
+                _singleInstanceAckWaitHandle = null;
+                _legacySingleInstanceAckWaitHandle?.Dispose();
+                _legacySingleInstanceAckWaitHandle = null;
 
                 if (!_singleInstanceThread.Join(500))
                 {
@@ -766,6 +781,10 @@ public partial class App
             _singleInstanceWaitHandle = null;
             _legacySingleInstanceWaitHandle?.Dispose();
             _legacySingleInstanceWaitHandle = null;
+            _singleInstanceAckWaitHandle?.Dispose();
+            _singleInstanceAckWaitHandle = null;
+            _legacySingleInstanceAckWaitHandle?.Dispose();
+            _legacySingleInstanceAckWaitHandle = null;
         }
         catch (Exception ex)
         {
@@ -846,6 +865,9 @@ public partial class App
         try
         {
             _backgroundInitializationCancellationTokenSource?.Cancel();
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
+
             await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
             await StopPluginsAsync().ConfigureAwait(false);
@@ -1050,6 +1072,9 @@ public partial class App
 
     private static bool IsSmokeAutomationRun()
     {
+        if (string.Equals(Environment.GetEnvironmentVariable(UDT_SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE), "1", StringComparison.OrdinalIgnoreCase))
+            return true;
+
         if (string.Equals(Environment.GetEnvironmentVariable(SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE), "1", StringComparison.OrdinalIgnoreCase))
             return true;
 
@@ -1085,31 +1110,50 @@ public partial class App
     }
 
 
-    private void EnsureSingleInstance()
+    private bool EnsureSingleInstance()
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Checking for other instances...");
 
         var mutexName = ResolveSingleInstanceObjectName(MUTEX_NAME);
         var eventName = ResolveSingleInstanceObjectName(EVENT_NAME);
+        var ackEventName = ResolveSingleInstanceObjectName(ACK_EVENT_NAME);
         var legacyMutexName = ResolveSingleInstanceObjectName(LEGACY_MUTEX_NAME);
         var legacyEventName = ResolveSingleInstanceObjectName(LEGACY_EVENT_NAME);
+        var legacyAckEventName = ResolveSingleInstanceObjectName(LEGACY_ACK_EVENT_NAME);
         _singleInstanceMutex = new Mutex(true, mutexName, out var isOwned);
         _singleInstanceMutexOwned = isOwned;
         _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
+        _singleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, ackEventName);
         _legacySingleInstanceMutex = new Mutex(true, legacyMutexName, out var legacyIsOwned);
         _legacySingleInstanceMutexOwned = legacyIsOwned;
         _legacySingleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, legacyEventName);
+        _legacySingleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, legacyAckEventName);
 
         if (!isOwned || !legacyIsOwned)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Another instance running, closing...");
+                Log.Instance.Trace($"Another instance running, signaling existing instance...");
 
-            _singleInstanceWaitHandle.Set();
-            _legacySingleInstanceWaitHandle.Set();
-            Shutdown();
-            return;
+            if (SignalAndWaitForSingleInstanceActivation())
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Another instance acknowledged activation, closing...");
+
+                Shutdown();
+                return false;
+            }
+
+            if (TrySwitchToRecoverySingleInstance(mutexName, eventName, ackEventName, legacyMutexName, legacyEventName, legacyAckEventName))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Existing instance did not acknowledge activation; continuing with recovery single-instance guard.");
+            }
+            else
+            {
+                Shutdown();
+                return false;
+            }
         }
 
         _singleInstanceThread = new Thread(() =>
@@ -1134,6 +1178,18 @@ public partial class App
             Name = "SingleInstanceThread"
         };
         _singleInstanceThread.Start();
+        return true;
+    }
+
+    private static void ExitDuplicateInstance()
+    {
+        try { Log.Instance.Shutdown(); }
+        catch { /* Logging shutdown failed; duplicate instance must still exit. */ }
+
+        try { Environment.Exit(0); }
+        catch { /* Fall back to native process exit. */ }
+
+        ExitProcess(0);
     }
 
     private bool WaitForSingleInstanceSignal()
@@ -1146,7 +1202,72 @@ public partial class App
         if (handles.Length == 0)
             return false;
 
-        return WaitHandle.WaitAny(handles, 1000) != WaitHandle.WaitTimeout;
+        return WaitHandle.WaitAny(handles) != WaitHandle.WaitTimeout;
+    }
+
+    private bool SignalAndWaitForSingleInstanceActivation()
+    {
+        _singleInstanceAckWaitHandle?.Reset();
+        _legacySingleInstanceAckWaitHandle?.Reset();
+
+        _singleInstanceWaitHandle?.Set();
+        _legacySingleInstanceWaitHandle?.Set();
+
+        var handles = new[] { _singleInstanceAckWaitHandle, _legacySingleInstanceAckWaitHandle }
+            .Where(handle => handle is not null)
+            .Cast<WaitHandle>()
+            .ToArray();
+
+        return handles.Length > 0
+               && WaitHandle.WaitAny(handles, SINGLE_INSTANCE_ACTIVATION_TIMEOUT_MS) != WaitHandle.WaitTimeout;
+    }
+
+    private void SignalSingleInstanceActivationAck()
+    {
+        try { _singleInstanceAckWaitHandle?.Set(); }
+        catch { /* Activation acknowledgement is best effort. */ }
+
+        try { _legacySingleInstanceAckWaitHandle?.Set(); }
+        catch { /* Activation acknowledgement is best effort. */ }
+    }
+
+    private bool TrySwitchToRecoverySingleInstance(
+        string mutexName,
+        string eventName,
+        string ackEventName,
+        string legacyMutexName,
+        string legacyEventName,
+        string legacyAckEventName)
+    {
+        CleanupSingleInstanceResources();
+
+        var recoveryMutexName = mutexName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+        var recoveryEventName = eventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+        var recoveryAckEventName = ackEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+        var recoveryLegacyMutexName = legacyMutexName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+        var recoveryLegacyEventName = legacyEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+        var recoveryLegacyAckEventName = legacyAckEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
+
+        _singleInstanceMutex = new Mutex(true, recoveryMutexName, out var recoveryIsOwned);
+        _singleInstanceMutexOwned = recoveryIsOwned;
+        _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryEventName);
+        _singleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryAckEventName);
+        _legacySingleInstanceMutex = new Mutex(true, recoveryLegacyMutexName, out var recoveryLegacyIsOwned);
+        _legacySingleInstanceMutexOwned = recoveryLegacyIsOwned;
+        _legacySingleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryLegacyEventName);
+        _legacySingleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryLegacyAckEventName);
+
+        if (recoveryIsOwned && recoveryLegacyIsOwned)
+            return true;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Recovery single-instance guard is already owned, signaling recovery instance...");
+
+        if (!SignalAndWaitForSingleInstanceActivation() && Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Recovery instance did not acknowledge activation.");
+
+        CleanupSingleInstanceResources();
+        return false;
     }
 
     private void BringMainWindowToForegroundFromSingleInstanceThread()
@@ -1163,7 +1284,17 @@ public partial class App
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
 
-                    window.BringToForeground();
+                    SignalSingleInstanceActivationAck();
+
+                    try
+                    {
+                        window.BringToForeground();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                    }
                 }
                 else
                 {

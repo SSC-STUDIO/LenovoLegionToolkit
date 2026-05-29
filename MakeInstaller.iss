@@ -110,7 +110,7 @@ Type: filesandordirs; Name: "{app}"
 
 [Run]
 #ifndef MyAppSkipPostInstallRun
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall skipifsilent
 #endif
 
 [UninstallDelete]
@@ -154,7 +154,7 @@ Type: filesandordirs; Name: "{app}\zh-hans"
 Type: filesandordirs; Name: "{app}\zh-Hans"
 Type: filesandordirs; Name: "{app}\zh-hant"
 Type: filesandordirs; Name: "{app}\zh-Hant"
-#ifndef MyAppSkipLocalAppDataDelete
+#ifdef MyAppDeleteLocalAppData
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 #endif
 

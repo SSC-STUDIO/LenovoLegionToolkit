@@ -67,6 +67,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
         _comboBox.MinWidth = 165;
         _comboBox.Visibility = Visibility.Hidden;
         _comboBox.Margin = new(8, 0, 0, 0);
+        AutomationProperties.SetAutomationId(_comboBox, $"{GetType().Name}_ComboBox");
 
         _cardHeaderControl.Accessory = GetAccessory(_comboBox);
         _cardControl.Header = _cardHeaderControl;
@@ -167,4 +168,3 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     protected virtual TimeSpan AdditionalStateChangeDelay(T? oldValue, T? newValue) => TimeSpan.Zero;
 }
-

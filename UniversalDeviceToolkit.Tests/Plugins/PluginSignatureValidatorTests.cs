@@ -187,6 +187,38 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task ValidateAsync_AfterRemovingTrustedPackageWithDifferentCasing_ShouldRejectUnsignedFile()
+    {
+        // Arrange
+        var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+
+        var pluginDirectory = CreateTempDirectory();
+        var pluginPath = Path.Combine(pluginDirectory, "trusted-plugin.dll");
+        File.WriteAllText(pluginPath, "trusted package content");
+
+        try
+        {
+            TrustedPluginPackageStore.TrustPluginDirectory("Trusted-Plugin", pluginDirectory);
+            TrustedPluginPackageStore.Remove("trusted-plugin");
+
+            var validator = new PluginSignatureValidator(PluginSignatureSettings.Production);
+
+            // Act
+            var result = await validator.ValidateAsync(pluginPath);
+
+            // Assert
+            result.Status.Should().Be(PluginSignatureStatus.NotSigned);
+            result.IsAllowedByPolicy.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, originalAppDataOverride);
+        }
+    }
+
+    [Fact]
     public async Task ValidateAsync_WhenValidationDisabled_ShouldNotCheckFileExistence()
     {
         // Arrange

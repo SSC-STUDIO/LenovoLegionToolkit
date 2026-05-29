@@ -2345,40 +2345,9 @@
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>透明度効果を有効にする</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>クラシックメニューを無効にする</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>クラシックメニューを有効にする</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>インストール</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>スタイル設定を開く</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>デフォルトに戻す</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>ステータス: クラシックメニューがインストールされ、有効になっています</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>ステータス: インストールされていますが有効になっていません</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>ステータス: クラシックメニューがインストールされていません</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>デフォルトとクラシックのコンテキストメニュースタイルを切り替えます。</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>右クリックメニュースタイル</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>アンインストール</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>右クリックメニュースタイルを含むWindowsの外観をカスタマイズします。</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2453,36 +2422,8 @@
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>選択したアプリが削除予定に追加されました。</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>コンテキストメニューの外観をカスタマイズします。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>スタイル設定の適用に失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>設定ファイルが見つかりません。Nilesoft Shellがインストールされていることを確認してください。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>クラシックメニューの有効化に失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>shellのインストールに失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>デフォルトメニューの復元に失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exeが見つかりません。Nilesoft Shellがインストールされていることを確認してください。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>コンテキストメニューのテーマを選択します。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>コンテキストメニューの透明度効果を有効にします。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>shellのアンインストールに失敗しました。</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
     <value>選択をクリア</value>
   </data>
@@ -2648,24 +2589,6 @@
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>ファイルの表示オプション</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>デフォルトスタイルを復元し、エクスプローラーを再起動します。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>デフォルトの右クリックメニューに切り替え</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>クラシックスタイルを適用し、エクスプローラーを再起動します。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>モダンメニューに切り替え</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>shell.exeと関連ファイルを完全にアンインストールします</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>モダンなコンテキストメニューを適用</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>システムキャッシュをメモリに保持し、カーネルドライバーのページングを回避します。</value>
   </data>
@@ -2743,12 +2666,6 @@
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>エクスプローラー &amp; インターフェース</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>右クリックメニューのスタイルを変更します。</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows美化</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>システムのパフォーマンスと応答性の設定を調整します。</value>
@@ -2918,48 +2835,6 @@
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>プラグインを読み込み中...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>シェル統合</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>コンテキストメニューの美化とマウススタイルのカスタマイズを備えた拡張されたWindowsシェル統合</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>モダンコンテキストメニューを有効にする</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Nilesoft Shellを有効にして、モダンスタイルでWindowsのコンテキストメニューを美化する</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>モダンコンテキストメニューを無効にする</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Nilesoft Shellの登録を解除し、Windowsの既定のコンテキストメニューを復元する</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Windows 11カーソルスタイルを適用</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>高DPI対応のWindows 11スタイルのカーソルテーマを適用する</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>ネットワーク加速</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>ネットワーク速度と応答性を向上させるためにネットワーク設定を最適化する。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IPおよびDNSの最適化</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>接続速度と応答性を向上させるためにTCP/IPパラメーターとDNSキャッシュ設定を最適化する。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>ネットワーク構成をリセット</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>DNSキャッシュをフラッシュし、WinsockおよびTCP/IPスタックの構成をリセットしてネットワーク接続の問題を修復します。</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>さまざまなアプリケーションによって残された一時ファイルとログをクリーンアップします。</value>
   </data>
@@ -2977,12 +2852,6 @@
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>大容量ファイル</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>拡張機能を有効にする</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>ツールページでプラグインマーケットにアクセスするために拡張機能システムを有効にします。</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>アプリケーションの外観、動作、機能オプションを設定します。</value>
@@ -3395,24 +3264,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>ダウンロード中... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>ネットワーク加速</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>ヴィヴツール</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>ツール</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>リアルタイムネットワーク加速および最適化機能</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>ViVeToolを使ってWindowsの機能フラグを管理する</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>システム最適化およびユーティリティツール</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>使用可能なツールがありません。アプリケーションディレクトリ内の tools フォルダーにツールを追加してください。</value>
   </data>
@@ -3488,56 +3339,8 @@
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>例:C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>透明性を有効にする</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>コンテキストメニューの透明効果を有効にする</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>ショーのファイル拡張子</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>ファイルエクスプローラーで拡張子を表示する</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>隠しファイルを表示</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>ファイルエクスプローラーで隠しファイルやフォルダを表示する</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>クイックアクセスに開放</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>このPCではなくクイックアクセスにファイルエクスプローラーを開く</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>プレビュー画面を表示する</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>ファイルエクスプローラーにプレビューペインを表示する</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>クリーンアップするアイテムを少なくとも1つ選択してください。</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>マウスの外観</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>カスタム カーソル スタイルを適用し、システムのライト/ダーク テーマに従います。</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>テーマに沿ったカーソルスタイルを有効にします</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>現在の Windows ライト/ダーク モードを検出し、一致するカスタム カーソル スキームを適用します。</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>テーマに従うカーソルスタイルを無効にする</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>バックアップされたカーソル スキームを復元し、テーマベースのカスタム カーソル切り替えを停止します。</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

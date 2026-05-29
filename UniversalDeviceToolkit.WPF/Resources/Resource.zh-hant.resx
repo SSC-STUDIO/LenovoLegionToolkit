@@ -1303,13 +1303,6 @@
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
     <value>不再提示不兼容設備</value>
   </data>
-
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>啓用擴展</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>啓用擴展系統以訪問插件市場。</value>
-  </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>選擇顯示哪些通知彈窗。</value>
   </data>
@@ -2632,12 +2625,6 @@
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
     <value>無法完成所選操作。</value>
   </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>系統美化</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>替換部分和更改系統UI樣式。</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>資源管理器與界面</value>
   </data>
@@ -2655,12 +2642,6 @@
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
     <value>禁用佔用資源的後臺服務。</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>網絡加速</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>優化網絡設置以提升網絡速度和響應性能。</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>垃圾清理</value>
@@ -2757,18 +2738,6 @@
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
     <value>禁用廣告 ID、聚焦內容和自動建議。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP 和 DNS 優化</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>優化 TCP/IP 參數和 DNS 緩存設置，提升網絡連接速度和響應性能。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>重置網絡配置</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>刷新 DNS 緩存並重置 Winsock 和 TCP/IP 協議棧配置，修復網絡連接問題。</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
     <value>強制使用高性能電源計劃</value>
@@ -2949,90 +2918,7 @@
   <data name="CollapseAll" xml:space="preserve">
     <value>摺疊全部</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>選擇右鍵菜單的主題。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>爲右鍵菜單啓用透明效果。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>自定義右鍵菜單的外觀。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>未找到 Shell.exe。請確保已安裝 Nilesoft Shell。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>未找到配置文件。請確保已安裝 Nilesoft Shell。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>啓用經典菜單失敗。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>恢復默認菜單失敗。</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>應用樣式設置失敗。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>切換到現代菜單</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>應用經典樣式並重啓資源管理器。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>切換到默認右鍵菜單</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>恢復默認樣式並重啓資源管理器。</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>鼠標外觀</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>應用自定義光標樣式，並可跟隨系統明暗主題。</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>啓用主題跟隨光標樣式</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>根據當前 Windows 明暗模式自動應用對應的自定義光標方案。</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>禁用主題跟隨光標樣式</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>恢復備份的光標方案，並停止按系統主題自動切換。</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>應用新式右鍵菜單</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>替換系統自帶默認右鍵菜單，效果更好。</value>
-  </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Shell 集成</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>增強的 Windows Shell 集成，包含右鍵菜單美化和鼠標樣式自定義</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>啓用現代右鍵菜單</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>啓用 Nilesoft Shell 以美化 Windows 右鍵菜單，使用現代風格</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>禁用現代右鍵菜單</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>註銷 Nilesoft Shell 並恢復默認的 Windows 右鍵菜單</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>應用 Windows 11 光標樣式</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>應用 Windows 11 風格的光標主題，支持高 DPI</value>
-  </data>
+
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>電池最大充電容量。</value>
   </data>
@@ -3089,51 +2975,7 @@
     <value>啓用透明度效果</value>
   </data>
 
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>禁用經典菜單</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>啓用經典菜單</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>安裝</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>打開樣式設置</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>恢復默認</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>已安裝</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>已安裝但未啓用</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>未安裝</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>自定義右鍵菜單的外觀和行爲。</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>右鍵菜單樣式</value>
-  </data>
-
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>卸載</value>
-  </data>
-
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>自定義 Windows 外觀和行爲。</value>
   </data>
 
@@ -3151,14 +2993,6 @@
 
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
     <value>發佈者：{0}</value>
-  </data>
-
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>安裝 shell 失敗。</value>
-  </data>
-
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>卸載 shell 失敗。</value>
   </data>
 
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
@@ -3590,24 +3424,6 @@
   <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
     <value>正在處理 {0}...</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>網絡加速</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>ViVeTool</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>工具</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>實時網絡加速和優化功能</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>使用 ViVeTool 管理 Windows 功能標誌</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>系統優化和實用工具</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>當前沒有可用的工具。請在應用程序目錄下的 tools 文件夾中添加工具。</value>
   </data>
@@ -3676,36 +3492,6 @@
   </data>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>例如: C:\Drivers</value>
-  </data>
-<data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>啓用透明效果</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>爲右鍵菜單啓用透明效果</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>顯示文件擴展名</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>在文件資源管理器中顯示文件擴展名</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>顯示隱藏文件</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>在文件資源管理器中顯示隱藏的文件和文件夾</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>打開到快速訪問</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>打開文件資源管理器時默認顯示快速訪問而非此電腦</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>顯示預覽窗格</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>在文件資源管理器中顯示預覽窗格</value>
   </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>請至少選擇一個要清理的項目。</value>

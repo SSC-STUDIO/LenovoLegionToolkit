@@ -2315,40 +2315,9 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Inštalovať</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Odinštalovať</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2431,36 +2400,8 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Vybrané aplikácie naplánované na odstránenie.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Prispôsobte vzhľad kontextového menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Nepodarilo sa použiť nastavenia štýlu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Konfiguračný súbor sa nenašiel. Uistite sa, že Nilesoft Shell je nainštalovaný.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Nepodarilo sa povoliť klasické menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Nepodarilo sa nainštalovať shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Nepodarilo sa obnoviť predvolené menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe sa nenašiel. Uistite sa, že Nilesoft Shell je nainštalovaný.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Vyberte tému pre kontextové menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Povoľte efekty priehľadnosti pre kontextové menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Nepodarilo sa odinštalovať shell.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Uvoľnených {0} v {1}</value>
   </data>
@@ -2638,24 +2579,6 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Možnosti viditeľnosti súborov</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Obnoví predvolený štýl a reštartuje Prieskumník.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Prepnúť na predvolené kontextové menu pravého kliknutia</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Používa klasický štýl a reštartuje Prieskumník.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Prepnúť na moderné menu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Úplne odinštalovať shell.exe a súvisiace súbory</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Použiť Moderné Kontextové Menu</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Udržiavať systémovú cache v pamäti a vyhnúť sa stránkovaniu ovládačov jadra.</value>
   </data>
@@ -2733,12 +2656,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Prieskumník a rozhranie</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Zmeniť štýl kontextového menu po kliknutí pravým tlačidlom.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Skrášľovanie Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Upravte nastavenia výkonu a odozvy systému.</value>
@@ -2881,48 +2798,6 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Načítavajú sa pluginy...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Integrácia shellu</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Vylepšená integrácia Windows Shell s krásnym kontextovým menu a prispôsobením štýlu myši</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Povoliť Moderné Kontextové Menu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Povoliť Nilesoft Shell a vylepšiť kontextové menu Windows moderným štýlom</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Zakázať Moderné Kontextové Menu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Odregistrujte Nilesoft Shell a obnovte predvolené kontextové menu Windows</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Použiť štýl kurzora Windows 11</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Použiť kurzorovú tému Windows 11 s podporou vysokého DPI</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Zrýchlenie siete</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimalizujte nastavenia siete pre zlepšenie rýchlosti a odozvy siete.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Optimalizácia TCP/IP a DNS</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimalizujte parametre TCP/IP a nastavenia DNS cache pre zlepšenie rýchlosti a odozvy pripojenia.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Resetovať konfiguráciu siete</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Vyprázdnite DNS cache a resetujte konfiguráciu Winsock a TCP/IP zásobníka na opravu problémov s pripojením.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Odstráni dočasné súbory a záznamy zanechané rôznymi aplikáciami.</value>
   </data>
@@ -2940,12 +2815,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Veľké súbory</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Povoliť rozšírenia</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Povoliť systém rozšírení na prístup k trhu s pluginmi na stránke Nástroje.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Konfigurovať vzhľad, správanie a funkčnosť aplikácie.</value>
@@ -3394,24 +3263,6 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Sťahuje sa... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Zrýchlenie siete</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>ViveTool</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Nástroje</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Funkcie zrýchlenia a optimalizácie siete v reálnom čase</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Spravujte Windows funkčné vlajky pomocou ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Nástroje na optimalizáciu systému a utility</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Nástroje nie sú k dispozícii. Prosím pridajte nástroje do priečinka tools v adresári aplikácie.</value>
   </data>
@@ -3487,56 +3338,8 @@ Vyžaduje reštart.</value>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>napr. C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Povoliť priehľadnosť</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Povoliť efekty priehľadnosti pre kontextové menu</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Zobraziť prípony súborov</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Zobraziť prípony súborov v Prieskumníkovi súborov</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Zobraziť skryté súbory</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Zobraziť skryté súbory a priečinky v Prieskumníkovi</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Otvoriť pre rýchly prístup</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Otvoriť Prieskumníka v Rýchlom prístupe namiesto tohto počítača</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Zobraziť tablu náhľadu</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Zobraziť tablu náhľadu v Prieskumníkovi</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Vyberte aspoň jednu položku, ktorú chcete vyčistiť.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Vzhľad myši</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Použite vlastné štýly kurzora a postupujte podľa systémovej svetlej/tmavej témy.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Povoliť štýl kurzora podľa témy</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Zistite aktuálny režim Windows light / dark a použite zodpovedajúcu vlastnú schému kurzora.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Zakázať štýl kurzora podľa témy</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Obnovte zálohovanú schému kurzora a zastavte prepínanie vlastného kurzora na základe témy.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

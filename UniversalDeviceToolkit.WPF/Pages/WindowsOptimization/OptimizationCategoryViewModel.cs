@@ -35,6 +35,12 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
                 {
                     HasSettings = pluginBase.GetSettingsPage() != null;
                 }
+
+                if (!HasSettings)
+                {
+                    var capabilities = PluginUiCapabilityResolver.ResolveFromInstalledManifest(PluginId);
+                    HasSettings = capabilities.SupportsSettingsPage;
+                }
             }
             catch
             {

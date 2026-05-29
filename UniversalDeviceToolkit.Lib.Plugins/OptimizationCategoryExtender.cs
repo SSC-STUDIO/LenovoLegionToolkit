@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -11,6 +14,8 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// </summary>
 public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 {
+    private static readonly string[] ManifestFileNames = ["plugin.manifest.json", "plugin.json", "Plugin.json"];
+
     private readonly IPluginManager _pluginManager;
 
     public OptimizationCategoryExtender(IPluginManager pluginManager)
@@ -24,6 +29,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 
         try
         {
+            var categoryPluginIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var installedPlugins = _pluginManager.GetRegisteredPlugins()
                 .Where(p => _pluginManager.IsInstalled(p.Id));
 
@@ -48,7 +54,23 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                         {
                             category = category with { PluginId = plugin.Id };
                         }
+
+                        if (category.ResourceAnchorType is null)
+                        {
+                            var pluginType = plugin.GetType();
+                            category = category with
+                            {
+                                ResourceAnchorType = pluginType,
+                                Actions = category.Actions
+                                    .Select(action => action.ResourceAnchorType is null
+                                        ? action with { ResourceAnchorType = pluginType }
+                                        : action)
+                                    .ToArray()
+                            };
+                        }
+
                         list.Add(category);
+                        categoryPluginIds.Add(plugin.Id);
                     }
                 }
                 catch (Exception ex)
@@ -57,6 +79,9 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                         Log.Instance.Trace($"Failed to get optimization category from plugin {plugin.Id}: {ex.Message}", ex);
                 }
             }
+
+            foreach (var category in GetManifestPluginCategories(categoryPluginIds))
+                list.Add(category);
         }
         catch (Exception ex)
         {
@@ -65,5 +90,75 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
         }
 
         return list;
+    }
+
+    private IEnumerable<WindowsOptimizationCategoryDefinition> GetManifestPluginCategories(HashSet<string> alreadyAddedPluginIds)
+    {
+        foreach (var pluginDirectory in EnumerateInstalledPluginDirectories())
+        {
+            PluginManifest? manifest = null;
+            try
+            {
+                manifest = TryReadManifest(pluginDirectory);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to read optimization manifest from {pluginDirectory}: {ex.Message}", ex);
+            }
+
+            if (manifest is null || string.IsNullOrWhiteSpace(manifest.Id))
+                continue;
+
+            if (!_pluginManager.IsInstalled(manifest.Id) || alreadyAddedPluginIds.Contains(manifest.Id))
+                continue;
+
+            var actions = manifest.Contributes?.OptimizationActions?
+                .Where(action => !string.IsNullOrWhiteSpace(action.Id))
+                .Select(action => new WindowsOptimizationActionDefinition(
+                    action.Id,
+                    string.IsNullOrWhiteSpace(action.Title) ? action.Id : action.Title,
+                    string.IsNullOrWhiteSpace(manifest.Description) ? action.Id : manifest.Description,
+                    _ => Task.CompletedTask,
+                    Recommended: false,
+                    IsAppliedAsync: _ => Task.FromResult(false)))
+                .ToArray();
+
+            if (actions is null || actions.Length == 0)
+                continue;
+
+            alreadyAddedPluginIds.Add(manifest.Id);
+            yield return new WindowsOptimizationCategoryDefinition(
+                manifest.Id,
+                string.IsNullOrWhiteSpace(manifest.Name) ? manifest.Id : manifest.Name,
+                manifest.Store?.Description ?? manifest.Description,
+                actions ?? [],
+                manifest.Id);
+        }
+    }
+
+    private static IEnumerable<string> EnumerateInstalledPluginDirectories()
+    {
+        var pluginsDirectory = PluginPaths.GetPluginsDirectory();
+        if (!Directory.Exists(pluginsDirectory))
+            yield break;
+
+        foreach (var directory in Directory.EnumerateDirectories(pluginsDirectory))
+            yield return directory;
+    }
+
+    private static PluginManifest? TryReadManifest(string pluginDirectory)
+    {
+        foreach (var manifestFileName in ManifestFileNames)
+        {
+            var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
+            if (!File.Exists(manifestPath))
+                continue;
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath), options);
+        }
+
+        return null;
     }
 }

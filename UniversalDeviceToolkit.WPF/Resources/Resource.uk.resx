@@ -2355,40 +2355,9 @@
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Встановити</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Видалити</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2439,36 +2408,8 @@
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Вибрані додатки заплановано для видалення.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Налаштуйте зовнішній вигляд контекстного меню.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Не вдалося застосувати налаштування стилю.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Файл конфігурації не знайдено. Переконайтеся, що Nilesoft Shell встановлено.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Не вдалося увімкнути класичне меню.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Не вдалося встановити оболонку.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Не вдалося відновити стандартне меню.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe не знайдено. Переконайтеся, що Nilesoft Shell встановлено.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Виберіть тему для контекстного меню.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Увімкнути ефекти прозорості для контекстного меню.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Не вдалося видалити оболонку.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Звільнено {0} у {1}s</value>
   </data>
@@ -2646,24 +2587,6 @@
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Параметри видимості файлів</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Відновлює стандартний стиль та перезапускає Провідник.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Переключитися на стандартне контекстне меню правої кнопки</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Застосовує класичний стиль та перезапускає Провідник.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Перейти на сучасне меню</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Повністю видалити shell.exe та пов'язані файли</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Застосувати сучасне контекстне меню</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Тримайте системний кеш у пам'яті та уникайте підкачки драйверів ядра.</value>
   </data>
@@ -2741,12 +2664,6 @@
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Провідник та інтерфейс</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Змініть стиль контекстного меню правої кнопки миші.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Прикраса Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Налаштувати продуктивність системи та швидкодію.</value>
@@ -2916,48 +2833,6 @@
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Завантаження плагінів...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Інтеграція оболонки</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Покращена інтеграція оболонки Windows з прикрасою контекстного меню та налаштуванням стилю миші</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Увімкнути сучасне контекстне меню</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Увімкнути Nilesoft Shell для покращення контекстного меню Windows у сучасному стилі</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Вимкнути сучасне контекстне меню</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Скасувати реєстрацію Nilesoft Shell та відновити стандартне контекстне меню Windows</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Застосувати стиль курсора Windows 11</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Застосувати тему курсора у стилі Windows 11 з підтримкою високого DPI</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Прискорення мережі</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Оптимізувати налаштування мережі для покращення швидкості та реагування.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Оптимізація TCP/IP та DNS</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Оптимізувати параметри TCP/IP та кеш DNS для підвищення швидкості з’єднання та реагування.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Скидання налаштувань мережі</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Очистити кеш DNS та скинути налаштування Winsock і стек TCP/IP для усунення проблем з підключенням до мережі.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Очистжує тимчасові файли та журнали, залишені різними додатками.</value>
   </data>
@@ -2975,12 +2850,6 @@
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Великі файли</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Увімкнути розширення</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Увімкнути систему розширень для доступу до ринку плагінів на сторінці Інструменти.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Налаштувати параметри зовнішнього вигляду, поведінки та функціоналу додатка.</value>
@@ -3393,24 +3262,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Завантаження... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Прискорення мережі</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>Живий інструмент</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Інструменти</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Функції прискорення та оптимізації мережі в реальному часі</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Керування прапорцями функцій Windows за допомогою ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Інструменти оптимізації системи та утиліти</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Інструменти відсутні. Будь ласка, додайте інструменти в папку tools у директорії програми.</value>
   </data>
@@ -3486,56 +3337,8 @@
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>наприклад, C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Увімкнути прозорість</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Увімкнути ефекти прозорості для контекстного меню</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Показати розширення файлів</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Показувати розширення файлів у Провіднику</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Показати приховані файли</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Показувати приховані файли та папки у Провіднику</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Відкрити в Швидкому доступі</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Відкривати Провідник у Швидкому доступі замість Цього ПК</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Показати панель попереднього перегляду</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Показувати панель попереднього перегляду у Провіднику</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Будь ласка, виберіть хоча б один елемент для очищення.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Зовнішній вигляд миші</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Застосовуйте власні стилі курсору та дотримуйтесь системної світлої / темної тематики.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Включити стиль курсору, що відповідає темі</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Визначте поточний режим роботи Windows light / dark і застосуйте відповідну призначену для користувача схему курсора.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Вимкніть тему, що відповідає стилю курсору</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Відновіть резервну копію схеми курсору та припиніть перемикання користувацького курсору на основі теми.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

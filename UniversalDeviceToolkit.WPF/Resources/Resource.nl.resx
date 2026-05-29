@@ -2359,40 +2359,9 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Installeren</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Verwijderen</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2443,36 +2412,8 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Geselecteerde apps gepland voor verwijdering.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Pas het uiterlijk van het contextmenu aan.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Kon stijlinstellingen niet toepassen.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuratiebestand niet gevonden. Zorg ervoor dat Nilesoft Shell is geïnstalleerd.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Kon klassiek menu niet inschakelen.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Kon shell niet installeren.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Kon standaardmenu niet herstellen.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe niet gevonden. Zorg ervoor dat Nilesoft Shell is geïnstalleerd.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Selecteer het thema voor het contextmenu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Schakel transparantie-effecten in voor het contextmenu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Kon shell niet verwijderen.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Vrijgekomen {0} in {1}s</value>
   </data>
@@ -2650,24 +2591,6 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Bestandszichtbaarheidsopties</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Herstelt de standaardstijl en herstart Verkenner.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Overschakelen naar standaard contextmenu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Past de klassieke stijl toe en herstart Verkenner.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Overschakelen naar modern menu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Verwijder shell.exe en gerelateerde bestanden volledig</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Modern contextmenu toepassen</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Houd het systeemcachegeheugen in het geheugen en voorkom dat kerneldrivers worden gepaged.</value>
   </data>
@@ -2745,12 +2668,6 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Verkenner &amp; interface</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Wijzig de stijl van het contextmenu.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Verfraaiing</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Pas systeemprestaties en reactievermogen instellingen aan.</value>
@@ -2884,48 +2801,6 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Plugins laden...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Shell-integratie</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Verbeterde Windows Shell-integratie met verfraaiing van contextmenu en aanpassing van muisstijl</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Modern contextmenu inschakelen</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Schakel Nilesoft Shell in om het Windows-contextmenu te verfraaien met een moderne stijl</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Modern contextmenu uitschakelen</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Deregistreer Nilesoft Shell en herstel het standaard Windows-contextmenu</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Windows 11-cursorstijl toepassen</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Pas het Windows 11-stijl cursor thema toe met ondersteuning voor hoge DPI</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Netwerkversnelling</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimaliseer netwerkinstellingen om de netsnelheid en reactievermogen te verbeteren.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP- en DNS-optimalisatie</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimaliseer TCP/IP-parameters en DNS-cache-instellingen om de verbindingssnelheid en responsiviteit te verbeteren.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Netwerkconfiguratie resetten</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Wis de DNS-cache en reset de Winsock- en TCP/IP-stackconfiguratie om netwerkconnectiviteitsproblemen te herstellen.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Schoont tijdelijke bestanden en logbestanden op die door verschillende applicaties zijn achtergelaten.</value>
   </data>
@@ -2943,12 +2818,6 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Grote Bestanden</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Extensies inschakelen</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Schakel het extensiesysteem in om toegang te krijgen tot de pluginmarkt op de Hulpprogramma's-pagina.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Configureer de opties voor uiterlijk, gedrag en functionaliteit van de toepassing.</value>
@@ -3397,24 +3266,6 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Bezig met downloaden... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Netwerkversnelling</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>Vive Toolbar</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Hulpmiddelen</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Realtime netwerkversnelling en optimalisatiefuncties</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Beheer Windows-featureflags met ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Systeemoptimalisatie en hulpprogramma's</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Geen tools beschikbaar. Voeg tools toe in de tools-map in de applicatiemap.</value>
   </data>
@@ -3490,56 +3341,8 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>bijv. C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Transparantie inschakelen</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Transparantie-effecten inschakelen voor het contextmenu</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Bestandsextensies weergeven</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Bestandsextensies weergeven in Verkenner</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Verborgen bestanden weergeven</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Verborgen bestanden en mappen weergeven in Verkenner</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Openen naar Snelle toegang</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Verkenner openen naar Snelle toegang in plaats van Deze pc</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Voorbeeldvenster weergeven</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Voorbeeldvenster weergeven in Verkenner</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Selecteer minimaal één item om op te ruimen.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Muis uiterlijk</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Pas aangepaste cursorstijlen toe en volg systeemlicht/donker thema.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Thema-volgende cursorstijl inschakelen</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Detecteer de huidige Windows light / dark-modus en pas bijpassende aangepaste cursorschema toe.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Thema-volgende cursorstijl uitschakelen</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Herstel back - up cursor schema en stoppen thema-gebaseerde aangepaste cursor schakelen.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

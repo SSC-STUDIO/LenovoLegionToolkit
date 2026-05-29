@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -9,6 +10,7 @@ using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
+using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
@@ -17,11 +19,15 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
     {
         private readonly string _actionKey;
         private readonly WindowsOptimizationActionDefinition? _actionDefinition;
+        private readonly ResourceManager? _resourceManager;
+        private readonly bool _isPluginResourceScope;
 
         public ActionDetailsWindow(string actionKey, WindowsOptimizationActionDefinition? actionDefinition)
         {
             _actionKey = actionKey;
             _actionDefinition = actionDefinition;
+            _isPluginResourceScope = actionDefinition?.ResourceAnchorType is not null;
+            _resourceManager = ResolveResourceManager(actionDefinition?.ResourceAnchorType);
             InitializeComponent();
             LoadActionDetails();
         }
@@ -337,6 +343,19 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
 
         private string? GetResourceString(string resourceKey)
         {
+            if (string.IsNullOrWhiteSpace(resourceKey))
+                return null;
+
+            if (_resourceManager is not null)
+            {
+                var pluginValue = LocalizationHelper.GetStringOrEnglish(_resourceManager, resourceKey, string.Empty, Resource.Culture);
+                if (!string.IsNullOrWhiteSpace(pluginValue))
+                    return pluginValue;
+            }
+
+            if (_isPluginResourceScope)
+                return null;
+
             try
             {
                 var resourceType = typeof(Resources.Resource);
@@ -345,6 +364,25 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
             }
             catch
             {
+                return null;
+            }
+        }
+
+        private static ResourceManager? ResolveResourceManager(Type? resourceAnchorType)
+        {
+            if (resourceAnchorType is null)
+                return null;
+
+            try
+            {
+                var resourceType = resourceAnchorType.Assembly.GetType($"{resourceAnchorType.Namespace}.Resources.Resource");
+                var property = resourceType?.GetProperty(nameof(Resource.ResourceManager), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                return property?.GetValue(null) as ResourceManager;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to resolve action details resource manager. [type={resourceAnchorType.FullName}]", ex);
                 return null;
             }
         }

@@ -5,12 +5,14 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -311,11 +313,12 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
         foreach (var category in _windowsOptimizationService.GetCategories())
         {
+            var categoryResourceManager = ResolveResourceManager(category.ResourceAnchorType);
+
             var actions = category.Actions.Select(action => new OptimizationActionViewModel(
-                action.Key,
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, action.TitleResourceKey, action.TitleResourceKey, ActiveCulture),
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, action.DescriptionResourceKey, action.DescriptionResourceKey, ActiveCulture),
-                action.Recommended,
+                action,
+                ResolveOptimizationText(action.ResourceAnchorType, categoryResourceManager, action.TitleResourceKey),
+                ResolveOptimizationText(action.ResourceAnchorType, categoryResourceManager, action.DescriptionResourceKey),
                 T("WindowsOptimization_Action_Recommended_Tag", "Recommended"))).ToList();
 
             var isCleanup = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
@@ -345,8 +348,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
             var categoryVm = new OptimizationCategoryViewModel(
                 category.Key,
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, category.TitleResourceKey, category.TitleResourceKey, ActiveCulture),
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, category.DescriptionResourceKey, category.DescriptionResourceKey, ActiveCulture),
+                ResolveOptimizationText(category.ResourceAnchorType, categoryResourceManager, category.TitleResourceKey),
+                ResolveOptimizationText(category.ResourceAnchorType, categoryResourceManager, category.DescriptionResourceKey),
                 Resource.WindowsOptimization_Category_SelectionSummary,
                 actions,
                 category.PluginId);
@@ -371,6 +374,45 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         UpdateSelectedActions();
 
         _ = ScanOptimizationStatesAsync();
+    }
+
+    private static string ResolveOptimizationText(Type? resourceAnchorType, ResourceManager? categoryResourceManager, string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return string.Empty;
+
+        var isPluginResourceScope = resourceAnchorType is not null || categoryResourceManager is not null;
+        var resourceManager = ResolveResourceManager(resourceAnchorType) ?? categoryResourceManager;
+        if (resourceManager is not null)
+        {
+            var value = LocalizationHelper.GetStringOrEnglish(resourceManager, key, string.Empty, ActiveCulture);
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        if (isPluginResourceScope)
+            return key;
+
+        return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, key, ActiveCulture);
+    }
+
+    private static ResourceManager? ResolveResourceManager(Type? resourceAnchorType)
+    {
+        if (resourceAnchorType is null)
+            return null;
+
+        try
+        {
+            var resourceType = resourceAnchorType.Assembly.GetType($"{resourceAnchorType.Namespace}.Resources.Resource");
+            var property = resourceType?.GetProperty(nameof(Resource.ResourceManager), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            return property?.GetValue(null) as ResourceManager;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve plugin resource manager. [type={resourceAnchorType.FullName}]", ex);
+            return null;
+        }
     }
 
     private void Action_PropertyChanged(object? sender, PropertyChangedEventArgs e)

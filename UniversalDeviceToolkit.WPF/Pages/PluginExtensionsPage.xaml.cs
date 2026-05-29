@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -440,12 +441,13 @@ private string _currentSearchText = string.Empty;
                     isLocal = onlinePlugin == null;
                 }
 
+                var manifestMetadata = updatePlugin ?? onlinePlugin ?? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath);
                 var resolvedPlugin = EnsureRegisteredPluginForUi(plugin.Id, isInstalled) ?? plugin;
-                var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled);
-                var localizedName = GetPluginLocalizedName(plugin);
-                var localizedDescription = GetPluginLocalizedDescription(plugin);
-                var detailedDescription = GetPluginDetailedDescription(resolvedPlugin, localizedDescription, capabilities);
-                var usageGuide = GetPluginUsageGuide(resolvedPlugin, capabilities);
+                var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled, plugin.Id, manifestMetadata);
+                var localizedName = GetPluginLocalizedName(plugin, manifestMetadata);
+                var localizedDescription = GetPluginLocalizedDescription(plugin, manifestMetadata);
+                var detailedDescription = GetPluginDetailedDescription(manifestMetadata);
+                var usageGuide = GetPluginUsageGuide(manifestMetadata);
 
                 // Determine location
                 string location = string.Empty;
@@ -1089,22 +1091,26 @@ private string _currentSearchText = string.Empty;
         return Wpf.Ui.Controls.SymbolRegular.Apps24;
     }
 
-    private PluginUiCapabilities ResolvePluginCapabilities(IPlugin? plugin, bool isInstalled, string? pluginId = null)
+    private PluginUiCapabilities ResolvePluginCapabilities(
+        IPlugin? plugin,
+        bool isInstalled,
+        string? pluginId = null,
+        PluginManifest? manifest = null)
     {
+        var manifestCapabilities = PluginUiCapabilityResolver.ResolveFromManifest(manifest);
         if (!isInstalled)
-            return default;
+            return manifestCapabilities;
 
         pluginId = string.IsNullOrWhiteSpace(pluginId) ? plugin?.Id : pluginId;
         if (string.IsNullOrWhiteSpace(pluginId))
-            return default;
+            return manifestCapabilities;
 
-        var capabilities = default(PluginUiCapabilities);
+        var capabilities = manifestCapabilities;
 
         if (plugin is not null and not PluginManifestAdapter)
             capabilities = capabilities.Merge(ResolveRuntimePluginCapabilities(plugin));
 
         capabilities = capabilities.Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId));
-        capabilities = capabilities.Merge(PluginUiCapabilityResolver.ResolveKnownStorePlugin(pluginId));
 
         return capabilities;
     }
@@ -1216,7 +1222,8 @@ private string _currentSearchText = string.Empty;
                 {
                     var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
                     plugin = EnsureRegisteredPluginForUi(pluginId, isInstalled) ?? plugin;
-                    var capabilities = ResolvePluginCapabilities(plugin, isInstalled, pluginId);
+                    var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
+                    var capabilities = ResolvePluginCapabilities(plugin, isInstalled, pluginId, manifestMetadata);
                     viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
                     viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
@@ -1605,7 +1612,8 @@ private string _currentSearchText = string.Empty;
             }
 
             var plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
-            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId);
+            var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
+            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
             if (!capabilities.SupportsSettingsPage)
             {
@@ -1662,7 +1670,8 @@ private string _currentSearchText = string.Empty;
             if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
                 plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
 
-            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId);
+            var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
+            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
             if (TryResolvePluginExecutable(pluginId, out var exeFile, out var pluginDir))
             {
@@ -1753,13 +1762,8 @@ private string _currentSearchText = string.Empty;
             if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
                 plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
 
-            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId);
-
-            if (capabilities.SupportsSettingsPage)
-            {
-                OpenPluginConfiguration(pluginId);
-                return;
-            }
+            var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
+            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
             await OpenPluginEntryPointAsync(pluginId);
         }
@@ -1822,6 +1826,23 @@ private string _currentSearchText = string.Empty;
             return null;
 
         return GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
+    }
+
+    private PluginManifest? ResolvePluginManifestMetadata(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return null;
+
+        if (TryGetAvailableUpdate(pluginId, out var updatePlugin))
+            return updatePlugin;
+
+        var onlinePlugin = _onlinePlugins.FirstOrDefault(plugin =>
+            string.Equals(plugin.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+        if (onlinePlugin is not null)
+            return onlinePlugin;
+
+        var metadata = _pluginManager.GetPluginMetadata(pluginId);
+        return TryReadInstalledPluginManifest(pluginId, metadata?.FilePath);
     }
 
     private IPlugin? GetRegisteredPluginForUi(string pluginId, bool reloadIfMissing)
@@ -2266,11 +2287,11 @@ private string _currentSearchText = string.Empty;
         return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory);
     }
 
-    private string GetPluginLocalizedName(IPlugin plugin)
+    private string GetPluginLocalizedName(IPlugin plugin, PluginManifest? manifest)
     {
-        var value = GetPluginResourceValue("Plugin_Name", plugin.Id);
-        if (!string.IsNullOrWhiteSpace(value))
-            return value;
+        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
+        if (!string.IsNullOrWhiteSpace(manifestValue))
+            return RemovePluginSuffix(manifestValue);
 
         return RemovePluginSuffix(plugin.Name);
     }
@@ -2409,145 +2430,149 @@ private string _currentSearchText = string.Empty;
         });
     }
 
-private string GetPluginLocalizedDescription(IPlugin plugin)
+private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? manifest)
     {
-        var value = GetPluginResourceValue("Plugin_Description", plugin.Id);
-        if (!string.IsNullOrWhiteSpace(value))
-            return value;
+        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.Description, manifest?.Description ?? manifest?.Store?.Description);
+        if (!string.IsNullOrWhiteSpace(manifestValue))
+            return manifestValue;
 
         return plugin.Description;
     }
 
-    private string GetPluginDetailedDescription(IPlugin plugin, string fallbackDescription, PluginUiCapabilities capabilities)
+    private string GetPluginDetailedDescription(PluginManifest? manifest)
     {
-        var resourceValue = GetPluginResourceValue("Plugin_Detail", plugin.Id);
-        if (!string.IsNullOrWhiteSpace(resourceValue))
-            return resourceValue;
+        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.Details, manifest?.Details ?? manifest?.Store?.Details);
+        if (!string.IsNullOrWhiteSpace(manifestValue))
+            return manifestValue;
 
-        return plugin.Id.ToLowerInvariant() switch
+        return string.Empty;
+    }
+
+    private string GetPluginUsageGuide(PluginManifest? manifest)
+    {
+        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.UsageGuide, manifest?.UsageGuide ?? manifest?.Store?.UsageGuide);
+        if (!string.IsNullOrWhiteSpace(manifestValue))
+            return manifestValue;
+
+        return string.Empty;
+    }
+
+    private static string ResolvePluginManifestText(
+        PluginManifest? manifest,
+        Func<PluginManifestLocalization, string?> selector,
+        string? fallback)
+    {
+        if (manifest is null)
+            return fallback ?? string.Empty;
+
+        foreach (var localization in EnumeratePluginLocalizations(manifest))
         {
-            "custom-mouse" =>
-                "Provides a focused mouse customization workflow inside Universal Device Toolkit. You can manage pointer speed, button behavior, and theme-aware cursor schemes without leaving the host app. This plugin also integrates with Windows Optimization so cursor-related actions stay grouped with the rest of your system tweaks.",
-            "shell-integration" =>
-                "Adds Universal Device Toolkit hooks into the Windows shell workflow. It helps manage Nilesoft Shell registration, packaged shell assets, and related configuration files so context-menu customization stays accessible from the plugin system instead of being scattered across external folders.",
-            "network-acceleration" =>
-                "Adds an interactive network tuning surface with live telemetry, optimization targets, and saved operating modes. It is designed for quick switching between balanced, gaming, and streaming priorities while keeping the underlying actions visible before you apply them.",
-            "vive-tool" =>
-                "Brings Windows feature flag management into Universal Device Toolkit. It can download or use a trusted ViVeTool runtime, import feature definitions, and expose enable or disable actions for advanced Windows experiments from a single UI surface.",
-            _ => BuildFallbackDetailedDescription(fallbackDescription, capabilities)
-        };
-    }
-
-    private string GetPluginUsageGuide(IPlugin plugin, PluginUiCapabilities capabilities)
-    {
-        var resourceValue = GetPluginResourceValue("Plugin_Guide", plugin.Id);
-        if (!string.IsNullOrWhiteSpace(resourceValue))
-            return resourceValue;
-
-        return plugin.Id.ToLowerInvariant() switch
-        {
-            "custom-mouse" =>
-                "1. Install the plugin and open Settings.\n2. Choose pointer speed, button swap, and cursor theme mode.\n3. Use \"Apply Cursor Theme Now\" when you want to force the current theme immediately.\n4. Open the plugin from Windows Optimization when you want to reach its system-tuning entry point.",
-            "shell-integration" =>
-                "1. Install the plugin and open Settings.\n2. Check whether Nilesoft Shell is detected and registered correctly.\n3. Open the config or style editor from the plugin if you need to adjust context-menu appearance.\n4. Use the Windows Optimization entry when you want to toggle the shell integration actions directly.",
-            "network-acceleration" =>
-                "1. Install the plugin and open it.\n2. Pick the target mode that matches your workload: Balanced, Gaming, or Streaming.\n3. Review the planned optimization steps and optional reset actions.\n4. Save the preferred mode or run quick optimization after checking the live telemetry and active adapter state.",
-            "vive-tool" =>
-                "1. Install the plugin and open Settings first.\n2. Download or configure the ViVeTool runtime from a trusted source.\n3. Import a feature definition file if you want a larger feature catalog.\n4. Open the feature page, search for a feature ID or name, then enable or disable it carefully and restart Windows if the feature requires it.",
-            _ => BuildFallbackUsageGuide(capabilities)
-        };
-    }
-
-    private static string BuildFallbackDetailedDescription(string fallbackDescription, PluginUiCapabilities capabilities)
-    {
-        var detail = string.IsNullOrWhiteSpace(fallbackDescription)
-            ? "This plugin extends Universal Device Toolkit with additional functionality."
-            : fallbackDescription.Trim();
-
-        var capabilityNotes = new List<string>();
-        if (capabilities.SupportsSettingsPage)
-            capabilityNotes.Add("includes a settings page");
-        if (capabilities.SupportsFeaturePage)
-            capabilityNotes.Add("includes a dedicated feature page");
-        if (capabilities.SupportsOptimizationCategory)
-            capabilityNotes.Add("adds actions to Windows Optimization");
-
-        if (capabilityNotes.Count == 0)
-            return detail;
-
-        return $"{detail} It {string.Join(", ", capabilityNotes)}.";
-    }
-
-    private static string BuildFallbackUsageGuide(PluginUiCapabilities capabilities)
-    {
-        var steps = new List<string> { "1. Install the plugin from the marketplace." };
-
-        if (capabilities.SupportsSettingsPage)
-            steps.Add("2. Open Settings to review the plugin configuration.");
-        if (capabilities.SupportsFeaturePage || capabilities.SupportsOptimizationCategory)
-            steps.Add("3. Use Open to enter the plugin's working surface and verify the available actions.");
-
-        steps.Add($"{steps.Count + 1}. Uninstall it from this page when you no longer need it.");
-        return string.Join("\n", steps);
-    }
-
-    private string? GetPluginResourceValue(string prefix, string pluginId)
-    {
-        foreach (var key in EnumeratePluginResourceKeys(prefix, pluginId))
-        {
-            var value = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, string.Empty, Resource.Culture);
+            var value = selector(localization);
             if (!string.IsNullOrWhiteSpace(value))
                 return value;
+        }
+
+        return fallback ?? string.Empty;
+    }
+
+    private static IEnumerable<PluginManifestLocalization> EnumeratePluginLocalizations(PluginManifest manifest)
+    {
+        var activeCulture = Resource.Culture ?? CultureInfo.CurrentUICulture;
+        var localizations = MergePluginLocalizations(manifest.Localizations, manifest.Store?.Localizations);
+        foreach (var cultureName in EnumerateCultureNames(activeCulture))
+        {
+            if (localizations.TryGetValue(cultureName, out var localization))
+                yield return localization;
+        }
+    }
+
+    private static Dictionary<string, PluginManifestLocalization> MergePluginLocalizations(
+        Dictionary<string, PluginManifestLocalization>? primary,
+        Dictionary<string, PluginManifestLocalization>? secondary)
+    {
+        var result = new Dictionary<string, PluginManifestLocalization>(StringComparer.OrdinalIgnoreCase);
+
+        if (secondary is not null)
+        {
+            foreach (var pair in secondary)
+                result[pair.Key] = pair.Value;
+        }
+
+        if (primary is not null)
+        {
+            foreach (var pair in primary)
+                result[pair.Key] = pair.Value;
+        }
+
+        return result;
+    }
+
+    private static IEnumerable<string> EnumerateCultureNames(CultureInfo culture)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var current = culture;
+        while (current != CultureInfo.InvariantCulture)
+        {
+            if (seen.Add(current.Name))
+                yield return current.Name;
+
+            if (current.Name.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase) && seen.Add("zh"))
+                yield return "zh";
+
+            current = current.Parent;
+        }
+
+        if (seen.Add("en"))
+            yield return "en";
+    }
+
+    private static PluginManifest? TryReadInstalledPluginManifest(string pluginId, string? pluginFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId) || string.IsNullOrWhiteSpace(pluginFilePath))
+            return null;
+
+        try
+        {
+            var pluginDirectory = Path.GetDirectoryName(pluginFilePath);
+            if (string.IsNullOrWhiteSpace(pluginDirectory) || !Directory.Exists(pluginDirectory))
+                return null;
+
+            foreach (var manifestPath in EnumerateInstalledPluginManifestPaths(pluginDirectory))
+            {
+                try
+                {
+                    using var stream = File.OpenRead(manifestPath);
+                    var manifest = JsonSerializer.Deserialize<PluginManifest>(stream, InstalledPluginManifestJsonOptions);
+                    if (manifest is not null && pluginId.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase))
+                        return manifest;
+                }
+                catch (Exception ex)
+                {
+                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to read plugin manifest '{manifestPath}': {ex.Message}", ex);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to locate installed plugin manifest for {pluginId}: {ex.Message}", ex);
         }
 
         return null;
     }
 
-    private static IEnumerable<string> EnumeratePluginResourceKeys(string prefix, string pluginId)
+    private static readonly JsonSerializerOptions InstalledPluginManifestJsonOptions = new()
     {
-        var normalized = NormalizePluginResourceSuffix(pluginId);
-        if (!string.IsNullOrWhiteSpace(normalized))
-            yield return $"{prefix}_{normalized}";
+        PropertyNameCaseInsensitive = true
+    };
 
-        var compact = pluginId.Replace("-", string.Empty, StringComparison.Ordinal)
-                              .Replace("_", string.Empty, StringComparison.Ordinal)
-                              .Replace(" ", string.Empty, StringComparison.Ordinal);
-        if (!string.Equals(compact, normalized, StringComparison.OrdinalIgnoreCase))
-            yield return $"{prefix}_{compact}";
-
-        foreach (var alias in GetPluginResourceAliases(pluginId))
-            yield return $"{prefix}_{alias}";
-    }
-
-    private static string NormalizePluginResourceSuffix(string pluginId)
+    private static IEnumerable<string> EnumerateInstalledPluginManifestPaths(string pluginDirectory)
     {
-        var parts = pluginId
-            .Split(['-', '_', ' '], StringSplitOptions.RemoveEmptyEntries)
-            .Select(part => char.ToUpperInvariant(part[0]) + part[1..])
-            .ToArray();
-
-        return string.Concat(parts);
+        yield return Path.Combine(pluginDirectory, "plugin.manifest.json");
+        yield return Path.Combine(pluginDirectory, "plugin.json");
+        yield return Path.Combine(pluginDirectory, "Plugin.json");
     }
-
-    private static IEnumerable<string> GetPluginResourceAliases(string pluginId)
-    {
-        switch (pluginId.ToLowerInvariant())
-        {
-            case "custom-mouse":
-                yield return "CustomMouse";
-                break;
-            case "shell-integration":
-                yield return "ShellIntegration";
-                break;
-            case "network-acceleration":
-                yield return "NetworkAcceleration";
-                break;
-            case "vive-tool":
-                yield return "ViveTool";
-                break;
-        }
-    }
-
 
 
     private async void PluginListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

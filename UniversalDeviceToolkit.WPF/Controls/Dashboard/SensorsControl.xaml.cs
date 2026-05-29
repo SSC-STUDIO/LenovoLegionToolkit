@@ -26,12 +26,15 @@ public partial class SensorsControl
     private const string GigahertzUnit = "GHz";
     private const string MegahertzUnit = "MHz";
     private const string RpmUnit = "RPM";
+    private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
 
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
     private bool _sensorRuntimeAvailable = true;
     private volatile bool _forceDetailedRefresh;
+    private bool _detailsExpanded;
+    private DateTime _lastDetailsToggleClick = DateTime.MinValue;
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
@@ -39,14 +42,15 @@ public partial class SensorsControl
     private CancellationTokenSource? _batteryCts;
     private Task? _batteryRefreshTask;
 
-    private string _cpuName = "Loading...";
-    private string _gpuName = "Loading...";
+    private string _cpuName = T("SensorsControl_Loading", "Loading...");
+    private string _gpuName = T("SensorsControl_Loading", "Loading...");
 
     public SensorsControl()
     {
         InitializeComponent();
         InitializeContextMenu();
         ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
+        SetInitialSensorPlaceholders();
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
@@ -61,8 +65,8 @@ public partial class SensorsControl
         }
         catch
         {
-            _cpuName = "Unknown CPU";
-            _gpuName = "Unknown GPU";
+            _cpuName = T("SensorsControl_UnknownCpu", "Unknown CPU");
+            _gpuName = T("SensorsControl_UnknownGpu", "Unknown GPU");
         }
 
         Dispatcher.Invoke(() => {
@@ -224,7 +228,7 @@ public partial class SensorsControl
 
         if (FindName("_batteryModelName") is TextBlock batteryModelName)
         {
-            batteryModelName.Text = info.ModelName ?? "Unknown";
+            batteryModelName.Text = info.ModelName ?? T("SensorsControl_UnknownBattery", "Unknown battery");
         }
 
         // Advanced Details
@@ -376,7 +380,7 @@ public partial class SensorsControl
 
         if (FindName("_cpuWattage") is TextBlock cpuWattage)
         {
-            cpuWattage.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : "N/A";
+            cpuWattage.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText();
         }
 
         if (FindName("_cpuTempRange") is TextBlock cpuTempRange)
@@ -384,12 +388,12 @@ public partial class SensorsControl
              if (data.CPU.MinTemperature < int.MaxValue && data.CPU.MaxTemperatureRecord > int.MinValue)
                  cpuTempRange.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
-                 cpuTempRange.Text = "N/A";
+                 cpuTempRange.Text = NotAvailableText();
         }
 
         if (FindName("_cpuVoltage") is TextBlock cpuVoltage)
         {
-            cpuVoltage.Text = data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : "N/A";
+            cpuVoltage.Text = data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : NotAvailableText();
         }
 
         if (FindName("_cpuVoltageRange") is TextBlock cpuVoltageRange)
@@ -397,7 +401,7 @@ public partial class SensorsControl
              if (data.CPU.MinVoltage < double.MaxValue && data.CPU.MaxVoltage > double.MinValue)
                  cpuVoltageRange.Text = $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V";
              else
-                 cpuVoltageRange.Text = "N/A";
+                 cpuVoltageRange.Text = NotAvailableText();
         }
 
         UpdateValue(_gpuUtilizationBar, _gpuUtilizationLabel, data.GPU.MaxUtilization, data.GPU.Utilization,
@@ -431,7 +435,7 @@ public partial class SensorsControl
 
         if (FindName("_gpuWattage") is TextBlock gpuWattage)
         {
-            gpuWattage.Text = data.GPU.Wattage >= 0 ? $"{data.GPU.Wattage} W" : "N/A";
+            gpuWattage.Text = data.GPU.Wattage >= 0 ? $"{data.GPU.Wattage} W" : NotAvailableText();
         }
         
         if (FindName("_gpuTempRange") is TextBlock gpuTempRange)
@@ -439,12 +443,12 @@ public partial class SensorsControl
              if (data.GPU.MinTemperature < int.MaxValue && data.GPU.MaxTemperatureRecord > int.MinValue)
                  gpuTempRange.Text = $"{data.GPU.MinTemperature}{CelsiusUnit} ~ {data.GPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
-                 gpuTempRange.Text = "N/A";
+                 gpuTempRange.Text = NotAvailableText();
         }
 
         if (FindName("_gpuVoltage") is TextBlock gpuVoltage)
         {
-            gpuVoltage.Text = data.GPU.Voltage > 0 ? $"{data.GPU.Voltage:0.000} V" : "N/A";
+            gpuVoltage.Text = data.GPU.Voltage > 0 ? $"{data.GPU.Voltage:0.000} V" : NotAvailableText();
         }
         
         if (FindName("_gpuVoltageRange") is TextBlock gpuVoltageRange)
@@ -452,14 +456,28 @@ public partial class SensorsControl
              if (data.GPU.MinVoltage < double.MaxValue && data.GPU.MaxVoltage > double.MinValue)
                  gpuVoltageRange.Text = $"{data.GPU.MinVoltage:0.000} V ~ {data.GPU.MaxVoltage:0.000} V";
              else
-                 gpuVoltageRange.Text = "N/A";
+                 gpuVoltageRange.Text = NotAvailableText();
         }
     }
 
-    private void CardControl_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void CardControl_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        var isVisible = _cpuDetailsPanel.Visibility == Visibility.Visible;
-        var newState = isVisible ? Visibility.Collapsed : Visibility.Visible;
+        var now = DateTime.UtcNow;
+        if (e.ClickCount >= 2 || now - _lastDetailsToggleClick <= DoubleClickThreshold)
+        {
+            _lastDetailsToggleClick = DateTime.MinValue;
+            ToggleDetails();
+            e.Handled = true;
+            return;
+        }
+
+        _lastDetailsToggleClick = now;
+    }
+
+    private void ToggleDetails()
+    {
+        _detailsExpanded = !AreDetailsVisible();
+        var newState = _detailsExpanded ? Visibility.Visible : Visibility.Collapsed;
 
         if (_sensorRuntimeAvailable)
         {
@@ -478,6 +496,13 @@ public partial class SensorsControl
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Sensor details toggled: {newState}.");
     }
+
+    private bool AreDetailsVisible() =>
+        IsElementVisible("_batteryDetailsPanel") ||
+        (_sensorRuntimeAvailable && (IsElementVisible("_cpuDetailsPanel") || IsElementVisible("_gpuDetailsPanel")));
+
+    private bool IsElementVisible(string name) =>
+        FindName(name) is FrameworkElement element && element.Visibility == Visibility.Visible;
 
     private async Task RefreshDetailedValuesAsync()
     {
@@ -544,6 +569,7 @@ public partial class SensorsControl
 
         if (!visible)
         {
+            _detailsExpanded = false;
             SetVisibility("_cpuDetailsPanel", false);
             SetVisibility("_gpuDetailsPanel", false);
         }
@@ -556,6 +582,26 @@ public partial class SensorsControl
 
     private static string T(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
-}
-}
 
+    private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
+
+    private void SetInitialSensorPlaceholders()
+    {
+        UpdateDetailText("_cpuWattage", NotAvailableText());
+        UpdateDetailText("_cpuVoltage", NotAvailableText());
+        UpdateDetailText("_cpuTempRange", NotAvailableText());
+        UpdateDetailText("_cpuVoltageRange", NotAvailableText());
+        UpdateDetailText("_gpuWattage", NotAvailableText());
+        UpdateDetailText("_gpuVoltage", NotAvailableText());
+        UpdateDetailText("_gpuTempRange", NotAvailableText());
+        UpdateDetailText("_gpuVoltageRange", NotAvailableText());
+
+        if (FindName("_cpuModelName") is TextBlock cpu)
+            cpu.Text = _cpuName;
+        if (FindName("_gpuModelName") is TextBlock gpu)
+            gpu.Text = _gpuName;
+        if (FindName("_batteryModelName") is TextBlock battery)
+            battery.Text = T("SensorsControl_Loading", "Loading...");
+    }
+}
+}

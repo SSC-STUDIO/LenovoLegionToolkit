@@ -161,7 +161,7 @@
                     </custom:CardControl>
                 </StackPanel>
 
-                <StackPanel x:Name="_warrantyInfo" Visibility="Hidden">
+                <StackPanel x:Name="_warrantyInfo" Visibility="Collapsed">
                     <Grid Margin="0,16,0,24">
 
                         <Grid.ColumnDefinitions>
@@ -223,5 +223,4 @@
             HorizontalAlignment="Center" />
     </Grid>
 </local:BaseWindow>
-
 

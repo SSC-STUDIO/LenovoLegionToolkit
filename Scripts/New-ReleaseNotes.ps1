@@ -72,7 +72,25 @@ function Get-SectionSummary {
   }
 
   $items = New-Object System.Collections.Generic.List[string]
-  foreach ($line in ($Body -split "`r?`n")) {
+  $lines = @($Body -split "`r?`n")
+  $startIndex = 0
+  $endIndex = $lines.Count
+
+  for ($i = 0; $i -lt $lines.Count; $i++) {
+    if ($lines[$i] -match '^###\s+Highlights\b') {
+      $startIndex = $i + 1
+      for ($j = $startIndex; $j -lt $lines.Count; $j++) {
+        if ($lines[$j] -match '^###\s+') {
+          $endIndex = $j
+          break
+        }
+      }
+      break
+    }
+  }
+
+  for ($i = $startIndex; $i -lt $endIndex; $i++) {
+    $line = $lines[$i]
     $trimmed = $line.Trim()
     if (-not $trimmed.StartsWith('- ')) {
       continue
@@ -89,6 +107,37 @@ function Get-SectionSummary {
   }
 
   return $items.ToArray()
+}
+
+function Remove-LeadingHighlightsSection {
+  param(
+    [string]$Body
+  )
+
+  if ([string]::IsNullOrWhiteSpace($Body)) {
+    return ''
+  }
+
+  $lines = @($Body -split "`r?`n")
+  $index = 0
+  while ($index -lt $lines.Count -and [string]::IsNullOrWhiteSpace($lines[$index])) {
+    $index++
+  }
+
+  if ($index -ge $lines.Count -or $lines[$index] -notmatch '^###\s+Highlights\b') {
+    return $Body
+  }
+
+  $index++
+  while ($index -lt $lines.Count -and $lines[$index] -notmatch '^###\s+') {
+    $index++
+  }
+
+  if ($index -ge $lines.Count) {
+    return ''
+  }
+
+  return (($lines[$index..($lines.Count - 1)] -join "`n").Trim())
 }
 
 function Add-AssetLine {
@@ -122,16 +171,16 @@ function Get-DownloadLines {
   $sha = $sorted | Where-Object { $_ -match '_SHA256\.txt$' } | Select-Object -First 1
   $languagePacks = @($sorted | Where-Object { $_ -match '_lang_[^/]+\.zip$' })
 
-  if ($fullSetup) { Add-AssetLine $lines $fullSetup 'full installer with all bundled languages and built-in device packs.' }
-  if ($onlineSetup) { Add-AssetLine $lines $onlineSetup 'online installer with English bundled; additional language and device resources are installed from the online catalog.' }
-  if ($fullZip) { Add-AssetLine $lines $fullZip 'full portable package with all bundled languages and built-in device packs.' }
-  if ($onlineZip) { Add-AssetLine $lines $onlineZip 'online portable package with English bundled; additional resources are installed from the online catalog.' }
-  if ($legacyAlias) { Add-AssetLine $lines $legacyAlias 'legacy Lenovo Legion Toolkit compatibility installer alias for existing updater and package-manager users.' }
-  if ($englishSetup) { Add-AssetLine $lines $englishSetup 'English-only installer; install additional languages from Settings.' }
-  if ($englishZip) { Add-AssetLine $lines $englishZip 'English-only portable package; install additional languages from Settings.' }
+  if ($fullSetup) { Add-AssetLine $lines $fullSetup 'Full installer with bundled languages and device support data.' }
+  if ($onlineSetup) { Add-AssetLine $lines $onlineSetup 'Online installer with the base app; additional language and device resources install from the in-app online catalog.' }
+  if ($fullZip) { Add-AssetLine $lines $fullZip 'Full portable package with bundled languages and device support data.' }
+  if ($onlineZip) { Add-AssetLine $lines $onlineZip 'Online portable package with the base app; additional resources install from the in-app online catalog.' }
+  if ($legacyAlias) { Add-AssetLine $lines $legacyAlias 'Compatibility installer alias for existing Lenovo Legion Toolkit updater, winget, and Scoop users.' }
+  if ($englishSetup) { Add-AssetLine $lines $englishSetup 'Legacy online-style installer asset; prefer the Online installer for current releases.' }
+  if ($englishZip) { Add-AssetLine $lines $englishZip 'Legacy online-style portable asset; prefer the Online portable package for current releases.' }
   if ($setup) { Add-AssetLine $lines $setup 'installer package.' }
   if ($zip) { Add-AssetLine $lines $zip 'portable win-x64 package.' }
-  if ($languagePacks.Count -gt 0) { $lines.Add("- ``*_lang_<culture>.zip`` - optional language packs for this release ($($languagePacks.Count) assets).") }
+  if ($languagePacks.Count -gt 0) { $lines.Add("- ``*_lang_<culture>.zip`` - legacy language-pack assets for historical releases ($($languagePacks.Count) assets). Current releases use the GitHub Pages language catalog.") }
   if ($sha) { Add-AssetLine $lines $sha 'SHA256 checksum manifest.' }
 
   if ($lines.Count -eq 0) {
@@ -152,9 +201,9 @@ function Get-OnlineResourceLines {
 
   if ($hasUniversalAssets) {
     return @(
-      "- Language packs are published through GitHub Pages under ``resources/$ReleaseVersion/languages``.",
-      "- Device packs are published through GitHub Pages under ``resources/$ReleaseVersion/devices``.",
-      '- The stable online resource catalog is published at `resources/stable/catalog.json`, with `stable/catalog.json` kept as a compatibility copy.'
+      "- Language resources are published through GitHub Pages under ``resources/$ReleaseVersion/languages``.",
+      "- Device model resources are published through GitHub Pages under ``resources/$ReleaseVersion/devices``.",
+      '- The stable online catalog is published at `resources/stable/catalog.json`; `stable/catalog.json` remains as a compatibility copy.'
     )
   }
 
@@ -192,6 +241,7 @@ $section = Get-ReleaseSection -Path $ChangelogPath -ReleaseVersion $Version
 $releaseDate = if ($section) { $section.Date } elseif (-not [string]::IsNullOrWhiteSpace($ReleaseDate)) { $ReleaseDate } else { 'Unknown' }
 $changeBody = if ($section) { $section.Body } else { '' }
 $highlights = Get-SectionSummary -Body $changeBody
+$changesBody = Remove-LeadingHighlightsSection -Body $changeBody
 $downloads = Get-DownloadLines -ReleaseVersion $Version -Names $AssetNames
 $onlineResources = Get-OnlineResourceLines -ReleaseVersion $Version -Names $AssetNames
 $verification = Get-VerificationLines -Names $AssetNames
@@ -205,10 +255,10 @@ $lines.Add('## Highlights')
 $lines.AddRange([string[]]$highlights)
 $lines.Add('')
 $lines.Add('## Changes')
-if ([string]::IsNullOrWhiteSpace($changeBody)) {
+if ([string]::IsNullOrWhiteSpace($changesBody)) {
   $lines.Add('- No changelog section is available for this historical version.')
 } else {
-  $lines.Add($changeBody)
+  $lines.Add($changesBody)
 }
 $lines.Add('')
 $lines.Add('## Downloads')

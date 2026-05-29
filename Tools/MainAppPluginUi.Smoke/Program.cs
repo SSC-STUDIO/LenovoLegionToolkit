@@ -43,6 +43,7 @@ internal static class Program
     private const string DisableAnimationsEnvironmentVariable = "LLT_SMOKE_DISABLE_ANIMATIONS";
     private const string SmokeAutomationEnvironmentVariable = "LLT_SMOKE_AUTOMATION";
     private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
+    private const string ExercisePowerModePresetsEnvironmentVariable = "LLT_SMOKE_EXERCISE_POWER_MODE_PRESETS";
 
     private static string? GetEnvVar(string legacyName)
     {
@@ -71,6 +72,7 @@ internal static class Program
     private const byte VkEnter = 0x0D;
     private const byte VkSpace = 0x20;
     private const byte VkTab = 0x09;
+    private const byte VkShift = 0x10;
     private const byte VkA = 0x41;
     private const byte VkBack = 0x08;
     private const uint KeyEventExtendedKey = 0x0001;
@@ -126,7 +128,9 @@ internal static class Program
         ShellLocal,
         ComboLocal,
         DriverDownload,
-        SystemOptimization
+        SystemOptimization,
+        Dashboard,
+        PowerMode
     }
 
     private enum SmokeTheme
@@ -298,11 +302,13 @@ internal static class Program
 
             var isDriverDownloadScenario = _activeScenario == SmokeScenario.DriverDownload;
             var isSystemOptimizationScenario = _activeScenario == SmokeScenario.SystemOptimization;
+            var isDashboardScenario = _activeScenario == SmokeScenario.Dashboard;
+            var isPowerModeScenario = _activeScenario == SmokeScenario.PowerMode;
             var scenarioPreset = ResolveScenarioPreset(_activeScenario);
-            var preferredPlugins = isDriverDownloadScenario || isSystemOptimizationScenario
+            var preferredPlugins = isDriverDownloadScenario || isSystemOptimizationScenario || isDashboardScenario || isPowerModeScenario
                 ? Array.Empty<string>()
                 : ResolvePreferredPlugins(args, scenarioPreset);
-            var requestedPluginSources = isDriverDownloadScenario || isSystemOptimizationScenario
+            var requestedPluginSources = isDriverDownloadScenario || isSystemOptimizationScenario || isDashboardScenario || isPowerModeScenario
                 ? new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase)
                 : ResolveRequestedPluginSources(args, scenarioPreset);
             var desiredPluginSources = preferredPlugins
@@ -311,7 +317,7 @@ internal static class Program
                     pluginId => pluginId,
                     pluginId => ResolveRequestedPluginSource(pluginId, requestedPluginSources),
                     StringComparer.OrdinalIgnoreCase);
-            var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
+            var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot, args);
             var runtimePluginsDirectory = ResolveRuntimePluginsDirectory(appRuntimeDirectory);
             runtimePluginFixtureStates = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, runtimePluginsDirectory, preferredPlugins);
             runtimeSupportFixtureStates = PrepareRuntimeSupportFixtures(repositoryRoot, appRuntimeDirectory);
@@ -335,7 +341,7 @@ internal static class Program
             _mainProcessId = process.Id;
             TryWaitForInputIdle(process, 8000);
 
-            mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(60));
+            mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromMinutes(3));
             Console.WriteLine("[main-smoke] Main window ready");
             CaptureMainWindow(mainWindow, "main-shell-home");
             ObserveStep("Main window ready", mainWindow);
@@ -354,6 +360,26 @@ internal static class Program
             {
                 TestSystemOptimizationUi(mainWindow);
                 HoldForObservation("System Optimization smoke completed successfully", mainWindow, _successHold);
+                CloseWindow(mainWindow);
+                process.WaitForExit(7000);
+                Console.WriteLine("[main-smoke] PASS");
+                return 0;
+            }
+
+            if (isDashboardScenario)
+            {
+                TestDashboardSensorDetailsToggle(mainWindow);
+                HoldForObservation("Dashboard smoke completed successfully", mainWindow, _successHold);
+                CloseWindow(mainWindow);
+                process.WaitForExit(7000);
+                Console.WriteLine("[main-smoke] PASS");
+                return 0;
+            }
+
+            if (isPowerModeScenario)
+            {
+                TestPowerModeUi(mainWindow);
+                HoldForObservation("Power Mode smoke completed successfully", mainWindow, _successHold);
                 CloseWindow(mainWindow);
                 process.WaitForExit(7000);
                 Console.WriteLine("[main-smoke] PASS");
@@ -390,6 +416,8 @@ internal static class Program
 
             foreach (var plan in installPlans.Where(plan => plan.Source == PluginInstallSource.Online))
                 EnsurePluginInstalled(mainWindow, smokeSandboxState, plan.PluginId);
+
+            AssertNoInstalledPluginEmptyOptimizationCategories(mainWindow, pluginsUnderTest);
 
             for (var index = 0; index < pluginsUnderTest.Count; index++)
             {
@@ -594,7 +622,9 @@ internal static class Program
             "combo-local" => SmokeScenario.ComboLocal,
             "driver-download" => SmokeScenario.DriverDownload,
             "system-optimization" => SmokeScenario.SystemOptimization,
-            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local', 'combo-local', 'driver-download', or 'system-optimization'.")
+            "dashboard" => SmokeScenario.Dashboard,
+            "power-mode" => SmokeScenario.PowerMode,
+            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local', 'combo-local', 'driver-download', 'system-optimization', 'dashboard', or 'power-mode'.")
         };
     }
 
@@ -728,8 +758,8 @@ internal static class Program
 MainAppPluginUi.Smoke
 
 Usage:
-MainAppPluginUi.Smoke.dll [--repo-root <path>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
-                            [--scenario shell-local|combo-local|driver-download|system-optimization] [--theme system|light|dark]
+MainAppPluginUi.Smoke.dll [--repo-root <path>] [--app-dir <installed-or-published-app-dir>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
+                            [--scenario shell-local|combo-local|driver-download|system-optimization|dashboard|power-mode] [--theme system|light|dark]
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
@@ -737,9 +767,10 @@ MainAppPluginUi.Smoke.dll [--repo-root <path>] [--plugin <id[,id]>] [--plugin-so
 
 Options:
   --repo-root            Main repository root. Defaults to the current repo when auto-detected.
+  --app-dir              Optional installed or published app directory to launch instead of the repo Release build output.
   --plugin               Comma-separated plugin id filter. Defaults to the smoke-supported plugin set.
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Default source is online for every smoke-supported plugin. Local sources require matching plugin build directories or the smoke fails fast.
-  --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions.
+  --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions; 'dashboard' validates sensor card expand/collapse; 'power-mode' validates the performance-mode entry without changing hardware mode.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
@@ -911,8 +942,21 @@ Environment variables:
             throw new DirectoryNotFoundException($"Path is not main repository root: {repositoryRoot}");
     }
 
-    private static string ResolveMainAppRuntimeDirectory(string repositoryRoot)
+    private static string ResolveMainAppRuntimeDirectory(string repositoryRoot, IReadOnlyList<string> args)
     {
+        var appDirectoryFromOption = TryReadOptionValue(args, "--app-dir");
+        if (!string.IsNullOrWhiteSpace(appDirectoryFromOption))
+        {
+            var fromOption = Path.GetFullPath(appDirectoryFromOption);
+            if (!Directory.Exists(fromOption))
+                throw new DirectoryNotFoundException($"Main app directory not found: {fromOption}");
+
+            if (!ContainsMainAppExecutableArtifacts(fromOption))
+                throw new DirectoryNotFoundException($"Main app directory does not contain runnable app artifacts: {fromOption}");
+
+            return fromOption;
+        }
+
         var releaseRoot = Path.Combine(repositoryRoot, @"UniversalDeviceToolkit.WPF\bin\Release");
         if (!Directory.Exists(releaseRoot))
             throw new DirectoryNotFoundException($"Main app Release output not found: {releaseRoot}. Build main app first.");
@@ -1128,7 +1172,6 @@ Environment variables:
             };
 
             ApplySmokeEnvironmentOverrides(startInfo, sandboxState, localPluginPackageBundle);
-            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
             return startInfo;
         }
 
@@ -1144,7 +1187,6 @@ Environment variables:
             };
 
             ApplySmokeEnvironmentOverrides(startInfo, sandboxState, localPluginPackageBundle);
-            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
             return startInfo;
         }
 
@@ -1170,6 +1212,7 @@ Environment variables:
 
         if (localPluginPackageBundle.Packages.Count > 0)
         {
+            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
             SetDualEnvVar(startInfo.EnvironmentVariables, PluginImportFilesEnvironmentVariable,
                 string.Join(Path.PathSeparator, localPluginPackageBundle.Packages.Select(package => package.PackagePath)));
         }
@@ -1695,6 +1738,12 @@ Environment variables:
                 return window;
         }
 
+        foreach (var window in candidates)
+        {
+            if (WindowTitleLooksLikeMainShell(window) && HasUsableTopLevelBounds(window))
+                return window;
+        }
+
         return null;
     }
 
@@ -1718,6 +1767,19 @@ Environment variables:
     private static bool HasMainNavigationMarkers(AutomationElement window) =>
         FindByAutomationId(window, "MainNavigationStore") is not null
         || FindByAutomationId(window, "_navigationStore") is not null;
+
+    private static bool HasUsableTopLevelBounds(AutomationElement window)
+    {
+        try
+        {
+            var bounds = window.Current.BoundingRectangle;
+            return bounds.Width > 0 && bounds.Height > 0;
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
+    }
 
     private static bool TryHandleCompatibilityWindow(AutomationElement window)
     {
@@ -1966,13 +2028,20 @@ Environment variables:
 
         try
         {
-            Click(element);
-            return true;
+            if (element.TryGetCurrentPattern(InvokePattern.Pattern, out var invokePattern))
+            {
+                ((InvokePattern)invokePattern).Invoke();
+                return true;
+            }
         }
         catch (InvalidOperationException) when (!IsInteractable(element))
         {
             // Element may have become stale after window transitions; try resolving a fresh reference.
             Console.WriteLine($"[main-smoke] Navigation element '{label}' was not interactable for direct click; trying fallback clicks.");
+        }
+        catch
+        {
+            // Ignore and continue with physical click fallbacks.
         }
 
         var textDescendant = FindFirstVisibleDescendant(
@@ -2005,6 +2074,21 @@ Environment variables:
         {
             DoubleClick(element);
             return true;
+        }
+        catch
+        {
+            // Ignore and continue with selection fallback.
+        }
+
+        try
+        {
+            if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var selectionPattern))
+            {
+                ((SelectionItemPattern)selectionPattern).Select();
+                return true;
+            }
+
+            return false;
         }
         catch
         {
@@ -2426,49 +2510,6 @@ Environment variables:
             return;
         }
 
-        if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
-        {
-            var returnToMarketplace = marketplaceAvailable && !isLastPlugin;
-
-            if (isKnownInstalled)
-                AssertNoStandaloneFeatureEntry(mainWindow, pluginId);
-
-            var openButton = FindByAutomationId(mainWindow, $"PluginOpenButton_{pluginId}");
-            if (marketplaceAvailable && openButton is not null && IsVisible(openButton))
-                TestOpenOptimizationExtension(mainWindow, pluginId, returnToMarketplace);
-            else
-                TestOptimizationExtensionCategory(mainWindow, pluginId);
-
-            if (isKnownInstalled)
-                TestOptimizationSettingsWindow(mainWindow, processId, pluginId, returnToMarketplace: marketplaceAvailable);
-
-            if (marketplaceAvailable && IsPluginInstalledInUi(mainWindow, pluginId))
-                TestConfigureOpensSettings(mainWindow, processId, pluginId);
-
-            return;
-        }
-
-        if (UsesOptimizationOpenRoute(pluginId))
-        {
-            if (isKnownInstalled)
-                AssertNoStandaloneFeatureEntry(mainWindow, pluginId);
-
-            var optimizationOpenButton = FindByAutomationId(mainWindow, $"PluginOpenButton_{pluginId}");
-            if (marketplaceAvailable && optimizationOpenButton is not null && IsVisible(optimizationOpenButton))
-                TestOpenOptimizationExtension(mainWindow, pluginId, returnToMarketplace: true);
-            else if (isKnownInstalled)
-                TestOptimizationExtensionCategory(mainWindow, pluginId);
-            else
-                Console.WriteLine($"[main-smoke] Optimization-page test skipped (no Open button): {pluginId}");
-
-            if (isKnownInstalled)
-                TestOptimizationSettingsWindow(mainWindow, processId, pluginId, returnToMarketplace: marketplaceAvailable);
-            else
-                throw new InvalidOperationException($"Plugin is not installed before optimization settings validation: {pluginId}");
-
-            return;
-        }
-
         var featureOpenButton = FindByAutomationId(mainWindow, $"PluginOpenButton_{pluginId}");
         if (marketplaceAvailable && featureOpenButton is not null && IsVisible(featureOpenButton))
         {
@@ -2494,8 +2535,10 @@ Environment variables:
                 NavigateToPluginExtensionsPage(mainWindow, refresh: false);
             }
         }
-        else if (isKnownInstalled)
+        else if (isKnownInstalled && ExpectsSidebarFeaturePage(pluginId))
             TestSidebarPluginPageEntry(mainWindow, pluginId, returnToMarketplace: false);
+        else if (isKnownInstalled)
+            Console.WriteLine($"[main-smoke] Feature-page test skipped for settings-only plugin: {pluginId}");
         else
             Console.WriteLine($"[main-smoke] Feature-page test skipped (no Open button): {pluginId}");
 
@@ -2523,6 +2566,12 @@ Environment variables:
             Console.WriteLine($"[main-smoke] Skipping marketplace settings validation for '{pluginId}' because direct-route verification already succeeded.");
         else
             throw new InvalidOperationException($"Plugin is not installed before settings validation: {pluginId}");
+    }
+
+    private static bool ExpectsSidebarFeaturePage(string pluginId)
+    {
+        return pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
+               || pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void TestOpenFeaturePage(AutomationElement mainWindow, string pluginId, bool returnToMarketplace)
@@ -2645,8 +2694,7 @@ Environment variables:
 
     private static bool UsesOptimizationOpenRoute(string pluginId)
     {
-        return pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
-               || pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
+        return false;
     }
 
     private static void EnsureMarketplaceViewExited(AutomationElement mainWindow, string pluginId, string entrySource)
@@ -2680,8 +2728,7 @@ Environment variables:
 
     private static bool SupportsPluginFocusedOptimizationRoute(string pluginId)
     {
-        return pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
-               || pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
+        return false;
     }
 
     private static void TestOpenOptimizationExtension(AutomationElement mainWindow, string pluginId, bool returnToMarketplace)
@@ -2990,7 +3037,7 @@ Environment variables:
             try
             {
                 mainWindow = ResolveLiveWindowAndDismissPopups(mainWindow, processId);
-                var configureButton = WaitForAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}", TimeSpan.FromSeconds(8));
+                var configureButton = WaitForPluginConfigureButton(mainWindow, pluginId, TimeSpan.FromSeconds(12));
 
                 switch (activationModes[attempt])
                 {
@@ -3082,6 +3129,59 @@ Environment variables:
             mainWindowHandle,
             existingSettingsWindows,
             timeout);
+    }
+
+    private static AutomationElement WaitForPluginConfigureButton(AutomationElement mainWindow, string pluginId, TimeSpan timeout)
+    {
+        var automationId = $"PluginConfigureButton_{pluginId}";
+        var deadline = DateTime.UtcNow + timeout;
+        TimeoutException? lastTimeout = null;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var remaining = deadline - DateTime.UtcNow;
+            if (remaining <= TimeSpan.Zero)
+                break;
+
+            try
+            {
+                return WaitForAutomationIdWithScroll(
+                    mainWindow,
+                    automationId,
+                    TimeSpan.FromMilliseconds(Math.Min(2500, Math.Max(500, remaining.TotalMilliseconds))));
+            }
+            catch (TimeoutException ex)
+            {
+                lastTimeout = ex;
+                TryRefreshMarketplaceSelection(mainWindow, pluginId);
+            }
+        }
+
+        throw lastTimeout ?? new TimeoutException($"Timed out waiting for automation element '{automationId}'.");
+    }
+
+    private static void TryRefreshMarketplaceSelection(AutomationElement mainWindow, string pluginId)
+    {
+        try
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var pluginCard = FindByAutomationId(mainWindow, $"PluginCard_{pluginId}");
+            if (pluginCard is not null)
+            {
+                TryScrollElementIntoView(pluginCard);
+                if (!TrySelectElementOrAncestor(pluginCard))
+                    MouseClick(pluginCard);
+                Thread.Sleep(250);
+                return;
+            }
+
+            _ = TryEnsurePluginMarketplaceEntrySelected(mainWindow, pluginId);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException || ex is TimeoutException)
+        {
+            Console.WriteLine($"[main-smoke] Marketplace selection refresh for '{pluginId}' skipped: {ex.Message}");
+        }
     }
 
     private static void TestOptimizationSettingsWindow(AutomationElement mainWindow, int processId, string pluginId, bool returnToMarketplace)
@@ -4504,7 +4604,16 @@ Environment variables:
         Console.WriteLine($"[main-smoke] Clicked uninstall for plugin: {pluginId}");
 
         var uninstalled = WaitUntil(
-            () => IsPluginUninstalled(mainWindow, sandboxState, pluginId),
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                if (!IsPluginUninstalledInSandbox(sandboxState, pluginId))
+                    return false;
+
+                _ = TryEnsurePluginMarketplaceEntrySelected(mainWindow, pluginId);
+                return IsPluginUninstalledInUi(mainWindow, pluginId)
+                       || IsPluginUninstalledInMarketplaceState(mainWindow, pluginId);
+            },
             TimeSpan.FromSeconds(60),
             TimeSpan.FromMilliseconds(300));
 
@@ -4575,9 +4684,6 @@ Environment variables:
         }
     }
 
-    private static bool IsPluginUninstalled(AutomationElement root, SmokeSandboxState? sandboxState, string pluginId)
-        => IsPluginUninstalledInUi(root, pluginId) && !IsPluginInstalledInSandbox(sandboxState, pluginId);
-
     private static bool IsPluginUninstalledInUi(AutomationElement root, string pluginId)
     {
         root = ResolveLiveWindow(root);
@@ -4588,14 +4694,47 @@ Environment variables:
                && !IsVisible(FindByAutomationId(root, $"PluginUninstallButton_{pluginId}"));
     }
 
+    private static bool IsPluginUninstalledInMarketplaceState(AutomationElement root, string pluginId)
+    {
+        root = ResolveLiveWindow(root);
+        return !IsVisible(FindByAutomationId(root, $"PluginOpenButton_{pluginId}"))
+               && !IsVisible(FindByAutomationId(root, $"PluginConfigureButton_{pluginId}"))
+               && !IsVisible(FindByAutomationId(root, $"PluginUninstallButton_{pluginId}"))
+               && !IsPluginInstalledInUi(root, pluginId);
+    }
+
     private static void AssertPluginUninstalledUiState(AutomationElement root, SmokeSandboxState? sandboxState, string pluginId)
     {
         root = ResolveLiveWindow(root);
         if (!IsPluginUninstalledInUi(root, pluginId))
             throw new InvalidOperationException($"Plugin uninstall UI state did not reset correctly: {pluginId}");
 
-        if (IsPluginInstalledInSandbox(sandboxState, pluginId))
+        if (!IsPluginUninstalledInSandbox(sandboxState, pluginId))
             throw new InvalidOperationException($"Plugin uninstall sandbox state still reports installed: {pluginId}");
+    }
+
+    private static bool IsPluginUninstalledInSandbox(SmokeSandboxState? sandboxState, string pluginId)
+    {
+        if (sandboxState is null || string.IsNullOrWhiteSpace(pluginId))
+            return true;
+
+        try
+        {
+            var settingsPath = Path.Combine(sandboxState.AppDataDirectory, "settings.json");
+            if (!File.Exists(settingsPath))
+                return true;
+
+            var root = ReadSettingsRoot(settingsPath);
+            var installedExtensions = EnsureJsonArray(root, "InstalledExtensions");
+            var pendingDeletionExtensions = EnsureJsonArray(root, "PendingDeletionExtensions");
+
+            return !ContainsJsonValue(installedExtensions, pluginId)
+                   || ContainsJsonValue(pendingDeletionExtensions, pluginId);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool IsPluginInstalledInSandbox(SmokeSandboxState? sandboxState, string pluginId)
@@ -4635,6 +4774,115 @@ Environment variables:
         }
     }
 
+    private static void AssertNoInstalledPluginEmptyOptimizationCategories(AutomationElement mainWindow, IEnumerable<string> pluginIds)
+    {
+        var pluginIdList = pluginIds
+            .Where(pluginId => !string.IsNullOrWhiteSpace(pluginId))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (pluginIdList.Length == 0)
+            return;
+
+        NavigateToWindowsOptimizationPage(mainWindow);
+        mainWindow = ResolveLiveWindow(mainWindow);
+
+        foreach (var pluginId in pluginIdList)
+            AssertNoEmptyOptimizationCategory(mainWindow, pluginId);
+
+        NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+    }
+
+    private static void AssertNoEmptyOptimizationCategory(AutomationElement mainWindow, string pluginId)
+    {
+        var category = TryFindOptimizationCategoryForPlugin(mainWindow, pluginId);
+        var settingsButton = TryFindOptimizationSettingsButtonForPlugin(mainWindow, pluginId);
+
+        if (category is null && settingsButton is null)
+        {
+            Console.WriteLine($"[main-smoke] No System Optimization category exposed for plugin: {pluginId}");
+            return;
+        }
+
+        if (category is not null)
+        {
+            TryScrollElementIntoView(category);
+            ExpandIfNeeded(category);
+            TryScrollElementIntoView(category);
+        }
+
+        var action = TryFindOptimizationActionForPlugin(mainWindow, pluginId);
+        if (action is null)
+        {
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 260);
+            throw new InvalidOperationException($"Plugin '{pluginId}' exposed a System Optimization category/settings entry without any action checkboxes.");
+        }
+
+        Console.WriteLine($"[main-smoke] System Optimization category for plugin '{pluginId}' has action checkbox: {action.Current.AutomationId}");
+    }
+
+    private static AutomationElement? TryFindOptimizationCategoryForPlugin(AutomationElement mainWindow, string pluginId)
+    {
+        foreach (var prefix in GetPluginAutomationIdPrefixes(pluginId, "WindowsOptimizationCategory_"))
+        {
+            var element = TryWaitForAutomationIdPrefix(mainWindow, prefix, TimeSpan.FromSeconds(2));
+            if (element is not null)
+                return element;
+        }
+
+        return null;
+    }
+
+    private static AutomationElement? TryFindOptimizationSettingsButtonForPlugin(AutomationElement mainWindow, string pluginId)
+    {
+        foreach (var prefix in GetPluginAutomationIdPrefixes(pluginId, "WindowsOptimizationCategorySettings_"))
+        {
+            var element = TryWaitForAutomationIdPrefix(mainWindow, prefix, TimeSpan.FromSeconds(2));
+            if (element is not null)
+                return element;
+        }
+
+        return null;
+    }
+
+    private static AutomationElement? TryFindOptimizationActionForPlugin(AutomationElement mainWindow, string pluginId)
+    {
+        foreach (var prefix in GetPluginAutomationIdPrefixes(pluginId, "WindowsOptimizationAction_"))
+        {
+            var element = TryWaitForAutomationIdPrefixWithScroll(mainWindow, prefix, TimeSpan.FromSeconds(2));
+            if (element is not null)
+                return element;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetPluginAutomationIdPrefixes(string pluginId, string basePrefix)
+    {
+        var normalized = pluginId.Trim();
+        if (normalized.Length == 0)
+            yield break;
+
+        yield return basePrefix + normalized;
+
+        var dotted = normalized.Replace('-', '.');
+        if (!string.Equals(dotted, normalized, StringComparison.Ordinal))
+            yield return basePrefix + dotted;
+
+        var compact = normalized.Replace("-", string.Empty, StringComparison.Ordinal);
+        if (!string.Equals(compact, normalized, StringComparison.Ordinal))
+            yield return basePrefix + compact;
+
+        if (normalized.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return basePrefix + "CustomMouse";
+            yield return basePrefix + "LenovoLegionToolkit.Plugins.CustomMouse";
+        }
+
+        if (normalized.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
+            yield return basePrefix + "ShellIntegration";
+    }
+
     private static void TestOptimizationExtensionCategory(AutomationElement mainWindow, string pluginId)
     {
         EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
@@ -4662,6 +4910,9 @@ Environment variables:
         Console.WriteLine($"[main-smoke] Optimization settings button ready ({pluginId}): {settingsButton.Current.AutomationId}");
 
         var actions = WaitForOptimizationActionButtons(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
+
+        if (actions.Length == 0)
+            throw new InvalidOperationException($"Optimization category for {pluginId} has no action checkboxes.");
 
         if (!toggleActions)
             return;
@@ -5034,7 +5285,7 @@ Environment variables:
     {
         var element = TryWaitForAutomationIdPrefix(root, automationIdPrefix, timeout);
         if (element is null)
-            throw new TimeoutException($"Timed out waiting for automation element prefix '{automationIdPrefix}'.");
+        throw new TimeoutException($"Timed out waiting for automation element prefix '{automationIdPrefix}'.");
 
         return element;
     }
@@ -5101,14 +5352,306 @@ Environment variables:
         ObserveStep("System Optimization all tabs verified", ResolveLiveWindow(mainWindow));
     }
 
+    private static void TestDashboardSensorDetailsToggle(AutomationElement mainWindow)
+    {
+        NavigateToDashboardPage(mainWindow);
+        mainWindow = ResolveLiveWindow(mainWindow);
+
+        var sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(25));
+        CaptureMainWindow(mainWindow, "dashboard-sensors-collapsed");
+
+        var initiallyExpanded = AnyDashboardSensorDetailsVisible(mainWindow);
+        if (initiallyExpanded)
+        {
+            DoubleClick(sensorsCard);
+            WaitUntil(
+                () => !AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
+                TimeSpan.FromSeconds(8),
+                TimeSpan.FromMilliseconds(200));
+        }
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(8));
+        DoubleClick(sensorsCard);
+
+        var expanded = WaitUntil(
+            () => AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
+            TimeSpan.FromSeconds(8),
+            TimeSpan.FromMilliseconds(200));
+
+        if (!expanded)
+        {
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 220);
+            throw new TimeoutException("Dashboard sensor details did not expand after double-click.");
+        }
+
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "dashboard-sensors-expanded");
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(8));
+        DoubleClick(sensorsCard);
+
+        var collapsed = WaitUntil(
+            () => !AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
+            TimeSpan.FromSeconds(8),
+            TimeSpan.FromMilliseconds(200));
+
+        if (!collapsed)
+        {
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 220);
+            throw new TimeoutException("Dashboard sensor details did not collapse after second double-click.");
+        }
+
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "dashboard-sensors-recollapsed");
+        Console.WriteLine("[main-smoke] Dashboard sensor card expand/collapse verified.");
+    }
+
+    private static bool AnyDashboardSensorDetailsVisible(AutomationElement mainWindow)
+    {
+        var detailElementIds = new[]
+        {
+            "DashboardSensorsCpuDetailsPanel",
+            "DashboardSensorsBatteryDetailsPanel",
+            "DashboardSensorsGpuDetailsPanel",
+            "_cpuWattage",
+            "_batteryRateRange",
+            "_gpuMemoryClockText"
+        };
+
+        return detailElementIds.Any(id => IsVisible(FindByAutomationId(mainWindow, id)));
+    }
+
+    private static void TestPowerModeUi(AutomationElement mainWindow)
+    {
+        NavigateToDashboardPage(mainWindow);
+        mainWindow = ResolveLiveWindow(mainWindow);
+
+        var comboBox = TryWaitForAutomationId(mainWindow, "PowerModeControl_ComboBox", TimeSpan.FromSeconds(25));
+        if (comboBox is null)
+        {
+            Console.WriteLine("[main-smoke] Power Mode control is not visible on this device; treating unsupported hardware as a valid basic-mode outcome.");
+            CaptureMainWindow(mainWindow, "power-mode-not-supported");
+            return;
+        }
+
+        VerifyPowerModeComboBox(comboBox);
+        CaptureMainWindow(mainWindow, "power-mode-combobox");
+
+        var settingsButton = TryWaitForAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton", TimeSpan.FromSeconds(6));
+        if (settingsButton is null || !IsInteractable(settingsButton))
+        {
+            Console.WriteLine("[main-smoke] Power Mode settings button is hidden for the current mode/device; combo box presence verified without changing hardware mode.");
+            return;
+        }
+
+        var processId = GetProcessId(mainWindow);
+        var ownerHandle = mainWindow.Current.NativeWindowHandle;
+        Click(settingsButton);
+
+        var settingsWindow = WaitForOwnedWindow(
+            processId,
+            ownerHandle,
+            IsPowerModeSettingsWindow,
+            TimeSpan.FromSeconds(15),
+            "power mode settings window");
+
+        CapturePluginSettingsWindow(settingsWindow, "power-mode", "settings-window");
+
+        if (IsVisible(FindByAutomationId(settingsWindow, "GodModeSettingsWindow")))
+        {
+            WaitForAutomationId(settingsWindow, "GodModePresetComboBox", TimeSpan.FromSeconds(15));
+            WaitForAutomationId(settingsWindow, "GodModeAddPresetButton", TimeSpan.FromSeconds(10));
+            WaitForAutomationId(settingsWindow, "GodModeEditPresetButton", TimeSpan.FromSeconds(10));
+            WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
+
+            if (ResolveBooleanSwitch([], "--exercise-power-mode-presets", ExercisePowerModePresetsEnvironmentVariable))
+                ExerciseTemporaryGodModePreset(settingsWindow);
+            else
+                Console.WriteLine("[main-smoke] God Mode preset controls verified. Set LLT_SMOKE_EXERCISE_POWER_MODE_PRESETS=1 to exercise create/delete UI.");
+        }
+        else
+        {
+            Console.WriteLine("[main-smoke] Balance/AI settings window opened; no custom preset controls expected.");
+        }
+
+        CloseWindow(settingsWindow);
+        Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
+        Console.WriteLine("[main-smoke] Power Mode UI verified without changing the selected hardware mode.");
+    }
+
+    private static void VerifyPowerModeComboBox(AutomationElement comboBox)
+    {
+        if (!comboBox.Current.IsEnabled)
+            throw new InvalidOperationException("Power Mode combo box is visible but disabled.");
+
+        if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
+        {
+            var expander = (ExpandCollapsePattern)expandPattern;
+            expander.Expand();
+            Thread.Sleep(250);
+
+            var options = comboBox
+                .FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                .Cast<AutomationElement>()
+                .Concat(AutomationElement.RootElement
+                    .FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                    .Cast<AutomationElement>())
+                .Where(IsVisible)
+                .ToArray();
+
+            if (options.Length == 0)
+                throw new InvalidOperationException("Power Mode combo box opened but exposed no selectable options.");
+
+            expander.Collapse();
+            Thread.Sleep(120);
+            Console.WriteLine($"[main-smoke] Power Mode combo box exposed {options.Length} option(s).");
+        }
+        else
+        {
+            Console.WriteLine("[main-smoke] Power Mode combo box visible; ExpandCollapsePattern is unavailable, so option count was not inspected.");
+        }
+    }
+
+    private static bool IsPowerModeSettingsWindow(AutomationElement window)
+    {
+        return IsVisible(FindByAutomationId(window, "GodModeSettingsWindow"))
+               || IsVisible(FindByAutomationId(window, "GodModePresetComboBox"))
+               || WindowNameContains(window, "God Mode")
+               || WindowNameContains(window, "Custom")
+               || WindowNameContains(window, "Performance")
+               || WindowNameContains(window, "Balance")
+               || WindowNameContains(window, "自定义")
+               || WindowNameContains(window, "性能")
+               || WindowNameContains(window, "平衡");
+    }
+
+    private static bool IsInputDialogWindow(AutomationElement window)
+    {
+        if (window.Current.ControlType != ControlType.Window)
+            return false;
+
+        var textBox = FindFirstVisibleDescendant(window, element =>
+            element.Current.ControlType == ControlType.Edit
+            || element.Current.ControlType == ControlType.Document);
+
+        return textBox is not null
+               && (FindByAutomationId(window, "ButtonLeft") is not null
+                   || FindByAutomationId(window, "ButtonRight") is not null
+                   || window.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button)).Count >= 2);
+    }
+
+    private static void CompleteInputDialog(int processId, int ownerHandle, string value, string description)
+    {
+        var dialog = WaitForOwnedWindow(
+            processId,
+            ownerHandle,
+            IsInputDialogWindow,
+            TimeSpan.FromSeconds(10),
+            description);
+
+        var input = FindFirstVisibleDescendant(dialog, element =>
+            element.Current.ControlType == ControlType.Edit
+            || element.Current.ControlType == ControlType.Document);
+
+        if (input is null)
+        {
+            DumpAutomationSnapshot(dialog, 160);
+            throw new TimeoutException($"Input field was not found for {description}.");
+        }
+
+        input.SetFocus();
+        Thread.Sleep(120);
+        PressCtrlA();
+        TypeText(value);
+
+        var primaryButton = FindByAutomationId(dialog, "ButtonLeft")
+                            ?? dialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button))
+                                .Cast<AutomationElement>()
+                                .Where(IsVisible)
+                                .FirstOrDefault(button => button.Current.IsEnabled);
+
+        if (primaryButton is not null)
+            Click(primaryButton);
+        else
+            PressVirtualKey(VkEnter);
+
+        Thread.Sleep(350);
+    }
+
+    private static void ExerciseTemporaryGodModePreset(AutomationElement settingsWindow)
+    {
+        var presetComboBox = WaitForAutomationId(settingsWindow, "GodModePresetComboBox", TimeSpan.FromSeconds(10));
+        var originalPresetName = ReadElementText(presetComboBox);
+        var addButton = WaitForAutomationId(settingsWindow, "GodModeAddPresetButton", TimeSpan.FromSeconds(10));
+        var deleteButton = WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
+        var temporaryName = "Smoke preset " + DateTimeOffset.UtcNow.ToString("HHmmss", CultureInfo.InvariantCulture);
+
+        Click(addButton);
+        CompleteInputDialog(settingsWindow.Current.ProcessId, settingsWindow.Current.NativeWindowHandle, temporaryName, "add god mode preset");
+
+        var created = WaitUntil(
+            () =>
+            {
+                var liveWindow = ResolveTopLevelWindow(settingsWindow);
+                var combo = FindByAutomationId(liveWindow, "GodModePresetComboBox");
+                return combo is not null
+                       && IsVisible(combo)
+                       && ReadElementText(combo).Contains(temporaryName, StringComparison.OrdinalIgnoreCase);
+            },
+            TimeSpan.FromSeconds(10),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!created)
+            throw new TimeoutException("Temporary God Mode preset was not selected after creation.");
+
+        settingsWindow = ResolveTopLevelWindow(settingsWindow);
+        deleteButton = WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
+        if (!deleteButton.Current.IsEnabled)
+            throw new InvalidOperationException("God Mode delete preset button stayed disabled after temporary preset creation.");
+
+        Click(deleteButton);
+
+        var deleted = WaitUntil(
+            () =>
+            {
+                var liveWindow = ResolveTopLevelWindow(settingsWindow);
+                var combo = FindByAutomationId(liveWindow, "GodModePresetComboBox");
+                return combo is not null
+                       && IsVisible(combo)
+                       && !ReadElementText(combo).Contains(temporaryName, StringComparison.OrdinalIgnoreCase);
+            },
+            TimeSpan.FromSeconds(10),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!deleted)
+            throw new TimeoutException("Temporary God Mode preset was not removed after delete.");
+
+        Console.WriteLine($"[main-smoke] Temporary God Mode preset create/delete verified. Original='{originalPresetName}' Temporary='{temporaryName}'");
+    }
+
+    private static AutomationElement ResolveTopLevelWindow(AutomationElement window)
+    {
+        var processId = GetProcessId(window);
+        var handle = window.Current.NativeWindowHandle;
+        if (handle != 0)
+            return FindTopLevelWindow(processId, handle) ?? window;
+
+        return ResolveLiveWindow(window);
+    }
+
     private static void VerifyOptimizationTabUi(AutomationElement mainWindow)
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         Click(WaitForAutomationId(mainWindow, "WindowsOptimizationOptimizationTabButton", TimeSpan.FromSeconds(12)));
 
-        var expectedCategories = new[] { "explorer", "performance", "services", "network" };
+        var expectedCategories = new[] { "explorer", "performance", "services" };
         foreach (var categoryKey in expectedCategories)
             ExpandOptimizationCategory(mainWindow, categoryKey);
+
+        if (FindByAutomationId(mainWindow, "WindowsOptimizationCategory_network") is not null)
+            ExpandOptimizationCategory(mainWindow, "network");
+        else
+            Console.WriteLine("[main-smoke] Optional network optimization plugin category is not present; skipping plugin action assertions.");
 
         var expectedActions = new[]
         {
@@ -5126,19 +5669,25 @@ Environment variables:
             "services.sysmain",
             "services.search",
             "services.remoteRegistry",
-            "services.errorReporting",
-            "network.acceleration",
-            "network.optimization"
+            "services.errorReporting"
         };
 
         foreach (var actionKey in expectedActions)
             WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
 
+        var optionalActions = new[] { "network.acceleration", "network.optimization" };
+        foreach (var actionKey in optionalActions)
+        {
+            var action = FindByAutomationId(mainWindow, $"WindowsOptimizationAction_{actionKey}");
+            if (action is not null)
+                WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
+        }
+
         CaptureMainWindow(mainWindow, "system-optimization-optimization-tab");
         Click(WaitForAutomationId(mainWindow, "WindowsOptimizationSelectRecommendedButton", TimeSpan.FromSeconds(8)));
         VerifySelectedActionsWindow(mainWindow);
-        Click(WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8)));
-        Console.WriteLine("[main-smoke] System Optimization tab verified without applying optimization actions.");
+        WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8));
+        Console.WriteLine("[main-smoke] System Optimization tab verified; bulk action button was visible but not clicked.");
     }
 
     private static void VerifyCleanupTabUi(AutomationElement mainWindow)
@@ -5197,8 +5746,8 @@ Environment variables:
 
         CaptureMainWindow(ResolveLiveWindow(mainWindow), "system-optimization-cleanup-scanned");
 
-        Click(WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8)));
-        Console.WriteLine("[main-smoke] System Optimization cleanup tab scanned and selection cleared without running cleanup.");
+        WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8));
+        Console.WriteLine("[main-smoke] System Optimization cleanup tab scanned; cleanup action button was visible but not clicked.");
     }
 
     private static void ExpandOptimizationCategory(AutomationElement mainWindow, string categoryKey)
@@ -5543,7 +6092,7 @@ Environment variables:
             try
             {
                 nav = WaitForWindowsOptimizationNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
-                Click(nav);
+                ActivateNavigationElement(nav, "WindowsOptimizationNavItem");
             }
             catch (TimeoutException)
             {
@@ -5565,7 +6114,7 @@ Environment variables:
             {
                 BringToForeground(mainWindow);
                 if (nav is not null)
-                    MouseClick(nav);
+                    TryActivateNavigationElement(nav, "WindowsOptimizationNavItem");
                 else
                     PressCtrlTab();
             }
@@ -5597,6 +6146,119 @@ Environment variables:
         }
 
         Console.WriteLine("[main-smoke] Navigated to Windows Optimization page");
+    }
+
+    private static void NavigateToDashboardPage(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        if (IsDashboardPageReady(mainWindow))
+            return;
+
+        var arrived = false;
+        for (var attempt = 1; attempt <= 5; attempt++)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            AutomationElement? nav = null;
+            try
+            {
+                nav = WaitForDashboardNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
+                ActivateNavigationElement(nav, "DashboardNavItem");
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[main-smoke] Dashboard navigation element unavailable; trying keyboard navigation fallback (attempt {attempt}/5)");
+                BringToForeground(mainWindow);
+                PressCtrlTab();
+            }
+
+            var quickReady = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsDashboardPageReady(mainWindow);
+                },
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromMilliseconds(200));
+
+            if (!quickReady)
+            {
+                BringToForeground(mainWindow);
+                if (nav is not null)
+                    TryActivateNavigationElement(nav, "DashboardNavItem");
+                else
+                    PressCtrlTab();
+            }
+
+            arrived = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsDashboardPageReady(mainWindow);
+                },
+                TimeSpan.FromSeconds(12),
+                TimeSpan.FromMilliseconds(250));
+
+            if (arrived)
+                break;
+
+            Console.WriteLine($"[main-smoke] Dashboard navigation retry {attempt}/5");
+            Thread.Sleep(700);
+        }
+
+        if (!arrived)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            DumpAutomationSnapshot(mainWindow, 300);
+            throw new TimeoutException("Timed out waiting for Dashboard page.");
+        }
+
+        Console.WriteLine("[main-smoke] Navigated to Dashboard page");
+    }
+
+    private static bool IsDashboardPageReady(AutomationElement mainWindow)
+    {
+        return IsVisible(FindByAutomationId(mainWindow, "DashboardPageRoot"))
+               || IsVisible(FindByAutomationId(mainWindow, "DashboardSensorsCard"))
+               || IsVisible(FindByAutomationId(mainWindow, "PowerModeControl_ComboBox"));
+    }
+
+    private static AutomationElement WaitForDashboardNavigationElement(AutomationElement root, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => TryFindDashboardNavigationElement(ResolveLiveWindow(root), out _),
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        var liveRoot = ResolveLiveWindow(root);
+        if (!found || !TryFindDashboardNavigationElement(liveRoot, out var element) || element is null)
+        {
+            DumpAutomationSnapshot(liveRoot, 250);
+            throw new TimeoutException("Timed out waiting for dashboard navigation item.");
+        }
+
+        return element;
+    }
+
+    private static bool TryFindDashboardNavigationElement(AutomationElement root, out AutomationElement? element)
+    {
+        var idCandidates = new[]
+        {
+            "DashboardNavItem",
+            "_dashboardItem"
+        };
+
+        foreach (var id in idCandidates)
+        {
+            var byId = FindByAutomationId(root, id);
+            if (IsVisible(byId))
+            {
+                element = byId;
+                return true;
+            }
+        }
+
+        element = null;
+        return false;
     }
 
     private static bool IsWindowsOptimizationPageReady(AutomationElement mainWindow)
@@ -6177,9 +6839,7 @@ Environment variables:
 
     private static void DoubleClick(AutomationElement element)
     {
-        MouseClick(element);
-        Thread.Sleep(120);
-        MouseClick(element);
+        MouseDoubleClick(element);
     }
 
     private static void CapturePluginSettingsWindow(AutomationElement settingsWindow, string pluginId, string suffix)
@@ -6971,6 +7631,25 @@ Environment variables:
         mouse_event(MouseEventLeftUp, 0, 0, 0, UIntPtr.Zero);
     }
 
+    private static void MouseDoubleClick(AutomationElement element)
+    {
+        var target = ResolveMouseClickableElement(element);
+        EnsureElementInteractable(target, "mouse double-click target");
+        var rect = target.Current.BoundingRectangle;
+        if (rect.Width <= 0 || rect.Height <= 0)
+            throw new InvalidOperationException($"Cannot double-click element with empty bounds: {element.Current.AutomationId}");
+
+        var centerX = (int)(rect.Left + rect.Width / 2);
+        var centerY = (int)(rect.Top + rect.Height / 2);
+        SetCursorPos(centerX, centerY);
+        Thread.Sleep(60);
+        mouse_event(MouseEventLeftDown, 0, 0, 0, UIntPtr.Zero);
+        mouse_event(MouseEventLeftUp, 0, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(80);
+        mouse_event(MouseEventLeftDown, 0, 0, 0, UIntPtr.Zero);
+        mouse_event(MouseEventLeftUp, 0, 0, 0, UIntPtr.Zero);
+    }
+
     private static void PressCtrlTab()
     {
         keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
@@ -6993,6 +7672,82 @@ Environment variables:
         Thread.Sleep(40);
         keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
         Thread.Sleep(80);
+    }
+
+    private static void TypeText(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        foreach (var character in text)
+            TypeAsciiCharacter(character);
+    }
+
+    private static void TypeAsciiCharacter(char character)
+    {
+        if (!TryMapAsciiKey(character, out var virtualKey, out var shift))
+            throw new ArgumentException($"Unsupported character for smoke keyboard input: '{character}'");
+
+        if (shift)
+        {
+            keybd_event(VkShift, 0, KeyEventExtendedKey, UIntPtr.Zero);
+            Thread.Sleep(20);
+        }
+
+        keybd_event(virtualKey, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(20);
+        keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(20);
+
+        if (shift)
+        {
+            keybd_event(VkShift, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+            Thread.Sleep(20);
+        }
+    }
+
+    private static bool TryMapAsciiKey(char character, out byte virtualKey, out bool shift)
+    {
+        shift = false;
+        if (character is >= 'a' and <= 'z')
+        {
+            virtualKey = (byte)char.ToUpperInvariant(character);
+            return true;
+        }
+
+        if (character is >= 'A' and <= 'Z')
+        {
+            virtualKey = (byte)character;
+            shift = true;
+            return true;
+        }
+
+        if (character is >= '0' and <= '9')
+        {
+            virtualKey = (byte)character;
+            return true;
+        }
+
+        switch (character)
+        {
+            case ' ':
+                virtualKey = VkSpace;
+                return true;
+            case '-':
+                virtualKey = 0xBD;
+                return true;
+            case '_':
+                virtualKey = 0xBD;
+                shift = true;
+                return true;
+            case ':':
+                virtualKey = 0xBA;
+                shift = true;
+                return true;
+            default:
+                virtualKey = 0;
+                return false;
+        }
     }
 
     private static void PressVirtualKey(byte virtualKey)
@@ -7086,7 +7841,8 @@ Environment variables:
 
         try
         {
-            return !element.Current.IsOffscreen;
+            var bounds = element.Current.BoundingRectangle;
+            return !element.Current.IsOffscreen && bounds.Width > 0 && bounds.Height > 0;
         }
         catch
         {

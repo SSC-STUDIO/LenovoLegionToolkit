@@ -28,8 +28,8 @@
                 <StackPanel Grid.Row="0" Margin="0,16,0,24">
                     <TextBlock
                         Focusable="True"
-                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
-                        Text="{x:Static resources:Resource.AutomationPage_Actions_Title}" />
+                        Style="{StaticResource AppPageTitleTextBlockStyle}"
+                        Text="{x:Static resources:Resource.AutomationPage_Title}" />
 
                     <TextBlock
                         Margin="0,8,0,0"
@@ -290,4 +290,3 @@
     </Grid>
 
 </Page>
-

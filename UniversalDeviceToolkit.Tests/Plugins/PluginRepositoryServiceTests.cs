@@ -221,6 +221,29 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             arguments.Should().NotContain("--ssl-revoke-best-effort");
     }
 
+    [Theory]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/assets/123456", true)]
+    [InlineData("https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("file:///C:/Temp/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://example.com/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://github.com/SomeoneElse/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    public void ShouldTrustDownloadedPluginPackage_ShouldOnlyTrustOfficialGitHubReleaseAssets(string candidateUrl, bool expected)
+    {
+        // Arrange
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "ShouldTrustDownloadedPluginPackage",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        // Act
+        var result = method!.Invoke(null, [candidateUrl, "custom-mouse"]);
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));

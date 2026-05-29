@@ -79,9 +79,8 @@ public sealed class LanguagePackManagerTests : IDisposable
     }
 
     [Theory]
-    [InlineData("de", "Universal Device Toolkit.resources.dll")]
-    [InlineData("de", "LenovoLegionToolkit.WPF.resources.dll")]
-    [InlineData("zh-hans", "Universal Device Toolkit.resources.dll")]
+    [InlineData("ff-Latn-SN", "Universal Device Toolkit.resources.dll")]
+    [InlineData("ff-Latn-SN", "LenovoLegionToolkit.WPF.resources.dll")]
     public void IsInstalled_WhenAppSatelliteExists_ReturnsTrue(string cultureName, string satelliteFileName)
     {
         var culture = new CultureInfo(cultureName);
@@ -172,9 +171,9 @@ public sealed class LanguagePackManagerTests : IDisposable
     [Fact]
     public void IsInstalled_WhenOnlyDependencySatellitesExist_ReturnsFalse()
     {
-        var culture = new CultureInfo("de");
+        var culture = new CultureInfo("ff-latn-sn");
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(new Dictionary<string, byte[]>())));
-        var directory = Path.Combine(AppContext.BaseDirectory, "de");
+        var directory = Path.Combine(AppContext.BaseDirectory, "ff-Latn-SN");
 
         try
         {

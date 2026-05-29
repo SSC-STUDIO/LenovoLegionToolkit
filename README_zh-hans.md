@@ -46,9 +46,9 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩�
 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版安装包。v4.0.0 目前以预发布预览形式提供，用于验证多厂商基础模式与 UDT 品牌迁移。
-- **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
-- **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。v4.0.0 是首个稳定版 Universal Device Toolkit，并保留旧 Lenovo Legion Toolkit 的升级兼容。
+- **winget**：可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。winget `PackageIdentifier` 暂时保留 `SSC-STUDIO.LenovoLegionToolkit`，用于保证旧 Lenovo Legion Toolkit 安装可原地升级。
+- **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。Scoop manifest 名称也暂时保留 `lenovolegiontoolkit`。
 - **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
 
 #### 接下来的步骤

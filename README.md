@@ -51,7 +51,7 @@ Please be patient and read through this readme carefully - it contains important
 
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
 
-- **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). v4.0.0 is published as a pre-release preview while multi-vendor basic mode and the Universal Device Toolkit rebrand continue to stabilize.
+- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. v4.0.0 is the first stable Universal Device Toolkit release with legacy Lenovo Legion Toolkit upgrade compatibility.
 - **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.

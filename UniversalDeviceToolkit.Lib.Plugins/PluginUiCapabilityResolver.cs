@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -55,28 +56,19 @@ public static class PluginUiCapabilityResolver
         return default;
     }
 
-    public static PluginUiCapabilities ResolveKnownStorePlugin(string pluginId) =>
-        pluginId.Trim().ToLowerInvariant() switch
+    public static PluginUiCapabilities ResolveFromManifest(PluginManifest? manifest)
+    {
+        var contributes = manifest?.Contributes;
+        if (contributes is null)
+            return default;
+
+        return new PluginUiCapabilities
         {
-            "custom-mouse" => new PluginUiCapabilities
-            {
-                SupportsSettingsPage = true,
-                SupportsOptimizationCategory = true,
-            },
-            "shell-integration" => new PluginUiCapabilities
-            {
-                SupportsOptimizationCategory = true,
-            },
-            "network-acceleration" => new PluginUiCapabilities
-            {
-                SupportsFeaturePage = true,
-            },
-            "vive-tool" => new PluginUiCapabilities
-            {
-                SupportsFeaturePage = true,
-            },
-            _ => default,
+            SupportsSettingsPage = HasContribution(contributes.SettingsPage),
+            SupportsFeaturePage = HasContribution(contributes.FeaturePage),
+            SupportsOptimizationCategory = contributes.OptimizationActions?.Count > 0,
         };
+    }
 
     private static PluginUiCapabilities ReadCapabilitiesFromJson(string manifestPath)
     {
@@ -84,10 +76,20 @@ public static class PluginUiCapabilityResolver
         using var document = JsonDocument.Parse(stream);
         var root = document.RootElement;
 
-        var supportsSettings = ReadBool(root, "hasSettingsPage", "hasSettings", "settingsPage", "supportsSettingsPage");
-        var supportsFeature = ReadBool(root, "hasFeaturePage", "featurePage", "supportsFeaturePage", "hasPluginPage");
+        var contributes = ReadObject(root, "contributes");
+
+        var supportsSettings =
+            HasContribution(contributes, "settingsPage") ||
+            ReadBool(root, "hasSettingsPage", "hasSettings", "settingsPage", "supportsSettingsPage");
+
+        var supportsFeature =
+            HasContribution(contributes, "featurePage") ||
+            ReadBool(root, "hasFeaturePage", "featurePage", "supportsFeaturePage", "hasPluginPage");
+
         var optimizationCategoryId = ReadString(root, "optimizationCategoryId", "optimizationCategory", "categoryId");
-        var supportsOptimization = ReadBool(root, "hasOptimizationCategory", "supportsOptimizationCategory", "optimizationCategory")
+        var supportsOptimization =
+            HasOptimizationContribution(contributes) ||
+            ReadBool(root, "hasOptimizationCategory", "supportsOptimizationCategory", "optimizationCategory")
             || !string.IsNullOrWhiteSpace(optimizationCategoryId);
 
         return new PluginUiCapabilities
@@ -97,6 +99,53 @@ public static class PluginUiCapabilityResolver
             SupportsOptimizationCategory = supportsOptimization,
         };
     }
+
+    private static bool HasContribution(PluginManifestPageContribution? contribution) =>
+        contribution is not null &&
+        (!string.IsNullOrWhiteSpace(contribution.Class) || !string.IsNullOrWhiteSpace(contribution.Title));
+
+    private static bool HasContribution(JsonElement? root, string propertyName)
+    {
+        if (root is null)
+            return false;
+
+        if (!TryGetProperty(root.Value, propertyName, out var property))
+            return false;
+
+        return property.ValueKind switch
+        {
+            JsonValueKind.Object => property.EnumerateObject().Any(item =>
+                item.Value.ValueKind != JsonValueKind.Null &&
+                item.Value.ValueKind != JsonValueKind.Undefined &&
+                (item.Value.ValueKind != JsonValueKind.String || !string.IsNullOrWhiteSpace(item.Value.GetString()))),
+            JsonValueKind.True => true,
+            JsonValueKind.String => !string.IsNullOrWhiteSpace(property.GetString()),
+            _ => false,
+        };
+    }
+
+    private static bool HasOptimizationContribution(JsonElement? root)
+    {
+        if (root is null)
+            return false;
+
+        if (!TryGetProperty(root.Value, "optimizationActions", out var property))
+            return false;
+
+        return property.ValueKind switch
+        {
+            JsonValueKind.Array => property.GetArrayLength() > 0,
+            JsonValueKind.Object => true,
+            JsonValueKind.True => true,
+            JsonValueKind.String => !string.IsNullOrWhiteSpace(property.GetString()),
+            _ => false,
+        };
+    }
+
+    private static JsonElement? ReadObject(JsonElement root, string propertyName) =>
+        TryGetProperty(root, propertyName, out var property) && property.ValueKind == JsonValueKind.Object
+            ? property
+            : null;
 
     private static bool ReadBool(JsonElement root, params string[] propertyNames)
     {
@@ -136,5 +185,20 @@ public static class PluginUiCapabilityResolver
         }
 
         return null;
+    }
+
+    private static bool TryGetProperty(JsonElement root, string propertyName, out JsonElement value)
+    {
+        foreach (var property in root.EnumerateObject())
+        {
+            if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                value = property.Value;
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
     }
 }

@@ -209,33 +209,74 @@ public class NavigationStore : Control
     private void UpdateNavigationWidth(bool animate)
     {
         var targetWidth = GetNavigationWidth();
-        Width = targetWidth;
-        MinWidth = targetWidth;
-        MaxWidth = targetWidth;
+        var currentWidth = ResolveCurrentNavigationWidth(targetWidth);
+
+        BeginAnimation(WidthProperty, null);
+        BeginAnimation(MinWidthProperty, null);
+        BeginAnimation(MaxWidthProperty, null);
 
         if (!animate || !ShouldAnimate())
-            return;
-
-        var animation = new DoubleAnimation
         {
-            From = ActualWidth > 0 ? ActualWidth : targetWidth,
-            To = targetWidth,
-            Duration = Application.Current.Resources["AnimationDurationMedium"] as Duration? ?? new Duration(TimeSpan.FromMilliseconds(200)),
-            EasingFunction = Application.Current.Resources["AnimationEasingCubicOut"] as IEasingFunction
-        };
+            SetNavigationWidth(targetWidth);
+            return;
+        }
+
+        if (Math.Abs(currentWidth - targetWidth) < 0.5)
+        {
+            SetNavigationWidth(targetWidth);
+            return;
+        }
+
+        var animation = CreateNavigationWidthAnimation(currentWidth, targetWidth);
+        animation.Completed += (_, _) => SetNavigationWidth(targetWidth);
 
         BeginAnimation(WidthProperty, animation);
-        BeginAnimation(MinWidthProperty, animation);
-        BeginAnimation(MaxWidthProperty, animation);
+        BeginAnimation(MinWidthProperty, animation.Clone());
+        BeginAnimation(MaxWidthProperty, animation.Clone());
+    }
+
+    private double ResolveCurrentNavigationWidth(double targetWidth)
+    {
+        if (ActualWidth > 0)
+            return ActualWidth;
+
+        if (!double.IsNaN(Width) && Width > 0)
+            return Width;
+
+        return IsExpanded ? GetNavigationWidth(false) : GetNavigationWidth(true);
+    }
+
+    private static DoubleAnimation CreateNavigationWidthAnimation(double from, double to)
+    {
+        return new DoubleAnimation
+        {
+            From = from,
+            To = to,
+            Duration = Application.Current.Resources["AnimationDurationMedium"] as Duration? ?? new Duration(TimeSpan.FromMilliseconds(200)),
+            EasingFunction = Application.Current.Resources["AnimationEasingCubicOut"] as IEasingFunction,
+            FillBehavior = FillBehavior.Stop
+        };
+    }
+
+    private void SetNavigationWidth(double width)
+    {
+        Width = width;
+        MinWidth = width;
+        MaxWidth = width;
     }
 
     private double GetNavigationWidth()
     {
-        var key = IsExpanded ? "NavigationWidthExpanded" : "NavigationWidthCollapsed";
+        return GetNavigationWidth(IsExpanded);
+    }
+
+    private static double GetNavigationWidth(bool isExpanded)
+    {
+        var key = isExpanded ? "NavigationWidthExpanded" : "NavigationWidthCollapsed";
         if (Application.Current.TryFindResource(key) is double width)
             return width;
 
-        return IsExpanded ? 220 : 70;
+        return isExpanded ? 220 : 70;
     }
 
     private static bool ShouldAnimate()

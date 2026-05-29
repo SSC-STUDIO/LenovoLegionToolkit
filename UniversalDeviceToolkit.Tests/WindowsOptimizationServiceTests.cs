@@ -36,8 +36,8 @@ public class WindowsOptimizationServiceTests
         categoryKeys.Should().Contain("explorer");
         categoryKeys.Should().Contain("performance");
         categoryKeys.Should().Contain("services");
-        categoryKeys.Should().Contain("network");
         categoryKeys.Should().Contain("cleanup.cache");
+        categoryKeys.Should().NotContain("network", "network acceleration is provided by the plugin package, not the host app");
     }
 
     [Fact]
@@ -73,16 +73,16 @@ public class WindowsOptimizationServiceTests
         allActionKeys.Should().Contain("explorer.taskbar");
         allActionKeys.Should().Contain("performance.powerPlan");
         allActionKeys.Should().Contain("services.diagnostics");
-        allActionKeys.Should().Contain("network.acceleration");
         allActionKeys.Should().Contain("cleanup.tempFiles");
         allActionKeys.Should().Contain("cleanup.custom");
+        allActionKeys.Should().NotContain("network.acceleration", "network acceleration is provided by the plugin package, not the host app");
         
         // Verify expected categories are represented by their actions
         allActionKeys.Should().Contain(k => k.StartsWith("explorer."));
         allActionKeys.Should().Contain(k => k.StartsWith("performance."));
         allActionKeys.Should().Contain(k => k.StartsWith("services."));
-        allActionKeys.Should().Contain(k => k.StartsWith("network."));
         allActionKeys.Should().Contain(k => k.StartsWith("cleanup."));
+        allActionKeys.Should().NotContain(k => k.StartsWith("network."), "plugin-specific optimization actions must not be built into the host app");
     }
 
     [Fact]

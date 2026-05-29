@@ -34,7 +34,17 @@ public partial class DashboardPage
 
     private async void DashboardPage_Initialized(object? sender, EventArgs e)
     {
-        await RefreshAsync();
+        try
+        {
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            _loader.IsLoading = false;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard initialization failed.", ex);
+        }
     }
 
     private void DashboardPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -48,8 +58,6 @@ public partial class DashboardPage
     private async Task RefreshAsync()
     {
         _loader.IsLoading = true;
-
-        var initializedTasks = new List<Task> { Task.Delay(TimeSpan.FromSeconds(1)) };
 
         _scrollViewer.ScrollToTop();
 
@@ -79,7 +87,6 @@ public partial class DashboardPage
             var control = new DashboardGroupControl(group);
             _content.Children.Add(control);
             _dashboardGroupControls.Add(control);
-            initializedTasks.Add(control.InitializedTask);
         }
 
         _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
@@ -106,15 +113,8 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
-        var completedTask = await Task.WhenAny(Task.WhenAll(initializedTasks), timeoutTask);
-
-        if (completedTask == timeoutTask)
-        {
-            Log.Instance.Warning($"Dashboard initialization timed out after 10 seconds");
-        }
-
         _loader.IsLoading = false;
+        await Task.Delay(TimeSpan.FromMilliseconds(250));
     }
 
     private void DashboardPage_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
@@ -12,11 +14,12 @@ public class HttpClientFactory
     private Uri? _url;
     private string? _username;
     private string? _password;
-    private bool _allowAllCerts;
 
     public virtual HttpClientHandler CreateHandler()
     {
         var handler = new HttpClientHandler();
+        handler.CheckCertificateRevocationList = true;
+        handler.ServerCertificateCustomValidationCallback = ValidateServerCertificate;
 
         if (_url is not null)
         {
@@ -29,34 +32,6 @@ public class HttpClientFactory
 
             if (_username is not null && _password is not null)
                 handler.DefaultProxyCredentials = new NetworkCredential(_username, _password);
-
-            if (_allowAllCerts)
-            {
-                // SECURITY FIX: Always validate certificates in production
-                // Only allow bypass in explicit development builds
-                // Never bypass based on debugger attachment status
-                #if DEBUG
-                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-                {
-                    // In DEBUG builds, log certificate errors but still validate
-                    if (errors != SslPolicyErrors.None)
-                    {
-                        Debug.WriteLine($"SSL Certificate validation error: {errors}");
-                        // Still return false to enforce validation
-                    }
-                    return errors == SslPolicyErrors.None;
-                };
-                #else
-                // RELEASE builds: Never bypass certificate validation
-                // This prevents MITM attacks even if --proxy-allow-all-certs is specified
-                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-                {
-                    // Always validate certificates in production
-                    // Certificate errors cannot be bypassed
-                    return errors == SslPolicyErrors.None;
-                };
-                #endif
-            }
         }
 
         return handler;
@@ -69,12 +44,38 @@ public class HttpClientFactory
         _url = url;
         _username = username;
         _password = password;
-        // SECURITY: Ignore allowAllCerts in release builds
-        // This prevents users from bypassing certificate validation
-        #if DEBUG
-        _allowAllCerts = allowAllCerts;
-        #else
-        _allowAllCerts = false;
-        #endif
+        _ = allowAllCerts;
+    }
+
+    internal static bool ValidateServerCertificate(HttpRequestMessage message, X509Certificate2? cert, X509Chain? chain, SslPolicyErrors errors)
+    {
+        if (errors == SslPolicyErrors.None)
+            return true;
+
+        if (errors != SslPolicyErrors.RemoteCertificateChainErrors || chain is null)
+        {
+            Debug.WriteLine($"SSL certificate validation error: {errors}");
+            return false;
+        }
+
+        var chainStatus = chain.ChainStatus;
+        if (IsOnlyRevocationAvailabilityFailure(chainStatus))
+        {
+            Debug.WriteLine($"SSL certificate revocation status unavailable for {message.RequestUri}; continuing with otherwise valid certificate chain.");
+            return true;
+        }
+
+        Debug.WriteLine($"SSL certificate chain validation failed for {message.RequestUri}: {string.Join(", ", chainStatus.Select(status => status.Status))}");
+        return false;
+    }
+
+    internal static bool IsOnlyRevocationAvailabilityFailure(IReadOnlyCollection<X509ChainStatus> chainStatus)
+    {
+        if (chainStatus.Count == 0)
+            return false;
+
+        return chainStatus
+            .Select(status => status.Status & ~X509ChainStatusFlags.RevocationStatusUnknown & ~X509ChainStatusFlags.OfflineRevocation)
+            .All(status => status == X509ChainStatusFlags.NoError);
     }
 }

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -10,8 +12,22 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
-public class OptimizationCategoryExtenderTests
+public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 {
+    private readonly string? _originalAppDataOverride;
+
+    public OptimizationCategoryExtenderTests()
+    {
+        _originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+    }
+
+    public override void Dispose()
+    {
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
+        base.Dispose();
+    }
+
     [Fact]
     public void GetPluginCategories_WhenNoInstalledPlugins_ShouldReturnEmpty()
     {
@@ -55,6 +71,83 @@ public class OptimizationCategoryExtenderTests
         var extender = new OptimizationCategoryExtender(pluginManager.Object);
 
         extender.GetPluginCategories().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenInstalledManifestHasOptimizationActions_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "manifest-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "manifest-plugin",
+              "name": "Manifest Plugin",
+              "description": "Manifest description",
+              "contributes": {
+                "settingsPage": {
+                  "class": "Plugin.Settings",
+                  "title": "Settings"
+                },
+                "optimizationActions": [
+                  {
+                    "id": "manifest.action",
+                    "title": "Manifest action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        categories.Should().ContainSingle(category =>
+            category.Key == pluginId &&
+            category.PluginId == pluginId &&
+            category.Actions.Count == 1 &&
+            category.Actions[0].Key == "manifest.action");
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenInstalledManifestHasSettingsPageOnly_ShouldSkipEmptyCategory()
+    {
+        var pluginId = "settings-only-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "settings-only-plugin",
+              "name": "Settings Only Plugin",
+              "description": "Settings-only description",
+              "contributes": {
+                "settingsPage": {
+                  "class": "Plugin.Settings",
+                  "title": "Settings"
+                },
+                "optimizationActions": []
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        categories.Should().BeEmpty();
     }
 
     private sealed class TestOptimizationProvider(string id, WindowsOptimizationCategoryDefinition category) : IPlugin, IOptimizationCategoryProvider

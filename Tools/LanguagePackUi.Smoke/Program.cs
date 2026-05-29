@@ -16,13 +16,18 @@ const string pass = "PASS";
 const string fail = "FAIL";
 const string StableCatalogUrl = "https://ssc-studio.github.io/UniversalDeviceToolkit/resources/stable/catalog.json";
 const string DefaultLocalCatalogUrl = "http://127.0.0.1:18765/catalog.json";
+const byte VkControl = 0x11;
+const byte VkTab = 0x09;
+const uint KeyEventExtendedKey = 0x0001;
+const uint KeyEventKeyUp = 0x0002;
 
 var options = SmokeOptions.Parse(args);
 var repositoryRoot = ResolveRepositoryRoot();
-var runtimeDirectory = ResolveRuntimeDirectory(repositoryRoot);
+var runtimeDirectory = ResolveRuntimeDirectory(repositoryRoot, options.AppDirectory);
 var artifactRoot = Path.Combine(Path.GetTempPath(), $"udt-lang-ui-smoke-{DateTime.Now:yyyyMMdd-HHmmss}");
 var sandboxRoot = Path.Combine(artifactRoot, "sandbox");
 var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
+var singleInstanceKey = Path.GetFileName(artifactRoot);
 Directory.CreateDirectory(appDataDirectory);
 
 var version = GetAppVersion(runtimeDirectory);
@@ -54,6 +59,9 @@ if (options.BackendOnly)
 }
 
 File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "en");
+File.WriteAllLines(
+    Path.Combine(appDataDirectory, "device-setup"),
+    ["devicePackId=", "basicMode=false", $"confirmedAtUtc={DateTimeOffset.UtcNow:O}"]);
 await File.WriteAllTextAsync(
     Path.Combine(appDataDirectory, "settings.json"),
     """
@@ -80,7 +88,7 @@ var localizedUiTimeout = useOnlineLikeTimeouts ? TimeSpan.FromMinutes(2) : TimeS
 
 try
 {
-    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory, sandboxRoot);
+    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory, singleInstanceKey);
     if (effectiveCatalogUrl is not null)
     {
         startInfo.EnvironmentVariables["UDT_RESOURCE_CATALOG_URL"] = effectiveCatalogUrl;
@@ -94,14 +102,14 @@ try
 
     startInfo.EnvironmentVariables["UDT_APPDATA_OVERRIDE"] = appDataDirectory;
     startInfo.EnvironmentVariables["LLT_APPDATA_OVERRIDE"] = appDataDirectory;
-    startInfo.EnvironmentVariables["UDT_SINGLE_INSTANCE_KEY"] = Path.GetFileName(sandboxRoot);
-    startInfo.EnvironmentVariables["LLT_SINGLE_INSTANCE_KEY"] = Path.GetFileName(sandboxRoot);
+    startInfo.EnvironmentVariables["UDT_SINGLE_INSTANCE_KEY"] = singleInstanceKey;
+    startInfo.EnvironmentVariables["LLT_SINGLE_INSTANCE_KEY"] = singleInstanceKey;
     startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
     startInfo.EnvironmentVariables["LLT_SMOKE_AUTOMATION"] = "1";
 
     Console.WriteLine($"[lang-ui-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
     process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app.");
-    process = WaitForAppProcess(process, TimeSpan.FromSeconds(30));
+    process = WaitForAppProcess(process, runtimeDirectory, TimeSpan.FromSeconds(30));
     try
     {
         process.WaitForInputIdle(20000);
@@ -174,9 +182,13 @@ try
         Console.WriteLine($"{pass}: Sandbox lang file set to {targetCulture}.");
     }
 
-    if (!WaitForLocalizedUi(process, uiMarkers.UiStrings, localizedUiTimeout))
+    process = RestartAppForLanguageVerification(process, runtimeDirectory, appDataDirectory, singleInstanceKey);
+
+    if (!WaitForLocalizedUi(process, uiMarkers.UiStrings, localizedUiTimeout, out var localizedWindow))
     {
         Console.WriteLine($"{fail}: Main window did not show expected localized UI strings after install.");
+        if (localizedWindow is not null)
+            DumpAutomationSnapshot(RefreshWindow(localizedWindow), 260);
         failures++;
     }
     else
@@ -223,8 +235,18 @@ static string ResolveRepositoryRoot()
     throw new DirectoryNotFoundException("Could not locate repository root.");
 }
 
-static string ResolveRuntimeDirectory(string repositoryRoot)
+static string ResolveRuntimeDirectory(string repositoryRoot, string? appDirectoryOverride)
 {
+    if (!string.IsNullOrWhiteSpace(appDirectoryOverride))
+    {
+        var runtimeDirectory = Path.GetFullPath(appDirectoryOverride);
+        if (File.Exists(Path.Combine(runtimeDirectory, "Universal Device Toolkit.exe")) ||
+            File.Exists(Path.Combine(runtimeDirectory, "Universal Device Toolkit.dll")))
+            return runtimeDirectory;
+
+        throw new DirectoryNotFoundException($"Main app startup files not found in --app-dir: {runtimeDirectory}");
+    }
+
     foreach (var configuration in new[] { "Debug", "Release" })
     {
         var root = Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF", "bin", configuration);
@@ -234,6 +256,7 @@ static string ResolveRuntimeDirectory(string repositoryRoot)
         var runtimeDirectory = Directory
             .EnumerateFiles(root, "Universal Device Toolkit.exe", SearchOption.AllDirectories)
             .Select(Path.GetDirectoryName)
+            .OfType<string>()
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .OrderByDescending(Directory.GetLastWriteTimeUtc)
             .FirstOrDefault();
@@ -275,10 +298,10 @@ static string GetAppVersion(string runtimeDirectory)
     return "3.8.1";
 }
 
-static ProcessStartInfo CreateAppStartInfo(string runtimeDirectory, string appDataDirectory, string sandboxRoot)
+static ProcessStartInfo CreateAppStartInfo(string runtimeDirectory, string appDataDirectory, string singleInstanceKey)
 {
     var arguments =
-        $"--skip-compat-check --disable-update-checker --disable-conflicting-software-warning --trace --single-instance-key={Path.GetFileName(sandboxRoot)}";
+        $"--skip-compat-check --disable-update-checker --disable-conflicting-software-warning --trace --single-instance-key={singleInstanceKey}";
 
     var dllPath = Path.Combine(runtimeDirectory, "Universal Device Toolkit.dll");
     var runtimeConfigPath = Path.Combine(runtimeDirectory, "Universal Device Toolkit.runtimeconfig.json");
@@ -454,23 +477,62 @@ static async Task<string> GetStringWithRetryAsync(HttpClient http, string url, i
     throw lastError ?? new InvalidOperationException("Preflight request failed.");
 }
 
-static bool WaitForLocalizedUi(Process process, string[] expectedStrings, TimeSpan timeout)
+static bool WaitForLocalizedUi(Process process, string[] expectedStrings, TimeSpan timeout, out AutomationElement? localizedWindow)
 {
-    return WaitUntil(
-        () =>
+    localizedWindow = null;
+    var deadline = DateTime.UtcNow + timeout;
+    while (DateTime.UtcNow < deadline)
+    {
+        if (process.HasExited)
+            return false;
+
+        var window = TryFindMainWindow(process) ?? TryFindMainShellWindowAnyProcess();
+        if (window is not null)
         {
-            if (process.HasExited)
-                return false;
-
-            var window = TryFindMainWindow(process) ?? TryFindMainShellWindowAnyProcess();
-            if (window is null)
-                return false;
-
             var liveWindow = RefreshWindow(window);
-            return expectedStrings.Any(marker => FindVisibleTextContains(liveWindow, marker));
-        },
-        timeout,
-        "localized UI strings");
+            localizedWindow = liveWindow;
+            if (expectedStrings.Any(marker =>
+                    FindVisibleTextContains(liveWindow, marker) ||
+                    FindVisibleNameContains(liveWindow, marker)))
+                return true;
+        }
+
+        Thread.Sleep(500);
+    }
+
+    Console.WriteLine("[lang-ui-smoke] Timeout: localized UI strings");
+    return false;
+}
+
+static Process RestartAppForLanguageVerification(Process process, string runtimeDirectory, string appDataDirectory, string singleInstanceKey)
+{
+    try
+    {
+        if (!process.HasExited)
+        {
+            process.Kill(entireProcessTree: true);
+            process.WaitForExit(5000);
+        }
+    }
+    catch
+    {
+        // best-effort cleanup; the new single-instance key below prevents collisions.
+    }
+
+    var restartKey = $"{singleInstanceKey}-localized";
+    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory, restartKey);
+    startInfo.EnvironmentVariables["UDT_APPDATA_OVERRIDE"] = appDataDirectory;
+    startInfo.EnvironmentVariables["LLT_APPDATA_OVERRIDE"] = appDataDirectory;
+    startInfo.EnvironmentVariables["UDT_SINGLE_INSTANCE_KEY"] = restartKey;
+    startInfo.EnvironmentVariables["LLT_SINGLE_INSTANCE_KEY"] = restartKey;
+    startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
+    startInfo.EnvironmentVariables["LLT_SMOKE_AUTOMATION"] = "1";
+
+    Console.WriteLine($"[lang-ui-smoke] Restarting app for localized UI verification: {startInfo.FileName} {startInfo.Arguments}");
+    var restarted = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to restart app for localized UI verification.");
+    restarted = WaitForAppProcess(restarted, runtimeDirectory, TimeSpan.FromSeconds(30));
+    _ = WaitForMainWindow(restarted, appDataDirectory, TimeSpan.FromSeconds(180));
+    return restarted;
 }
 
 static UiMarkers GetUiMarkersForCulture(string culture) =>
@@ -528,15 +590,17 @@ static AutomationElement? FindInstallLanguageButton(AutomationElement root) =>
     ?? FindByName(root, "Install language", ControlType.Button)
     ?? FindByName(root, "Sprache installieren", ControlType.Button);
 
-static Process WaitForAppProcess(Process initialProcess, TimeSpan timeout)
+static Process WaitForAppProcess(Process initialProcess, string runtimeDirectory, TimeSpan timeout)
 {
     var deadline = DateTime.UtcNow + timeout;
+    var normalizedRuntimeDirectory = Path.GetFullPath(runtimeDirectory).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     while (DateTime.UtcNow < deadline)
     {
         if (initialProcess.HasExited)
             break;
 
         var child = Process.GetProcessesByName("Universal Device Toolkit")
+            .Where(p => ProcessLooksLikeRuntimeDirectory(p, normalizedRuntimeDirectory))
             .OrderByDescending(p => p.StartTime)
             .FirstOrDefault();
         if (child is not null && child.Id != initialProcess.Id)
@@ -552,6 +616,32 @@ static Process WaitForAppProcess(Process initialProcess, TimeSpan timeout)
     }
 
     return initialProcess;
+}
+
+static bool ProcessLooksLikeRuntimeDirectory(Process process, string runtimeDirectory)
+{
+    try
+    {
+        var executablePath = process.MainModule?.FileName;
+        if (!string.IsNullOrWhiteSpace(executablePath) &&
+            Path.GetFullPath(Path.GetDirectoryName(executablePath) ?? string.Empty)
+                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                .Equals(runtimeDirectory, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        using var searcher = new System.Management.ManagementObjectSearcher(
+            "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id.ToString(CultureInfo.InvariantCulture));
+        var commandLine = searcher.Get()
+            .Cast<System.Management.ManagementObject>()
+            .Select(mo => mo["CommandLine"] as string)
+            .FirstOrDefault();
+
+        return commandLine?.Contains(runtimeDirectory, StringComparison.OrdinalIgnoreCase) == true;
+    }
+    catch
+    {
+        return false;
+    }
 }
 
 static AutomationElement WaitForMainWindow(Process process, string appDataDirectory, TimeSpan timeout)
@@ -777,7 +867,7 @@ static void DismissCompatibilityDialog(AutomationElement mainWindow) => TryDismi
 
 static void ClickSettingsNavigation(AutomationElement mainWindow)
 {
-    for (var attempt = 1; attempt <= 4; attempt++)
+    for (var attempt = 1; attempt <= 5; attempt++)
     {
         mainWindow = RefreshWindow(mainWindow);
         BringToForeground(mainWindow);
@@ -785,20 +875,118 @@ static void ClickSettingsNavigation(AutomationElement mainWindow)
         if (SettingsAppearancePageIsReady(mainWindow))
             return;
 
-        var settingsNav = FindDescendant(mainWindow, "SettingsNavItem")
+        var settingsNav = FindInteractableDescendant(mainWindow, "SettingsNavItem")
+                          ?? FindDescendant(mainWindow, "SettingsNavItem")
                           ?? FindByName(mainWindow, "Settings", ControlType.ListItem)
                           ?? FindByName(mainWindow, "Einstellungen", ControlType.ListItem)
                           ?? FindByName(mainWindow, "设置", ControlType.ListItem)
                           ?? FindByName(mainWindow, "Settings", ControlType.Button);
 
         if (settingsNav is not null)
-            ActivateElement(settingsNav);
+            ActivateNavigationElement(settingsNav);
 
-        Thread.Sleep(attempt == 4 ? 0 : 800);
+        if (SettingsAppearancePageIsReady(RefreshWindow(mainWindow)))
+            return;
+
+        TryOpenSettingsWithKeyboard(mainWindow);
+
+        if (SettingsAppearancePageIsReady(RefreshWindow(mainWindow)))
+            return;
+
+        Thread.Sleep(attempt == 5 ? 0 : 800);
     }
 
     if (!SettingsAppearancePageIsReady(RefreshWindow(mainWindow)))
+    {
+        DumpAutomationSnapshot(RefreshWindow(mainWindow), 220);
         throw new InvalidOperationException("Settings navigation item was not found or did not open the appearance page.");
+    }
+}
+
+static void ActivateNavigationElement(AutomationElement element)
+{
+    try
+    {
+        element.SetFocus();
+    }
+    catch
+    {
+        // Continue with click paths.
+    }
+
+    try
+    {
+        if (element.TryGetCurrentPattern(InvokePattern.Pattern, out var invokeObj) && invokeObj is InvokePattern invoke)
+        {
+            invoke.Invoke();
+            Thread.Sleep(250);
+            return;
+        }
+    }
+    catch
+    {
+        // Continue with selection fallback.
+    }
+
+    try
+    {
+        if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var selectObj) && selectObj is SelectionItemPattern select)
+        {
+            select.Select();
+            Thread.Sleep(250);
+            return;
+        }
+    }
+    catch
+    {
+        // Continue with mouse fallback.
+    }
+
+    try
+    {
+        MouseClick(element);
+        Thread.Sleep(250);
+        return;
+    }
+    catch
+    {
+        // Some navigation item bounds point at the clipped container; click visible text/icon descendants next.
+    }
+
+    var clickableDescendant = FindFirstVisibleDescendant(
+        element,
+        candidate => candidate.Current.ControlType == ControlType.Text ||
+                     candidate.Current.ControlType == ControlType.Image);
+    if (clickableDescendant is not null)
+    {
+        MouseClick(clickableDescendant);
+        Thread.Sleep(250);
+        return;
+    }
+
+    ActivateElement(element);
+    Thread.Sleep(250);
+}
+
+static void TryOpenSettingsWithKeyboard(AutomationElement mainWindow)
+{
+    BringToForeground(mainWindow);
+
+    for (byte digit = 0x35; digit <= 0x38; digit++)
+    {
+        PressCtrlDigit(digit);
+        Thread.Sleep(350);
+        if (SettingsAppearancePageIsReady(RefreshWindow(mainWindow)))
+            return;
+    }
+
+    for (var i = 0; i < 8; i++)
+    {
+        PressCtrlTab();
+        Thread.Sleep(250);
+        if (SettingsAppearancePageIsReady(RefreshWindow(mainWindow)))
+            return;
+    }
 }
 
 static bool WaitForLanguageInstallActivity(AutomationElement mainWindow, string cultureInstallDirectory, TimeSpan timeout)
@@ -832,32 +1020,6 @@ static bool ProgressBarShowsActivity(AutomationElement progressBar)
     return progressBar.Current.IsEnabled && progressBar.Current.BoundingRectangle.Width > 0;
 }
 
-static AutomationElement WaitForVisibleDescendant(AutomationElement root, string automationId, TimeSpan timeout)
-{
-    if (!WaitUntil(
-            () =>
-            {
-                var element = FindDescendant(RefreshWindow(root), automationId);
-                return element is not null && IsVisible(element);
-            },
-            timeout,
-            $"visible '{automationId}'"))
-        throw new TimeoutException($"Timed out waiting for visible element '{automationId}'.");
-
-    return FindDescendant(RefreshWindow(root), automationId)!;
-}
-
-static AutomationElement WaitForDescendant(AutomationElement root, string automationId, TimeSpan timeout)
-{
-    if (!WaitUntil(
-            () => FindDescendant(RefreshWindow(root), automationId) is not null,
-            timeout,
-            $"element '{automationId}'"))
-        throw new TimeoutException($"Timed out waiting for element '{automationId}'.");
-
-    return FindDescendant(RefreshWindow(root), automationId)!;
-}
-
 static AutomationElement RefreshWindow(AutomationElement window)
 {
     try
@@ -880,6 +1042,17 @@ static AutomationElement? FindDescendant(AutomationElement root, string automati
     return root.FindFirst(TreeScope.Descendants, condition);
 }
 
+static AutomationElement? FindInteractableDescendant(AutomationElement root, string automationId)
+{
+    var condition = new PropertyCondition(AutomationElement.AutomationIdProperty, automationId);
+    return root.FindAll(TreeScope.Descendants, condition)
+        .Cast<AutomationElement>()
+        .Where(IsVisible)
+        .OrderByDescending(element => element.TryGetCurrentPattern(InvokePattern.Pattern, out _))
+        .ThenByDescending(element => element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out _))
+        .FirstOrDefault();
+}
+
 static AutomationElement? FindByName(AutomationElement root, string name, ControlType controlType)
 {
     var condition = new AndCondition(
@@ -892,6 +1065,21 @@ static AutomationElement? FindByControlType(AutomationElement root, ControlType 
 {
     var condition = new PropertyCondition(AutomationElement.ControlTypeProperty, controlType);
     return root.FindFirst(TreeScope.Descendants, condition);
+}
+
+static AutomationElement? FindFirstVisibleDescendant(AutomationElement root, Func<AutomationElement, bool> predicate)
+{
+    try
+    {
+        return root.FindAll(TreeScope.Descendants, Condition.TrueCondition)
+            .Cast<AutomationElement>()
+            .Where(IsVisible)
+            .FirstOrDefault(predicate);
+    }
+    catch
+    {
+        return null;
+    }
 }
 
 static bool IsVisible(AutomationElement element) =>
@@ -955,6 +1143,46 @@ static bool SettingsAppearancePageIsReady(AutomationElement root) =>
     || FindVisibleTextContains(root, "Designstil")
     || FindVisibleTextContains(root, "主题样式");
 
+static void DumpAutomationSnapshot(AutomationElement root, int maxElements)
+{
+    try
+    {
+        Console.WriteLine("[lang-ui-smoke] Automation snapshot:");
+        var index = 0;
+        foreach (AutomationElement element in root.FindAll(TreeScope.Descendants, Condition.TrueCondition))
+        {
+            if (++index > maxElements)
+            {
+                Console.WriteLine("[lang-ui-smoke]   ...");
+                break;
+            }
+
+            string id;
+            string name;
+            string type;
+            try
+            {
+                id = element.Current.AutomationId ?? string.Empty;
+                name = element.Current.Name ?? string.Empty;
+                type = element.Current.ControlType.ProgrammaticName ?? string.Empty;
+            }
+            catch
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(id) && string.IsNullOrWhiteSpace(name))
+                continue;
+
+            Console.WriteLine($"[lang-ui-smoke]   {type} | id='{id}' | name='{name}'");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[lang-ui-smoke] Failed to dump automation snapshot: {ex.Message}");
+    }
+}
+
 static bool FindVisibleTextContains(AutomationElement root, string text)
 {
     var condition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text);
@@ -969,6 +1197,25 @@ static bool FindVisibleTextContains(AutomationElement root, string text)
         catch
         {
             // skip stale elements
+        }
+    }
+
+    return false;
+}
+
+static bool FindVisibleNameContains(AutomationElement root, string text)
+{
+    foreach (AutomationElement element in root.FindAll(TreeScope.Descendants, Condition.TrueCondition))
+    {
+        try
+        {
+            var name = element.Current.Name ?? string.Empty;
+            if (name.Contains(text, StringComparison.OrdinalIgnoreCase) && IsVisible(element))
+                return true;
+        }
+        catch
+        {
+            // Ignore stale UIA elements while the app is still loading.
         }
     }
 
@@ -1020,6 +1267,31 @@ static extern bool SetCursorPos(int x, int y);
 [DllImport("user32.dll")]
 static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
 
+[DllImport("user32.dll")]
+static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+static void PressCtrlDigit(byte virtualKey)
+{
+    keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(virtualKey, 0, KeyEventExtendedKey, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+}
+
+static void PressCtrlTab()
+{
+    keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(VkTab, 0, KeyEventExtendedKey, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(VkTab, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+    Thread.Sleep(30);
+    keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+}
+
 static void ExpandCombo(AutomationElement combo)
 {
     if (combo.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var patternObj) &&
@@ -1031,17 +1303,6 @@ static void ExpandCombo(AutomationElement combo)
     }
 
     InvokeElement(combo);
-}
-
-static void SelectItem(AutomationElement item)
-{
-    if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var patternObj) && patternObj is SelectionItemPattern select)
-    {
-        select.Select();
-        return;
-    }
-
-    InvokeElement(item);
 }
 
 static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, string description)
@@ -1062,7 +1323,7 @@ static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, string description
     return false;
 }
 
-sealed record SmokeOptions(bool UseOnlineCatalog, bool BackendOnly, string Culture, string? CatalogUrl, bool SkipPreflight)
+sealed record SmokeOptions(bool UseOnlineCatalog, bool BackendOnly, string Culture, string? CatalogUrl, bool SkipPreflight, string? AppDirectory)
 {
     public static SmokeOptions Parse(string[] args)
     {
@@ -1071,6 +1332,7 @@ sealed record SmokeOptions(bool UseOnlineCatalog, bool BackendOnly, string Cultu
                        !args.Any(arg => arg.Equals("--local", StringComparison.OrdinalIgnoreCase));
         var culture = "de";
         string? catalogUrl = null;
+        string? appDirectory = null;
         var skipPreflight = args.Any(arg => arg.Equals("--skip-preflight", StringComparison.OrdinalIgnoreCase));
 
         for (var i = 0; i < args.Length; i++)
@@ -1093,9 +1355,11 @@ sealed record SmokeOptions(bool UseOnlineCatalog, bool BackendOnly, string Cultu
                 culture = args[++i];
             else if (args[i].Equals("--catalog-url", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
                 catalogUrl = args[++i];
+            else if (args[i].Equals("--app-dir", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                appDirectory = args[++i];
         }
 
-        return new SmokeOptions(online, backendOnly, culture, catalogUrl, skipPreflight);
+        return new SmokeOptions(online, backendOnly, culture, catalogUrl, skipPreflight, appDirectory);
     }
 }
 

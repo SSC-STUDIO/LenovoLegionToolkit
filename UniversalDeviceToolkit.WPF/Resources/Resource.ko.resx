@@ -2193,40 +2193,9 @@
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>설치</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>삭제</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2417,36 +2386,8 @@
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>선택한 앱이 제거 예정입니다.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>컨텍스트 메뉴 모양 맞춤 설정</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>스타일 설정 적용 실패.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>구성 파일을 찾을 수 없습니다. Nilesoft Shell이 설치되어 있는지 확인하세요.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>클래식 메뉴 활성화 실패</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>셸 설치 실패.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>기본 메뉴 복원 실패</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe를 찾을 수 없습니다. Nilesoft Shell이 설치되어 있는지 확인하세요.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>컨텍스트 메뉴의 테마를 선택하세요.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>컨텍스트 메뉴의 투명 효과 활성화</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>셸 제거 실패.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>{1}s에서 {0} 확보</value>
   </data>
@@ -2624,24 +2565,6 @@
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>파일 표시 옵션</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>기본 스타일을 복원하고 탐색기를 재시작합니다.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>기본 오른쪽 클릭 메뉴로 전환</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>클래식 스타일을 적용하고 탐색기를 재시작합니다.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>모던 메뉴로 전환</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>shell.exe 및 관련 파일 완전히 제거</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>모던 컨텍스트 메뉴 적용</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>시스템 캐시는 메모리에 보관하고 커널 드라이버 페이징을 피하세요.</value>
   </data>
@@ -2719,12 +2642,6 @@
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>탐색기 및 인터페이스</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>마우스 오른쪽 버튼 클릭 메뉴 스타일을 변경합니다.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>윈도우 꾸미기</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>시스템 성능 및 반응속도 설정 조정.</value>
@@ -2906,48 +2823,6 @@
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>플러그인 로딩 중...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>셸 통합</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>향상된 Windows 셸 통합: 컨텍스트 메뉴 꾸미기 및 마우스 스타일 맞춤 설정</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>모던 컨텍스트 메뉴 활성화</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Nilesoft Shell을 활성화하여 Windows 컨텍스트 메뉴를 모던 스타일로 꾸밉니다</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>모던 컨텍스트 메뉴 비활성화</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Nilesoft Shell 등록 취소 및 기본 Windows 컨텍스트 메뉴 복원</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Windows 11 커서 스타일 적용</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>고해상도 DPI 지원이 포함된 Windows 11 스타일 커서 테마 적용</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>네트워크 가속</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>네트워크 속도 및 반응속도 향상을 위한 네트워크 설정 최적화.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP 및 DNS 최적화</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>연결 속도 및 반응속도 향상을 위한 TCP/IP 매개변수와 DNS 캐시 설정 최적화.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>네트워크 구성 재설정</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>DNS 캐시를 플러시하고 Winsock 및 TCP/IP 스택 구성을 재설정하여 네트워크 연결 문제 해결.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>다양한 응용 프로그램이 남긴 임시 파일과 로그 정리</value>
   </data>
@@ -2965,12 +2840,6 @@
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>대용량 파일</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>확장 기능 활성화</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>도구 페이지의 플러그인 마켓에 접근할 수 있도록 확장 시스템을 활성화합니다.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>응용 프로그램의 외관, 동작 및 기능 옵션 구성.</value>
@@ -3383,24 +3252,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>다운로드 중... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>네트워크 가속</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>비브툴</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>도구</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>실시간 네트워크 가속 및 최적화 기능</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>ViVeTool을 사용하여 Windows 기능 플래그 관리</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>시스템 최적화 및 유틸리티 도구</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>도구는 없어요. 애플리케이션 디렉터리의 tools 폴더에 도구를 추가해 주세요.</value>
   </data>
@@ -3476,56 +3327,8 @@
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>예: C:\드라이버</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>투명 효과 사용</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>컨텍스트 메뉴에 투명 효과 적용</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>파일 확장명 표시</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>파일 탐색기에서 파일 확장명 표시</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>숨김 파일 표시</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>파일 탐색기에서 숨김 파일 및 폴더 표시</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>빠른 액세스로 열기</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>이 PC 대신 파일 탐색기를 열어서 빠른 액세스</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>파일 탐색기에 미리 보기 창</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>표시 미리 보기 창 표시</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>정리할 항목을 하나 이상 선택하세요.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>마우스 외모</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>사용자 정의 커서 스타일을 적용하고 시스템 밝은/어두운 테마를 따릅니다.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>다음 항목 커서 스타일을 사용합니다</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>현재 윈도우 라이트/다크 모드를 감지하고 일치하는 사용자 지정 커서 체계를 적용합니다.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>테마 다음 커서 스타일을 사용하지 않습니다</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>백업된 커서 체계를 복원하고 테마 기반 사용자 지정 커서 전환을 중지합니다.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

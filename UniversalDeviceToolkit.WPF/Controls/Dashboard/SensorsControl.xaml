@@ -30,14 +30,14 @@
             <Setter Property="Appearance" Value="Transparent" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Margin" Value="0,16,0,0" />
-            <Setter Property="Content" Value="Show Details" />
         </Style>
     </UserControl.Resources>
 
     <wpfui:CardControl
+        AutomationProperties.AutomationId="DashboardSensorsCard"
         Background="{DynamicResource AppSurfaceCardBrush}"
         Focusable="False"
-        MouseDoubleClick="CardControl_MouseDoubleClick">
+        PreviewMouseLeftButtonDown="CardControl_PreviewMouseLeftButtonDown">
         <wpfui:CardControl.Header>
             <StackPanel Margin="16,8">
                 <Grid>
@@ -52,7 +52,7 @@
                     <StackPanel x:Name="_cpuSection" Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_cpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_cpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -92,7 +92,7 @@
                             <Label x:Name="_cpuFanSpeedLabel" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
 
-                        <StackPanel x:Name="_cpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                        <StackPanel x:Name="_cpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsCpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -100,17 +100,17 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuWattage" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuWattage" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuVoltage" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuTempRange" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuTempRange" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuVoltageRange" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -121,7 +121,7 @@
                     <StackPanel x:Name="_batterySectionColumn" Grid.Column="2">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_batteryModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_batteryModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -168,7 +168,7 @@
                             <wpfui:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="24" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="Collapsed" />
                         </StackPanel>
 
-                        <StackPanel x:Name="_batteryDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                        <StackPanel x:Name="_batteryDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsBatteryDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -201,7 +201,7 @@
                     <StackPanel x:Name="_gpuSection" Grid.Column="4">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_gpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_gpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -241,7 +241,7 @@
                             <Label x:Name="_gpuFanSpeedLabel" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
 
-                        <StackPanel x:Name="_gpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                        <StackPanel x:Name="_gpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsGpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -261,17 +261,17 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuWattage" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuWattage" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVoltage" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVoltage" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuTempRange" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuTempRange" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVoltageRange" Text="N/A" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVoltageRange" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>

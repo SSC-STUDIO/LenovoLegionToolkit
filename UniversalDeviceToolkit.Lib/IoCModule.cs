@@ -167,7 +167,7 @@ public class IoCModule : Module
         // Register default delay provider for production code so IDelayProvider can be injected
         builder.Register<DefaultDelayProvider>().As<IDelayProvider>().SingleInstance();
 
-        builder.Register<BatteryDischargeRateMonitorService>();
+        builder.Register<BatteryDischargeRateMonitorService>().SingleInstance();
         builder.Register<AmdOverclockingController>();
         builder.Register<FanCurveManager>(c => new FanCurveManager(
             c.Resolve<SensorsGroupController>(),

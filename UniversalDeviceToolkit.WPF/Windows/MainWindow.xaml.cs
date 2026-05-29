@@ -193,23 +193,8 @@ public partial class MainWindow
             source.AddHook(MainWindowHwndSourceHook);
     }
 
-    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        _contentGrid.Visibility = Visibility.Hidden;
-
-        var mi = await MachineCompatibility.GetMachineInformationAsync();
-        var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
-
-        if (deviceAvailability.HiddenFeatures.Contains("keyboard-backlight") && !ShouldKeepUnsupportedNavigationItems())
-        {
-            _navigationStore.Items.Remove(_keyboardItem);
-        }
-        else if (!await KeyboardBacklightPage.IsSupportedAsync() && !ShouldKeepUnsupportedNavigationItems())
-        {
-            _navigationStore.Items.Remove(_keyboardItem);
-        }
-
-        // Control WindowsOptimization navigation item visibility based on extension settings
         UpdateNavigationVisibility();
 
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
@@ -243,10 +228,56 @@ public partial class MainWindow
             _pluginExtensionsItem.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", Resource.Culture);
         }
 
-        var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
-        await trayHelper.InitializeAsync();
-        trayHelper.MakeVisible();
-        _trayHelper = trayHelper;
+        _ = UpdateHardwareDependentNavigationAsync();
+        _ = InitializeTrayAsync();
+    }
+
+    private async Task UpdateHardwareDependentNavigationAsync()
+    {
+        try
+        {
+            if (ShouldKeepUnsupportedNavigationItems())
+                return;
+
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
+
+            var hideKeyboardBacklight =
+                deviceAvailability.HiddenFeatures.Contains("keyboard-backlight") ||
+                !await KeyboardBacklightPage.IsSupportedAsync();
+
+            if (hideKeyboardBacklight)
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    if (_navigationStore.Items.Contains(_keyboardItem))
+                        _navigationStore.Items.Remove(_keyboardItem);
+
+                    UpdateNavigationVisibility();
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to update hardware-dependent navigation.", ex);
+        }
+    }
+
+    private async Task InitializeTrayAsync()
+    {
+        try
+        {
+            var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
+            await trayHelper.InitializeAsync();
+            trayHelper.MakeVisible();
+            _trayHelper = trayHelper;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to initialize tray helper.", ex);
+        }
     }
 
     private async void MainWindow_Closing(object? sender, CancelEventArgs e)

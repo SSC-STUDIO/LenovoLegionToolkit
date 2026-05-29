@@ -195,8 +195,8 @@ public class PluginRepositoryService : IDisposable
             var tempFilePath = Path.Combine(_tempDownloadDirectory, $"{manifest.Id}.zip");
 
             // Download the plugin
-            var downloaded = await DownloadPluginAsync(manifest, tempFilePath).ConfigureAwait(false);
-            if (!downloaded)
+            var downloadResult = await DownloadPluginAsync(manifest, tempFilePath).ConfigureAwait(false);
+            if (!downloadResult.Success)
             {
                 DownloadFailed?.Invoke(this, $"Failed to download {manifest.Id}");
                 return false;
@@ -204,7 +204,11 @@ public class PluginRepositoryService : IDisposable
 
             // Extract and install
             var extractPath = Path.Combine(_tempDownloadDirectory, manifest.Id);
-            var installed = await ExtractAndInstallPluginAsync(tempFilePath, extractPath, manifest).ConfigureAwait(false);
+            var installed = await ExtractAndInstallPluginAsync(
+                tempFilePath,
+                extractPath,
+                manifest,
+                downloadResult.TrustAsOfficialOnlinePackage).ConfigureAwait(false);
 
             // Clean up temp files
             try
@@ -241,7 +245,7 @@ public class PluginRepositoryService : IDisposable
     /// <summary>
     /// Download plugin package
     /// </summary>
-    private async Task<bool> DownloadPluginAsync(PluginManifest manifest, string destinationPath)
+    private async Task<PluginDownloadResult> DownloadPluginAsync(PluginManifest manifest, string destinationPath)
     {
         var candidateUrls = GetDownloadUrlCandidates(manifest);
         var publishedAsset = await TryResolvePublishedAssetAsync(manifest).ConfigureAwait(false);
@@ -271,7 +275,9 @@ public class PluginRepositoryService : IDisposable
         {
             var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
             if (downloaded)
-                return true;
+                return new PluginDownloadResult(
+                    Success: true,
+                    TrustAsOfficialOnlinePackage: ShouldTrustDownloadedPluginPackage(candidateUrl, manifest.Id));
         }
 
         if (publishedAsset is not null)
@@ -286,7 +292,7 @@ public class PluginRepositoryService : IDisposable
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Fell back to local package for plugin {manifest.Id} at {destinationPath}");
-            return true;
+            return new PluginDownloadResult(Success: true, TrustAsOfficialOnlinePackage: false);
         }
 
         if (Log.Instance.IsTraceEnabled)
@@ -295,7 +301,7 @@ public class PluginRepositoryService : IDisposable
             Log.Instance.Trace($"Error downloading plugin {manifest.Id}: all candidates failed. Tried URLs: [{urlsText}]");
         }
 
-        return false;
+        return new PluginDownloadResult(Success: false, TrustAsOfficialOnlinePackage: false);
     }
 
     private async Task<bool> TryDownloadPluginFromUrlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
@@ -772,7 +778,11 @@ public class PluginRepositoryService : IDisposable
     /// <summary>
     /// Extract plugin zip and install to plugins directory
     /// </summary>
-    private async Task<bool> ExtractAndInstallPluginAsync(string zipPath, string extractPath, PluginManifest manifest)
+    private async Task<bool> ExtractAndInstallPluginAsync(
+        string zipPath,
+        string extractPath,
+        PluginManifest manifest,
+        bool trustAsOfficialOnlinePackage)
     {
         string? backupDir = null;
         var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
@@ -914,7 +924,16 @@ public class PluginRepositoryService : IDisposable
 
             TryStageCanonicalPluginSharedAssembly(pluginDir);
             TryStageCanonicalPluginSdkAssembly(pluginDir);
-            TrustedPluginPackageStore.TrustPluginDirectory(manifest.Id, pluginDir);
+            if (trustAsOfficialOnlinePackage)
+            {
+                TrustedPluginPackageStore.TrustPluginDirectory(manifest.Id, pluginDir);
+            }
+            else
+            {
+                // A local/dev fallback uses the same marketplace install path, so clear any
+                // stale trust record from a previous online install before the plugin is loaded.
+                TrustedPluginPackageStore.Remove(manifest.Id);
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Installed plugin {manifest.Id} to {pluginDir}");
@@ -1142,6 +1161,69 @@ public class PluginRepositoryService : IDisposable
         return null;
     }
 
+    private static bool ShouldTrustDownloadedPluginPackage(string candidateUrl, string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(candidateUrl) || string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        if (!Uri.TryCreate(candidateUrl, UriKind.Absolute, out var uri))
+            return false;
+
+        if (!uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var segments = uri.AbsolutePath
+            .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(Uri.UnescapeDataString)
+            .ToArray();
+
+        if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
+            return IsTrustedGitHubBrowserDownloadPath(segments, pluginId);
+
+        if (uri.Host.Equals("api.github.com", StringComparison.OrdinalIgnoreCase))
+            return IsTrustedGitHubReleaseAssetApiPath(segments);
+
+        return false;
+    }
+
+    private static bool IsTrustedGitHubBrowserDownloadPath(IReadOnlyList<string> segments, string pluginId)
+    {
+        if (segments.Count < 6 || !IsOfficialPluginRepository(segments[0], segments[1]))
+            return false;
+
+        if (!segments[2].Equals("releases", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var assetName = segments[^1];
+        if (!IsMatchingPublishedPluginAsset(assetName, pluginId))
+            return false;
+
+        if (segments[3].Equals("download", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return segments.Count >= 6 &&
+               segments[3].Equals("latest", StringComparison.OrdinalIgnoreCase) &&
+               segments[4].Equals("download", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsTrustedGitHubReleaseAssetApiPath(IReadOnlyList<string> segments)
+    {
+        return segments.Count >= 6 &&
+               segments[0].Equals("repos", StringComparison.OrdinalIgnoreCase) &&
+               IsOfficialPluginRepository(segments[1], segments[2]) &&
+               segments[3].Equals("releases", StringComparison.OrdinalIgnoreCase) &&
+               segments[4].Equals("assets", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsOfficialPluginRepository(string owner, string repository)
+    {
+        if (!owner.Equals("SSC-STUDIO", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return repository.Equals("UniversalDeviceToolkit-Plugins", StringComparison.OrdinalIgnoreCase) ||
+               repository.Equals("LenovoLegionToolkit-Plugins", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsMatchingPublishedPluginAsset(string assetName, string pluginId)
     {
         if (string.IsNullOrWhiteSpace(assetName) || !assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
@@ -1171,6 +1253,8 @@ public class PluginRepositoryService : IDisposable
     }
 
     private sealed record PublishedPluginAsset(string? DownloadUrl, string? ApiDownloadUrl, string AssetName, string? Version);
+
+    private sealed record PluginDownloadResult(bool Success, bool TrustAsOfficialOnlinePackage);
 
     private static HttpRequestMessage CreateGetRequest(string url)
     {
@@ -1498,6 +1582,11 @@ public class PluginRepositoryService : IDisposable
             Id = manifest.Id,
             Name = manifest.Name,
             Description = manifest.Description,
+            Details = manifest.Details,
+            UsageGuide = manifest.UsageGuide,
+            Localizations = CloneLocalizations(manifest.Localizations),
+            Store = CloneStore(manifest.Store),
+            Contributes = CloneContributions(manifest.Contributes),
             Icon = manifest.Icon,
             IconBackground = manifest.IconBackground,
             Author = manifest.Author,
@@ -1512,6 +1601,63 @@ public class PluginRepositoryService : IDisposable
             Tags = manifest.Tags?.ToArray(),
             IsSystemPlugin = manifest.IsSystemPlugin
         };
+
+    private static PluginManifestStore? CloneStore(PluginManifestStore? store) =>
+        store is null
+            ? null
+            : new PluginManifestStore
+            {
+                Description = store.Description,
+                Details = store.Details,
+                UsageGuide = store.UsageGuide,
+                Localizations = CloneLocalizations(store.Localizations)
+            };
+
+    private static Dictionary<string, PluginManifestLocalization>? CloneLocalizations(
+        Dictionary<string, PluginManifestLocalization>? localizations) =>
+        localizations is null
+            ? null
+            : localizations.ToDictionary(
+                pair => pair.Key,
+                pair => new PluginManifestLocalization
+                {
+                    Name = pair.Value.Name,
+                    Description = pair.Value.Description,
+                    Details = pair.Value.Details,
+                    UsageGuide = pair.Value.UsageGuide
+                },
+                StringComparer.OrdinalIgnoreCase);
+
+    private static PluginManifestContributions? CloneContributions(PluginManifestContributions? contributes) =>
+        contributes is null
+            ? null
+            : new PluginManifestContributions
+            {
+                FeaturePage = ClonePageContribution(contributes.FeaturePage),
+                SettingsPage = ClonePageContribution(contributes.SettingsPage),
+                Runtime = contributes.Runtime is null
+                    ? null
+                    : new PluginManifestRuntimeContribution
+                    {
+                        Class = contributes.Runtime.Class
+                    },
+                OptimizationActions = contributes.OptimizationActions?
+                    .Select(action => new PluginManifestOptimizationContribution
+                    {
+                        Id = action.Id,
+                        Title = action.Title
+                    })
+                    .ToList()
+            };
+
+    private static PluginManifestPageContribution? ClonePageContribution(PluginManifestPageContribution? contribution) =>
+        contribution is null
+            ? null
+            : new PluginManifestPageContribution
+            {
+                Class = contribution.Class,
+                Title = contribution.Title
+            };
 
     /// <summary>
     /// Cleanup temporary download directory

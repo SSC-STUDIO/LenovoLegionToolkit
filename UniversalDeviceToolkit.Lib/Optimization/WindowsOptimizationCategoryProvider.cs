@@ -22,7 +22,6 @@ public class WindowsOptimizationCategoryProvider
         CreateExplorerCategory(),
         CreatePerformanceCategory(),
         CreateServicesCategory(),
-        CreateNetworkAccelerationCategory(),
         CreateCleanupCacheCategory(),
         CreateCleanupSystemFilesCategory(),
         CreateCleanupSystemComponentsCategory(),
@@ -133,25 +132,6 @@ public class WindowsOptimizationCategoryProvider
                     "WindowsOptimization_Action_ServicesErrorReporting_Title",
                     "WindowsOptimization_Action_ServicesErrorReporting_Description",
                     WindowsOptimizationDefinitions.ErrorReportingService)
-            ]);
-
-    private WindowsOptimizationCategoryDefinition CreateNetworkAccelerationCategory() =>
-        new(
-            "network",
-            "WindowsOptimization_Category_NetworkAcceleration_Title",
-            "WindowsOptimization_Category_NetworkAcceleration_Description",
-            [
-                _service.CreateRegistryAction(
-                    "network.acceleration",
-                    "WindowsOptimization_Action_NetworkAcceleration_Title",
-                    "WindowsOptimization_Action_NetworkAcceleration_Description",
-                    WindowsOptimizationDefinitions.NetworkAccelerationTweaks),
-                _service.CreateCommandAction(
-                    "network.optimization",
-                    "WindowsOptimization_Action_NetworkOptimization_Title",
-                    "WindowsOptimization_Action_NetworkOptimization_Description",
-                    WindowsOptimizationDefinitions.NetworkOptimizationCommands,
-                    recommended: false)
             ]);
 
     private WindowsOptimizationCategoryDefinition CreateCleanupCacheCategory() =>

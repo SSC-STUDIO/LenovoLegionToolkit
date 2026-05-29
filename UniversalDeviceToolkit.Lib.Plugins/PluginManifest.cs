@@ -18,6 +18,21 @@ public class PluginManifest
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
 
+    [JsonPropertyName("details")]
+    public string? Details { get; set; }
+
+    [JsonPropertyName("usageGuide")]
+    public string? UsageGuide { get; set; }
+
+    [JsonPropertyName("localizations")]
+    public Dictionary<string, PluginManifestLocalization>? Localizations { get; set; }
+
+    [JsonPropertyName("store")]
+    public PluginManifestStore? Store { get; set; }
+
+    [JsonPropertyName("contributes")]
+    public PluginManifestContributions? Contributes { get; set; }
+
     [JsonPropertyName("icon")]
     public string Icon { get; set; } = string.Empty;
 
@@ -70,6 +85,75 @@ public class PluginManifest
 
     [JsonPropertyName("isSystemPlugin")]
     public bool IsSystemPlugin { get; set; }
+}
+
+public class PluginManifestStore
+{
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("details")]
+    public string? Details { get; set; }
+
+    [JsonPropertyName("usageGuide")]
+    public string? UsageGuide { get; set; }
+
+    [JsonPropertyName("localizations")]
+    public Dictionary<string, PluginManifestLocalization>? Localizations { get; set; }
+}
+
+public class PluginManifestLocalization
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("details")]
+    public string? Details { get; set; }
+
+    [JsonPropertyName("usageGuide")]
+    public string? UsageGuide { get; set; }
+}
+
+public class PluginManifestContributions
+{
+    [JsonPropertyName("featurePage")]
+    public PluginManifestPageContribution? FeaturePage { get; set; }
+
+    [JsonPropertyName("settingsPage")]
+    public PluginManifestPageContribution? SettingsPage { get; set; }
+
+    [JsonPropertyName("runtime")]
+    public PluginManifestRuntimeContribution? Runtime { get; set; }
+
+    [JsonPropertyName("optimizationActions")]
+    public List<PluginManifestOptimizationContribution>? OptimizationActions { get; set; }
+}
+
+public class PluginManifestPageContribution
+{
+    [JsonPropertyName("class")]
+    public string Class { get; set; } = string.Empty;
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+}
+
+public class PluginManifestRuntimeContribution
+{
+    [JsonPropertyName("class")]
+    public string Class { get; set; } = string.Empty;
+}
+
+public class PluginManifestOptimizationContribution
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
 }
 
 /// <summary>

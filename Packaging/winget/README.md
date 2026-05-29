@@ -16,9 +16,11 @@ The public product name is Universal Device Toolkit. The winget package identity
 
 ## Release Checklist
 
-1. Create a stable GitHub release with the versioned installer asset:
+1. Create a stable GitHub release with Full and Online Universal Device Toolkit assets plus the winget compatibility installer alias:
+   `UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`
+   `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`
    `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
-2. Confirm the release also includes:
+2. Confirm the release also includes the checksum manifest:
    `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 3. Do not create or submit a new version manifest until the final release asset URL and SHA256 are available.
 4. Copy the installer SHA256 from the release checksum file into the winget installer manifest.

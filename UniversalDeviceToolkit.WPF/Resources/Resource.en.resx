@@ -1407,102 +1407,7 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorer &amp; interface</value>
   </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Mouse appearance</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Apply custom cursor styles and follow system light/dark theme.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Enable theme-following cursor style</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Disable theme-following cursor style</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
-  </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Shell Integration</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Enhanced Windows Shell integration with context menu beautification and mouse style customization</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Modern Context Menu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Enable Nilesoft Shell to beautify Windows context menu with modern style</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Disable Modern Context Menu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore default Windows context menu</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Apply Windows 11 Cursor Style</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Apply Windows 11 style cursor theme with high DPI support</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
-  </data>
+
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
     <value>System beautification</value>
   </data>
@@ -1520,24 +1425,6 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
     <value>Disable background services that consume resources.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Network Acceleration</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimize network settings to improve network speed and responsiveness.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP and DNS Optimization</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimize TCP/IP parameters and DNS cache settings to improve connection speed and responsiveness.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Reset Network Configuration</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Flush DNS cache and reset Winsock and TCP/IP stack configuration to repair network connectivity issues.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>Cleanup</value>
@@ -3102,40 +2989,8 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System Beautification</value>
   </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right Click Menu</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Customize the right click menu appearance and behavior.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable Classic Menu</value>
-  </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable Classic Menu</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore Default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Not Installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Installed but not registered</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open Style Settings</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+
+<data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
     <value>Windows Beautification</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
@@ -3528,24 +3383,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Downloading... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Network Acceleration</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>ViveTool</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Real-time network acceleration and optimization features</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Manage Windows feature flags using ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>System optimization and utility tools</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>No tools available. Please add tools in tools folder in application directory.</value>
   </data>
@@ -3623,36 +3460,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>e.g. C:\Drivers</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Enable Transparency</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Show File Extensions</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Show file extensions in File Explorer</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Show Hidden Files</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Show hidden files and folders in File Explorer</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Open to Quick Access</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Open File Explorer to Quick Access instead of This PC</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Show Preview Pane</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Show preview pane in File Explorer</value>
   </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Please select at least one item to clean up.</value>

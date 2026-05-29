@@ -2357,40 +2357,9 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Telepítés</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Eltávolítás</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2441,36 +2410,8 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>A kiválasztott alkalmazások eltávolítása ütemezve.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Testreszabhatja a kontextus menü megjelenését.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Sikertelen a stílusbeállítások alkalmazása.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Konfigurációs fájl nem található. Kérjük, győződjön meg róla, hogy a Nilesoft Shell telepítve van.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Sikertelen a klasszikus menü engedélyezése.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Sikertelen a shell telepítése.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Sikertelen az alapértelmezett menü visszaállítása.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>A shell.exe nem található. Kérjük, győződjön meg róla, hogy a Nilesoft Shell telepítve van.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Válassza ki a kontextus menü témáját.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Engedélyezze az átlátszósági effekteket a kontextus menüben.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Sikertelen a shell eltávolítása.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Felszabadított {0} a {1}-kban</value>
   </data>
@@ -2648,24 +2589,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Fájl megjelenítési beállítások</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Visszaállítja az alapértelmezett stílust és újraindítja az Explorert.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Váltás alapértelmezett jobb gombos menüre</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Alkalmazza a klasszikus stílust és újraindítja az Explorert.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Váltás modern menüre</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Teljesen távolítsa el a shell.exe-t és a kapcsolódó fájlokat</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Modern helyi menü alkalmazása</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>A rendszer gyorsítótárának memória megtartása és a kernel illesztőprogramok lapozásának elkerülése.</value>
   </data>
@@ -2743,12 +2666,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Felfedező és felület</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Módosítsa a jobb gombos menü stílusát.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Szépítés</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>A rendszer teljesítmény- és válaszkészség beállításainak módosítása.</value>
@@ -2882,48 +2799,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Bővítmények betöltése...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Shell integráció</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Fokozott Windows Shell integráció a kontextus menü szépítésével és az egér stílus testreszabásával</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Modern kontextus menü engedélyezése</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Engedélyezze a Nilesoft Shell-t a Windows kontextus menü modern stílusú szépítéséhez</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Modern kontextus menü letiltása</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Regisztráció törlése a Nilesoft Shell-ből és az alapértelmezett Windows kontextus menü visszaállítása</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Windows 11 kurzorstílus alkalmazása</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Windows 11 stílusú kurzortéma alkalmazása nagy DPI támogatással</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Hálózat gyorsítása</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>A hálózati beállítások optimalizálása a hálózati sebesség és a válaszkészség javítása érdekében.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP és DNS optimalizálás</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>A TCP/IP paraméterek és a DNS gyorsítótár beállításainak optimalizálása a kapcsolat sebességének és válaszkészségének javítására.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Hálózati konfiguráció visszaállítása</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>DNS gyorsítótár törlése és a Winsock és TCP/IP verem konfigurációjának visszaállítása a hálózati kapcsolati problémák javításához.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Tisztítja az ideiglenes fájlokat és a különböző alkalmazások által hagyott naplókat.</value>
   </data>
@@ -2941,12 +2816,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Nagy fájlok</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Bővítmények engedélyezése</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Engedélyezze a bővítményrendszert a Plugin-piac eléréséhez az Eszközök oldalon.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Az alkalmazás megjelenésének, viselkedésének és funkcióinak beállítása.</value>
@@ -3395,24 +3264,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Letöltés... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Hálózat gyorsítása</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>Vivetool</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Eszközök</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Valós idejű hálózati gyorsítás és optimalizáló funkciók</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>A Windows funkciózászászók kezelése ViVeTool segítségével</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Rendszeroptimalizálási és segédprogramok</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Nincsenek elérhető eszközök. Kérjük, adjon hozzá eszközöket az alkalmazás könyvtárában lévő tools mappába.</value>
   </data>
@@ -3488,56 +3339,8 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>pl. C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Átlátszóság engedélyezése</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Engedélyezze a kontextus menü átlátszósági effektusait</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Fájlkiterjesztések megjelenítése</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>A fájlkezelőben a fájlnevek kiterjesztéseinek megjelenítése</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Rejtett fájlok megjelenítése</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Rejtett fájlok és mappák megjelenítése a Fájlkezelőben</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Gyors elérés megnyitása</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>A Fájlkezelőt a Gyors elérésre nyitja a "Ez a gép" helyett</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Előnézeti panel megjelenítése</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Előnézeti panel megjelenítése a Fájlkezelőben</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Kérjük, válasszon legalább egy elemet a tisztításhoz.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Egér megjelenése</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Alkalmazza az egyéni kurzor stílusokat, és kövesse a rendszer világos / sötét témáját.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Téma-kurzort követő stílus engedélyezése</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Észleli az aktuális Windows Világos / Sötét módot, és alkalmazza a megfelelő egyéni kurzor sémát.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Tiltsa le a témát követő kurzor stílusát</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Állítsa vissza a mentett kurzor sémát, és állítsa le a téma alapú egyéni kurzorváltást.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

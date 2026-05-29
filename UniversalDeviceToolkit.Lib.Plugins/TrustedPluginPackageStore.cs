@@ -117,12 +117,24 @@ internal static class TrustedPluginPackageStore
                 return new TrustedPluginPackageStoreModel();
 
             var json = File.ReadAllText(StorePath);
-            return JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json) ?? new TrustedPluginPackageStoreModel();
+            return NormalizeStore(JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json));
         }
         catch
         {
             return new TrustedPluginPackageStoreModel();
         }
+    }
+
+    private static TrustedPluginPackageStoreModel NormalizeStore(TrustedPluginPackageStoreModel? store)
+    {
+        if (store is null)
+            return new TrustedPluginPackageStoreModel();
+
+        store.Plugins = new Dictionary<string, TrustedPluginPackage>(
+            store.Plugins ?? new Dictionary<string, TrustedPluginPackage>(),
+            StringComparer.OrdinalIgnoreCase);
+
+        return store;
     }
 
     private static void WriteStore(TrustedPluginPackageStoreModel store)

@@ -45,6 +45,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         AutomationProperties.SetName(_configButton, Resource.PowerModeControl_Title);
         AutomationProperties.SetHelpText(_configButton, Resource.PowerModeControl_Settings);
+        AutomationProperties.SetAutomationId(_configButton, "PowerModeSettingsButton");
         _configButton.Click += ConfigButton_Click;
 
         _thermalModeListener.Changed += ThermalModeListener_Changed;

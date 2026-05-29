@@ -21,14 +21,28 @@ public record WindowsOptimizationActionDefinition(
     string DescriptionResourceKey,
     Func<CancellationToken, Task> ExecuteAsync,
     bool Recommended = true,
-    Func<CancellationToken, Task<bool>>? IsAppliedAsync = null);
+    Func<CancellationToken, Task<bool>>? IsAppliedAsync = null,
+    Type? ResourceAnchorType = null)
+{
+    public WindowsOptimizationActionDefinition(
+        string key,
+        string titleResourceKey,
+        string descriptionResourceKey,
+        Func<CancellationToken, Task> executeAsync,
+        bool recommended,
+        Func<CancellationToken, Task<bool>>? isAppliedAsync)
+        : this(key, titleResourceKey, descriptionResourceKey, executeAsync, recommended, isAppliedAsync, null)
+    {
+    }
+}
 
 public record WindowsOptimizationCategoryDefinition(
     string Key,
     string TitleResourceKey,
     string DescriptionResourceKey,
     IReadOnlyList<WindowsOptimizationActionDefinition> Actions,
-    string? PluginId = null);
+    string? PluginId = null,
+    Type? ResourceAnchorType = null);
 
 /// <summary>
 /// Service for executing Windows optimization commands with strict security validation.

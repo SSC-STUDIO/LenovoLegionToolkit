@@ -372,6 +372,10 @@ public string PluginId
                     _isInstalled = value;
                     OnPropertyChanged(nameof(IsInstalled));
                     OnPropertyChanged(nameof(ShouldShowStatusBadge));
+                    OnPropertyChanged(nameof(ShouldShowInstalledActions));
+                    OnPropertyChanged(nameof(ShouldShowConfigureButton));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(CapabilitySummary));
                     OnPropertyChanged(nameof(UpdateInfoVisible));
                     OnPropertyChanged(nameof(HasUpdateDetails));
                     OnPropertyChanged(nameof(HasExpandableContent));
@@ -397,6 +401,7 @@ public string PluginId
                 {
                     _supportsConfiguration = value;
                     OnPropertyChanged(nameof(SupportsConfiguration));
+                    OnPropertyChanged(nameof(ShouldShowConfigureButton));
                     OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
@@ -412,6 +417,7 @@ public string PluginId
                     _supportsFeaturePage = value;
                     OnPropertyChanged(nameof(SupportsFeaturePage));
                     OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(ShouldShowInstalledActions));
                     OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
@@ -427,6 +433,7 @@ public string PluginId
                     _supportsOptimizationCategory = value;
                     OnPropertyChanged(nameof(SupportsOptimizationCategory));
                     OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(ShouldShowInstalledActions));
                     OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
@@ -445,6 +452,8 @@ public string PluginId
                     OnPropertyChanged(nameof(IsInstalling));
                     OnPropertyChanged(nameof(ShouldShowInstalledActions));
                     OnPropertyChanged(nameof(ShouldShowConfigureButton));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(CapabilitySummary));
                     OnPropertyChanged(nameof(ShouldShowStatusBadge));
                     OnPropertyChanged(nameof(StatusText));
                     UpdateInstallButtonText();

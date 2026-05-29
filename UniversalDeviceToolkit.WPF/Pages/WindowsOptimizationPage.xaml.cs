@@ -308,16 +308,16 @@ public partial class WindowsOptimizationPage : Page
         // Double click logic or details window logic
         if (e.ClickCount == 2)
         {
-            OpenActionDetailsWindow(actionVm.Key);
+            OpenActionDetailsWindow(actionVm);
         }
     }
 
-    private void OpenActionDetailsWindow(string actionKey)
+    private void OpenActionDetailsWindow(OptimizationActionViewModel actionVm)
     {
         try
         {
             _actionDetailsWindow?.Close();
-            _actionDetailsWindow = new ActionDetailsWindow(actionKey, null) // Definition can be fetched inside
+            _actionDetailsWindow = new ActionDetailsWindow(actionVm.Key, actionVm.Definition)
             {
                 Owner = Window.GetWindow(this)
             };

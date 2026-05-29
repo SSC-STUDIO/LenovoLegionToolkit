@@ -211,7 +211,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: installer
-          path: BuildInstaller/LenovoLegionToolkitSetup.exe
+          path: BuildInstaller/UniversalDeviceToolkit_v*_Full_Setup.exe
 ```
 
 #### CI Tests Pipeline (`Ci-tests.yml`)
@@ -356,7 +356,7 @@ The maintainer-side manifest draft lives under `Packaging/winget`. The canonical
 
 Before submitting a new version:
 
-1. Publish a stable GitHub Release with `UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, the compatibility alias `LenovoLegionToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
+1. Publish a stable GitHub Release with Full and Online assets (`UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, portable ZIPs as needed), the compatibility alias `LenovoLegionToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
 2. Do not draft a new version manifest until the release asset URL and installer SHA256 are final.
 3. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
 4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.

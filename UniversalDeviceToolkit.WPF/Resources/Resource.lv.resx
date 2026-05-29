@@ -2324,40 +2324,9 @@ Nepieciešama restartēšana.</value>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Instalēt</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Atinstalēt</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2433,36 +2402,8 @@ Nepieciešama restartēšana.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Izvēlētās lietotnes plānotas noņemšanai.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Pielāgot konteksta izvēlnes izskatu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Neizdevās piemērot stila iestatījumus.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Konfigurācijas fails nav atrasts. Lūdzu, pārliecinieties, ka Nilesoft Shell ir instalēts.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Neizdevās iespējot klasisko izvēlni.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Neizdevās instalēt shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Neizdevās atjaunot noklusējuma izvēlni.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe nav atrasts. Lūdzu, pārliecinieties, ka Nilesoft Shell ir instalēts.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Izvēlieties tēmu konteksta izvēlnei.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Iespējot caurspīdīguma efektus konteksta izvēlnei.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Neizdevās atinstalēt shell.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Atbrīvots {0} no {1}</value>
   </data>
@@ -2640,24 +2581,6 @@ Nepieciešama restartēšana.</value>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Failu redzamības opcijas</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Atjauno noklusējuma stilu un pārstartē Explorer.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Pārslēgties uz noklusējuma labo klikšķa izvēlni</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Lieto klasisko stilu un restartē Explorer.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Pārslēgties uz modernu izvēlni</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Pilnībā atinstalēt shell.exe un saistītos failus</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Pielietot modernu konteksta izvēlni</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Saglabāt sistēmas kešu atmiņā un izvairīties no kodola draiveru lapošanas.</value>
   </data>
@@ -2735,12 +2658,6 @@ Nepieciešama restartēšana.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorer un saskarne</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Mainīt labo klikšķa izvēlnes stilu.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows vizuālais pielāgojums</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Pielāgojiet sistēmas veiktspējas un atsaucības iestatījumus.</value>
@@ -2883,48 +2800,6 @@ Nepieciešama restartēšana.</value>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Ielādē spraudņus...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Shell integrācija</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Uzlabota Windows Shell integrācija ar konteksta izvēlnes uzlabošanu un peles stila pielāgošanu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Iespēt modernu konteksta izvēlni</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Iespējot Nilesoft Shell, lai uzlabotu Windows konteksta izvēlni ar moderno stilu</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Atspējot modernu konteksta izvēlni</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Atreģistrēt Nilesoft Shell un atjaunot noklusējuma Windows konteksta izvēlni</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Pielietot Windows 11 rādītāja stilu</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Pielietot Windows 11 stila rādītāja tēmu ar augstas DPI atbalstu</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Tīkla paātrinājums</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimizējiet tīkla iestatījumus, lai uzlabotu tīkla ātrumu un atsaucību.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>TCP/IP un DNS optimizācija</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimizējiet TCP/IP parametrus un DNS keša iestatījumus, lai uzlabotu savienojuma ātrumu un atsaucību.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Atiestatīt tīkla konfigurāciju</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Attīrīt DNS kešu un atiestatīt Winsock un TCP/IP steka konfigurāciju, lai novērstu tīkla savienojuma problēmas.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Notīra pagaidu failus un žurnālus, ko atstājušas dažādas programmas.</value>
   </data>
@@ -2942,12 +2817,6 @@ Nepieciešama restartēšana.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Lielie faili</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Iespējot paplašinājumus</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Iespējojiet paplašinājumu sistēmu, lai piekļūtu spraudņu tirgum lapā Rīki.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Konfigurējiet lietojumprogrammas izskatu, darbību un funkcionalitātes opcijas.</value>
@@ -3396,24 +3265,6 @@ Nepieciešama restartēšana.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Lejupielādē... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Tīkla paātrinājums</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>ViveTool</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Rīki</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Reāllaika tīkla paātrināšanas un optimizācijas funkcijas</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Pārvaldīt Windows funkciju karodziņus, izmantojot ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Sistēmas optimizācijas un utilītu rīki</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Nav pieejami rīki. Lūdzu, pievienojiet rīkus mapē tools lietojumprogrammas direktorijā.</value>
   </data>
@@ -3489,56 +3340,8 @@ Nepieciešama restartēšana.</value>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>piem., C:\Draiveri</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Iespējot caurspīdīgumu</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Caurspīdīguma efektu iespējošana konteksta izvēlnē</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Rādīt failu paplašinājumus</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Failu paplašinājumu rādīšana failu pārlūkā</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Rādīt slēptos failus</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Slēpto failu un mapju rādīšana failu pārlūkā</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Atvērt ātrajai piekļuvei</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Failu pārlūka atvēršana ātrajai piekļuvei, nevis šis dators</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Rādīt priekšskatījuma rūti</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Rādīt priekšskatījuma rūti failu pārlūkā</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Lūdzu, izvēlieties vismaz vienu tīrāmo vienumu.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Peles izskats</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Piesakies pielāgotus kursora stilus un sekojiet sistēmas gaismas/tumsas tēmai.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Iespējot motīvu sekojošu kursora stilu</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Noteikt pašreizējo Windows gaismas / tumšo režīmu un piemērot atbilstošu pielāgotu kursora shēmu.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Atspējot motīvu pēc kursora stila</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Atjaunojiet dublēto kursora shēmu un pārtrauciet uz tēmu balstītu pielāgoto kursora pārslēgšanu.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

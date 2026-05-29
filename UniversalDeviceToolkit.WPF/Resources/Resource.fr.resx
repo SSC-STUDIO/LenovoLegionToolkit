@@ -2354,40 +2354,9 @@ Nécessite un redémarrage.</value>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Activer les effets de transparence</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Désactiver le menu classique</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Activer le menu classique</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Installer</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Ouvrir les paramètres de style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restaurer par défaut</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>État : Menu classique installé et activé</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>État : Installé mais non activé</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>État : Menu classique non installé</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Basculer entre les styles de menu contextuel par défaut et classique.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Style de menu contextuel</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Désinstaller</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Personnalisez l'apparence de Windows, y compris le style du menu contextuel.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2442,36 +2411,8 @@ Nécessite un redémarrage.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Applications sélectionnées programmées pour la suppression.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Personnalisez l'apparence du menu contextuel.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Échec de l'application des paramètres de style.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Fichier de configuration introuvable. Veuillez vous assurer que Nilesoft Shell est installé.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Échec de l'activation du menu classique.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Échec de l'installation du shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Échec de la restauration du menu par défaut.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe introuvable. Veuillez vous assurer que Nilesoft Shell est installé.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Sélectionnez le thème pour le menu contextuel.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Activer les effets de transparence pour le menu contextuel.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Échec de la désinstallation du shell.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>{0} libéré en {1}s</value>
   </data>
@@ -2649,24 +2590,6 @@ Nécessite un redémarrage.</value>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Options de visibilité des fichiers</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restaure le style par défaut et redémarre l'Explorateur.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Passer au menu contextuel par défaut</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applique le style classique et redémarre l'Explorateur.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Passer au menu moderne</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Désinstaller complètement shell.exe et les fichiers associés</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Appliquer le menu contextuel moderne</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Conserver le cache système en mémoire et éviter la pagination des pilotes du noyau.</value>
   </data>
@@ -2744,12 +2667,6 @@ Nécessite un redémarrage.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorateur &amp; interface</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Changer le style du menu contextuel.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Embellissement Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Ajuster les paramètres de performance et de réactivité du système.</value>
@@ -2919,48 +2836,6 @@ Nécessite un redémarrage.</value>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Chargement des plugins...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Intégration du Shell</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Intégration améliorée du Shell Windows avec embellissement du menu contextuel et personnalisation du style de la souris</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Activer le menu contextuel moderne</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Activer Nilesoft Shell pour embellir le menu contextuel de Windows avec un style moderne</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Désactiver le menu contextuel moderne</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Désenregistrer Nilesoft Shell et restaurer le menu contextuel par défaut de Windows</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Appliquer le style de curseur Windows 11</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Appliquer le thème de curseur style Windows 11 avec support haute résolution</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Accélération réseau</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimiser les paramètres réseau pour améliorer la vitesse et la réactivité du réseau.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Optimisation TCP/IP et DNS</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Optimiser les paramètres TCP/IP et le cache DNS pour améliorer la vitesse de connexion et la réactivité.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Réinitialiser la configuration du réseau</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Vider le cache DNS et réinitialiser la configuration Winsock et TCP/IP pour résoudre les problèmes de connectivité réseau.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Nettoie les fichiers temporaires et les journaux laissés par diverses applications.</value>
   </data>
@@ -2978,12 +2853,6 @@ Nécessite un redémarrage.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Fichiers volumineux</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Activer les extensions</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Activer le système d'extensions pour accéder au marché de plugins dans la page Outils.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Configurer les options d'apparence, de comportement et de fonctionnalité de l'application.</value>
@@ -3396,24 +3265,6 @@ Nécessite un redémarrage.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Téléchargement... {0:F1} / {1:F1} Mo ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Accélération réseau</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>Outil VIVANT</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Outils</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Fonctionnalités d'accélération et d'optimisation du réseau en temps réel</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Gérer les indicateurs de fonctionnalités de Windows avec ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Outils d'optimisation et utilitaires système</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Aucun outil disponible. Veuillez ajouter des outils dans le dossier tools dans le répertoire de l'application.</value>
   </data>
@@ -3489,56 +3340,8 @@ Nécessite un redémarrage.</value>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>par ex. C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Activer la transparence</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Activer les effets de transparence pour le menu contextuel</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Afficher les extensions de fichiers</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Afficher les extensions de fichiers dans l'Explorateur de fichiers</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Afficher les fichiers cachés</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Afficher les fichiers et dossiers cachés dans l'Explorateur de fichiers</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Ouvrir sur Accès rapide</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Ouvrir l'Explorateur de fichiers sur Accès rapide au lieu de Ce PC</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Afficher le volet de prévisualisation</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Afficher le volet de prévisualisation dans l'Explorateur de fichiers</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Veuillez sélectionner au moins un élément à nettoyer.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Apparence de la souris</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Appliquez des styles de curseur personnalisés et suivez le thème système clair / foncé.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Activer le style de curseur suivant le thème</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Détectez le mode clair/sombre actuel des Fenêtres et appliquez le schéma de curseur personnalisé correspondant.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Désactiver le style de curseur suivant le thème</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Restaurez le schéma de curseur sauvegardé et arrêtez la commutation de curseur personnalisée basée sur le thème.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

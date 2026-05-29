@@ -73,7 +73,14 @@
                             </Rectangle>
 
                             <!-- Compact mode: icon above label, vertical accent bar -->
-                            <Grid x:Name="CompactLayout" HorizontalAlignment="Stretch">
+                            <Grid
+                                x:Name="CompactLayout"
+                                HorizontalAlignment="Stretch"
+                                Opacity="1"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TranslateTransform x:Name="CompactLayoutTranslate" X="0" />
+                                </Grid.RenderTransform>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
@@ -118,7 +125,13 @@
                             <Grid
                                 x:Name="ExpandedLayout"
                                 MinHeight="40"
+                                ClipToBounds="True"
+                                Opacity="0"
+                                RenderTransformOrigin="0,0.5"
                                 Visibility="Collapsed">
+                                <Grid.RenderTransform>
+                                    <TranslateTransform x:Name="ExpandedLayoutTranslate" X="-8" />
+                                </Grid.RenderTransform>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32" />
                                     <ColumnDefinition Width="*" />
@@ -161,20 +174,60 @@
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=(custom:NavigationStore.NavigationPaneExpanded), RelativeSource={RelativeSource Self}}" Value="True">
                             <Setter TargetName="CompactLayout" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="CompactLayout" Property="Opacity" Value="0" />
                             <Setter TargetName="ExpandedLayout" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="ExpandedLayout" Property="Opacity" Value="1" />
                             <Setter TargetName="MainBorder" Property="Padding" Value="8,0,10,0" />
                             <Setter TargetName="MainBorder" Property="CornerRadius" Value="4" />
                             <Setter TargetName="MainBorder" Property="BorderThickness" Value="1" />
-                            <Setter Property="Width" Value="{StaticResource NavigationWidthExpanded}" />
                             <Setter Property="MinWidth" Value="0" />
                             <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
                             <Setter Property="MinHeight" Value="40" />
                             <Setter Property="Margin" Value="0,0,0,4" />
                             <Setter Property="ToolTip" Value="{x:Null}" />
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ExpandedLayout"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="{StaticResource AnimationDurationMedium}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ExpandedLayout"
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                            From="-8"
+                                            To="0"
+                                            Duration="{StaticResource AnimationDurationMedium}"
+                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Path=(custom:NavigationStore.NavigationPaneExpanded), RelativeSource={RelativeSource Self}}" Value="False">
-                            <Setter Property="Width" Value="{StaticResource NavigationWidthCollapsed}" />
+                            <Setter TargetName="CompactLayout" Property="Opacity" Value="1" />
+                            <Setter TargetName="ExpandedLayout" Property="Opacity" Value="0" />
                             <Setter Property="ToolTip" Value="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="CompactLayout"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="{StaticResource AnimationDurationMedium}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="CompactLayout"
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                            From="4"
+                                            To="0"
+                                            Duration="{StaticResource AnimationDurationMedium}"
+                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
                         </DataTrigger>
 
                         <Trigger Property="IsActive" Value="True">
@@ -438,13 +491,10 @@
                         </Trigger>
                         <Trigger Property="IsExpanded" Value="True">
                             <Setter TargetName="PART_TogglePaneButton" Property="Opacity" Value="1" />
-                            <Setter TargetName="PART_MainItemsScrollViewer" Property="Width" Value="{StaticResource NavigationWidthExpanded}" />
                             <Setter TargetName="PART_MainItems" Property="MinWidth" Value="0" />
                             <Setter TargetName="PART_MainItems" Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
-                            <Setter TargetName="PART_MainItems" Property="Width" Value="{StaticResource NavigationWidthExpanded}" />
                             <Setter TargetName="PART_FooterItems" Property="MinWidth" Value="0" />
                             <Setter TargetName="PART_FooterItems" Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
-                            <Setter TargetName="PART_FooterItems" Property="Width" Value="{StaticResource NavigationWidthExpanded}" />
                             <Setter TargetName="PART_TogglePaneButton" Property="HorizontalAlignment" Value="Left" />
                             <Setter TargetName="PART_TogglePaneButton" Property="Margin" Value="8,4,0,8" />
                         </Trigger>

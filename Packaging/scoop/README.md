@@ -7,6 +7,8 @@ The authoritative Scoop manifest is published in the custom bucket repository: [
 ## Release Checklist
 
 1. Publish a stable GitHub release with:
+   - `UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`
+   - `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`
    - `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
    - `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 2. Confirm the installer URL is the final GitHub Release asset URL.

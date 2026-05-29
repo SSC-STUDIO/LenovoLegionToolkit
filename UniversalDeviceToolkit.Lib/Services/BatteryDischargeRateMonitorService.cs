@@ -13,10 +13,10 @@ public class BatteryDischargeRateMonitorService : IDisposable
     private readonly object _lock = new();
     private bool _disposed;
 
-    public async Task StartStopIfNeededAsync()
+    public Task StartStopIfNeededAsync()
     {
         if (!Battery.TestBatterySupport())
-            return;
+            return Task.CompletedTask;
 
         CancellationTokenSource? newCts = null;
         Task? newTask = null;
@@ -24,7 +24,7 @@ public class BatteryDischargeRateMonitorService : IDisposable
         lock (_lock)
         {
             if (_refreshTask != null)
-                return;
+                return Task.CompletedTask;
 
             if (_cts is not null)
             {
@@ -88,8 +88,19 @@ public class BatteryDischargeRateMonitorService : IDisposable
             _refreshTask = newTask;
         }
 
-        if (newTask is not null)
-            await newTask.ConfigureAwait(false);
+        _ = newTask.ContinueWith(t =>
+        {
+            lock (_lock)
+            {
+                if (ReferenceEquals(_refreshTask, t))
+                    _refreshTask = null;
+            }
+
+            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Battery monitoring service task faulted.", t.Exception);
+        }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+
+        return Task.CompletedTask;
     }
 
     public async Task StopAsync()
@@ -120,16 +131,30 @@ public class BatteryDischargeRateMonitorService : IDisposable
         {
             try
             {
-                await ctsToDispose.CancelAsync().ConfigureAwait(false);
+                ctsToDispose.Cancel();
             }
             catch (ObjectDisposedException)
             {
             }
-            ctsToDispose.Dispose();
         }
 
         if (taskToWait is not null)
-            await taskToWait.ConfigureAwait(false);
+        {
+            try
+            {
+                await taskToWait.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            }
+            catch (TimeoutException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Battery monitoring service did not stop in time.");
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        ctsToDispose?.Dispose();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Battery monitoring service stopped");

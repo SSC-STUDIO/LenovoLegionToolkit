@@ -2359,40 +2359,9 @@
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Εγκατάσταση</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Απεγκατάσταση</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+
+
+<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -2443,36 +2412,8 @@
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
     <value>Οι επιλεγμένες εφαρμογές έχουν προγραμματιστεί για κατάργηση.</value>
   </data>
-  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Προσαρμόστε την εμφάνιση του μενού περιβάλλοντος.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Αποτυχία εφαρμογής ρυθμίσεων στυλ.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Το αρχείο διαμόρφωσης δεν βρέθηκε. Βεβαιωθείτε ότι το Nilesoft Shell είναι εγκατεστημένο.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Αποτυχία ενεργοποίησης του κλασικού μενού.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Αποτυχία εγκατάστασης του shell.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Αποτυχία επαναφοράς του προεπιλεγμένου μενού.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe δεν βρέθηκε. Βεβαιωθείτε ότι το Nilesoft Shell είναι εγκατεστημένο.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Επιλέξτε το θέμα για το μενού περιβάλλοντος.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Ενεργοποίηση εφέ διαφάνειας για το μενού περιβάλλοντος.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Αποτυχία απεγκατάστασης του shell.</value>
-  </data>
+
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Απελευθερώθηκαν {0} σε {1}s</value>
   </data>
@@ -2650,24 +2591,6 @@
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Επιλογές ορατότητας αρχείων</value>
   </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Επαναφέρει το προεπιλεγμένο στυλ και επανεκκινεί τον Explorer.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Μεταβείτε στο προεπιλεγμένο μενού δεξιού κλικ</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Εφαρμόζει το κλασικό στυλ και επανεκκινεί τον Εξερευνητή.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Μεταβείτε σε μοντέρνο μενού</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Απεγκατάσταση του shell.exe και των σχετικών αρχείων</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Εφαρμογή Σύγχρονου Μενού Περιβάλλοντος</value>
-  </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
     <value>Διατηρήστε την cache του συστήματος στη μνήμη και αποφύγετε το paging των οδηγών πυρήνα.</value>
   </data>
@@ -2745,12 +2668,6 @@
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Εξερευνητής &amp; διεπαφή</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Αλλάξτε το στυλ μενού δεξιού κλικ.</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Ομορφιά των Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Ρυθμίστε τις ρυθμίσεις απόδοσης και ανταπόκρισης του συστήματος.</value>
@@ -2884,48 +2801,6 @@
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
     <value>Φόρτωση προσθηκών...</value>
   </data>
-  <data name="ShellIntegration_Category_Title" xml:space="preserve">
-    <value>Ενσωμάτωση Shell</value>
-  </data>
-  <data name="ShellIntegration_Category_Description" xml:space="preserve">
-    <value>Βελτιωμένη ενσωμάτωση του Windows Shell με καλλωπισμό μενού περιβάλλοντος και προσαρμογή στυλ ποντικιού</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Ενεργοποίηση Σύγχρονου Μενού Περιβάλλοντος</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Ενεργοποίηση του Nilesoft Shell για να καλλωπίσετε το μενού περιβάλλοντος των Windows με σύγχρονο στυλ</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Απενεργοποίηση Σύγχρονου Μενού Περιβάλλοντος</value>
-  </data>
-  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Απεγγραφή του Nilesoft Shell και επαναφορά του προεπιλεγμένου μενού περιβάλλοντος των Windows</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>Εφαρμογή Στυλ Δείκτη Windows 11</value>
-  </data>
-  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>Εφαρμογή θέματος δείκτη στυλ Windows 11 με υποστήριξη υψηλής DPI</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Επιτάχυνση Δικτύου</value>
-  </data>
-  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Βελτιστοποιήστε τις ρυθμίσεις δικτύου για να βελτιώσετε την ταχύτητα και την απόκριση του δικτύου.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
-    <value>Βελτιστοποίηση TCP/IP και DNS</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
-    <value>Βελτιστοποιήστε τις παραμέτρους TCP/IP και τις ρυθμίσεις προσωρινής μνήμης DNS για να βελτιώσετε την ταχύτητα σύνδεσης και την απόκριση.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
-    <value>Επαναφορά διαμόρφωσης δικτύου</value>
-  </data>
-  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
-    <value>Ξεπλύνετε την προσωρινή μνήμη DNS και επαναφέρετε τη διαμόρφωση στοίβας Winsock και TCP/IP για να επιδιορθώσετε προβλήματα συνδεσιμότητας δικτύου.</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Καθαρίζει προσωρινά αρχεία και αρχεία καταγραφής που έχουν αφήσει διάφορες εφαρμογές.</value>
   </data>
@@ -2943,12 +2818,6 @@
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Μεγάλα αρχεία</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
-    <value>Ενεργοποιήστε τις Επεκτάσεις</value>
-  </data>
-  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>Ενεργοποιήστε το σύστημα επεκτάσεων για να αποκτήσετε πρόσβαση στην αγορά προσθηκών στη σελίδα Εργαλεία.</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
     <value>Διαμορφώστε τις επιλογές εμφάνισης, συμπεριφοράς και λειτουργικότητας της εφαρμογής.</value>
@@ -3397,24 +3266,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Λήψη... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
-    <value>Επιτάχυνση Δικτύου</value>
-  </data>
-  <data name="Plugin_Name_ViveTool" xml:space="preserve">
-    <value>Βιβετόλη</value>
-  </data>
-  <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>Εργαλεία</value>
-  </data>
-  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
-    <value>Χαρακτηριστικά επιτάχυνσης και βελτιστοποίησης δικτύου σε πραγματικό χρόνο</value>
-  </data>
-  <data name="Plugin_Description_ViveTool" xml:space="preserve">
-    <value>Διαχείριση σημαιών λειτουργιών των Windows χρησιμοποιώντας το ViVeTool</value>
-  </data>
-  <data name="Plugin_Description_Tools" xml:space="preserve">
-    <value>Εργαλεία βελτιστοποίησης συστήματος και βοηθητικά προγράμματα</value>
-  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>Δεν υπάρχουν διαθέσιμα εργαλεία. Παρακαλώ προσθέστε εργαλεία στον φάκελο tools στον κατάλογο της εφαρμογής.</value>
   </data>
@@ -3490,56 +3341,8 @@
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>π.χ. C:\Drivers</value>
   </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
-    <value>Ενεργοποίηση Διαφάνειας</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
-    <value>Ενεργοποιήστε τα εφέ διαφάνειας για το μενού περιβάλλοντος</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
-    <value>Εμφάνιση Επεκτάσεων Αρχείων</value>
-  </data>
-  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
-    <value>Εμφάνιση επεκτάσεων αρχείων στον Εξερευνητή Αρχείων</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
-    <value>Εμφάνιση Κρυφών Αρχείων</value>
-  </data>
-  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
-    <value>Εμφανίστε κρυφά αρχεία και φακέλους στον Εξερευνητή Αρχείων</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
-    <value>Άνοιγμα στο Quick Access</value>
-  </data>
-  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
-    <value>Ανοίξτε τον Εξερευνητή Αρχείων στο Quick Access αντί για Αυτόν τον Υπολογιστή</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
-    <value>Εμφάνιση Παραθύρου Προεπισκόπησης</value>
-  </data>
-  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
-    <value>Εμφάνιση παραθύρου προεπισκόπησης στον Εξερευνητή Αρχείων</value>
-  </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Παρακαλώ επιλέξτε τουλάχιστον ένα στοιχείο για καθαρισμό.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Εμφάνιση ποντικιού</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Εφαρμόστε προσαρμοσμένα στυλ δρομέα και ακολουθήστε το ανοιχτό/σκοτεινό θέμα του συστήματος.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Ενεργοποιήστε το στυλ δρομέα που ακολουθεί το θέμα</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Εντοπίστε την τρέχουσα λειτουργία Windows light/dark και εφαρμόστε το αντίστοιχο προσαρμοσμένο σχήμα δρομέα.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Απενεργοποιήστε το στυλ δρομέα που ακολουθεί το θέμα</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Επαναφέρετε το εφεδρικό σχήμα δρομέα και σταματήστε την προσαρμοσμένη εναλλαγή δρομέα με βάση το θέμα.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Force software rendering</value>

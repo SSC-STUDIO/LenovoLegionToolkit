@@ -140,6 +140,7 @@
                     <custom:NavigationItem
                         x:Name="_dashboardItem"
                         AutomationProperties.AccessKey="D"
+                        AutomationProperties.AutomationId="DashboardNavItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}"
                         Icon="Home24"
                         PageTag="dashboard"

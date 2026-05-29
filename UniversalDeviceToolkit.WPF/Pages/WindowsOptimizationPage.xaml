@@ -407,7 +407,7 @@
                                                 Margin="12,0,8,0"
                                                 VerticalAlignment="Center"
                                                 Appearance="Transparent"
-                                                ToolTip="{x:Static resources:Resource.SystemBeautification_RightClick_OpenStyleSettings}"
+                                                ToolTip="{x:Static resources:Resource.Settings}"
                                                 Click="OpenStyleSettingsButton_Click"
                                                 Visibility="{Binding HasSettings, Converter={StaticResource BoolToVisibilityConverter}}">
                                                 <wpfui:Button.Icon>

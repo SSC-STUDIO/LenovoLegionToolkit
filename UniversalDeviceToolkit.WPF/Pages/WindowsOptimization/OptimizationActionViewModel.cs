@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
@@ -8,17 +9,19 @@ public class OptimizationActionViewModel : INotifyPropertyChanged
     private bool _isSelected;
     private bool _isEnabled = true;
 
-    public OptimizationActionViewModel(string key, string title, string description, bool recommended, string recommendedTagText)
+    public OptimizationActionViewModel(WindowsOptimizationActionDefinition definition, string title, string description, string recommendedTagText)
     {
-        Key = key;
+        Definition = definition;
+        Key = definition.Key;
         Title = title;
         Description = description;
-        Recommended = recommended;
+        Recommended = definition.Recommended;
         RecommendedTagText = recommendedTagText;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    public WindowsOptimizationActionDefinition Definition { get; }
     public string Key { get; }
     public string Title { get; }
     public string Description { get; }

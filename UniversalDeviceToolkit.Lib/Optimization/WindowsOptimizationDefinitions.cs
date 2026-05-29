@@ -7,12 +7,6 @@ namespace LenovoLegionToolkit.Lib.Optimization;
 
 public static class WindowsOptimizationDefinitions
 {
-    private const int DefaultTcpTtl = 64;
-    private const int MaxTcpWindowSize = 65535;
-    private const int DefaultTcpTimedWaitDelay = 30;
-    private const int DefaultDnsMaxCacheTtl = 3600;
-    private const int DefaultDnsMaxNegativeCacheTtl = 300;
-
     private static readonly string LocalAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     private static readonly string RoamingAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     private static readonly string ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -184,29 +178,6 @@ public static class WindowsOptimizationDefinitions
     [
         "powercfg -setactive SCHEME_MAX",
         "powercfg -h off"
-    ];
-
-    public static readonly IReadOnlyList<RegistryValueDefinition> NetworkAccelerationTweaks =
-    [
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpAckFrequency", 1, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TCPNoDelay", 1, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "Tcp1323Opts", 3, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "DefaultTTL", DefaultTcpTtl, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "EnablePMTUBHDetect", 0, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "EnablePMTUDiscovery", 1, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "GlobalMaxTcpWindowSize", MaxTcpWindowSize, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpMaxDupAcks", 2, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "SackOpts", 1, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpTimedWaitDelay", DefaultTcpTimedWaitDelay, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxCacheTtl", DefaultDnsMaxCacheTtl, RegistryValueKind.DWord),
-        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxNegativeCacheTtl", DefaultDnsMaxNegativeCacheTtl, RegistryValueKind.DWord)
-    ];
-
-    public static readonly IReadOnlyList<string> NetworkOptimizationCommands =
-    [
-        "ipconfig /flushdns",
-        "netsh winsock reset",
-        "netsh int ip reset"
     ];
 
     public static readonly IReadOnlyList<string> ComponentStoreCommands =

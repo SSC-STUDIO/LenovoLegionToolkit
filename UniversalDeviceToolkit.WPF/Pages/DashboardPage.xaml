@@ -11,6 +11,7 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.DashboardPage_Title}"
+    AutomationProperties.AutomationId="DashboardPageRoot"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Initialized="DashboardPage_Initialized"
     SizeChanged="DashboardPage_SizeChanged">

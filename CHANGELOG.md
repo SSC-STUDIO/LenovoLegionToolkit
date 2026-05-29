@@ -10,37 +10,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Improved
-- 刷新 v4.0.0 README 截图：统一 1300×850 逻辑窗口与 IPC 截图流程，并补充 DEPLOYMENT 分辨率说明 / Refreshed v4.0.0 README screenshots at the standard 1300×850 logical window via IPC capture and documented the resolution workflow in DEPLOYMENT.md
+## [4.0.0] - 2026-05-29
 
-## [4.0.0] - 2026-05-26
+### Highlights / 重点
+- Universal Device Toolkit is now the stable public name. Existing Lenovo Legion Toolkit installations can upgrade in place while settings, plugins, updater paths, winget, and Scoop compatibility are preserved.
+- Added Full and Online release packages. Full includes bundled languages and device support data; Online starts smaller and installs language/device resources from the GitHub Pages catalog through the app flow.
+- Plugin Extensions now use plugin-owned metadata and translations for names, descriptions, details, usage guides, and optimization entries.
 
-### Added
-- Added a local device-support simulation matrix for ASUS, MECHREVO/Mechanical Revolution, HP, Dell, Acer, Xiaomi, and Huawei machine profiles.
-- Added explicit MECHREVO basic-mode device pack matching alongside the existing Clevo/Tongfang fallback.
-- Added a generic CPU/GPU sensor fallback for basic-mode non-Lenovo devices, using Windows performance counters, ACPI thermal zones, NVAPI, and `nvidia-smi` where available.
+### Added / 新增
+- Added a first-run language and device setup flow, including online language/device resource installation and progress feedback.
+- Added broader basic-mode support for more Lenovo and non-Lenovo PCs, with device matching for common ASUS, Dell, HP, Acer, Xiaomi, Huawei, MECHREVO, Clevo/Tongfang, and generic desktop/laptop profiles.
+- Added generic CPU/GPU telemetry fallbacks for basic-mode systems when Lenovo-specific sensor paths are not available.
 
-### Fixed
-- 修复启动约 47 秒后因未观察的 WMI `GetFeatureValue` 任务异常写入崩溃报告的问题：后台混合显卡/延迟通知任务改为 `Forget` 观察异常，`OrNullIfException` 改为 await 捕获，并在 iGPU 能力读取失败时优雅降级 / Fixed unobserved `GetFeatureValue` WMI task exceptions (~47s after startup) by observing background hybrid-GPU tasks via `Forget`, awaiting `OrNullIfException`, and degrading gracefully when iGPU capability reads are unavailable.
-- 修复首次安装或未完成机型设置时不再弹出语言选择窗的问题：即使已有 `lang` 配置（例如从旧版迁移），在 `device-setup` 完成前仍会显示语言选择与语言包安装 / Fixed missing first-run language selector when a `lang` file already exists (e.g. migrated from a previous install): the language picker and pack install now show until device setup is completed.
-- 修复插件扩展页「从文件导入」不弹出文件选择框的问题：仅自动化测试读取 `LLT_PLUGIN_IMPORT_FILES`，正常使用时始终打开文件对话框 / Fixed plugin Extensions “Import from Files” not showing the file picker by honoring `LLT_PLUGIN_IMPORT_FILES` only during smoke automation and always opening the dialog for normal use.
-- 恢复插件市场「从文件导入」按钮，本地 ZIP 插件包可再次通过 UI 与冒烟测试点击导入 / Restored the Plugin Extensions “Import from Files” button so local ZIP plugin packages can be imported again via the UI and smoke automation.
-- 修复语言包下载完成后仍显示未安装的问题：安装目录与程序目录对齐、复制逻辑更稳健、安装后校验主程序 UI 资源并在不完整时回退完整包 / Fixed language packs still showing as not installed after download by aligning install paths with the app directory, hardening satellite copy logic, verifying UI resources after install, and falling back to the full portable package when the language zip is incomplete.
-- 修复在线安装插件后仅显示 Installed/Uninstall、双击提示 No UI 的问题：补充官方在线包哈希信任后的运行时重载，并按设置页/功能页/系统优化分类回退打开入口 / Fixed online-installed plugins showing only Installed/Uninstall and "No UI" on double-click by reloading trusted plugin runtimes and falling back to settings, feature, or optimization entry points.
-- 修复设置页切换其它界面后语言包下载进度消失的问题；安装任务在后台继续，返回外观页会恢复进度显示 / Fixed language pack install progress disappearing when leaving Settings; the download continues in the background and progress is restored when returning to Appearance.
-- 修复插件扩展页切换导航后在线插件下载进度条消失、且下载中误显示 Open/Uninstall 的问题；下载在后台继续，返回插件页会恢复进度并隐藏已安装操作按钮 / Fixed online plugin download progress disappearing when leaving Plugin Extensions and Open/Uninstall showing during an in-flight download; progress is restored and installed actions stay hidden until completion.
-- 在线插件安装改为串行队列：同时只下载一个，其余显示「等待安装」进度状态，避免点击多个 Install 时只有第一个有进度条 / Online plugin installs now run one at a time with a visible queued state for additional Install clicks instead of silent background installs.
-- Fixed main sidebar compact mode to match the repository screenshots, left-align the expanded toggle, and use a straight content divider.
-- 修复自定义模式（God Mode）预设命名、新增、删除与切换不持久化，以及切换预设时丢失当前编辑参数的问题 / Fixed God Mode preset rename, add, delete, and switch not persisting, and losing in-progress edits when changing presets.
-- 修复自定义模式（God Mode）设置中恢复默认按钮无图标、重命名/新建预设后下拉框无法选中的问题 / Fixed missing reset icons in God Mode settings and preset combo selection after rename or create.
-- Fixed a startup `XamlParseException` caused by the main-window update banner binding `UpdateIndicator_Click` through XAML mouse events.
-- Fixed startup argument parsing for space-separated string options such as `--single-instance-key value` and `--ipc-pipe-name value`.
+### Fixed / 修复
+- Fixed language pack installation so newly selected languages are available after first launch and from Settings.
+- Fixed online plugin installation so installed plugins reload correctly, show their available actions, and no longer open to a misleading "No UI" message when a settings page or optimization entry exists.
+- Fixed settings-only plugins appearing as empty System Optimization categories with no actions to select.
+- Fixed plugin download progress so installs continue across page navigation and queued installs show a clear waiting state.
+- Fixed God Mode preset rename, create, delete, and switching persistence.
+- Fixed the Device Information window leaving a large blank area when warranty details are unavailable.
+- Fixed Dashboard sensor details so double-click expand/collapse works reliably across child controls.
+- Fixed startup stability issues around Lenovo WMI feature reads and update banner event binding.
 
 ### Improved / 改进
-- 性能模式不再提供 Extreme 选项；若硬件当前为 Extreme 将自动切换为 Performance / Removed Extreme from selectable power modes; hardware still on Extreme is migrated to Performance on read.
-- Expanded built-in basic-mode aliases and model keywords for ASUS, Dell, HP, Acer, Xiaomi, and Huawei systems.
-- Non-Lenovo dashboard sensor cards now keep showing any available generic CPU/GPU telemetry instead of requiring Lenovo fan-table support.
-- 语言包安装显示下载与安装进度（设置页与首次启动语言窗口）/ Language pack installation shows download and install progress in Settings and the startup language selector.
+- Improved Plugin Extensions with collapsible details, usage guides, better spacing, and online/store metadata that stays separate from main app translations.
+- Improved Dashboard sensor cards so available CPU, battery, and GPU readings stay visible instead of disappearing when one backend is unsupported.
+- Improved the main left navigation with a smoother collapsed/expanded transition.
+- Improved performance mode selection by keeping unsupported modes out of the picker and falling back safely when hardware reports an unavailable state.
+- Improved package naming, release notes structure, SHA256 output, GitHub Pages resource catalog descriptions, and legacy installer alias handling for the rename transition.
 
 ## [3.8.1] - 2026-05-23
 
@@ -63,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / 变更
 - Release packaging now produces Full and Online installers/portable ZIPs under UniversalDeviceToolkit names, plus the LenovoLegionToolkit setup alias for the first bridge release.
-- Language and device resources now publish through GitHub Pages catalogs instead of per-language GitHub Release assets; English remains built into Online packages.
+- Language and device resources now publish through GitHub Pages catalogs instead of separate language-pack GitHub Release assets; Online packages include the base English resources.
 - Runtime paths migrate from `%LOCALAPPDATA%\LenovoLegionToolkit` to `%LOCALAPPDATA%\UniversalDeviceToolkit` without deleting the legacy directory.
 - Autorun tasks and single-instance guards now use the new name while also handling legacy LenovoLegionToolkit identifiers.
 
@@ -76,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added / 新增
 - Added app theme style presets with persisted settings: Current Style, Official Cool, Midnight Neon, and Forest Tech.
-- Added optional online language-pack install/uninstall support and release packaging for full, English-only, and per-language assets.
+- Added optional online language-pack install/uninstall support and release packaging for Full, Online, and legacy language-pack assets.
 
 ### Fixed / 修复
 - Hide the advanced Keyboard Backlight navigation and settings entry on devices that do not support Spectrum/RGB keyboard lighting, preventing empty unsupported pages from appearing in normal use.
@@ -85,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved / 改进
 - Expanded visual regression smoke options for theme-style screenshots, settings-only captures, and unsupported-hardware navigation checks.
-- Updated release automation to build full and English-only installers, portable ZIPs, language-pack ZIPs, and consolidated SHA256 files.
+- Updated release automation to build Full and Online installers, portable ZIPs, legacy language-pack ZIPs, and consolidated SHA256 files.
 - Cleaned Plugin Extensions dead import code and tightened UI action dispatch paths across dashboard, automation, keyboard, and display controls.
 
 ## [3.7.0] - 2026-05-19
@@ -100,7 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 补充 README 下载渠道、社区维护和 winget 安装说明，并新增中文宣发与上架材料，提升发布传播与安装承接 / Expanded README download, community-maintenance, and winget guidance and added Chinese launch materials for release promotion.
 - 升级控制台页首次加载体验：控制台首页改为更贴近最终布局的骨架扫光动画，CLI 等待主程序响应时也新增不污染脚本输出的加载动画 / Improved first-load UX with a dashboard skeleton shimmer and a non-polluting CLI loading animation.
 - 应用设置、自动化、CLI IPC 与 Spectrum 配置统一迁移到 `System.Text.Json`，同时保持既有配置文件兼容 / Migrated app settings, automation, CLI IPC, and Spectrum profile serialization to `System.Text.Json` while preserving existing file compatibility.
-- 补齐 WPF 多语言资源键并新增 `resx` 审计脚本，提升翻译完整性和发布前本地化自检能力 / Backfilled WPF resource keys and added a `resx` audit script to improve localization completeness and pre-release checks.
+- 补齐 WPF 多语言资源键并新增 `resx` 审计脚本，提升翻译完整性和发布前本地化自检能力 / Backfilled WPF resource keys and added a `resx` audit script to improve localization completeness and release readiness checks.
 - 扩展 2025 年 Lenovo Legion 与 LOQ Gen 10 机型识别，补齐 `15AKP`、`15IRX`、`16ADR`、`16AFR`、`17IRX`、`18IAX` 前缀支持 / Expanded 2025 Lenovo Legion and LOQ Gen 10 model detection.
 - 改进 CLI 与插件兼容性：CLI 切换到稳定 `System.CommandLine` API，插件依赖区间校验和未知版本展示更准确 / Improved CLI and plugin compatibility by moving to the stable `System.CommandLine` API and tightening plugin dependency version handling.
 - 强化发布链路与仓库维护：安装器改为检测 .NET 10 Desktop Runtime，发布前自动跑测试，并同步整理依赖和仓库模板 / Hardened release infrastructure with .NET 10 Desktop Runtime detection, pre-package tests, dependency updates, and repository maintenance cleanup.
@@ -178,7 +175,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **WPF Rendering Compatibility / WPF 渲染兼容性**: Centralized the software-rendering fallback in `RenderingCompatibilityHelper`, applied an opaque window background fallback in `BaseWindow`, and routed app startup render-mode selection through the helper so Remote Desktop / forced-software-rendering sessions no longer show blank Mica/Acrylic windows. Evidence: `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`, `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff` / 将软件渲染兜底逻辑集中到 `RenderingCompatibilityHelper`，在 `BaseWindow` 中补充不透明背景兜底，并让启动阶段的渲染模式统一走 helper，避免远程桌面或强制软件渲染场景下 Mica/Acrylic 窗口空白。证据：`C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`、`C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff`
 - **Plugin UI Localization / 插件界面本地化**: Replaced plugin marketplace summary/capability/author strings with localized resources and added a localized optimization failure format so simplified Chinese UI no longer shows English labels such as `Total Plugins`, `Quick Open`, or `Failed to apply ...` in the plugin workflow / 将插件市场的摘要、能力标签、作者前缀改为资源化本地化文本，并补充系统优化失败消息模板，使简体中文插件流程中不再显示 `Total Plugins`、`Quick Open`、`Failed to apply ...` 等英文标签
 - **Menu Style Editor Localization / 菜单样式编辑器本地化**: Replaced hard-coded Chinese strings in `MenuStyleSettingsWindow` with resource lookups, localized apply/open error prompts, and aligned the editor with the actual Shell config availability so Chinese and cold-locale runs no longer mix in untranslated text or expose missing-file actions / 将 `MenuStyleSettingsWindow` 中的硬编码中文替换为资源查找，补齐应用与打开失败提示的本地化，并按实际 Shell 配置文件可用性控制编辑器状态，避免中文和冷门语言运行时混入未翻译文本或暴露无效文件操作
-- **Plugin Host Localization Refresh / 插件宿主本地化刷新**: Added a shared plugin-resource culture change event, taught `PluginPageWrapper` and `PluginSettingsWindow` to rebuild plugin UI after culture changes, and localized previously hard-coded plugin host empty states, delete confirmations, snackbars, and ZIP dialog filters so plugin pages/settings inherit language changes more reliably instead of keeping stale text or popping English-only helper UI / 新增共享的插件资源文化变更事件，让 `PluginPageWrapper` 与 `PluginSettingsWindow` 在语言变化后重建插件界面，并把原本硬编码的插件宿主空状态、删除确认、提示条与 ZIP 文件对话框过滤文本资源化，减少插件页/设置页保留旧语言或弹出英文辅助界面的情况
+- **Plugin Host Localization Refresh / 插件宿主本地化刷新**: Added a shared plugin-resource culture change event, taught `PluginPageWrapper` and `PluginSettingsWindow` to rebuild plugin UI after culture changes, and localized previously hard-coded plugin host empty states, delete confirmations, snackbars, and ZIP dialog filters so plugin pages/settings inherit language changes more reliably instead of keeping stale text or popping untranslated helper UI / 新增共享的插件资源文化变更事件，让 `PluginPageWrapper` 与 `PluginSettingsWindow` 在语言变化后重建插件界面，并把原本硬编码的插件宿主空状态、删除确认、提示条与 ZIP 文件对话框过滤文本资源化，减少插件页/设置页保留旧语言或弹出未翻译的辅助界面
 - **Plugin Marketplace Hidden Copy / 插件市场隐藏文案**: Routed the remaining install/uninstall/bulk-import fallback snackbars in `PluginExtensionsPage` through resource keys so the plugin marketplace no longer mixes English helper text like install-failed details, dependency uninstall warnings, or `Unknown` import-source placeholders into Chinese mode / 将 `PluginExtensionsPage` 中残留的安装、卸载、批量导入兜底提示统一改走资源键，避免插件市场在中文模式下继续混入安装失败详情、依赖卸载警告或 `Unknown` 这类英文占位提示
 - **Hidden Settings Dialog Copy / 隐藏设置弹框文案**: Routed package-download example placeholders in `PackagesPage` and the mirrored `WindowsOptimizationPage` surface through shared resource keys, and localized the Compatibility Check window's manual “Open Log” failure message so hidden host dialogs no longer mix hard-coded English/Chinese helper text / 将 `PackagesPage` 及镜像到 `WindowsOptimizationPage` 的包下载示例占位文案改走共享资源键，并把兼容性检查窗口里手动“打开日志”失败提示资源化，避免宿主隐藏弹框继续混入硬编码中英文辅助文本
 - **Explorer Restart Reliability / Explorer 重启可靠性**: Replaced duplicated Explorer restart snippets with a shared helper that waits for Explorer to fully exit, relaunches it via the shell with a `cmd /c start` fallback, uses the Windows `explorer.exe` full path, and verifies the process actually returns so optimization and menu-style apply flows no longer leave the desktop shell closed / 用共享 helper 替换重复的 Explorer 重启片段：等待 Explorer 完全退出、通过 shell 方式拉起并提供 `cmd /c start` 兜底、使用 Windows 下 `explorer.exe` 的全路径、并校验进程确实恢复，避免系统优化和菜单样式应用流程把桌面壳杀掉后不自动回来
