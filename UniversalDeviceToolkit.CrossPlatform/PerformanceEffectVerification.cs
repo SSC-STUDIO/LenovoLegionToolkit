@@ -134,17 +134,19 @@ internal sealed class CpuFrequencyLoadSampler(
 
         using var cancellation = new CancellationTokenSource();
         var workers = StartLoadWorkers(options.LoadWorkerCount, cancellation.Token);
+        var sampleCount = 0;
         var stopwatch = Stopwatch.StartNew();
         try
         {
-            while (stopwatch.Elapsed < duration)
+            while (stopwatch.Elapsed < duration || sampleCount < 2)
             {
+                sampleCount++;
                 readings.AddRange(readTelemetry().CpuFrequencies);
                 var remaining = duration - stopwatch.Elapsed;
-                if (remaining <= TimeSpan.Zero)
+                if (remaining <= TimeSpan.Zero && sampleCount >= 2)
                     break;
 
-                Thread.Sleep(remaining < interval ? remaining : interval);
+                Thread.Sleep(remaining <= TimeSpan.Zero || remaining > interval ? interval : remaining);
             }
         }
         finally

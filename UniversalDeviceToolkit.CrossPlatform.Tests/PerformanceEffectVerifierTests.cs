@@ -104,7 +104,7 @@ public sealed class PerformanceEffectVerifierTests
             },
             new PerformanceEffectVerificationOptions(
                 TimeSpan.Zero,
-                TimeSpan.FromMilliseconds(45),
+                TimeSpan.FromMilliseconds(1),
                 TimeSpan.FromMilliseconds(10),
                 0));
 
