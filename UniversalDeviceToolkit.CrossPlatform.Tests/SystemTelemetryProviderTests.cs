@@ -19,6 +19,8 @@ public sealed class SystemTelemetryProviderTests
                 MemTotal:       32768000 kB
                 MemAvailable:   12345678 kB
                 """,
+            ["/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"] = "2412500\n",
+            ["/sys/devices/system/cpu/cpu1/cpufreq/scaling_cur_freq"] = "2399000\n",
             ["/sys/class/hwmon/hwmon0/name"] = "k10temp\n",
             ["/sys/class/hwmon/hwmon0/temp1_input"] = "54125\n",
             ["/sys/class/hwmon/hwmon0/temp1_label"] = "Tctl\n",
@@ -35,6 +37,11 @@ public sealed class SystemTelemetryProviderTests
         telemetry.LogicalProcessorCount.Should().Be(Environment.ProcessorCount);
         telemetry.MemoryTotalGiB.Should().Be(31.25);
         telemetry.MemoryAvailableGiB.Should().Be(11.77);
+        telemetry.CpuFrequencies.Should().BeEquivalentTo(
+        [
+            new CpuFrequencyReading("cpu0", 2412.5, "linux-cpufreq"),
+            new CpuFrequencyReading("cpu1", 2399, "linux-cpufreq")
+        ]);
         telemetry.Temperatures.Should().BeEquivalentTo(
         [
             new TemperatureReading("Tctl", 54.1, "linux-hwmon"),
@@ -48,6 +55,33 @@ public sealed class SystemTelemetryProviderTests
     }
 
     [Fact]
+    public void LinuxProvider_WhenCpufreqIsUnavailable_ShouldReadProcCpuFrequencies()
+    {
+        var fileSystem = new FakeFileSystem(new Dictionary<string, string>
+        {
+            ["/proc/cpuinfo"] = """
+                processor   : 0
+                cpu MHz     : 1800.123
+                processor   : 1
+                cpu MHz     : 2400.456
+                """,
+            ["/proc/meminfo"] = "MemTotal: 1048576 kB\n",
+            ["/sys/class/hwmon/hwmon0/name"] = "nvme\n",
+            ["/sys/class/hwmon/hwmon0/temp1_input"] = "42100\n",
+            ["/sys/class/hwmon/hwmon0/fan1_input"] = "1000\n"
+        });
+
+        var telemetry = new LinuxSystemTelemetryProvider(fileSystem).Read();
+
+        telemetry.CpuFrequencies.Should().BeEquivalentTo(
+        [
+            new CpuFrequencyReading("cpu0", 1800.1, "linux-procfs"),
+            new CpuFrequencyReading("cpu1", 2400.5, "linux-procfs")
+        ]);
+        telemetry.Notes.Should().NotContain(note => note.Contains("CPU frequency", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void LinuxProvider_WhenNoHwmonSensors_ShouldReturnNotes()
     {
         var fileSystem = new FakeFileSystem(new Dictionary<string, string>
@@ -57,8 +91,10 @@ public sealed class SystemTelemetryProviderTests
 
         var telemetry = new LinuxSystemTelemetryProvider(fileSystem).Read();
 
+        telemetry.CpuFrequencies.Should().BeEmpty();
         telemetry.Temperatures.Should().BeEmpty();
         telemetry.FanSpeeds.Should().BeEmpty();
+        telemetry.Notes.Should().Contain(note => note.Contains("CPU frequency", StringComparison.OrdinalIgnoreCase));
         telemetry.Notes.Should().Contain(note => note.Contains("temperature", StringComparison.OrdinalIgnoreCase));
         telemetry.Notes.Should().Contain(note => note.Contains("fan speed", StringComparison.OrdinalIgnoreCase));
     }
@@ -70,7 +106,8 @@ public sealed class SystemTelemetryProviderTests
         {
             ["sysctl -n machdep.cpu.brand_string"] = "Apple M3 Pro\n",
             ["sysctl -n hw.logicalcpu"] = "12\n",
-            ["sysctl -n hw.memsize"] = "19327352832\n"
+            ["sysctl -n hw.memsize"] = "19327352832\n",
+            ["sysctl -n hw.cpufrequency"] = "3600000000\n"
         });
 
         var telemetry = new MacSystemTelemetryProvider(runner).Read();
@@ -80,6 +117,7 @@ public sealed class SystemTelemetryProviderTests
         telemetry.LogicalProcessorCount.Should().Be(12);
         telemetry.MemoryTotalGiB.Should().Be(18);
         telemetry.MemoryAvailableGiB.Should().BeNull();
+        telemetry.CpuFrequencies.Should().ContainEquivalentOf(new CpuFrequencyReading("package", 3600, "macos-sysctl"));
         telemetry.Temperatures.Should().BeEmpty();
         telemetry.FanSpeeds.Should().BeEmpty();
         telemetry.Notes.Should().ContainSingle(note => note.Contains("SMC", StringComparison.OrdinalIgnoreCase));

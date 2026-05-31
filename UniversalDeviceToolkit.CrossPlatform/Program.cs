@@ -87,6 +87,13 @@ static int PrintTelemetry()
     Console.WriteLine($"Memory available: {FormatGibibytes(telemetry.MemoryAvailableGiB)}");
     Console.WriteLine($"Source: {telemetry.Source}");
 
+    if (telemetry.CpuFrequencies.Length > 0)
+    {
+        Console.WriteLine("CPU frequencies:");
+        foreach (var reading in telemetry.CpuFrequencies)
+            Console.WriteLine($"  {reading.Name}: {reading.MHz:0.#} MHz ({reading.Source})");
+    }
+
     if (telemetry.Temperatures.Length > 0)
     {
         Console.WriteLine("Temperatures:");
@@ -316,6 +323,8 @@ static string FormatTelemetrySummary(SystemTelemetry telemetry)
         parts.Add(telemetry.CpuModel);
     if (telemetry.MemoryTotalGiB is not null)
         parts.Add($"{telemetry.MemoryTotalGiB:0.##} GiB RAM");
+    if (telemetry.CpuFrequencies.Length > 0)
+        parts.Add($"{telemetry.CpuFrequencies.Length} CPU frequency readings");
     if (telemetry.Temperatures.Length > 0)
         parts.Add($"{telemetry.Temperatures.Length} temperature readings");
     if (telemetry.FanSpeeds.Length > 0)
@@ -502,7 +511,7 @@ internal sealed record CrossPlatformStatus(
         new("Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
         new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
         new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
-        new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature/fan telemetry where available."),
+        new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, frequency, and safe temperature/fan telemetry where available."),
         new("Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
         new("Platform power profiles", isMacOS || isLinux, isLinux
             ? "Can inspect and set Linux power-profiles-daemon profiles through powerprofilesctl."

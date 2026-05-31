@@ -54,6 +54,7 @@ internal sealed record DoctorReport(
     {
         var hasTelemetry = !string.IsNullOrWhiteSpace(telemetry.CpuModel) ||
                            telemetry.MemoryTotalGiB is not null ||
+                           telemetry.CpuFrequencies.Length > 0 ||
                            telemetry.Temperatures.Length > 0 ||
                            telemetry.FanSpeeds.Length > 0;
 
@@ -64,6 +65,8 @@ internal sealed record DoctorReport(
                 details.Add(telemetry.CpuModel);
             if (telemetry.MemoryTotalGiB is not null)
                 details.Add($"{telemetry.MemoryTotalGiB:0.##} GiB RAM");
+            if (telemetry.CpuFrequencies.Length > 0)
+                details.Add($"{telemetry.CpuFrequencies.Length} CPU frequency readings");
             if (telemetry.Temperatures.Length > 0)
                 details.Add($"{telemetry.Temperatures.Length} temperature readings");
             if (telemetry.FanSpeeds.Length > 0)

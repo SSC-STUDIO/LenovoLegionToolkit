@@ -11,7 +11,7 @@ public sealed class DoctorReportTests
     {
         var status = CreateStatus(
             new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
-            new SystemTelemetry("linux-procfs-sysfs", "AMD Ryzen 7 7840U", 16, 31.25, 12.5, [new TemperatureReading("Tctl", 54.1, "linux-hwmon")], [new FanSpeedReading("CPU Fan", 2120, "linux-hwmon")], []),
+            new SystemTelemetry("linux-procfs-sysfs", "AMD Ryzen 7 7840U", 16, 31.25, 12.5, [new CpuFrequencyReading("cpu0", 2412.5, "linux-cpufreq")], [new TemperatureReading("Tctl", 54.1, "linux-hwmon")], [new FanSpeedReading("CPU Fan", 2120, "linux-hwmon")], []),
             new PowerStatus("linux-power-supply", [new PowerSupplyReading("BAT0", "Battery", "Discharging", 81, 51.2, 75, 80, 13.4, 15.5, 42, null, true, "Good", "test")], []),
             new PowerProfileStatus("linux-powerprofilesctl", "balanced", [new PowerProfileOption("balanced", "Balanced", true)], true, []),
             new CpuGovernorStatus("linux-cpufreq", "schedutil", [new CpuGovernorPolicy("policy0", "schedutil", ["performance", "powersave", "schedutil"], "/sys/devices/system/cpu/cpufreq/policy0/scaling_governor", "linux-cpufreq")], [new CpuGovernorOption("schedutil", "Schedutil", true)], true, []),

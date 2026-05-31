@@ -7,13 +7,19 @@ internal sealed record SystemTelemetry(
     int? LogicalProcessorCount,
     double? MemoryTotalGiB,
     double? MemoryAvailableGiB,
+    CpuFrequencyReading[] CpuFrequencies,
     TemperatureReading[] Temperatures,
     FanSpeedReading[] FanSpeeds,
     string[] Notes)
 {
     public static SystemTelemetry Unknown(string source, params string[] notes) =>
-        new(source, string.Empty, Environment.ProcessorCount, null, null, [], [], notes);
+        new(source, string.Empty, Environment.ProcessorCount, null, null, [], [], [], notes);
 }
+
+internal sealed record CpuFrequencyReading(
+    string Name,
+    double MHz,
+    string Source);
 
 internal sealed record TemperatureReading(
     string Name,
@@ -49,9 +55,12 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
     {
         var cpuModel = ReadCpuModel();
         var (memoryTotalGiB, memoryAvailableGiB) = ReadMemory();
+        var cpuFrequencies = ReadCpuFrequencies();
         var temperatures = ReadTemperatures();
         var fanSpeeds = ReadFanSpeeds();
         var notes = new List<string>();
+        if (cpuFrequencies.Length == 0)
+            notes.Add("No readable Linux CPU frequency inputs were found.");
         if (temperatures.Length == 0)
             notes.Add("No readable hwmon temperature inputs were found.");
         if (fanSpeeds.Length == 0)
@@ -63,6 +72,7 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
             Environment.ProcessorCount,
             memoryTotalGiB,
             memoryAvailableGiB,
+            cpuFrequencies,
             temperatures,
             fanSpeeds,
             notes.ToArray());
@@ -112,6 +122,67 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
         }
 
         return (total, available);
+    }
+
+    private CpuFrequencyReading[] ReadCpuFrequencies()
+    {
+        var sysfsReadings = ReadSysfsCpuFrequencies();
+        return sysfsReadings.Length > 0 ? sysfsReadings : ReadProcCpuFrequencies();
+    }
+
+    private CpuFrequencyReading[] ReadSysfsCpuFrequencies()
+    {
+        var readings = new List<CpuFrequencyReading>();
+
+        foreach (var directory in fileSystem.EnumerateDirectories("/sys/devices/system/cpu").OrderBy(path => path, StringComparer.Ordinal))
+        {
+            var cpuId = fileSystem.GetFileName(directory);
+            if (!Regex.IsMatch(cpuId, @"^cpu\d+$", RegexOptions.IgnoreCase))
+                continue;
+
+            var raw = fileSystem.ReadAllText(CombineUnixPath(CombineUnixPath(directory, "cpufreq"), "scaling_cur_freq"));
+            var kilohertz = TryParseFirstDouble(raw);
+            if (kilohertz is null || kilohertz <= 0)
+                continue;
+
+            readings.Add(new CpuFrequencyReading(cpuId, Math.Round(kilohertz.Value / 1000.0, 1), "linux-cpufreq"));
+        }
+
+        return readings.ToArray();
+    }
+
+    private CpuFrequencyReading[] ReadProcCpuFrequencies()
+    {
+        var readings = new List<CpuFrequencyReading>();
+        var cpuInfo = fileSystem.ReadAllText("/proc/cpuinfo");
+        var processorId = string.Empty;
+
+        foreach (var line in cpuInfo.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var separator = line.IndexOf(':');
+            if (separator < 0)
+                continue;
+
+            var key = line[..separator].Trim();
+            var value = line[(separator + 1)..].Trim();
+            if (key.Equals("processor", StringComparison.OrdinalIgnoreCase))
+            {
+                processorId = value;
+                continue;
+            }
+
+            if (!key.Equals("cpu MHz", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var megahertz = TryParseFirstDouble(value);
+            if (megahertz is null || megahertz <= 0)
+                continue;
+
+            var name = string.IsNullOrWhiteSpace(processorId) ? $"cpu{readings.Count}" : $"cpu{processorId}";
+            readings.Add(new CpuFrequencyReading(name, Math.Round(megahertz.Value, 1), "linux-procfs"));
+        }
+
+        return readings.ToArray();
     }
 
     private TemperatureReading[] ReadTemperatures()
@@ -201,6 +272,10 @@ internal sealed class MacSystemTelemetryProvider(ICommandRunner commandRunner)
 
         var logicalCpuCount = TryParseInt(commandRunner.Run("sysctl", "-n", "hw.logicalcpu").Trim());
         var memoryBytes = TryParseDouble(commandRunner.Run("sysctl", "-n", "hw.memsize").Trim());
+        var cpuFrequencyHertz = TryParseDouble(commandRunner.Run("sysctl", "-n", "hw.cpufrequency").Trim());
+        var cpuFrequencies = cpuFrequencyHertz is null
+            ? Array.Empty<CpuFrequencyReading>()
+            : [new CpuFrequencyReading("package", Math.Round(cpuFrequencyHertz.Value / 1_000_000.0, 1), "macos-sysctl")];
 
         return new SystemTelemetry(
             "macos-sysctl",
@@ -208,6 +283,7 @@ internal sealed class MacSystemTelemetryProvider(ICommandRunner commandRunner)
             logicalCpuCount ?? Environment.ProcessorCount,
             memoryBytes is null ? null : Math.Round(memoryBytes.Value / 1024.0 / 1024.0 / 1024.0, 2),
             null,
+            cpuFrequencies,
             [],
             [],
             ["macOS temperature and fan sensors require platform-specific SMC access and are not read by this safe diagnostics provider."]);
