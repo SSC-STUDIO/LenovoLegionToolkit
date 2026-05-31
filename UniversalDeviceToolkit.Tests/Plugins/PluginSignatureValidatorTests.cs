@@ -395,29 +395,6 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
     }
 
-    [Fact]
-    public void PluginSignatureSettings_CreateForCurrentProcess_ShouldHonorEnvironmentOverride()
-    {
-        // Arrange
-        var originalValue = Environment.GetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable);
-        Environment.SetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable, "allow-unsigned");
-
-        try
-        {
-            // Act
-            var settings = PluginSignatureSettings.CreateForCurrentProcess();
-
-            // Assert
-            settings.ValidationMode.Should().Be(PluginSignatureValidationMode.AllowUnsigned);
-            settings.AllowTestCertificates.Should().BeTrue();
-            settings.CheckRevocationStatus.Should().BeFalse();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable, originalValue);
-        }
-    }
-
     #endregion
 
     #region PluginSignatureStatus Enum Tests

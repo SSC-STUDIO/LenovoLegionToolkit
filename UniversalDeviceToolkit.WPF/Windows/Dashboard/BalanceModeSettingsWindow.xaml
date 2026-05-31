@@ -15,6 +15,7 @@
     ShowInTaskbar="False"
     SizeToContent="Height"
     WindowStartupLocation="CenterOwner">
+    <AutomationProperties.AutomationId>BalanceModeSettingsWindow</AutomationProperties.AutomationId>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -52,7 +53,10 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <CheckBox x:Name="_aiModeCheckBox" Content="{x:Static resources:Resource.BalanceModeSettingsWindow_AIEngine_Title}" />
+                <CheckBox
+                    x:Name="_aiModeCheckBox"
+                    AutomationProperties.AutomationId="BalanceModeAiModeCheckBox"
+                    Content="{x:Static resources:Resource.BalanceModeSettingsWindow_AIEngine_Title}" />
 
                 <TextBlock
                     Margin="32,4,0,0"
@@ -86,4 +90,3 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
-

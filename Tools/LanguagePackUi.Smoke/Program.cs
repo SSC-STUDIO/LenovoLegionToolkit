@@ -27,7 +27,6 @@ var runtimeDirectory = ResolveRuntimeDirectory(repositoryRoot, options.AppDirect
 var artifactRoot = Path.Combine(Path.GetTempPath(), $"udt-lang-ui-smoke-{DateTime.Now:yyyyMMdd-HHmmss}");
 var sandboxRoot = Path.Combine(artifactRoot, "sandbox");
 var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
-var singleInstanceKey = Path.GetFileName(artifactRoot);
 Directory.CreateDirectory(appDataDirectory);
 
 var version = GetAppVersion(runtimeDirectory);
@@ -88,11 +87,10 @@ var localizedUiTimeout = useOnlineLikeTimeouts ? TimeSpan.FromMinutes(2) : TimeS
 
 try
 {
-    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory, singleInstanceKey);
+    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory);
     if (effectiveCatalogUrl is not null)
     {
         startInfo.EnvironmentVariables["UDT_RESOURCE_CATALOG_URL"] = effectiveCatalogUrl;
-        startInfo.EnvironmentVariables["LLT_RESOURCE_CATALOG_URL"] = effectiveCatalogUrl;
         Console.WriteLine($"[lang-ui-smoke] Catalog override: {effectiveCatalogUrl}");
     }
     else
@@ -100,12 +98,8 @@ try
         Console.WriteLine($"[lang-ui-smoke] Using default online catalog: {StableCatalogUrl}");
     }
 
-    startInfo.EnvironmentVariables["UDT_APPDATA_OVERRIDE"] = appDataDirectory;
-    startInfo.EnvironmentVariables["LLT_APPDATA_OVERRIDE"] = appDataDirectory;
-    startInfo.EnvironmentVariables["UDT_SINGLE_INSTANCE_KEY"] = singleInstanceKey;
-    startInfo.EnvironmentVariables["LLT_SINGLE_INSTANCE_KEY"] = singleInstanceKey;
+        startInfo.EnvironmentVariables["UDT_APPDATA_OVERRIDE"] = appDataDirectory;
     startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
-    startInfo.EnvironmentVariables["LLT_SMOKE_AUTOMATION"] = "1";
 
     Console.WriteLine($"[lang-ui-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
     process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app.");
@@ -182,7 +176,7 @@ try
         Console.WriteLine($"{pass}: Sandbox lang file set to {targetCulture}.");
     }
 
-    process = RestartAppForLanguageVerification(process, runtimeDirectory, appDataDirectory, singleInstanceKey);
+    process = RestartAppForLanguageVerification(process, runtimeDirectory, appDataDirectory);
 
     if (!WaitForLocalizedUi(process, uiMarkers.UiStrings, localizedUiTimeout, out var localizedWindow))
     {
@@ -298,10 +292,10 @@ static string GetAppVersion(string runtimeDirectory)
     return "3.8.1";
 }
 
-static ProcessStartInfo CreateAppStartInfo(string runtimeDirectory, string appDataDirectory, string singleInstanceKey)
+static ProcessStartInfo CreateAppStartInfo(string runtimeDirectory, string appDataDirectory)
 {
     var arguments =
-        $"--skip-compat-check --disable-update-checker --disable-conflicting-software-warning --trace --single-instance-key={singleInstanceKey}";
+        "--disable-update-checker --trace";
 
     var dllPath = Path.Combine(runtimeDirectory, "Universal Device Toolkit.dll");
     var runtimeConfigPath = Path.Combine(runtimeDirectory, "Universal Device Toolkit.runtimeconfig.json");
@@ -399,9 +393,7 @@ static async Task<int> RunBackendOnlyInstallAsync(
 {
     var failures = 0;
     Environment.SetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable, catalogUrl);
-    Environment.SetEnvironmentVariable("LLT_RESOURCE_CATALOG_URL", catalogUrl);
     Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, appDataDirectory);
-    Environment.SetEnvironmentVariable(Folders.LegacyAppDataOverrideEnvironmentVariable, appDataDirectory);
 
     var previousDirectory = Directory.GetCurrentDirectory();
     try
@@ -446,9 +438,7 @@ static async Task<int> RunBackendOnlyInstallAsync(
     {
         Directory.SetCurrentDirectory(previousDirectory);
         Environment.SetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable, null);
-        Environment.SetEnvironmentVariable("LLT_RESOURCE_CATALOG_URL", null);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, null);
-        Environment.SetEnvironmentVariable(Folders.LegacyAppDataOverrideEnvironmentVariable, null);
     }
 
     Console.WriteLine(failures == 0
@@ -504,7 +494,7 @@ static bool WaitForLocalizedUi(Process process, string[] expectedStrings, TimeSp
     return false;
 }
 
-static Process RestartAppForLanguageVerification(Process process, string runtimeDirectory, string appDataDirectory, string singleInstanceKey)
+static Process RestartAppForLanguageVerification(Process process, string runtimeDirectory, string appDataDirectory)
 {
     try
     {
@@ -516,17 +506,12 @@ static Process RestartAppForLanguageVerification(Process process, string runtime
     }
     catch
     {
-        // best-effort cleanup; the new single-instance key below prevents collisions.
+        // best-effort cleanup; sandbox appdata keeps the restarted instance isolated from the user's installed app.
     }
 
-    var restartKey = $"{singleInstanceKey}-localized";
-    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory, restartKey);
+    var startInfo = CreateAppStartInfo(runtimeDirectory, appDataDirectory);
     startInfo.EnvironmentVariables["UDT_APPDATA_OVERRIDE"] = appDataDirectory;
-    startInfo.EnvironmentVariables["LLT_APPDATA_OVERRIDE"] = appDataDirectory;
-    startInfo.EnvironmentVariables["UDT_SINGLE_INSTANCE_KEY"] = restartKey;
-    startInfo.EnvironmentVariables["LLT_SINGLE_INSTANCE_KEY"] = restartKey;
     startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
-    startInfo.EnvironmentVariables["LLT_SMOKE_AUTOMATION"] = "1";
 
     Console.WriteLine($"[lang-ui-smoke] Restarting app for localized UI verification: {startInfo.FileName} {startInfo.Arguments}");
     var restarted = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to restart app for localized UI verification.");

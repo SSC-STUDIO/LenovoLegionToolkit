@@ -607,6 +607,16 @@ docs/superpowers/
 
 # Temporary build/test outputs
 .tmp-build/
+Build-*/
+obj-smoke-*/
+**/obj-codex-verify/
+*.result.txt
+*.smoke.txt
+*.stdout
+*.stderr
+*.log.txt
+uac-probe*.txt
+sensor-inventory.latest.json
 
 # Browser automation sandbox directories
 true/

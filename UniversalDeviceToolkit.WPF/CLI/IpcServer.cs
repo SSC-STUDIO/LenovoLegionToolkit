@@ -10,11 +10,6 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using UniversalDeviceToolkit.CLI.Lib;
 using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -41,8 +36,6 @@ public class IpcServer(
     UpdateCheckSettings updateCheckSettings
     )
 {
-    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
-
     private CancellationTokenSource _cancellationTokenSource = new();
     private Task _handler = Task.CompletedTask;
 
@@ -132,7 +125,7 @@ public class IpcServer(
     private static NamedPipeServerStream CreatePipeServerStream()
     {
         var security = CreatePipeSecurity();
-        return NamedPipeServerStreamAcl.Create(UniversalDeviceToolkit.CLI.Lib.Constants.PIPE_NAME,
+        return NamedPipeServerStreamAcl.Create(GetPipeName(),
             PipeDirection.InOut,
             1,
             PipeTransmissionMode.Message,
@@ -150,17 +143,16 @@ public class IpcServer(
         var adminIdentity = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
         security.AddAccessRule(new(adminIdentity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
 
-        if (IsRelaxedIpcAclEnabled() && WindowsIdentity.GetCurrent().User is { } currentUser)
+        if (WindowsIdentity.GetCurrent().User is { } currentUser)
             security.AddAccessRule(new(currentUser, PipeAccessRights.ReadWrite, AccessControlType.Allow));
 
         return security;
     }
 
-    private static bool IsRelaxedIpcAclEnabled()
+    private static string GetPipeName()
     {
-        var rawValue = Environment.GetEnvironmentVariable(RelaxedIpcAclEnvironmentVariable);
-        return string.Equals(rawValue, "1", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(rawValue, "true", StringComparison.OrdinalIgnoreCase);
+        var isolationPath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        return UniversalDeviceToolkit.CLI.Lib.Constants.GetPipeName(isolationPath);
     }
 
     private async Task<IpcResponse> HandleRequest(IpcRequest req)
@@ -218,9 +210,6 @@ public class IpcServer(
             case IpcRequest.OperationType.UninstallShell:
                 await UninstallShellAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true };
-            case IpcRequest.OperationType.CaptureWindowVisual when req is { Name: not null, Value: not null }:
-                await CaptureWindowVisualAsync(req.Name, req.Value).ConfigureAwait(false);
-                return new IpcResponse { Success = true };
             case IpcRequest.OperationType.GetAppStatus:
                 return new IpcResponse { Success = true, Message = BuildAppStatus() };
             default:
@@ -247,98 +236,6 @@ public class IpcServer(
             "CLI IPC: enabled",
             $"Update checker: {updateStatus}",
             $"Update repository: {repositoryOwner}/{repositoryName}");
-    }
-
-    private static Task CaptureWindowVisualAsync(string windowHandleValue, string outputPath)
-    {
-        if (!int.TryParse(windowHandleValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var windowHandle) || windowHandle == 0)
-            throw new IpcException($"Invalid window handle '{windowHandleValue}'.");
-
-        return Application.Current.Dispatcher.InvokeAsync(() =>
-        {
-            var window = Application.Current.Windows
-                .OfType<Window>()
-                .FirstOrDefault(candidate => new WindowInteropHelper(candidate).Handle == (IntPtr)windowHandle)
-                ?? throw new IpcException($"Window handle {windowHandle} is not tracked by the application.");
-
-            var rootVisual = window.Content as FrameworkElement ?? window;
-            rootVisual.ApplyTemplate();
-            rootVisual.UpdateLayout();
-
-            var width = rootVisual.ActualWidth > 0 ? rootVisual.ActualWidth : window.ActualWidth;
-            var height = rootVisual.ActualHeight > 0 ? rootVisual.ActualHeight : window.ActualHeight;
-
-            if (width <= 0 || height <= 0)
-                throw new IpcException($"Window handle {windowHandle} has no renderable surface.");
-
-            rootVisual.Measure(new Size(width, height));
-            rootVisual.Arrange(new Rect(0, 0, width, height));
-            rootVisual.UpdateLayout();
-
-            var presentationSource = PresentationSource.FromVisual(rootVisual);
-            var dpiX = 96d;
-            var dpiY = 96d;
-            if (presentationSource?.CompositionTarget is not null)
-            {
-                dpiX *= presentationSource.CompositionTarget.TransformToDevice.M11;
-                dpiY *= presentationSource.CompositionTarget.TransformToDevice.M22;
-            }
-
-            var pixelWidth = Math.Max(1, (int)Math.Ceiling(width * dpiX / 96d));
-            var pixelHeight = Math.Max(1, (int)Math.Ceiling(height * dpiY / 96d));
-
-            var bitmap = new RenderTargetBitmap(pixelWidth, pixelHeight, dpiX, dpiY, PixelFormats.Pbgra32);
-            var drawingVisual = new DrawingVisual();
-            using (var context = drawingVisual.RenderOpen())
-            {
-                var background = ResolveCaptureBackgroundBrush(window, rootVisual);
-                if (background is not null)
-                    context.DrawRectangle(background, null, new Rect(0, 0, width, height));
-
-                context.DrawRectangle(new VisualBrush(rootVisual), null, new Rect(0, 0, width, height));
-            }
-
-            bitmap.Render(drawingVisual);
-
-            var outputDirectory = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrWhiteSpace(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
-
-            using var stream = File.Create(outputPath);
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-            encoder.Save(stream);
-        }, DispatcherPriority.Render).Task;
-    }
-
-    private static Brush? ResolveCaptureBackgroundBrush(Window window, FrameworkElement rootVisual)
-    {
-        Brush?[] candidates =
-        {
-            rootVisual switch
-            {
-                Control control => control.Background,
-                Panel panel => panel.Background,
-                Border border => border.Background,
-                _ => null
-            },
-            window.Background,
-            window.TryFindResource("ApplicationBackgroundBrush") as Brush,
-            Application.Current.TryFindResource("ApplicationBackgroundBrush") as Brush
-        };
-
-        foreach (var candidate in candidates)
-        {
-            if (candidate is null)
-                continue;
-
-            if (candidate is SolidColorBrush solid && solid.Color.A == 0)
-                continue;
-
-            return candidate.CloneCurrentValue();
-        }
-
-        return Brushes.White;
     }
 
     private async Task<string> ListQuickActionsAsync()

@@ -32,11 +32,6 @@ namespace UniversalDeviceToolkit.WPF.Pages
 {
 public partial class PluginExtensionsPage
 {
-    private const string BulkImportFilesEnvironmentVariable = "UDT_PLUGIN_IMPORT_FILES";
-    private const string LegacyBulkImportFilesEnvironmentVariable = "LLT_PLUGIN_IMPORT_FILES";
-    private const string SmokeAutomationEnvironmentVariable = "UDT_SMOKE_AUTOMATION";
-    private const string LegacySmokeAutomationEnvironmentVariable = "LLT_SMOKE_AUTOMATION";
-
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PluginRepositoryService _pluginRepositoryService = IoCContainer.Resolve<PluginRepositoryService>();
@@ -602,79 +597,6 @@ private string _currentSearchText = string.Empty;
             SetLoadingState(false);
             UpdateAllPluginsUI();
             UpdateBulkActionButtonsVisibility();
-        }
-    }
-
-    private async Task LoadPluginsFromRootDirectoryAsync()
-    {
-        try
-        {
-            var rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginsDirectory = Path.Combine(rootDirectory, "plugins");
-
-            if (!Directory.Exists(pluginsDirectory))
-                return;
-
-            var pluginDirectories = Directory.GetDirectories(pluginsDirectory);
-            if (pluginDirectories.Length == 0)
-                return;
-
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow == null)
-                return;
-
-            // Count potential new plugins (not already installed)
-            var newPluginCount = 0;
-            foreach (var pluginDir in pluginDirectories)
-            {
-                var pluginId = Path.GetFileName(pluginDir);
-
-                // Check if plugin is already installed
-                if (_pluginManager.IsInstalled(pluginId))
-                    continue;
-
-                // Check if this is a plugin directory (has DLL file)
-                var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
-                if (dllFiles.Length == 0)
-                    continue;
-
-                newPluginCount++;
-
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Found potential new plugin in root directory: {pluginId}");
-                }
-            }
-
-            if (newPluginCount == 0)
-                return;
-
-            // Scan and load all plugins once (not per-directory)
-            try
-            {
-                await _pluginManager.ScanAndLoadPluginsAsync();
-
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Scanned plugins directory, found {newPluginCount} potential new plugins");
-                }
-            }
-            catch (Exception ex)
-            {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error scanning plugins: {ex.Message}", ex);
-            }
-
-            await Task.Delay(500);
-            UpdateAllPluginsUI();
-
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Auto-loaded {newPluginCount} plugins from root directory");
-            }
-        }
-        catch (Exception ex)
-        {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugins from root directory: {ex.Message}", ex);
         }
     }
 
@@ -2046,51 +1968,7 @@ private string _currentSearchText = string.Empty;
 
     private IReadOnlyList<string> ResolveBulkImportZipFilePaths()
     {
-        if (IsSmokeAutomationEnabled())
-        {
-            var fromEnvironment = TryGetBulkImportZipFilePathsFromEnvironment();
-            if (fromEnvironment is not null)
-                return fromEnvironment;
-        }
-
         return PromptForBulkImportZipFilePaths();
-    }
-
-    private static bool IsSmokeAutomationEnabled()
-    {
-        var smokeAutomation = EnvironmentVariableHelper.Get(
-            SmokeAutomationEnvironmentVariable,
-            LegacySmokeAutomationEnvironmentVariable);
-
-        return string.Equals(smokeAutomation, "1", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private IReadOnlyList<string>? TryGetBulkImportZipFilePathsFromEnvironment()
-    {
-        var importFilesOverride = EnvironmentVariableHelper.Get(
-            BulkImportFilesEnvironmentVariable,
-            LegacyBulkImportFilesEnvironmentVariable);
-        if (string.IsNullOrWhiteSpace(importFilesOverride))
-            return null;
-
-        var overriddenFiles = importFilesOverride
-            .Split(new[] { Path.PathSeparator, '\r', '\n', '|' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(Path.GetFullPath)
-            .Where(File.Exists)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        if (overriddenFiles.Length > 0)
-        {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Using overridden bulk import files: [{string.Join(", ", overriddenFiles)}]");
-            return overriddenFiles;
-        }
-
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Bulk import override was provided but no valid ZIP files were found: {importFilesOverride}");
-
-        return Array.Empty<string>();
     }
 
     private IReadOnlyList<string> PromptForBulkImportZipFilePaths()
@@ -2218,44 +2096,10 @@ private string _currentSearchText = string.Empty;
 
     private string GetPluginsDirectory()
     {
-        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
-        if (!string.IsNullOrWhiteSpace(overridePath))
-        {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Using overridden plugins directory: {overridePath}");
-            return overridePath;
-        }
-
-        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-
-        var possiblePaths = new[]
-        {
-            Path.Combine(appBaseDir, "plugins"),
-            Path.Combine(appBaseDir, "Plugins"),
-            Path.Combine(appBaseDir, "build", "plugins"),
-            Path.Combine(appBaseDir, "Build", "plugins"),
-            Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),
-            Path.Combine(appBaseDir, "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "Build", "plugins"),
-        };
-
-        foreach (var possiblePath in possiblePaths)
-        {
-            var fullPath = Path.GetFullPath(possiblePath);
-            if (Directory.Exists(fullPath))
-            {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Found plugins directory: {fullPath}");
-                return fullPath;
-            }
-        }
-
-        var defaultPath = Path.Combine(appBaseDir, "build", "plugins");
-        Directory.CreateDirectory(defaultPath);
+        var pluginsDirectory = PluginPaths.GetPluginsDirectory();
         if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
-        return defaultPath;
+            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Using plugins directory: {pluginsDirectory}");
+        return pluginsDirectory;
     }
 
     private List<PluginManifest> BuildInstalledPluginManifestsForUpdateCheck()

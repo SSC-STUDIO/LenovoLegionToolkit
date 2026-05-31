@@ -154,7 +154,7 @@ dotnet Tools/VisualRegression.Smoke/bin/Release/net10.0-windows/VisualRegression
 ```bash
 # 1. 先确�?smoke 工具本身可构�?dotnet build Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
 
-# 2. 先跑单插件样�?LLT_SMOKE_PLUGIN_IDS=shell-integration dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>
+# 2. 先跑单插件样�?UDT_SMOKE_PLUGIN_IDS=shell-integration dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>
 
 # 3. 再跑默认集合
 dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>

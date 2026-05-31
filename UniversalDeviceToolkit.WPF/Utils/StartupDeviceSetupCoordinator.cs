@@ -78,11 +78,6 @@ public sealed class StartupDeviceSetupCoordinator
         installedDeviceSupportProvider.SetInstalledCatalog(_devicePackManager.GetInstalledCatalog());
     }
 
-    public static DevicePack? FindRecommendedPackForTest(MachineInformation machineInformation, DeviceSupportCatalog catalog) =>
-        LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation, catalog).DevicePackId is { } devicePackId
-            ? catalog.DevicePacks.FirstOrDefault(pack => pack.Id.Equals(devicePackId, StringComparison.OrdinalIgnoreCase))
-            : null;
-
     private static DeviceSetupWindow CreateWindow(MachineInformation machineInformation, DevicePack? recommendedPack, bool isBasicMode) =>
         new(machineInformation, recommendedPack, isBasicMode);
 

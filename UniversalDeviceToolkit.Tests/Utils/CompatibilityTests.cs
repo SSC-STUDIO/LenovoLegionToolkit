@@ -1,6 +1,7 @@
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
+using System.Reflection;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
@@ -256,38 +257,55 @@ public class CompatibilityTests
     }
 
     [Fact]
-    public void SmokeSimulateLegionEnvironmentVariable_WhenSet_ShouldBeDetected()
+    public void GetSupportsGodModeV2_WhenCapabilityDataExposesGodModeFnQSwitchable_ShouldReturnTrue()
     {
-        try
-        {
-            Environment.SetEnvironmentVariable("LLT_SMOKE_SIMULATE_LEGION", "1");
-            Compatibility.IsSmokeLegionSimulationEnabled.Should().BeTrue();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable("LLT_SMOKE_SIMULATE_LEGION", null);
-        }
+        var method = typeof(Compatibility).GetMethod("GetSupportsGodModeV2", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var features = new MachineInformation.FeatureData(
+            MachineInformation.FeatureData.SourceType.CapabilityData,
+            [CapabilityID.GodModeFnQSwitchable]);
+
+        var result = (bool)method!.Invoke(null, [Array.Empty<PowerModeState>(), -1, -1, features])!;
+
+        result.Should().BeTrue();
     }
 
     [Fact]
-    public void SmokeSimulateLegionEnvironmentVariable_WhenNotSet_ShouldBeFalse()
+    public void ApplyGodModeFallback_WhenKnownLegionPro5HardwarePackMatches_ShouldEnableGodModeV2()
     {
-        Environment.SetEnvironmentVariable("LLT_SMOKE_SIMULATE_LEGION", null);
-        Compatibility.IsSmokeLegionSimulationEnabled.Should().BeFalse();
+        var method = typeof(Compatibility).GetMethod("ApplyGodModeFallback", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = (MachineInformation.PropertyData)method!.Invoke(null,
+        [
+            "83DF",
+            "Legion Y9000P IRX9",
+            Array.Empty<PowerModeState>(),
+            MachineInformation.FeatureData.Unknown,
+            new MachineInformation.PropertyData()
+        ])!;
+
+        result.SupportsGodModeV2.Should().BeTrue();
+        result.SupportsGodMode.Should().BeTrue();
     }
 
     [Fact]
-    public void SmokeSimulateLegionEnvironmentVariable_WhenSetToOtherValue_ShouldBeFalse()
+    public void ApplyGodModeFallback_WhenBasicModeDeviceMatches_ShouldNotEnableGodMode()
     {
-        try
-        {
-            Environment.SetEnvironmentVariable("LLT_SMOKE_SIMULATE_LEGION", "yes");
-            Compatibility.IsSmokeLegionSimulationEnabled.Should().BeFalse();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable("LLT_SMOKE_SIMULATE_LEGION", null);
-        }
+        var method = typeof(Compatibility).GetMethod("ApplyGodModeFallback", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = (MachineInformation.PropertyData)method!.Invoke(null,
+        [
+            "0000",
+            "Generic PC",
+            Array.Empty<PowerModeState>(),
+            MachineInformation.FeatureData.Unknown,
+            new MachineInformation.PropertyData()
+        ])!;
+
+        result.SupportsGodMode.Should().BeFalse();
     }
 
     private static MachineInformation CreateMachineInformation(string model, string vendor = "LENOVO") => new()

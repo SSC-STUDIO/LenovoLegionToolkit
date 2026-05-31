@@ -57,9 +57,6 @@ public partial class App
     private const string LEGACY_MUTEX_NAME = AppIdentity.LegacyCompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string LEGACY_EVENT_NAME = AppIdentity.LegacyCompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string LEGACY_ACK_EVENT_NAME = AppIdentity.LegacyCompactName + "_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE = "LLT_SINGLE_INSTANCE_KEY";
-    private const string SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "LLT_SMOKE_AUTOMATION";
-    private const string UDT_SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "UDT_SMOKE_AUTOMATION";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
     private const int SINGLE_INSTANCE_ACTIVATION_TIMEOUT_MS = 1200;
     private const string RECOVERY_SINGLE_INSTANCE_SUFFIX = "_Recovery";
@@ -130,10 +127,8 @@ public partial class App
         // after initialization for consistency.
         var applicationSettings = new ApplicationSettings();
 
-        if (!flags.SkipCompatibilityCheck)
+        try
         {
-            try
-            {
                 var machineInformation = await Compatibility.GetMachineInformationAsync();
                 await RunStartupDeviceSetupIfNeededAsync(machineInformation, flags);
 
@@ -182,9 +177,9 @@ public partial class App
                         return;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
+        }
+        catch (Exception ex)
+        {
                 // Always log error details, regardless of trace flag
                 // Use Error level to ensure it's always written to log file
                 Log.Instance.Error($"Failed to check device compatibility: {ex.Message}", ex);
@@ -218,7 +213,6 @@ public partial class App
                 // Perform safe shutdown for compatibility check errors to prevent process residue
                 await PerformSafeShutdownForIncompatibleSystemAsync(200).ConfigureAwait(false);
                 return;
-            }
         }
 
         if (Log.Instance.IsTraceEnabled)
@@ -252,8 +246,6 @@ public partial class App
         updateChecker.Disable = flags.DisableUpdateChecker;
         updateChecker.DisableReason = flags.DisableUpdateChecker ? Flags.DisableUpdateCheckerSwitch : null;
 
-        AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
-
         // Initialize plugins
         await InitializePluginsAsync();
         
@@ -271,8 +263,7 @@ public partial class App
             IoCContainer.Resolve<UpdateChecker>())
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            TrayTooltipEnabled = !flags.DisableTrayTooltip,
-            DisableConflictingSoftwareWarning = flags.DisableConflictingSoftwareWarning
+            TrayTooltipEnabled = !flags.DisableTrayTooltip
         };
         MainWindow = mainWindow;
         PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => MainWindow as Window));
@@ -332,9 +323,6 @@ public partial class App
 
     private static async Task RunStartupDeviceSetupIfNeededAsync(MachineInformation machineInformation, Flags flags)
     {
-        if (flags.SkipCompatibilityCheck || IsSmokeAutomationRun())
-            return;
-
         try
         {
             await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation);
@@ -1022,22 +1010,18 @@ public partial class App
             // Save crash report BEFORE showing message box
             CrashReportHelper.SaveCrashReport(e.Exception, "Dispatcher");
 
-            // Skip modal dialogs during smoke automation runs so UIA does not get pinned on a crash dialog.
-            if (!IsSmokeAutomationRun())
+            // Try to show message box, but don't let it cause infinite recursion
+            try
             {
-                // Try to show message box, but don't let it cause infinite recursion
-                try
-                {
-                    MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
-                        T("App_UnhandledException_Dispatcher_Title", "Application Error"),
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
-                catch
-                {
-                    // If MessageBox fails, just log and exit
-                    Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
-                }
+                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
+                    T("App_UnhandledException_Dispatcher_Title", "Application Error"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch
+            {
+                // If MessageBox fails, just log and exit
+                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
             }
         }
         catch
@@ -1068,17 +1052,6 @@ public partial class App
                 }
             }
         }
-    }
-
-    private static bool IsSmokeAutomationRun()
-    {
-        if (string.Equals(Environment.GetEnvironmentVariable(UDT_SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE), "1", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (string.Equals(Environment.GetEnvironmentVariable(SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE), "1", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return string.Equals(Environment.GetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable), "1", StringComparison.OrdinalIgnoreCase);
     }
 
     private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
@@ -1314,11 +1287,11 @@ public partial class App
 
     private static string ResolveSingleInstanceObjectName(string baseName)
     {
-        var key = Environment.GetEnvironmentVariable(SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE);
-        if (string.IsNullOrWhiteSpace(key))
+        var isolationKey = ResolveSingleInstanceIsolationKey();
+        if (string.IsNullOrWhiteSpace(isolationKey))
             return baseName;
 
-        var sanitizedKey = string.Concat(key
+        var sanitizedKey = string.Concat(isolationKey
             .Trim()
             .Where(character => char.IsLetterOrDigit(character) || character is '-' or '_'));
 
@@ -1327,13 +1300,25 @@ public partial class App
             : $"{baseName}_{sanitizedKey}";
     }
 
+    private static string? ResolveSingleInstanceIsolationKey()
+    {
+        var overridePath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        if (string.IsNullOrWhiteSpace(overridePath))
+            return null;
+
+        try
+        {
+            return Path.GetFullPath(overridePath);
+        }
+        catch
+        {
+            return overridePath;
+        }
+    }
+
     private static void ApplyStartupOverrides(Flags flags)
     {
-        if (!string.IsNullOrWhiteSpace(flags.SingleInstanceKey))
-            Environment.SetEnvironmentVariable(SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE, flags.SingleInstanceKey);
-
-        if (!string.IsNullOrWhiteSpace(flags.IpcPipeName))
-            Environment.SetEnvironmentVariable(UniversalDeviceToolkit.CLI.Lib.Constants.PIPE_NAME_ENVIRONMENT_VARIABLE, flags.IpcPipeName);
+        _ = flags;
     }
 
     private static async Task LogSoftwareStatusAsync()

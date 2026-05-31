@@ -118,6 +118,9 @@ public partial class GodModeSettingsWindow
     private GodModePreset BuildActivePresetFromControls(GodModePreset preset) => new()
     {
         Name = preset.Name,
+        PowerPlanGuid = preset.PowerPlanGuid,
+        PowerMode = preset.PowerMode,
+        SourcePowerMode = preset.SourcePowerMode,
         CPULongTermPowerLimit = preset.CPULongTermPowerLimit?.WithValue(_cpuLongTermPowerLimitControl.Value),
         CPUShortTermPowerLimit = preset.CPUShortTermPowerLimit?.WithValue(_cpuShortTermPowerLimitControl.Value),
         CPUPeakPowerLimit = preset.CPUPeakPowerLimit?.WithValue(_cpuPeakPowerLimitControl.Value),
@@ -157,7 +160,43 @@ public partial class GodModeSettingsWindow
         if (!_state.HasValue)
             return;
 
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Persisting God Mode state... [activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
+
         await _godModeController.SetStateAsync(_state.Value);
+        _state = await _godModeController.GetStateAsync();
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"God Mode state reloaded after persistence. [activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
+    }
+
+    internal static string GetUniquePresetName(
+        string requestedName,
+        IReadOnlyDictionary<Guid, GodModePreset> presets,
+        Guid? excludePresetId = null)
+    {
+        var normalizedRequestedName = requestedName.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedRequestedName))
+            return normalizedRequestedName;
+
+        var existingNames = presets
+            .Where(kv => !excludePresetId.HasValue || kv.Key != excludePresetId.Value)
+            .Select(kv => kv.Value.Name.Trim())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!existingNames.Contains(normalizedRequestedName))
+            return normalizedRequestedName;
+
+        var suffix = 2;
+        while (true)
+        {
+            var candidate = $"{normalizedRequestedName} ({suffix})";
+            if (!existingNames.Contains(candidate))
+                return candidate;
+
+            suffix++;
+        }
     }
 
     private async Task<bool> ApplyAsync()
@@ -408,12 +447,16 @@ public partial class GodModeSettingsWindow
         var preset = presets[activePresetId];
 
         var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name);
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Edit preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={activePresetId}]");
         if (string.IsNullOrWhiteSpace(result))
             return;
 
+        var uniqueName = GetUniquePresetName(result, presets, activePresetId);
+
         var newPresets = new Dictionary<Guid, GodModePreset>(presets)
         {
-            [activePresetId] = preset with { Name = result.Trim() }
+            [activePresetId] = preset with { Name = uniqueName, SourcePowerMode = null }
         };
         _state = _state.Value with { Presets = newPresets.AsReadOnlyDictionary() };
 
@@ -458,6 +501,9 @@ public partial class GodModeSettingsWindow
 
         try
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={newPresets.Count}, newActivePresetId={newActivePresetId}]");
+
             await PersistStateAsync();
 
             if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
@@ -481,6 +527,8 @@ public partial class GodModeSettingsWindow
             return;
 
         var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message);
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Add preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
         if (string.IsNullOrWhiteSpace(result))
             return;
 
@@ -491,7 +539,8 @@ public partial class GodModeSettingsWindow
         var preset = presets[activePresetId];
 
         var newActivePresetId = Guid.NewGuid();
-        var newPreset = preset with { Name = result.Trim() };
+        var uniqueName = GetUniquePresetName(result, presets);
+        var newPreset = preset with { Name = uniqueName, SourcePowerMode = null };
         var newPresets = new Dictionary<Guid, GodModePreset>(presets)
         {
             [newActivePresetId] = newPreset
@@ -505,6 +554,9 @@ public partial class GodModeSettingsWindow
 
         try
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={newPresets.Count}]");
+
             await PersistStateAsync();
         }
         catch (Exception ex)

@@ -23,8 +23,6 @@ namespace UniversalDeviceToolkit.WPF.Pages
 {
 public partial class AutomationPage
 {
-    public static bool EnableHybridModeAutomation;
-
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
 
     private IAutomationStep[] _supportedAutomationSteps = [];
@@ -193,12 +191,10 @@ public partial class AutomationPage
             new TurnOffMonitorsAutomationStep(),
             new TurnOffWiFiAutomationStep(),
             new TurnOnWiFiAutomationStep(),
+            new HybridModeAutomationStep(default),
             new WhiteKeyboardBacklightAutomationStep(default),
             new WinKeyAutomationStep(default)
         };
-
-        if (EnableHybridModeAutomation)
-            steps.Add(new HybridModeAutomationStep(default));
 
         for (var index = steps.Count - 1; index >= 0; index--)
         {
@@ -361,4 +357,3 @@ public partial class AutomationPage
     }
 }
 }
-

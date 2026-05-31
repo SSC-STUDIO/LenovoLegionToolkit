@@ -4,6 +4,8 @@ This folder keeps the maintainer-side winget manifest draft for `SSC-STUDIO.Leno
 
 The public product name is Universal Device Toolkit. The winget package identity intentionally remains under the old Lenovo Legion Toolkit identifier for now so existing installs can upgrade in place.
 
+The repo may contain a versioned draft folder such as `manifests/s/SSC-STUDIO/LenovoLegionToolkit/4.1.0` before release assets exist. Those files are preparation only and are not submission-ready until the final GitHub Release URL, release date, and SHA256 are filled in from the published release.
+
 ## Package Identity
 
 - PackageIdentifier: `SSC-STUDIO.LenovoLegionToolkit`
@@ -24,6 +26,10 @@ The public product name is Universal Device Toolkit. The winget package identity
    `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 3. Do not create or submit a new version manifest until the final release asset URL and SHA256 are available.
 4. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
+   A helper script can populate the versioned winget folder and the Scoop draft manifest from the final release metadata:
+   ```powershell
+   .\Packaging\Prepare-PackageManifests.ps1 -Version X.Y.Z -ReleaseDate YYYY-MM-DD -InstallerSha256 <SHA256>
+   ```
 5. Validate the manifest locally:
    ```powershell
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z

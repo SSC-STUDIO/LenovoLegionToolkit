@@ -58,6 +58,7 @@ public partial class DashboardPage
     private async Task RefreshAsync()
     {
         _loader.IsLoading = true;
+        _dashboardContentRoot.Visibility = Visibility.Collapsed;
 
         _scrollViewer.ScrollToTop();
 
@@ -113,9 +114,42 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
+        await WaitForDashboardDataAsync();
+        _dashboardContentRoot.Visibility = Visibility.Visible;
         _loader.IsLoading = false;
         await Task.Delay(TimeSpan.FromMilliseconds(250));
     }
+
+    private async Task WaitForDashboardDataAsync()
+    {
+        var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
+        if (groupInitializationTasks.Length > 0)
+            await Task.WhenAll(groupInitializationTasks);
+
+        var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToList();
+
+        if (_dashboardSettings.Store.ShowSensors && _sensors.Visibility == Visibility.Visible)
+        {
+            contentReadyTasks.Insert(0, _sensors.FirstSensorDataReadyTask);
+        }
+
+        if (contentReadyTasks.Count > 0)
+        {
+            try
+            {
+                await Task.WhenAll(contentReadyTasks).WaitAsync(TimeSpan.FromSeconds(3));
+                return;
+            }
+            catch (TimeoutException)
+            {
+                // Do not block the whole dashboard forever when the platform cannot provide live sensor data.
+            }
+        }
+
+        await Task.Delay(GetDashboardFallbackLoadingDelay());
+    }
+
+    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(350);
 
     private void DashboardPage_SizeChanged(object sender, SizeChangedEventArgs e)
     {

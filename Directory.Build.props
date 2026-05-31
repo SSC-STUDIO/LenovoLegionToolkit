@@ -2,7 +2,7 @@
 <Project>
   <PropertyGroup>
     <MajorVersion>4</MajorVersion>
-    <MinorVersion>0</MinorVersion>
+    <MinorVersion>1</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
     <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
@@ -22,6 +22,7 @@
     <LLTTargetFramework>$(UDTTargetFramework)</LLTTargetFramework>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <RestoreConfigFile Condition="'$(RestoreConfigFile)' == '' and Exists('$(MSBuildThisFileDirectory)NuGet.Config')">$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj-*/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">

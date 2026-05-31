@@ -1,7 +1,6 @@
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.DeviceSupport;
-using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -10,7 +9,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public sealed class StartupDeviceSetupCoordinatorTests
 {
     [Fact]
-    public void FindRecommendedPackForTest_WithMatchingMachineType_ShouldReturnDevicePack()
+    public void CatalogEvaluation_WithMatchingMachineType_ShouldReturnDevicePack()
     {
         var catalog = new DeviceSupportCatalog
         {
@@ -35,14 +34,16 @@ public sealed class StartupDeviceSetupCoordinatorTests
             Model = "Legion Y9000P IRX9"
         };
 
-        var pack = StartupDeviceSetupCoordinator.FindRecommendedPackForTest(machineInformation, catalog);
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation, catalog);
+        var pack = catalog.DevicePacks.SingleOrDefault(devicePack =>
+            devicePack.Id.Equals(availability.DevicePackId, StringComparison.OrdinalIgnoreCase));
 
         pack.Should().NotBeNull();
         pack!.Id.Should().Be("lenovo-legion-pro-7");
     }
 
     [Fact]
-    public void FindRecommendedPackForTest_WithUnknownDevice_ShouldReturnNull()
+    public void CatalogEvaluation_WithUnknownDevice_ShouldReturnNull()
     {
         var catalog = new DeviceSupportCatalog
         {
@@ -66,13 +67,15 @@ public sealed class StartupDeviceSetupCoordinatorTests
             Model = "Generic Laptop"
         };
 
-        var pack = StartupDeviceSetupCoordinator.FindRecommendedPackForTest(machineInformation, catalog);
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation, catalog);
+        var pack = catalog.DevicePacks.SingleOrDefault(devicePack =>
+            devicePack.Id.Equals(availability.DevicePackId, StringComparison.OrdinalIgnoreCase));
 
         pack.Should().BeNull();
     }
 
     [Fact]
-    public void FindRecommendedPackForTest_WithGenericFallbackPack_ShouldReturnBasicPack()
+    public void CatalogEvaluation_WithGenericFallbackPack_ShouldReturnBasicPack()
     {
         var catalog = new DeviceSupportCatalog
         {
@@ -96,7 +99,9 @@ public sealed class StartupDeviceSetupCoordinatorTests
             Model = "Generic Laptop"
         };
 
-        var pack = StartupDeviceSetupCoordinator.FindRecommendedPackForTest(machineInformation, catalog);
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation, catalog);
+        var pack = catalog.DevicePacks.SingleOrDefault(devicePack =>
+            devicePack.Id.Equals(availability.DevicePackId, StringComparison.OrdinalIgnoreCase));
 
         pack.Should().NotBeNull();
         pack!.Id.Should().Be("generic-pc-basic");

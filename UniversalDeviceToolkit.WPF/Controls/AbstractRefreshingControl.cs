@@ -9,8 +9,11 @@ namespace UniversalDeviceToolkit.WPF.Controls;
 public abstract class AbstractRefreshingControl : UserControl
 {
     private Task? _refreshTask;
+    private bool _hasFinishedLoading;
+    private readonly TaskCompletionSource _initialRefreshCompletedTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     protected bool IsRefreshing => _refreshTask is not null;
+    public Task InitialRefreshCompletedTask => _initialRefreshCompletedTaskCompletionSource.Task;
 
     protected virtual bool DisablesWhileRefreshing => true;
 
@@ -22,9 +25,15 @@ public abstract class AbstractRefreshingControl : UserControl
         IsVisibleChanged += RefreshingControl_IsVisibleChanged;
     }
 
-    private void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
+    private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
     {
-        OnFinishedLoading();
+        if (!_hasFinishedLoading)
+        {
+            _hasFinishedLoading = true;
+            OnFinishedLoading();
+        }
+
+        await RefreshAsync();
     }
 
     protected abstract void OnFinishedLoading();
@@ -72,6 +81,8 @@ public abstract class AbstractRefreshingControl : UserControl
                 Visibility = Visibility.Collapsed;
             else
                 IsEnabled = true;
+
+            _initialRefreshCompletedTaskCompletionSource.TrySetResult();
         }
     }
 

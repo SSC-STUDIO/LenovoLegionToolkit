@@ -21,7 +21,6 @@ public class IpcRequest
         IsShellInstalled,
         InstallShell,
         UninstallShell,
-        CaptureWindowVisual,
         GetAppStatus,
     }
 

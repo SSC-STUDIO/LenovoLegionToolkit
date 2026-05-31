@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -16,54 +17,36 @@ using System.Windows.Automation;
 using UniversalDeviceToolkit.CLI.Lib;
 using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using Microsoft.Win32;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace MainAppPluginUi.Smoke;
 
 [SupportedOSPlatform("windows")]
 internal static class Program
 {
-    private const string AppDataOverrideEnvironmentVariable = "LLT_APPDATA_OVERRIDE";
-    private const string PluginDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
-    private const string PluginImportFilesEnvironmentVariable = "LLT_PLUGIN_IMPORT_FILES";
-    private const string PluginSignatureModeEnvironmentVariable = "LLT_PLUGIN_SIGNATURE_MODE";
-    private const string SingleInstanceKeyEnvironmentVariable = "LLT_SINGLE_INSTANCE_KEY";
-    private const string SingleInstanceKeySwitch = "--single-instance-key";
-    private const string IpcPipeNameSwitch = "--ipc-pipe-name";
-    private const string PluginSourcesEnvironmentVariable = "LLT_SMOKE_PLUGIN_SOURCES";
-    private const string ScreenshotModeEnvironmentVariable = "LLT_SMOKE_SCREENSHOTS";
-    private const string ScreenshotDirectoryEnvironmentVariable = "LLT_SMOKE_SCREENSHOT_DIR";
-    private const string KeepArtifactsEnvironmentVariable = "LLT_SMOKE_KEEP_ARTIFACTS";
-    private const string WatchModeEnvironmentVariable = "LLT_SMOKE_WATCH";
-    private const string StepDelayEnvironmentVariable = "LLT_SMOKE_STEP_DELAY_MS";
-    private const string SuccessHoldEnvironmentVariable = "LLT_SMOKE_SUCCESS_HOLD_MS";
-    private const string FailureHoldEnvironmentVariable = "LLT_SMOKE_FAILURE_HOLD_MS";
-    private const string ScenarioEnvironmentVariable = "LLT_SMOKE_SCENARIO";
-    private const string ThemeEnvironmentVariable = "LLT_SMOKE_THEME";
-    private const string AnimationSpeedEnvironmentVariable = "LLT_SMOKE_ANIMATION_SPEED_MS";
-    private const string DisableAnimationsEnvironmentVariable = "LLT_SMOKE_DISABLE_ANIMATIONS";
-    private const string SmokeAutomationEnvironmentVariable = "LLT_SMOKE_AUTOMATION";
-    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
-    private const string ExercisePowerModePresetsEnvironmentVariable = "LLT_SMOKE_EXERCISE_POWER_MODE_PRESETS";
+    private const string AppDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
+    private const string PluginIdsEnvironmentVariable = "UDT_SMOKE_PLUGIN_IDS";
+    private const string PluginSourcesEnvironmentVariable = "UDT_SMOKE_PLUGIN_SOURCES";
+    private const string ScreenshotModeEnvironmentVariable = "UDT_SMOKE_SCREENSHOTS";
+    private const string ScreenshotDirectoryEnvironmentVariable = "UDT_SMOKE_SCREENSHOT_DIR";
+    private const string KeepArtifactsEnvironmentVariable = "UDT_SMOKE_KEEP_ARTIFACTS";
+    private const string WatchModeEnvironmentVariable = "UDT_SMOKE_WATCH";
+    private const string StepDelayEnvironmentVariable = "UDT_SMOKE_STEP_DELAY_MS";
+    private const string SuccessHoldEnvironmentVariable = "UDT_SMOKE_SUCCESS_HOLD_MS";
+    private const string FailureHoldEnvironmentVariable = "UDT_SMOKE_FAILURE_HOLD_MS";
+    private const string ScenarioEnvironmentVariable = "UDT_SMOKE_SCENARIO";
+    private const string ThemeEnvironmentVariable = "UDT_SMOKE_THEME";
+    private const string AnimationSpeedEnvironmentVariable = "UDT_SMOKE_ANIMATION_SPEED_MS";
+    private const string DisableAnimationsEnvironmentVariable = "UDT_SMOKE_DISABLE_ANIMATIONS";
+    private const string SmokeAutomationEnvironmentVariable = "UDT_SMOKE_AUTOMATION";
 
-    private static string? GetEnvVar(string legacyName)
-    {
-        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
-        {
-            var udtName = "UDT_" + legacyName[4..];
-            var udtValue = Environment.GetEnvironmentVariable(udtName);
-            if (!string.IsNullOrWhiteSpace(udtValue))
-                return udtValue;
-        }
+    private static string? GetEnvVar(string environmentVariableName) =>
+        Environment.GetEnvironmentVariable(environmentVariableName);
 
-        return Environment.GetEnvironmentVariable(legacyName);
-    }
-
-    private static void SetDualEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string legacyName, string value)
-    {
-        environmentVariables[legacyName] = value;
-        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
-            environmentVariables["UDT_" + legacyName[4..]] = value;
-    }
+    private static void SetEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string environmentVariableName, string value) =>
+        environmentVariables[environmentVariableName] = value;
 
     private static readonly string[] MainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
     private const uint MouseEventLeftDown = 0x0002;
@@ -74,9 +57,11 @@ internal static class Program
     private const byte VkTab = 0x09;
     private const byte VkShift = 0x10;
     private const byte VkA = 0x41;
+    private const byte VkV = 0x56;
     private const byte VkBack = 0x08;
     private const uint KeyEventExtendedKey = 0x0001;
     private const uint KeyEventKeyUp = 0x0002;
+    private const uint GwOwner = 4;
     private const int SwRestore = 9;
     private const int SmXVirtualScreen = 76;
     private const int SmYVirtualScreen = 77;
@@ -84,6 +69,7 @@ internal static class Program
     private const int SmCyVirtualScreen = 79;
     private const int PwRenderFullContent = 0x00000002;
     private const int Srccopy = 0x00CC0020;
+    private const uint WmClose = 0x0010;
     private const int BaseAnimationDurationMs = 350;
     private static readonly TimeSpan OnlinePluginInstallTimeout = TimeSpan.FromMinutes(12);
     private static readonly TimeSpan WindowAnimationDuration = TimeSpan.FromMilliseconds(BaseAnimationDurationMs);
@@ -106,6 +92,9 @@ internal static class Program
     private static TimeSpan _failureHold = TimeSpan.Zero;
     private static SmokeScenario _activeScenario = SmokeScenario.None;
     private static SmokeTheme _activeTheme = SmokeTheme.System;
+    private static string? _activeAppRuntimeDirectory;
+    private static string? _activeRepositoryRoot;
+    private static string? _activeSmokeAppDataDirectory;
     private static double _animationSpeedMultiplier = 1.0;
     private static bool _animationsDisabled = false;
 
@@ -172,6 +161,15 @@ internal static class Program
         PluginInstallSource Source,
         string? LocalPackagePath);
 
+    private sealed record LocalPluginFixtureState(
+        string PluginId,
+        string SourceDirectory,
+        string TargetDirectory,
+        string BackupDirectory,
+        bool TargetExistedBefore,
+        bool FixturePrepared,
+        string? WarningMessage);
+
     private sealed record RuntimePluginFixtureState(
         string PluginId,
         string SourceDirectory,
@@ -226,10 +224,19 @@ internal static class Program
     private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
     [DllImport("user32.dll")]
+    private static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+    [DllImport("user32.dll")]
     private static extern int GetSystemMetrics(int nIndex);
 
     [DllImport("user32.dll")]
+    private static extern bool IsWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
     private static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
     [DllImport("user32.dll")]
     private static extern IntPtr GetWindowDC(IntPtr hWnd);
@@ -270,6 +277,7 @@ internal static class Program
         AutomationElement? mainWindow = null;
         SmokeSandboxState? smokeSandboxState = null;
         LocalPluginPackageBundle? localPluginPackageBundle = null;
+        List<LocalPluginFixtureState>? localPluginFixtureStates = null;
         PreparedPluginInstallState? preparedPluginInstallState = null;
         List<RuntimePluginFixtureState>? runtimePluginFixtureStates = null;
         List<RuntimeFileFixtureState>? runtimeSupportFixtureStates = null;
@@ -296,6 +304,7 @@ internal static class Program
             _activeScenario = ResolveScenario(args);
             _activeTheme = ResolveTheme(args);
             var repositoryRoot = ResolveRepositoryRoot(args);
+            _activeRepositoryRoot = repositoryRoot;
             Console.WriteLine($"[main-smoke] Repository root: {repositoryRoot}");
             Console.WriteLine($"[main-smoke] Scenario: {_activeScenario}");
             Console.WriteLine($"[main-smoke] Theme: {_activeTheme}");
@@ -305,10 +314,10 @@ internal static class Program
             var isDashboardScenario = _activeScenario == SmokeScenario.Dashboard;
             var isPowerModeScenario = _activeScenario == SmokeScenario.PowerMode;
             var scenarioPreset = ResolveScenarioPreset(_activeScenario);
-            var preferredPlugins = isDriverDownloadScenario || isSystemOptimizationScenario || isDashboardScenario || isPowerModeScenario
+            var preferredPlugins = isDriverDownloadScenario || isDashboardScenario || isPowerModeScenario
                 ? Array.Empty<string>()
                 : ResolvePreferredPlugins(args, scenarioPreset);
-            var requestedPluginSources = isDriverDownloadScenario || isSystemOptimizationScenario || isDashboardScenario || isPowerModeScenario
+            var requestedPluginSources = isDriverDownloadScenario || isDashboardScenario || isPowerModeScenario
                 ? new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase)
                 : ResolveRequestedPluginSources(args, scenarioPreset);
             var desiredPluginSources = preferredPlugins
@@ -318,16 +327,24 @@ internal static class Program
                     pluginId => ResolveRequestedPluginSource(pluginId, requestedPluginSources),
                     StringComparer.OrdinalIgnoreCase);
             var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot, args);
+            _activeAppRuntimeDirectory = appRuntimeDirectory;
             var runtimePluginsDirectory = ResolveRuntimePluginsDirectory(appRuntimeDirectory);
             runtimePluginFixtureStates = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, runtimePluginsDirectory, preferredPlugins);
             runtimeSupportFixtureStates = PrepareRuntimeSupportFixtures(repositoryRoot, appRuntimeDirectory);
             smokeSandboxState = PrepareSmokeSandbox();
+            _activeSmokeAppDataDirectory = smokeSandboxState.AppDataDirectory;
             ApplySmokeSettingsOverrides(smokeSandboxState, _activeTheme);
-            var smokeIpcPipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(smokeSandboxState.RootDirectory)}";
-            Environment.SetEnvironmentVariable(Constants.PIPE_NAME_ENVIRONMENT_VARIABLE, smokeIpcPipeName);
+            var smokeIpcPipeName = Constants.GetPipeName(smokeSandboxState.AppDataDirectory);
             Console.WriteLine($"[main-smoke] IPC pipe: {smokeIpcPipeName}");
             localPluginPackageBundle = PrepareLocalPluginPackages(
                 repositoryRoot,
+                desiredPluginSources
+                    .Where(pair => pair.Value == PluginInstallSource.Local)
+                    .Select(pair => pair.Key)
+                    .ToArray());
+            localPluginFixtureStates = PrepareLocalPluginFixtures(
+                repositoryRoot,
+                smokeSandboxState.PluginsDirectory,
                 desiredPluginSources
                     .Where(pair => pair.Value == PluginInstallSource.Local)
                     .Select(pair => pair.Key)
@@ -452,6 +469,8 @@ internal static class Program
             {
                 if (localPluginPackageBundle is not null)
                     Console.WriteLine($"[main-smoke] Preserved local package bundle: {localPluginPackageBundle.RootDirectory}");
+                if (localPluginFixtureStates is not null)
+                    Console.WriteLine($"[main-smoke] Preserved local plugin fixtures: [{string.Join(", ", localPluginFixtureStates.Select(state => state.PluginId))}]");
                 if (smokeSandboxState is not null)
                     Console.WriteLine($"[main-smoke] Preserved smoke sandbox: {smokeSandboxState.RootDirectory}");
             }
@@ -462,6 +481,7 @@ internal static class Program
             }
 
             RestorePluginInstallState(preparedPluginInstallState);
+            RestoreLocalPluginFixtures(localPluginFixtureStates);
             RestoreRuntimeFileFixtures(runtimeSupportFixtureStates);
             RestoreRuntimePluginFixtures(runtimePluginFixtureStates);
 
@@ -785,19 +805,19 @@ Options:
   --help                 Print this help text and exit.
 
 Environment variables:
-  LLT_SMOKE_PLUGIN_IDS
-  LLT_SMOKE_PLUGIN_SOURCES
-  LLT_SMOKE_SCENARIO
-  LLT_SMOKE_THEME
-  LLT_SMOKE_SCREENSHOTS
-  LLT_SMOKE_SCREENSHOT_DIR
-  LLT_SMOKE_KEEP_ARTIFACTS
-  LLT_SMOKE_WATCH
-  LLT_SMOKE_STEP_DELAY_MS
-  LLT_SMOKE_SUCCESS_HOLD_MS
-  LLT_SMOKE_FAILURE_HOLD_MS
-  LLT_SMOKE_ANIMATION_SPEED_MS
-  LLT_SMOKE_DISABLE_ANIMATIONS
+  UDT_SMOKE_PLUGIN_IDS
+  UDT_SMOKE_PLUGIN_SOURCES
+  UDT_SMOKE_SCENARIO
+  UDT_SMOKE_THEME
+  UDT_SMOKE_SCREENSHOTS
+  UDT_SMOKE_SCREENSHOT_DIR
+  UDT_SMOKE_KEEP_ARTIFACTS
+  UDT_SMOKE_WATCH
+  UDT_SMOKE_STEP_DELAY_MS
+  UDT_SMOKE_SUCCESS_HOLD_MS
+  UDT_SMOKE_FAILURE_HOLD_MS
+  UDT_SMOKE_ANIMATION_SPEED_MS
+  UDT_SMOKE_DISABLE_ANIMATIONS
 """);
     }
 
@@ -833,7 +853,7 @@ Environment variables:
         }
 
         // Fall back to environment variable
-        var fromEnvironment = GetEnvVar("LLT_SMOKE_PLUGIN_IDS");
+        var fromEnvironment = GetEnvVar(PluginIdsEnvironmentVariable);
         if (!string.IsNullOrWhiteSpace(fromEnvironment))
         {
             var requested = fromEnvironment
@@ -843,7 +863,7 @@ Environment variables:
 
             if (requested.Length > 0)
             {
-                Console.WriteLine($"[main-smoke] Plugin filter from LLT_SMOKE_PLUGIN_IDS: [{string.Join(", ", requested)}]");
+                Console.WriteLine($"[main-smoke] Plugin filter from {PluginIdsEnvironmentVariable}: [{string.Join(", ", requested)}]");
                 return requested;
             }
         }
@@ -1003,7 +1023,7 @@ Environment variables:
     {
         var rootDirectory = Path.Combine(Path.GetTempPath(), $"llt-plugin-smoke-{DateTime.Now:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
         var appDataDirectory = Path.Combine(rootDirectory, "appdata");
-        var pluginsDirectory = Path.Combine(rootDirectory, "plugins");
+        var pluginsDirectory = Path.Combine(appDataDirectory, "plugins");
 
         Directory.CreateDirectory(appDataDirectory);
         Directory.CreateDirectory(pluginsDirectory);
@@ -1128,6 +1148,86 @@ Environment variables:
         return new LocalPluginPackageBundle(packageRoot, packages);
     }
 
+    private static List<LocalPluginFixtureState> PrepareLocalPluginFixtures(
+        string repositoryRoot,
+        string sandboxPluginsDirectory,
+        IReadOnlyList<string> preferredPlugins)
+    {
+        var sourceCandidates = new[]
+        {
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
+            Path.Combine(repositoryRoot, "Build", "plugins")
+        };
+
+        var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
+        if (string.IsNullOrWhiteSpace(sourceRoot))
+        {
+            Console.WriteLine("[main-smoke] Local plugin fixture source not found; continuing without preinstalled local fixtures");
+            return new List<LocalPluginFixtureState>();
+        }
+
+        Directory.CreateDirectory(Path.Combine(sandboxPluginsDirectory, "local"));
+        var fixtureStates = new List<LocalPluginFixtureState>();
+        var pluginSourceDirectories = Directory.GetDirectories(sourceRoot, "*", SearchOption.TopDirectoryOnly)
+            .ToDictionary(path => Path.GetFileName(path), StringComparer.OrdinalIgnoreCase);
+        var pluginDirectoryNames = ResolveFixturePluginDirectoryNames(preferredPlugins, pluginSourceDirectories.Keys)
+            .ToArray();
+
+        if (pluginDirectoryNames.Length == 0)
+        {
+            Console.WriteLine("[main-smoke] No matching local plugin fixtures selected; continuing without preinstall copy");
+            return fixtureStates;
+        }
+
+        try
+        {
+            foreach (var pluginDirectoryName in pluginDirectoryNames)
+            {
+                if (!pluginSourceDirectories.TryGetValue(pluginDirectoryName, out var sourcePluginDirectory))
+                    continue;
+
+                fixtureStates.Add(PrepareLocalPluginFixture(sandboxPluginsDirectory, pluginDirectoryName, sourcePluginDirectory));
+            }
+
+            Console.WriteLine($"[main-smoke] Prepared local plugin fixtures in sandbox: [{string.Join(", ", fixtureStates.Where(state => state.FixturePrepared).Select(state => state.PluginId))}]");
+            return fixtureStates;
+        }
+        catch
+        {
+            RestoreLocalPluginFixtures(fixtureStates);
+            throw;
+        }
+    }
+
+    private static LocalPluginFixtureState PrepareLocalPluginFixture(
+        string sandboxPluginsDirectory,
+        string pluginDirectoryName,
+        string sourcePluginDirectory)
+    {
+        var pluginId = NormalizeRuntimeFixturePluginId(pluginDirectoryName);
+        var targetPluginDirectory = Path.Combine(sandboxPluginsDirectory, "local", pluginId);
+        var backupPluginDirectory = Path.Combine(sandboxPluginsDirectory, "local", $".{pluginId}.smoke-backup");
+        var targetExistedBefore = Directory.Exists(targetPluginDirectory);
+
+        try
+        {
+            CleanupFixtureDirectory(backupPluginDirectory);
+            if (targetExistedBefore)
+                Directory.Move(targetPluginDirectory, backupPluginDirectory);
+
+            CopyDirectory(sourcePluginDirectory, targetPluginDirectory);
+            return new LocalPluginFixtureState(pluginId, sourcePluginDirectory, targetPluginDirectory, backupPluginDirectory, targetExistedBefore, true, null);
+        }
+        catch (Exception ex)
+        {
+            var warningMessage = $"Local fixture warning for '{pluginId}': {ex.Message}";
+            Console.WriteLine($"[main-smoke] {warningMessage}");
+            TryRestorePreparedRuntimePluginFixture(targetPluginDirectory, backupPluginDirectory, targetExistedBefore);
+            return new LocalPluginFixtureState(pluginId, sourcePluginDirectory, targetPluginDirectory, backupPluginDirectory, targetExistedBefore, false, warningMessage);
+        }
+    }
+
     private static void CleanupLocalPluginPackages(LocalPluginPackageBundle? bundle)
     {
         if (bundle is null)
@@ -1141,6 +1241,20 @@ Environment variables:
         catch (Exception ex)
         {
             Console.WriteLine($"[main-smoke] Failed to clean local plugin package bundle '{bundle.RootDirectory}': {ex.Message}");
+        }
+    }
+
+    private static void RestoreLocalPluginFixtures(IEnumerable<LocalPluginFixtureState>? fixtureStates)
+    {
+        if (fixtureStates is null)
+            return;
+
+        foreach (var state in fixtureStates.Reverse())
+        {
+            if (!state.FixturePrepared)
+                continue;
+
+            TryRestorePreparedRuntimePluginFixture(state.TargetDirectory, state.BackupDirectory, state.TargetExistedBefore);
         }
     }
 
@@ -1166,7 +1280,7 @@ Environment variables:
                 FileName = "dotnet",
                 // Smoke runs need to get past the unsupported-device gate on this workstation
                 // so the plugin UI can still be validated end-to-end.
-                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker",
+                Arguments = $"\"{dllPath}\" --trace --disable-update-checker",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
@@ -1181,7 +1295,7 @@ Environment variables:
             var startInfo = new ProcessStartInfo
             {
                 FileName = exePath,
-                Arguments = "--skip-compat-check --trace --disable-update-checker",
+                Arguments = "--trace --disable-update-checker",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
@@ -1198,24 +1312,8 @@ Environment variables:
         SmokeSandboxState sandboxState,
         LocalPluginPackageBundle localPluginPackageBundle)
     {
-        startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = Constants.PIPE_NAME;
-        SetDualEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, sandboxState.AppDataDirectory);
-        SetDualEnvVar(startInfo.EnvironmentVariables, PluginDirectoryOverrideEnvironmentVariable, sandboxState.PluginsDirectory);
-        SetDualEnvVar(startInfo.EnvironmentVariables, SingleInstanceKeyEnvironmentVariable, Path.GetFileName(sandboxState.RootDirectory));
-        SetDualEnvVar(startInfo.EnvironmentVariables, SmokeAutomationEnvironmentVariable, "1");
-        SetDualEnvVar(startInfo.EnvironmentVariables, RelaxedIpcAclEnvironmentVariable, "1");
-
-        var singleInstanceKey = Path.GetFileName(sandboxState.RootDirectory);
-        startInfo.Arguments = string.IsNullOrWhiteSpace(startInfo.Arguments)
-            ? $"{SingleInstanceKeySwitch}={singleInstanceKey} {IpcPipeNameSwitch}={Constants.PIPE_NAME}"
-            : $"{startInfo.Arguments} {SingleInstanceKeySwitch}={singleInstanceKey} {IpcPipeNameSwitch}={Constants.PIPE_NAME}";
-
-        if (localPluginPackageBundle.Packages.Count > 0)
-        {
-            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
-            SetDualEnvVar(startInfo.EnvironmentVariables, PluginImportFilesEnvironmentVariable,
-                string.Join(Path.PathSeparator, localPluginPackageBundle.Packages.Select(package => package.PackagePath)));
-        }
+        SetEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, sandboxState.AppDataDirectory);
+        SetEnvVar(startInfo.EnvironmentVariables, SmokeAutomationEnvironmentVariable, "1");
     }
 
     private static PreparedPluginInstallState? PreparePluginInstallState(IReadOnlyList<string> preferredPlugins, string runtimePluginsDirectory)
@@ -2416,39 +2514,19 @@ Environment variables:
             return;
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var bulkImportButton = TryWaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(12));
-        if (bulkImportButton is null || !IsVisible(bulkImportButton))
-            throw new InvalidOperationException("PluginBulkImportButton is not visible on the Plugin Extensions page.");
-
-        Console.WriteLine("[main-smoke] PluginBulkImportButton is visible for local import flow");
-
         var pendingPlans = localPlans
             .Where(plan => !IsPluginInstalled(mainWindow, sandboxState, plan.PluginId))
             .ToArray();
 
-        if (pendingPlans.Length == 0)
-        {
-            Console.WriteLine($"[main-smoke] Local plugins already installed; skipping bulk import click for: [{string.Join(", ", localPlans.Select(plan => plan.PluginId))}]");
-        }
-        else
-        {
-            Click(bulkImportButton);
-            Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", pendingPlans.Select(plan => plan.PluginId))}]");
-        }
+        Console.WriteLine("[main-smoke] Verifying preinstalled local plugin fixtures through the normal installed-plugin UI.");
+        if (pendingPlans.Length > 0)
+            throw new TimeoutException($"Preinstalled local plugin fixture did not reach installed state: {string.Join(", ", pendingPlans.Select(plan => plan.PluginId))}");
 
         foreach (var plan in localPlans)
         {
-            var installed = WaitUntil(
-                () => IsPluginInstalled(mainWindow, sandboxState, plan.PluginId),
-                TimeSpan.FromSeconds(90),
-                TimeSpan.FromMilliseconds(350));
-
-            if (!installed)
-                throw new TimeoutException($"Local ZIP import did not reach installed state: {plan.PluginId}");
-
-            Console.WriteLine($"[main-smoke] Local ZIP import verified for plugin: {plan.PluginId}");
+            Console.WriteLine($"[main-smoke] Preinstalled local plugin fixture verified: {plan.PluginId}");
             CaptureMainWindow(mainWindow, $"{plan.PluginId}-local-import-installed");
-            ObserveStep($"Local ZIP import verified: {plan.PluginId}", mainWindow);
+            ObserveStep($"Local plugin fixture verified: {plan.PluginId}", mainWindow);
         }
     }
 
@@ -2538,7 +2616,7 @@ Environment variables:
         else if (isKnownInstalled && ExpectsSidebarFeaturePage(pluginId))
             TestSidebarPluginPageEntry(mainWindow, pluginId, returnToMarketplace: false);
         else if (isKnownInstalled)
-            Console.WriteLine($"[main-smoke] Feature-page test skipped for settings-only plugin: {pluginId}");
+            Console.WriteLine($"[main-smoke] Feature-page test skipped for non-feature plugin: {pluginId}");
         else
             Console.WriteLine($"[main-smoke] Feature-page test skipped (no Open button): {pluginId}");
 
@@ -2622,6 +2700,18 @@ Environment variables:
         if (!leftPluginPage)
             EnsureMarketplaceViewExited(mainWindow, pluginId, "marketplace-open");
 
+        if (UsesOptimizationOpenRoute(pluginId))
+        {
+            EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
+            CaptureMainWindow(mainWindow, pluginId, "optimization-open-route");
+            ObserveStep($"Optimization route opened: {pluginId}", mainWindow);
+
+            if (returnToMarketplace)
+                NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+
+            return;
+        }
+
         EnsurePluginFeaturePageRendered(mainWindow, pluginId, entrySource: "marketplace-open");
         CaptureMainWindow(mainWindow, pluginId, "feature-page");
         ObserveStep($"Feature page opened: {pluginId}", mainWindow);
@@ -2694,7 +2784,8 @@ Environment variables:
 
     private static bool UsesOptimizationOpenRoute(string pluginId)
     {
-        return false;
+        return pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase)
+               || pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void EnsureMarketplaceViewExited(AutomationElement mainWindow, string pluginId, string entrySource)
@@ -2723,7 +2814,8 @@ Environment variables:
 
     private static bool SupportsMarketplaceDoubleClickSettings(string pluginId)
     {
-        return !pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase);
+        return !pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
+               && !pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool SupportsPluginFocusedOptimizationRoute(string pluginId)
@@ -5356,6 +5448,7 @@ Environment variables:
     {
         NavigateToDashboardPage(mainWindow);
         mainWindow = ResolveLiveWindow(mainWindow);
+        WaitForDashboardLoadingToFinish(mainWindow);
 
         var sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(25));
         CaptureMainWindow(mainWindow, "dashboard-sensors-collapsed");
@@ -5406,6 +5499,17 @@ Environment variables:
         Console.WriteLine("[main-smoke] Dashboard sensor card expand/collapse verified.");
     }
 
+    private static void WaitForDashboardLoadingToFinish(AutomationElement mainWindow)
+    {
+        var finished = WaitUntil(
+            () => !IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "DashboardLoadingSkeleton")),
+            TimeSpan.FromSeconds(8),
+            TimeSpan.FromMilliseconds(200));
+
+        if (!finished)
+            Console.WriteLine("[main-smoke] Dashboard loading skeleton still visible when attempting sensor-card interaction.");
+    }
+
     private static bool AnyDashboardSensorDetailsVisible(AutomationElement mainWindow)
     {
         var detailElementIds = new[]
@@ -5423,10 +5527,13 @@ Environment variables:
 
     private static void TestPowerModeUi(AutomationElement mainWindow)
     {
+        Console.WriteLine("[main-smoke] Starting power-mode UI flow.");
         NavigateToDashboardPage(mainWindow);
+        Console.WriteLine("[main-smoke] Dashboard page navigation completed for power-mode flow.");
         mainWindow = ResolveLiveWindow(mainWindow);
 
-        var comboBox = TryWaitForAutomationId(mainWindow, "PowerModeControl_ComboBox", TimeSpan.FromSeconds(25));
+        Console.WriteLine("[main-smoke] Resolving Power Mode combo box.");
+        var comboBox = TryFindPowerModeComboBox(mainWindow, TimeSpan.FromSeconds(25));
         if (comboBox is null)
         {
             Console.WriteLine("[main-smoke] Power Mode control is not visible on this device; treating unsupported hardware as a valid basic-mode outcome.");
@@ -5437,7 +5544,14 @@ Environment variables:
         VerifyPowerModeComboBox(comboBox);
         CaptureMainWindow(mainWindow, "power-mode-combobox");
 
+        Console.WriteLine("[main-smoke] Reading original power mode.");
+        var originalPowerMode = ReadElementText(comboBox);
+        Console.WriteLine($"[main-smoke] Original power mode resolved as '{originalPowerMode}'.");
+        Console.WriteLine("[main-smoke] Resolving power-mode settings button.");
         var settingsButton = TryWaitForAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton", TimeSpan.FromSeconds(6));
+        Console.WriteLine(settingsButton is null
+            ? "[main-smoke] Power-mode settings button not currently visible."
+            : $"[main-smoke] Power-mode settings button resolved. Enabled={settingsButton.Current.IsEnabled}.");
         if (settingsButton is null || !IsInteractable(settingsButton))
         {
             Console.WriteLine("[main-smoke] Power Mode settings button is hidden for the current mode/device; combo box presence verified without changing hardware mode.");
@@ -5457,17 +5571,17 @@ Environment variables:
 
         CapturePluginSettingsWindow(settingsWindow, "power-mode", "settings-window");
 
-        if (IsVisible(FindByAutomationId(settingsWindow, "GodModeSettingsWindow")))
+        settingsWindow = ResolvePowerModeSettingsWindow(settingsWindow);
+
+        if (IsVisible(FindByAutomationId(settingsWindow, "GodModeSettingsWindow"))
+            || FindByAutomationId(settingsWindow, "GodModePresetComboBox") is not null)
         {
             WaitForAutomationId(settingsWindow, "GodModePresetComboBox", TimeSpan.FromSeconds(15));
             WaitForAutomationId(settingsWindow, "GodModeAddPresetButton", TimeSpan.FromSeconds(10));
             WaitForAutomationId(settingsWindow, "GodModeEditPresetButton", TimeSpan.FromSeconds(10));
             WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
-
-            if (ResolveBooleanSwitch([], "--exercise-power-mode-presets", ExercisePowerModePresetsEnvironmentVariable))
-                ExerciseTemporaryGodModePreset(settingsWindow);
-            else
-                Console.WriteLine("[main-smoke] God Mode preset controls verified. Set LLT_SMOKE_EXERCISE_POWER_MODE_PRESETS=1 to exercise create/delete UI.");
+            VerifyGodModeBasePresets(settingsWindow);
+            Console.WriteLine("[main-smoke] God Mode preset controls verified. Preset create/rename/delete is covered by Tools\\PresetUiValidation; hardware apply verification is covered by Tools\\HardwareValidation.");
         }
         else
         {
@@ -5476,7 +5590,154 @@ Environment variables:
 
         CloseWindow(settingsWindow);
         Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
+
         Console.WriteLine("[main-smoke] Power Mode UI verified without changing the selected hardware mode.");
+    }
+
+    private static void SelectPowerModeForGodModeSettings(AutomationElement mainWindow, AutomationElement comboBox)
+    {
+        var optionsBeforeSelection = GetComboBoxOptionNames(comboBox);
+        Console.WriteLine($"[main-smoke] Power-mode combo options before selection: [{string.Join(", ", optionsBeforeSelection)}]");
+        var currentSelection = TryGetComboBoxSelectedItemText(comboBox) ?? ReadElementText(comboBox);
+        if (IsGodModeSettingsSelection(currentSelection))
+        {
+            Console.WriteLine($"[main-smoke] Power-mode combo box is already on '{currentSelection}'; skipping reselection.");
+            return;
+        }
+
+        var currentSettingsButton = FindByAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton");
+        if (IsInteractable(currentSettingsButton))
+        {
+            Console.WriteLine($"[main-smoke] Power-mode settings button is already interactable while selection reads '{currentSelection}'; skipping reselection.");
+            return;
+        }
+
+        if (optionsBeforeSelection.Length == 0)
+        {
+            Console.WriteLine($"[main-smoke] Power-mode combo options were unavailable while selection reads '{currentSelection}'.");
+            if (!string.IsNullOrWhiteSpace(currentSelection))
+                return;
+        }
+
+        var selected = SelectComboBoxItemByNamesOrContains(comboBox, "God Mode", "GodMode", "Custom", "自定义", "Performance", "性能");
+        Console.WriteLine($"[main-smoke] Requested power-mode selection item: '{selected}'.");
+
+        var settingsButton = WaitForPowerModeSettingsButton(mainWindow, "power mode settings button after selecting performance/godmode");
+        var selectionUpdated = WaitUntil(
+            () =>
+            {
+                var liveMainWindow = ResolveLiveWindow(mainWindow);
+                var liveCombo = FindPowerModeComboBox(liveMainWindow) ?? comboBox;
+                var selection = TryGetComboBoxSelectedItemText(liveCombo) ?? ReadElementText(liveCombo);
+                if (IsGodModeSettingsSelection(selection))
+                    return true;
+
+                var liveSettingsButton = FindByAutomationId(liveMainWindow, "PowerModeSettingsButton");
+                return IsInteractable(liveSettingsButton);
+            },
+            TimeSpan.FromSeconds(20),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!selectionUpdated)
+            throw new TimeoutException("Timed out waiting for power mode combo box selection to update.");
+
+        var optionsAfterSelection = GetComboBoxOptionNames(FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox);
+        Console.WriteLine($"[main-smoke] Power-mode combo options after selection: [{string.Join(", ", optionsAfterSelection)}]");
+        var finalCombo = FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox;
+        var finalSelection = TryGetComboBoxSelectedItemText(finalCombo) ?? ReadElementText(finalCombo);
+        Console.WriteLine($"[main-smoke] UI-selected power mode for settings: '{finalSelection}' (requested '{selected}').");
+    }
+
+    private static AutomationElement WaitForPowerModeSettingsButton(AutomationElement mainWindow, string description)
+    {
+        return WaitUntilValue(
+            () =>
+            {
+                var candidate = FindByAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton");
+                return IsInteractable(candidate) ? candidate : null;
+            },
+            TimeSpan.FromSeconds(30),
+            TimeSpan.FromMilliseconds(300),
+            description);
+    }
+
+    private static AutomationElement WaitForPowerModeComboBox(AutomationElement mainWindow, TimeSpan timeout)
+    {
+        return WaitUntilValue(
+            () => TryFindPowerModeComboBox(mainWindow, timeout),
+            timeout,
+            TimeSpan.FromMilliseconds(250),
+            "power mode combo box");
+    }
+
+    private static AutomationElement? TryFindPowerModeComboBox(AutomationElement mainWindow, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        return found ? FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) : null;
+    }
+
+    private static AutomationElement? FindPowerModeComboBox(AutomationElement root)
+    {
+        var byAutomationId = FindByAutomationId(root, "PowerModeControl_ComboBox");
+        if (byAutomationId is not null)
+            return byAutomationId;
+
+        var powerModeCard = FindFirstVisibleDescendant(root, element =>
+            element.Current.ControlType == ControlType.Text
+            && string.Equals(ReadElementText(element), "Power Mode", StringComparison.OrdinalIgnoreCase));
+        if (powerModeCard is not null)
+        {
+            var parent = TreeWalker.ControlViewWalker.GetParent(powerModeCard);
+            AutomationElement? comboInPowerSection = null;
+            while (parent is not null)
+            {
+                if (parent.Current.ControlType == ControlType.Pane || parent.Current.ControlType == ControlType.Group)
+                {
+                    comboInPowerSection = parent.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox));
+                    if (comboInPowerSection is not null)
+                        break;
+                }
+
+                parent = TreeWalker.ControlViewWalker.GetParent(parent);
+            }
+
+            if (comboInPowerSection is not null && IsVisible(comboInPowerSection))
+                return comboInPowerSection;
+        }
+
+        var settingsButton = FindByAutomationId(root, "PowerModeSettingsButton");
+        if (settingsButton is null)
+            return null;
+
+        var comboBoxes = root
+            .FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox))
+            .Cast<AutomationElement>()
+            .Where(IsVisible)
+            .ToArray();
+
+        if (comboBoxes.Length == 0)
+            return null;
+
+        var buttonBounds = settingsButton.Current.BoundingRectangle;
+        return comboBoxes
+            .Where(combo =>
+            {
+                var bounds = combo.Current.BoundingRectangle;
+                return Math.Abs(bounds.Top - buttonBounds.Top) < 80 && bounds.Left < buttonBounds.Left;
+            })
+            .OrderByDescending(combo => combo.Current.BoundingRectangle.Width)
+            .FirstOrDefault()
+            ?? comboBoxes.OrderByDescending(combo => combo.Current.BoundingRectangle.Width).FirstOrDefault();
+    }
+
+    private static bool IsGodModeSettingsSelection(string? value)
+    {
+        var normalized = NormalizePowerModeValue(value ?? string.Empty);
+        return normalized is "performance" or "godmode";
     }
 
     private static void VerifyPowerModeComboBox(AutomationElement comboBox)
@@ -5484,26 +5745,27 @@ Environment variables:
         if (!comboBox.Current.IsEnabled)
             throw new InvalidOperationException("Power Mode combo box is visible but disabled.");
 
+        var currentSelection = TryGetComboBoxSelectedItemText(comboBox) ?? ReadElementText(comboBox);
+
         if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
         {
             var expander = (ExpandCollapsePattern)expandPattern;
             expander.Expand();
             Thread.Sleep(250);
 
-            var options = comboBox
-                .FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
-                .Cast<AutomationElement>()
-                .Concat(AutomationElement.RootElement
-                    .FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
-                    .Cast<AutomationElement>())
-                .Where(IsVisible)
-                .ToArray();
+            var options = GetComboBoxOptionNames(comboBox);
 
             if (options.Length == 0)
-                throw new InvalidOperationException("Power Mode combo box opened but exposed no selectable options.");
+            {
+                if (!string.IsNullOrWhiteSpace(currentSelection))
+                {
+                    Console.WriteLine($"[main-smoke] Power Mode combo box exposed no visible options; continuing with current selection '{currentSelection}'.");
+                    return;
+                }
 
-            expander.Collapse();
-            Thread.Sleep(120);
+                throw new InvalidOperationException("Power Mode combo box opened but exposed no selectable options.");
+            }
+
             Console.WriteLine($"[main-smoke] Power Mode combo box exposed {options.Length} option(s).");
         }
         else
@@ -5515,7 +5777,9 @@ Environment variables:
     private static bool IsPowerModeSettingsWindow(AutomationElement window)
     {
         return IsVisible(FindByAutomationId(window, "GodModeSettingsWindow"))
+               || IsVisible(FindByAutomationId(window, "BalanceModeSettingsWindow"))
                || IsVisible(FindByAutomationId(window, "GodModePresetComboBox"))
+               || IsVisible(FindByAutomationId(window, "BalanceModeAiModeCheckBox"))
                || WindowNameContains(window, "God Mode")
                || WindowNameContains(window, "Custom")
                || WindowNameContains(window, "Performance")
@@ -5525,108 +5789,251 @@ Environment variables:
                || WindowNameContains(window, "平衡");
     }
 
-    private static bool IsInputDialogWindow(AutomationElement window)
+    private static AutomationElement ResolvePowerModeSettingsWindow(AutomationElement settingsWindow)
     {
-        if (window.Current.ControlType != ControlType.Window)
-            return false;
+        var resolvedWindow = ResolveTopLevelWindow(settingsWindow);
+        var identifiedWindow = WaitUntilValue(
+            () =>
+            {
+                var liveWindow = ResolveTopLevelWindow(resolvedWindow);
+                if (FindByAutomationId(liveWindow, "GodModePresetComboBox") is not null)
+                    return liveWindow;
 
-        var textBox = FindFirstVisibleDescendant(window, element =>
-            element.Current.ControlType == ControlType.Edit
-            || element.Current.ControlType == ControlType.Document);
+                if (FindByAutomationId(liveWindow, "BalanceModeAiModeCheckBox") is not null)
+                    return liveWindow;
 
-        return textBox is not null
-               && (FindByAutomationId(window, "ButtonLeft") is not null
-                   || FindByAutomationId(window, "ButtonRight") is not null
-                   || window.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button)).Count >= 2);
-    }
+                if (IsVisible(FindByAutomationId(liveWindow, "GodModeSettingsWindow")))
+                    return liveWindow;
 
-    private static void CompleteInputDialog(int processId, int ownerHandle, string value, string description)
-    {
-        var dialog = WaitForOwnedWindow(
-            processId,
-            ownerHandle,
-            IsInputDialogWindow,
+                if (IsVisible(FindByAutomationId(liveWindow, "BalanceModeSettingsWindow")))
+                    return liveWindow;
+
+                return null;
+            },
             TimeSpan.FromSeconds(10),
-            description);
+            TimeSpan.FromMilliseconds(250),
+            "power mode settings window content");
 
-        var input = FindFirstVisibleDescendant(dialog, element =>
-            element.Current.ControlType == ControlType.Edit
-            || element.Current.ControlType == ControlType.Document);
-
-        if (input is null)
-        {
-            DumpAutomationSnapshot(dialog, 160);
-            throw new TimeoutException($"Input field was not found for {description}.");
-        }
-
-        input.SetFocus();
-        Thread.Sleep(120);
-        PressCtrlA();
-        TypeText(value);
-
-        var primaryButton = FindByAutomationId(dialog, "ButtonLeft")
-                            ?? dialog.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button))
-                                .Cast<AutomationElement>()
-                                .Where(IsVisible)
-                                .FirstOrDefault(button => button.Current.IsEnabled);
-
-        if (primaryButton is not null)
-            Click(primaryButton);
-        else
-            PressVirtualKey(VkEnter);
-
-        Thread.Sleep(350);
+        return identifiedWindow;
     }
 
-    private static void ExerciseTemporaryGodModePreset(AutomationElement settingsWindow)
+    private static void VerifyGodModeBasePresets(AutomationElement settingsWindow)
     {
         var presetComboBox = WaitForAutomationId(settingsWindow, "GodModePresetComboBox", TimeSpan.FromSeconds(10));
-        var originalPresetName = ReadElementText(presetComboBox);
-        var addButton = WaitForAutomationId(settingsWindow, "GodModeAddPresetButton", TimeSpan.FromSeconds(10));
-        var deleteButton = WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
-        var temporaryName = "Smoke preset " + DateTimeOffset.UtcNow.ToString("HHmmss", CultureInfo.InvariantCulture);
+        var options = GetComboBoxOptionNames(presetComboBox);
+        var requiredOptions = new[] { "Quiet", "Balance", "Performance" };
+        var missing = requiredOptions
+            .Where(required => !options.Any(option => option.Contains(required, StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
 
-        Click(addButton);
-        CompleteInputDialog(settingsWindow.Current.ProcessId, settingsWindow.Current.NativeWindowHandle, temporaryName, "add god mode preset");
+        if (missing.Length > 0)
+            throw new InvalidOperationException(
+                $"God Mode base preset(s) missing from combo box: [{string.Join(", ", missing)}]. Options: [{string.Join(", ", options)}]");
 
-        var created = WaitUntil(
-            () =>
+        Console.WriteLine($"[main-smoke] God Mode base presets verified: [{string.Join(", ", options)}]");
+    }
+
+    private static (string SelectedText, string[] Options) ReadComboBoxState(AutomationElement comboBox)
+    {
+        var selectedText = TryGetComboBoxSelectedItemText(comboBox) ?? ReadElementText(comboBox);
+        var options = GetComboBoxOptionNames(comboBox);
+        return (selectedText, options);
+    }
+
+    private static bool ComboBoxContainsOption(AutomationElement comboBox, string expectedText)
+    {
+        return GetComboBoxOptionNames(comboBox)
+            .Any(option => option.Contains(expectedText, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string NormalizePowerModeValue(string value)
+    {
+        var normalized = value.Trim().ToLowerInvariant();
+        return normalized switch
+        {
+            "quiet" or "安静" or "静音" => "quiet",
+            "balance" or "balanced" or "平衡" => "balance",
+            "performance" or "性能" => "performance",
+            "godmode" or "god mode" or "custom" or "自定义" => "godmode",
+            _ when normalized.Contains("quiet") => "quiet",
+            _ when normalized.Contains("balance") => "balance",
+            _ when normalized.Contains("performance") => "performance",
+            _ when normalized.Contains("god") || normalized.Contains("custom") => "godmode",
+            _ when normalized.Contains("安静") || normalized.Contains("静音") => "quiet",
+            _ when normalized.Contains("平衡") => "balance",
+            _ when normalized.Contains("性能") => "performance",
+            _ when normalized.Contains("自定义") => "godmode",
+            _ => normalized
+        };
+    }
+
+    private static string[] GetComboBoxOptionNames(AutomationElement comboBox)
+    {
+        for (var attempt = 1; attempt <= 3; attempt++)
+        {
+            try
             {
-                var liveWindow = ResolveTopLevelWindow(settingsWindow);
-                var combo = FindByAutomationId(liveWindow, "GodModePresetComboBox");
-                return combo is not null
-                       && IsVisible(combo)
-                       && ReadElementText(combo).Contains(temporaryName, StringComparison.OrdinalIgnoreCase);
-            },
-            TimeSpan.FromSeconds(10),
-            TimeSpan.FromMilliseconds(250));
+                if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
+                {
+                    var expander = (ExpandCollapsePattern)expandPattern;
+                    expander.Expand();
+                    Thread.Sleep(250);
+                }
 
-        if (!created)
-            throw new TimeoutException("Temporary God Mode preset was not selected after creation.");
+                var names = GetComboBoxItems(comboBox)
+                    .Select(ReadElementText)
+                    .Where(text => !string.IsNullOrWhiteSpace(text))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
 
-        settingsWindow = ResolveTopLevelWindow(settingsWindow);
-        deleteButton = WaitForAutomationId(settingsWindow, "GodModeDeletePresetButton", TimeSpan.FromSeconds(10));
-        if (!deleteButton.Current.IsEnabled)
-            throw new InvalidOperationException("God Mode delete preset button stayed disabled after temporary preset creation.");
+                if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var collapsePattern))
+                {
+                    var expander = (ExpandCollapsePattern)collapsePattern;
+                    if (expander.Current.ExpandCollapseState is ExpandCollapseState.Expanded or ExpandCollapseState.PartiallyExpanded)
+                        expander.Collapse();
+                }
 
-        Click(deleteButton);
-
-        var deleted = WaitUntil(
-            () =>
+                Thread.Sleep(120);
+                return names;
+            }
+            catch (Exception ex) when (IsRecoverableAutomationException(ex))
             {
-                var liveWindow = ResolveTopLevelWindow(settingsWindow);
-                var combo = FindByAutomationId(liveWindow, "GodModePresetComboBox");
-                return combo is not null
-                       && IsVisible(combo)
-                       && !ReadElementText(combo).Contains(temporaryName, StringComparison.OrdinalIgnoreCase);
-            },
-            TimeSpan.FromSeconds(10),
-            TimeSpan.FromMilliseconds(250));
+                if (attempt == 3)
+                    throw;
 
-        if (!deleted)
-            throw new TimeoutException("Temporary God Mode preset was not removed after delete.");
+                Thread.Sleep(200);
+            }
+        }
 
-        Console.WriteLine($"[main-smoke] Temporary God Mode preset create/delete verified. Original='{originalPresetName}' Temporary='{temporaryName}'");
+        return [];
+    }
+
+    private static AutomationElement[] GetComboBoxItems(AutomationElement comboBox)
+    {
+        var comboProcessId = GetProcessId(comboBox);
+        var comboBounds = comboBox.Current.BoundingRectangle;
+        var listItemCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem);
+
+        return comboBox.FindAll(TreeScope.Descendants, listItemCondition)
+            .Cast<AutomationElement>()
+            .Concat(
+                AutomationElement.RootElement
+                    .FindAll(TreeScope.Descendants, listItemCondition)
+                    .Cast<AutomationElement>())
+            .Where(IsVisible)
+            .Where(item => GetProcessId(item) == comboProcessId)
+            .Where(item => !string.IsNullOrWhiteSpace(ReadElementText(item)))
+            .Where(item => IsComboBoxItemCandidate(comboBox, comboBounds, item))
+            .GroupBy(item => string.Join(",", item.GetRuntimeId()))
+            .Select(group => group.First())
+            .ToArray();
+    }
+
+    private static bool IsComboBoxItemCandidate(AutomationElement comboBox, System.Windows.Rect comboBounds, AutomationElement item)
+    {
+        if (IsDescendantOf(item, comboBox))
+            return true;
+
+        var itemBounds = item.Current.BoundingRectangle;
+        if (itemBounds.Width <= 0 || itemBounds.Height <= 0)
+            return false;
+
+        if (!HasMeaningfulHorizontalOverlap(comboBounds, itemBounds))
+            return false;
+
+        if (itemBounds.Top >= comboBounds.Top - 40 && itemBounds.Bottom <= comboBounds.Bottom + 700)
+            return true;
+
+        if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var selectionPatternObject)
+            && selectionPatternObject is SelectionItemPattern selectionPattern)
+        {
+            try
+            {
+                var selectionContainer = selectionPattern.Current.SelectionContainer;
+                if (selectionContainer is not null)
+                {
+                    if (IsDescendantOf(selectionContainer, comboBox))
+                        return true;
+
+                    var selectionBounds = selectionContainer.Current.BoundingRectangle;
+                    return HasMeaningfulHorizontalOverlap(comboBounds, selectionBounds)
+                           && selectionBounds.Top >= comboBounds.Top - 40
+                           && selectionBounds.Bottom <= comboBounds.Bottom + 700;
+                }
+            }
+            catch (Exception ex) when (IsRecoverableAutomationException(ex))
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasMeaningfulHorizontalOverlap(System.Windows.Rect comboBounds, System.Windows.Rect candidateBounds)
+    {
+        var overlap = Math.Min(comboBounds.Right, candidateBounds.Right) - Math.Max(comboBounds.Left, candidateBounds.Left);
+        return overlap >= Math.Min(comboBounds.Width, candidateBounds.Width) * 0.35;
+    }
+
+    private static bool IsDescendantOf(AutomationElement candidate, AutomationElement ancestor)
+    {
+        try
+        {
+            var walker = TreeWalker.ControlViewWalker;
+            var current = candidate;
+            while (current is not null)
+            {
+                if (current.Equals(ancestor))
+                    return true;
+
+                current = walker.GetParent(current);
+            }
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    private static string? TryGetComboBoxSelectedItemText(AutomationElement comboBox)
+    {
+        try
+        {
+            if (comboBox.TryGetCurrentPattern(SelectionPattern.Pattern, out var selectionPatternObject)
+                && selectionPatternObject is SelectionPattern selectionPattern)
+            {
+                var selectedItems = selectionPattern.Current.GetSelection();
+                var selectedItem = selectedItems.FirstOrDefault(IsVisible) ?? selectedItems.FirstOrDefault();
+                if (selectedItem is not null)
+                {
+                    var text = ReadElementText(selectedItem);
+                    if (!string.IsNullOrWhiteSpace(text))
+                        return text;
+                }
+            }
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            // Fall back to selected list item scan below.
+        }
+
+        try
+        {
+            var selectedListItem = GetComboBoxItems(comboBox)
+                .FirstOrDefault(item =>
+                    item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var selectionItemPatternObject)
+                    && selectionItemPatternObject is SelectionItemPattern selectionItemPattern
+                    && selectionItemPattern.Current.IsSelected);
+
+            return selectedListItem is null ? null : ReadElementText(selectedListItem);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return null;
+        }
     }
 
     private static AutomationElement ResolveTopLevelWindow(AutomationElement window)
@@ -5954,8 +6361,14 @@ Environment variables:
 
                 foreach (var window in windows)
                 {
+                    if (!HasExpectedOwner(window, mainWindowHandle))
+                        continue;
+
                     if (predicate(window))
+                    {
+                        Console.WriteLine($"[main-smoke] Detected {description} window: handle={window.Current.NativeWindowHandle} name='{window.Current.Name}'");
                         return window;
+                    }
                 }
             }
             catch (Exception ex) when (IsRecoverableAutomationException(ex))
@@ -5967,6 +6380,22 @@ Environment variables:
         }
 
         throw new TimeoutException($"Timed out waiting for {description} window.");
+    }
+
+    private static bool HasExpectedOwner(AutomationElement window, int expectedOwnerHandle)
+    {
+        if (!TryGetNativeWindowHandle(window, out var handle))
+            return false;
+
+        try
+        {
+            var ownerHandle = GetWindow((IntPtr)handle, GwOwner);
+            return ownerHandle != IntPtr.Zero && ownerHandle == (IntPtr)expectedOwnerHandle;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static IEnumerable<AutomationElement> FindDescendantWindows(int mainWindowHandle)
@@ -6219,7 +6648,7 @@ Environment variables:
     {
         return IsVisible(FindByAutomationId(mainWindow, "DashboardPageRoot"))
                || IsVisible(FindByAutomationId(mainWindow, "DashboardSensorsCard"))
-               || IsVisible(FindByAutomationId(mainWindow, "PowerModeControl_ComboBox"));
+               || IsVisible(FindPowerModeComboBox(mainWindow));
     }
 
     private static AutomationElement WaitForDashboardNavigationElement(AutomationElement root, TimeSpan timeout)
@@ -6566,6 +6995,27 @@ Environment variables:
         }
     }
 
+    private static T WaitUntilValue<T>(
+        Func<T?> getValue,
+        TimeSpan timeout,
+        TimeSpan interval,
+        string description) where T : class
+    {
+        T? result = null;
+        var found = WaitUntil(
+            () =>
+            {
+                result = getValue();
+                return result is not null;
+            },
+            timeout,
+            interval);
+
+        return found && result is not null
+            ? result
+            : throw new TimeoutException($"Timed out waiting for {description}.");
+    }
+
     private static AutomationElement WaitForAnyAutomationId(AutomationElement root, IReadOnlyList<string> automationIds, TimeSpan timeout)
     {
         var candidates = automationIds
@@ -6762,7 +7212,7 @@ Environment variables:
         }
     }
 
-    private static AutomationElement? FindBestMatchingDescendant(AutomationElement root, Condition condition)
+    private static AutomationElement? FindBestMatchingDescendant(AutomationElement root, System.Windows.Automation.Condition condition)
     {
         var matches = root.FindAll(TreeScope.Descendants, condition).Cast<AutomationElement>().ToArray();
         if (matches.Length == 0)
@@ -6796,6 +7246,16 @@ Environment variables:
 
     private static void SelectComboBoxItemByNames(AutomationElement comboBox, params string[] itemNames)
     {
+        SelectComboBoxItem(comboBox, exactOnly: true, itemNames);
+    }
+
+    private static string SelectComboBoxItemByNamesOrContains(AutomationElement comboBox, params string[] itemNames)
+    {
+        return SelectComboBoxItem(comboBox, exactOnly: false, itemNames);
+    }
+
+    private static string SelectComboBoxItem(AutomationElement comboBox, bool exactOnly, params string[] itemNames)
+    {
         if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
         {
             var expander = (ExpandCollapsePattern)expandPattern;
@@ -6804,25 +7264,40 @@ Environment variables:
 
         Thread.Sleep(250);
 
-        var listItemCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem);
-        var items = comboBox.FindAll(TreeScope.Descendants, listItemCondition)
-            .Cast<AutomationElement>()
-            .Concat(
-                AutomationElement.RootElement
-                    .FindAll(TreeScope.Descendants, listItemCondition)
-                    .Cast<AutomationElement>())
-            .Where(IsVisible)
-            .ToArray();
+        var items = GetComboBoxItems(comboBox);
 
-        var item = items.FirstOrDefault(candidate =>
-            itemNames.Any(itemName =>
-                string.Equals(candidate.Current.Name, itemName, StringComparison.OrdinalIgnoreCase)));
+        AutomationElement? item = null;
+        foreach (var itemName in itemNames)
+        {
+            item = items.FirstOrDefault(candidate =>
+                string.Equals(candidate.Current.Name, itemName, StringComparison.OrdinalIgnoreCase));
+            if (item is not null)
+                break;
 
-        item ??= items.FirstOrDefault();
+            item = items.FirstOrDefault(candidate =>
+                string.Equals(ReadElementText(candidate), itemName, StringComparison.OrdinalIgnoreCase));
+            if (item is not null)
+                break;
+        }
+
+        if (item is null && !exactOnly)
+        {
+            foreach (var itemName in itemNames)
+            {
+                item = items.FirstOrDefault(candidate =>
+                    ReadElementText(candidate).Contains(itemName, StringComparison.OrdinalIgnoreCase));
+                if (item is not null)
+                    break;
+            }
+        }
+
+        item ??= exactOnly ? items.FirstOrDefault() : null;
 
         if (item is null)
             throw new InvalidOperationException($"ComboBox option was not found. Expected one of: [{string.Join(", ", itemNames)}].");
 
+        var selectedName = ReadElementText(item);
+        Console.WriteLine($"[main-smoke] Selecting combo-box item '{selectedName}' from options: [{string.Join(", ", items.Select(ReadElementText).Where(text => !string.IsNullOrWhiteSpace(text)).Distinct(StringComparer.OrdinalIgnoreCase))}]");
         Click(item);
         Thread.Sleep(180);
 
@@ -6835,6 +7310,8 @@ Environment variables:
                 expander.Collapse();
             }
         }
+
+        return selectedName;
     }
 
     private static void DoubleClick(AutomationElement element)
@@ -6898,22 +7375,7 @@ Environment variables:
         var fileStem = Path.Combine(outputDirectory, BuildScreenshotStem(captureLabel));
         var windowPath = $"{fileStem}-window.png";
 
-        if (TryCaptureWindowToFileViaIpc(windowHandle, windowPath, captureLabel, out var windowBounds))
-        {
-            using var ipcBitmap = new Bitmap(windowPath);
-
-            if (includeFullScreen)
-            {
-                var fullPath = $"{fileStem}-fullscreen.png";
-                CaptureFullScreenToFile(fullPath, ipcBitmap, windowBounds);
-                RegisterScreenshot($"{captureLabel}/fullscreen", fullPath);
-            }
-
-            RegisterScreenshot($"{captureLabel}/window", windowPath);
-            Console.WriteLine($"[main-smoke] Captured screenshot for {captureLabel} via app IPC: {windowPath}");
-            return;
-        }
-
+        Rectangle windowBounds;
         using var windowBitmap = CaptureWindowBitmapWithFallback(windowHandle, captureLabel, out windowBounds);
 
         if (includeFullScreen)
@@ -7578,43 +8040,6 @@ Environment variables:
         return true;
     }
 
-    private static bool TryCaptureWindowToFileViaIpc(int windowHandle, string outputPath, string captureLabel, out Rectangle windowBounds)
-    {
-        windowBounds = Rectangle.Empty;
-
-        if (!GetWindowRect((IntPtr)windowHandle, out var rect))
-            return false;
-
-        windowBounds = new Rectangle(rect.Left, rect.Top, Math.Max(1, rect.Right - rect.Left), Math.Max(1, rect.Bottom - rect.Top));
-
-        try
-        {
-            using var pipe = new NamedPipeClientStream(".", Constants.PIPE_NAME, PipeDirection.InOut, PipeOptions.None);
-            pipe.Connect(2500);
-            pipe.ReadMode = PipeTransmissionMode.Message;
-
-            var request = new IpcRequest
-            {
-                Operation = IpcRequest.OperationType.CaptureWindowVisual,
-                Name = windowHandle.ToString(CultureInfo.InvariantCulture),
-                Value = outputPath
-            };
-
-            pipe.WriteObjectAsync(request).GetAwaiter().GetResult();
-            var response = pipe.ReadObjectAsync<IpcResponse>().GetAwaiter().GetResult();
-            if (response?.Success == true && File.Exists(outputPath))
-                return true;
-
-            Console.WriteLine($"[main-smoke] IPC window capture skipped for {captureLabel}: {response?.Message ?? "unknown error"}");
-            return false;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[main-smoke] IPC window capture unavailable for {captureLabel}: {ex.Message}");
-            return false;
-        }
-    }
-
     private static void MouseClick(AutomationElement element)
     {
         var target = ResolveMouseClickableElement(element);
@@ -7672,6 +8097,18 @@ Environment variables:
         Thread.Sleep(40);
         keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
         Thread.Sleep(80);
+    }
+
+    private static void PressCtrlV()
+    {
+        keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkV, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkV, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(120);
     }
 
     private static void TypeText(string text)
@@ -7744,6 +8181,9 @@ Environment variables:
                 virtualKey = 0xBA;
                 shift = true;
                 return true;
+            case '.':
+                virtualKey = 0xBE;
+                return true;
             default:
                 virtualKey = 0;
                 return false;
@@ -7756,6 +8196,17 @@ Environment variables:
         Thread.Sleep(40);
         keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
         Thread.Sleep(60);
+    }
+
+    private static void SetClipboardText(string value)
+    {
+        var thread = new Thread(() => System.Windows.Clipboard.SetText(value))
+        {
+            IsBackground = true
+        };
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
     }
 
     private static void SendUnicodeCharacter(char character)
@@ -7956,8 +8407,36 @@ Environment variables:
 
     private static void CloseWindow(AutomationElement window)
     {
-        if (window.TryGetCurrentPattern(WindowPattern.Pattern, out var windowPattern))
-            ((WindowPattern)windowPattern).Close();
+        var handle = window.Current.NativeWindowHandle;
+
+        try
+        {
+            if (window.TryGetCurrentPattern(WindowPattern.Pattern, out var windowPattern))
+                ((WindowPattern)windowPattern).Close();
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            Console.WriteLine($"[main-smoke] WindowPattern close failed for handle={handle}: {ex.GetType().Name}");
+        }
+
+        if (handle == 0)
+            return;
+
+        var closed = WaitUntil(
+            () => !IsWindow(new IntPtr(handle)),
+            TimeSpan.FromSeconds(5),
+            TimeSpan.FromMilliseconds(150));
+
+        if (closed)
+            return;
+
+        Console.WriteLine($"[main-smoke] Window handle {handle} still open after WindowPattern close; sending WM_CLOSE.");
+        SendMessage(new IntPtr(handle), WmClose, IntPtr.Zero, IntPtr.Zero);
+
+        WaitUntil(
+            () => !IsWindow(new IntPtr(handle)),
+            TimeSpan.FromSeconds(5),
+            TimeSpan.FromMilliseconds(150));
     }
 
     private static void DumpAutomationSnapshot(AutomationElement root, int maxCount)

@@ -35,7 +35,8 @@
         VerticalScrollBarVisibility="Auto">
         <controls:LoadableControl
             x:Name="_loader"
-            Margin="0,0,0,12">
+            Margin="0,0,0,12"
+            ContentVisibilityWhileLoading="Collapsed">
             <controls:LoadableControl.LoadingContent>
                 <StackPanel
                     Margin="0,16,16,0"
@@ -161,7 +162,7 @@
                 </StackPanel>
             </controls:LoadableControl.LoadingContent>
 
-            <Grid>
+            <Grid x:Name="_dashboardContentRoot" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

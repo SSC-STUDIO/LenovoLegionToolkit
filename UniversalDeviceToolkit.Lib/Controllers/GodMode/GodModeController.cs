@@ -129,7 +129,7 @@ public class GodModeController(GodModeControllerV1 controllerV1, GodModeControll
         if (mi.Properties.SupportsGodModeV1)
             return controllerV1;
 
-        if (mi.Properties.SupportsGodModeV2)
+        if (mi.Properties.SupportsGodModeV2 || mi.Properties.SupportsGodModeV3 || mi.Properties.SupportsGodModeV4)
             return controllerV2;
 
         throw new InvalidOperationException("No supported version found");

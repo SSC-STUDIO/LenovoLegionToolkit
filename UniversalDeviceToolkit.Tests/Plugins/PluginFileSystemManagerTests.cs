@@ -14,10 +14,19 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 public class PluginFileSystemManagerTests : TemporaryFileTestBase
 {
     private readonly PluginFileSystemManager _fileSystemManager;
+    private readonly string? _previousAppDataOverride;
 
     public PluginFileSystemManagerTests()
     {
+        _previousAppDataOverride = Environment.GetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
         _fileSystemManager = new PluginFileSystemManager();
+    }
+
+    public override void Dispose()
+    {
+        Environment.SetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
+        base.Dispose();
     }
 
     #region GetPluginsDirectory Tests
@@ -46,26 +55,15 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public void GetPluginsDirectory_ShouldHonorEnvironmentOverride()
+    public void GetPluginsDirectory_ShouldUseAppDataPluginsDirectory()
     {
-        // Arrange
-        var originalValue = Environment.GetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable);
-        var overrideDirectory = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDirectory);
+        var appDataDirectory = Environment.GetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
+        appDataDirectory.Should().NotBeNullOrWhiteSpace();
 
-        try
-        {
-            // Act
-            var path = _fileSystemManager.GetPluginsDirectory();
+        var path = _fileSystemManager.GetPluginsDirectory();
 
-            // Assert
-            path.Should().Be(Path.GetFullPath(overrideDirectory));
-            Directory.Exists(path).Should().BeTrue();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, originalValue);
-        }
+        path.Should().Be(Path.Combine(Path.GetFullPath(appDataDirectory!), PluginPaths.PluginsDirectoryName));
+        Directory.Exists(path).Should().BeTrue();
     }
 
     #endregion

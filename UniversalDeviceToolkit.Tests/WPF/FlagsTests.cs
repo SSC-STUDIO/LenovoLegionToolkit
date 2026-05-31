@@ -7,17 +7,30 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public sealed class FlagsTests
 {
     [Fact]
-    public void StringValue_WithEqualsSeparatedArgument_ReturnsValue()
+    public void Constructor_ParsesPublicBooleanFlags()
     {
-        var result = Flags.StringValue(["--single-instance-key=codex"], Flags.SingleInstanceKeySwitch);
+        var flags = new Flags(
+        [
+            "--trace",
+            "--disable-update-checker"
+        ]);
+
+        flags.IsTraceEnabled.Should().BeTrue();
+        flags.DisableUpdateChecker.Should().BeTrue();
+    }
+
+    [Fact]
+    public void StringValue_WithEqualsSeparatedProxyArgument_ReturnsValue()
+    {
+        var result = Flags.StringValue(["--proxy-username=codex"], "--proxy-username");
 
         result.Should().Be("codex");
     }
 
     [Fact]
-    public void StringValue_WithSpaceSeparatedArgument_ReturnsValue()
+    public void StringValue_WithSpaceSeparatedProxyArgument_ReturnsValue()
     {
-        var result = Flags.StringValue(["--single-instance-key", "codex"], Flags.SingleInstanceKeySwitch);
+        var result = Flags.StringValue(["--proxy-username", "codex"], "--proxy-username");
 
         result.Should().Be("codex");
     }
@@ -25,23 +38,8 @@ public sealed class FlagsTests
     [Fact]
     public void StringValue_WithMissingValue_ReturnsNull()
     {
-        var result = Flags.StringValue(["--single-instance-key", "--disable-update-checker"], Flags.SingleInstanceKeySwitch);
+        var result = Flags.StringValue(["--proxy-username", "--disable-update-checker"], "--proxy-username");
 
         result.Should().BeNull();
-    }
-
-    [Fact]
-    public void Constructor_WithSpaceSeparatedSingleInstanceArguments_DoesNotThrow()
-    {
-        var flags = new Flags(
-        [
-            "--single-instance-key",
-            "codex",
-            "--ipc-pipe-name",
-            "codex-pipe"
-        ]);
-
-        flags.SingleInstanceKey.Should().Be("codex");
-        flags.IpcPipeName.Should().Be("codex-pipe");
     }
 }

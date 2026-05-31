@@ -1508,33 +1508,7 @@ public class PluginRepositoryService : IDisposable
     /// </summary>
     private string GetPluginsDirectory()
     {
-        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
-        if (!string.IsNullOrWhiteSpace(overridePath))
-            return overridePath;
-
-        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-        
-        var possiblePaths = new[]
-        {
-            Path.Combine(appBaseDir, "plugins"),
-            Path.Combine(appBaseDir, "Plugins"),
-            Path.Combine(appBaseDir, "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "build", "plugins"),
-        };
-
-        foreach (var possiblePath in possiblePaths)
-        {
-            var fullPath = Path.GetFullPath(possiblePath);
-            if (Directory.Exists(fullPath))
-            {
-                return fullPath;
-            }
-        }
-
-        var defaultPath = Path.Combine(appBaseDir, "plugins");
-        Directory.CreateDirectory(defaultPath);
-        return defaultPath;
+        return PluginPaths.GetPluginsDirectory();
     }
 
     /// <summary>

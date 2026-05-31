@@ -33,7 +33,181 @@ public class SensorsGroupController : IDisposable
     private const string SENSOR_NAME_MEMORY_USED = "Memory Used";
     private const string SENSOR_NAME_MEMORY_AVAILABLE = "Memory Available";
     private const string SENSOR_NAME_PACKAGE = "Package";
-    private const string SENSOR_NAME_GPU_HOTSPOT = "GPU Memory Junction";
+    private static readonly string[] CPU_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "CPU Package",
+        "Package",
+        "Tctl/Tdie",
+        "Tctl",
+        "Tdie",
+        "Core Max",
+        "Core Average",
+        "Average",
+        "CPU",
+        "Core",
+    ];
+    private static readonly string[] CPU_VOLTAGE_SENSOR_PREFERENCES =
+    [
+        "CPU Core Voltage",
+        "Core Voltage",
+        "Vcore",
+        "VCore",
+        "VID",
+        "Core",
+        "CPU",
+        "Voltage",
+    ];
+    private static readonly string[] CPU_USAGE_SENSOR_PREFERENCES =
+    [
+        "CPU Total",
+        "Total",
+        "CPU Usage",
+        "CPU Utilization",
+        "Package",
+    ];
+    private static readonly string[] GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "GPU Memory Junction",
+        "Memory Junction",
+        "VRAM Temperature",
+        "Memory Temperature",
+        "VRAM",
+        "Memory",
+    ];
+    private static readonly string[] GPU_HOTSPOT_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "GPU Hot Spot",
+        "Hot Spot",
+        "Hotspot",
+    ];
+    private static readonly string[] MEMORY_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "DIMM",
+        "DRAM",
+        "DDR",
+        "SPD",
+        "Memory",
+        "RAM",
+    ];
+    private static readonly string[] GPU_VRAM_USED_SENSOR_PREFERENCES =
+    [
+        "GPU Memory Used",
+        "Dedicated Memory Used",
+        "D3D Dedicated Memory Used",
+        "D3D Shared Memory Used",
+        "Shared Memory Used",
+        "VRAM Used",
+        "Memory Used",
+    ];
+    private static readonly string[] GPU_VRAM_TOTAL_SENSOR_PREFERENCES =
+    [
+        "GPU Memory Total",
+        "D3D Shared Memory Total",
+        "Dedicated Memory Total",
+        "Shared Memory Total",
+        "VRAM Total",
+        "Memory Total",
+        "GPU Memory",
+    ];
+    private static readonly string[] GPU_VRAM_FREE_SENSOR_PREFERENCES =
+    [
+        "GPU Memory Free",
+        "Dedicated Memory Free",
+        "D3D Dedicated Memory Free",
+        "D3D Shared Memory Free",
+        "Shared Memory Free",
+        "VRAM Free",
+        "Memory Free",
+    ];
+    private static readonly string[] GPU_PCIE_RX_THROUGHPUT_SENSOR_PREFERENCES =
+    [
+        "GPU PCIe Rx",
+        "PCIe Rx",
+        "Bus Rx",
+    ];
+    private static readonly string[] GPU_PCIE_TX_THROUGHPUT_SENSOR_PREFERENCES =
+    [
+        "GPU PCIe Tx",
+        "PCIe Tx",
+        "Bus Tx",
+    ];
+    private static readonly string[] GPU_POWER_SENSOR_PREFERENCES =
+    [
+        "GPU Package",
+        "GPU Power",
+        "Board Power Draw",
+        "Package Power",
+        "Power",
+    ];
+    private static readonly string[] GPU_VOLTAGE_SENSOR_PREFERENCES =
+    [
+        "GPU Core Voltage",
+        "Core Voltage",
+        "GPU Core",
+        "GPU Voltage",
+        "Voltage",
+        "Core",
+        "GPU",
+    ];
+    private static readonly string[] GPU_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "GPU Core",
+        "Core Temperature",
+        "Core",
+        "GPU Temperature",
+        "GPU",
+        "Temperature",
+    ];
+    private static readonly string[] GPU_CORE_CLOCK_SENSOR_PREFERENCES =
+    [
+        "GPU Core",
+        "Core Clock",
+        "Graphics",
+        "GPU Clock",
+        "Core",
+        "Clock",
+    ];
+    private static readonly string[] GPU_MEMORY_CLOCK_SENSOR_PREFERENCES =
+    [
+        "GPU Memory",
+        "Memory Clock",
+        "VRAM Clock",
+        "VRAM",
+        "Memory",
+        "Clock",
+    ];
+    private static readonly string[] MEMORY_USED_SENSOR_PREFERENCES =
+    [
+        "Memory Used",
+        "Used Memory",
+    ];
+    private static readonly string[] MEMORY_AVAILABLE_SENSOR_PREFERENCES =
+    [
+        "Memory Available",
+        "Available Memory",
+        "Free Memory",
+    ];
+    private static readonly string[] MEMORY_LOAD_SENSOR_PREFERENCES =
+    [
+        "Memory",
+        "Memory Load",
+        "System Memory",
+    ];
+    private static readonly string[] STORAGE_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "Composite",
+        "Drive Temperature",
+        "Temperature",
+    ];
+    private static readonly string[] GPU_USAGE_SENSOR_PREFERENCES =
+    [
+        "D3D 3D",
+        "GPU Core",
+        "Core Utilization",
+        "GPU Utilization",
+        "Utilization",
+        "3D",
+    ];
 
     private const string HARDWARE_ID_NVIDIA_GPU = "NvidiaGPU";
 
@@ -69,30 +243,43 @@ public class SensorsGroupController : IDisposable
 
     private ISensor? _cpuTempSensor;
     private ISensor? _cpuUsageSensor;
+    private ISensor? _cpuCoreVoltageSensor;
     private ISensor? _gpuUsageSensor;
     private ISensor? _gpuTempSensor;
     private ISensor? _gpuClockSensor;
+    private ISensor? _gpuMemoryClockSensor;
+    private ISensor? _gpuCoreVoltageSensor;
+    private ISensor? _iGpuCoreVoltageSensor;
 
     private ISensor? _iGpuUsageSensor;
     private ISensor? _iGpuTempSensor;
     private ISensor? _iGpuClockSensor;
+    private ISensor? _iGpuMemoryClockSensor;
     private ISensor? _iGpuPowerSensor;
 
     private ISensor? _gpuD3DVramUsedSensor;
     private ISensor? _gpuVramTotalSensor;
+    private ISensor? _gpuVramFreeSensor;
+    private ISensor? _gpuPcieRxSensor;
+    private ISensor? _gpuPcieTxSensor;
     private float _cachedGpuVramTotal = INVALID_VALUE_FLOAT;
 
     private ISensor? _iGpuD3DVramUsedSensor;
     private ISensor? _iGpuVramTotalSensor;
+    private ISensor? _iGpuVramFreeSensor;
+    private ISensor? _iGpuPcieRxSensor;
+    private ISensor? _iGpuPcieTxSensor;
     private float _cachedIGpuVramTotal = INVALID_VALUE_FLOAT;
 
     private readonly List<ISensor> _pCoreClockSensors = [];
     private readonly List<ISensor> _eCoreClockSensors = [];
     private ISensor? _cpuPackagePowerSensor;
+    private readonly List<ISensor> _cpuComponentPowerSensors = [];
     private readonly List<ISensor> _cpuCoreClockSensors = [];
 
     private ISensor? _gpuPowerSensor;
-    private ISensor? _gpuHotspotSensor;
+    private ISensor? _gpuVramTemperatureSensor;
+    private ISensor? _gpuHotSpotSensor;
 
     private ISensor? _memoryLoadSensor;
     private ISensor? _memoryUsedSensor;
@@ -176,6 +363,10 @@ public class SensorsGroupController : IDisposable
     private float _snapshotCpuTemp = INVALID_VALUE_FLOAT;
     private float _snapshotCpuUsage = INVALID_VALUE_FLOAT;
     private float _snapshotCpuPower = INVALID_VALUE_FLOAT;
+    private float _snapshotCpuCoresPower = INVALID_VALUE_FLOAT;
+    private float _snapshotCpuMemoryPower = INVALID_VALUE_FLOAT;
+    private float _snapshotCpuPlatformPower = INVALID_VALUE_FLOAT;
+    private float _snapshotCpuVoltage = INVALID_VALUE_FLOAT;
     private float _snapshotCpuMaxClock = INVALID_VALUE_FLOAT;
     private float _snapshotCpuAvgClock = INVALID_VALUE_FLOAT;
     private float _snapshotCpuPClock = INVALID_VALUE_FLOAT;
@@ -185,10 +376,15 @@ public class SensorsGroupController : IDisposable
     private float _snapshotGpuUsage = INVALID_VALUE_FLOAT;
     private float _snapshotGpuTemp = INVALID_VALUE_FLOAT;
     private float _snapshotGpuClock = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuMemoryClock = INVALID_VALUE_FLOAT;
     private float _snapshotGpuPower = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuVoltage = INVALID_VALUE_FLOAT;
     private float _snapshotGpuVramTemp = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuHotSpotTemp = INVALID_VALUE_FLOAT;
     private float _snapshotGpuVramUsage = INVALID_VALUE_FLOAT;
     private float _snapshotGpuVramUtilization = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuPcieRxThroughput = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuPcieTxThroughput = INVALID_VALUE_FLOAT;
     private float _snapshotMemUsage = INVALID_VALUE_FLOAT;
     private float _snapshotMemUsed = INVALID_VALUE_FLOAT;
     private float _snapshotMemTotal = INVALID_VALUE_FLOAT;
@@ -229,7 +425,7 @@ public class SensorsGroupController : IDisposable
                     IsCpuEnabled = true,
                     IsGpuEnabled = true,
                     IsMemoryEnabled = true,
-                    IsMotherboardEnabled = false,
+                    IsMotherboardEnabled = true,
                     IsControllerEnabled = false,
                     IsNetworkEnabled = false,
                     IsStorageEnabled = true
@@ -260,21 +456,32 @@ public class SensorsGroupController : IDisposable
         _memoryHardware = null;
         _cpuTempSensor = null;
         _cpuUsageSensor = null;
+        _cpuCoreVoltageSensor = null;
         _gpuUsageSensor = null;
         _gpuTempSensor = null;
         _gpuClockSensor = null;
+        _gpuMemoryClockSensor = null;
+        _gpuCoreVoltageSensor = null;
+        _iGpuCoreVoltageSensor = null;
 
         _iGpuUsageSensor = null;
         _iGpuTempSensor = null;
         _iGpuClockSensor = null;
+        _iGpuMemoryClockSensor = null;
         _iGpuPowerSensor = null;
 
         _gpuD3DVramUsedSensor = null;
         _gpuVramTotalSensor = null;
+        _gpuVramFreeSensor = null;
+        _gpuPcieRxSensor = null;
+        _gpuPcieTxSensor = null;
         _cachedGpuVramTotal = INVALID_VALUE_FLOAT;
 
         _iGpuD3DVramUsedSensor = null;
         _iGpuVramTotalSensor = null;
+        _iGpuVramFreeSensor = null;
+        _iGpuPcieRxSensor = null;
+        _iGpuPcieTxSensor = null;
         _cachedIGpuVramTotal = INVALID_VALUE_FLOAT;
 
         _pCoreClockSensors.Clear();
@@ -285,7 +492,8 @@ public class SensorsGroupController : IDisposable
 
         _cpuPackagePowerSensor = null;
         _gpuPowerSensor = null;
-        _gpuHotspotSensor = null;
+        _gpuVramTemperatureSensor = null;
+        _gpuHotSpotSensor = null;
         _memoryLoadSensor = null;
         _memoryUsedSensor = null;
         _memoryAvailableSensor = null;
@@ -297,7 +505,7 @@ public class SensorsGroupController : IDisposable
         _amdGpuHardware = _hardware.FirstOrDefault(h => h.HardwareType == HardwareType.GpuAmd && !Regex.IsMatch(h.Name, REGEX_AMD_GPU_INTEGRATED, RegexOptions.IgnoreCase));
         _iGpuHardware = _hardware.FirstOrDefault(h => h.HardwareType == HardwareType.GpuIntel || (h.HardwareType == HardwareType.GpuAmd && Regex.IsMatch(h.Name, REGEX_AMD_GPU_INTEGRATED, RegexOptions.IgnoreCase)));
         _gpuHardware = _hardware.FirstOrDefault(h => h.HardwareType == HardwareType.GpuNvidia);
-        _memoryHardware = _hardware.FirstOrDefault(h => h is { HardwareType: HardwareType.Memory, Name: SENSOR_NAME_TOTAL_MEMORY });
+        _memoryHardware = SelectMemoryHardware(_hardware);
 
         if (_cpuHardware?.Sensors != null)
         {
@@ -308,8 +516,11 @@ public class SensorsGroupController : IDisposable
                     case SensorType.Temperature when s.Name.Contains(SENSOR_NAME_PACKAGE):
                         _cpuTempSensor = s;
                         break;
-                    case SensorType.Load when s.Name.Contains("Total"):
+                    case SensorType.Load when IsLikelyCpuUsageSensorName(s.Name):
                         _cpuUsageSensor = s;
+                        break;
+                    case SensorType.Voltage when IsLikelyCpuVoltageSensorName(s.Name):
+                        _cpuCoreVoltageSensor ??= s;
                         break;
                     case SensorType.Clock when s.Name.Contains("P-Core"):
                         _pCoreClockSensors.Add(s);
@@ -323,11 +534,15 @@ public class SensorsGroupController : IDisposable
                     case SensorType.Power when s.Name.Contains(SENSOR_NAME_PACKAGE):
                         _cpuPackagePowerSensor = s;
                         break;
+                    case SensorType.Power when IsLikelyCpuComponentPowerSensorName(s.Name):
+                        _cpuComponentPowerSensors.Add(s);
+                        break;
                 }
             }
             IsHybrid = _pCoreClockSensors.Count > 0;
-            _cpuTempSensor ??= _cpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Temperature);
-            _cpuUsageSensor ??= _cpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Load);
+            _cpuTempSensor ??= SelectCpuTemperatureSensor(_cpuHardware.Sensors);
+            _cpuUsageSensor ??= SelectCpuUsageSensor(_cpuHardware.Sensors);
+            _cpuCoreVoltageSensor ??= SelectCpuVoltageSensor(_cpuHardware.Sensors);
         }
 
         var mainGpu = _gpuHardware ?? _amdGpuHardware;
@@ -337,34 +552,60 @@ public class SensorsGroupController : IDisposable
             {
                 switch (s.SensorType)
                 {
-                    case SensorType.Load when s.Name.Contains("Core") || s.Name.Contains("Utilization"):
+                    case SensorType.Load when IsLikelyGpuUsageSensorName(s.Name):
                         _gpuUsageSensor = s;
                         break;
-                    case SensorType.Temperature when s.Name.Contains("Core"):
+                    case SensorType.Temperature when IsLikelyGpuTemperatureSensorName(s.Name):
                         _gpuTempSensor = s;
                         break;
-                    case SensorType.Clock when s.Name.Contains("Core"):
+                    case SensorType.Clock when IsLikelyGpuCoreClockSensorName(s.Name):
                         _gpuClockSensor = s;
                         break;
-                    case SensorType.Power:
-                        _gpuPowerSensor = s;
+                    case SensorType.Clock when IsLikelyGpuMemoryClockSensorName(s.Name):
+                        _gpuMemoryClockSensor ??= s;
                         break;
-                    case SensorType.Temperature when s.Name.Contains(SENSOR_NAME_GPU_HOTSPOT, StringComparison.OrdinalIgnoreCase):
-                        _gpuHotspotSensor = s;
+                    case SensorType.Power when IsLikelyGpuPowerSensorName(s.Name):
+                        _gpuPowerSensor ??= s;
                         break;
-                    case SensorType.SmallData when s.Name.Contains("D3D Dedicated Memory Used", StringComparison.OrdinalIgnoreCase):
+                    case SensorType.Voltage when IsLikelyGpuVoltageSensorName(s.Name):
+                        _gpuCoreVoltageSensor ??= s;
+                        break;
+                    case SensorType.Temperature when IsLikelyGpuHotSpotTemperatureSensorName(s.Name):
+                        _gpuHotSpotSensor ??= s;
+                        break;
+                    case SensorType.Temperature when IsLikelyGpuVramTemperatureSensorName(s.Name):
+                        _gpuVramTemperatureSensor ??= s;
+                        break;
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramUsedSensorName(s.Name):
                         _gpuD3DVramUsedSensor = s;
                         break;
-                    case SensorType.SmallData when s.Name.Contains("GPU Memory Total", StringComparison.OrdinalIgnoreCase):
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramTotalSensorName(s.Name):
                         _gpuVramTotalSensor = s;
+                        break;
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramFreeSensorName(s.Name):
+                        _gpuVramFreeSensor = s;
+                        break;
+                    case SensorType.Throughput when IsLikelyGpuPcieRxThroughputSensorName(s.Name):
+                        _gpuPcieRxSensor ??= s;
+                        break;
+                    case SensorType.Throughput when IsLikelyGpuPcieTxThroughputSensorName(s.Name):
+                        _gpuPcieTxSensor ??= s;
                         break;
                 }
             }
-            _gpuUsageSensor ??= mainGpu.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Load);
-            _gpuTempSensor ??= mainGpu.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Temperature);
-            _gpuClockSensor ??= mainGpu.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Clock);
-            _gpuD3DVramUsedSensor ??= mainGpu.Sensors.FirstOrDefault(s => s.SensorType == SensorType.SmallData && s.Name.Contains("Used", StringComparison.OrdinalIgnoreCase));
-            _gpuVramTotalSensor ??= mainGpu.Sensors.FirstOrDefault(s => s.SensorType == SensorType.SmallData && s.Name.Contains("Total", StringComparison.OrdinalIgnoreCase));
+            _gpuUsageSensor ??= SelectGpuUsageSensor(mainGpu.Sensors);
+            _gpuTempSensor ??= SelectGpuTemperatureSensor(mainGpu.Sensors);
+            _gpuClockSensor ??= SelectGpuCoreClockSensor(mainGpu.Sensors);
+            _gpuMemoryClockSensor ??= SelectGpuMemoryClockSensor(mainGpu.Sensors);
+            _gpuPowerSensor ??= SelectGpuPowerSensor(mainGpu.Sensors);
+            _gpuCoreVoltageSensor ??= SelectGpuVoltageSensor(mainGpu.Sensors);
+            _gpuHotSpotSensor ??= SelectGpuHotSpotTemperatureSensor(mainGpu.Sensors);
+            _gpuVramTemperatureSensor ??= SelectGpuVramTemperatureSensor(mainGpu.Sensors);
+            _gpuD3DVramUsedSensor ??= SelectGpuVramUsedSensor(mainGpu.Sensors);
+            _gpuVramTotalSensor ??= SelectGpuVramTotalSensor(mainGpu.Sensors);
+            _gpuVramFreeSensor ??= SelectGpuVramFreeSensor(mainGpu.Sensors);
+            _gpuPcieRxSensor ??= SelectGpuPcieRxThroughputSensor(mainGpu.Sensors);
+            _gpuPcieTxSensor ??= SelectGpuPcieTxThroughputSensor(mainGpu.Sensors);
         }
 
         if (_iGpuHardware?.Sensors != null)
@@ -373,46 +614,73 @@ public class SensorsGroupController : IDisposable
             {
                 switch (s.SensorType)
                 {
-                    case SensorType.Load when s.Name.Contains("Core") || s.Name.Contains("Utilization"):
+                    case SensorType.Load when IsLikelyGpuUsageSensorName(s.Name):
                         _iGpuUsageSensor = s;
                         break;
-                    case SensorType.Temperature when s.Name.Contains("Core"):
+                    case SensorType.Temperature when IsLikelyGpuTemperatureSensorName(s.Name):
                         _iGpuTempSensor = s;
                         break;
-                    case SensorType.Clock when s.Name.Contains("Core"):
+                    case SensorType.Clock when IsLikelyGpuCoreClockSensorName(s.Name):
                         _iGpuClockSensor = s;
                         break;
-                    case SensorType.Power:
-                        _iGpuPowerSensor = s;
+                    case SensorType.Clock when IsLikelyGpuMemoryClockSensorName(s.Name):
+                        _iGpuMemoryClockSensor ??= s;
                         break;
-                    case SensorType.SmallData when s.Name.Contains("D3D Dedicated Memory Used", StringComparison.OrdinalIgnoreCase):
+                    case SensorType.Power when IsLikelyGpuPowerSensorName(s.Name):
+                        _iGpuPowerSensor ??= s;
+                        break;
+                    case SensorType.Voltage when IsLikelyGpuVoltageSensorName(s.Name):
+                        _iGpuCoreVoltageSensor ??= s;
+                        break;
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramUsedSensorName(s.Name):
                         _iGpuD3DVramUsedSensor = s;
                         break;
-                    case SensorType.SmallData when s.Name.Contains("GPU Memory Total", StringComparison.OrdinalIgnoreCase):
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramTotalSensorName(s.Name):
                         _iGpuVramTotalSensor = s;
+                        break;
+                    case SensorType.SmallData or SensorType.Data when IsLikelyGpuVramFreeSensorName(s.Name):
+                        _iGpuVramFreeSensor = s;
+                        break;
+                    case SensorType.Throughput when IsLikelyGpuPcieRxThroughputSensorName(s.Name):
+                        _iGpuPcieRxSensor ??= s;
+                        break;
+                    case SensorType.Throughput when IsLikelyGpuPcieTxThroughputSensorName(s.Name):
+                        _iGpuPcieTxSensor ??= s;
                         break;
                 }
             }
-            _iGpuUsageSensor ??= _iGpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Load);
-            _iGpuTempSensor ??= _iGpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Temperature);
-            _iGpuClockSensor ??= _iGpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Clock);
-            _iGpuD3DVramUsedSensor ??= _iGpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.SmallData && s.Name.Contains("Used", StringComparison.OrdinalIgnoreCase));
-            _iGpuVramTotalSensor ??= _iGpuHardware.Sensors.FirstOrDefault(s => s.SensorType == SensorType.SmallData && s.Name.Contains("Total", StringComparison.OrdinalIgnoreCase));
+            _iGpuUsageSensor ??= SelectGpuUsageSensor(_iGpuHardware.Sensors);
+            _iGpuTempSensor ??= SelectGpuTemperatureSensor(_iGpuHardware.Sensors);
+            _iGpuClockSensor ??= SelectGpuCoreClockSensor(_iGpuHardware.Sensors);
+            _iGpuMemoryClockSensor ??= SelectGpuMemoryClockSensor(_iGpuHardware.Sensors);
+            _iGpuPowerSensor ??= SelectGpuPowerSensor(_iGpuHardware.Sensors);
+            _iGpuCoreVoltageSensor ??= SelectGpuVoltageSensor(_iGpuHardware.Sensors);
+            _iGpuD3DVramUsedSensor ??= SelectGpuVramUsedSensor(_iGpuHardware.Sensors);
+            _iGpuVramTotalSensor ??= SelectGpuVramTotalSensor(_iGpuHardware.Sensors);
+            _iGpuVramFreeSensor ??= SelectGpuVramFreeSensor(_iGpuHardware.Sensors);
+            _iGpuPcieRxSensor ??= SelectGpuPcieRxThroughputSensor(_iGpuHardware.Sensors);
+            _iGpuPcieTxSensor ??= SelectGpuPcieTxThroughputSensor(_iGpuHardware.Sensors);
         }
 
-        _memoryLoadSensor = _memoryHardware?.Sensors?.FirstOrDefault(s => s.SensorType == SensorType.Load);
-        _memoryUsedSensor = _memoryHardware?.Sensors?.FirstOrDefault(s => s.SensorType == SensorType.Data && s.Name.Contains(SENSOR_NAME_MEMORY_USED, StringComparison.OrdinalIgnoreCase));
-        _memoryAvailableSensor = _memoryHardware?.Sensors?.FirstOrDefault(s => s.SensorType == SensorType.Data && s.Name.Contains(SENSOR_NAME_MEMORY_AVAILABLE, StringComparison.OrdinalIgnoreCase));
+        _memoryLoadSensor = _memoryHardware?.Sensors is null ? null : SelectMemoryLoadSensor(_memoryHardware.Sensors);
+        _memoryUsedSensor = _memoryHardware?.Sensors is null ? null : SelectMemoryUsedSensor(_memoryHardware.Sensors);
+        _memoryAvailableSensor = _memoryHardware?.Sensors is null ? null : SelectMemoryAvailableSensor(_memoryHardware.Sensors);
 
         foreach (var hw in _hardware.Where(h => h.HardwareType == HardwareType.Memory))
         {
             if (hw.Sensors == null) continue;
-            _memoryTempSensors.AddRange(hw.Sensors.Where(s => s.SensorType == SensorType.Temperature && s.Name.Contains("DIMM")));
+            _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: false));
+        }
+
+        foreach (var hw in _hardware.Where(h => h.HardwareType == HardwareType.Motherboard))
+        {
+            if (hw.Sensors == null) continue;
+            _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: true));
         }
 
         foreach (var storage in _hardware.Where(h => h.HardwareType == HardwareType.Storage))
         {
-            var temp = storage.Sensors?.FirstOrDefault(s => s.SensorType == SensorType.Temperature);
+            var temp = storage.Sensors is null ? null : SelectStorageTemperatureSensor(storage.Sensors);
             if (temp != null) _storageTempSensors.Add(temp);
         }
 
@@ -420,8 +688,693 @@ public class SensorsGroupController : IDisposable
         {
             var hardwareSummary = string.Join(", ", _hardware.Select(h => $"{h.HardwareType}:{h.Name}"));
             Log.Instance.Trace($"LibreHardwareMonitor hardware summary: [{hardwareSummary}]");
+            Log.Instance.Trace($"LibreHardwareMonitor CPU temperature sensor: {(_cpuTempSensor is null ? "not found" : _cpuTempSensor.Name)}");
             Log.Instance.Trace($"LibreHardwareMonitor CPU package power sensor: {(_cpuPackagePowerSensor is null ? "not found" : _cpuPackagePowerSensor.Name)}");
         }
+    }
+
+    private static ISensor? SelectCpuTemperatureSensor(IEnumerable<ISensor> sensors)
+    {
+        var temperatureSensors = sensors
+            .Where(s => s.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (temperatureSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectCpuTemperatureSensorName(temperatureSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return temperatureSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+
+        return temperatureSensors
+            .OrderByDescending(sensor => sensor.Name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(sensor => sensor.Name.Contains("Core", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(sensor => sensor.Name, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static IHardware? SelectMemoryHardware(IEnumerable<IHardware> hardware)
+    {
+        var memoryHardware = hardware
+            .Where(h => h.HardwareType == HardwareType.Memory)
+            .ToArray();
+
+        if (memoryHardware.Length == 0)
+            return null;
+
+        var preferredName = SelectMemoryHardwareName(memoryHardware.Select(h => h.Name));
+        if (preferredName is not null)
+            return memoryHardware.FirstOrDefault(h => string.Equals(h.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+
+        return memoryHardware
+            .FirstOrDefault();
+    }
+
+    internal static string? SelectMemoryHardwareName(IEnumerable<string> hardwareNames)
+    {
+        var names = hardwareNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        return names
+            .OrderByDescending(name => string.Equals(name, SENSOR_NAME_TOTAL_MEMORY, StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(name => name.Contains("Memory", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    internal static string? SelectCpuTemperatureSensorName(IEnumerable<string> sensorNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in CPU_TEMPERATURE_SENSOR_PREFERENCES)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return names
+            .OrderByDescending(name => name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(name => name.Contains("Core", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static ISensor? SelectCpuUsageSensor(IEnumerable<ISensor> sensors)
+    {
+        var loadSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Load)
+            .ToArray();
+
+        if (loadSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectCpuUsageSensorName(loadSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return loadSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+
+        return loadSensors.FirstOrDefault();
+    }
+
+    internal static string? SelectCpuUsageSensorName(IEnumerable<string> sensorNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in CPU_USAGE_SENSOR_PREFERENCES)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("Core Max", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("Thread", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains('#'));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return names
+            .Where(name =>
+                !name.Contains("Core Max", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("Thread", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains('#'))
+            .OrderByDescending(name => name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(name => name.Contains("Total", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static ISensor? SelectCpuVoltageSensor(IEnumerable<ISensor> sensors)
+    {
+        var voltageSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Voltage)
+            .ToArray();
+
+        if (voltageSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectCpuVoltageSensorName(voltageSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return voltageSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+
+        return voltageSensors.FirstOrDefault();
+    }
+
+    internal static string? SelectCpuVoltageSensorName(IEnumerable<string> sensorNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in CPU_VOLTAGE_SENSOR_PREFERENCES)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("System Agent", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("SA", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("Cache", StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return names
+            .Where(name =>
+                !name.Contains("System Agent", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("SA", StringComparison.OrdinalIgnoreCase)
+                && !name.Contains("Cache", StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(name => name.Contains("Core", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(name => name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static ISensor? SelectGpuVramTemperatureSensor(IEnumerable<ISensor> sensors)
+    {
+        var temperatureSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (temperatureSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuVramTemperatureSensorName(temperatureSensors.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return temperatureSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string? SelectGpuVramTemperatureSensorName(IEnumerable<string> sensorNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return null;
+    }
+
+    private static ISensor? SelectGpuHotSpotTemperatureSensor(IEnumerable<ISensor> sensors)
+    {
+        var temperatureSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (temperatureSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuHotSpotTemperatureSensorName(temperatureSensors.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return temperatureSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string? SelectGpuHotSpotTemperatureSensorName(IEnumerable<string> sensorNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in GPU_HOTSPOT_TEMPERATURE_SENSOR_PREFERENCES)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return null;
+    }
+
+    private static bool IsLikelyGpuVramTemperatureSensorName(string sensorName) =>
+        SelectGpuVramTemperatureSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuHotSpotTemperatureSensorName(string sensorName) =>
+        SelectGpuHotSpotTemperatureSensorName([sensorName]) is not null;
+
+    private static IEnumerable<ISensor> SelectMemoryTemperatureSensors(IEnumerable<ISensor> sensors, bool requireMemoryKeywords)
+    {
+        var temperatureSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .Where(sensor => !requireMemoryKeywords || IsLikelyMemoryTemperatureSensorName(sensor.Name))
+            .OrderByDescending(sensor => MEMORY_TEMPERATURE_SENSOR_PREFERENCES.Any(keyword =>
+                sensor.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+            .ThenByDescending(sensor => sensor.Name.Contains("DIMM", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(sensor => sensor.Name.Contains("DRAM", StringComparison.OrdinalIgnoreCase))
+            .ThenByDescending(sensor => sensor.Name.Contains("SPD", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(sensor => sensor.Name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        return temperatureSensors;
+    }
+
+    private static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
+        MEMORY_TEMPERATURE_SENSOR_PREFERENCES.Any(keyword =>
+            sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    private static ISensor? SelectGpuVramUsedSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType is SensorType.SmallData or SensorType.Data)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuVramUsedSensorName(candidates.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuVramTotalSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType is SensorType.SmallData or SensorType.Data)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuVramTotalSensorName(candidates.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuVramFreeSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType is SensorType.SmallData or SensorType.Data)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuVramFreeSensorName(candidates.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string? SelectGpuVramUsedSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_VRAM_USED_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuVramTotalSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_VRAM_TOTAL_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuVramFreeSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_VRAM_FREE_SENSOR_PREFERENCES);
+
+    private static bool IsLikelyGpuVramUsedSensorName(string sensorName) =>
+        SelectGpuVramUsedSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyCpuVoltageSensorName(string sensorName) =>
+        SelectCpuVoltageSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyCpuUsageSensorName(string sensorName) =>
+        SelectCpuUsageSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuVramTotalSensorName(string sensorName) =>
+        SelectGpuVramTotalSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuVramFreeSensorName(string sensorName) =>
+        SelectGpuVramFreeSensorName([sensorName]) is not null;
+
+    private static ISensor? SelectGpuPcieRxThroughputSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Throughput)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuPcieRxThroughputSensorName(candidates.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuPcieTxThroughputSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Throughput)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuPcieTxThroughputSensorName(candidates.Select(sensor => sensor.Name));
+        if (preferredName is null)
+            return null;
+
+        return candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string? SelectGpuPcieRxThroughputSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_PCIE_RX_THROUGHPUT_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuPcieTxThroughputSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_PCIE_TX_THROUGHPUT_SENSOR_PREFERENCES);
+
+    private static ISensor? SelectGpuUsageSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Load)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuUsageSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectMemoryUsedSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Data)
+            .Where(sensor => IsLikelySystemMemorySensorName(sensor.Name))
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectMemoryUsedSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault(sensor => sensor.Name.Contains(SENSOR_NAME_MEMORY_USED, StringComparison.OrdinalIgnoreCase))
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectMemoryAvailableSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Data)
+            .Where(sensor => IsLikelySystemMemorySensorName(sensor.Name))
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectMemoryAvailableSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault(sensor => sensor.Name.Contains(SENSOR_NAME_MEMORY_AVAILABLE, StringComparison.OrdinalIgnoreCase))
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectMemoryLoadSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Load)
+            .Where(sensor => IsLikelySystemMemorySensorName(sensor.Name))
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectMemoryLoadSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectStorageTemperatureSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectStorageTemperatureSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuPowerSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Power)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuPowerSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuTemperatureSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuTemperatureSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuCoreClockSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Clock)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuCoreClockSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuMemoryClockSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Clock)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuMemoryClockSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static ISensor? SelectGpuVoltageSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Voltage)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            return null;
+
+        var preferredName = SelectGpuVoltageSensorName(candidates.Select(sensor => sensor.Name));
+        return preferredName is null
+            ? candidates.FirstOrDefault()
+            : candidates.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string? SelectGpuPowerSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_POWER_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuTemperatureSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_TEMPERATURE_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuCoreClockSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_CORE_CLOCK_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuMemoryClockSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_MEMORY_CLOCK_SENSOR_PREFERENCES);
+
+    internal static string? SelectGpuVoltageSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_VOLTAGE_SENSOR_PREFERENCES);
+
+    internal static string? SelectMemoryUsedSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames.Where(IsLikelySystemMemorySensorName), MEMORY_USED_SENSOR_PREFERENCES);
+
+    internal static string? SelectMemoryAvailableSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames.Where(IsLikelySystemMemorySensorName), MEMORY_AVAILABLE_SENSOR_PREFERENCES);
+
+    internal static string? SelectMemoryLoadSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames.Where(IsLikelySystemMemorySensorName), MEMORY_LOAD_SENSOR_PREFERENCES);
+
+    internal static string? SelectStorageTemperatureSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, STORAGE_TEMPERATURE_SENSOR_PREFERENCES);
+
+    private static bool IsLikelySystemMemorySensorName(string sensorName) =>
+        !sensorName.Contains("GPU", StringComparison.OrdinalIgnoreCase)
+        && !sensorName.Contains("VRAM", StringComparison.OrdinalIgnoreCase)
+        && !sensorName.Contains("D3D", StringComparison.OrdinalIgnoreCase)
+        && !sensorName.Contains("Shared", StringComparison.OrdinalIgnoreCase);
+
+    internal static string? SelectGpuUsageSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(sensorNames, GPU_USAGE_SENSOR_PREFERENCES)
+        ?? sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault(name => name.Trim().StartsWith("D3D", StringComparison.OrdinalIgnoreCase));
+
+    private static bool IsLikelyGpuPcieRxThroughputSensorName(string sensorName) =>
+        SelectGpuPcieRxThroughputSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuPcieTxThroughputSensorName(string sensorName) =>
+        SelectGpuPcieTxThroughputSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuUsageSensorName(string sensorName) =>
+        SelectGpuUsageSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuPowerSensorName(string sensorName) =>
+        SelectGpuPowerSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuTemperatureSensorName(string sensorName) =>
+        SelectGpuTemperatureSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuCoreClockSensorName(string sensorName) =>
+        SelectGpuCoreClockSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuMemoryClockSensorName(string sensorName) =>
+        SelectGpuMemoryClockSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyGpuVoltageSensorName(string sensorName) =>
+        SelectGpuVoltageSensorName([sensorName]) is not null;
+
+    internal static bool IsLikelyCpuComponentPowerSensorName(string sensorName) =>
+        sensorName.Contains("CPU Cores", StringComparison.OrdinalIgnoreCase)
+        || sensorName.Contains("CPU Memory", StringComparison.OrdinalIgnoreCase)
+        || sensorName.Contains("CPU Platform", StringComparison.OrdinalIgnoreCase);
+
+    internal static (float cores, float memory, float platform) ResolveCpuComponentPowers(IEnumerable<(string name, float value)> components)
+    {
+        float cores = INVALID_VALUE_FLOAT;
+        float memory = INVALID_VALUE_FLOAT;
+        float platform = INVALID_VALUE_FLOAT;
+
+        foreach (var (name, value) in components)
+        {
+            if (value <= MIN_VALID_POWER_READING)
+                continue;
+
+            if (name.Contains("CPU Cores", StringComparison.OrdinalIgnoreCase))
+                cores = value;
+            else if (name.Contains("CPU Memory", StringComparison.OrdinalIgnoreCase))
+                memory = value;
+            else if (name.Contains("CPU Platform", StringComparison.OrdinalIgnoreCase))
+                platform = value;
+        }
+
+        return (cores, memory, platform);
+    }
+
+    internal static float ResolveCpuPower(float packagePower, IEnumerable<float> componentPowers)
+    {
+        if (packagePower > MIN_VALID_POWER_READING)
+            return packagePower;
+
+        var validComponentPowers = componentPowers
+            .Where(value => value > MIN_VALID_POWER_READING)
+            .ToArray();
+
+        if (validComponentPowers.Length == 0)
+            return INVALID_VALUE_FLOAT;
+
+        var total = validComponentPowers.Sum();
+        return total > MIN_VALID_POWER_READING ? total : INVALID_VALUE_FLOAT;
+    }
+
+    internal static (float used, float total, float utilization) ResolveGpuVramMetrics(float used, float total, float free)
+    {
+        if (total <= 0 && used >= 0 && free >= 0)
+            total = used + free;
+
+        if (used < 0 && total > 0 && free >= 0)
+            used = Math.Max(0, total - free);
+
+        var utilization = used >= 0 && total > 0
+            ? (used / total) * 100f
+            : INVALID_VALUE_FLOAT;
+
+        return (used, total, utilization);
+    }
+
+    private bool ShouldUseIntegratedGpuSnapshot(IHardware? dGpu) =>
+        SelectedGpuIsIgpu || dGpu == null || !_isDgpuConnected;
+
+    private static string? SelectPreferredSensorName(IEnumerable<string> sensorNames, IEnumerable<string> preferredNames)
+    {
+        var names = sensorNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (names.Length == 0)
+            return null;
+
+        foreach (var preferredName in preferredNames)
+        {
+            var preferred = names.FirstOrDefault(name =>
+                name.Contains(preferredName, StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return preferred;
+        }
+
+        return null;
     }
 
     public Task<float> GetCpuTemperatureAsync()
@@ -447,6 +1400,11 @@ public class SensorsGroupController : IDisposable
     public Task<float> GetGpuCoreClockAsync()
     {
         lock (_dataLock) return Task.FromResult(_snapshotGpuClock);
+    }
+
+    public Task<float> GetGpuMemoryClockAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuMemoryClock);
     }
 
     public Task<string> GetCpuNameAsync()
@@ -475,17 +1433,37 @@ public class SensorsGroupController : IDisposable
                 return Task.FromResult(_cachedGpuName);
 
             var dGpu = _gpuHardware ?? _amdGpuHardware;
-            var forceIgpu = !SelectedGpuIsIgpu && (dGpu == null || !_isDgpuConnected);
-            var gpu = (SelectedGpuIsIgpu || forceIgpu) ? _iGpuHardware : dGpu;
+            var gpu = ShouldUseIntegratedGpuSnapshot(dGpu) ? _iGpuHardware : dGpu;
             _cachedGpuName = gpu != null ? StripName(gpu.Name) : UNKNOWN_NAME;
             _needRefreshGpuHardware = false;
             return Task.FromResult(_cachedGpuName);
         }
     }
 
+    public Task<bool> IsCurrentGpuIntegratedAsync()
+    {
+        lock (_dataLock)
+        {
+            if (_isResetting || !IsLibreHardwareMonitorInitialized())
+                return Task.FromResult(false);
+
+            return Task.FromResult(ShouldUseIntegratedGpuSnapshot(_gpuHardware ?? _amdGpuHardware));
+        }
+    }
+
     public Task<float> GetCpuPowerAsync()
     {
         lock (_dataLock) return Task.FromResult(_snapshotCpuPower);
+    }
+
+    public Task<(float cores, float memory, float platform)> GetCpuComponentPowersAsync()
+    {
+        lock (_dataLock) return Task.FromResult((_snapshotCpuCoresPower, _snapshotCpuMemoryPower, _snapshotCpuPlatformPower));
+    }
+
+    public Task<float> GetCpuVoltageAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotCpuVoltage);
     }
 
     public Task<float> GetCpuCoreClockAsync()
@@ -508,9 +1486,19 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotGpuPower);
     }
 
+    public Task<float> GetGpuVoltageAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuVoltage);
+    }
+
     public Task<float> GetGpuVramTemperatureAsync()
     {
         lock (_dataLock) return Task.FromResult(_snapshotGpuVramTemp);
+    }
+
+    public Task<float> GetGpuHotSpotTemperatureAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuHotSpotTemp);
     }
 
     public Task<float> GetGpuVramUtilizationAsync()
@@ -528,10 +1516,19 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock)
         {
             var dGpu = _gpuHardware ?? _amdGpuHardware;
-            var forceIgpu = !SelectedGpuIsIgpu && (dGpu == null || !_isDgpuConnected);
-            float total = (SelectedGpuIsIgpu || forceIgpu) ? _cachedIGpuVramTotal : _cachedGpuVramTotal;
+            float total = ShouldUseIntegratedGpuSnapshot(dGpu) ? _cachedIGpuVramTotal : _cachedGpuVramTotal;
             return Task.FromResult(total > 0 ? total / MB_PER_GB : INVALID_VALUE_FLOAT);
         }
+    }
+
+    public Task<float> GetGpuPcieRxThroughputAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuPcieRxThroughput);
+    }
+
+    public Task<float> GetGpuPcieTxThroughputAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuPcieTxThroughput);
     }
 
     public Task<(float, float)> GetSsdTemperaturesAsync()
@@ -640,6 +1637,7 @@ public class SensorsGroupController : IDisposable
                     {
                         _snapshotCpuTemp = _cpuTempSensor?.Value ?? INVALID_VALUE_FLOAT;
                         _snapshotCpuUsage = _cpuUsageSensor?.Value ?? INVALID_VALUE_FLOAT;
+                        _snapshotCpuVoltage = _cpuCoreVoltageSensor?.Value ?? INVALID_VALUE_FLOAT;
 
                         if (_cpuCoreClockSensors.Count > 0)
                         {
@@ -665,82 +1663,94 @@ public class SensorsGroupController : IDisposable
                             _snapshotCpuEAvgClock = eAvg > 0 ? (float)Math.Round(eAvg) : eAvg;
                         }
 
-                        if (_cpuPackagePowerSensor != null)
+                        var cpuPackagePower = _cpuPackagePowerSensor?.Value ?? INVALID_VALUE_FLOAT;
+                        var cpuComponentReadings = _cpuComponentPowerSensors
+                            .Select(sensor => (sensor.Name, value: sensor.Value ?? INVALID_VALUE_FLOAT))
+                            .ToArray();
+                        var cpuComponentPower = cpuComponentReadings.Select(reading => reading.value).ToArray();
+                        var resolvedCpuPower = ResolveCpuPower(cpuPackagePower, cpuComponentPower);
+                        (_snapshotCpuCoresPower, _snapshotCpuMemoryPower, _snapshotCpuPlatformPower) = ResolveCpuComponentPowers(cpuComponentReadings);
+
+                        if (Log.Instance.IsTraceEnabled)
                         {
-                            float pVal = _cpuPackagePowerSensor.Value ?? INVALID_VALUE_FLOAT;
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"LibreHardwareMonitor CPU package power raw value: {pVal}");
-                            if (pVal > MAX_VALID_CPU_POWER) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
-                            else if (pVal <= MIN_VALID_POWER_READING) { _snapshotCpuPower = INVALID_VALUE_FLOAT; }
-                            else
+                            Log.Instance.Trace(
+                                $"LibreHardwareMonitor CPU power raw values: package={cpuPackagePower}, components=[{string.Join(", ", cpuComponentReadings.Select(reading => $"{reading.Name}={reading.value}"))}], resolved={resolvedCpuPower}");
+                        }
+
+                        if (resolvedCpuPower > MAX_VALID_CPU_POWER) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
+                        else if (resolvedCpuPower <= MIN_VALID_POWER_READING) { _snapshotCpuPower = INVALID_VALUE_FLOAT; }
+                        else
+                        {
+                            if (Math.Abs(resolvedCpuPower - _cachedCpuPower) < float.Epsilon)
                             {
-                                if (Math.Abs(pVal - _cachedCpuPower) < float.Epsilon)
-                                {
-                                    if (++_cachedCpuPowerTime >= MAX_CPU_POWER_STUCK_RETRIES) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
-                                    else _snapshotCpuPower = pVal;
-                                }
-                                else { _cachedCpuPower = pVal; _cachedCpuPowerTime = 0; _snapshotCpuPower = pVal; }
+                                if (++_cachedCpuPowerTime >= MAX_CPU_POWER_STUCK_RETRIES) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
+                                else _snapshotCpuPower = resolvedCpuPower;
                             }
+                            else { _cachedCpuPower = resolvedCpuPower; _cachedCpuPowerTime = 0; _snapshotCpuPower = resolvedCpuPower; }
                         }
 
                         var dGpu = _gpuHardware ?? _amdGpuHardware;
-                        var forceIgpu = !SelectedGpuIsIgpu && (dGpu == null || !_isDgpuConnected);
 
-                        if (SelectedGpuIsIgpu || forceIgpu)
+                        if (ShouldUseIntegratedGpuSnapshot(dGpu))
                         {
-                            if (_cachedIGpuVramTotal <= 0 && _iGpuVramTotalSensor != null)
-                                _cachedIGpuVramTotal = _iGpuVramTotalSensor.Value ?? INVALID_VALUE_FLOAT;
+                            var iGpuVramTotal = _iGpuVramTotalSensor?.Value ?? _cachedIGpuVramTotal;
+                            var iGpuVramUsed = _iGpuD3DVramUsedSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            var iGpuVramFree = _iGpuVramFreeSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            var iGpuVramMetrics = ResolveGpuVramMetrics(iGpuVramUsed, iGpuVramTotal, iGpuVramFree);
 
-                            _snapshotGpuVramUsage = _iGpuD3DVramUsedSensor?.Value ?? INVALID_VALUE_FLOAT;
-
-                            if (_snapshotGpuVramUsage != INVALID_VALUE_FLOAT && _cachedIGpuVramTotal > 0)
-                            {
-                                _snapshotGpuVramUtilization = (_snapshotGpuVramUsage / _cachedIGpuVramTotal) * 100f;
-                            }
-                            else
-                            {
-                                _snapshotGpuVramUtilization = INVALID_VALUE_FLOAT;
-                            }
+                            _snapshotGpuVramUsage = iGpuVramMetrics.used;
+                            _snapshotGpuVramUtilization = iGpuVramMetrics.utilization;
+                            _cachedIGpuVramTotal = iGpuVramMetrics.total > 0 ? iGpuVramMetrics.total : _cachedIGpuVramTotal;
 
                             _snapshotGpuPower = _iGpuPowerSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuUsage = _iGpuUsageSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuTemp = _iGpuTempSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuVoltage = _iGpuCoreVoltageSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuVramTemp = INVALID_VALUE_FLOAT;
+                            _snapshotGpuHotSpotTemp = INVALID_VALUE_FLOAT;
                             _snapshotGpuClock = _iGpuClockSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuMemoryClock = _iGpuMemoryClockSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieRxThroughput = _iGpuPcieRxSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieTxThroughput = _iGpuPcieTxSensor?.Value ?? INVALID_VALUE_FLOAT;
                         }
                         else if (gpuInactive)
                         {
                             _snapshotGpuVramUtilization = INVALID_VALUE_FLOAT;
                             _snapshotGpuVramUsage = INVALID_VALUE_FLOAT;
                             _snapshotGpuPower = INVALID_VALUE_FLOAT;
+                            _snapshotGpuVoltage = INVALID_VALUE_FLOAT;
                             _snapshotGpuVramTemp = INVALID_VALUE_FLOAT;
+                            _snapshotGpuHotSpotTemp = INVALID_VALUE_FLOAT;
                             _snapshotGpuUsage = INVALID_VALUE_FLOAT;
                             _snapshotGpuTemp = INVALID_VALUE_FLOAT;
                             _snapshotGpuClock = INVALID_VALUE_FLOAT;
+                            _snapshotGpuMemoryClock = INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieRxThroughput = INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieTxThroughput = INVALID_VALUE_FLOAT;
                         }
                         else
                         {
-                            if (_cachedGpuVramTotal <= 0 && _gpuVramTotalSensor != null)
-                                _cachedGpuVramTotal = _gpuVramTotalSensor.Value ?? INVALID_VALUE_FLOAT;
+                            var gpuVramTotal = _gpuVramTotalSensor?.Value ?? _cachedGpuVramTotal;
+                            var gpuVramUsed = _gpuD3DVramUsedSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            var gpuVramFree = _gpuVramFreeSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            var gpuVramMetrics = ResolveGpuVramMetrics(gpuVramUsed, gpuVramTotal, gpuVramFree);
 
-                            _snapshotGpuVramUsage = _gpuD3DVramUsedSensor?.Value ?? INVALID_VALUE_FLOAT;
-
-                            if (_snapshotGpuVramUsage != INVALID_VALUE_FLOAT && _cachedGpuVramTotal > 0)
-                            {
-                                _snapshotGpuVramUtilization = (_snapshotGpuVramUsage / _cachedGpuVramTotal) * 100f;
-                            }
-                            else
-                            {
-                                _snapshotGpuVramUtilization = INVALID_VALUE_FLOAT;
-                            }
+                            _snapshotGpuVramUsage = gpuVramMetrics.used;
+                            _snapshotGpuVramUtilization = gpuVramMetrics.utilization;
+                            _cachedGpuVramTotal = gpuVramMetrics.total > 0 ? gpuVramMetrics.total : _cachedGpuVramTotal;
 
                             float gPower = _gpuPowerSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _lastGpuPower = gPower;
                             _snapshotGpuPower = _lastGpuPower > MIN_ACTIVE_GPU_POWER ? _lastGpuPower : INVALID_VALUE_FLOAT;
-                            _snapshotGpuVramTemp = _gpuHotspotSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuVoltage = _gpuCoreVoltageSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuVramTemp = _gpuVramTemperatureSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuHotSpotTemp = _gpuHotSpotSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuUsage = _gpuUsageSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuTemp = _gpuTempSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuClock = _gpuClockSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuMemoryClock = _gpuMemoryClockSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieRxThroughput = _gpuPcieRxSensor?.Value ?? INVALID_VALUE_FLOAT;
+                            _snapshotGpuPcieTxThroughput = _gpuPcieTxSensor?.Value ?? INVALID_VALUE_FLOAT;
                         }
 
                         _snapshotMemUsage = _memoryLoadSensor?.Value ?? INVALID_VALUE_FLOAT;

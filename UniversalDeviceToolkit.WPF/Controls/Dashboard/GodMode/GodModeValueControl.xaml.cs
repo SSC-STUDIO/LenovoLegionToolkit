@@ -11,6 +11,7 @@ namespace UniversalDeviceToolkit.WPF.Controls.Dashboard.GodMode
 public partial class GodModeValueControl
 {
     private int? _defaultValue;
+    private string _automationIdPrefix = string.Empty;
 
     public string Title
     {
@@ -18,10 +19,17 @@ public partial class GodModeValueControl
         set
         {
             _cardControlHeader.Title = value;
+            UpdateAutomationMetadata();
+        }
+    }
 
-            AutomationProperties.SetName(_slider, _cardControlHeader.Title);
-            AutomationProperties.SetName(_comboBox, _cardControlHeader.Title);
-            AutomationProperties.SetName(_resetToDefaultButton, _cardControlHeader.Title);
+    public string AutomationIdPrefix
+    {
+        get => _automationIdPrefix;
+        set
+        {
+            _automationIdPrefix = value ?? string.Empty;
+            UpdateAutomationMetadata();
         }
     }
 
@@ -86,6 +94,7 @@ public partial class GodModeValueControl
     public GodModeValueControl()
     {
         InitializeComponent();
+        UpdateAutomationMetadata();
     }
 
     public void Set(StepperValue? stepperValue)
@@ -156,6 +165,20 @@ public partial class GodModeValueControl
 
         if (_comboBox.Visibility == Visibility.Visible)
             _comboBox.SelectItem(_defaultValue.Value);
+    }
+
+    private void UpdateAutomationMetadata()
+    {
+        AutomationProperties.SetName(_slider, _cardControlHeader.Title);
+        AutomationProperties.SetName(_comboBox, _cardControlHeader.Title);
+        AutomationProperties.SetName(_resetToDefaultButton, _cardControlHeader.Title);
+
+        if (string.IsNullOrWhiteSpace(_automationIdPrefix))
+            return;
+
+        AutomationProperties.SetAutomationId(_slider, $"{_automationIdPrefix}Slider");
+        AutomationProperties.SetAutomationId(_comboBox, $"{_automationIdPrefix}ComboBox");
+        AutomationProperties.SetAutomationId(_resetToDefaultButton, $"{_automationIdPrefix}ResetButton");
     }
 }
 }

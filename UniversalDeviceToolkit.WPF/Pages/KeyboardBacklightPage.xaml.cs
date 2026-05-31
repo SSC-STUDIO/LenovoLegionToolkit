@@ -37,16 +37,8 @@ public partial class KeyboardBacklightPage
         }
         else
         {
-            if (KeyboardBacklightViewModel.ShouldKeepUnsupportedNavigationItems())
-            {
-                _titleTextBlock.Visibility = Visibility.Visible;
-                _noKeyboardsText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                _titleTextBlock.Visibility = Visibility.Collapsed;
-                _content.Visibility = Visibility.Collapsed;
-            }
+            _titleTextBlock.Visibility = Visibility.Collapsed;
+            _content.Visibility = Visibility.Collapsed;
         }
 
         _loader.IsLoading = false;

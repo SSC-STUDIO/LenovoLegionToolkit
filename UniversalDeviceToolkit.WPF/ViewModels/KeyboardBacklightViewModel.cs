@@ -10,8 +10,6 @@ namespace UniversalDeviceToolkit.WPF.ViewModels;
 
 public partial class KeyboardBacklightViewModel : ObservableObject
 {
-    public static readonly string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
-
     [ObservableProperty]
     private bool _isLoading = true;
 
@@ -65,20 +63,10 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
     public static async Task<bool> IsSupportedAsync()
     {
-        if (ShouldKeepUnsupportedNavigationItems())
-            return true;
-
         if (await IsSpectrumSupportedAsync())
             return true;
 
         return await IsRgbSupportedAsync();
-    }
-
-    public static bool ShouldKeepUnsupportedNavigationItems()
-    {
-        var value = Environment.GetEnvironmentVariable(KeepUnsupportedNavigationItemsEnvironmentVariable);
-        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task<bool> IsSpectrumSupportedAsync()

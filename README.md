@@ -530,7 +530,7 @@ It seems that some BIOS versions indeed have weird issues when using Fn+Q. Only 
 
 #### Why am I getting incompatible message after motherboard replacement?
 
-Sometimes new motherboard does not contain correct model numbers and serial numbers. You should try [this tutorial](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) to try and recover them. If that method does not succeed, you can workaround it with `--skip-compat-check` argument. Check [Arguments](#arguments) section for more details.
+Sometimes new motherboard does not contain correct model numbers and serial numbers. You should try [this tutorial](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) to try and recover them.
 
 #### Why isn't a game detected, even though Actions are configured properly?
 
@@ -591,10 +591,8 @@ Some, less frequently needed, features or options can be enabled by using additi
 
 * `--trace` - enables logging to `%LOCALAPPDATA%\LenovoLegionToolkit\log`
 * `--minimized` - starts UDT minimized to tray
-* `--skip-compat-check` - disables compatibility check on startup _(No support is provided when this argument is used)_
 * `--disable-tray-tooltip` - disables tray tooltip that is shown when you hover the cursors over tray icon
 * `--allow-all-power-modes-on-battery` - allows using all Power Modes without AC adapter _(No support is provided when this argument is used)_
-* `--enable-hybrid-mode-automation` - allows changing Hybrid Mode/GPU Working Mode with actions _(No support is provided when this argument is used)_
 * `--force-disable-rgbkb` - disables all lighting features for 4-zone RGB keyboards
 * `--force-disable-spectrumkb` - disables all lighting features for Spectrum per-key RGB keyboards
 * `--force-disable-lenovolighting` - disables all lighting features related to panel logo, ports backlight and some white backlit keyboards
@@ -604,7 +602,6 @@ Some, less frequently needed, features or options can be enabled by using additi
 * `--proxy-password=some_password` - if applicable, specifies proxy server password to use
 * `--proxy-allow-all-certs` - if needed relaxes criteria needed to establish HTTPS/SSL connections via proxy server
 * `--disable-update-checker` - disable update checks in UDT, in case you want to rely on winget, scoop etc.
-* `--disable-conflicting-software-warning` - disables warning banners when conflicting software is running
 
 If you decide to use the arguments with `args.txt` file:
 1. Go to `%LOCALAPPDATA%\LenovoLegionToolkit`

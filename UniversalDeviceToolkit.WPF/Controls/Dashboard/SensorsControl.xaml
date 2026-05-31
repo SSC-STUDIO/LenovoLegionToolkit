@@ -52,7 +52,7 @@
                     <StackPanel x:Name="_cpuSection" Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_cpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_cpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -104,6 +104,15 @@
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_cpuPCoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuPCoreClock" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_cpuECoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuECoreClock" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_cpuMemoryUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuMemoryUsage" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
@@ -111,6 +120,12 @@
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_cpuMemoryTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuMemoryTemperature" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_cpuSsdTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuSsdTemperature" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -121,7 +136,7 @@
                     <StackPanel x:Name="_batterySectionColumn" Grid.Column="2">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_batteryModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_batteryModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -189,8 +204,6 @@
                                     <TextBlock x:Name="_batteryFullCap" Text="-" />
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_DesignCapacity}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0" />
                                     <TextBlock x:Name="_batteryDesignCap" Text="-" />
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_AvgTemp}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0" />
-                                    <TextBlock x:Name="_batteryAvgTemp" Text="-" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -201,7 +214,7 @@
                     <StackPanel x:Name="_gpuSection" Grid.Column="4">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                            <TextBlock x:Name="_gpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            <TextBlock x:Name="_gpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150" />
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -260,13 +273,25 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock x:Name="_gpuVramUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVramUsage" Text="" Margin="0,0,0,8" />
+
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_gpuWattage" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_gpuVoltage" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_gpuPcieThroughputTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuPcieThroughput" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock x:Name="_gpuVramTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVramTemperature" Text="" Margin="0,0,0,8" />
+
+                                    <TextBlock x:Name="_gpuHotSpotTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Margin="0,0,0,8" />
+
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_gpuTempRange" Text="" Margin="0,0,0,8" />
 

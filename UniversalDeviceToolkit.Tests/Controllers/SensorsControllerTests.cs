@@ -205,6 +205,81 @@ public class ISensorsControllerTests : UnitTestBase
 [Trait("Category", TestCategories.Controller)]
 public class GenericSensorsControllerTests : UnitTestBase
 {
+    private sealed class FallbackSensorsController : AbstractSensorsController
+    {
+        private readonly int _cpuUtilization;
+        private readonly int _cpuTemperature;
+        private readonly int _cpuCoreClock;
+        private readonly int _cpuWattage;
+        private readonly double _cpuVoltage;
+        private readonly int _gpuUtilization;
+        private readonly int _gpuTemperature;
+        private readonly int _gpuCoreClock;
+        private readonly int _gpuMemoryClock;
+        private readonly int _gpuWattage;
+        private readonly double _gpuVoltage;
+
+        internal FallbackSensorsController(
+            GPUController gpuController,
+            int cpuUtilization,
+            int cpuTemperature,
+            int cpuCoreClock,
+            int gpuUtilization,
+            int gpuTemperature,
+            int gpuCoreClock,
+            int gpuMemoryClock = -1,
+            int cpuWattage = 0,
+            double cpuVoltage = 0,
+            int gpuWattage = 0,
+            double gpuVoltage = 0)
+            : base(gpuController)
+        {
+            _cpuUtilization = cpuUtilization;
+            _cpuTemperature = cpuTemperature;
+            _cpuCoreClock = cpuCoreClock;
+            _cpuWattage = cpuWattage;
+            _cpuVoltage = cpuVoltage;
+            _gpuUtilization = gpuUtilization;
+            _gpuTemperature = gpuTemperature;
+            _gpuCoreClock = gpuCoreClock;
+            _gpuMemoryClock = gpuMemoryClock;
+            _gpuWattage = gpuWattage;
+            _gpuVoltage = gpuVoltage;
+        }
+
+        public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
+
+        protected override Task<int> GetCpuCurrentTemperatureAsync() => Task.FromResult(-1);
+        protected override Task<int> GetGpuCurrentTemperatureAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuCurrentFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetGpuCurrentFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetGpuMaxFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(5000);
+        protected override int GetCpuUtilization(int maxUtilization) => -1;
+        protected override int GetCpuCoreClock() => -1;
+        protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(GPUInfo.Empty);
+        protected override Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync() =>
+            Task.FromResult<LibreHardwareMonitorReadings?>(new LibreHardwareMonitorReadings(
+                _cpuUtilization,
+                _cpuTemperature,
+                _cpuCoreClock,
+                _cpuWattage,
+                _cpuVoltage,
+                _gpuUtilization,
+                _gpuTemperature,
+                _gpuCoreClock,
+                _gpuMemoryClock,
+                _gpuWattage,
+                _gpuVoltage));
+    }
+
+    private sealed class TestableGenericSensorsController(GPUController gpuController, Func<Task<bool>> canReadSnapshot)
+        : GenericSensorsController(gpuController)
+    {
+        protected override Task<bool> CanReadGenericSnapshotAsyncCore() => canReadSnapshot();
+    }
+
     [Fact]
     public void GenericSensorsController_ShouldBeAssignableToSensorsController()
     {
@@ -223,6 +298,44 @@ public class GenericSensorsControllerTests : UnitTestBase
         var act = () => controller.GetDataAsync();
 
         await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task GenericSensorsController_IsSupportedAsync_ShouldAllowFallbackOnSupportedMachines()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        using var controller = new TestableGenericSensorsController(gpuController, () => Task.FromResult(true));
+
+        var supported = await controller.IsSupportedAsync();
+
+        supported.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task AbstractSensorsController_GetDataAsync_ShouldUseLibreHardwareMonitorFallbackForSummaryMetrics()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        using var controller = new FallbackSensorsController(
+            gpuController,
+            cpuUtilization: 37,
+            cpuTemperature: 71,
+            cpuCoreClock: 4123,
+            gpuUtilization: 84,
+            gpuTemperature: 67,
+            gpuCoreClock: 1785,
+            gpuMemoryClock: 9200);
+
+        var data = await controller.GetDataAsync();
+
+        data.CPU.Utilization.Should().Be(37);
+        data.CPU.Temperature.Should().Be(71);
+        data.CPU.CoreClock.Should().Be(4123);
+        data.GPU.Utilization.Should().Be(84);
+        data.GPU.Temperature.Should().Be(67);
+        data.GPU.CoreClock.Should().Be(1785);
+        data.GPU.MemoryClock.Should().Be(9200);
+        data.GPU.MaxCoreClock.Should().Be(1785);
+        data.GPU.MaxMemoryClock.Should().Be(9200);
     }
 
     [Fact]

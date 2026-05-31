@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
@@ -11,18 +12,22 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 public class PluginConfigurationTests : TemporaryFileTestBase
 {
     private const string TestPluginId = "test-plugin-config";
-    private string _configDir = null!;
+    private string _appDataOverride = null!;
+    private string? _previousAppDataOverride;
     private PluginConfiguration _config = null!;
 
     protected override void Setup()
     {
-        _configDir = CreateTempDirectory();
+        _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        _appDataOverride = CreateTempDirectory();
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _appDataOverride);
         _config = new PluginConfiguration(TestPluginId);
     }
 
     protected override void Cleanup()
     {
         _config?.Clear();
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
         base.Cleanup();
     }
 

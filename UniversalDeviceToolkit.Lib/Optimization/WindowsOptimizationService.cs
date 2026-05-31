@@ -42,7 +42,18 @@ public record WindowsOptimizationCategoryDefinition(
     string DescriptionResourceKey,
     IReadOnlyList<WindowsOptimizationActionDefinition> Actions,
     string? PluginId = null,
-    Type? ResourceAnchorType = null);
+    Type? ResourceAnchorType = null)
+{
+    public WindowsOptimizationCategoryDefinition(
+        string key,
+        string titleResourceKey,
+        string descriptionResourceKey,
+        IReadOnlyList<WindowsOptimizationActionDefinition> actions,
+        string? pluginId)
+        : this(key, titleResourceKey, descriptionResourceKey, actions, pluginId, null)
+    {
+    }
+}
 
 /// <summary>
 /// Service for executing Windows optimization commands with strict security validation.

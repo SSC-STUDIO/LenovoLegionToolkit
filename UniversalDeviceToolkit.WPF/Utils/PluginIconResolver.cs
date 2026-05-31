@@ -80,31 +80,7 @@ internal static class PluginIconResolver
 
     public static string ResolvePluginsDirectory()
     {
-        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
-        if (!string.IsNullOrWhiteSpace(overridePath))
-            return overridePath;
-
-        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-        var possiblePaths = new[]
-        {
-            Path.Combine(appBaseDir, "plugins"),
-            Path.Combine(appBaseDir, "Plugins"),
-            Path.Combine(appBaseDir, "build", "plugins"),
-            Path.Combine(appBaseDir, "Build", "plugins"),
-            Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),
-            Path.Combine(appBaseDir, "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "..", "Build", "plugins"),
-        };
-
-        foreach (var possiblePath in possiblePaths)
-        {
-            var fullPath = Path.GetFullPath(possiblePath);
-            if (Directory.Exists(fullPath))
-                return fullPath;
-        }
-
-        return Path.Combine(appBaseDir, "build", "plugins");
+        return PluginPaths.GetPluginsDirectory();
     }
 
     private static FrameworkElement CreateImage(string imagePath)

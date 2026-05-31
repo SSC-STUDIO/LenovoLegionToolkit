@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LenovoLegionToolkit.Lib;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 
@@ -11,6 +12,9 @@ public class GodModeSettings() : AbstractSettings<GodModeSettings.GodModeSetting
         public class Preset
         {
             public string Name { get; init; } = string.Empty;
+            public Guid? PowerPlanGuid { get; init; }
+            public WindowsPowerMode? PowerMode { get; init; }
+            public PowerModeState? SourcePowerMode { get; init; }
             public StepperValue? CPULongTermPowerLimit { get; init; }
             public StepperValue? CPUShortTermPowerLimit { get; init; }
             public StepperValue? CPUPeakPowerLimit { get; init; }

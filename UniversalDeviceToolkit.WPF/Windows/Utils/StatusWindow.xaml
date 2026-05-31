@@ -37,6 +37,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <wpfui:SymbolIcon
@@ -91,6 +94,66 @@
                 FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                 Visibility="Collapsed" />
+
+            <Label
+                x:Name="_cpuSensorsLabel"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalContentAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+            <Label
+                x:Name="_cpuSensorsValueLabel"
+                Grid.Row="2"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+
+            <Label
+                x:Name="_memoryLabel"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalContentAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+            <Label
+                x:Name="_memoryValueLabel"
+                Grid.Row="3"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+
+            <Label
+                x:Name="_ssdTemperatureLabel"
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalContentAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+            <Label
+                x:Name="_ssdTemperatureValueLabel"
+                Grid.Row="4"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
         </Grid>
 
         <Grid x:Name="_gpuGrid" Margin="16,16,16,0">
@@ -103,6 +166,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <wpfui:SymbolIcon
@@ -111,6 +175,7 @@
                 FontSize="{StaticResource SymbolFontSize}"
                 Symbol="DeveloperBoard24" />
             <Label
+                x:Name="_gpuTitleLabel"
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="8,0,0,0"
@@ -201,6 +266,26 @@
                 HorizontalAlignment="Right"
                 FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+            <Label
+                x:Name="_gpuSensorsLabel"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalContentAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
+            <Label
+                x:Name="_gpuSensorsValueLabel"
+                Grid.Row="2"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Visibility="Collapsed" />
         </Grid>
 
         <Grid Margin="16,16,16,16">
@@ -361,4 +446,3 @@
 
     </StackPanel>
 </wpfui:FluentWindow>
-

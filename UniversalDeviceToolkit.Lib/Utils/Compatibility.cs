@@ -70,14 +70,7 @@ public static partial class Compatibility
     private static MachineInformation? _machineInformation;
     private static bool? _isCompatible;
 
-    public const string SmokeSimulateLegionEnvironmentVariable = "LLT_SMOKE_SIMULATE_LEGION";
-
-    public static bool IsSmokeLegionSimulationEnabled =>
-        string.Equals(Environment.GetEnvironmentVariable(SmokeSimulateLegionEnvironmentVariable), "1", StringComparison.OrdinalIgnoreCase);
-
-    public static Task<bool> CheckBasicCompatibilityAsync() => IsSmokeLegionSimulationEnabled
-        ? Task.FromResult(true)
-        : WMI.LenovoGameZoneData.ExistsAsync();
+    public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
 
     public static DeviceFeatureAvailability GetDeviceFeatureAvailability(MachineInformation machineInformation) =>
         LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
@@ -94,12 +87,6 @@ public static partial class Compatibility
 
         if (_isCompatible.HasValue)
             return (_isCompatible.Value, mi);
-
-        if (IsSmokeLegionSimulationEnabled)
-        {
-            _isCompatible = true;
-            return (true, mi);
-        }
 
         var isSupportedLenovoDevice = IsSupportedLegionMachine(mi);
         if (isSupportedLenovoDevice && !await CheckBasicCompatibilityAsync().ConfigureAwait(false))
@@ -119,9 +106,6 @@ public static partial class Compatibility
         if (_machineInformation.HasValue)
             return _machineInformation.Value;
 
-        if (IsSmokeLegionSimulationEnabled)
-            return (_machineInformation = GetSmokeMachineInformation()).Value;
-
         var (vendor, machineType, model, serialNumber) = await GetModelDataAsync().ConfigureAwait(false);
         var hardware = await HardwareInventoryProvider.ReadAsync().ConfigureAwait(false);
         var generation = GetMachineGeneration(model);
@@ -131,6 +115,31 @@ public static partial class Compatibility
         var smartFanVersion = await GetSmartFanVersionAsync().ConfigureAwait(false);
         var legionZoneVersion = await GetLegionZoneVersionAsync().ConfigureAwait(false);
         var features = await GetFeaturesAsync().ConfigureAwait(false);
+
+        var properties = new MachineInformation.PropertyData
+        {
+            SupportsAlwaysOnAc = GetAlwaysOnAcStatus(),
+            SupportsGodModeV1 = GetSupportsGodModeV1(supportedPowerModes, smartFanVersion, legionZoneVersion, biosVersion),
+            SupportsGodModeV2 = GetSupportsGodModeV2(supportedPowerModes, smartFanVersion, legionZoneVersion, features),
+            SupportsGodModeV3 = GetSupportsGodModeV3(supportedPowerModes, smartFanVersion, legionZoneVersion, generation, model, machineType),
+            SupportsGodModeV4 = GetSupportsGodModeV4(supportedPowerModes, smartFanVersion, legionZoneVersion),
+            SupportsGSync = await GetSupportsGSyncAsync().ConfigureAwait(false),
+            SupportsIGPUMode = await GetSupportsIGPUModeAsync().ConfigureAwait(false),
+            SupportsAIMode = await GetSupportsAIModeAsync().ConfigureAwait(false),
+            SupportBootLogoChange = GetSupportBootLogoChange(smartFanVersion),
+            SupportsITSMode = GetSupportITSMode(model),
+            HasQuietToPerformanceModeSwitchingBug = GetHasQuietToPerformanceModeSwitchingBug(biosVersion),
+            HasGodModeToOtherModeSwitchingBug = GetHasGodModeToOtherModeSwitchingBug(biosVersion),
+            HasReapplyParameterIssue = GetHasReapplyParameterIssue(model, machineType),
+            HasSpectrumProfileSwitchingBug = GetHasSpectrumProfileSwitchingBug(model, machineType),
+            IsExcludedFromLenovoLighting = GetIsExcludedFromLenovoLighting(biosVersion, generation, legionSeries),
+            IsExcludedFromPanelLogoLenovoLighting = GetIsExcludedFromPanelLenovoLighting(machineType, model),
+            HasAlternativeFullSpectrumLayout = GetHasAlternativeFullSpectrumLayout(machineType),
+            IsAmdDevice = GetIsAmdDevice(model),
+            IsChineseModel = GetIsChineseModel(model),
+        };
+
+        properties = ApplyGodModeFallback(machineType, model, supportedPowerModes, features, properties);
 
         var machineInformation = new MachineInformation
         {
@@ -147,28 +156,7 @@ public static partial class Compatibility
             LegionZoneVersion = legionZoneVersion,
             Features = features,
             Hardware = hardware,
-            Properties = new()
-            {
-                SupportsAlwaysOnAc = GetAlwaysOnAcStatus(),
-                SupportsGodModeV1 = GetSupportsGodModeV1(supportedPowerModes, smartFanVersion, legionZoneVersion, biosVersion),
-                SupportsGodModeV2 = GetSupportsGodModeV2(supportedPowerModes, smartFanVersion, legionZoneVersion),
-                SupportsGodModeV3 = GetSupportsGodModeV3(supportedPowerModes, smartFanVersion, legionZoneVersion, generation, model, machineType),
-                SupportsGodModeV4 = GetSupportsGodModeV4(supportedPowerModes, smartFanVersion, legionZoneVersion),
-                SupportsGSync = await GetSupportsGSyncAsync().ConfigureAwait(false),
-                SupportsIGPUMode = await GetSupportsIGPUModeAsync().ConfigureAwait(false),
-                SupportsAIMode = await GetSupportsAIModeAsync().ConfigureAwait(false),
-                SupportBootLogoChange = GetSupportBootLogoChange(smartFanVersion),
-                SupportsITSMode = GetSupportITSMode(model),
-                HasQuietToPerformanceModeSwitchingBug = GetHasQuietToPerformanceModeSwitchingBug(biosVersion),
-                HasGodModeToOtherModeSwitchingBug = GetHasGodModeToOtherModeSwitchingBug(biosVersion),
-                HasReapplyParameterIssue = GetHasReapplyParameterIssue(model, machineType),
-                HasSpectrumProfileSwitchingBug = GetHasSpectrumProfileSwitchingBug(model, machineType),
-                IsExcludedFromLenovoLighting = GetIsExcludedFromLenovoLighting(biosVersion, generation, legionSeries),
-                IsExcludedFromPanelLogoLenovoLighting = GetIsExcludedFromPanelLenovoLighting(machineType, model),
-                HasAlternativeFullSpectrumLayout = GetHasAlternativeFullSpectrumLayout(machineType),
-                IsAmdDevice = GetIsAmdDevice(model),
-                IsChineseModel = GetIsChineseModel(model),
-            }
+            Properties = properties
         };
 
         if (Log.Instance.IsTraceEnabled)
@@ -208,6 +196,43 @@ public static partial class Compatibility
         return (_machineInformation = machineInformation).Value;
     }
 
+    private static MachineInformation.PropertyData ApplyGodModeFallback(
+        string machineType,
+        string model,
+        IEnumerable<PowerModeState> supportedPowerModes,
+        MachineInformation.FeatureData features,
+        MachineInformation.PropertyData properties)
+    {
+        if (properties.SupportsGodMode)
+            return properties;
+
+        if (supportedPowerModes.Contains(PowerModeState.GodMode))
+            return properties with { SupportsGodModeV2 = true };
+
+        if (features.Source == MachineInformation.FeatureData.SourceType.CapabilityData
+            && features[CapabilityID.GodModeFnQSwitchable])
+            return properties with { SupportsGodModeV2 = true };
+
+        var availability = GetDeviceFeatureAvailability(new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = machineType,
+            Model = model,
+            SupportedPowerModes = [],
+            Features = MachineInformation.FeatureData.Unknown,
+            Properties = new MachineInformation.PropertyData()
+        });
+
+        if (availability.IsBasicMode)
+            return properties;
+
+        return availability.DevicePackId switch
+        {
+            "lenovo-legion-pro-5" or "lenovo-legion-pro-7" or "lenovo-legion-9" => properties with { SupportsGodModeV2 = true },
+            _ => properties
+        };
+    }
+
     private static void LogHardwareInventory(HardwareInventory hardware)
     {
         Log.Instance.Trace($" * Hardware:");
@@ -219,89 +244,6 @@ public static partial class Compatibility
         Log.Instance.Trace($"     * Memory: '{FormatCapacity(hardware.Memory.TotalCapacityBytes)}' modules='{hardware.Memory.ModuleCount}' speed='{hardware.Memory.ConfiguredClockSpeedMHz ?? hardware.Memory.SpeedMHz}'");
         Log.Instance.Trace($"     * Battery: '{string.Join(" | ", hardware.Batteries.Select(battery => battery.Name).Where(name => !string.IsNullOrWhiteSpace(name)))}'");
     }
-
-    private static MachineInformation GetSmokeMachineInformation() => new()
-    {
-        Generation = 9,
-        LegionSeries = LegionSeries.Legion_Pro_7,
-        Vendor = "LENOVO",
-        MachineType = "83DE",
-        Model = "Legion Y9000P IRX9",
-        SerialNumber = "SMOKE-LEGION",
-        BiosVersion = new("NMCN", 32),
-        BiosVersionRaw = "NMCN32WW",
-        SupportedPowerModes =
-        [
-            PowerModeState.Quiet,
-            PowerModeState.Balance,
-            PowerModeState.Performance,
-            PowerModeState.GodMode
-        ],
-        SmartFanVersion = 6,
-        LegionZoneVersion = 3,
-        Features = MachineInformation.FeatureData.Unknown,
-        Hardware = new()
-        {
-            ComputerSystem = new()
-            {
-                Manufacturer = "LENOVO",
-                Model = "Legion Y9000P IRX9",
-                SystemFamily = "Legion"
-            },
-            BaseBoard = new()
-            {
-                Manufacturer = "LENOVO",
-                Product = "83DE"
-            },
-            Chassis = new()
-            {
-                Manufacturer = "LENOVO",
-                ChassisTypes = [10]
-            },
-            Processors =
-            [
-                new()
-                {
-                    Name = "Intel(R) Core(TM) i9-14900HX",
-                    Manufacturer = "GenuineIntel",
-                    NumberOfCores = 24,
-                    NumberOfLogicalProcessors = 32
-                }
-            ],
-            VideoControllers =
-            [
-                new()
-                {
-                    Name = "NVIDIA GeForce RTX 4060 Laptop GPU",
-                    AdapterCompatibility = "NVIDIA"
-                }
-            ],
-            Memory = new()
-            {
-                TotalCapacityBytes = 32UL * 1024 * 1024 * 1024,
-                ModuleCount = 2,
-                ConfiguredClockSpeedMHz = 5600
-            },
-            Batteries =
-            [
-                new()
-                {
-                    Name = "L22B4PC0",
-                    Status = "OK"
-                }
-            ]
-        },
-        Properties = new()
-        {
-            SupportsAlwaysOnAc = (false, false),
-            SupportsGodModeV2 = true,
-            SupportsGSync = true,
-            SupportsIGPUMode = true,
-            SupportsAIMode = true,
-            SupportBootLogoChange = true,
-            IsChineseModel = true,
-        }
-    };
 
     private static Task<(string, string, string, string)> GetModelDataAsync() => WMI.Win32.ComputerSystemProduct.ReadAsync();
 
@@ -522,8 +464,16 @@ public static partial class Compatibility
         return smartFanVersion is 4 or 5 || legionZoneVersion is 1 or 2;
     }
 
-    private static bool GetSupportsGodModeV2(IEnumerable<PowerModeState> supportedPowerModes, int smartFanVersion, int legionZoneVersion)
+    private static bool GetSupportsGodModeV2(
+        IEnumerable<PowerModeState> supportedPowerModes,
+        int smartFanVersion,
+        int legionZoneVersion,
+        MachineInformation.FeatureData features)
     {
+        if (features.Source == MachineInformation.FeatureData.SourceType.CapabilityData
+            && features[CapabilityID.GodModeFnQSwitchable])
+            return true;
+
         if (!supportedPowerModes.Contains(PowerModeState.GodMode))
             return false;
 

@@ -11,6 +11,13 @@ namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
 public abstract class AbstractGodModeController(GodModeSettings settings)
     : IGodModeController
 {
+    private static readonly PowerModeState[] BasePresetPowerModes =
+    [
+        PowerModeState.Quiet,
+        PowerModeState.Balance,
+        PowerModeState.Performance
+    ];
+
     public event EventHandler<Guid>? PresetChanged;
 
     public abstract Task<bool> NeedsVantageDisabledAsync();
@@ -40,35 +47,55 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
         if (!IsValidStore(store))
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Loading default state...");
+                Log.Instance.Trace($"Loading initial state...");
 
-            var id = Guid.NewGuid();
-            return new GodModeState
-            {
-                ActivePresetId = id,
-                Presets = new Dictionary<Guid, GodModePreset> { { id, defaultState } }.AsReadOnlyDictionary()
-            };
+            var initialState = await CreateInitialStateAsync(defaultState).ConfigureAwait(false);
+            SaveState(initialState);
+            return initialState;
         }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Loading state from store...");
 
-        return await LoadStateFromStoreAsync(store, defaultState).ConfigureAwait(false);
+        var state = await LoadStateFromStoreAsync(store, defaultState).ConfigureAwait(false);
+        var migratedState = await EnsureBasePresetsAsync(state, defaultState).ConfigureAwait(false);
+        if (migratedState.Presets.Count != state.Presets.Count)
+            SaveState(migratedState);
+
+        return migratedState;
     }
 
-    public Task SetStateAsync(GodModeState state)
+    public async Task SetStateAsync(GodModeState state)
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state...");
 
-        var activePresetId = state.ActivePresetId;
+        var stateToSave = await EnsureBasePresetsForSaveAsync(state).ConfigureAwait(false);
+        SaveState(stateToSave);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"State saved.");
+    }
+
+    private void SaveState(GodModeState state)
+    {
+        settings.Store.ActivePresetId = state.ActivePresetId;
+        settings.Store.Presets = ToSettingsPresets(state.Presets);
+        settings.SynchronizeStore();
+    }
+
+    private static Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset> ToSettingsPresets(IReadOnlyDictionary<Guid, GodModePreset> source)
+    {
         var presets = new Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset>();
 
-        foreach (var (id, preset) in state.Presets)
+        foreach (var (id, preset) in source)
         {
             presets.Add(id, new()
             {
                 Name = preset.Name,
+                PowerPlanGuid = preset.PowerPlanGuid,
+                PowerMode = preset.PowerMode,
+                SourcePowerMode = preset.SourcePowerMode,
                 CPULongTermPowerLimit = preset.CPULongTermPowerLimit,
                 CPUShortTermPowerLimit = preset.CPUShortTermPowerLimit,
                 CPUPeakPowerLimit = preset.CPUPeakPowerLimit,
@@ -88,14 +115,7 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
             });
         }
 
-        settings.Store.ActivePresetId = activePresetId;
-        settings.Store.Presets = presets;
-        settings.SynchronizeStore();
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"State saved.");
-
-        return Task.CompletedTask;
+        return presets;
     }
 
     public abstract Task ApplyStateAsync();
@@ -145,6 +165,158 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
 
     private static bool IsValidStore(GodModeSettings.GodModeSettingsStore store) => store.Presets.Count != 0 && store.Presets.ContainsKey(store.ActivePresetId);
 
+    private async Task<GodModeState> CreateInitialStateAsync(GodModePreset defaultState)
+    {
+        var presets = await CreateBasePresetsAsync(defaultState).ConfigureAwait(false);
+        if (presets.Count == 0)
+        {
+            var id = Guid.NewGuid();
+            presets[id] = defaultState;
+        }
+
+        var activePresetId = GetPreferredActivePresetId(presets)
+            ?? throw new InvalidOperationException("No God Mode preset could be created.");
+
+        return new GodModeState
+        {
+            ActivePresetId = activePresetId,
+            Presets = presets.AsReadOnlyDictionary()
+        };
+    }
+
+    private async Task<GodModeState> EnsureBasePresetsForSaveAsync(GodModeState state)
+    {
+        if (HasAllBasePresets(state.Presets.Values) && state.Presets.ContainsKey(state.ActivePresetId))
+            return state;
+
+        var defaultState = await GetDefaultStateAsync().ConfigureAwait(false);
+        var normalizedState = await EnsureBasePresetsAsync(state, defaultState).ConfigureAwait(false);
+        if (normalizedState.Presets.ContainsKey(normalizedState.ActivePresetId))
+            return normalizedState;
+
+        var presets = new Dictionary<Guid, GodModePreset>(normalizedState.Presets);
+        var activePresetId = GetPreferredActivePresetId(presets)
+                             ?? throw new InvalidOperationException("No God Mode preset is available.");
+        return normalizedState with { ActivePresetId = activePresetId };
+    }
+
+    private static Guid? GetPreferredActivePresetId(Dictionary<Guid, GodModePreset> presets)
+    {
+        if (presets.Count == 0)
+            return null;
+
+        return presets
+            .Where(kv => kv.Value.SourcePowerMode == PowerModeState.Performance)
+            .Select(kv => kv.Key)
+            .DefaultIfEmpty(presets.OrderBy(kv => kv.Value.Name).Select(kv => kv.Key).First())
+            .First();
+    }
+
+    private async Task<GodModeState> EnsureBasePresetsAsync(GodModeState state, GodModePreset defaultState)
+    {
+        if (HasAllBasePresets(state.Presets.Values))
+            return state;
+
+        var presets = new Dictionary<Guid, GodModePreset>(state.Presets);
+        var basePresets = await CreateBasePresetsAsync(defaultState).ConfigureAwait(false);
+
+        foreach (var (_, preset) in basePresets)
+        {
+            if (HasBasePreset(presets.Values, preset.SourcePowerMode))
+                continue;
+
+            presets[Guid.NewGuid()] = preset;
+        }
+
+        var activePresetId = presets.ContainsKey(state.ActivePresetId)
+            ? state.ActivePresetId
+            : GetPreferredActivePresetId(presets) ?? state.ActivePresetId;
+
+        return state with
+        {
+            ActivePresetId = activePresetId,
+            Presets = presets.AsReadOnlyDictionary()
+        };
+    }
+
+    private static bool HasAllBasePresets(IEnumerable<GodModePreset> presets)
+    {
+        var presetList = presets.ToArray();
+        return BasePresetPowerModes.All(mode => HasBasePreset(presetList, mode));
+    }
+
+    private async Task<Dictionary<Guid, GodModePreset>> CreateBasePresetsAsync(GodModePreset defaultState)
+    {
+        var presets = new Dictionary<Guid, GodModePreset>();
+        var defaults = await GetDefaultsInOtherPowerModesAsync().ConfigureAwait(false);
+
+        foreach (var mode in BasePresetPowerModes)
+        {
+            if (!defaults.TryGetValue(mode, out var modeDefaults))
+                continue;
+
+            if (!HasConfigurableDefault(modeDefaults))
+                continue;
+
+            presets[Guid.NewGuid()] = CreatePresetFromDefaults(defaultState, mode, modeDefaults);
+        }
+
+        return presets;
+    }
+
+    private static bool HasBasePreset(IEnumerable<GodModePreset> presets, PowerModeState? mode)
+    {
+        if (mode is null)
+            return false;
+
+        return presets.Any(preset => preset.SourcePowerMode == mode);
+    }
+
+    private static bool HasConfigurableDefault(GodModeDefaults defaults) =>
+        defaults.CPULongTermPowerLimit.HasValue ||
+        defaults.CPUShortTermPowerLimit.HasValue ||
+        defaults.CPUPeakPowerLimit.HasValue ||
+        defaults.CPUCrossLoadingPowerLimit.HasValue ||
+        defaults.CPUPL1Tau.HasValue ||
+        defaults.APUsPPTPowerLimit.HasValue ||
+        defaults.CPUTemperatureLimit.HasValue ||
+        defaults.GPUPowerBoost.HasValue ||
+        defaults.GPUConfigurableTGP.HasValue ||
+        defaults.GPUTemperatureLimit.HasValue ||
+        defaults.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline.HasValue ||
+        defaults.GPUToCPUDynamicBoost.HasValue ||
+        defaults.FanTable.HasValue ||
+        defaults.FanFullSpeed.HasValue;
+
+    private static GodModePreset CreatePresetFromDefaults(GodModePreset defaultState, PowerModeState mode, GodModeDefaults defaults)
+    {
+        return defaultState with
+        {
+            Name = mode.GetDisplayName(),
+            SourcePowerMode = mode,
+            CPULongTermPowerLimit = CreateStepperValue(defaultState.CPULongTermPowerLimit, defaults.CPULongTermPowerLimit),
+            CPUShortTermPowerLimit = CreateStepperValue(defaultState.CPUShortTermPowerLimit, defaults.CPUShortTermPowerLimit),
+            CPUPeakPowerLimit = CreateStepperValue(defaultState.CPUPeakPowerLimit, defaults.CPUPeakPowerLimit),
+            CPUCrossLoadingPowerLimit = CreateStepperValue(defaultState.CPUCrossLoadingPowerLimit, defaults.CPUCrossLoadingPowerLimit),
+            CPUPL1Tau = CreateStepperValue(defaultState.CPUPL1Tau, defaults.CPUPL1Tau),
+            APUsPPTPowerLimit = CreateStepperValue(defaultState.APUsPPTPowerLimit, defaults.APUsPPTPowerLimit),
+            CPUTemperatureLimit = CreateStepperValue(defaultState.CPUTemperatureLimit, defaults.CPUTemperatureLimit),
+            GPUPowerBoost = CreateStepperValue(defaultState.GPUPowerBoost, defaults.GPUPowerBoost),
+            GPUConfigurableTGP = CreateStepperValue(defaultState.GPUConfigurableTGP, defaults.GPUConfigurableTGP),
+            GPUTemperatureLimit = CreateStepperValue(defaultState.GPUTemperatureLimit, defaults.GPUTemperatureLimit),
+            GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline = CreateStepperValue(
+                defaultState.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline,
+                defaults.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline),
+            GPUToCPUDynamicBoost = CreateStepperValue(defaultState.GPUToCPUDynamicBoost, defaults.GPUToCPUDynamicBoost),
+            FanTableInfo = defaultState.FanTableInfo is { } fanTableInfo && defaults.FanTable is { } fanTable
+                ? new FanTableInfo(fanTableInfo.Data, fanTable)
+                : defaultState.FanTableInfo,
+            FanFullSpeed = defaults.FanFullSpeed ?? defaultState.FanFullSpeed,
+            MinValueOffset = 0,
+            MaxValueOffset = 0
+        };
+    }
+
     private async Task<GodModeState> LoadStateFromStoreAsync(GodModeSettings.GodModeSettingsStore store, GodModePreset defaultState)
     {
         var states = new Dictionary<Guid, GodModePreset>();
@@ -154,6 +326,9 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
             states.Add(id, new GodModePreset
             {
                 Name = preset.Name,
+                PowerPlanGuid = preset.PowerPlanGuid,
+                PowerMode = preset.PowerMode,
+                SourcePowerMode = preset.SourcePowerMode,
                 CPULongTermPowerLimit = CreateStepperValue(defaultState.CPULongTermPowerLimit, preset.CPULongTermPowerLimit, preset.MinValueOffset, preset.MaxValueOffset),
                 CPUShortTermPowerLimit = CreateStepperValue(defaultState.CPUShortTermPowerLimit, preset.CPUShortTermPowerLimit, preset.MinValueOffset, preset.MaxValueOffset),
                 CPUPeakPowerLimit = CreateStepperValue(defaultState.CPUPeakPowerLimit, preset.CPUPeakPowerLimit, preset.MinValueOffset, preset.MaxValueOffset),
@@ -181,6 +356,14 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
             ActivePresetId = store.ActivePresetId,
             Presets = states.AsReadOnlyDictionary()
         };
+    }
+
+    private static StepperValue? CreateStepperValue(StepperValue? state, int? value)
+    {
+        if (!value.HasValue)
+            return null;
+
+        return CreateStepperValue(state, state?.WithValue(value.Value));
     }
 
     private static StepperValue? CreateStepperValue(StepperValue? state, StepperValue? store = null, int? minValueOffset = 0, int? maxValueOffset = 0)

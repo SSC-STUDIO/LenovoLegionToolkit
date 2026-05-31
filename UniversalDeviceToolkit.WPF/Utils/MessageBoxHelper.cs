@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Windows.Utils;
 using Wpf.Ui.Controls;
 using MessageBox = Wpf.Ui.Controls.MessageBox;
 using MessageBoxResult = Wpf.Ui.Controls.MessageBoxResult;
-using TextBox = Wpf.Ui.Controls.TextBox;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -87,56 +86,21 @@ public static class MessageBoxHelper
         bool allowEmpty = false
     )
     {
-        var tcs = new TaskCompletionSource<string?>();
+        var dialog = new InputDialogWindow(
+            title,
+            placeholder,
+            text,
+            primaryButton ?? Resource.OK,
+            secondaryButton ?? Resource.Cancel,
+            allowEmpty,
+            window);
 
-        var textBox = new TextBox
-        {
-            MaxLines = 1,
-            MaxLength = 50,
-            PlaceholderText = placeholder ?? string.Empty,
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = (System.Windows.Media.Brush)window.FindResource("TextFillColorPrimaryBrush"),
-        };
-        var messageBox = new MessageBox
-        {
-            Owner = window,
-            Title = title,
-            Content = textBox,
-            PrimaryButtonAppearance = ControlAppearance.Transparent,
-            PrimaryButtonText = primaryButton ?? Resource.OK,
-            SecondaryButtonText = secondaryButton ?? Resource.Cancel,
-            ShowInTaskbar = false,
-            Topmost = false,
-            MinHeight = 160,
-            MaxHeight = 160,
-            ResizeMode = ResizeMode.NoResize,
-        };
+        var result = dialog.ShowDialog();
+        if (result != true)
+            return Task.FromResult<string?>(null);
 
-        textBox.TextChanged += (_, _) =>
-        {
-            var isEmpty = !allowEmpty && string.IsNullOrWhiteSpace(textBox.Text);
-            messageBox.PrimaryButtonAppearance = isEmpty ? ControlAppearance.Transparent : ControlAppearance.Primary;
-        };
-        _ = messageBox.ShowDialogAsync().ContinueWith(t =>
-        {
-            if (!t.IsCompletedSuccessfully || t.Result != MessageBoxResult.Primary)
-            {
-                tcs.TrySetResult(null);
-                return;
-            }
-
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var content = textBox.Text?.Trim();
-            var newText = string.IsNullOrWhiteSpace(content) ? null : content;
-            tcs.TrySetResult(!allowEmpty && newText is null ? null : newText);
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-
-        textBox.Text = text ?? string.Empty;
-        textBox.SelectionStart = text?.Length ?? 0;
-        textBox.SelectionLength = 0;
-
-        FocusManager.SetFocusedElement(window, textBox);
-
-        return tcs.Task;
+        var input = dialog.InputText?.Trim();
+        var normalized = string.IsNullOrWhiteSpace(input) ? null : input;
+        return Task.FromResult(!allowEmpty && normalized is null ? null : normalized);
     }
 }

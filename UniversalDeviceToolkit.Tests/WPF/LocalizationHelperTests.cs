@@ -14,16 +14,13 @@ public sealed class LocalizationHelperTests : IDisposable
 {
     private readonly string _tempAppData;
     private readonly string? _previousAppDataOverride;
-    private readonly string? _previousLegacyAppDataOverride;
 
     public LocalizationHelperTests()
     {
         _tempAppData = Path.Combine(Path.GetTempPath(), $"udt-lang-helper-test-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_tempAppData);
         _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
-        _previousLegacyAppDataOverride = Environment.GetEnvironmentVariable(Folders.LegacyAppDataOverrideEnvironmentVariable);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _tempAppData);
-        Environment.SetEnvironmentVariable(Folders.LegacyAppDataOverrideEnvironmentVariable, _tempAppData);
     }
 
     [Fact]
@@ -40,7 +37,6 @@ public sealed class LocalizationHelperTests : IDisposable
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
-        Environment.SetEnvironmentVariable(Folders.LegacyAppDataOverrideEnvironmentVariable, _previousLegacyAppDataOverride);
 
         try
         {

@@ -13,6 +13,7 @@ namespace UniversalDeviceToolkit.WPF.Controls.Dashboard;
 public class DashboardGroupControl : UserControl
 {
     private readonly TaskCompletionSource _initializedTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource _firstVisibleContentReadyTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private readonly DashboardGroup _dashboardGroup;
 
@@ -20,6 +21,7 @@ public class DashboardGroupControl : UserControl
     private TextBlock? _headerTextBlock;
 
     public Task InitializedTask => _initializedTaskCompletionSource.Task;
+    public Task FirstVisibleContentReadyTask => _firstVisibleContentReadyTaskCompletionSource.Task;
 
     public DashboardGroupControl(DashboardGroup dashboardGroup)
     {
@@ -97,5 +99,43 @@ public class DashboardGroupControl : UserControl
             .Any(child => child.Visibility == Visibility.Visible);
 
         Visibility = hasVisibleChild ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    protected override async void OnContentChanged(object oldContent, object newContent)
+    {
+        base.OnContentChanged(oldContent, newContent);
+
+        if (newContent is not StackPanel)
+            return;
+
+        await TryCompleteFirstVisibleContentReadyAsync();
+    }
+
+    private async Task TryCompleteFirstVisibleContentReadyAsync()
+    {
+        try
+        {
+            if (_stackPanel is null)
+                return;
+
+            var visibleRefreshingControls = _stackPanel.Children
+                .OfType<AbstractRefreshingControl>()
+                .Where(control => control.Visibility == Visibility.Visible)
+                .ToArray();
+
+            if (visibleRefreshingControls.Length == 0)
+            {
+                _firstVisibleContentReadyTaskCompletionSource.TrySetResult();
+                return;
+            }
+
+            await Task.WhenAll(visibleRefreshingControls.Select(control => control.InitialRefreshCompletedTask));
+            _firstVisibleContentReadyTaskCompletionSource.TrySetResult();
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Failed waiting for dashboard group {_dashboardGroup.GetName()} content readiness: {ex.Message}");
+            _firstVisibleContentReadyTaskCompletionSource.TrySetResult();
+        }
     }
 }

@@ -68,44 +68,10 @@ public class PluginFileSystemManager : IPluginFileSystemManager
     /// </summary>
     public string GetPluginsDirectory()
     {
-        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
-        if (!string.IsNullOrWhiteSpace(overridePath))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Using overridden plugins directory: {overridePath}");
-            return overridePath;
-        }
-
-        // Try to find the plugins directory relative to the application base directory
-        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-
-        // Check for Build/plugins directory (development/build scenario)
-        // Try multiple relative paths to handle different build configurations
-        var possiblePaths = new[]
-        {
-            Path.Combine(appBaseDir, "plugins"),  // Same directory as executable (release)
-            Path.Combine(appBaseDir, "Plugins"),  // Same directory as executable (release, legacy)
-            Path.Combine(appBaseDir, "Build", "plugins"),  // Direct Build/plugins
-            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),  // Relative to bin
-            Path.Combine(appBaseDir, "..", "Build", "plugins"),  // One level up
-        };
-
-        foreach (var possiblePath in possiblePaths)
-        {
-            var fullPath = Path.GetFullPath(possiblePath);
-            if (Directory.Exists(fullPath))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Found plugins directory: {fullPath}");
-                return fullPath;
-            }
-        }
-
-        // Default to plugins relative to app base directory (will be created if needed)
-        var defaultPath = Path.Combine(appBaseDir, "plugins");
+        var pluginsDirectory = PluginPaths.GetPluginsDirectory();
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
-        return defaultPath;
+            Log.Instance.Trace($"Using plugins directory: {pluginsDirectory}");
+        return pluginsDirectory;
     }
 
     /// <summary>

@@ -527,7 +527,7 @@ LLT 使用了许多底层的 Windows API，杀毒软件可能会识别这些 API
 
 #### 更换主板后提示不兼容？
 
-有时新主板内的机型和序列号信息出错，你可以尝试 [这篇教程](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) 来恢复。如果这不起作用你可以尝试打开 `%LOCALAPPDATA%\LenovoLegionToolkit` 并创建一个名为 `args.txt` 的文件并打开文件后呼入 `--skip-compat-check` ，这会禁用 LLT 的兼容性检查。我们建议你在无法正确恢复型号、序列号等信息的情况下再使用这个办法。
+有时新主板内的机型和序列号信息出错，你可以尝试 [这篇教程](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) 来恢复。
 
 #### 为什么我无法在使用电池供电时切换到野兽与自定义模式？
 
@@ -602,10 +602,8 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 * `--trace` - 启用日志记录并将日志保存到 `%LOCALAPPDATA%\LenovoLegionToolkit\log`
 * `--minimized` - 以最小化到托盘的方式启动 LLT
-* `--skip-compat-check` - 在启动 LLT 时不检查设备兼容性 _（使用该参数时 LLT 不保证能够正常运行，也不会为此参数造成的问题提供技术支持）_
 * `--disable-tray-tooltip` - 当鼠标悬停在托盘图标上方时不显示 LLT 托盘自定义工具提示
 * `--allow-all-power-modes-on-battery` - 允许在未接通外部电源的情况下启用所有性能模式 _（使用该参数时 LLT 不保证能够正常运行，也不会为此参数造成的问题提供技术支持）_
-* `--enable-hybrid-mode-automation` - 允许使用 LLT 自动化操作切换混合模式或其他显卡工作模式 _（使用该参数时 LLT 不保证能够正常运行，也不会为此参数造成的问题提供技术支持）_
 * `--force-disable-rgbkb` - 禁用四分区 RGB 键盘的所有光效控制功能
 * `--force-disable-spectrumkb` - 禁用 Spectrum 单键 RGB 的所有光效控制功能
 * `--force-disable-lenovolighting` - 禁用拯救者 Logo，白色键盘背光，和其他如端口背光的光效控制功能

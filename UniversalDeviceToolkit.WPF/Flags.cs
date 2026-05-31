@@ -11,27 +11,20 @@ namespace UniversalDeviceToolkit.WPF;
 public class Flags
 {
     public const string DisableUpdateCheckerSwitch = "--disable-update-checker";
-    public const string SingleInstanceKeySwitch = "--single-instance-key";
-    public const string IpcPipeNameSwitch = "--ipc-pipe-name";
 
     public bool IsTraceEnabled { get; }
     public bool Minimized { get; }
-    public bool SkipCompatibilityCheck { get; }
     public bool DisableTrayTooltip { get; }
     public bool AllowAllPowerModesOnBattery { get; }
     public bool ForceDisableRgbKeyboardSupport { get; }
     public bool ForceDisableSpectrumKeyboardSupport { get; }
     public bool ForceDisableLenovoLighting { get; }
     public bool ExperimentalGPUWorkingMode { get; }
-    public bool EnableHybridModeAutomation { get; }
     public Uri? ProxyUrl { get; }
     public string? ProxyUsername { get; }
     public string? ProxyPassword { get; }
     public bool ProxyAllowAllCerts { get; }
     public bool DisableUpdateChecker { get; }
-    public bool DisableConflictingSoftwareWarning { get; }
-    public string? SingleInstanceKey { get; }
-    public string? IpcPipeName { get; }
 
     public Flags(IEnumerable<string> startupArgs)
     {
@@ -39,22 +32,17 @@ public class Flags
 
         IsTraceEnabled = BoolValue(args, "--trace");
         Minimized = BoolValue(args, "--minimized");
-        SkipCompatibilityCheck = BoolValue(args, "--skip-compat-check");
         DisableTrayTooltip = BoolValue(args, "--disable-tray-tooltip");
         AllowAllPowerModesOnBattery = BoolValue(args, "--allow-all-power-modes-on-battery");
         ForceDisableRgbKeyboardSupport = BoolValue(args, "--force-disable-rgbkb");
         ForceDisableSpectrumKeyboardSupport = BoolValue(args, "--force-disable-spectrumkb");
         ForceDisableLenovoLighting = BoolValue(args, "--force-disable-lenovolighting");
         ExperimentalGPUWorkingMode = BoolValue(args, "--experimental-gpu-working-mode");
-        EnableHybridModeAutomation = BoolValue(args, "--enable-hybrid-mode-automation");
         ProxyUrl = Uri.TryCreate(StringValue(args, "--proxy-url"), UriKind.Absolute, out var uri) ? uri : null;
         ProxyUsername = StringValue(args, "--proxy-username");
         ProxyPassword = StringValue(args, "--proxy-password");
         ProxyAllowAllCerts = BoolValue(args, "--proxy-allow-all-certs");
         DisableUpdateChecker = BoolValue(args, DisableUpdateCheckerSwitch);
-        DisableConflictingSoftwareWarning = BoolValue(args, "--disable-conflicting-software-warning");
-        SingleInstanceKey = StringValue(args, SingleInstanceKeySwitch);
-        IpcPipeName = StringValue(args, IpcPipeNameSwitch);
     }
 
     private static string[] LoadExternalArgs()
@@ -94,20 +82,15 @@ public class Flags
     public override string ToString() =>
         $"{nameof(IsTraceEnabled)}: {IsTraceEnabled}," +
         $" {nameof(Minimized)}: {Minimized}," +
-        $" {nameof(SkipCompatibilityCheck)}: {SkipCompatibilityCheck}," +
         $" {nameof(DisableTrayTooltip)}: {DisableTrayTooltip}," +
         $" {nameof(AllowAllPowerModesOnBattery)}: {AllowAllPowerModesOnBattery}," +
         $" {nameof(ForceDisableRgbKeyboardSupport)}: {ForceDisableRgbKeyboardSupport}," +
         $" {nameof(ForceDisableSpectrumKeyboardSupport)}: {ForceDisableSpectrumKeyboardSupport}," +
         $" {nameof(ForceDisableLenovoLighting)}: {ForceDisableLenovoLighting}," +
         $" {nameof(ExperimentalGPUWorkingMode)}: {ExperimentalGPUWorkingMode}," +
-        $" {nameof(EnableHybridModeAutomation)}: {EnableHybridModeAutomation}," +
         $" {nameof(ProxyUrl)}: {ProxyUrl}," +
         $" {nameof(ProxyUsername)}: {ProxyUsername}," +
         $" {nameof(ProxyPassword)}: [REDACTED]," +
         $" {nameof(ProxyAllowAllCerts)}: {ProxyAllowAllCerts}," +
-        $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}, " +
-        $" {nameof(DisableConflictingSoftwareWarning)}: {DisableConflictingSoftwareWarning}," +
-        $" {nameof(SingleInstanceKey)}: {SingleInstanceKey}," +
-        $" {nameof(IpcPipeName)}: {IpcPipeName}";
+        $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}";
 }

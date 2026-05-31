@@ -21,7 +21,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
@@ -48,7 +48,10 @@
 
         </Grid>
 
-        <wpfui:DynamicScrollViewer Grid.Row="1">
+        <wpfui:DynamicScrollViewer
+            x:Name="_contentScrollViewer"
+            Grid.Row="1"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="16,0,16,12">
 
                 <TextBlock
@@ -223,4 +226,3 @@
             HorizontalAlignment="Center" />
     </Grid>
 </local:BaseWindow>
-

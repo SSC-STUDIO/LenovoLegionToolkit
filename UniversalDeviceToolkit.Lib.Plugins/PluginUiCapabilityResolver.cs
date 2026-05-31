@@ -34,17 +34,16 @@ public static class PluginUiCapabilityResolver
 
         try
         {
-            var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
-            if (!Directory.Exists(pluginDirectory))
-                return default;
-
-            foreach (var manifestFileName in ManifestFileNames)
+            foreach (var pluginDirectory in GetInstalledPluginDirectories(pluginId))
             {
-                var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
-                if (!File.Exists(manifestPath))
-                    continue;
+                foreach (var manifestFileName in ManifestFileNames)
+                {
+                    var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
+                    if (!File.Exists(manifestPath))
+                        continue;
 
-                return ReadCapabilitiesFromJson(manifestPath);
+                    return ReadCapabilitiesFromJson(manifestPath);
+                }
             }
         }
         catch (Exception ex)
@@ -200,5 +199,22 @@ public static class PluginUiCapabilityResolver
 
         value = default;
         return false;
+    }
+
+    private static string[] GetInstalledPluginDirectories(string pluginId)
+    {
+        var pluginsDirectory = PluginPaths.GetPluginsDirectory();
+        var directories = new[]
+        {
+            PluginPaths.GetPluginDirectory(pluginId),
+            Path.Combine(pluginsDirectory, "local", pluginId),
+            Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"),
+            Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}")
+        };
+
+        return directories
+            .Where(Directory.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 }

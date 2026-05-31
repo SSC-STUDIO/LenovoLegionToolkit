@@ -32,6 +32,12 @@ public partial class DeviceInformationWindow
 
     private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync();
 
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        _contentScrollViewer.MaxHeight = Math.Max(320, SystemParameters.WorkArea.Height - 96);
+    }
+
     private async Task RefreshAsync(bool forceRefresh = false)
     {
         MachineInformation mi;

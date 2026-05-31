@@ -12,11 +12,10 @@ Serves `http://127.0.0.1:18765/catalog.json` and `de.zip` (built from real `Univ
 
 ## 2. Point the app at it
 
-The app already reads `UDT_RESOURCE_CATALOG_URL` / `LLT_RESOURCE_CATALOG_URL`:
+The app already reads `UDT_RESOURCE_CATALOG_URL`:
 
 ```powershell
 $env:UDT_RESOURCE_CATALOG_URL = "http://127.0.0.1:18765/catalog.json"
-$env:LLT_RESOURCE_CATALOG_URL  = $env:UDT_RESOURCE_CATALOG_URL
 # launch Universal Device Toolkit or smoke test
 ```
 

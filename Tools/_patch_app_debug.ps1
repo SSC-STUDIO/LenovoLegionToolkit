@@ -22,7 +22,6 @@ $insert = @"
             "D",
             new
             {
-                skipCompatCheck = flags.SkipCompatibilityCheck,
                 deviceSetupExists = File.Exists(deviceSetupPath),
                 deviceSetupPath,
                 langFileExists = File.Exists(Path.Combine(Folders.AppData, "lang")),

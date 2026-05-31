@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>PresetUiValidation</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj" />
+  </ItemGroup>
+
+</Project>

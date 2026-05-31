@@ -144,7 +144,18 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             yield break;
 
         foreach (var directory in Directory.EnumerateDirectories(pluginsDirectory))
+        {
+            var directoryName = Path.GetFileName(directory);
+            if (directoryName.Equals("local", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var localDirectory in Directory.EnumerateDirectories(directory))
+                    yield return localDirectory;
+
+                continue;
+            }
+
             yield return directory;
+        }
     }
 
     private static PluginManifest? TryReadManifest(string pluginDirectory)

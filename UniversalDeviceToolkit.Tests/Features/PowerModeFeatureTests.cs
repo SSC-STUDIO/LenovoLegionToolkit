@@ -52,7 +52,16 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, "1");
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DE",
+                Model = "Legion Pro 7 16IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
 
             var feature = (IFeature<PowerModeState>)RuntimeHelpers.GetUninitializedObject(typeof(PowerModeFeature));
 
@@ -62,7 +71,6 @@ public class PowerModeFeatureTests : UnitTestBase
         }
         finally
         {
-            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, null);
             ResetCompatibilityCache();
         }
     }
@@ -74,7 +82,16 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, "1");
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DE",
+                Model = "Legion Pro 7 16IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.Extreme],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
 
             var feature = new PowerModeFeature(
                 null!,
@@ -89,7 +106,6 @@ public class PowerModeFeatureTests : UnitTestBase
         }
         finally
         {
-            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, null);
             ResetCompatibilityCache();
         }
     }
@@ -161,6 +177,46 @@ public class PowerModeFeatureTests : UnitTestBase
 
             states.Should().Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.GodMode]);
             states.Should().NotContain(PowerModeState.Extreme);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetAllStatesAsync_WhenCapabilityDataExposesGodModeFnQSwitchable_ShouldIncludeGodMode()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DF",
+                Model = "Legion Y9000P IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance],
+                Features = new MachineInformation.FeatureData(
+                    MachineInformation.FeatureData.SourceType.CapabilityData,
+                    [CapabilityID.GodModeFnQSwitchable]),
+                Properties = new MachineInformation.PropertyData
+                {
+                    SupportsGodModeV2 = true
+                }
+            });
+
+            var feature = new PowerModeFeature(
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
+
+            var states = await feature.GetAllStatesAsync();
+
+            states.Should().Contain(PowerModeState.GodMode);
         }
         finally
         {

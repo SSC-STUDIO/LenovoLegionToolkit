@@ -10,6 +10,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 鏀硅繘
+No unreleased changes yet.
+
+## [4.1.0] - 2026-05-31
+
+### Highlights / 重点
+- Fixed God Mode preset management so create, rename, delete, and preset switching refresh both the visible picker and the stored state correctly.
+- Fixed optimization-only plugins so installed local plugins can contribute System Optimization child actions even when they do not expose a standalone page.
+- Expanded sensor coverage and fallback handling with better VRAM, GPU hot-spot, memory temperature, SSD temperature, voltage, and shared-memory GPU readings.
+- Fixed dashboard loading timing so skeletons remain visible until the first real content refresh is ready, and removed the battery detailed average temperature field.
+- Continued separating hardware-validation and smoke-only behavior out of the shipping app and into standalone tools.
+
+### Improved / 改进
+- Fixed God Mode preset create, rename, delete, and switching behavior so the UI and persisted state stay in sync.
+- Fixed Plugin Extensions optimization-only plugins so their System Optimization child actions load correctly from installed local plugin directories.
+- Expanded dashboard and fallback sensor coverage with additional VRAM, memory, SSD, voltage, hot-spot, and memory-temperature readings on more machines.
+- Fixed dashboard skeleton timing so loading indicators stay visible until the first real content refresh has completed, and removed the battery detailed average temperature field.
+- Continued moving hardware validation and other smoke-only behavior into standalone tools instead of shipping-app entry points.
+- Prepared 4.1.0 release metadata, package-manager manifest generation, and local validation so winget/Scoop manifests can be finalized from the tagged release assets.
+
 ## [4.0.0] - 2026-05-29
 
 ### Highlights / 重点

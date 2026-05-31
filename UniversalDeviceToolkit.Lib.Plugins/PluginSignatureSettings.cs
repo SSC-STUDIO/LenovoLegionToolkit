@@ -1,5 +1,3 @@
-using System;
-
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
@@ -29,8 +27,6 @@ public enum PluginSignatureValidationMode
 /// </summary>
 public class PluginSignatureSettings
 {
-    public const string ValidationModeEnvironmentVariable = "LLT_PLUGIN_SIGNATURE_MODE";
-
     /// <summary>
     /// Signature validation mode
     /// Default: RequireSignature (most secure)
@@ -92,15 +88,6 @@ public class PluginSignatureSettings
         AllowTestCertificates = true,
         CheckRevocationStatus = false
     };
-
-    public static PluginSignatureSettings CreateForCurrentProcess()
-    {
-        return TryCreateFromEnvironmentValue(
-            Environment.GetEnvironmentVariable(ValidationModeEnvironmentVariable),
-            out var settings)
-            ? settings
-            : Production;
-    }
 
     public static bool TryCreateFromEnvironmentValue(string? value, out PluginSignatureSettings settings)
     {

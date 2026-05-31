@@ -74,6 +74,8 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
     {
         await base.OnRefreshAsync();
 
+        await UpdateConfigButtonVisibilityAsync();
+
         if (await Power.IsPowerAdapterConnectedAsync() != PowerAdapterStatus.Connected
             && TryGetSelectedItem(out var state)
             && state is PowerModeState.Performance or PowerModeState.GodMode)
@@ -86,22 +88,32 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
     {
         await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
 
+        await UpdateConfigButtonVisibilityAsync();
+    }
+
+    private async Task UpdateConfigButtonVisibilityAsync()
+    {
+        if (!TryGetSelectedItem(out var state))
+        {
+            _configButton.ToolTip = null;
+            _configButton.Visibility = Visibility.Collapsed;
+            return;
+        }
+
         var mi = await MachineCompatibility.GetMachineInformationAsync();
 
-        switch (newValue)
-        {
-            case PowerModeState.Balance when mi.Properties.SupportsAIMode:
-            case PowerModeState.Performance when mi.Properties.SupportsGodMode:
-            case PowerModeState.GodMode when mi.Properties.SupportsGodMode:
-                _configButton.ToolTip = Resource.PowerModeControl_Settings;
-                _configButton.Visibility = Visibility.Visible;
-                break;
-            default:
-                _configButton.ToolTip = null;
-                _configButton.Visibility = Visibility.Collapsed;
-                break;
-        }
+        var shouldShowConfigButton = ShouldShowConfigButton(state, mi.Properties);
+        _configButton.ToolTip = shouldShowConfigButton ? Resource.PowerModeControl_Settings : null;
+        _configButton.Visibility = shouldShowConfigButton ? Visibility.Visible : Visibility.Collapsed;
     }
+
+    internal static bool ShouldShowConfigButton(PowerModeState state, MachineInformation.PropertyData properties) =>
+        state switch
+        {
+            PowerModeState.Balance => properties.SupportsAIMode,
+            PowerModeState.Performance or PowerModeState.GodMode => properties.SupportsGodMode,
+            _ => false
+        };
 
     protected override void OnStateChangeException(Exception exception)
     {
@@ -115,6 +127,8 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     protected override FrameworkElement GetAccessory(ComboBox comboBox)
     {
+        AutomationProperties.SetAutomationId(comboBox, "PowerModeControl_ComboBox");
+
         if (_accessoryStackPanel.Children.Count == 0)
         {
             _accessoryStackPanel.Children.Add(_configButton);

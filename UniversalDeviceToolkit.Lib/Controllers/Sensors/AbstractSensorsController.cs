@@ -17,6 +17,19 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
 public abstract class AbstractSensorsController(GPUController gpuController) : ISensorsController
 {
+    protected readonly record struct LibreHardwareMonitorReadings(
+        int CpuUtilization,
+        int CpuTemperature,
+        int CpuCoreClock,
+        int CpuWattage,
+        double CpuVoltage,
+        int GpuUtilization,
+        int GpuTemperature,
+        int GpuCoreClock,
+        int GpuMemoryClock,
+        int GpuWattage,
+        double GpuVoltage);
+
     protected readonly struct GPUInfo(
         int utilization,
         int coreClock,
@@ -148,30 +161,100 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     {
         const int GENERIC_MAX_UTILIZATION = 100;
         const int GENERIC_MAX_TEMPERATURE = 100;
+        Task<LibreHardwareMonitorReadings?>? libreHardwareMonitorReadingsTask = null;
+        Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsOnceAsync() =>
+            libreHardwareMonitorReadingsTask ??= GetLibreHardwareMonitorReadingsAsync();
 
         var cpuUtilization = SafeRead(() => GetCpuUtilization(GENERIC_MAX_UTILIZATION), -1, "CPU utilization");
         var cpuMaxCoreClock = await SafeReadAsync(async () => _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false), -1, "CPU max core clock").ConfigureAwait(false);
         var cpuCoreClock = SafeRead(GetCpuCoreClock, -1, "CPU core clock");
-        var cpuCurrentTemperature = await SafeReadAsync(GetCpuCurrentTemperatureWithFallbackAsync, -1, "CPU temperature").ConfigureAwait(false);
+        var cpuCurrentTemperature = NormalizeTemperatureReading(await SafeReadAsync(GetCpuCurrentTemperatureAsync, -1, "CPU temperature").ConfigureAwait(false));
         var cpuCurrentFanSpeed = await SafeReadAsync(GetCpuCurrentFanSpeedAsync, -1, "CPU fan speed").ConfigureAwait(false);
         var cpuMaxFanSpeed = await SafeReadAsync(async () => _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "CPU max fan speed").ConfigureAwait(false);
 
         double cpuVoltage = 0;
         int cpuWattage = -1;
 
+        if (cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0)
+        {
+            var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
+            if (libreHardwareMonitorReadings is { } readings)
+            {
+                if (cpuUtilization < 0 && readings.CpuUtilization >= 0)
+                    cpuUtilization = readings.CpuUtilization;
+                if (cpuCoreClock < 0 && readings.CpuCoreClock >= 0)
+                    cpuCoreClock = readings.CpuCoreClock;
+                if (cpuCurrentTemperature < 0 && readings.CpuTemperature > 0)
+                    cpuCurrentTemperature = readings.CpuTemperature;
+            }
+        }
+
+        if (cpuCurrentTemperature < 0)
+        {
+            var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
+            if (fallback > 0 && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CPU temperature from ACPI thermal zone fallback: {fallback}C");
+
+            cpuCurrentTemperature = fallback > 0 ? fallback : -1;
+        }
+
         if (detailed)
         {
             cpuVoltage = await SafeReadAsync(WMI.Win32.Processor.GetVoltageAsync, 0d, "CPU voltage").ConfigureAwait(false);
             cpuWattage = await SafeReadAsync(GetCpuWattageAsync, -1, "CPU wattage").ConfigureAwait(false);
+
+            if (cpuVoltage <= 0 || cpuWattage < 0)
+            {
+                var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
+                if (libreHardwareMonitorReadings is { } readings)
+                {
+                    if (cpuVoltage <= 0 && readings.CpuVoltage > 0)
+                        cpuVoltage = readings.CpuVoltage;
+                    if (cpuWattage < 0 && readings.CpuWattage > 0)
+                        cpuWattage = readings.CpuWattage;
+                }
+            }
         }
 
         var gpuInfo = await SafeReadAsync(GetGPUInfoAsync, GPUInfo.Empty, "GPU info").ConfigureAwait(false);
-        var gpuCurrentTemperature = gpuInfo.Temperature >= 0
+        var gpuUtilization = gpuInfo.Utilization;
+        var gpuCoreClock = gpuInfo.CoreClock;
+        var gpuMaxCoreClock = gpuInfo.MaxCoreClock;
+        var gpuMemoryClock = gpuInfo.MemoryClock;
+        var gpuMaxMemoryClock = gpuInfo.MaxMemoryClock;
+        var gpuCurrentTemperature = gpuInfo.Temperature > 0
             ? gpuInfo.Temperature
-            : await SafeReadAsync(GetGpuCurrentTemperatureAsync, -1, "GPU temperature").ConfigureAwait(false);
+            : NormalizeTemperatureReading(await SafeReadAsync(GetGpuCurrentTemperatureAsync, -1, "GPU temperature").ConfigureAwait(false));
         var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
+        var gpuWattage = gpuInfo.Wattage;
+        var gpuVoltage = gpuInfo.Voltage;
         var gpuCurrentFanSpeed = await SafeReadAsync(GetGpuCurrentFanSpeedAsync, -1, "GPU fan speed").ConfigureAwait(false);
         var gpuMaxFanSpeed = await SafeReadAsync(async () => _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "GPU max fan speed").ConfigureAwait(false);
+
+        if (gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || (detailed && (gpuVoltage <= 0 || gpuWattage < 0)))
+        {
+            var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
+            if (libreHardwareMonitorReadings is { } readings)
+            {
+                if (gpuUtilization < 0 && readings.GpuUtilization >= 0)
+                    gpuUtilization = readings.GpuUtilization;
+                if (gpuCoreClock < 0 && readings.GpuCoreClock >= 0)
+                    gpuCoreClock = readings.GpuCoreClock;
+                if (gpuMemoryClock < 0 && readings.GpuMemoryClock >= 0)
+                    gpuMemoryClock = readings.GpuMemoryClock;
+                if (gpuCurrentTemperature < 0 && readings.GpuTemperature > 0)
+                    gpuCurrentTemperature = readings.GpuTemperature;
+                if (detailed && gpuWattage < 0 && readings.GpuWattage > 0)
+                    gpuWattage = readings.GpuWattage;
+                if (detailed && gpuVoltage <= 0 && readings.GpuVoltage > 0)
+                    gpuVoltage = readings.GpuVoltage;
+            }
+        }
+
+        if (gpuMaxCoreClock < 0 && gpuCoreClock >= 0)
+            gpuMaxCoreClock = gpuCoreClock;
+        if (gpuMaxMemoryClock < 0 && gpuMemoryClock >= 0)
+            gpuMaxMemoryClock = gpuMemoryClock;
 
         // Update Min/Max records
         if (cpuVoltage > 0)
@@ -185,10 +268,10 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             if (cpuCurrentTemperature > _cpuMaxTemp) _cpuMaxTemp = cpuCurrentTemperature;
         }
         
-        if (gpuInfo.Voltage > 0)
+        if (gpuVoltage > 0)
         {
-            if (gpuInfo.Voltage < _gpuMinVoltage) _gpuMinVoltage = gpuInfo.Voltage;
-            if (gpuInfo.Voltage > _gpuMaxVoltage) _gpuMaxVoltage = gpuInfo.Voltage;
+            if (gpuVoltage < _gpuMinVoltage) _gpuMinVoltage = gpuVoltage;
+            if (gpuVoltage > _gpuMaxVoltage) _gpuMaxVoltage = gpuVoltage;
         }
         if (gpuCurrentTemperature > 0)
         {
@@ -209,16 +292,16 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             cpuCurrentFanSpeed,
             cpuMaxFanSpeed).WithMinMax(_cpuMinVoltage, _cpuMaxVoltage, _cpuMinTemp, _cpuMaxTemp);
             
-        var gpu = new SensorData(gpuInfo.Utilization,
+        var gpu = new SensorData(gpuUtilization,
             GENERIC_MAX_UTILIZATION,
-            gpuInfo.CoreClock,
-            gpuInfo.MaxCoreClock,
-            gpuInfo.MemoryClock,
-            gpuInfo.MaxMemoryClock,
+            gpuCoreClock,
+            gpuMaxCoreClock,
+            gpuMemoryClock,
+            gpuMaxMemoryClock,
             gpuCurrentTemperature,
             gpuMaxTemperature,
-            gpuInfo.Wattage,
-            gpuInfo.Voltage,
+            gpuWattage,
+            gpuVoltage,
             gpuCurrentFanSpeed,
             gpuMaxFanSpeed).WithMinMax(_gpuMinVoltage, _gpuMaxVoltage, _gpuMinTemp, _gpuMaxTemp);
 
@@ -258,18 +341,51 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected virtual Task<int> GetPchMaxFanSpeedAsync() => Task.FromResult(-1);
 
-    private async Task<int> GetCpuCurrentTemperatureWithFallbackAsync()
+    protected virtual async Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync()
     {
-        var temperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
-        if (temperature > 0)
-            return temperature;
+        try
+        {
+            if (IoCContainer.TryResolve<SensorsGroupController>() is not { } sensorsGroupController)
+                return null;
 
-        var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
-        if (fallback > 0 && Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"CPU temperature from ACPI thermal zone fallback: {fallback}C");
+            if (!sensorsGroupController.IsLibreHardwareMonitorInitialized())
+                _ = await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false);
 
-        return fallback;
+            if (!sensorsGroupController.IsLibreHardwareMonitorInitialized())
+                return null;
+
+            await sensorsGroupController.UpdateAsync().ConfigureAwait(false);
+
+            return new LibreHardwareMonitorReadings(
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuUsageAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuTemperatureAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuCoreClockAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetCpuVoltageAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuUsageAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuTemperatureAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuCoreClockAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuMemoryClockAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuPowerAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false)));
+        }
+        catch
+        {
+            return null;
+        }
     }
+
+    private static int NormalizeLibreHardwareMonitorMetric(float value) =>
+        value >= 0 ? (int)Math.Round(value) : -1;
+
+    private static int NormalizeLibreHardwareMonitorPositiveMetric(float value) =>
+        value > 0 ? (int)Math.Round(value) : -1;
+
+    private static double NormalizeLibreHardwareMonitorVoltage(float value) =>
+        value > 0 ? Math.Round(value, 3) : 0;
+
+    private static int NormalizeTemperatureReading(int value) =>
+        value > 0 ? value : -1;
 
     protected virtual int GetCpuUtilization(int maxUtilization)
     {

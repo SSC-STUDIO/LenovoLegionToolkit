@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1955,6 +1955,12 @@
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
     <value>核心频率</value>
   </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P 核频率</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E 核频率</value>
+  </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
     <value>温度</value>
   </data>
@@ -1966,6 +1972,40 @@
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>显存频率</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>内存占用</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>内存温度</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>固态温度</value>
+  </data>
+
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>显存占用</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>共享内存占用</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>显存温度</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU热点温度</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe 吞吐量</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>核心</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>内存</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>平台</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
     <value>刷新间隔</value>

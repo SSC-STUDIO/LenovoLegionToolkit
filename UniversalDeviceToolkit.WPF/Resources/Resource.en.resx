@@ -2415,6 +2415,12 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
     <value>Core Clock</value>
   </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P Core Clock</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E Core Clock</value>
+  </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
     <value>Temperature</value>
   </data>
@@ -2426,6 +2432,39 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Memory Clock</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Memory Usage</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Memory Temperature</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD Temperature</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM Usage</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Shared Memory Usage</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM Temperature</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU Hot Spot</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe Throughput</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Cores</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
     <value>Refresh interval</value>

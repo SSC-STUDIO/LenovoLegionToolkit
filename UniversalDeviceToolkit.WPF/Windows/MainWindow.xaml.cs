@@ -60,7 +60,6 @@ public partial class MainWindow
     private readonly Snackbar _snackbar;
 
     public bool TrayTooltipEnabled { get; set; } = true;
-    public bool DisableConflictingSoftwareWarning { get; set; }
     public bool SuppressClosingEventHandler { get; set; }
 
     public Snackbar Snackbar => _snackbar;
@@ -236,9 +235,6 @@ public partial class MainWindow
     {
         try
         {
-            if (ShouldKeepUnsupportedNavigationItems())
-                return;
-
             var mi = await MachineCompatibility.GetMachineInformationAsync();
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
 
@@ -456,9 +452,6 @@ public partial class MainWindow
 
     private void UpdateIndicators()
     {
-        if (DisableConflictingSoftwareWarning)
-            return;
-
         _vantageDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
         {
             _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
@@ -669,11 +662,6 @@ public partial class MainWindow
         // UpdatePluginExtensionsNavigationVisibility must be called AFTER UpdateNavigationItemsVisibilityFromSettings
         // to ensure it has the latest visibility settings
         UpdatePluginExtensionsNavigationVisibility();
-    }
-
-    private static bool ShouldKeepUnsupportedNavigationItems()
-    {
-        return KeyboardBacklightViewModel.ShouldKeepUnsupportedNavigationItems();
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()

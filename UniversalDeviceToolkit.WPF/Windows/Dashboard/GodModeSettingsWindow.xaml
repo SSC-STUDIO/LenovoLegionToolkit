@@ -141,6 +141,7 @@
 
                     <godMode:GodModeValueControl
                         x:Name="_cpuLongTermPowerLimitControl"
+                        AutomationIdPrefix="GodModeCpuLongTermPowerLimit"
                         Title="{x:Static resources:Resource.GodModeSettingsWindow_CPU_LongTermPL}"
                         Margin="0,0,0,8"
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_CPU_LongTermPL_Description}"
@@ -148,6 +149,7 @@
 
                     <godMode:GodModeValueControl
                         x:Name="_cpuShortTermPowerLimitControl"
+                        AutomationIdPrefix="GodModeCpuShortTermPowerLimit"
                         Title="{x:Static resources:Resource.GodModeSettingsWindow_CPU_ShortTermPL}"
                         Margin="0,0,0,8"
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_CPU_ShortTermPL_Description}"
@@ -197,6 +199,7 @@
 
                     <godMode:GodModeValueControl
                         x:Name="_gpuPowerBoostControl"
+                        AutomationIdPrefix="GodModeGpuPowerBoost"
                         Title="{x:Static resources:Resource.GodModeSettingsWindow_GPU_DynamicBoost}"
                         Margin="0,0,0,8"
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_GPU_DynamicBoost_Description}"
@@ -204,6 +207,7 @@
 
                     <godMode:GodModeValueControl
                         x:Name="_gpuConfigurableTGPControl"
+                        AutomationIdPrefix="GodModeGpuConfigurableTgp"
                         Title="{x:Static resources:Resource.GodModeSettingsWindow_GPU_CTGP}"
                         Margin="0,0,0,8"
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_GPU_CTGP_Description}"
@@ -343,6 +347,7 @@
             <wpfui:Button
                 Grid.Column="2"
                 MinWidth="120"
+                AutomationProperties.AutomationId="GodModeSaveButton"
                 Click="SaveButton_Click"
                 Content="{x:Static resources:Resource.Save}" />
             <wpfui:Button
@@ -350,6 +355,7 @@
                 MinWidth="120"
                 Margin="12,0,0,0"
                 Appearance="Primary"
+                AutomationProperties.AutomationId="GodModeSaveAndCloseButton"
                 Click="SaveAndCloseButton_Click"
                 Content="{x:Static resources:Resource.SaveAndClose}" />
         </Grid>
@@ -361,4 +367,3 @@
 
     </Grid>
 </local:BaseWindow>
-

@@ -14,33 +14,13 @@ namespace VisualRegression.Smoke;
 
 internal static partial class Program
 {
-    private const string AppDataOverrideEnvironmentVariable = "LLT_APPDATA_OVERRIDE";
-    private const string PluginDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
-    private const string SingleInstanceKeyEnvironmentVariable = "LLT_SINGLE_INSTANCE_KEY";
-    private const string SingleInstanceKeySwitch = "--single-instance-key";
-    private const string IpcPipeNameSwitch = "--ipc-pipe-name";
-    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
-    private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+    private const string AppDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
 
-    private static string? GetEnvVar(string legacyName)
-    {
-        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
-        {
-            var udtName = "UDT_" + legacyName[4..];
-            var udtValue = Environment.GetEnvironmentVariable(udtName);
-            if (!string.IsNullOrWhiteSpace(udtValue))
-                return udtValue;
-        }
+    private static string? GetEnvVar(string environmentVariableName) =>
+        Environment.GetEnvironmentVariable(environmentVariableName);
 
-        return Environment.GetEnvironmentVariable(legacyName);
-    }
-
-    private static void SetDualEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string legacyName, string value)
-    {
-        environmentVariables[legacyName] = value;
-        if (legacyName.StartsWith("LLT_", StringComparison.Ordinal))
-            environmentVariables["UDT_" + legacyName[4..]] = value;
-    }
+    private static void SetEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string environmentVariableName, string value) =>
+        environmentVariables[environmentVariableName] = value;
 
     private const int WindowX = 80;
     private const int WindowY = 80;
@@ -71,7 +51,7 @@ internal static partial class Program
             var currentDirectory = Path.Combine(outputRoot, "current");
             var sandboxRoot = Path.Combine(outputRoot, "sandbox");
             var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
-            var pluginsDirectory = Path.Combine(sandboxRoot, "plugins");
+            var pluginsDirectory = Path.Combine(appDataDirectory, "plugins");
             _appDataDirectory = appDataDirectory;
 
             ResetDirectory(currentDirectory);
@@ -83,10 +63,10 @@ internal static partial class Program
             PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle, options.Language);
             SeedPluginStoreCache(repoRoot, appDataDirectory);
 
-            _pipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(outputRoot)}-{Environment.ProcessId}";
+            _pipeName = Constants.GetPipeName(appDataDirectory);
 
             var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
-            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(outputRoot), options.KeepUnsupportedNavigationItems);
+            process = StartApp(runtimeDirectory, appDataDirectory);
             _processId = process.Id;
 
             Console.WriteLine($"[visual-smoke] Process: {_processId}");
@@ -456,8 +436,7 @@ internal static partial class Program
         var fileName = $"{++_captureSequence:000}-{SanitizeFileNameSegment(label)}.png";
         var outputPath = Path.Combine(currentDirectory, fileName);
 
-        if (!TryCaptureWindowToFileViaIpc(windowHandle, outputPath, label))
-            CaptureWindowFromScreen(windowHandle, outputPath);
+        CaptureWindowFromScreen(windowHandle, outputPath);
 
         AssertCaptureDimensions(outputPath, label);
         AssertThemeSurface(outputPath, label);
@@ -1048,28 +1027,6 @@ internal static partial class Program
         }
     }
 
-    private static bool TryCaptureWindowToFileViaIpc(int windowHandle, string outputPath, string label)
-    {
-        var handleValue = windowHandle.ToString(CultureInfo.InvariantCulture);
-        for (var attempt = 1; attempt <= 5; attempt++)
-        {
-            if (TrySendIpcRequest(
-                    IpcRequest.OperationType.CaptureWindowVisual,
-                    out var response,
-                    handleValue,
-                    outputPath) &&
-                File.Exists(outputPath))
-            {
-                return true;
-            }
-
-            Console.WriteLine($"[visual-smoke] IPC capture attempt {attempt}/5 failed for {label}: {response?.Message ?? "unknown error"}");
-            Thread.Sleep(500);
-        }
-
-        return false;
-    }
-
     private static void CaptureWindowFromScreen(int windowHandle, string outputPath)
     {
         if (!GetWindowRect((IntPtr)windowHandle, out var rect))
@@ -1181,7 +1138,7 @@ internal static partial class Program
         Thread.Sleep(900);
     }
 
-    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string pluginsDirectory, string sandboxKey, bool keepUnsupportedNavigationItems)
+    private static Process StartApp(string runtimeDirectory, string appDataDirectory)
     {
         var appBaseName = MainAppBaseNames.FirstOrDefault(name =>
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
@@ -1201,7 +1158,7 @@ internal static partial class Program
             startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip {SingleInstanceKeySwitch}={sandboxKey} {IpcPipeNameSwitch}={_pipeName}",
+                Arguments = $"\"{dllPath}\" --trace --disable-update-checker --disable-tray-tooltip",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
@@ -1211,7 +1168,7 @@ internal static partial class Program
             startInfo = new ProcessStartInfo
             {
                 FileName = exePath,
-                Arguments = $"--skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip {SingleInstanceKeySwitch}={sandboxKey} {IpcPipeNameSwitch}={_pipeName}",
+                Arguments = $"--trace --disable-update-checker --disable-tray-tooltip",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
@@ -1219,15 +1176,9 @@ internal static partial class Program
         else
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
 
-        startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = _pipeName;
-        SetDualEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, appDataDirectory);
-        SetDualEnvVar(startInfo.EnvironmentVariables, PluginDirectoryOverrideEnvironmentVariable, pluginsDirectory);
-        SetDualEnvVar(startInfo.EnvironmentVariables, SingleInstanceKeyEnvironmentVariable, sandboxKey);
-        SetDualEnvVar(startInfo.EnvironmentVariables, RelaxedIpcAclEnvironmentVariable, "1");
-        if (keepUnsupportedNavigationItems)
-            SetDualEnvVar(startInfo.EnvironmentVariables, KeepUnsupportedNavigationItemsEnvironmentVariable, "1");
+        SetEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, appDataDirectory);
 
-        SetDualEnvVar(startInfo.EnvironmentVariables, "LLT_SMOKE_AUTOMATION", "1");
+        SetEnvVar(startInfo.EnvironmentVariables, "UDT_SMOKE_AUTOMATION", "1");
 
         return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
     }
@@ -1690,7 +1641,6 @@ internal static partial class Program
         bool SettingsOnly,
         string? SwitchTheme,
         bool KeepApp,
-        bool KeepUnsupportedNavigationItems,
         bool ExpectKeyboardNavigation,
         bool NavigationSidebarOnly,
         bool ReadmeScreenshots)
@@ -1710,9 +1660,8 @@ internal static partial class Program
             var navigationSidebarOnly = args.Contains("--navigation-sidebar-only", StringComparer.OrdinalIgnoreCase);
             var readmeScreenshots = args.Contains("--readme-screenshots", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
-            var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, settingsOnly, switchTheme, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

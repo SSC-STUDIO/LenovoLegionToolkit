@@ -1,0 +1,228 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)]
+    [ValidatePattern('^\d+\.\d+\.\d+$')]
+    [string]$Version,
+
+    [Parameter(Mandatory)]
+    [ValidatePattern('^[A-Fa-f0-9]{64}$')]
+    [string]$InstallerSha256,
+
+    [Parameter(Mandatory)]
+    [ValidatePattern('^\d{4}-\d{2}-\d{2}$')]
+    [string]$ReleaseDate,
+
+    [string]$InstallerUrl,
+
+    [string]$RootPath = '',
+
+    [switch]$UpdatePublishedScoopManifest
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+$null = [DateTime]::ParseExact(
+    $ReleaseDate,
+    'yyyy-MM-dd',
+    [System.Globalization.CultureInfo]::InvariantCulture)
+
+if ([string]::IsNullOrWhiteSpace($RootPath))
+{
+    $RootPath = if ($PSScriptRoot)
+    {
+        (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+    }
+    else
+    {
+        throw 'RootPath was not provided and script root could not be determined.'
+    }
+}
+
+$repoRoot = (Resolve-Path $RootPath).Path
+$installerSha256Upper = $InstallerSha256.ToUpperInvariant()
+$installerSha256Lower = $InstallerSha256.ToLowerInvariant()
+
+if ([string]::IsNullOrWhiteSpace($InstallerUrl))
+{
+    $InstallerUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/LenovoLegionToolkit_v${Version}_Setup.exe"
+}
+
+function Ensure-Directory
+{
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path))
+    {
+        New-Item -ItemType Directory -Path $Path | Out-Null
+    }
+}
+
+function Write-Utf8NoBomFile
+{
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [Parameter(Mandatory)]
+        [string]$Content
+    )
+
+    $parent = Split-Path -Parent $Path
+    Ensure-Directory -Path $parent
+    $encoding = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $Content, $encoding)
+}
+
+function Get-ScoopManifestContent
+{
+    param(
+        [Parameter(Mandatory)]
+        [string]$Version,
+
+        [Parameter(Mandatory)]
+        [string]$InstallerUrl,
+
+        [Parameter(Mandatory)]
+        [string]$InstallerSha256,
+
+        [Parameter(Mandatory)]
+        [string]$Notes
+    )
+
+    return @"
+{
+  "version": "$Version",
+  "description": "Universal Device Toolkit is a lightweight, open-source utility for supported Lenovo Legion, LOQ, Ideapad Gaming, and related laptops.",
+  "homepage": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "license": "GPL-3.0-only",
+  "notes": "$Notes",
+  "architecture": {
+    "64bit": {
+      "url": "$InstallerUrl",
+      "hash": "$InstallerSha256"
+    }
+  },
+  "innosetup": true,
+  "shortcuts": [
+    [
+      "Universal Device Toolkit.exe",
+      "Universal Device Toolkit"
+    ]
+  ],
+  "checkver": {
+    "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest",
+    "regex": "/releases/tag/v([\\d.]+)"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v`$version/LenovoLegionToolkit_v`$version_Setup.exe"
+      }
+    }
+  }
+}
+"@
+}
+
+$wingetVersionDirectory = Join-Path $repoRoot "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$Version"
+Ensure-Directory -Path $wingetVersionDirectory
+
+$wingetVersionManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
+$wingetLocaleManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
+$wingetInstallerManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+
+$wingetVersionManifest = @"
+# yaml-language-server: `$schema=https://aka.ms/winget-manifest.version.1.10.0.schema.json
+
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageVersion: $Version
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.10.0
+"@
+
+$wingetLocaleManifest = @"
+# yaml-language-server: `$schema=https://aka.ms/winget-manifest.defaultLocale.1.10.0.schema.json
+
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageVersion: $Version
+PackageLocale: en-US
+Publisher: SSC-STUDIO
+PublisherUrl: https://github.com/SSC-STUDIO
+PublisherSupportUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues
+PackageName: Universal Device Toolkit
+PackageUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
+License: GPL-3.0
+LicenseUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE
+Copyright: Copyright (C) Universal Device Toolkit contributors
+ShortDescription: Lightweight hardware control toolkit for supported Lenovo laptops.
+Description: Universal Device Toolkit is a lightweight, open-source utility for supported Lenovo Legion, LOQ, Ideapad Gaming, and related laptops. It provides access to power modes, battery settings, RGB controls, dGPU state, driver updates, CLI control, and plugin extensions without running a background service or collecting telemetry.
+Moniker: universaldevicetoolkit
+Tags:
+- lenovo
+- legion
+- loq
+- vantage
+- toolkit
+- rgb
+- laptop
+- hardware-control
+ReleaseNotesUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v$Version
+ManifestType: defaultLocale
+ManifestVersion: 1.10.0
+"@
+
+$wingetInstallerManifest = @"
+# yaml-language-server: `$schema=https://aka.ms/winget-manifest.installer.1.10.0.schema.json
+
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageVersion: $Version
+InstallerType: inno
+Scope: user
+UpgradeBehavior: install
+ReleaseDate: $ReleaseDate
+Installers:
+- Architecture: x64
+  InstallerUrl: $InstallerUrl
+  InstallerSha256: $installerSha256Upper
+ManifestType: installer
+ManifestVersion: 1.10.0
+"@
+
+Write-Utf8NoBomFile -Path $wingetVersionManifestPath -Content $wingetVersionManifest
+Write-Utf8NoBomFile -Path $wingetLocaleManifestPath -Content $wingetLocaleManifest
+Write-Utf8NoBomFile -Path $wingetInstallerManifestPath -Content $wingetInstallerManifest
+
+$draftScoopManifestPath = Join-Path $repoRoot "Packaging\scoop\lenovolegiontoolkit.$Version.draft.json"
+$publishedScoopManifestPath = Join-Path $repoRoot 'Packaging\scoop\lenovolegiontoolkit.json'
+
+$draftScoopManifest = Get-ScoopManifestContent `
+    -Version $Version `
+    -InstallerUrl $InstallerUrl `
+    -InstallerSha256 $installerSha256Lower `
+    -Notes "Draft manifest generated from release metadata for version $Version. Publish it to the Scoop bucket only after validating install and upgrade behavior."
+
+Write-Utf8NoBomFile -Path $draftScoopManifestPath -Content $draftScoopManifest
+
+if ($UpdatePublishedScoopManifest)
+{
+    $publishedScoopManifest = Get-ScoopManifestContent `
+        -Version $Version `
+        -InstallerUrl $InstallerUrl `
+        -InstallerSha256 $installerSha256Lower `
+        -Notes 'Universal Device Toolkit keeps the legacy lenovolegiontoolkit Scoop package name so existing installs can upgrade in place.'
+
+    Write-Utf8NoBomFile -Path $publishedScoopManifestPath -Content $publishedScoopManifest
+}
+
+Write-Host "Updated winget manifests in: $wingetVersionDirectory"
+Write-Host "Updated scoop draft manifest: $draftScoopManifestPath"
+
+if ($UpdatePublishedScoopManifest)
+{
+    Write-Host "Updated published scoop manifest: $publishedScoopManifestPath"
+}

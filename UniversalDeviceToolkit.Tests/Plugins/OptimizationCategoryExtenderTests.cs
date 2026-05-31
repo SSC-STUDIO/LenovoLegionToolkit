@@ -117,6 +117,45 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenImportedPluginIsInstalledUnderLocalDirectory_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "local-plugin";
+        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "local-plugin",
+              "name": "Local Plugin",
+              "description": "Local manifest description",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "local.action",
+                    "title": "Local action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        categories.Should().ContainSingle(category =>
+            category.Key == pluginId &&
+            category.PluginId == pluginId &&
+            category.Actions.Count == 1 &&
+            category.Actions[0].Key == "local.action");
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenInstalledManifestHasSettingsPageOnly_ShouldSkipEmptyCategory()
     {
         var pluginId = "settings-only-plugin";
@@ -148,6 +187,24 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         var categories = extender.GetPluginCategories();
 
         categories.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void WindowsOptimizationCategoryDefinition_ShouldPreserveLegacyFiveArgumentConstructor()
+    {
+        var actions = Array.Empty<WindowsOptimizationActionDefinition>();
+
+        var category = new WindowsOptimizationCategoryDefinition(
+            "legacy-category",
+            "title",
+            "description",
+            actions,
+            "legacy-plugin");
+
+        category.Key.Should().Be("legacy-category");
+        category.PluginId.Should().Be("legacy-plugin");
+        category.ResourceAnchorType.Should().BeNull();
+        category.Actions.Should().BeSameAs(actions);
     }
 
     private sealed class TestOptimizationProvider(string id, WindowsOptimizationCategoryDefinition category) : IPlugin, IOptimizationCategoryProvider

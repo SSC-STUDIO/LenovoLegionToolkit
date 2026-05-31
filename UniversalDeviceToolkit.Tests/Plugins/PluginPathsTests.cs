@@ -12,55 +12,39 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 public class PluginPathsTests : TemporaryFileTestBase
 {
     private readonly string? _previousAppDataOverride;
-    private readonly string? _previousPluginsOverride;
 
     public PluginPathsTests()
     {
         _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
-        _previousPluginsOverride = Environment.GetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
     }
 
     public override void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, _previousPluginsOverride);
-        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, null);
         base.Dispose();
     }
 
     [Fact]
-    public void GetPluginsDirectory_WithOverride_ShouldReturnOverridePath()
+    public void GetPluginsDirectory_ShouldReturnAppDataPluginsPath()
     {
-        var overrideDir = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDir);
+        var expectedRoot = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        expectedRoot.Should().NotBeNullOrWhiteSpace();
 
         var result = PluginPaths.GetPluginsDirectory();
 
-        result.Should().Be(Path.GetFullPath(overrideDir));
+        result.Should().Be(Path.Combine(Path.GetFullPath(expectedRoot!), PluginPaths.PluginsDirectoryName));
         Directory.Exists(result).Should().BeTrue();
-    }
-
-    [Fact]
-    public void GetPluginsDirectoryOverride_WithLegacyVariable_ShouldResolveOverride()
-    {
-        var overrideDir = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, overrideDir);
-
-        var result = PluginPaths.GetPluginsDirectoryOverride();
-
-        result.Should().Be(Path.GetFullPath(overrideDir));
     }
 
     [Fact]
     public void GetPluginDirectory_ShouldCombineRootAndId()
     {
-        var overrideDir = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDir);
+        var pluginsRoot = PluginPaths.GetPluginsDirectory();
 
         var pluginDir = PluginPaths.GetPluginDirectory("custom-mouse");
 
-        pluginDir.Should().Be(Path.Combine(Path.GetFullPath(overrideDir), "custom-mouse"));
+        pluginDir.Should().Be(Path.Combine(pluginsRoot, "custom-mouse"));
     }
 
     [Fact]
@@ -74,12 +58,9 @@ public class PluginPathsTests : TemporaryFileTestBase
     [Fact]
     public void GetAllPossiblePluginsDirectories_ShouldIncludeAppDataDirectory()
     {
-        var overrideDir = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDir);
-
         var directories = PluginPaths.GetAllPossiblePluginsDirectories();
 
-        directories.Should().Contain(Path.GetFullPath(overrideDir));
+        directories.Should().Contain(PluginPaths.GetPluginsDirectory());
         directories.Should().HaveCountGreaterThan(1);
     }
 
@@ -139,13 +120,12 @@ public class PluginPathsTests : TemporaryFileTestBase
     [Fact]
     public void GetPluginResourcesAndConfigPaths_ShouldUsePluginDirectory()
     {
-        var overrideDir = CreateTempDirectory();
-        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDir);
         const string pluginId = "shell-integration";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
 
         PluginPaths.GetPluginResourcesDirectory(pluginId)
-            .Should().Be(Path.Combine(Path.GetFullPath(overrideDir), pluginId, "Resources"));
+            .Should().Be(Path.Combine(pluginDirectory, "Resources"));
         PluginPaths.GetPluginConfigFilePath(pluginId)
-            .Should().Be(Path.Combine(Path.GetFullPath(overrideDir), pluginId, "config.json"));
+            .Should().Be(Path.Combine(pluginDirectory, "config.json"));
     }
 }

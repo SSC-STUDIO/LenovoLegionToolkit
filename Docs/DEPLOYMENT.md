@@ -137,7 +137,7 @@ Regenerate repository README screenshots on an interactive Windows desktop sessi
 | Setting | Value |
 |---------|-------|
 | Main window (logical) | 1300×850 px — enforced by `Tools/VisualRegression.Smoke` (`WindowWidth` / `WindowHeight`) |
-| Capture method | In-app IPC `CaptureWindowVisual` (preferred; DPI-aware WPF render) |
+| Capture method | Smoke-owned screen capture from the normalized app window |
 | Expected pixel size | Logical size × Windows display scale (1300×850 at 100% DPI; ~1625×1063 at 125% DPI) |
 | README display width | 700 px (`width="700"` in README markdown) |
 

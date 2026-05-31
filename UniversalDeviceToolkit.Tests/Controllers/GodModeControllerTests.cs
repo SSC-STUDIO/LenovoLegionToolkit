@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Tests.Settings;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
@@ -24,6 +26,8 @@ public class GodModeControllerTests : UnitTestBase
 
     protected override void Setup()
     {
+        SettingsCleanupHelper.UseIsolatedAppData();
+        SettingsCleanupHelper.CleanupSettingsFile(SettingsCleanupHelper.SettingsFiles.GodMode);
         BackupCompatibilityState();
 
         var v1Settings = new GodModeSettings();
@@ -39,6 +43,7 @@ public class GodModeControllerTests : UnitTestBase
     protected override void Cleanup()
     {
         RestoreCompatibilityState();
+        SettingsCleanupHelper.CleanupSettingsFile(SettingsCleanupHelper.SettingsFiles.GodMode);
     }
 
     [Fact]
@@ -174,6 +179,167 @@ public class GodModeControllerTests : UnitTestBase
     }
 
     [Fact]
+    public async Task GetStateAsync_WhenStoreEmpty_ShouldCreateBasePowerModePresets()
+    {
+        var state = await _controller.GetStateAsync();
+
+        state.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        state.Presets.Values.Select(p => p.Name)
+            .Should()
+            .Contain([PowerModeState.Quiet.GetDisplayName(), PowerModeState.Balance.GetDisplayName(), PowerModeState.Performance.GetDisplayName()]);
+        state.Presets[state.ActivePresetId].SourcePowerMode.Should().Be(PowerModeState.Performance);
+
+        var storedState = await _controller.GetStateAsync();
+        storedState.Presets.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenStoreHasLegacyPreset_ShouldPreserveAndAddMissingBasePowerModePresets()
+    {
+        var legacyPresetId = Guid.NewGuid();
+        _controllerV1.SetStore(legacyPresetId, new Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset>
+        {
+            [legacyPresetId] = new() { Name = "Saved Preset" }
+        });
+
+        var state = await _controller.GetStateAsync();
+
+        state.ActivePresetId.Should().Be(legacyPresetId);
+        state.Presets.Should().ContainKey(legacyPresetId);
+        state.Presets[legacyPresetId].Name.Should().Be("Saved Preset");
+        state.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        state.Presets.Should().HaveCount(4);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenBasePresetWasDeleted_ShouldRestoreMissingBasePowerModePreset()
+    {
+        var state = await _controller.GetStateAsync();
+        var performancePreset = state.Presets.Single(kv => kv.Value.SourcePowerMode == PowerModeState.Performance);
+        var presets = state.Presets
+            .Where(kv => kv.Key != performancePreset.Key)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
+        var activePresetId = presets.First().Key;
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = activePresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
+        });
+
+        var restoredState = await _controller.GetStateAsync();
+
+        restoredState.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenBasePresetWasRenamedAsCustom_ShouldAddReplacementBasePreset()
+    {
+        var state = await _controller.GetStateAsync();
+        var performancePreset = state.Presets.Single(kv => kv.Value.SourcePowerMode == PowerModeState.Performance);
+        var presets = state.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        presets[performancePreset.Key] = performancePreset.Value with
+        {
+            Name = "My Performance",
+            SourcePowerMode = null
+        };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = performancePreset.Key,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
+        });
+
+        var restoredState = await _controller.GetStateAsync();
+
+        restoredState.Presets[performancePreset.Key].Name.Should().Be("My Performance");
+        restoredState.Presets[performancePreset.Key].SourcePowerMode.Should().BeNull();
+        restoredState.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        restoredState.Presets.Values.Select(p => p.Name)
+            .Should()
+            .Contain(PowerModeState.Performance.GetDisplayName());
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenStateHasCustomPreset_ShouldPersistCustomPresetAndKeepItActive()
+    {
+        var state = await _controller.GetStateAsync();
+        var performancePreset = state.Presets.Single(kv => kv.Value.SourcePowerMode == PowerModeState.Performance);
+        var customPresetId = Guid.NewGuid();
+        var presets = state.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        presets[customPresetId] = performancePreset.Value with
+        {
+            Name = "Custom Performance",
+            SourcePowerMode = null
+        };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = customPresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
+        });
+
+        var restoredState = await _controller.GetStateAsync();
+
+        restoredState.ActivePresetId.Should().Be(customPresetId);
+        restoredState.Presets.Should().ContainKey(customPresetId);
+        restoredState.Presets[customPresetId].Name.Should().Be("Custom Performance");
+        restoredState.Presets[customPresetId].SourcePowerMode.Should().BeNull();
+        restoredState.Presets.Should().HaveCount(4);
+        restoredState.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenStateHasCustomPresetOnV2_ShouldPersistCustomPresetAndKeepItActive()
+    {
+        SetCompatibility(supportsGodModeV1: false, supportsGodModeV2: true);
+
+        var state = await _controller.GetStateAsync();
+        var customPresetId = Guid.NewGuid();
+        var presets = state.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        var activePreset = presets[state.ActivePresetId];
+        presets[customPresetId] = activePreset with
+        {
+            Name = "Custom V2 Performance",
+            SourcePowerMode = null
+        };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = customPresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
+        });
+
+        var restoredState = await _controller.GetStateAsync();
+
+        restoredState.ActivePresetId.Should().Be(customPresetId);
+        restoredState.Presets.Should().ContainKey(customPresetId);
+        restoredState.Presets[customPresetId].Name.Should().Be("Custom V2 Performance");
+        restoredState.Presets[customPresetId].SourcePowerMode.Should().BeNull();
+        restoredState.Presets.Should().HaveCountGreaterThanOrEqualTo(1);
+    }
+
+    [Fact]
+    public async Task NeedsVantageDisabledAsync_WhenCompatibilityOnlyReportsGodModeV3_ShouldUseV2Controller()
+    {
+        SetCompatibility(supportsGodModeV1: false, supportsGodModeV2: false, supportsGodModeV3: true, supportsGodModeV4: false);
+
+        var result = await _controller.NeedsVantageDisabledAsync();
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task RestoreDefaultsInOtherPowerModeAsync_ShouldCallCorrectController()
     {
         var powerMode = PowerModeState.Quiet;
@@ -195,7 +361,7 @@ public class GodModeControllerTests : UnitTestBase
         GetCompatibilityField("_isCompatible").SetValue(null, _originalIsCompatible);
     }
 
-    private static void SetCompatibility(bool supportsGodModeV1, bool supportsGodModeV2)
+    private static void SetCompatibility(bool supportsGodModeV1, bool supportsGodModeV2, bool supportsGodModeV3 = false, bool supportsGodModeV4 = false)
     {
         var machineInformation = new MachineInformation
         {
@@ -206,7 +372,9 @@ public class GodModeControllerTests : UnitTestBase
             Properties = new MachineInformation.PropertyData
             {
                 SupportsGodModeV1 = supportsGodModeV1,
-                SupportsGodModeV2 = supportsGodModeV2
+                SupportsGodModeV2 = supportsGodModeV2,
+                SupportsGodModeV3 = supportsGodModeV3,
+                SupportsGodModeV4 = supportsGodModeV4
             }
         };
 
@@ -250,7 +418,9 @@ public class GodModeControllerTests : UnitTestBase
         public override Task<Dictionary<PowerModeState, GodModeDefaults>> GetDefaultsInOtherPowerModesAsync() =>
             Task.FromResult(new Dictionary<PowerModeState, GodModeDefaults>
             {
-                [PowerModeState.Quiet] = new() { CPULongTermPowerLimit = 1 }
+                [PowerModeState.Quiet] = new() { CPULongTermPowerLimit = 1 },
+                [PowerModeState.Balance] = new() { CPULongTermPowerLimit = 2 },
+                [PowerModeState.Performance] = new() { CPULongTermPowerLimit = 3 }
             });
 
         public override Task RestoreDefaultsInOtherPowerModeAsync(PowerModeState state)
@@ -260,7 +430,11 @@ public class GodModeControllerTests : UnitTestBase
             return Task.CompletedTask;
         }
 
-        protected override Task<GodModePreset> GetDefaultStateAsync() => Task.FromResult(new GodModePreset { Name = "Default V1" });
+        protected override Task<GodModePreset> GetDefaultStateAsync() => Task.FromResult(new GodModePreset
+        {
+            Name = "Default V1",
+            CPULongTermPowerLimit = new StepperValue(2, 1, 10, 1, [], 2)
+        });
 
         public void TriggerPresetChanged(Guid presetId) => RaisePresetChanged(presetId);
 

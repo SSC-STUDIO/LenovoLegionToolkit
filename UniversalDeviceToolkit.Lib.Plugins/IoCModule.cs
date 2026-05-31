@@ -8,7 +8,7 @@ public class IoCModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.CreateForCurrentProcess()))
+        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.Production))
             .As<IPluginSignatureValidator>()
             .SingleInstance();
 

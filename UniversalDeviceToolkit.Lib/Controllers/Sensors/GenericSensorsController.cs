@@ -16,12 +16,7 @@ public class GenericSensorsController(GPUController gpuController) : AbstractSen
     {
         try
         {
-            var machineInformation = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-            var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
-            if (!availability.IsBasicMode)
-                return false;
-
-            return await CanReadGenericSnapshotAsync().ConfigureAwait(false);
+            return await CanReadGenericSnapshotAsyncCore().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -31,6 +26,8 @@ public class GenericSensorsController(GPUController gpuController) : AbstractSen
             return false;
         }
     }
+
+    protected virtual Task<bool> CanReadGenericSnapshotAsyncCore() => CanReadGenericSnapshotAsync();
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
         SensorReadingHelper.GetCpuTemperatureFromAcpiAsync();
