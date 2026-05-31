@@ -126,9 +126,10 @@ dotnet run --project UniversalDeviceToolkit.CrossPlatform -- json
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- hardware
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- telemetry
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- support
+dotnet run --project UniversalDeviceToolkit.CrossPlatform -- doctor
 ```
 
-On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/temperature telemetry from Linux procfs/sysfs or macOS `sysctl`, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/temperature telemetry from Linux procfs/sysfs or macOS `sysctl`, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. The `doctor` command aggregates those checks into a pass/warn/fail readiness report. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
 
 ### Lenovo's software
 

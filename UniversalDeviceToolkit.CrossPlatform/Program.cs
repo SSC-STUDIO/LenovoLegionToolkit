@@ -11,6 +11,7 @@ return command.ToLowerInvariant() switch
     "hardware" => PrintHardware(),
     "telemetry" => PrintTelemetry(),
     "support" => PrintSupport(),
+    "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
     _ => PrintUnknownCommand(command)
 };
@@ -100,6 +101,18 @@ static int PrintSupport()
     return 0;
 }
 
+static int PrintDoctor()
+{
+    var report = CrossPlatformStatus.Create().Doctor;
+
+    Console.WriteLine("Doctor report");
+    Console.WriteLine($"Overall: {report.OverallStatus}");
+    foreach (var check in report.Checks)
+        Console.WriteLine($"[{check.Status.ToString().ToLowerInvariant()}] {check.Name} - {check.Detail}");
+
+    return report.OverallStatus == "fail" ? 1 : 0;
+}
+
 static int PrintHelp()
 {
     Console.WriteLine("Universal Device Toolkit cross-platform diagnostics");
@@ -110,6 +123,7 @@ static int PrintHelp()
     Console.WriteLine("  udt hardware  Print basic hardware identity for device-pack matching.");
     Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
+    Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
     Console.WriteLine();
     Console.WriteLine("Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.");
@@ -158,6 +172,7 @@ internal sealed record CrossPlatformStatus(
     HardwareIdentity Hardware,
     SystemTelemetry Telemetry,
     DeviceSupportStatus DeviceSupport,
+    DoctorReport Doctor,
     string SupportLevel,
     CapabilityStatus[] Capabilities)
 {
@@ -179,8 +194,7 @@ internal sealed record CrossPlatformStatus(
             new PhysicalFileSystem(),
             new ProcessCommandRunner()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
-
-        return new CrossPlatformStatus(
+        var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
             GetVersion(),
             RuntimeInformation.OSDescription,
@@ -190,8 +204,11 @@ internal sealed record CrossPlatformStatus(
             hardware,
             telemetry,
             deviceSupport,
+            DoctorReport.CreatePlaceholder(),
             supportLevel,
             BuildCapabilities(isWindows, isMacOS, isLinux));
+
+        return status with { Doctor = DoctorReport.Create(status) };
     }
 
     private static CapabilityStatus[] BuildCapabilities(bool isWindows, bool isMacOS, bool isLinux) =>

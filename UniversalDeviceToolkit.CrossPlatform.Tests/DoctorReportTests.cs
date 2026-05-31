@@ -1,0 +1,78 @@
+using FluentAssertions;
+using System.Text.Json;
+using Xunit;
+
+namespace UniversalDeviceToolkit.CrossPlatform.Tests;
+
+public sealed class DoctorReportTests
+{
+    [Fact]
+    public void Create_WhenIdentityTelemetryAndPackMatch_ShouldWarnOnlyForHiddenControls()
+    {
+        var status = CreateStatus(
+            new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
+            new SystemTelemetry("linux-procfs-sysfs", "AMD Ryzen 7 7840U", 16, 31.25, 12.5, [new TemperatureReading("Tctl", 54.1, "linux-hwmon")], []),
+            new CrossPlatformDeviceSupportEvaluator().Evaluate(
+                new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
+                isWindows: false),
+            "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform.");
+
+        var report = DoctorReport.Create(status);
+
+        report.OverallStatus.Should().Be("warn");
+        report.Checks.Should().Contain(check => check.Name == "Hardware identity" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Hardware controls" && check.Status == DoctorCheckStatus.Warn);
+    }
+
+    [Fact]
+    public void Create_WhenIdentityAndTelemetryAreMissing_ShouldWarn()
+    {
+        var status = CreateStatus(
+            HardwareIdentity.Unknown("test"),
+            SystemTelemetry.Unknown("test", "telemetry unavailable"),
+            new CrossPlatformDeviceSupportEvaluator().Evaluate(HardwareIdentity.Unknown("test"), isWindows: false),
+            "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform.");
+
+        var report = DoctorReport.Create(status);
+
+        report.OverallStatus.Should().Be("warn");
+        report.Checks.Should().Contain(check => check.Name == "Hardware identity" && check.Status == DoctorCheckStatus.Warn);
+        report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Warn);
+        report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Warn);
+    }
+
+    [Fact]
+    public void Serialize_ShouldWriteCheckStatusAsString()
+    {
+        var report = new DoctorReport("warn", [new DoctorCheck("Hardware identity", DoctorCheckStatus.Warn, "missing")]);
+
+        var json = JsonSerializer.Serialize(report);
+
+        json.Should().Contain("\"Status\":\"Warn\"");
+    }
+
+    private static CrossPlatformStatus CreateStatus(
+        HardwareIdentity hardware,
+        SystemTelemetry telemetry,
+        DeviceSupportStatus deviceSupport,
+        string supportLevel)
+    {
+        var status = new CrossPlatformStatus(
+            "Universal Device Toolkit",
+            "4.1.0.0",
+            "Test OS",
+            "X64",
+            "test-machine",
+            ".NET 10.0",
+            hardware,
+            telemetry,
+            deviceSupport,
+            DoctorReport.CreatePlaceholder(),
+            supportLevel,
+            []);
+
+        return status with { Doctor = DoctorReport.Create(status) };
+    }
+}
