@@ -105,6 +105,14 @@ jobs:
             throw "controls command did not print hardware controls."
           }
 
+          $verify = dotnet run --project $project --configuration Release --no-build -- verify vendor-hardware-controls performance
+          if ($LASTEXITCODE -ne 1) {
+            throw "verify command failed with unexpected exit code $LASTEXITCODE"
+          }
+          if (($verify | Out-String) -notmatch 'Performance verification') {
+            throw "verify command did not print performance verification."
+          }
+
           $support = dotnet run --project $project --configuration Release --no-build -- support
           if ($LASTEXITCODE -ne 0) {
             throw "support command failed with exit code $LASTEXITCODE"
