@@ -17,6 +17,7 @@ return command.ToLowerInvariant() switch
     "controls" => PrintControls(),
     "set" => SetControl(commandArguments),
     "verify" => VerifyControl(commandArguments),
+    "elevate" => Elevate(commandArguments),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
@@ -297,6 +298,14 @@ static int VerifyControl(IReadOnlyList<string> arguments)
     return report.Succeeded ? 0 : 1;
 }
 
+static int Elevate(IReadOnlyList<string> arguments)
+{
+    var result = new ElevationLauncher().Launch(arguments);
+    Console.WriteLine(result.Succeeded ? "Elevation requested" : "Elevation request failed");
+    Console.WriteLine($"Detail: {result.Detail}");
+    return result.Succeeded ? 0 : 1;
+}
+
 static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
@@ -338,6 +347,7 @@ static int PrintHelp()
     Console.WriteLine("  udt controls  Print writable and hidden cross-platform hardware controls.");
     Console.WriteLine("  udt set <id> <value>  Set a writable cross-platform control.");
     Console.WriteLine("  udt verify <id> <value>  Set a control and sample CPU frequency before/after.");
+    Console.WriteLine("  udt elevate <command> [arguments]  Restart a write command through Windows UAC when needed.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
