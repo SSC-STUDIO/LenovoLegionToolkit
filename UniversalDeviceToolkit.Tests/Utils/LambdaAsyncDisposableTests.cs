@@ -165,22 +165,27 @@ public class LambdaAsyncDisposableTests
     {
         // Arrange
         var disposed = false;
-        var delayMs = 50;
-        var startTime = DateTime.UtcNow;
+        var disposeStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var allowDisposeToComplete = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var disposable = new LambdaAsyncDisposable(async () =>
         {
-            await Task.Delay(delayMs);
+            disposeStarted.SetResult();
+            await allowDisposeToComplete.Task;
             disposed = true;
         });
 
         // Act
-        await disposable.DisposeAsync();
-        var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
+        var disposeTask = disposable.DisposeAsync().AsTask();
+        await disposeStarted.Task;
 
         // Assert
+        disposeTask.IsCompleted.Should().BeFalse();
+        disposed.Should().BeFalse();
+
+        allowDisposeToComplete.SetResult();
+        await disposeTask;
         disposed.Should().BeTrue();
-        elapsedMs.Should().BeGreaterThanOrEqualTo(delayMs);
     }
 
     #endregion
