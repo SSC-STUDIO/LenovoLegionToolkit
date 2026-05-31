@@ -71,7 +71,24 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("Xiaomi Corporation", "Xiaomi Book Pro 16"), "xiaomi-basic" },
         { MachineInformationTestData.Create("TIMI", "Redmi G Pro 2024"), "xiaomi-basic" },
         { MachineInformationTestData.Create("Huawei Technologies Co., Ltd.", "MateBook GT 14"), "huawei-basic" },
-        { MachineInformationTestData.Create("HUAWEI", "Qingyun L540"), "huawei-basic" }
+        { MachineInformationTestData.Create("HUAWEI", "Qingyun L540"), "huawei-basic" },
+        { MachineInformationTestData.Create("Apple Inc.", "MacBook Air"), "apple-basic" },
+        { MachineInformationTestData.Create("Honor Device Co., Ltd.", "MagicBook X 16"), "honor-basic" },
+        { MachineInformationTestData.Create("LG", "LG gram Pro 16"), "lg-basic" },
+        { MachineInformationTestData.Create("Framework Computer Inc.", "Framework Laptop 13"), "framework-basic" },
+        { MachineInformationTestData.Create("Hasee", "ZhanShen T8"), "hasee-basic" },
+        { MachineInformationTestData.Create("THUNDEROBOT", "911 MT"), "thunderobot-basic" },
+        { MachineInformationTestData.Create("MACHENIKE", "L16"), "machenike-basic" },
+        { MachineInformationTestData.Create("COLORFUL", "Evol P15"), "colorful-basic" },
+        { MachineInformationTestData.Create("MAIBENBEN", "Xiaomai 6"), "maibenben-basic" },
+        { MachineInformationTestData.Create("Valve Corporation", "Steam Deck"), "valve-handheld-basic" },
+        { MachineInformationTestData.Create("GPD", "GPD Win Mini"), "gpd-handheld-basic" },
+        { MachineInformationTestData.Create("AYANEO", "AYANEO Air Plus"), "ayaneo-handheld-basic" },
+        { MachineInformationTestData.Create("ONEXPLAYER", "OneXPlayer Mini Pro"), "one-netbook-handheld-basic" },
+        { MachineInformationTestData.Create("MINISFORUM", "UM890 Pro"), "minisforum-basic" },
+        { MachineInformationTestData.Create("AZW", "Beelink GTR7"), "beelink-basic" },
+        { MachineInformationTestData.Create("GEEKOM", "MiniAir 12"), "geekom-basic" },
+        { MachineInformationTestData.Create("ZOTAC", "ZBOX CI669"), "zotac-basic" }
     };
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
@@ -132,6 +149,31 @@ public sealed class DeviceSupportModelSimulationTests
                 "Huawei Technologies Co., Ltd.",
                 "MateBook D 16"),
             "huawei-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "Apple Inc.",
+                "MacBookPro18,3",
+                "MacBook Pro"),
+            "apple-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "AZW",
+                "SER8"),
+            "beelink-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "Valve Corporation",
+                "Steam Deck"),
+            "valve-handheld-basic"
         },
         {
             MachineInformationTestData.WithChassis(

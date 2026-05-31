@@ -1,0 +1,120 @@
+using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+var command = args.FirstOrDefault() ?? "status";
+
+return command.ToLowerInvariant() switch
+{
+    "status" => PrintStatus(),
+    "json" => PrintJson(),
+    "help" or "--help" or "-h" => PrintHelp(),
+    _ => PrintUnknownCommand(command)
+};
+
+static int PrintStatus()
+{
+    var status = CrossPlatformStatus.Create();
+
+    Console.WriteLine($"{status.ProductName} cross-platform diagnostics");
+    Console.WriteLine($"Version: {status.Version}");
+    Console.WriteLine($"OS: {status.OsDescription}");
+    Console.WriteLine($"Architecture: {status.Architecture}");
+    Console.WriteLine($"Machine: {status.MachineName}");
+    Console.WriteLine($"Runtime: {status.DotNetRuntime}");
+    Console.WriteLine($"Support level: {status.SupportLevel}");
+    Console.WriteLine();
+
+    foreach (var capability in status.Capabilities)
+        Console.WriteLine($"[{(capability.Available ? "yes" : "no ")}] {capability.Name} - {capability.Detail}");
+
+    return 0;
+}
+
+static int PrintJson()
+{
+    var options = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
+    Console.WriteLine(JsonSerializer.Serialize(CrossPlatformStatus.Create(), options));
+    return 0;
+}
+
+static int PrintHelp()
+{
+    Console.WriteLine("Universal Device Toolkit cross-platform diagnostics");
+    Console.WriteLine();
+    Console.WriteLine("Usage:");
+    Console.WriteLine("  udt status   Print human-readable platform support status.");
+    Console.WriteLine("  udt json     Print platform support status as JSON.");
+    Console.WriteLine("  udt help     Show this help.");
+    Console.WriteLine();
+    Console.WriteLine("Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.");
+    return 0;
+}
+
+static int PrintUnknownCommand(string command)
+{
+    Console.Error.WriteLine($"Unknown command '{command}'. Run 'udt help'.");
+    return 2;
+}
+
+internal sealed record CrossPlatformStatus(
+    string ProductName,
+    string Version,
+    string OsDescription,
+    string Architecture,
+    string MachineName,
+    string DotNetRuntime,
+    string SupportLevel,
+    CapabilityStatus[] Capabilities)
+{
+    public static CrossPlatformStatus Create()
+    {
+        var isWindows = System.OperatingSystem.IsWindows();
+        var isMacOS = System.OperatingSystem.IsMacOS();
+        var isLinux = System.OperatingSystem.IsLinux();
+        var supportLevel = isWindows
+            ? "Windows desktop app and full hardware-control stack are available."
+            : isMacOS || isLinux
+                ? "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform."
+                : "Unsupported OS; diagnostics may be incomplete.";
+
+        return new CrossPlatformStatus(
+            "Universal Device Toolkit",
+            GetVersion(),
+            RuntimeInformation.OSDescription,
+            RuntimeInformation.OSArchitecture.ToString(),
+            Environment.MachineName,
+            RuntimeInformation.FrameworkDescription,
+            supportLevel,
+            BuildCapabilities(isWindows, isMacOS, isLinux));
+    }
+
+    private static CapabilityStatus[] BuildCapabilities(bool isWindows, bool isMacOS, bool isLinux) =>
+    [
+        new("Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
+        new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
+        new("Basic-mode compatibility", true, "Non-Windows systems are treated as safe basic mode until platform-specific packs are implemented."),
+        new("Windows hardware controls", isWindows, isWindows
+            ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."
+            : "Windows-only controls are intentionally hidden on macOS/Linux."),
+        new("Plugin runtime", isWindows, isWindows
+            ? "Windows plugin workflows remain available in the desktop app."
+            : "Cross-platform plugin loading is a future expansion point and is not enabled yet."),
+        new("Linux diagnostics", isLinux, isLinux
+            ? "Running on Linux; safe diagnostics are enabled."
+            : "Not running on Linux."),
+        new("macOS diagnostics", isMacOS, isMacOS
+            ? "Running on macOS; safe diagnostics are enabled."
+            : "Not running on macOS.")
+    ];
+
+    private static string GetVersion() =>
+        typeof(CrossPlatformStatus).Assembly.GetName().Version?.ToString() ?? "unknown";
+}
+
+internal sealed record CapabilityStatus(string Name, bool Available, string Detail);

@@ -16,7 +16,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 
 Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add CPU, GPU, network, shell, mouse, and other specialized tools without bloating the base application.
 
-UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. Just like Lenovo Vantage, this application is Windows only.
+UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. The full desktop hardware-control app remains Windows-first; macOS and Linux support starts with the `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI and safe basic-mode discovery.
 
 
 <img src="Assets/Screenshot_main.png" width="700" />
@@ -110,11 +110,22 @@ Hardware-control families:
 
 Basic-mode families:
 - Lenovo ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Slim, and other unmatched Lenovo models
-- Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung Galaxy Book, HUAWEI MateBook, Xiaomi/RedmiBook, HONOR MagicBook, LG gram, Framework, Panasonic TOUGHBOOK, Dynabook/Toshiba, Fujitsu, VAIO, MEDION/ERAZER, XMG/SCHENKER, Clevo/Tongfang barebones, and generic PCs
+- Motorola, ASUS, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung Galaxy Book, Apple Mac, HUAWEI MateBook, Xiaomi/RedmiBook, realme Book, Infinix INBook, HONOR MagicBook, LG gram, Framework, Panasonic TOUGHBOOK, Dynabook/Toshiba, Fujitsu, VAIO, Gateway, CHUWI, TECLAST, Jumper, MEDION/ERAZER, XMG/SCHENKER, Hasee, THUNDEROBOT, MACHENIKE, COLORFUL, MAIBENBEN, MECHREVO, Clevo/Tongfang barebones, handheld PCs such as Steam Deck/GPD/AYANEO/ONEXPLAYER, mini PCs such as MINISFORUM/Beelink/GEEKOM/ZOTAC, and generic PCs
 
 Hardware-control matching is driven by `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` and online data-only device packs. Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary Lenovo hardware-control target. Some features may also work on selected 5th generation (MY2020) devices. Basic-mode vendor matching normalizes common BIOS/DMI formatting differences, so punctuation, casing, spacing, diacritics, and company suffix variants do not usually block a match.
 
 If UDT starts in basic mode, it is doing that intentionally to avoid showing unsupported hardware controls. You can still use plugins and general system tools, and you can contribute logs or device-pack data for broader support.
+
+### macOS and Linux
+
+The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. The repository now includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point intended for macOS/Linux and Windows diagnostics:
+
+```powershell
+dotnet run --project UniversalDeviceToolkit.CrossPlatform -- status
+dotnet run --project UniversalDeviceToolkit.CrossPlatform -- json
+```
+
+On macOS/Linux this CLI reports platform/runtime information and treats the machine as safe basic mode. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
 
 ### Lenovo's software
 
