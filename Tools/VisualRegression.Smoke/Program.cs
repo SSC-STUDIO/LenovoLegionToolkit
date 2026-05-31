@@ -61,6 +61,8 @@ internal static partial class Program
             Directory.CreateDirectory(pluginsDirectory);
 
             PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle, options.Language);
+            if (options.OsdOnly)
+                PrepareOsdSandboxSettings(appDataDirectory);
             SeedPluginStoreCache(repoRoot, appDataDirectory);
 
             _pipeName = Constants.GetPipeName(appDataDirectory);
@@ -79,6 +81,25 @@ internal static partial class Program
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(90));
             NormalizeWindow(mainWindow);
             WaitForIpcReady(TimeSpan.FromSeconds(30));
+
+            if (options.OsdOnly)
+            {
+                CaptureOsdVisualAcceptance(currentDirectory, mainWindow);
+
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+                if (options.KeepApp)
+                {
+                    Console.WriteLine("[visual-smoke] Leaving app running for inspection.");
+                    process = null;
+                    return 0;
+                }
+
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
 
             if (options.ReadmeScreenshots)
             {
@@ -419,6 +440,120 @@ internal static partial class Program
 
         WaitForAnimationsToComplete();
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+    }
+
+    private static void CaptureOsdVisualAcceptance(string currentDirectory, AutomationElement mainWindow)
+    {
+        Console.WriteLine("[visual-smoke] Waiting for OSD overlay and sensor refresh...");
+        Thread.Sleep(TimeSpan.FromSeconds(4));
+
+        var osdWindow = WaitForOsdWindow(_processId, "OsdPanelWindow", TimeSpan.FromSeconds(45));
+        CaptureOverlayWindow(currentDirectory, osdWindow, "osd-panel-overlay");
+        AssertOsdOverlayCapture(Path.Combine(currentDirectory, Captures[^1].FileName));
+
+        CapturePage(currentDirectory, mainWindow, "dashboard-with-osd");
+
+        NavigateAndWait(mainWindow, new PageTarget(
+            "settings",
+            [],
+            ["Settings"],
+            root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var applicationTab = FindByName(mainWindow, "Application")
+                               ?? throw new InvalidOperationException("Settings Application tab not found.");
+        ActivateElement(applicationTab);
+
+        var applicationReady = WaitUntil(
+            () =>
+            {
+                var live = ResolveLiveWindow(mainWindow);
+                return FindVisibleTextContains(live, "Hardware Sensors")
+                       && FindVisibleTextContains(live, "Enable OSD");
+            },
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!applicationReady)
+            throw new TimeoutException("Timed out waiting for Application settings with OSD controls.");
+
+        WaitForAnimationsToComplete();
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings-application-osd");
+    }
+
+    private static AutomationElement WaitForOsdWindow(int processId, string title, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            var window = TryFindOsdWindow(processId, title);
+            if (window is not null)
+                return window;
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException($"Timed out waiting for OSD window '{title}'.");
+    }
+
+    private static AutomationElement? TryFindOsdWindow(int processId, string title)
+    {
+        var condition = new AndCondition(
+            new PropertyCondition(AutomationElement.ProcessIdProperty, processId),
+            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+            new PropertyCondition(AutomationElement.NameProperty, title));
+
+        try
+        {
+            var window = AutomationElement.RootElement.FindFirst(TreeScope.Children, condition);
+            return window is not null && IsVisible(window) ? window : null;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return null;
+        }
+    }
+
+    private static void CaptureOverlayWindow(string currentDirectory, AutomationElement window, string label)
+    {
+        if (!TryGetNativeWindowHandle(window, out var windowHandle))
+            throw new InvalidOperationException($"Window handle unavailable for overlay '{label}'.");
+
+        var fileName = $"{++_captureSequence:000}-{SanitizeFileNameSegment(label)}.png";
+        var outputPath = Path.Combine(currentDirectory, fileName);
+
+        CaptureWindowFromScreen(windowHandle, outputPath);
+
+        using (var bitmap = new Bitmap(outputPath))
+        {
+            if (bitmap.Width < 80 || bitmap.Height < 80)
+            {
+                throw new InvalidOperationException(
+                    $"OSD overlay screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}).");
+            }
+
+            Console.WriteLine($"[visual-smoke] OSD overlay size for {label}: {bitmap.Width}x{bitmap.Height}");
+        }
+
+        var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
+        var snapshot = BuildSnapshot(label, window);
+        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, JsonOptions));
+
+        Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
+    }
+
+    private static void AssertOsdOverlayCapture(string outputPath)
+    {
+        using var bitmap = new Bitmap(outputPath);
+        var sample = SampleRegion(bitmap, 0, 0, bitmap.Width, bitmap.Height);
+        if (sample.AverageLuminance < 8)
+        {
+            throw new InvalidOperationException(
+                $"OSD overlay appears blank or fully transparent. Average luminance {sample.AverageLuminance:F1}. Screenshot: {outputPath}");
+        }
+
+        Console.WriteLine($"[visual-smoke] OSD overlay luminance check passed ({sample.AverageLuminance:F1}).");
     }
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label)
@@ -1230,6 +1365,32 @@ internal static partial class Program
         }
     }
 
+    private static void PrepareOsdSandboxSettings(string appDataDirectory)
+    {
+        var settingsPath = Path.Combine(appDataDirectory, "settings.json");
+        var root = File.Exists(settingsPath)
+            ? JsonNode.Parse(File.ReadAllText(settingsPath))?.AsObject() ?? new JsonObject()
+            : new JsonObject();
+
+        root["EnableHardwareSensors"] = true;
+        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+
+        var osdPath = Path.Combine(appDataDirectory, "osd.json");
+        File.WriteAllText(osdPath, new JsonObject
+        {
+            ["ShowOsd"] = true,
+            ["SelectedStyleIndex"] = 0,
+            ["OsdRefreshInterval"] = 1,
+            ["BackgroundOpacity"] = 0.85,
+            ["BackgroundColor"] = "#1E1E1E",
+            ["PanelPositionX"] = 60,
+            ["PanelPositionY"] = 60,
+            ["IsLocked"] = true
+        }.ToJsonString(JsonOptions));
+
+        Console.WriteLine("[visual-smoke] Prepared sandbox OSD settings (panel style, hardware sensors enabled).");
+    }
+
     private static void UpdateSandboxTheme(string theme)
     {
         if (string.IsNullOrWhiteSpace(_appDataDirectory))
@@ -1638,6 +1799,7 @@ internal static partial class Program
         string ThemeStyle,
         string Language,
         bool PluginOnly,
+        bool OsdOnly,
         bool SettingsOnly,
         string? SwitchTheme,
         bool KeepApp,
@@ -1656,12 +1818,13 @@ internal static partial class Program
             var language = ReadOption(args, "--lang") ?? "en";
             var switchTheme = ReadOption(args, "--switch-theme");
             var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
+            var osdOnly = args.Contains("--osd-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
             var navigationSidebarOnly = args.Contains("--navigation-sidebar-only", StringComparer.OrdinalIgnoreCase);
             var readmeScreenshots = args.Contains("--readme-screenshots", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, osdOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

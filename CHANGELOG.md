@@ -10,14 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+No unreleased changes yet.
+
+## [4.2.0] - 2026-05-31
+
+### Highlights / 重点
+- Beta release for in-app update from v4.1.0. Existing installs can check for updates normally and install the Full or Online setup package from GitHub Releases.
+- Added a real-time on-screen display (OSD) overlay for hardware metrics, ported from upstream Lenovo Legion Toolkit behavior.
+
 ### Added / 新增
 - Added on-screen display (OSD) overlay with Panel and Bar styles, configurable metrics, and settings under Application behavior when hardware sensors are enabled / 新增屏幕显示（OSD）浮层，支持 Panel 与 Bar 两种样式、可配置指标，并在启用硬件传感器时于应用行为设置中提供配置入口
 
 ### Fixed / 修复
 - Fixed the dashboard power mode settings gear staying hidden on some Legion machines (including Y9000P 2025) when custom mode is available from hardware / 修复部分拯救者机型（含 Y9000P 2025）在硬件已支持自定义模式时，仪表盘性能模式齿轮仍无法打开设置的问题
-
-### Improved / 改进
-No unreleased changes yet.
 
 ## [4.1.0] - 2026-05-31
 

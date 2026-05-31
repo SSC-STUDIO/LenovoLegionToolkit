@@ -199,6 +199,66 @@ public partial class GodModeSettingsWindow
         }
     }
 
+    internal static GodModeState AddPreset(GodModeState state, string requestedName, Guid? newPresetId = null)
+    {
+        var activePreset = GetActivePreset(state);
+        var presetId = newPresetId ?? Guid.NewGuid();
+        if (state.Presets.ContainsKey(presetId))
+            throw new InvalidOperationException($"Preset with ID {presetId} already exists.");
+
+        var uniqueName = GetUniquePresetName(requestedName, state.Presets);
+        var presets = new Dictionary<Guid, GodModePreset>(state.Presets)
+        {
+            [presetId] = activePreset with { Name = uniqueName, SourcePowerMode = null }
+        };
+
+        return new()
+        {
+            ActivePresetId = presetId,
+            Presets = presets.AsReadOnlyDictionary()
+        };
+    }
+
+    internal static GodModeState RenameActivePreset(GodModeState state, string requestedName)
+    {
+        var activePresetId = state.ActivePresetId;
+        var activePreset = GetActivePreset(state);
+        var uniqueName = GetUniquePresetName(requestedName, state.Presets, activePresetId);
+        var presets = new Dictionary<Guid, GodModePreset>(state.Presets)
+        {
+            [activePresetId] = activePreset with { Name = uniqueName, SourcePowerMode = null }
+        };
+
+        return state with { Presets = presets.AsReadOnlyDictionary() };
+    }
+
+    internal static GodModeState DeleteActivePreset(GodModeState state)
+    {
+        _ = GetActivePreset(state);
+        if (state.Presets.Count <= 1)
+            return state;
+
+        var presets = new Dictionary<Guid, GodModePreset>(state.Presets);
+        presets.Remove(state.ActivePresetId);
+        var activePresetId = presets.OrderBy(kv => kv.Value.Name)
+            .Select(kv => kv.Key)
+            .First();
+
+        return new()
+        {
+            ActivePresetId = activePresetId,
+            Presets = presets.AsReadOnlyDictionary()
+        };
+    }
+
+    private static GodModePreset GetActivePreset(GodModeState state)
+    {
+        if (state.Presets is null || !state.Presets.TryGetValue(state.ActivePresetId, out var preset))
+            throw new InvalidOperationException($"Preset with ID {state.ActivePresetId} not found.");
+
+        return preset;
+    }
+
     private async Task<bool> ApplyAsync()
     {
         try
@@ -452,13 +512,7 @@ public partial class GodModeSettingsWindow
         if (string.IsNullOrWhiteSpace(result))
             return;
 
-        var uniqueName = GetUniquePresetName(result, presets, activePresetId);
-
-        var newPresets = new Dictionary<Guid, GodModePreset>(presets)
-        {
-            [activePresetId] = preset with { Name = uniqueName, SourcePowerMode = null }
-        };
-        _state = _state.Value with { Presets = newPresets.AsReadOnlyDictionary() };
+        _state = RenameActivePreset(_state.Value, result);
 
         try
         {
@@ -485,24 +539,12 @@ public partial class GodModeSettingsWindow
             return;
 
         var activePresetId = _state.Value.ActivePresetId;
-        var presets = _state.Value.Presets;
-
-        var newPresets = new Dictionary<Guid, GodModePreset>(presets);
-        newPresets.Remove(activePresetId);
-        var newActivePresetId = newPresets.OrderBy(kv => kv.Value.Name)
-            .Select(kv => kv.Key)
-            .First();
-
-        _state = new()
-        {
-            ActivePresetId = newActivePresetId,
-            Presets = newPresets.AsReadOnlyDictionary()
-        };
+        _state = DeleteActivePreset(_state.Value);
 
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={newPresets.Count}, newActivePresetId={newActivePresetId}]");
+                Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={_state.Value.Presets.Count}, newActivePresetId={_state.Value.ActivePresetId}]");
 
             await PersistStateAsync();
 
@@ -534,28 +576,14 @@ public partial class GodModeSettingsWindow
 
         FlushActivePresetToState();
 
-        var activePresetId = _state.Value.ActivePresetId;
-        var presets = _state.Value.Presets;
-        var preset = presets[activePresetId];
-
-        var newActivePresetId = Guid.NewGuid();
-        var uniqueName = GetUniquePresetName(result, presets);
-        var newPreset = preset with { Name = uniqueName, SourcePowerMode = null };
-        var newPresets = new Dictionary<Guid, GodModePreset>(presets)
-        {
-            [newActivePresetId] = newPreset
-        };
-
-        _state = new()
-        {
-            ActivePresetId = newActivePresetId,
-            Presets = newPresets.AsReadOnlyDictionary()
-        };
+        _state = AddPreset(_state.Value, result);
 
         try
         {
+            var newActivePresetId = _state.Value.ActivePresetId;
+            var newPreset = _state.Value.Presets[newActivePresetId];
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={newPresets.Count}]");
+                Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={_state.Value.Presets.Count}]");
 
             await PersistStateAsync();
         }

@@ -10407,5 +10407,500 @@ namespace UniversalDeviceToolkit.WPF.Resources {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to GB.
+        /// </summary>
+        public static string GB {
+            get {
+                return ResourceManager.GetString("GB", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Show or Hide the OSD.
+        /// </summary>
+        public static string OsdAutomationStepControl_Message {
+            get {
+                return ResourceManager.GetString("OsdAutomationStepControl_Message", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to OSD.
+        /// </summary>
+        public static string OsdAutomationStepControl_Title {
+            get {
+                return ResourceManager.GetString("OsdAutomationStepControl_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Background Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_BackgroundColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_BackgroundColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Category Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_CategoryColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_CategoryColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Corner Radius.
+        /// </summary>
+        public static string OsdSettings_Appearance_CornerRadius {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_CornerRadius", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom.
+        /// </summary>
+        public static string OsdSettings_Appearance_CornerRadiusBottom {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_CornerRadiusBottom", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Top.
+        /// </summary>
+        public static string OsdSettings_Appearance_CornerRadiusTop {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_CornerRadiusTop", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Critical Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_CriticalColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_CriticalColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Font Size.
+        /// </summary>
+        public static string OsdSettings_Appearance_FontSize {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_FontSize", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Label Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_LabelColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_LabelColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string OsdSettings_Appearance_Opacity {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_Opacity", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Value Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_ValueColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_ValueColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Warning Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_WarningColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_WarningColor", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Lock Position.
+        /// </summary>
+        public static string OsdSettings_General_LockPosition {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_LockPosition", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Overlay Style.
+        /// </summary>
+        public static string OsdSettings_General_OverlayStyle {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_OverlayStyle", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Interval.
+        /// </summary>
+        public static string OsdSettings_General_RefreshInterval {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_RefreshInterval", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Sensor refresh interval.
+        /// </summary>
+        public static string OsdSettings_General_RefreshInterval_Tooltip {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_RefreshInterval_Tooltip", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Position.
+        /// </summary>
+        public static string OsdSettings_General_ResetPosition {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_ResetPosition", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Snapping Threshold.
+        /// </summary>
+        public static string OsdSettings_General_SnapThreshold {
+            get {
+                return ResourceManager.GetString("OsdSettings_General_SnapThreshold", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Appearance.
+        /// </summary>
+        public static string OsdSettings_Tabs_Appearance {
+            get {
+                return ResourceManager.GetString("OsdSettings_Tabs_Appearance", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string OsdSettings_Tabs_General {
+            get {
+                return ResourceManager.GetString("OsdSettings_Tabs_General", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Sensors.
+        /// </summary>
+        public static string OsdSettings_Tabs_SensorItems {
+            get {
+                return ResourceManager.GetString("OsdSettings_Tabs_SensorItems", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Thresholds.
+        /// </summary>
+        public static string OsdSettings_Tabs_Thresholds {
+            get {
+                return ResourceManager.GetString("OsdSettings_Tabs_Thresholds", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Critical.
+        /// </summary>
+        public static string OsdSettings_Thresholds_Critical {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_Critical", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to FPS Redline.
+        /// </summary>
+        public static string OsdSettings_Thresholds_FpsRedline {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_FpsRedline", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to The minimum acceptable frame rate. Below this, the color turns critical..
+        /// </summary>
+        public static string OsdSettings_Thresholds_FpsRedline_Description {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_FpsRedline_Description", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Low FPS Delta.
+        /// </summary>
+        public static string OsdSettings_Thresholds_LowFpsDelta {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_LowFpsDelta", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to The maximum difference between average FPS and 1% Low. Above this, the counter turns critical..
+        /// </summary>
+        public static string OsdSettings_Thresholds_LowFpsDelta_Description {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_LowFpsDelta_Description", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Performance.
+        /// </summary>
+        public static string OsdSettings_Thresholds_Performance {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_Performance", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        public static string OsdSettings_Thresholds_Temperature {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_Temperature", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Usage.
+        /// </summary>
+        public static string OsdSettings_Thresholds_Usage {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_Usage", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string OsdSettings_Thresholds_Warning {
+            get {
+                return ResourceManager.GetString("OsdSettings_Thresholds_Warning", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to OSD Settings.
+        /// </summary>
+        public static string OsdWindow_Title {
+            get {
+                return ResourceManager.GetString("OsdWindow_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to CPU.
+        /// </summary>
+        public static string Osd_Cpu {
+            get {
+                return ResourceManager.GetString("Osd_Cpu", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Fan.
+        /// </summary>
+        public static string Osd_CPU_Fan {
+            get {
+                return ResourceManager.GetString("Osd_CPU_Fan", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Disk 1 Temperature.
+        /// </summary>
+        public static string Osd_Disk_0_Temperature {
+            get {
+                return ResourceManager.GetString("Osd_Disk_0_Temperature", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Disk 2 Temperature.
+        /// </summary>
+        public static string Osd_Disk_1_Temperature {
+            get {
+                return ResourceManager.GetString("Osd_Disk_1_Temperature", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to E-Core Clock.
+        /// </summary>
+        public static string Osd_ECoreClock {
+            get {
+                return ResourceManager.GetString("Osd_ECoreClock", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to FPS.
+        /// </summary>
+        public static string Osd_Fps {
+            get {
+                return ResourceManager.GetString("Osd_Fps", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Frame Time.
+        /// </summary>
+        public static string Osd_Frame_Time {
+            get {
+                return ResourceManager.GetString("Osd_Frame_Time", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Game.
+        /// </summary>
+        public static string Osd_Game {
+            get {
+                return ResourceManager.GetString("Osd_Game", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to GPU.
+        /// </summary>
+        public static string Osd_Gpu {
+            get {
+                return ResourceManager.GetString("Osd_Gpu", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Fan.
+        /// </summary>
+        public static string Osd_GPU_Fan {
+            get {
+                return ResourceManager.GetString("Osd_GPU_Fan", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to 1% Low.
+        /// </summary>
+        public static string Osd_Low_Fps {
+            get {
+                return ResourceManager.GetString("Osd_Low_Fps", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        public static string Osd_Memory_Temperature {
+            get {
+                return ResourceManager.GetString("Osd_Memory_Temperature", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Utilization.
+        /// </summary>
+        public static string Osd_Memory_Utilization {
+            get {
+                return ResourceManager.GetString("Osd_Memory_Utilization", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to PCH.
+        /// </summary>
+        public static string Osd_Pch {
+            get {
+                return ResourceManager.GetString("Osd_Pch", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to PCH Fan.
+        /// </summary>
+        public static string Osd_PCH_Fan {
+            get {
+                return ResourceManager.GetString("Osd_PCH_Fan", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to P-Core Clock.
+        /// </summary>
+        public static string Osd_PCoreClock {
+            get {
+                return ResourceManager.GetString("Osd_PCoreClock", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Bar.
+        /// </summary>
+        public static string Osd_Style_Bar {
+            get {
+                return ResourceManager.GetString("Osd_Style_Bar", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Panel.
+        /// </summary>
+        public static string Osd_Style_Panel {
+            get {
+                return ResourceManager.GetString("Osd_Style_Panel", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to %.
+        /// </summary>
+        public static string Percent {
+            get {
+                return ResourceManager.GetString("Percent", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Board Temperature.
+        /// </summary>
+        public static string SensorsControl_Motherboard_Temperature {
+            get {
+                return ResourceManager.GetString("SensorsControl_Motherboard_Temperature", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Motherboard.
+        /// </summary>
+        public static string SensorsControl_Motherboard_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Motherboard_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Enable advanced hardware polling to monitor detailed temperatures, frequencies, and power limits..
+        /// </summary>
+        public static string SettingsPage_HardwareSensors_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_HardwareSensors_Message", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to You need to install PawnIO first to use hardware sensors!.
+        /// </summary>
+        public static string SettingsPage_HardwareSensors_PawnIOWarning {
+            get {
+                return ResourceManager.GetString("SettingsPage_HardwareSensors_PawnIOWarning", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Hardware Sensors.
+        /// </summary>
+        public static string SettingsPage_HardwareSensors_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_HardwareSensors_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Floating overlay showing live sensor data..
+        /// </summary>
+        public static string SettingsPage_Osd_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_Osd_Message", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Enable OSD.
+        /// </summary>
+        public static string SettingsPage_Osd_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_Osd_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to W.
+        /// </summary>
+        public static string Watt {
+            get {
+                return ResourceManager.GetString("Watt", resourceCulture);
+            }
+        }
+        public static string SensorsControl_CPU_Power { get { return ResourceManager.GetString("SensorsControl_CPU_Power", resourceCulture); } }
+        public static string SensorsControl_GpuCoreTemperature_Title { get { return ResourceManager.GetString("SensorsControl_GpuCoreTemperature_Title", resourceCulture); } }
+        public static string SensorsControl_GpuMemoryTemperature_Title { get { return ResourceManager.GetString("SensorsControl_GpuMemoryTemperature_Title", resourceCulture); } }
+        public static string SensorsControl_GpuVramUtilization_Title { get { return ResourceManager.GetString("SensorsControl_GpuVramUtilization_Title", resourceCulture); } }
+        public static string SensorsControl_GPU_Power { get { return ResourceManager.GetString("SensorsControl_GPU_Power", resourceCulture); } }
+        public static string SensorsControl_Memory_Title { get { return ResourceManager.GetString("SensorsControl_Memory_Title", resourceCulture); } }
+        public static string SensorItem_PchTemperature { get { return ResourceManager.GetString("SensorItem_PchTemperature", resourceCulture); } }
     }
 }

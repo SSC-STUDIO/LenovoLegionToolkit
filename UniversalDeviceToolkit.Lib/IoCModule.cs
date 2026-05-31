@@ -52,6 +52,7 @@ public class IoCModule : Module
         builder.Register<VantageDisabler>();
 
         builder.Register<ApplicationSettings>();
+        builder.Register<OsdSettings>();
         builder.Register<BalanceModeSettings>();
         builder.Register<GodModeSettings>();
         builder.Register<GPUOverclockSettings>();
@@ -65,6 +66,7 @@ public class IoCModule : Module
         builder.Register<UpdateCheckSettings>();
 
         builder.Register<AlwaysOnUSBFeature>();
+        builder.Register<HardwareSensorsFeature>();
         builder.Register<BatteryFeature>();
         builder.Register<BatteryNightChargeFeature>();
         builder.Register<DpiScaleFeature>();
@@ -148,6 +150,7 @@ public class IoCModule : Module
         builder.Register<SensorsControllerV5>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
+        builder.Register<FpsSensorController>();
         builder.Register<SmartFnLockController>();
         builder.Register<SpectrumKeyboardBacklightController>();
         builder.Register<WindowsPowerModeController>();

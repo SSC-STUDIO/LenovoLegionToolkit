@@ -3,14 +3,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Messaging;
+using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
+using UniversalDeviceToolkit.WPF.Windows.Osd;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
 {
@@ -22,6 +28,9 @@ public partial class SettingsApplicationBehaviorControl
     private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
     private readonly RGBKeyboardBacklightController _rgbKeyboardBacklightController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
+    private readonly OsdSettings _osdSettings = IoCContainer.Resolve<OsdSettings>();
+    private readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
+    private readonly HardwareSensorsFeature _hardwareSensorsFeature = IoCContainer.Resolve<HardwareSensorsFeature>();
     private bool _isRefreshing;
 
     public SettingsApplicationBehaviorControl()
@@ -71,6 +80,19 @@ public partial class SettingsApplicationBehaviorControl
         var fnKeysStatus = await fnKeysTask;
         _fnKeysCard.Visibility = isSupportedLegionMachine && fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
+
+        _osdToggle.IsChecked = _osdSettings.Store.ShowOsd;
+        _hardwareSensorsToggle.IsChecked = _settings.Store.EnableHardwareSensors;
+        _osdCardControl.Visibility = _settings.Store.EnableHardwareSensors ? Visibility.Visible : Visibility.Collapsed;
+
+        if (PawnIOHelper.IsPawnIOInstalled())
+        {
+            _hardwareSensorsCardHeader.Warning = string.Empty;
+        }
+        else
+        {
+            _hardwareSensorsCardHeader.Warning = Resource.SettingsPage_HardwareSensors_PawnIOWarning;
+        }
 
         _isRefreshing = false;
     }
@@ -334,6 +356,93 @@ public partial class SettingsApplicationBehaviorControl
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Unexpected failure while toggling FnKeys state.", ex);
+        }
+    }
+
+    private void HardwareSensorsCard_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        _hardwareSensorsToggle.IsChecked = !(_hardwareSensorsToggle.IsChecked ?? false);
+    }
+
+    private async void HardwareSensorsToggle_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        var state = _hardwareSensorsToggle.IsChecked;
+        if (state is null)
+            return;
+
+        if (state.Value && !PawnIOHelper.IsPawnIOInstalled())
+        {
+            await PawnIOHelper.TryShowPawnIONotFoundDialogAsync().ConfigureAwait(true);
+            _hardwareSensorsToggle.IsChecked = false;
+            return;
+        }
+
+        try
+        {
+            await RunWithToggleDisabledAsync(_hardwareSensorsToggle, async () =>
+            {
+                await _hardwareSensorsFeature.SetStateAsync(
+                    state.Value ? HardwareSensorsState.On : HardwareSensorsState.Off).ConfigureAwait(true);
+
+                if (state.Value)
+                {
+                    _hardwareSensorSettings.SynchronizeStore();
+                }
+
+                _osdCardControl.Visibility = state.Value ? Visibility.Visible : Visibility.Collapsed;
+
+                if (!state.Value)
+                {
+                    _osdToggle.IsChecked = false;
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unexpected failure while toggling hardware sensors state.", ex);
+        }
+    }
+
+    private void OsdSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        OsdSettingsWindow.ShowInstance();
+    }
+
+    private void OsdToggle_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        try
+        {
+            var state = _osdToggle.IsChecked;
+            if (state is null)
+                return;
+
+            MessagingCenter.Publish(new OsdChangedMessage(state.Value ? OsdState.Show : OsdState.Hidden));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"OsdToggle_Click error: {ex.Message}", ex);
+
+            _osdToggle.IsChecked = false;
+            _osdSettings.Store.ShowOsd = false;
+            _osdSettings.SynchronizeStore();
         }
     }
 }

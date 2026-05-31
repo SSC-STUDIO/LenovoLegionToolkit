@@ -46,6 +46,7 @@
 		<PackageReference Include="Markdig.Wpf" />
 		<PackageReference Include="PixiEditor.ColorPicker" />
 		<PackageReference Include="WPF-UI" />
+		<PackageReference Include="WpfScreenHelper" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />

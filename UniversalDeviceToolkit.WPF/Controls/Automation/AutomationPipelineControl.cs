@@ -359,6 +359,7 @@ public class AutomationPipelineControl : UserControl
             MacroAutomationStep s => new MacroAutomationStepControl(s),
             MicrophoneAutomationStep s => new MicrophoneAutomationStepControl(s),
             NotificationAutomationStep s => new NotificationAutomationStepControl(s),
+            OsdAutomationStep s => new OsdAutomationStepControl(s),
             OneLevelWhiteKeyboardBacklightAutomationStep s => new OneLevelWhiteKeyboardBacklightAutomationStepControl(s),
             OverDriveAutomationStep s => new OverDriveAutomationStepControl(s),
             OverclockDiscreteGPUAutomationStep s => new OverclockDiscreteGPUAutomationStepControl(s),

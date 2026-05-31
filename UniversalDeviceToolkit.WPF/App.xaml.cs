@@ -32,12 +32,15 @@ using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Lib.Messaging;
+using LenovoLegionToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Pages;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
+using UniversalDeviceToolkit.WPF.Windows.Osd;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
@@ -82,6 +85,8 @@ public partial class App
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     public new static App Current => (App)Application.Current;
+
+    public Window? OsdWindow;
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
@@ -295,6 +300,8 @@ public partial class App
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Start up complete");
+
+        InitOsd();
     }
 
     private static async Task InitializePluginsAsync()
@@ -1646,6 +1653,82 @@ public partial class App
     {
         var controller = IoCContainer.Resolve<MacroController>();
         controller.Start();
+    }
+
+    public void InitOsd()
+    {
+        MessagingCenter.Subscribe<OsdChangedMessage>(this, message =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                HandleOsdCommand(message.State);
+            });
+        });
+
+        var osdSettings = IoCContainer.Resolve<OsdSettings>();
+
+        if (osdSettings.Store.ShowOsd)
+        {
+            HandleOsdCommand(OsdState.Show);
+        }
+    }
+
+    private void HandleOsdCommand(OsdState command)
+    {
+        var osdSettings = IoCContainer.Resolve<OsdSettings>();
+        bool shouldBeBar = osdSettings.Store.SelectedStyleIndex == 1;
+
+        switch (command)
+        {
+            case OsdState.Hidden:
+                if (OsdWindow != null)
+                {
+                    OsdWindow.Hide();
+                }
+                break;
+
+            case OsdState.Show:
+                EnsureCorrectOsdStyle(shouldBeBar);
+                OsdWindow?.Show();
+                break;
+
+            case OsdState.Toggle:
+                if (OsdWindow is { IsVisible: true })
+                {
+                    OsdWindow.Hide();
+                }
+                else
+                {
+                    EnsureCorrectOsdStyle(shouldBeBar);
+                    OsdWindow?.Show();
+                }
+                break;
+        }
+
+        osdSettings.Store.ShowOsd = OsdWindow?.IsVisible ?? false;
+        osdSettings.SynchronizeStore();
+    }
+
+    private void EnsureCorrectOsdStyle(bool shouldBeBar)
+    {
+        if (OsdWindow != null && (OsdWindow is OsdBarWindow) != shouldBeBar)
+        {
+            OsdWindow.Close();
+            OsdWindow = null;
+        }
+
+        EnsureOsdWindowCreated(shouldBeBar);
+    }
+
+    private void EnsureOsdWindowCreated(bool isBar)
+    {
+        if (OsdWindow != null)
+        {
+            return;
+        }
+
+        OsdWindow = isBar ? new OsdBarWindow() : new OsdPanelWindow();
+        OsdWindow.Closed += (_, _) => OsdWindow = null;
     }
 
 }
