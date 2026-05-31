@@ -15,6 +15,7 @@ internal sealed record DoctorReport(
             CheckTelemetry(status.Telemetry),
             CheckPower(status.Power),
             CheckPowerProfile(status.PowerProfile),
+            CheckDisplayBrightness(status.DisplayBrightness),
             CheckPlugins(status.Plugins),
             CheckControls(status.Controls),
             CheckDeviceSupport(status.DeviceSupport),
@@ -114,6 +115,24 @@ internal sealed record DoctorReport(
             "Power profile",
             DoctorCheckStatus.Warn,
             string.IsNullOrWhiteSpace(note) ? $"No platform power profile was available from {profile.Source}." : note);
+    }
+
+    private static DoctorCheck CheckDisplayBrightness(DisplayBrightnessStatus brightness)
+    {
+        var device = brightness.Devices.FirstOrDefault();
+        if (device is not null)
+        {
+            return new DoctorCheck(
+                "Display brightness",
+                DoctorCheckStatus.Pass,
+                $"{device.DisplayName} is at {device.Percent}% from {brightness.Source}.");
+        }
+
+        var note = brightness.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+        return new DoctorCheck(
+            "Display brightness",
+            DoctorCheckStatus.Warn,
+            string.IsNullOrWhiteSpace(note) ? $"No display brightness provider was available from {brightness.Source}." : note);
     }
 
     private static DoctorCheck CheckPlugins(PluginDiscoveryReport plugins)

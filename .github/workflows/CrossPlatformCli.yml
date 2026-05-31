@@ -142,6 +142,9 @@ jobs:
           if (-not $payload.PowerProfile) {
             throw "json command returned no power profile object."
           }
+          if (-not $payload.DisplayBrightness) {
+            throw "json command returned no display brightness object."
+          }
           if (-not $payload.Plugins) {
             throw "json command returned no plugin discovery object."
           }

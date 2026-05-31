@@ -93,6 +93,8 @@ public sealed class HardwareIdentityProviderTests
 
         public bool DirectoryExists(string path) =>
             files.Keys.Any(file => file.StartsWith(path.TrimEnd('/') + "/", StringComparison.Ordinal));
+
+        public string GetFileName(string path) => path.TrimEnd('/', '\\').Split('/', '\\').Last();
     }
 
     private sealed class FakeCommandRunner(IReadOnlyDictionary<string, string> outputs) : ICommandRunner

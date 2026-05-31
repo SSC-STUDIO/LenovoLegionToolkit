@@ -143,5 +143,8 @@ public sealed class PluginDiscoveryTests
 
         public bool DirectoryExists(string path) =>
             files.Keys.Any(file => file.StartsWith(path.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase));
+
+        public string GetFileName(string path) =>
+            Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
     }
 }

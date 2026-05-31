@@ -36,6 +36,7 @@ static int PrintStatus()
     Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
     Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
+    Console.WriteLine($"Display brightness: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
     Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
     Console.WriteLine($"Controls: {FormatControlSummary(status.Controls)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
@@ -234,7 +235,7 @@ static int SetControl(IReadOnlyList<string> arguments)
         return 2;
     }
 
-    var result = new HardwareControlSurfaceWriter(new ProcessCommandRunner()).Set(arguments[0], arguments[1]);
+    var result = new HardwareControlSurfaceWriter(new PhysicalFileSystem(), new ProcessCommandRunner()).Set(arguments[0], arguments[1]);
     Console.WriteLine(result.Succeeded ? "Control changed" : "Control change failed");
     Console.WriteLine($"Control: {result.ControlId}");
     Console.WriteLine($"Value: {result.Value}");
@@ -338,6 +339,14 @@ static string FormatPowerProfileSummary(PowerProfileStatus profile)
     return $"unknown ({profile.Source})";
 }
 
+static string FormatDisplayBrightnessSummary(DisplayBrightnessStatus brightness)
+{
+    var device = brightness.Devices.FirstOrDefault();
+    return device is null
+        ? $"unknown ({brightness.Source})"
+        : $"{device.Percent}% on {device.Id} ({brightness.Source})";
+}
+
 static string FormatPluginSummary(PluginDiscoveryReport plugins)
 {
     var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
@@ -395,6 +404,7 @@ internal sealed record CrossPlatformStatus(
     SystemTelemetry Telemetry,
     PowerStatus Power,
     PowerProfileStatus PowerProfile,
+    DisplayBrightnessStatus DisplayBrightness,
     PluginDiscoveryReport Plugins,
     HardwareControlSurface Controls,
     DeviceSupportStatus DeviceSupport,
@@ -424,10 +434,12 @@ internal sealed record CrossPlatformStatus(
             new ProcessCommandRunner()).Read();
         var powerProfile = new PowerProfileReader(
             new ProcessCommandRunner()).Read();
+        var displayBrightness = new DisplayBrightnessReader(
+            new PhysicalFileSystem()).Read();
         var plugins = new PluginDiscoveryReader(
             new PhysicalFileSystem()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
-        var controls = new HardwareControlSurfaceReader(powerProfile, plugins, deviceSupport).Read();
+        var controls = new HardwareControlSurfaceReader(powerProfile, displayBrightness, plugins, deviceSupport).Read();
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
             GetVersion(),
@@ -439,6 +451,7 @@ internal sealed record CrossPlatformStatus(
             telemetry,
             power,
             powerProfile,
+            displayBrightness,
             plugins,
             controls,
             deviceSupport,
@@ -461,6 +474,9 @@ internal sealed record CrossPlatformStatus(
             : isMacOS
                 ? "Can inspect and set macOS low power mode through pmset."
                 : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration."),
+        new("Display brightness", isLinux, isLinux
+            ? "Can inspect and set Linux backlight brightness through /sys/class/backlight."
+            : "Linux backlight control is not available on this platform."),
         new("Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
         new("Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),

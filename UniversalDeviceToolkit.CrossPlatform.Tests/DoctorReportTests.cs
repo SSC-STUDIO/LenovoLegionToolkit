@@ -14,8 +14,9 @@ public sealed class DoctorReportTests
             new SystemTelemetry("linux-procfs-sysfs", "AMD Ryzen 7 7840U", 16, 31.25, 12.5, [new TemperatureReading("Tctl", 54.1, "linux-hwmon")], []),
             new PowerStatus("linux-power-supply", [new PowerSupplyReading("BAT0", "Battery", "Discharging", 81, 51.2, 75, 80, 13.4, 15.5, 42, null, true, "Good", "test")], []),
             new PowerProfileStatus("linux-powerprofilesctl", "balanced", [new PowerProfileOption("balanced", "Balanced", true)], true, []),
+            new DisplayBrightnessStatus("linux-backlight", [new DisplayBrightnessDevice("intel_backlight", "intel_backlight", 480, 960, 50, "/sys/class/backlight/intel_backlight/brightness", "linux-backlight")], []),
             new PluginDiscoveryReport("test", [], [new PluginDescriptor("cross", "Cross", "1.0.0", "/plugins/cross/plugin.json", true, true, 1, ["linux"], "test")], []),
-            new HardwareControlSurface("test", [new HardwareControlDescriptor("power-profile", "Power profile", "standard-os", true, true, "balanced", [], "test")], []),
+            new HardwareControlSurface("test", [new HardwareControlDescriptor("power-profile", "Power profile", "standard-os", true, true, "balanced", [], "test"), new HardwareControlDescriptor("display-brightness", "Display brightness", "standard-os", true, true, "50%", [], "test")], []),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(
                 new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
                 isWindows: false),
@@ -28,6 +29,7 @@ public sealed class DoctorReportTests
         report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Power profile" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Display brightness" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Plugin manifests" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Control surface" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Pass);
@@ -42,6 +44,7 @@ public sealed class DoctorReportTests
             SystemTelemetry.Unknown("test", "telemetry unavailable"),
             PowerStatus.Unknown("test", "power unavailable"),
             PowerProfileStatus.Unknown("test", "profile unavailable"),
+            DisplayBrightnessStatus.Unknown("test", "brightness unavailable"),
             PluginDiscoveryReport.Unknown("test", "plugins unavailable"),
             HardwareControlSurface.Unknown("test", "controls unavailable"),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(HardwareIdentity.Unknown("test"), isWindows: false),
@@ -54,6 +57,7 @@ public sealed class DoctorReportTests
         report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Power profile" && check.Status == DoctorCheckStatus.Warn);
+        report.Checks.Should().Contain(check => check.Name == "Display brightness" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Plugin manifests" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Control surface" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Warn);
@@ -74,6 +78,7 @@ public sealed class DoctorReportTests
         SystemTelemetry telemetry,
         PowerStatus power,
         PowerProfileStatus powerProfile,
+        DisplayBrightnessStatus displayBrightness,
         PluginDiscoveryReport plugins,
         HardwareControlSurface controls,
         DeviceSupportStatus deviceSupport,
@@ -90,6 +95,7 @@ public sealed class DoctorReportTests
             telemetry,
             power,
             powerProfile,
+            displayBrightness,
             plugins,
             controls,
             deviceSupport,

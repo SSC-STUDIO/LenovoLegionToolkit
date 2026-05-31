@@ -30,6 +30,7 @@ internal sealed record HardwareControlSetResult(
 
 internal sealed class HardwareControlSurfaceReader(
     PowerProfileStatus powerProfile,
+    DisplayBrightnessStatus displayBrightness,
     PluginDiscoveryReport plugins,
     DeviceSupportStatus deviceSupport)
 {
@@ -39,6 +40,7 @@ internal sealed class HardwareControlSurfaceReader(
         var controls = new List<HardwareControlDescriptor>
         {
             BuildPowerProfileControl(powerProfile),
+            BuildDisplayBrightnessControl(displayBrightness),
             BuildPluginDiscoveryControl(plugins),
             BuildVendorHardwareControls(deviceSupport, isWindows)
         };
@@ -67,6 +69,22 @@ internal sealed class HardwareControlSurfaceReader(
             profile.CanSetProfile
                 ? "Set through Linux powerprofilesctl or macOS pmset where available."
                 : FirstPresent(profile.Notes));
+
+    private static HardwareControlDescriptor BuildDisplayBrightnessControl(DisplayBrightnessStatus brightness)
+    {
+        var device = brightness.Devices.FirstOrDefault();
+        return new HardwareControlDescriptor(
+            "display-brightness",
+            "Display brightness",
+            "standard-os",
+            device is not null,
+            device is not null,
+            device is null ? string.Empty : $"{device.Percent}%",
+            [],
+            device is null
+                ? FirstPresent(brightness.Notes)
+                : $"Set through Linux backlight device {device.Id}.");
+    }
 
     private static HardwareControlDescriptor BuildPluginDiscoveryControl(PluginDiscoveryReport plugins)
     {
@@ -102,19 +120,23 @@ internal sealed class HardwareControlSurfaceReader(
 }
 
 internal sealed class HardwareControlSurfaceWriter(
+    IFileSystem fileSystem,
     ICommandResultRunner commandRunner,
     CrossPlatformControlPlatform platform = CrossPlatformControlPlatform.Auto)
 {
     public HardwareControlSetResult Set(string controlId, string value)
     {
         var normalizedControlId = NormalizeControlId(controlId);
+        if (normalizedControlId.Equals("display-brightness", StringComparison.OrdinalIgnoreCase))
+            return new DisplayBrightnessWriter(fileSystem, commandRunner, ResolvePlatform()).SetBrightnessPercent(value);
+
         if (!normalizedControlId.Equals("power-profile", StringComparison.OrdinalIgnoreCase))
         {
             return new HardwareControlSetResult(
                 false,
                 controlId,
                 value,
-                "Only the standard power-profile control is writable in the cross-platform CLI.");
+                "Only standard power-profile and display-brightness controls are writable in the cross-platform CLI.");
         }
 
         var result = ResolvePlatform() switch

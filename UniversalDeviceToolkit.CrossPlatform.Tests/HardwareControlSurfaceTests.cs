@@ -23,6 +23,10 @@ public sealed class HardwareControlSurfaceTests
             [],
             [new PluginDescriptor("cross", "Cross", "1.0.0", "/plugins/cross/plugin.json", true, true, 1, ["linux"], "test")],
             []);
+        var brightness = new DisplayBrightnessStatus(
+            "linux-backlight",
+            [new DisplayBrightnessDevice("intel_backlight", "intel_backlight", 480, 960, 50, "/sys/class/backlight/intel_backlight/brightness", "linux-backlight")],
+            []);
         var deviceSupport = new DeviceSupportStatus(
             "Basic",
             "framework-basic",
@@ -31,7 +35,7 @@ public sealed class HardwareControlSurfaceTests
             ["vendor-hardware-controls"],
             "test");
 
-        var surface = new HardwareControlSurfaceReader(powerProfile, plugins, deviceSupport).Read();
+        var surface = new HardwareControlSurfaceReader(powerProfile, brightness, plugins, deviceSupport).Read();
 
         surface.Controls.Should().ContainEquivalentOf(new HardwareControlDescriptor(
             "power-profile",
@@ -47,6 +51,11 @@ public sealed class HardwareControlSurfaceTests
             ],
             "Set through Linux powerprofilesctl or macOS pmset where available."));
         surface.Controls.Should().Contain(control =>
+            control.Id == "display-brightness" &&
+            control.IsAvailable &&
+            control.IsWritable &&
+            control.CurrentValue == "50%");
+        surface.Controls.Should().Contain(control =>
             control.Id == "plugin-manifests" &&
             control.IsAvailable &&
             !control.IsWritable &&
@@ -61,12 +70,13 @@ public sealed class HardwareControlSurfaceTests
     [Fact]
     public void Writer_WhenControlIsPowerProfile_ShouldDelegateToPowerProfileWriter()
     {
+        var fileSystem = new FakeFileSystem(new Dictionary<string, string>());
         var runner = new FakeCommandRunner(new Dictionary<string, CommandResult>
         {
             ["powerprofilesctl set performance"] = new(0, "", "")
         });
 
-        var result = new HardwareControlSurfaceWriter(runner, CrossPlatformControlPlatform.Linux).Set("power_profile", "performance");
+        var result = new HardwareControlSurfaceWriter(fileSystem, runner, CrossPlatformControlPlatform.Linux).Set("power_profile", "performance");
 
         result.Succeeded.Should().BeTrue();
         result.ControlId.Should().Be("power-profile");
@@ -79,11 +89,24 @@ public sealed class HardwareControlSurfaceTests
     {
         var runner = new FakeCommandRunner(new Dictionary<string, CommandResult>());
 
-        var result = new HardwareControlSurfaceWriter(runner).Set("vendor-hardware-controls", "performance");
+        var result = new HardwareControlSurfaceWriter(new FakeFileSystem(new Dictionary<string, string>()), runner).Set("vendor-hardware-controls", "performance");
 
         result.Succeeded.Should().BeFalse();
-        result.Detail.Should().Contain("Only the standard power-profile control");
+        result.Detail.Should().Contain("Only standard power-profile and display-brightness controls");
         runner.Commands.Should().BeEmpty();
+    }
+
+    private sealed class FakeFileSystem(IReadOnlyDictionary<string, string> files) : IFileSystem
+    {
+        public string ReadAllText(string path) => files.TryGetValue(path, out var value) ? value : string.Empty;
+
+        public IEnumerable<string> EnumerateDirectories(string path) => [];
+
+        public IEnumerable<string> EnumerateFiles(string path, string searchPattern) => [];
+
+        public bool DirectoryExists(string path) => false;
+
+        public string GetFileName(string path) => Path.GetFileName(path);
     }
 
     private sealed class FakeCommandRunner(IReadOnlyDictionary<string, CommandResult> results) : ICommandResultRunner

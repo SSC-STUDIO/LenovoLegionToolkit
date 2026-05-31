@@ -130,6 +130,8 @@ internal interface IFileSystem
     IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
     bool DirectoryExists(string path);
+
+    string GetFileName(string path);
 }
 
 internal sealed class PhysicalFileSystem : IFileSystem
@@ -181,6 +183,8 @@ internal sealed class PhysicalFileSystem : IFileSystem
             return false;
         }
     }
+
+    public string GetFileName(string path) => Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 }
 
 internal interface ICommandRunner
