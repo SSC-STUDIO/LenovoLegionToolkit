@@ -31,6 +31,9 @@ public sealed record OnlineDownloads
 
     [JsonPropertyName("online")]
     public OnlineDownloadGroup? Online { get; init; }
+
+    [JsonPropertyName("cli")]
+    public OnlineCliDownloadGroup? Cli { get; init; }
 }
 
 public sealed record OnlineDownloadGroup
@@ -40,6 +43,12 @@ public sealed record OnlineDownloadGroup
 
     [JsonPropertyName("installer")]
     public OnlineFileResource? Installer { get; init; }
+}
+
+public sealed record OnlineCliDownloadGroup
+{
+    [JsonPropertyName("crossPlatform")]
+    public OnlineFileResource? CrossPlatform { get; init; }
 }
 
 public sealed record OnlineFileResource

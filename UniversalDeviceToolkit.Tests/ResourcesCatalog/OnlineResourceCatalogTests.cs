@@ -25,6 +25,14 @@ public sealed class OnlineResourceCatalogTests
                                     "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
                                     "size": 4096
                                   }
+                                },
+                                "cli": {
+                                  "crossPlatform": {
+                                    "name": "UniversalDeviceToolkit_v3.8.0_CLI_cross-platform.zip",
+                                    "url": "https://example.com/releases/UniversalDeviceToolkit_v3.8.0_CLI_cross-platform.zip",
+                                    "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                                    "size": 8192
+                                  }
                                 }
                               },
                               "languages": [
@@ -64,6 +72,9 @@ public sealed class OnlineResourceCatalogTests
         catalog.Downloads?.Full?.Portable.Should().NotBeNull();
         catalog.Downloads!.Full!.Portable!.Name.Should().Be("UniversalDeviceToolkit_v3.8.0_Full_win-x64.zip");
         catalog.Downloads.Full.Portable.Sha256.Should().HaveLength(64);
+        catalog.Downloads.Cli?.CrossPlatform.Should().NotBeNull();
+        catalog.Downloads.Cli!.CrossPlatform!.Name.Should().Be("UniversalDeviceToolkit_v3.8.0_CLI_cross-platform.zip");
+        catalog.Downloads.Cli.CrossPlatform.Sha256.Should().HaveLength(64);
         catalog.Languages.Should().ContainSingle(language =>
             language.Culture == "zh-hans" &&
             language.Sha256.Length == 64 &&

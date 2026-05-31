@@ -163,6 +163,7 @@ function Get-DownloadLines {
   $onlineSetup = $sorted | Where-Object { $_ -match '_Online_Setup\.exe$' } | Select-Object -First 1
   $fullZip = $sorted | Where-Object { $_ -match '_Full_win-x64\.zip$' } | Select-Object -First 1
   $onlineZip = $sorted | Where-Object { $_ -match '_Online_win-x64\.zip$' } | Select-Object -First 1
+  $crossPlatformCliZip = $sorted | Where-Object { $_ -match '_CLI_cross-platform\.zip$' } | Select-Object -First 1
   $englishSetup = $sorted | Where-Object { $_ -match '_English_Setup\.exe$' } | Select-Object -First 1
   $englishZip = $sorted | Where-Object { $_ -match '_English_win-x64\.zip$' } | Select-Object -First 1
   $legacyAlias = $sorted | Where-Object { $_ -match '^LenovoLegionToolkit_v\d+\.\d+\.\d+_Setup\.exe$' } | Select-Object -First 1
@@ -175,6 +176,7 @@ function Get-DownloadLines {
   if ($onlineSetup) { Add-AssetLine $lines $onlineSetup 'Online installer with the base app; additional language and device resources install from the in-app online catalog.' }
   if ($fullZip) { Add-AssetLine $lines $fullZip 'Full portable package with bundled languages and device support data.' }
   if ($onlineZip) { Add-AssetLine $lines $onlineZip 'Online portable package with the base app; additional resources install from the in-app online catalog.' }
+  if ($crossPlatformCliZip) { Add-AssetLine $lines $crossPlatformCliZip 'Framework-dependent diagnostics CLI for Windows, macOS, and Linux. Run with `dotnet udt.dll <command>`.' }
   if ($legacyAlias) { Add-AssetLine $lines $legacyAlias 'Compatibility installer alias for existing Lenovo Legion Toolkit updater, winget, and Scoop users.' }
   if ($englishSetup) { Add-AssetLine $lines $englishSetup 'Legacy online-style installer asset; prefer the Online installer for current releases.' }
   if ($englishZip) { Add-AssetLine $lines $englishZip 'Legacy online-style portable asset; prefer the Online portable package for current releases.' }
@@ -268,8 +270,8 @@ $lines.Add('## Online resources')
 $lines.AddRange([string[]]$onlineResources)
 $lines.Add('')
 $lines.Add('## Compatibility')
-$lines.Add('- OS: Windows 10/11 x64')
-$lines.Add('- Architecture: x64')
+$lines.Add('- Desktop app and hardware controls: Windows 10/11 x64')
+$lines.Add('- Cross-platform diagnostics CLI: Windows, macOS, and Linux with .NET 10 runtime')
 $lines.Add('')
 $lines.Add('## Verification')
 $lines.AddRange([string[]]$verification)

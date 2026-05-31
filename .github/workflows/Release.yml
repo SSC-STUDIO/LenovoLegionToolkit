@@ -71,6 +71,7 @@ jobs:
         "SETUP_ONLINE_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Online_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "ZIP_FULL_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Full_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "ZIP_ONLINE_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_Online_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_CLI_cross-platform.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "HASH_ASSET=UniversalDeviceToolkit_v$releaseVersion" + "_SHA256.txt" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
@@ -155,6 +156,14 @@ jobs:
           throw "Online Inno Setup build failed."
         }
 
+    - name: Publish cross-platform CLI asset
+      shell: pwsh
+      run: |
+        ./Scripts/Build-CrossPlatformCliAsset.ps1 `
+          -Version $env:BUILD_VERSION `
+          -ReleaseOutput $env:RELEASE_OUTPUT `
+          -SkipHashUpdate
+
     - name: Finalize release assets
       shell: pwsh
       run: |
@@ -175,6 +184,7 @@ jobs:
           $env:SETUP_ONLINE_ASSET,
           $env:ZIP_FULL_ASSET,
           $env:ZIP_ONLINE_ASSET,
+          $env:CLI_CROSS_PLATFORM_ASSET,
           $env:LEGACY_SETUP_ASSET,
           $env:HASH_ASSET
         )

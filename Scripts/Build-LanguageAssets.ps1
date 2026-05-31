@@ -78,6 +78,7 @@ function Get-FullSetupAssetName { param([string]$AssetVersion) "${PublicAssetPre
 function Get-OnlineSetupAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Online_Setup.exe" }
 function Get-FullZipAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Full_win-x64.zip" }
 function Get-OnlineZipAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Online_win-x64.zip" }
+function Get-CrossPlatformCliAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_CLI_cross-platform.zip" }
 function Get-HashAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_SHA256.txt" }
 function Get-LegacySetupAssetName { param([string]$AssetVersion) "${LegacyAssetPrefix}_v${AssetVersion}_Setup.exe" }
 function Get-LanguageAssetName { param([string]$AssetVersion, [string]$Culture) "$Culture.zip" }
@@ -414,6 +415,7 @@ function Write-StableCatalog {
     $onlineSetupName = Get-OnlineSetupAssetName $Version
     $fullZipName = Get-FullZipAssetName $Version
     $onlineZipName = Get-OnlineZipAssetName $Version
+    $crossPlatformCliName = Get-CrossPlatformCliAssetName $Version
     $hashName = Get-HashAssetName $Version
     $legacySetupName = Get-LegacySetupAssetName $Version
 
@@ -461,6 +463,16 @@ function Write-StableCatalog {
             -Name $onlineSetupName `
             -CatalogPath "releases/v$Version/$onlineSetupName" `
             -Url "$releaseBaseUrl/$onlineSetupName"
+    }
+
+    if (Test-Path -LiteralPath (Join-Path $ReleaseOutputPath $crossPlatformCliName)) {
+        $downloads['cli'] = [ordered]@{
+            crossPlatform = New-FileMetadata `
+                -FilePath (Join-Path $ReleaseOutputPath $crossPlatformCliName) `
+                -Name $crossPlatformCliName `
+                -CatalogPath "releases/v$Version/$crossPlatformCliName" `
+                -Url "$releaseBaseUrl/$crossPlatformCliName"
+        }
     }
 
     $legacyAliases = @()
@@ -726,6 +738,7 @@ function Finalize-ReleaseAssets {
     $onlineSetupName = Get-OnlineSetupAssetName $Version
     $fullZipName = Get-FullZipAssetName $Version
     $onlineZipName = Get-OnlineZipAssetName $Version
+    $crossPlatformCliName = Get-CrossPlatformCliAssetName $Version
     $hashName = Get-HashAssetName $Version
     $legacySetupName = Get-LegacySetupAssetName $Version
 
@@ -733,7 +746,12 @@ function Finalize-ReleaseAssets {
     Copy-Item -LiteralPath $fullInstallerSource -Destination (Join-Path $releaseOutputPath $legacySetupName) -Force
     Copy-Item -LiteralPath $onlineInstallerSource -Destination (Join-Path $releaseOutputPath $onlineSetupName) -Force
 
-    Write-HashFile -AssetNames @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName) -ReleaseOutputPath $releaseOutputPath -HashFileName $hashName
+    $hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)
+    if (Test-Path -LiteralPath (Join-Path $releaseOutputPath $crossPlatformCliName)) {
+        $hashAssetNames += $crossPlatformCliName
+    }
+
+    Write-HashFile -AssetNames $hashAssetNames -ReleaseOutputPath $releaseOutputPath -HashFileName $hashName
     Write-StableCatalog -ReleaseOutputPath $releaseOutputPath -PagesOutputPath $pagesOutputPath
 
     Write-Host "Finalized installer aliases and SHA256 file in '$releaseOutputPath'."
