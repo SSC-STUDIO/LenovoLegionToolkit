@@ -103,6 +103,9 @@ public sealed class SystemTelemetryProviderTests
                 .Where(file => !file[(path.TrimEnd('/').Length + 1)..].Contains('/'))
                 .Where(file => regex.IsMatch(Path.GetFileName(file)));
         }
+
+        public bool DirectoryExists(string path) =>
+            files.Keys.Any(file => file.StartsWith(path.TrimEnd('/') + "/", StringComparison.Ordinal));
     }
 
     private sealed class FakeCommandRunner(IReadOnlyDictionary<string, string> outputs) : ICommandRunner

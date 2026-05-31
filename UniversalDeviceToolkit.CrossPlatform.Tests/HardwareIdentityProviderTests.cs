@@ -90,6 +90,9 @@ public sealed class HardwareIdentityProviderTests
         public IEnumerable<string> EnumerateDirectories(string path) => [];
 
         public IEnumerable<string> EnumerateFiles(string path, string searchPattern) => [];
+
+        public bool DirectoryExists(string path) =>
+            files.Keys.Any(file => file.StartsWith(path.TrimEnd('/') + "/", StringComparison.Ordinal));
     }
 
     private sealed class FakeCommandRunner(IReadOnlyDictionary<string, string> outputs) : ICommandRunner

@@ -15,6 +15,7 @@ internal sealed record DoctorReport(
             CheckTelemetry(status.Telemetry),
             CheckPower(status.Power),
             CheckPowerProfile(status.PowerProfile),
+            CheckPlugins(status.Plugins),
             CheckDeviceSupport(status.DeviceSupport),
             CheckHardwareControls(status)
         };
@@ -112,6 +113,23 @@ internal sealed record DoctorReport(
             "Power profile",
             DoctorCheckStatus.Warn,
             string.IsNullOrWhiteSpace(note) ? $"No platform power profile was available from {profile.Source}." : note);
+    }
+
+    private static DoctorCheck CheckPlugins(PluginDiscoveryReport plugins)
+    {
+        if (plugins.Plugins.Length == 0)
+        {
+            var note = plugins.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+            return new DoctorCheck(
+                "Plugin manifests",
+                DoctorCheckStatus.Warn,
+                string.IsNullOrWhiteSpace(note) ? "No plugin manifests were found." : note);
+        }
+
+        var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
+        return candidates > 0
+            ? new DoctorCheck("Plugin manifests", DoctorCheckStatus.Pass, $"{plugins.Plugins.Length} manifests found; {candidates} cross-platform candidates.")
+            : new DoctorCheck("Plugin manifests", DoctorCheckStatus.Warn, $"{plugins.Plugins.Length} manifests found, but none declare cross-platform candidates.");
     }
 
     private static DoctorCheck CheckDeviceSupport(DeviceSupportStatus support) =>

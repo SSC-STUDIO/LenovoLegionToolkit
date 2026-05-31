@@ -128,6 +128,8 @@ internal interface IFileSystem
     IEnumerable<string> EnumerateDirectories(string path);
 
     IEnumerable<string> EnumerateFiles(string path, string searchPattern);
+
+    bool DirectoryExists(string path);
 }
 
 internal sealed class PhysicalFileSystem : IFileSystem
@@ -165,6 +167,18 @@ internal sealed class PhysicalFileSystem : IFileSystem
         catch
         {
             return [];
+        }
+    }
+
+    public bool DirectoryExists(string path)
+    {
+        try
+        {
+            return Directory.Exists(path);
+        }
+        catch
+        {
+            return false;
         }
     }
 }

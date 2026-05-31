@@ -13,6 +13,7 @@ return command.ToLowerInvariant() switch
     "telemetry" => PrintTelemetry(),
     "power" => PrintPower(),
     "profile" or "power-profile" => PrintOrSetPowerProfile(commandArguments),
+    "plugins" => PrintPlugins(commandArguments),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
@@ -33,6 +34,7 @@ static int PrintStatus()
     Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
     Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
+    Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"Support level: {status.SupportLevel}");
     Console.WriteLine();
@@ -159,6 +161,38 @@ static int PrintPowerProfile()
     return 0;
 }
 
+static int PrintPlugins(IReadOnlyList<string> arguments)
+{
+    var explicitRoot = arguments.Count > 0 ? arguments[0] : null;
+    var plugins = explicitRoot is null
+        ? CrossPlatformStatus.Create().Plugins
+        : new PluginDiscoveryReader(new PhysicalFileSystem(), explicitRoot).Read();
+
+    Console.WriteLine("Plugin discovery");
+    Console.WriteLine($"Source: {plugins.Source}");
+    Console.WriteLine($"Search roots: {plugins.SearchRoots.Length}");
+    foreach (var root in plugins.SearchRoots)
+        Console.WriteLine($"  {root}");
+
+    Console.WriteLine($"Plugins: {plugins.Plugins.Length}");
+    foreach (var plugin in plugins.Plugins)
+    {
+        Console.WriteLine($"  {plugin.Id} ({plugin.Version})");
+        Console.WriteLine($"    Name: {ValueOrUnknown(plugin.Name)}");
+        Console.WriteLine($"    Cross-platform candidate: {(plugin.IsCrossPlatformCandidate ? "yes" : "no")}");
+        Console.WriteLine($"    Runtime contribution: {(plugin.HasRuntimeContribution ? "yes" : "no")}");
+        Console.WriteLine($"    Optimization actions: {plugin.OptimizationActionCount}");
+        Console.WriteLine($"    Target platforms: {(plugin.TargetPlatforms.Length == 0 ? "unspecified" : string.Join(", ", plugin.TargetPlatforms))}");
+        Console.WriteLine($"    Reason: {plugin.Reason}");
+        Console.WriteLine($"    Manifest: {plugin.ManifestPath}");
+    }
+
+    foreach (var note in plugins.Notes)
+        Console.WriteLine($"Note: {note}");
+
+    return 0;
+}
+
 static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
@@ -196,6 +230,7 @@ static int PrintHelp()
     Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
     Console.WriteLine("  udt power     Print safe read-only battery and external power status.");
     Console.WriteLine("  udt profile   Print platform power profile, or set it with a profile argument.");
+    Console.WriteLine("  udt plugins   Inspect plugin manifests without loading Windows/WPF assemblies.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
@@ -252,6 +287,14 @@ static string FormatPowerProfileSummary(PowerProfileStatus profile)
     return $"unknown ({profile.Source})";
 }
 
+static string FormatPluginSummary(PluginDiscoveryReport plugins)
+{
+    var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
+    return plugins.Plugins.Length == 0
+        ? $"none found ({plugins.Source})"
+        : $"{plugins.Plugins.Length} manifests, {candidates} cross-platform candidates ({plugins.Source})";
+}
+
 static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? "unknown" : value;
 
 static string FormatGibibytes(double? value) => value is null ? "unknown" : $"{value:0.##} GiB";
@@ -294,6 +337,7 @@ internal sealed record CrossPlatformStatus(
     SystemTelemetry Telemetry,
     PowerStatus Power,
     PowerProfileStatus PowerProfile,
+    PluginDiscoveryReport Plugins,
     DeviceSupportStatus DeviceSupport,
     DoctorReport Doctor,
     string SupportLevel,
@@ -321,6 +365,8 @@ internal sealed record CrossPlatformStatus(
             new ProcessCommandRunner()).Read();
         var powerProfile = new PowerProfileReader(
             new ProcessCommandRunner()).Read();
+        var plugins = new PluginDiscoveryReader(
+            new PhysicalFileSystem()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
@@ -333,6 +379,7 @@ internal sealed record CrossPlatformStatus(
             telemetry,
             power,
             powerProfile,
+            plugins,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,
@@ -353,6 +400,7 @@ internal sealed record CrossPlatformStatus(
             : isMacOS
                 ? "Can inspect and set macOS low power mode through pmset."
                 : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration."),
+        new("Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
             ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."
