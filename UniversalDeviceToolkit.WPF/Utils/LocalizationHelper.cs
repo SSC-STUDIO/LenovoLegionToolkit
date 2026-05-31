@@ -22,7 +22,7 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 
 public static class LocalizationHelper
 {
-    private static readonly string LanguagePath = Path.Combine(Folders.AppData, "lang");
+    private static string LanguagePath => Path.Combine(Folders.AppData, "lang");
 
     private static readonly CultureInfo DefaultLanguage = new("en");
     private static readonly object _eventLock = new();
