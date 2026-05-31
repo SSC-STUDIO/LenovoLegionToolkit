@@ -1,0 +1,31 @@
+{
+  "version": "4.1.0",
+  "description": "Universal Device Toolkit is a lightweight, open-source utility for supported Lenovo Legion, LOQ, Ideapad Gaming, and related laptops.",
+  "homepage": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "license": "GPL-3.0-only",
+  "notes": "Universal Device Toolkit keeps the legacy lenovolegiontoolkit Scoop package name so existing installs can upgrade in place.",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.1.0/LenovoLegionToolkit_v4.1.0_Setup.exe",
+      "hash": "585485f697f642930052784b7bc97ce6ab79ea1749c2582e98799110667c399a"
+    }
+  },
+  "innosetup": true,
+  "shortcuts": [
+    [
+      "Universal Device Toolkit.exe",
+      "Universal Device Toolkit"
+    ]
+  ],
+  "checkver": {
+    "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest",
+    "regex": "/releases/tag/v([\\d.]+)"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v$version/LenovoLegionToolkit_v$version_Setup.exe"
+      }
+    }
+  }
+}
