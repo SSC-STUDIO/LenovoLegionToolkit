@@ -23,7 +23,10 @@ public sealed class CrossPlatformProjectTests
     [Fact]
     public void CrossPlatformCli_ShouldAvoidWindowsOnlyApis()
     {
-        var source = File.ReadAllText(Path.Combine(RepositoryRoot, "UniversalDeviceToolkit.CrossPlatform", "Program.cs"));
+        var source = string.Join(
+            Environment.NewLine,
+            Directory.EnumerateFiles(Path.Combine(RepositoryRoot, "UniversalDeviceToolkit.CrossPlatform"), "*.cs", SearchOption.AllDirectories)
+                .Select(File.ReadAllText));
 
         source.Should().NotContain("System.Management");
         source.Should().NotContain("Microsoft.Win32");

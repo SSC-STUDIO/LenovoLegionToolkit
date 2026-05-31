@@ -10,6 +10,7 @@ return command.ToLowerInvariant() switch
     "json" => PrintJson(),
     "hardware" => PrintHardware(),
     "telemetry" => PrintTelemetry(),
+    "support" => PrintSupport(),
     "help" or "--help" or "-h" => PrintHelp(),
     _ => PrintUnknownCommand(command)
 };
@@ -26,6 +27,7 @@ static int PrintStatus()
     Console.WriteLine($"Runtime: {status.DotNetRuntime}");
     Console.WriteLine($"Hardware: {FormatHardwareSummary(status.Hardware)}");
     Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
+    Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"Support level: {status.SupportLevel}");
     Console.WriteLine();
 
@@ -84,6 +86,20 @@ static int PrintTelemetry()
     return 0;
 }
 
+static int PrintSupport()
+{
+    var support = CrossPlatformStatus.Create().DeviceSupport;
+
+    Console.WriteLine("Device support");
+    Console.WriteLine($"Level: {support.SupportLevel}");
+    Console.WriteLine($"Pack: {support.DisplayName} ({support.DevicePackId})");
+    Console.WriteLine($"Reason: {support.Reason}");
+    Console.WriteLine($"Hardware controls: {(support.IsHardwareControlAvailable ? "available" : "hidden")}");
+    Console.WriteLine($"Enabled features: {string.Join(", ", support.EnabledFeatures)}");
+    Console.WriteLine($"Hidden features: {string.Join(", ", support.HiddenFeatures)}");
+    return 0;
+}
+
 static int PrintHelp()
 {
     Console.WriteLine("Universal Device Toolkit cross-platform diagnostics");
@@ -93,6 +109,7 @@ static int PrintHelp()
     Console.WriteLine("  udt json      Print platform support status as JSON.");
     Console.WriteLine("  udt hardware  Print basic hardware identity for device-pack matching.");
     Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
+    Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt help      Show this help.");
     Console.WriteLine();
     Console.WriteLine("Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.");
@@ -140,6 +157,7 @@ internal sealed record CrossPlatformStatus(
     string DotNetRuntime,
     HardwareIdentity Hardware,
     SystemTelemetry Telemetry,
+    DeviceSupportStatus DeviceSupport,
     string SupportLevel,
     CapabilityStatus[] Capabilities)
 {
@@ -160,6 +178,7 @@ internal sealed record CrossPlatformStatus(
         var telemetry = new SystemTelemetryReader(
             new PhysicalFileSystem(),
             new ProcessCommandRunner()).Read();
+        var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
 
         return new CrossPlatformStatus(
             "Universal Device Toolkit",
@@ -170,6 +189,7 @@ internal sealed record CrossPlatformStatus(
             RuntimeInformation.FrameworkDescription,
             hardware,
             telemetry,
+            deviceSupport,
             supportLevel,
             BuildCapabilities(isWindows, isMacOS, isLinux));
     }
@@ -180,7 +200,7 @@ internal sealed record CrossPlatformStatus(
         new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
         new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
         new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature telemetry where available."),
-        new("Basic-mode compatibility", true, "Non-Windows systems are treated as safe basic mode until platform-specific packs are implemented."),
+        new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
             ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."
             : "Windows-only controls are intentionally hidden on macOS/Linux."),
