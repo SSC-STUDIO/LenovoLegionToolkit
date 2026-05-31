@@ -14,6 +14,7 @@ internal sealed record DoctorReport(
             CheckHardwareIdentity(status.Hardware),
             CheckTelemetry(status.Telemetry),
             CheckPower(status.Power),
+            CheckPowerProfile(status.PowerProfile),
             CheckDeviceSupport(status.DeviceSupport),
             CheckHardwareControls(status)
         };
@@ -96,6 +97,21 @@ internal sealed record DoctorReport(
             details.Add($"{power.Supplies.Length} power supplies");
 
         return new DoctorCheck("Power diagnostics", DoctorCheckStatus.Pass, $"{string.Join(", ", details)} from {power.Source}.");
+    }
+
+    private static DoctorCheck CheckPowerProfile(PowerProfileStatus profile)
+    {
+        if (!string.IsNullOrWhiteSpace(profile.ActiveProfile))
+        {
+            var writable = profile.CanSetProfile ? "settable" : "read-only";
+            return new DoctorCheck("Power profile", DoctorCheckStatus.Pass, $"{profile.ActiveProfile} from {profile.Source}; {writable}.");
+        }
+
+        var note = profile.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+        return new DoctorCheck(
+            "Power profile",
+            DoctorCheckStatus.Warn,
+            string.IsNullOrWhiteSpace(note) ? $"No platform power profile was available from {profile.Source}." : note);
     }
 
     private static DoctorCheck CheckDeviceSupport(DeviceSupportStatus support) =>

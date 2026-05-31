@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var command = args.FirstOrDefault() ?? "status";
+var commandArguments = args.Skip(1).ToArray();
 
 return command.ToLowerInvariant() switch
 {
@@ -11,6 +12,7 @@ return command.ToLowerInvariant() switch
     "hardware" => PrintHardware(),
     "telemetry" => PrintTelemetry(),
     "power" => PrintPower(),
+    "profile" or "power-profile" => PrintOrSetPowerProfile(commandArguments),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
@@ -30,6 +32,7 @@ static int PrintStatus()
     Console.WriteLine($"Hardware: {FormatHardwareSummary(status.Hardware)}");
     Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
     Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
+    Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"Support level: {status.SupportLevel}");
     Console.WriteLine();
@@ -122,6 +125,40 @@ static int PrintPower()
     return 0;
 }
 
+static int PrintOrSetPowerProfile(IReadOnlyList<string> arguments)
+{
+    if (arguments.Count == 0)
+        return PrintPowerProfile();
+
+    var result = new PowerProfileWriter(new ProcessCommandRunner()).SetProfile(arguments[0]);
+    Console.WriteLine(result.Succeeded ? "Power profile changed" : "Power profile change failed");
+    Console.WriteLine($"Profile: {result.ProfileId}");
+    Console.WriteLine($"Detail: {result.Detail}");
+    return result.Succeeded ? 0 : 1;
+}
+
+static int PrintPowerProfile()
+{
+    var profile = CrossPlatformStatus.Create().PowerProfile;
+
+    Console.WriteLine("Power profile");
+    Console.WriteLine($"Source: {profile.Source}");
+    Console.WriteLine($"Active: {ValueOrUnknown(profile.ActiveProfile)}");
+    Console.WriteLine($"Can set profile: {(profile.CanSetProfile ? "yes" : "no")}");
+
+    if (profile.AvailableProfiles.Length > 0)
+    {
+        Console.WriteLine("Available profiles:");
+        foreach (var option in profile.AvailableProfiles)
+            Console.WriteLine($"  [{(option.IsActive ? "yes" : "no ")}] {option.Id} - {option.DisplayName}");
+    }
+
+    foreach (var note in profile.Notes)
+        Console.WriteLine($"Note: {note}");
+
+    return 0;
+}
+
 static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
@@ -158,6 +195,7 @@ static int PrintHelp()
     Console.WriteLine("  udt hardware  Print basic hardware identity for device-pack matching.");
     Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
     Console.WriteLine("  udt power     Print safe read-only battery and external power status.");
+    Console.WriteLine("  udt profile   Print platform power profile, or set it with a profile argument.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
@@ -206,6 +244,14 @@ static string FormatPowerSummary(PowerStatus power)
     return parts.Count == 0 ? $"unknown ({power.Source})" : $"{string.Join(", ", parts)} ({power.Source})";
 }
 
+static string FormatPowerProfileSummary(PowerProfileStatus profile)
+{
+    if (!string.IsNullOrWhiteSpace(profile.ActiveProfile))
+        return $"{profile.ActiveProfile} ({profile.Source})";
+
+    return $"unknown ({profile.Source})";
+}
+
 static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? "unknown" : value;
 
 static string FormatGibibytes(double? value) => value is null ? "unknown" : $"{value:0.##} GiB";
@@ -247,6 +293,7 @@ internal sealed record CrossPlatformStatus(
     HardwareIdentity Hardware,
     SystemTelemetry Telemetry,
     PowerStatus Power,
+    PowerProfileStatus PowerProfile,
     DeviceSupportStatus DeviceSupport,
     DoctorReport Doctor,
     string SupportLevel,
@@ -272,6 +319,8 @@ internal sealed record CrossPlatformStatus(
         var power = new PowerStatusReader(
             new PhysicalFileSystem(),
             new ProcessCommandRunner()).Read();
+        var powerProfile = new PowerProfileReader(
+            new ProcessCommandRunner()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
@@ -283,6 +332,7 @@ internal sealed record CrossPlatformStatus(
             hardware,
             telemetry,
             power,
+            powerProfile,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,
@@ -298,6 +348,11 @@ internal sealed record CrossPlatformStatus(
         new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
         new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature telemetry where available."),
         new("Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
+        new("Platform power profiles", isMacOS || isLinux, isLinux
+            ? "Can inspect and set Linux power-profiles-daemon profiles through powerprofilesctl."
+            : isMacOS
+                ? "Can inspect and set macOS low power mode through pmset."
+                : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
             ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."

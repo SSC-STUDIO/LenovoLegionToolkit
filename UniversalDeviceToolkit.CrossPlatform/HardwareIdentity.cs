@@ -174,9 +174,39 @@ internal interface ICommandRunner
     string Run(string fileName, params string[] arguments);
 }
 
-internal sealed class ProcessCommandRunner : ICommandRunner
+internal interface ICommandResultRunner : ICommandRunner
+{
+    CommandResult RunResult(string fileName, params string[] arguments);
+}
+
+internal sealed record CommandResult(
+    int ExitCode,
+    string StandardOutput,
+    string StandardError)
+{
+    public bool Succeeded => ExitCode == 0;
+
+    public string GetSummary()
+    {
+        var output = string.Join(
+            " ",
+            new[] { StandardOutput, StandardError }
+                .Select(value => value.Trim())
+                .Where(value => !string.IsNullOrWhiteSpace(value)));
+
+        return string.IsNullOrWhiteSpace(output) ? $"exit code {ExitCode}" : output;
+    }
+}
+
+internal sealed class ProcessCommandRunner : ICommandResultRunner
 {
     public string Run(string fileName, params string[] arguments)
+    {
+        var result = RunResult(fileName, arguments);
+        return result.Succeeded ? result.StandardOutput : string.Empty;
+    }
+
+    public CommandResult RunResult(string fileName, params string[] arguments)
     {
         try
         {
@@ -189,7 +219,7 @@ internal sealed class ProcessCommandRunner : ICommandRunner
             }.WithArguments(arguments));
 
             if (process is null)
-                return string.Empty;
+                return new CommandResult(-1, string.Empty, "Process could not be started.");
 
             var outputTask = process.StandardOutput.ReadToEndAsync();
             var errorTask = process.StandardError.ReadToEndAsync();
@@ -197,16 +227,16 @@ internal sealed class ProcessCommandRunner : ICommandRunner
             if (!process.WaitForExit(3000))
             {
                 process.Kill(entireProcessTree: true);
-                return string.Empty;
+                return new CommandResult(-1, string.Empty, "Process timed out.");
             }
 
             var output = outputTask.GetAwaiter().GetResult();
-            _ = errorTask.GetAwaiter().GetResult();
-            return process.ExitCode == 0 ? output : string.Empty;
+            var error = errorTask.GetAwaiter().GetResult();
+            return new CommandResult(process.ExitCode, output, error);
         }
-        catch
+        catch (Exception ex)
         {
-            return string.Empty;
+            return new CommandResult(-1, string.Empty, ex.Message);
         }
     }
 }

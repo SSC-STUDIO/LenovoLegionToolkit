@@ -81,6 +81,14 @@ jobs:
             throw "power command did not print power status."
           }
 
+          $profile = dotnet run --project $project --configuration Release --no-build -- profile
+          if ($LASTEXITCODE -ne 0) {
+            throw "profile command failed with exit code $LASTEXITCODE"
+          }
+          if (($profile | Out-String) -notmatch 'Power profile') {
+            throw "profile command did not print power profile."
+          }
+
           $support = dotnet run --project $project --configuration Release --no-build -- support
           if ($LASTEXITCODE -ne 0) {
             throw "support command failed with exit code $LASTEXITCODE"
@@ -114,6 +122,9 @@ jobs:
           }
           if (-not $payload.Power) {
             throw "json command returned no power object."
+          }
+          if (-not $payload.PowerProfile) {
+            throw "json command returned no power profile object."
           }
           if (-not $payload.DeviceSupport) {
             throw "json command returned no device support object."
