@@ -272,6 +272,40 @@ public class CompatibilityTests
     }
 
     [Fact]
+    public void SupportsGodModeCustomization_WhenSupportedPowerModesIncludeGodMode_ShouldReturnTrue()
+    {
+        var machineInformation = new MachineInformation
+        {
+            SupportedPowerModes = [PowerModeState.GodMode],
+            Properties = new MachineInformation.PropertyData(),
+            Features = MachineInformation.FeatureData.Unknown
+        };
+
+        Compatibility.SupportsGodModeCustomization(machineInformation).Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData("Legion Y9000P IRX10")]
+    [InlineData("Legion Y9000P 16IRX10")]
+    public void ApplyGodModeFallback_WhenY9000P2025StyleModelMatchesLegionProPack_ShouldEnableGodModeV2(string model)
+    {
+        var method = typeof(Compatibility).GetMethod("ApplyGodModeFallback", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = (MachineInformation.PropertyData)method!.Invoke(null,
+        [
+            "83ZZ",
+            model,
+            Array.Empty<PowerModeState>(),
+            MachineInformation.FeatureData.Unknown,
+            new MachineInformation.PropertyData()
+        ])!;
+
+        result.SupportsGodModeV2.Should().BeTrue();
+        result.SupportsGodMode.Should().BeTrue();
+    }
+
+    [Fact]
     public void ApplyGodModeFallback_WhenKnownLegionPro5HardwarePackMatches_ShouldEnableGodModeV2()
     {
         var method = typeof(Compatibility).GetMethod("ApplyGodModeFallback", BindingFlags.NonPublic | BindingFlags.Static);

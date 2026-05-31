@@ -102,16 +102,16 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         var mi = await MachineCompatibility.GetMachineInformationAsync();
 
-        var shouldShowConfigButton = ShouldShowConfigButton(state, mi.Properties);
+        var shouldShowConfigButton = ShouldShowConfigButton(state, mi);
         _configButton.ToolTip = shouldShowConfigButton ? Resource.PowerModeControl_Settings : null;
         _configButton.Visibility = shouldShowConfigButton ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    internal static bool ShouldShowConfigButton(PowerModeState state, MachineInformation.PropertyData properties) =>
+    internal static bool ShouldShowConfigButton(PowerModeState state, MachineInformation machineInformation) =>
         state switch
         {
-            PowerModeState.Balance => properties.SupportsAIMode,
-            PowerModeState.Performance or PowerModeState.GodMode => properties.SupportsGodMode,
+            PowerModeState.Balance => machineInformation.Properties.SupportsAIMode,
+            PowerModeState.Performance or PowerModeState.GodMode => MachineCompatibility.SupportsGodModeCustomization(machineInformation),
             _ => false
         };
 
@@ -131,8 +131,9 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         if (_accessoryStackPanel.Children.Count == 0)
         {
-            _accessoryStackPanel.Children.Add(_configButton);
+            Panel.SetZIndex(_configButton, 1);
             _accessoryStackPanel.Children.Add(comboBox);
+            _accessoryStackPanel.Children.Add(_configButton);
         }
 
         return _accessoryStackPanel;

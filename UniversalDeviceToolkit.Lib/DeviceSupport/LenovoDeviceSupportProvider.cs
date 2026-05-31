@@ -56,7 +56,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "lenovo-legion-pro-5",
                 "Lenovo Legion Pro 5",
                 ["Legion"],
-                ["16IAX", "16IRX", "16ARX"],
+                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10"],
                 ["83LT", "83F3", "83DF", "83F2", "83LU", "82WM", "83NN", "82WK", "82JQ"],
                 ["Legion Pro 5", "Y9000P", "R9000P"]),
             LenovoHardwarePack(
@@ -70,7 +70,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "lenovo-legion-pro-7",
                 "Lenovo Legion Pro 7",
                 ["Legion"],
-                ["16IAX", "16IRX", "16ARX"],
+                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "IRX10", "IAX10"],
                 ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS"],
                 ["Legion Pro 7", "Y9000P", "R9000P"]),
             LenovoHardwarePack(

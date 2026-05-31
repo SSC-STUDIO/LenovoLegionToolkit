@@ -228,9 +228,19 @@ public static partial class Compatibility
 
         return availability.DevicePackId switch
         {
-            "lenovo-legion-pro-5" or "lenovo-legion-pro-7" or "lenovo-legion-9" => properties with { SupportsGodModeV2 = true },
+            "lenovo-legion-pro-5" or "lenovo-legion-pro-7" or "lenovo-legion-9" or "lenovo-legion-7" or "lenovo-legion-5" or "lenovo-legacy-limited" => properties with { SupportsGodModeV2 = true },
             _ => properties
         };
+    }
+
+    public static bool SupportsGodModeCustomization(MachineInformation machineInformation)
+    {
+        var supportedPowerModes = machineInformation.SupportedPowerModes ?? [];
+
+        return machineInformation.Properties.SupportsGodMode
+               || supportedPowerModes.Contains(PowerModeState.GodMode)
+               || (machineInformation.Features.Source == MachineInformation.FeatureData.SourceType.CapabilityData
+                   && machineInformation.Features[CapabilityID.GodModeFnQSwitchable]);
     }
 
     private static void LogHardwareInventory(HardwareInventory hardware)
@@ -488,7 +498,9 @@ public static partial class Compatibility
         var affectedSeries = new[]
         {
             LegionSeries.Legion_5,
-            LegionSeries.Legion_7
+            LegionSeries.Legion_7,
+            LegionSeries.Legion_Pro_5,
+            LegionSeries.Legion_Pro_7,
         };
 
         var affectedModels = new[]
@@ -498,7 +510,10 @@ public static partial class Compatibility
             "Legion Pro 5 16IAX10H",
             "LOQ",
             "Y7000",
-            "R7000"
+            "Y7000P",
+            "R7000",
+            "R9000",
+            "Y9000",
         };
 
         var isAffectedSeries = affectedSeries.Any(series => GetLegionSeries(model, machineType) == series);
