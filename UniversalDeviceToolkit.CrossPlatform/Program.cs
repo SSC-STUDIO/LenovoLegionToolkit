@@ -94,6 +94,13 @@ static int PrintTelemetry()
             Console.WriteLine($"  {reading.Name}: {reading.Celsius:0.0} C ({reading.Source})");
     }
 
+    if (telemetry.FanSpeeds.Length > 0)
+    {
+        Console.WriteLine("Fans:");
+        foreach (var reading in telemetry.FanSpeeds)
+            Console.WriteLine($"  {reading.Name}: {reading.Rpm} RPM ({reading.Source})");
+    }
+
     foreach (var note in telemetry.Notes)
         Console.WriteLine($"Note: {note}");
 
@@ -311,6 +318,8 @@ static string FormatTelemetrySummary(SystemTelemetry telemetry)
         parts.Add($"{telemetry.MemoryTotalGiB:0.##} GiB RAM");
     if (telemetry.Temperatures.Length > 0)
         parts.Add($"{telemetry.Temperatures.Length} temperature readings");
+    if (telemetry.FanSpeeds.Length > 0)
+        parts.Add($"{telemetry.FanSpeeds.Length} fan readings");
 
     return parts.Count == 0 ? $"unknown ({telemetry.Source})" : $"{string.Join(", ", parts)} ({telemetry.Source})";
 }
@@ -493,7 +502,7 @@ internal sealed record CrossPlatformStatus(
         new("Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
         new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
         new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
-        new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature telemetry where available."),
+        new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature/fan telemetry where available."),
         new("Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
         new("Platform power profiles", isMacOS || isLinux, isLinux
             ? "Can inspect and set Linux power-profiles-daemon profiles through powerprofilesctl."

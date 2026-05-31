@@ -7,7 +7,7 @@ namespace UniversalDeviceToolkit.CrossPlatform.Tests;
 public sealed class SystemTelemetryProviderTests
 {
     [Fact]
-    public void LinuxProvider_ShouldReadCpuMemoryAndHwmonTemperatures()
+    public void LinuxProvider_ShouldReadCpuMemoryHwmonTemperaturesAndFans()
     {
         var fileSystem = new FakeFileSystem(new Dictionary<string, string>
         {
@@ -22,6 +22,8 @@ public sealed class SystemTelemetryProviderTests
             ["/sys/class/hwmon/hwmon0/name"] = "k10temp\n",
             ["/sys/class/hwmon/hwmon0/temp1_input"] = "54125\n",
             ["/sys/class/hwmon/hwmon0/temp1_label"] = "Tctl\n",
+            ["/sys/class/hwmon/hwmon0/fan1_input"] = "2120\n",
+            ["/sys/class/hwmon/hwmon0/fan1_label"] = "CPU Fan\n",
             ["/sys/class/hwmon/hwmon1/name"] = "nvme\n",
             ["/sys/class/hwmon/hwmon1/temp1_input"] = "42100\n",
         });
@@ -38,11 +40,15 @@ public sealed class SystemTelemetryProviderTests
             new TemperatureReading("Tctl", 54.1, "linux-hwmon"),
             new TemperatureReading("nvme", 42.1, "linux-hwmon")
         ]);
+        telemetry.FanSpeeds.Should().BeEquivalentTo(
+        [
+            new FanSpeedReading("CPU Fan", 2120, "linux-hwmon")
+        ]);
         telemetry.Notes.Should().BeEmpty();
     }
 
     [Fact]
-    public void LinuxProvider_WhenNoTemperatures_ShouldReturnNote()
+    public void LinuxProvider_WhenNoHwmonSensors_ShouldReturnNotes()
     {
         var fileSystem = new FakeFileSystem(new Dictionary<string, string>
         {
@@ -52,7 +58,9 @@ public sealed class SystemTelemetryProviderTests
         var telemetry = new LinuxSystemTelemetryProvider(fileSystem).Read();
 
         telemetry.Temperatures.Should().BeEmpty();
-        telemetry.Notes.Should().ContainSingle(note => note.Contains("No readable hwmon", StringComparison.OrdinalIgnoreCase));
+        telemetry.FanSpeeds.Should().BeEmpty();
+        telemetry.Notes.Should().Contain(note => note.Contains("temperature", StringComparison.OrdinalIgnoreCase));
+        telemetry.Notes.Should().Contain(note => note.Contains("fan speed", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -73,6 +81,7 @@ public sealed class SystemTelemetryProviderTests
         telemetry.MemoryTotalGiB.Should().Be(18);
         telemetry.MemoryAvailableGiB.Should().BeNull();
         telemetry.Temperatures.Should().BeEmpty();
+        telemetry.FanSpeeds.Should().BeEmpty();
         telemetry.Notes.Should().ContainSingle(note => note.Contains("SMC", StringComparison.OrdinalIgnoreCase));
     }
 

@@ -54,7 +54,8 @@ internal sealed record DoctorReport(
     {
         var hasTelemetry = !string.IsNullOrWhiteSpace(telemetry.CpuModel) ||
                            telemetry.MemoryTotalGiB is not null ||
-                           telemetry.Temperatures.Length > 0;
+                           telemetry.Temperatures.Length > 0 ||
+                           telemetry.FanSpeeds.Length > 0;
 
         if (hasTelemetry)
         {
@@ -65,6 +66,8 @@ internal sealed record DoctorReport(
                 details.Add($"{telemetry.MemoryTotalGiB:0.##} GiB RAM");
             if (telemetry.Temperatures.Length > 0)
                 details.Add($"{telemetry.Temperatures.Length} temperature readings");
+            if (telemetry.FanSpeeds.Length > 0)
+                details.Add($"{telemetry.FanSpeeds.Length} fan readings");
 
             return new DoctorCheck("Read-only telemetry", DoctorCheckStatus.Pass, $"{string.Join(", ", details)} from {telemetry.Source}.");
         }

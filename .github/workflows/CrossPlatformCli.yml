@@ -136,6 +136,9 @@ jobs:
           if (-not $payload.Telemetry) {
             throw "json command returned no telemetry object."
           }
+          if (($payload.Telemetry.PSObject.Properties.Name -notcontains 'FanSpeeds')) {
+            throw "json command returned no fan speed telemetry array."
+          }
           if (-not $payload.Power) {
             throw "json command returned no power object."
           }

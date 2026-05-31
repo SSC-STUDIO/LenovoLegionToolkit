@@ -8,15 +8,21 @@ internal sealed record SystemTelemetry(
     double? MemoryTotalGiB,
     double? MemoryAvailableGiB,
     TemperatureReading[] Temperatures,
+    FanSpeedReading[] FanSpeeds,
     string[] Notes)
 {
     public static SystemTelemetry Unknown(string source, params string[] notes) =>
-        new(source, string.Empty, Environment.ProcessorCount, null, null, [], notes);
+        new(source, string.Empty, Environment.ProcessorCount, null, null, [], [], notes);
 }
 
 internal sealed record TemperatureReading(
     string Name,
     double Celsius,
+    string Source);
+
+internal sealed record FanSpeedReading(
+    string Name,
+    int Rpm,
     string Source);
 
 internal sealed class SystemTelemetryReader(
@@ -44,9 +50,12 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
         var cpuModel = ReadCpuModel();
         var (memoryTotalGiB, memoryAvailableGiB) = ReadMemory();
         var temperatures = ReadTemperatures();
-        var notes = temperatures.Length == 0
-            ? ["No readable hwmon temperature inputs were found."]
-            : Array.Empty<string>();
+        var fanSpeeds = ReadFanSpeeds();
+        var notes = new List<string>();
+        if (temperatures.Length == 0)
+            notes.Add("No readable hwmon temperature inputs were found.");
+        if (fanSpeeds.Length == 0)
+            notes.Add("No readable hwmon fan speed inputs were found.");
 
         return new SystemTelemetry(
             "linux-procfs-sysfs",
@@ -55,7 +64,8 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
             memoryTotalGiB,
             memoryAvailableGiB,
             temperatures,
-            notes);
+            fanSpeeds,
+            notes.ToArray());
     }
 
     private string ReadCpuModel()
@@ -131,6 +141,32 @@ internal sealed class LinuxSystemTelemetryProvider(IFileSystem fileSystem)
         return readings.ToArray();
     }
 
+    private FanSpeedReading[] ReadFanSpeeds()
+    {
+        var readings = new List<FanSpeedReading>();
+
+        foreach (var deviceDirectory in fileSystem.EnumerateDirectories(HwmonRoot).OrderBy(path => path, StringComparer.Ordinal))
+        {
+            var chipName = NormalizeHwmonName(fileSystem.ReadAllText(CombineUnixPath(deviceDirectory, "name")));
+            foreach (var inputPath in fileSystem.EnumerateFiles(deviceDirectory, "fan*_input").OrderBy(path => path, StringComparer.Ordinal))
+            {
+                var raw = fileSystem.ReadAllText(inputPath).Trim();
+                if (!int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rpm))
+                    continue;
+
+                if (rpm < 0 || rpm > 100_000)
+                    continue;
+
+                var labelPath = Regex.Replace(inputPath, "_input$", "_label", RegexOptions.IgnoreCase);
+                var label = NormalizeHwmonName(fileSystem.ReadAllText(labelPath));
+                var name = FirstPresent(label, chipName, Path.GetFileName(deviceDirectory));
+                readings.Add(new FanSpeedReading(name, rpm, "linux-hwmon"));
+            }
+        }
+
+        return readings.ToArray();
+    }
+
     private static string NormalizeHwmonName(string value) =>
         NormalizeWhitespace(value.Replace('_', ' '));
 
@@ -173,7 +209,8 @@ internal sealed class MacSystemTelemetryProvider(ICommandRunner commandRunner)
             memoryBytes is null ? null : Math.Round(memoryBytes.Value / 1024.0 / 1024.0 / 1024.0, 2),
             null,
             [],
-            ["macOS temperature sensors require platform-specific SMC access and are not read by this safe diagnostics provider."]);
+            [],
+            ["macOS temperature and fan sensors require platform-specific SMC access and are not read by this safe diagnostics provider."]);
     }
 
     private static int? TryParseInt(string value) =>
