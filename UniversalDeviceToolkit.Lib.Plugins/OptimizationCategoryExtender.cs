@@ -110,7 +110,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             if (manifest is null || string.IsNullOrWhiteSpace(manifest.Id))
                 continue;
 
-            if (!_pluginManager.IsInstalled(manifest.Id) || alreadyAddedPluginIds.Contains(manifest.Id))
+            if (!IsManifestPluginInstalled(manifest.Id) || alreadyAddedPluginIds.Contains(manifest.Id))
                 continue;
 
             var actions = manifest.Contributes?.OptimizationActions?
@@ -172,4 +172,8 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 
         return null;
     }
+
+    private bool IsManifestPluginInstalled(string pluginId) =>
+        _pluginManager.GetInstalledPluginIds().Contains(pluginId, StringComparer.OrdinalIgnoreCase) ||
+        _pluginManager.IsInstalled(pluginId);
 }

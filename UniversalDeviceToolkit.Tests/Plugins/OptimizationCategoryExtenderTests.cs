@@ -156,6 +156,46 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenManifestOnlyPluginIsInInstalledList_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "manifest-only-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "manifest-only-plugin",
+              "name": "Manifest Only Plugin",
+              "description": "Manifest-only optimization contribution",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "manifest-only.action",
+                    "title": "Manifest-only action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(false);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        categories.Should().ContainSingle(category =>
+            category.Key == pluginId &&
+            category.PluginId == pluginId &&
+            category.Actions.Count == 1 &&
+            category.Actions[0].Key == "manifest-only.action");
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenInstalledManifestHasSettingsPageOnly_ShouldSkipEmptyCategory()
     {
         var pluginId = "settings-only-plugin";
