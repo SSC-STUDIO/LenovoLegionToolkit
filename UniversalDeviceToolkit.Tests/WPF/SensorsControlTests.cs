@@ -2,6 +2,8 @@
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -117,7 +119,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatCpuPowerBreakdown(58, (24f, 3.5f, 7f));
 
-        text.Should().Be("58 W | 核心 24 W | 内存 3.5 W | 平台 7 W");
+        text.Should().Be($"58 W | {T("SensorsControl_CpuCoresPower_Label", "Cores")} 24 W | {T("SensorsControl_CpuMemoryPower_Label", "Memory")} 3.5 W | {T("SensorsControl_CpuPlatformPower_Label", "Platform")} 7 W");
     }
 
     [Fact]
@@ -125,7 +127,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatCpuPowerBreakdown(-1, (24f, -1f, 7f));
 
-        text.Should().Be("核心 24 W | 平台 7 W");
+        text.Should().Be($"{T("SensorsControl_CpuCoresPower_Label", "Cores")} 24 W | {T("SensorsControl_CpuPlatformPower_Label", "Platform")} 7 W");
     }
 
     [Fact]
@@ -151,7 +153,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.GetGpuMemoryUsageTitle(true);
 
-        text.Should().Be("共享内存占用");
+        text.Should().Be(T("SensorsControl_SharedMemoryUsage_Title", "Shared Memory Usage"));
     }
 
     [Fact]
@@ -159,7 +161,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.GetGpuMemoryUsageTitle(false);
 
-        text.Should().Be("显存占用");
+        text.Should().Be(T("SensorsControl_VramUsage_Title", "VRAM Usage"));
     }
 
     [Fact]
@@ -175,7 +177,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatVoltage(-1f);
 
-        text.Should().Be("不可用");
+        text.Should().Be(NotAvailableText());
     }
 
     [Fact]
@@ -191,7 +193,7 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatPower(-1f);
 
-        text.Should().Be("不可用");
+        text.Should().Be(NotAvailableText());
     }
 
     [Fact]
@@ -207,13 +209,13 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatFrequency(-1f);
 
-        text.Should().Be("不可用");
+        text.Should().Be(NotAvailableText());
     }
 
     [Fact]
     public void FormatFallbackRangeText_WhenRangeUnavailable_ShouldFallbackToPrimaryValue()
     {
-        var text = SensorsControl.FormatFallbackRangeText("71 °C", "不可用");
+        var text = SensorsControl.FormatFallbackRangeText("71 °C", SensorsControl.FormatFrequency(-1f));
 
         text.Should().Be("71 °C");
     }
@@ -225,4 +227,9 @@ public class SensorsControlTests
 
         text.Should().Be("55 °C ~ 82 °C");
     }
+
+    private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 }
