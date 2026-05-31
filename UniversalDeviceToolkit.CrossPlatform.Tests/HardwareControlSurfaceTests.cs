@@ -34,6 +34,10 @@ public sealed class HardwareControlSurfaceTests
             ],
             true,
             []);
+        var batteryChargeLimit = new BatteryChargeLimitStatus(
+            "linux-power-supply-threshold",
+            [new BatteryChargeLimitDevice("BAT0", "BAT0", 40, 80, "/sys/class/power_supply/BAT0/charge_control_start_threshold", "/sys/class/power_supply/BAT0/charge_control_end_threshold", "linux-power-supply-threshold")],
+            []);
         var brightness = new DisplayBrightnessStatus(
             "linux-backlight",
             [new DisplayBrightnessDevice("intel_backlight", "intel_backlight", 480, 960, 50, "/sys/class/backlight/intel_backlight/brightness", "linux-backlight")],
@@ -46,7 +50,7 @@ public sealed class HardwareControlSurfaceTests
             ["vendor-hardware-controls"],
             "test");
 
-        var surface = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, brightness, plugins, deviceSupport).Read();
+        var surface = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, brightness, plugins, deviceSupport).Read();
 
         surface.Controls.Should().ContainEquivalentOf(new HardwareControlDescriptor(
             "power-profile",
@@ -67,6 +71,11 @@ public sealed class HardwareControlSurfaceTests
             control.IsWritable &&
             control.CurrentValue == "schedutil");
         surface.Controls.Should().Contain(control =>
+            control.Id == "battery-charge-limit" &&
+            control.IsAvailable &&
+            control.IsWritable &&
+            control.CurrentValue == "80%");
+        surface.Controls.Should().Contain(control =>
             control.Id == "display-brightness" &&
             control.IsAvailable &&
             control.IsWritable &&
@@ -81,6 +90,27 @@ public sealed class HardwareControlSurfaceTests
             !control.IsAvailable &&
             !control.IsWritable &&
             control.CurrentValue == "hidden");
+    }
+
+    [Fact]
+    public void Writer_WhenControlIsBatteryChargeLimit_ShouldDelegateToBatteryChargeLimitWriter()
+    {
+        var fileSystem = new FakeFileSystem(new Dictionary<string, string>
+        {
+            ["/sys/class/power_supply/BAT0/type"] = "Battery\n",
+            ["/sys/class/power_supply/BAT0/charge_control_end_threshold"] = "80\n"
+        });
+        var runner = new FakeCommandRunner(new Dictionary<string, CommandResult>
+        {
+            ["sh -c printf %s 70 > '/sys/class/power_supply/BAT0/charge_control_end_threshold'"] = new(0, "", "")
+        });
+
+        var result = new HardwareControlSurfaceWriter(fileSystem, runner, CrossPlatformControlPlatform.Linux).Set("battery_charge_limit", "70");
+
+        result.Succeeded.Should().BeTrue();
+        result.ControlId.Should().Be("battery-charge-limit");
+        result.Value.Should().Be("70");
+        runner.Commands.Should().ContainSingle().Which.Should().Be("sh -c printf %s 70 > '/sys/class/power_supply/BAT0/charge_control_end_threshold'");
     }
 
     [Fact]
@@ -129,7 +159,7 @@ public sealed class HardwareControlSurfaceTests
         var result = new HardwareControlSurfaceWriter(new FakeFileSystem(new Dictionary<string, string>()), runner).Set("vendor-hardware-controls", "performance");
 
         result.Succeeded.Should().BeFalse();
-        result.Detail.Should().Contain("Only standard power-profile, cpu-governor, and display-brightness controls");
+        result.Detail.Should().Contain("Only standard power-profile, cpu-governor, battery-charge-limit, and display-brightness controls");
         runner.Commands.Should().BeEmpty();
     }
 

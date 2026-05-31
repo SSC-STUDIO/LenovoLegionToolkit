@@ -16,6 +16,7 @@ internal sealed record DoctorReport(
             CheckPower(status.Power),
             CheckPowerProfile(status.PowerProfile),
             CheckCpuGovernor(status.CpuGovernor),
+            CheckBatteryChargeLimit(status.BatteryChargeLimit),
             CheckDisplayBrightness(status.DisplayBrightness),
             CheckPlugins(status.Plugins),
             CheckControls(status.Controls),
@@ -134,6 +135,24 @@ internal sealed record DoctorReport(
             "CPU governor",
             DoctorCheckStatus.Warn,
             string.IsNullOrWhiteSpace(note) ? $"No CPU governor provider was available from {governor.Source}." : note);
+    }
+
+    private static DoctorCheck CheckBatteryChargeLimit(BatteryChargeLimitStatus chargeLimit)
+    {
+        var device = chargeLimit.Devices.FirstOrDefault();
+        if (device?.EndThreshold is not null)
+        {
+            return new DoctorCheck(
+                "Battery charge limit",
+                DoctorCheckStatus.Pass,
+                $"{device.DisplayName} ends charging at {device.EndThreshold}% from {chargeLimit.Source}.");
+        }
+
+        var note = chargeLimit.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+        return new DoctorCheck(
+            "Battery charge limit",
+            DoctorCheckStatus.Warn,
+            string.IsNullOrWhiteSpace(note) ? $"No battery charge limit provider was available from {chargeLimit.Source}." : note);
     }
 
     private static DoctorCheck CheckDisplayBrightness(DisplayBrightnessStatus brightness)

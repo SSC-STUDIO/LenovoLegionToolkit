@@ -37,6 +37,7 @@ static int PrintStatus()
     Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
     Console.WriteLine($"CPU governor: {FormatCpuGovernorSummary(status.CpuGovernor)}");
+    Console.WriteLine($"Battery charge limit: {FormatBatteryChargeLimitSummary(status.BatteryChargeLimit)}");
     Console.WriteLine($"Display brightness: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
     Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
     Console.WriteLine($"Controls: {FormatControlSummary(status.Controls)}");
@@ -348,6 +349,14 @@ static string FormatCpuGovernorSummary(CpuGovernorStatus governor)
     return $"unknown ({governor.Source})";
 }
 
+static string FormatBatteryChargeLimitSummary(BatteryChargeLimitStatus chargeLimit)
+{
+    var device = chargeLimit.Devices.FirstOrDefault();
+    return device?.EndThreshold is null
+        ? $"unknown ({chargeLimit.Source})"
+        : $"{device.EndThreshold}% on {device.Id} ({chargeLimit.Source})";
+}
+
 static string FormatDisplayBrightnessSummary(DisplayBrightnessStatus brightness)
 {
     var device = brightness.Devices.FirstOrDefault();
@@ -414,6 +423,7 @@ internal sealed record CrossPlatformStatus(
     PowerStatus Power,
     PowerProfileStatus PowerProfile,
     CpuGovernorStatus CpuGovernor,
+    BatteryChargeLimitStatus BatteryChargeLimit,
     DisplayBrightnessStatus DisplayBrightness,
     PluginDiscoveryReport Plugins,
     HardwareControlSurface Controls,
@@ -446,12 +456,14 @@ internal sealed record CrossPlatformStatus(
             new ProcessCommandRunner()).Read();
         var cpuGovernor = new CpuGovernorReader(
             new PhysicalFileSystem()).Read();
+        var batteryChargeLimit = new BatteryChargeLimitReader(
+            new PhysicalFileSystem()).Read();
         var displayBrightness = new DisplayBrightnessReader(
             new PhysicalFileSystem()).Read();
         var plugins = new PluginDiscoveryReader(
             new PhysicalFileSystem()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
-        var controls = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, displayBrightness, plugins, deviceSupport).Read();
+        var controls = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, displayBrightness, plugins, deviceSupport).Read();
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
             GetVersion(),
@@ -464,6 +476,7 @@ internal sealed record CrossPlatformStatus(
             power,
             powerProfile,
             cpuGovernor,
+            batteryChargeLimit,
             displayBrightness,
             plugins,
             controls,
@@ -490,6 +503,9 @@ internal sealed record CrossPlatformStatus(
         new("CPU governor", isLinux, isLinux
             ? "Can inspect and set Linux CPU frequency governors through /sys/devices/system/cpu."
             : "Linux CPU governor control is not available on this platform."),
+        new("Battery charge limit", isLinux, isLinux
+            ? "Can inspect and set Linux battery charge thresholds through /sys/class/power_supply."
+            : "Linux battery charge threshold control is not available on this platform."),
         new("Display brightness", isLinux, isLinux
             ? "Can inspect and set Linux backlight brightness through /sys/class/backlight."
             : "Linux backlight control is not available on this platform."),
