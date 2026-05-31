@@ -15,6 +15,7 @@ public sealed class DoctorReportTests
             new PowerStatus("linux-power-supply", [new PowerSupplyReading("BAT0", "Battery", "Discharging", 81, 51.2, 75, 80, 13.4, 15.5, 42, null, true, "Good", "test")], []),
             new PowerProfileStatus("linux-powerprofilesctl", "balanced", [new PowerProfileOption("balanced", "Balanced", true)], true, []),
             new PluginDiscoveryReport("test", [], [new PluginDescriptor("cross", "Cross", "1.0.0", "/plugins/cross/plugin.json", true, true, 1, ["linux"], "test")], []),
+            new HardwareControlSurface("test", [new HardwareControlDescriptor("power-profile", "Power profile", "standard-os", true, true, "balanced", [], "test")], []),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(
                 new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
                 isWindows: false),
@@ -28,6 +29,7 @@ public sealed class DoctorReportTests
         report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Power profile" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Plugin manifests" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Control surface" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Hardware controls" && check.Status == DoctorCheckStatus.Warn);
     }
@@ -41,6 +43,7 @@ public sealed class DoctorReportTests
             PowerStatus.Unknown("test", "power unavailable"),
             PowerProfileStatus.Unknown("test", "profile unavailable"),
             PluginDiscoveryReport.Unknown("test", "plugins unavailable"),
+            HardwareControlSurface.Unknown("test", "controls unavailable"),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(HardwareIdentity.Unknown("test"), isWindows: false),
             "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform.");
 
@@ -52,6 +55,7 @@ public sealed class DoctorReportTests
         report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Power profile" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Plugin manifests" && check.Status == DoctorCheckStatus.Warn);
+        report.Checks.Should().Contain(check => check.Name == "Control surface" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Warn);
     }
 
@@ -71,6 +75,7 @@ public sealed class DoctorReportTests
         PowerStatus power,
         PowerProfileStatus powerProfile,
         PluginDiscoveryReport plugins,
+        HardwareControlSurface controls,
         DeviceSupportStatus deviceSupport,
         string supportLevel)
     {
@@ -86,6 +91,7 @@ public sealed class DoctorReportTests
             power,
             powerProfile,
             plugins,
+            controls,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,

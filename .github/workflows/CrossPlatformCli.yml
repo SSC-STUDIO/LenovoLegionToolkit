@@ -97,6 +97,14 @@ jobs:
             throw "plugins command did not print plugin discovery."
           }
 
+          $controls = dotnet run --project $project --configuration Release --no-build -- controls
+          if ($LASTEXITCODE -ne 0) {
+            throw "controls command failed with exit code $LASTEXITCODE"
+          }
+          if (($controls | Out-String) -notmatch 'Hardware controls') {
+            throw "controls command did not print hardware controls."
+          }
+
           $support = dotnet run --project $project --configuration Release --no-build -- support
           if ($LASTEXITCODE -ne 0) {
             throw "support command failed with exit code $LASTEXITCODE"
@@ -136,6 +144,9 @@ jobs:
           }
           if (-not $payload.Plugins) {
             throw "json command returned no plugin discovery object."
+          }
+          if (-not $payload.Controls) {
+            throw "json command returned no controls object."
           }
           if (-not $payload.DeviceSupport) {
             throw "json command returned no device support object."

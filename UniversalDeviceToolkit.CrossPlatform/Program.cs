@@ -14,6 +14,8 @@ return command.ToLowerInvariant() switch
     "power" => PrintPower(),
     "profile" or "power-profile" => PrintOrSetPowerProfile(commandArguments),
     "plugins" => PrintPlugins(commandArguments),
+    "controls" => PrintControls(),
+    "set" => SetControl(commandArguments),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
@@ -35,6 +37,7 @@ static int PrintStatus()
     Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
     Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
+    Console.WriteLine($"Controls: {FormatControlSummary(status.Controls)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"Support level: {status.SupportLevel}");
     Console.WriteLine();
@@ -193,6 +196,52 @@ static int PrintPlugins(IReadOnlyList<string> arguments)
     return 0;
 }
 
+static int PrintControls()
+{
+    var controls = CrossPlatformStatus.Create().Controls;
+
+    Console.WriteLine("Hardware controls");
+    Console.WriteLine($"Source: {controls.Source}");
+    Console.WriteLine($"Controls: {controls.Controls.Length}");
+
+    foreach (var control in controls.Controls)
+    {
+        Console.WriteLine($"  {control.Id} - {control.DisplayName}");
+        Console.WriteLine($"    Kind: {control.Kind}");
+        Console.WriteLine($"    Available: {(control.IsAvailable ? "yes" : "no")}");
+        Console.WriteLine($"    Writable: {(control.IsWritable ? "yes" : "no")}");
+        Console.WriteLine($"    Current: {ValueOrUnknown(control.CurrentValue)}");
+        Console.WriteLine($"    Detail: {control.Detail}");
+        if (control.Options.Length > 0)
+        {
+            Console.WriteLine("    Options:");
+            foreach (var option in control.Options)
+                Console.WriteLine($"      [{(option.IsActive ? "yes" : "no ")}] {option.Value} - {option.DisplayName}");
+        }
+    }
+
+    foreach (var note in controls.Notes)
+        Console.WriteLine($"Note: {note}");
+
+    return 0;
+}
+
+static int SetControl(IReadOnlyList<string> arguments)
+{
+    if (arguments.Count < 2)
+    {
+        Console.Error.WriteLine("Usage: udt set <control-id> <value>");
+        return 2;
+    }
+
+    var result = new HardwareControlSurfaceWriter(new ProcessCommandRunner()).Set(arguments[0], arguments[1]);
+    Console.WriteLine(result.Succeeded ? "Control changed" : "Control change failed");
+    Console.WriteLine($"Control: {result.ControlId}");
+    Console.WriteLine($"Value: {result.Value}");
+    Console.WriteLine($"Detail: {result.Detail}");
+    return result.Succeeded ? 0 : 1;
+}
+
 static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
@@ -231,6 +280,8 @@ static int PrintHelp()
     Console.WriteLine("  udt power     Print safe read-only battery and external power status.");
     Console.WriteLine("  udt profile   Print platform power profile, or set it with a profile argument.");
     Console.WriteLine("  udt plugins   Inspect plugin manifests without loading Windows/WPF assemblies.");
+    Console.WriteLine("  udt controls  Print writable and hidden cross-platform hardware controls.");
+    Console.WriteLine("  udt set <id> <value>  Set a writable cross-platform control.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
@@ -295,6 +346,13 @@ static string FormatPluginSummary(PluginDiscoveryReport plugins)
         : $"{plugins.Plugins.Length} manifests, {candidates} cross-platform candidates ({plugins.Source})";
 }
 
+static string FormatControlSummary(HardwareControlSurface controls)
+{
+    var writable = controls.Controls.Count(control => control.IsWritable);
+    var available = controls.Controls.Count(control => control.IsAvailable);
+    return $"{available} available, {writable} writable ({controls.Source})";
+}
+
 static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? "unknown" : value;
 
 static string FormatGibibytes(double? value) => value is null ? "unknown" : $"{value:0.##} GiB";
@@ -338,6 +396,7 @@ internal sealed record CrossPlatformStatus(
     PowerStatus Power,
     PowerProfileStatus PowerProfile,
     PluginDiscoveryReport Plugins,
+    HardwareControlSurface Controls,
     DeviceSupportStatus DeviceSupport,
     DoctorReport Doctor,
     string SupportLevel,
@@ -368,6 +427,7 @@ internal sealed record CrossPlatformStatus(
         var plugins = new PluginDiscoveryReader(
             new PhysicalFileSystem()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
+        var controls = new HardwareControlSurfaceReader(powerProfile, plugins, deviceSupport).Read();
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
             GetVersion(),
@@ -380,6 +440,7 @@ internal sealed record CrossPlatformStatus(
             power,
             powerProfile,
             plugins,
+            controls,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,
@@ -401,6 +462,7 @@ internal sealed record CrossPlatformStatus(
                 ? "Can inspect and set macOS low power mode through pmset."
                 : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration."),
         new("Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
+        new("Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
             ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."

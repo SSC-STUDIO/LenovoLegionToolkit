@@ -1,0 +1,153 @@
+internal sealed record HardwareControlSurface(
+    string Source,
+    HardwareControlDescriptor[] Controls,
+    string[] Notes)
+{
+    public static HardwareControlSurface Unknown(string source, params string[] notes) =>
+        new(source, [], notes);
+}
+
+internal sealed record HardwareControlDescriptor(
+    string Id,
+    string DisplayName,
+    string Kind,
+    bool IsAvailable,
+    bool IsWritable,
+    string CurrentValue,
+    HardwareControlOption[] Options,
+    string Detail);
+
+internal sealed record HardwareControlOption(
+    string Value,
+    string DisplayName,
+    bool IsActive);
+
+internal sealed record HardwareControlSetResult(
+    bool Succeeded,
+    string ControlId,
+    string Value,
+    string Detail);
+
+internal sealed class HardwareControlSurfaceReader(
+    PowerProfileStatus powerProfile,
+    PluginDiscoveryReport plugins,
+    DeviceSupportStatus deviceSupport)
+{
+    public HardwareControlSurface Read()
+    {
+        var isWindows = OperatingSystem.IsWindows();
+        var controls = new List<HardwareControlDescriptor>
+        {
+            BuildPowerProfileControl(powerProfile),
+            BuildPluginDiscoveryControl(plugins),
+            BuildVendorHardwareControls(deviceSupport, isWindows)
+        };
+
+        string[] notes = isWindows
+            ? ["Windows vendor controls remain available through the desktop app and llt.exe; this CLI exposes cross-platform control metadata."]
+            : ["Only standardized OS controls are writable on macOS/Linux. Vendor-specific hardware writes remain hidden unless a platform backend is added."];
+
+        return new HardwareControlSurface(
+            isWindows ? "windows-cross-platform-cli" : "cross-platform-control-surface",
+            controls.ToArray(),
+            notes);
+    }
+
+    private static HardwareControlDescriptor BuildPowerProfileControl(PowerProfileStatus profile) =>
+        new(
+            "power-profile",
+            "Platform power profile",
+            "standard-os",
+            !string.IsNullOrWhiteSpace(profile.ActiveProfile) || profile.CanSetProfile || profile.AvailableProfiles.Length > 0,
+            profile.CanSetProfile,
+            profile.ActiveProfile,
+            profile.AvailableProfiles
+                .Select(option => new HardwareControlOption(option.Id, option.DisplayName, option.IsActive))
+                .ToArray(),
+            profile.CanSetProfile
+                ? "Set through Linux powerprofilesctl or macOS pmset where available."
+                : FirstPresent(profile.Notes));
+
+    private static HardwareControlDescriptor BuildPluginDiscoveryControl(PluginDiscoveryReport plugins)
+    {
+        var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
+        return new HardwareControlDescriptor(
+            "plugin-manifests",
+            "Plugin manifest discovery",
+            "extension-runtime",
+            true,
+            false,
+            $"{plugins.Plugins.Length} manifests",
+            [],
+            candidates == 0
+                ? FirstPresent(plugins.Notes)
+                : $"{candidates} cross-platform plugin candidates were found.");
+    }
+
+    private static HardwareControlDescriptor BuildVendorHardwareControls(DeviceSupportStatus deviceSupport, bool isWindows) =>
+        new(
+            "vendor-hardware-controls",
+            "Vendor hardware controls",
+            "vendor-specific",
+            deviceSupport.IsHardwareControlAvailable,
+            false,
+            deviceSupport.IsHardwareControlAvailable ? "available in desktop app" : "hidden",
+            [],
+            isWindows
+                ? "Use the Windows desktop app or llt.exe for vendor-specific controls."
+                : "Hidden on macOS/Linux until a vendor-specific backend is implemented.");
+
+    private static string FirstPresent(params string[] values) =>
+        values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
+}
+
+internal sealed class HardwareControlSurfaceWriter(
+    ICommandResultRunner commandRunner,
+    CrossPlatformControlPlatform platform = CrossPlatformControlPlatform.Auto)
+{
+    public HardwareControlSetResult Set(string controlId, string value)
+    {
+        var normalizedControlId = NormalizeControlId(controlId);
+        if (!normalizedControlId.Equals("power-profile", StringComparison.OrdinalIgnoreCase))
+        {
+            return new HardwareControlSetResult(
+                false,
+                controlId,
+                value,
+                "Only the standard power-profile control is writable in the cross-platform CLI.");
+        }
+
+        var result = ResolvePlatform() switch
+        {
+            CrossPlatformControlPlatform.Linux => new LinuxPowerProfileProvider(commandRunner).SetProfile(value),
+            CrossPlatformControlPlatform.MacOS => new MacPowerProfileProvider(commandRunner).SetProfile(value),
+            _ => new PowerProfileWriter(commandRunner).SetProfile(value)
+        };
+        return new HardwareControlSetResult(result.Succeeded, "power-profile", result.ProfileId, result.Detail);
+    }
+
+    private CrossPlatformControlPlatform ResolvePlatform()
+    {
+        if (platform != CrossPlatformControlPlatform.Auto)
+            return platform;
+
+        if (OperatingSystem.IsLinux())
+            return CrossPlatformControlPlatform.Linux;
+
+        if (OperatingSystem.IsMacOS())
+            return CrossPlatformControlPlatform.MacOS;
+
+        return CrossPlatformControlPlatform.Other;
+    }
+
+    private static string NormalizeControlId(string value) =>
+        value.Trim().ToLowerInvariant().Replace('_', '-');
+}
+
+internal enum CrossPlatformControlPlatform
+{
+    Auto,
+    Linux,
+    MacOS,
+    Other
+}

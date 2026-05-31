@@ -16,6 +16,7 @@ internal sealed record DoctorReport(
             CheckPower(status.Power),
             CheckPowerProfile(status.PowerProfile),
             CheckPlugins(status.Plugins),
+            CheckControls(status.Controls),
             CheckDeviceSupport(status.DeviceSupport),
             CheckHardwareControls(status)
         };
@@ -130,6 +131,26 @@ internal sealed record DoctorReport(
         return candidates > 0
             ? new DoctorCheck("Plugin manifests", DoctorCheckStatus.Pass, $"{plugins.Plugins.Length} manifests found; {candidates} cross-platform candidates.")
             : new DoctorCheck("Plugin manifests", DoctorCheckStatus.Warn, $"{plugins.Plugins.Length} manifests found, but none declare cross-platform candidates.");
+    }
+
+    private static DoctorCheck CheckControls(HardwareControlSurface controls)
+    {
+        if (controls.Controls.Length == 0)
+        {
+            var note = controls.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+            return new DoctorCheck(
+                "Control surface",
+                DoctorCheckStatus.Warn,
+                string.IsNullOrWhiteSpace(note) ? "No cross-platform controls were reported." : note);
+        }
+
+        var available = controls.Controls.Count(control => control.IsAvailable);
+        var writable = controls.Controls.Count(control => control.IsWritable);
+        var status = writable > 0 ? DoctorCheckStatus.Pass : DoctorCheckStatus.Warn;
+        return new DoctorCheck(
+            "Control surface",
+            status,
+            $"{available} available controls; {writable} writable controls from {controls.Source}.");
     }
 
     private static DoctorCheck CheckDeviceSupport(DeviceSupportStatus support) =>
