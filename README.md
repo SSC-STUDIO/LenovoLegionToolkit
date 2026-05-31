@@ -126,7 +126,7 @@ dotnet run --project UniversalDeviceToolkit.CrossPlatform -- json
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- hardware
 ```
 
-On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, and treats the machine as safe basic mode. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, and treats the machine as safe basic mode. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
 
 ### Lenovo's software
 

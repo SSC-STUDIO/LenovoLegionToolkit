@@ -1,0 +1,88 @@
+name: Cross-Platform CLI
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'plugins/**'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - 'plugins/**'
+  workflow_dispatch:
+
+jobs:
+  cross-platform-cli:
+    name: ${{ matrix.os }} diagnostics CLI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2022, ubuntu-latest, macos-latest ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
+
+      - name: Restore cross-platform tests
+        run: dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj
+
+      - name: Build cross-platform tests
+        run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore
+
+      - name: Test cross-platform diagnostics
+        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx"
+
+      - name: Smoke diagnostics CLI
+        shell: pwsh
+        run: |
+          $project = 'UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj'
+
+          $status = dotnet run --project $project --configuration Release --no-build -- status
+          if ($LASTEXITCODE -ne 0) {
+            throw "status command failed with exit code $LASTEXITCODE"
+          }
+          if (($status | Out-String) -notmatch 'cross-platform diagnostics') {
+            throw "status command did not print diagnostics header."
+          }
+
+          $hardware = dotnet run --project $project --configuration Release --no-build -- hardware
+          if ($LASTEXITCODE -ne 0) {
+            throw "hardware command failed with exit code $LASTEXITCODE"
+          }
+          if (($hardware | Out-String) -notmatch 'Hardware identity') {
+            throw "hardware command did not print hardware identity."
+          }
+
+          $json = dotnet run --project $project --configuration Release --no-build -- json | Out-String
+          if ($LASTEXITCODE -ne 0) {
+            throw "json command failed with exit code $LASTEXITCODE"
+          }
+
+          $payload = $json | ConvertFrom-Json
+          if ($payload.ProductName -ne 'Universal Device Toolkit') {
+            throw "json command returned unexpected product name '$($payload.ProductName)'."
+          }
+          if (-not $payload.Capabilities -or $payload.Capabilities.Count -lt 1) {
+            throw "json command returned no capabilities."
+          }
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v3
+        if: always()
+        continue-on-error: true
+        with:
+          name: Cross-platform test results (${{ matrix.os }})
+          path: '**/UniversalDeviceToolkit.CrossPlatform.Tests.trx'
+          reporter: dotnet-trx
