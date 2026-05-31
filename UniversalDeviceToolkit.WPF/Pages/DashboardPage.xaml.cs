@@ -126,28 +126,43 @@ public partial class DashboardPage
         if (groupInitializationTasks.Length > 0)
             await Task.WhenAll(groupInitializationTasks);
 
-        var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToList();
+        var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
 
+        Task? sensorsReadyTask = null;
         if (_dashboardSettings.Store.ShowSensors && _sensors.Visibility == Visibility.Visible)
-        {
-            contentReadyTasks.Insert(0, _sensors.FirstSensorDataReadyTask);
-        }
+            sensorsReadyTask = _sensors.FirstSensorDataReadyTask;
 
-        if (contentReadyTasks.Count > 0)
+        if (contentReadyTasks.Length > 0)
         {
             try
             {
-                await Task.WhenAll(contentReadyTasks).WaitAsync(TimeSpan.FromSeconds(3));
+                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout());
+            }
+            catch (TimeoutException)
+            {
+                // Do not let one regular card block the whole dashboard.
+            }
+        }
+
+        if (sensorsReadyTask is not null)
+        {
+            try
+            {
+                await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout());
                 return;
             }
             catch (TimeoutException)
             {
-                // Do not block the whole dashboard forever when the platform cannot provide live sensor data.
+                // Sensor backends can be unavailable or slow on some hardware. Keep a finite escape hatch.
             }
         }
 
         await Task.Delay(GetDashboardFallbackLoadingDelay());
     }
+
+    internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
+
+    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
 
     internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(350);
 
