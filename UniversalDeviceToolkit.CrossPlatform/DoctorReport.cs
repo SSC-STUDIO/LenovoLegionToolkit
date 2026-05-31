@@ -15,6 +15,7 @@ internal sealed record DoctorReport(
             CheckTelemetry(status.Telemetry),
             CheckPower(status.Power),
             CheckPowerProfile(status.PowerProfile),
+            CheckCpuGovernor(status.CpuGovernor),
             CheckDisplayBrightness(status.DisplayBrightness),
             CheckPlugins(status.Plugins),
             CheckControls(status.Controls),
@@ -115,6 +116,24 @@ internal sealed record DoctorReport(
             "Power profile",
             DoctorCheckStatus.Warn,
             string.IsNullOrWhiteSpace(note) ? $"No platform power profile was available from {profile.Source}." : note);
+    }
+
+    private static DoctorCheck CheckCpuGovernor(CpuGovernorStatus governor)
+    {
+        if (governor.Policies.Length > 0 && !string.IsNullOrWhiteSpace(governor.ActiveGovernor))
+        {
+            var writable = governor.CanSetGovernor ? "settable" : "read-only";
+            return new DoctorCheck(
+                "CPU governor",
+                DoctorCheckStatus.Pass,
+                $"{governor.ActiveGovernor} across {governor.Policies.Length} policies from {governor.Source}; {writable}.");
+        }
+
+        var note = governor.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+        return new DoctorCheck(
+            "CPU governor",
+            DoctorCheckStatus.Warn,
+            string.IsNullOrWhiteSpace(note) ? $"No CPU governor provider was available from {governor.Source}." : note);
     }
 
     private static DoctorCheck CheckDisplayBrightness(DisplayBrightnessStatus brightness)

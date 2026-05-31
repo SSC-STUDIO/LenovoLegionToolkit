@@ -30,6 +30,7 @@ internal sealed record HardwareControlSetResult(
 
 internal sealed class HardwareControlSurfaceReader(
     PowerProfileStatus powerProfile,
+    CpuGovernorStatus cpuGovernor,
     DisplayBrightnessStatus displayBrightness,
     PluginDiscoveryReport plugins,
     DeviceSupportStatus deviceSupport)
@@ -40,6 +41,7 @@ internal sealed class HardwareControlSurfaceReader(
         var controls = new List<HardwareControlDescriptor>
         {
             BuildPowerProfileControl(powerProfile),
+            BuildCpuGovernorControl(cpuGovernor),
             BuildDisplayBrightnessControl(displayBrightness),
             BuildPluginDiscoveryControl(plugins),
             BuildVendorHardwareControls(deviceSupport, isWindows)
@@ -69,6 +71,21 @@ internal sealed class HardwareControlSurfaceReader(
             profile.CanSetProfile
                 ? "Set through Linux powerprofilesctl or macOS pmset where available."
                 : FirstPresent(profile.Notes));
+
+    private static HardwareControlDescriptor BuildCpuGovernorControl(CpuGovernorStatus governor) =>
+        new(
+            "cpu-governor",
+            "CPU governor",
+            "standard-os",
+            governor.Policies.Length > 0,
+            governor.CanSetGovernor,
+            governor.ActiveGovernor,
+            governor.AvailableGovernors
+                .Select(option => new HardwareControlOption(option.Id, option.DisplayName, option.IsActive))
+                .ToArray(),
+            governor.CanSetGovernor
+                ? $"Set through Linux cpufreq across {governor.Policies.Length} policies."
+                : FirstPresent(governor.Notes));
 
     private static HardwareControlDescriptor BuildDisplayBrightnessControl(DisplayBrightnessStatus brightness)
     {
@@ -127,6 +144,9 @@ internal sealed class HardwareControlSurfaceWriter(
     public HardwareControlSetResult Set(string controlId, string value)
     {
         var normalizedControlId = NormalizeControlId(controlId);
+        if (normalizedControlId.Equals("cpu-governor", StringComparison.OrdinalIgnoreCase))
+            return new CpuGovernorWriter(fileSystem, commandRunner, ResolvePlatform()).SetGovernor(value);
+
         if (normalizedControlId.Equals("display-brightness", StringComparison.OrdinalIgnoreCase))
             return new DisplayBrightnessWriter(fileSystem, commandRunner, ResolvePlatform()).SetBrightnessPercent(value);
 
@@ -136,7 +156,7 @@ internal sealed class HardwareControlSurfaceWriter(
                 false,
                 controlId,
                 value,
-                "Only standard power-profile and display-brightness controls are writable in the cross-platform CLI.");
+                "Only standard power-profile, cpu-governor, and display-brightness controls are writable in the cross-platform CLI.");
         }
 
         var result = ResolvePlatform() switch
