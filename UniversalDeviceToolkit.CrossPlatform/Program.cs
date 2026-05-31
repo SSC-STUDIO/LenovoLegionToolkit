@@ -10,6 +10,7 @@ return command.ToLowerInvariant() switch
     "json" => PrintJson(),
     "hardware" => PrintHardware(),
     "telemetry" => PrintTelemetry(),
+    "power" => PrintPower(),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
     "help" or "--help" or "-h" => PrintHelp(),
@@ -28,6 +29,7 @@ static int PrintStatus()
     Console.WriteLine($"Runtime: {status.DotNetRuntime}");
     Console.WriteLine($"Hardware: {FormatHardwareSummary(status.Hardware)}");
     Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
+    Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"Support level: {status.SupportLevel}");
     Console.WriteLine();
@@ -87,6 +89,39 @@ static int PrintTelemetry()
     return 0;
 }
 
+static int PrintPower()
+{
+    var power = CrossPlatformStatus.Create().Power;
+
+    Console.WriteLine("Power status");
+    Console.WriteLine($"Source: {power.Source}");
+    Console.WriteLine($"External power: {FormatBoolean(power.IsExternalPowerConnected)}");
+    Console.WriteLine($"Battery present: {(power.HasBattery ? "yes" : "no")}");
+
+    if (power.Supplies.Length > 0)
+    {
+        Console.WriteLine("Supplies:");
+        foreach (var supply in power.Supplies)
+        {
+            Console.WriteLine($"  {supply.Name} ({supply.Type})");
+            Console.WriteLine($"    Status: {ValueOrUnknown(supply.Status)}");
+            Console.WriteLine($"    Charge: {FormatPercent(supply.ChargePercent)}");
+            Console.WriteLine($"    Energy: {FormatEnergy(supply.EnergyNowWh, supply.EnergyFullWh, supply.EnergyFullDesignWh)}");
+            Console.WriteLine($"    Power draw: {FormatWatts(supply.PowerDrawW)}");
+            Console.WriteLine($"    Voltage: {FormatVolts(supply.VoltageV)}");
+            Console.WriteLine($"    Cycle count: {supply.CycleCount?.ToString() ?? "unknown"}");
+            Console.WriteLine($"    Online: {FormatBoolean(supply.IsOnline)}");
+            Console.WriteLine($"    Present: {FormatBoolean(supply.IsPresent)}");
+            Console.WriteLine($"    Health: {ValueOrUnknown(supply.Health)}");
+        }
+    }
+
+    foreach (var note in power.Notes)
+        Console.WriteLine($"Note: {note}");
+
+    return 0;
+}
+
 static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
@@ -122,6 +157,7 @@ static int PrintHelp()
     Console.WriteLine("  udt json      Print platform support status as JSON.");
     Console.WriteLine("  udt hardware  Print basic hardware identity for device-pack matching.");
     Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
+    Console.WriteLine("  udt power     Print safe read-only battery and external power status.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
     Console.WriteLine("  udt help      Show this help.");
@@ -152,9 +188,48 @@ static string FormatTelemetrySummary(SystemTelemetry telemetry)
     return parts.Count == 0 ? $"unknown ({telemetry.Source})" : $"{string.Join(", ", parts)} ({telemetry.Source})";
 }
 
+static string FormatPowerSummary(PowerStatus power)
+{
+    var parts = new List<string>();
+    if (power.HasBattery)
+    {
+        var battery = power.Supplies.First(supply => supply.Type.Equals("Battery", StringComparison.OrdinalIgnoreCase));
+        var batteryParts = new List<string> { ValueOrUnknown(battery.Status) };
+        if (battery.ChargePercent is not null)
+            batteryParts.Add($"{battery.ChargePercent:0.#}%");
+        parts.Add($"battery {string.Join(' ', batteryParts.Where(part => !string.IsNullOrWhiteSpace(part)))}");
+    }
+
+    if (power.IsExternalPowerConnected is not null)
+        parts.Add(power.IsExternalPowerConnected.Value ? "external power connected" : "external power offline");
+
+    return parts.Count == 0 ? $"unknown ({power.Source})" : $"{string.Join(", ", parts)} ({power.Source})";
+}
+
 static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? "unknown" : value;
 
 static string FormatGibibytes(double? value) => value is null ? "unknown" : $"{value:0.##} GiB";
+
+static string FormatPercent(double? value) => value is null ? "unknown" : $"{value:0.#}%";
+
+static string FormatWatts(double? value) => value is null ? "unknown" : $"{value:0.##} W";
+
+static string FormatVolts(double? value) => value is null ? "unknown" : $"{value:0.##} V";
+
+static string FormatBoolean(bool? value) => value is null ? "unknown" : value.Value ? "yes" : "no";
+
+static string FormatEnergy(double? nowWh, double? fullWh, double? designWh)
+{
+    var parts = new List<string>();
+    if (nowWh is not null)
+        parts.Add($"{nowWh:0.##} Wh now");
+    if (fullWh is not null)
+        parts.Add($"{fullWh:0.##} Wh full");
+    if (designWh is not null)
+        parts.Add($"{designWh:0.##} Wh design");
+
+    return parts.Count == 0 ? "unknown" : string.Join(", ", parts);
+}
 
 static int PrintUnknownCommand(string command)
 {
@@ -171,6 +246,7 @@ internal sealed record CrossPlatformStatus(
     string DotNetRuntime,
     HardwareIdentity Hardware,
     SystemTelemetry Telemetry,
+    PowerStatus Power,
     DeviceSupportStatus DeviceSupport,
     DoctorReport Doctor,
     string SupportLevel,
@@ -193,6 +269,9 @@ internal sealed record CrossPlatformStatus(
         var telemetry = new SystemTelemetryReader(
             new PhysicalFileSystem(),
             new ProcessCommandRunner()).Read();
+        var power = new PowerStatusReader(
+            new PhysicalFileSystem(),
+            new ProcessCommandRunner()).Read();
         var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
@@ -203,6 +282,7 @@ internal sealed record CrossPlatformStatus(
             RuntimeInformation.FrameworkDescription,
             hardware,
             telemetry,
+            power,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,
@@ -217,6 +297,7 @@ internal sealed record CrossPlatformStatus(
         new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
         new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
         new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, and safe temperature telemetry where available."),
+        new("Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
             ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."

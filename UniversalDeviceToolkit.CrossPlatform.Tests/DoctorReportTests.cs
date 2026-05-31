@@ -12,6 +12,7 @@ public sealed class DoctorReportTests
         var status = CreateStatus(
             new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
             new SystemTelemetry("linux-procfs-sysfs", "AMD Ryzen 7 7840U", 16, 31.25, 12.5, [new TemperatureReading("Tctl", 54.1, "linux-hwmon")], []),
+            new PowerStatus("linux-power-supply", [new PowerSupplyReading("BAT0", "Battery", "Discharging", 81, 51.2, 75, 80, 13.4, 15.5, 42, null, true, "Good", "test")], []),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(
                 new HardwareIdentity("Framework Computer Inc.", "Framework Laptop 16 A8", "Framework Laptop 16", "SERIAL", "test"),
                 isWindows: false),
@@ -22,6 +23,7 @@ public sealed class DoctorReportTests
         report.OverallStatus.Should().Be("warn");
         report.Checks.Should().Contain(check => check.Name == "Hardware identity" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Pass);
+        report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Pass);
         report.Checks.Should().Contain(check => check.Name == "Hardware controls" && check.Status == DoctorCheckStatus.Warn);
     }
@@ -32,6 +34,7 @@ public sealed class DoctorReportTests
         var status = CreateStatus(
             HardwareIdentity.Unknown("test"),
             SystemTelemetry.Unknown("test", "telemetry unavailable"),
+            PowerStatus.Unknown("test", "power unavailable"),
             new CrossPlatformDeviceSupportEvaluator().Evaluate(HardwareIdentity.Unknown("test"), isWindows: false),
             "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform.");
 
@@ -40,6 +43,7 @@ public sealed class DoctorReportTests
         report.OverallStatus.Should().Be("warn");
         report.Checks.Should().Contain(check => check.Name == "Hardware identity" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Read-only telemetry" && check.Status == DoctorCheckStatus.Warn);
+        report.Checks.Should().Contain(check => check.Name == "Power diagnostics" && check.Status == DoctorCheckStatus.Warn);
         report.Checks.Should().Contain(check => check.Name == "Device support" && check.Status == DoctorCheckStatus.Warn);
     }
 
@@ -56,6 +60,7 @@ public sealed class DoctorReportTests
     private static CrossPlatformStatus CreateStatus(
         HardwareIdentity hardware,
         SystemTelemetry telemetry,
+        PowerStatus power,
         DeviceSupportStatus deviceSupport,
         string supportLevel)
     {
@@ -68,6 +73,7 @@ public sealed class DoctorReportTests
             ".NET 10.0",
             hardware,
             telemetry,
+            power,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
             supportLevel,

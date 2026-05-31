@@ -13,6 +13,7 @@ internal sealed record DoctorReport(
             CheckRuntime(status),
             CheckHardwareIdentity(status.Hardware),
             CheckTelemetry(status.Telemetry),
+            CheckPower(status.Power),
             CheckDeviceSupport(status.DeviceSupport),
             CheckHardwareControls(status)
         };
@@ -67,6 +68,34 @@ internal sealed record DoctorReport(
             "Read-only telemetry",
             DoctorCheckStatus.Warn,
             string.IsNullOrWhiteSpace(note) ? $"No read-only telemetry was available from {telemetry.Source}." : note);
+    }
+
+    private static DoctorCheck CheckPower(PowerStatus power)
+    {
+        if (power.Supplies.Length == 0)
+        {
+            var note = power.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
+            return new DoctorCheck(
+                "Power diagnostics",
+                DoctorCheckStatus.Warn,
+                string.IsNullOrWhiteSpace(note) ? $"No power status was available from {power.Source}." : note);
+        }
+
+        var details = new List<string>();
+        if (power.HasBattery)
+        {
+            var battery = power.Supplies.First(supply => supply.Type.Equals("Battery", StringComparison.OrdinalIgnoreCase));
+            var batteryState = FirstPresent(battery.Status, "battery");
+            details.Add(battery.ChargePercent is null ? batteryState : $"{batteryState} {battery.ChargePercent:0.#}%");
+        }
+
+        if (power.IsExternalPowerConnected is not null)
+            details.Add(power.IsExternalPowerConnected.Value ? "external power connected" : "external power offline");
+
+        if (details.Count == 0)
+            details.Add($"{power.Supplies.Length} power supplies");
+
+        return new DoctorCheck("Power diagnostics", DoctorCheckStatus.Pass, $"{string.Join(", ", details)} from {power.Source}.");
     }
 
     private static DoctorCheck CheckDeviceSupport(DeviceSupportStatus support) =>
