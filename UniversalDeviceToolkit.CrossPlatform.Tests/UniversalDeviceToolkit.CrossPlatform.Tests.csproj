@@ -17,4 +17,8 @@
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.CrossPlatform\UniversalDeviceToolkit.CrossPlatform.csproj" />
+  </ItemGroup>
 </Project>

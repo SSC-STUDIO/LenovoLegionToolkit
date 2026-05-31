@@ -123,9 +123,10 @@ The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Wind
 ```powershell
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- status
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- json
+dotnet run --project UniversalDeviceToolkit.CrossPlatform -- hardware
 ```
 
-On macOS/Linux this CLI reports platform/runtime information and treats the machine as safe basic mode. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, and treats the machine as safe basic mode. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
 
 ### Lenovo's software
 
