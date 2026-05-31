@@ -65,6 +65,14 @@ jobs:
             throw "hardware command did not print hardware identity."
           }
 
+          $telemetry = dotnet run --project $project --configuration Release --no-build -- telemetry
+          if ($LASTEXITCODE -ne 0) {
+            throw "telemetry command failed with exit code $LASTEXITCODE"
+          }
+          if (($telemetry | Out-String) -notmatch 'System telemetry') {
+            throw "telemetry command did not print system telemetry."
+          }
+
           $json = dotnet run --project $project --configuration Release --no-build -- json | Out-String
           if ($LASTEXITCODE -ne 0) {
             throw "json command failed with exit code $LASTEXITCODE"
@@ -76,6 +84,9 @@ jobs:
           }
           if (-not $payload.Capabilities -or $payload.Capabilities.Count -lt 1) {
             throw "json command returned no capabilities."
+          }
+          if (-not $payload.Telemetry) {
+            throw "json command returned no telemetry object."
           }
 
       - name: Publish test results

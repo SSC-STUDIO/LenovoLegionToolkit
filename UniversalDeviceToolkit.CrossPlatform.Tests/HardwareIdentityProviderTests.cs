@@ -86,6 +86,10 @@ public sealed class HardwareIdentityProviderTests
     private sealed class FakeFileSystem(IReadOnlyDictionary<string, string> files) : IFileSystem
     {
         public string ReadAllText(string path) => files.TryGetValue(path, out var value) ? value : string.Empty;
+
+        public IEnumerable<string> EnumerateDirectories(string path) => [];
+
+        public IEnumerable<string> EnumerateFiles(string path, string searchPattern) => [];
     }
 
     private sealed class FakeCommandRunner(IReadOnlyDictionary<string, string> outputs) : ICommandRunner

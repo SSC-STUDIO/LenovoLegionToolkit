@@ -51,7 +51,7 @@ Please be patient and read through this readme carefully - it contains important
 
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
 
-- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. v4.0.0 is the first stable Universal Device Toolkit release with legacy Lenovo Legion Toolkit upgrade compatibility.
+- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. v4.1.0 is the first stable Universal Device Toolkit release with legacy Lenovo Legion Toolkit upgrade compatibility.
 - **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
@@ -124,9 +124,10 @@ The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Wind
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- status
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- json
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- hardware
+dotnet run --project UniversalDeviceToolkit.CrossPlatform -- telemetry
 ```
 
-On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, and treats the machine as safe basic mode. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/temperature telemetry from Linux procfs/sysfs or macOS `sysctl`, and treats the machine as safe basic mode. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
 
 ### Lenovo's software
 

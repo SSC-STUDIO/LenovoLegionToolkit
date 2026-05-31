@@ -124,6 +124,10 @@ internal sealed class MacHardwareIdentityProvider(ICommandRunner commandRunner) 
 internal interface IFileSystem
 {
     string ReadAllText(string path);
+
+    IEnumerable<string> EnumerateDirectories(string path);
+
+    IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 }
 
 internal sealed class PhysicalFileSystem : IFileSystem
@@ -137,6 +141,30 @@ internal sealed class PhysicalFileSystem : IFileSystem
         catch
         {
             return string.Empty;
+        }
+    }
+
+    public IEnumerable<string> EnumerateDirectories(string path)
+    {
+        try
+        {
+            return Directory.Exists(path) ? Directory.EnumerateDirectories(path).ToArray() : [];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern)
+    {
+        try
+        {
+            return Directory.Exists(path) ? Directory.EnumerateFiles(path, searchPattern).ToArray() : [];
+        }
+        catch
+        {
+            return [];
         }
     }
 }
