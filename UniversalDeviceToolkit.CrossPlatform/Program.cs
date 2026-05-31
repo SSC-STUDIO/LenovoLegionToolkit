@@ -270,15 +270,21 @@ static int VerifyControl(IReadOnlyList<string> arguments)
 
     var fileSystem = new PhysicalFileSystem();
     var commandRunner = new ProcessCommandRunner();
-    var verifier = new PerformanceEffectVerifier(
+    var options = PerformanceEffectVerificationOptions.Default;
+    var sampler = new CpuFrequencyLoadSampler(
         () => new SystemTelemetryReader(fileSystem, commandRunner).Read(),
+        options);
+    var verifier = new PerformanceEffectVerifier(
+        sampler.Sample,
         (controlId, value) => new HardwareControlSurfaceWriter(fileSystem, commandRunner).Set(controlId, value),
-        () => Thread.Sleep(TimeSpan.FromSeconds(2)));
+        () => Thread.Sleep(options.StabilizationDelay),
+        options);
     var report = verifier.Verify(arguments[0], arguments[1]);
 
     Console.WriteLine("Performance verification");
     Console.WriteLine($"Control: {report.ControlId}");
     Console.WriteLine($"Requested value: {report.RequestedValue}");
+    Console.WriteLine($"Sample window: {report.SampleDuration.TotalSeconds:0.#}s CPU load, {report.LoadWorkerCount} workers");
     Console.WriteLine(report.ControlResult.Succeeded ? "Control write: succeeded" : "Control write: failed");
     Console.WriteLine($"Detail: {report.ControlResult.Detail}");
     PrintCpuFrequencySummary("Before CPU frequency", report.BeforeCpuFrequency);

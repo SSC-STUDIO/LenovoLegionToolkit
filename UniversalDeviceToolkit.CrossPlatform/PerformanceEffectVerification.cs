@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 internal sealed record PerformanceEffectVerificationReport(
     string ControlId,
     string RequestedValue,
@@ -5,9 +7,25 @@ internal sealed record PerformanceEffectVerificationReport(
     CpuFrequencySummary BeforeCpuFrequency,
     CpuFrequencySummary AfterCpuFrequency,
     double? AverageFrequencyDeltaMHz,
+    TimeSpan SampleDuration,
+    int LoadWorkerCount,
     string[] Notes)
 {
     public bool Succeeded => ControlResult.Succeeded;
+}
+
+internal sealed record PerformanceEffectVerificationOptions(
+    TimeSpan StabilizationDelay,
+    TimeSpan LoadSampleDuration,
+    TimeSpan SampleInterval,
+    int LoadWorkerCount)
+{
+    public static PerformanceEffectVerificationOptions Default =>
+        new(
+            TimeSpan.FromSeconds(2),
+            TimeSpan.FromSeconds(1),
+            TimeSpan.FromMilliseconds(250),
+            Math.Clamp(Environment.ProcessorCount, 1, 4));
 }
 
 internal sealed record CpuFrequencySummary(
@@ -41,19 +59,17 @@ internal sealed record CpuFrequencySummary(
 }
 
 internal sealed class PerformanceEffectVerifier(
-    Func<SystemTelemetry> readTelemetry,
+    Func<CpuFrequencySummary> sampleCpuFrequency,
     Func<string, string, HardwareControlSetResult> setControl,
-    Action waitBetweenSamples)
+    Action waitBetweenSamples,
+    PerformanceEffectVerificationOptions options)
 {
     public PerformanceEffectVerificationReport Verify(string controlId, string value)
     {
-        var beforeTelemetry = readTelemetry();
+        var before = sampleCpuFrequency();
         var result = setControl(controlId, value);
         waitBetweenSamples();
-        var afterTelemetry = readTelemetry();
-
-        var before = CpuFrequencySummary.From(beforeTelemetry.CpuFrequencies);
-        var after = CpuFrequencySummary.From(afterTelemetry.CpuFrequencies);
+        var after = sampleCpuFrequency();
         var notes = BuildNotes(result, before, after);
 
         return new PerformanceEffectVerificationReport(
@@ -65,6 +81,8 @@ internal sealed class PerformanceEffectVerifier(
             before.AverageMHz is null || after.AverageMHz is null
                 ? null
                 : Math.Round(after.AverageMHz.Value - before.AverageMHz.Value, 1),
+            options.LoadSampleDuration,
+            Math.Max(0, options.LoadWorkerCount),
             notes);
     }
 
@@ -87,9 +105,75 @@ internal sealed class PerformanceEffectVerifier(
         {
             var delta = Math.Round(after.AverageMHz.Value - before.AverageMHz.Value, 1);
             if (Math.Abs(delta) < 1)
-                notes.Add("Average CPU frequency was unchanged in the sampled window; run under a repeatable workload for stronger evidence.");
+                notes.Add("Average CPU frequency was unchanged in the sampled load window; run under a longer workload-specific scenario for stronger evidence.");
         }
 
         return notes.ToArray();
+    }
+}
+
+internal sealed class CpuFrequencyLoadSampler(
+    Func<SystemTelemetry> readTelemetry,
+    PerformanceEffectVerificationOptions options)
+{
+    public CpuFrequencySummary Sample()
+    {
+        var readings = new List<CpuFrequencyReading>();
+        var duration = options.LoadSampleDuration <= TimeSpan.Zero
+            ? TimeSpan.Zero
+            : options.LoadSampleDuration;
+        var interval = options.SampleInterval <= TimeSpan.Zero
+            ? TimeSpan.FromMilliseconds(250)
+            : options.SampleInterval;
+
+        if (duration == TimeSpan.Zero)
+        {
+            readings.AddRange(readTelemetry().CpuFrequencies);
+            return CpuFrequencySummary.From(readings);
+        }
+
+        using var cancellation = new CancellationTokenSource();
+        var workers = StartLoadWorkers(options.LoadWorkerCount, cancellation.Token);
+        var stopwatch = Stopwatch.StartNew();
+        try
+        {
+            while (stopwatch.Elapsed < duration)
+            {
+                readings.AddRange(readTelemetry().CpuFrequencies);
+                var remaining = duration - stopwatch.Elapsed;
+                if (remaining <= TimeSpan.Zero)
+                    break;
+
+                Thread.Sleep(remaining < interval ? remaining : interval);
+            }
+        }
+        finally
+        {
+            cancellation.Cancel();
+            Task.WaitAll(workers, TimeSpan.FromSeconds(1));
+        }
+
+        return CpuFrequencySummary.From(readings);
+    }
+
+    private static Task[] StartLoadWorkers(int workerCount, CancellationToken cancellationToken) =>
+        Enumerable
+            .Range(0, Math.Max(0, workerCount))
+            .Select(_ => Task.Run(() => RunCpuLoad(cancellationToken)))
+            .ToArray();
+
+    private static void RunCpuLoad(CancellationToken cancellationToken)
+    {
+        var value = 0.0;
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            for (var i = 1; i <= 4096; i++)
+                value += Math.Sqrt(i + value % 31);
+
+            if (value > 1_000_000)
+                value = 0;
+        }
+
+        GC.KeepAlive(value);
     }
 }
