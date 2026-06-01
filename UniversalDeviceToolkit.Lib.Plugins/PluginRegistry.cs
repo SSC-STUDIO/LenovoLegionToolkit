@@ -36,9 +36,19 @@ public interface IPluginRegistry
     PluginMetadata? GetMetadata(string pluginId);
 
     /// <summary>
+    /// Get all registered metadata (returns a snapshot copy for thread safety)
+    /// </summary>
+    IEnumerable<PluginMetadata> GetAllMetadata();
+
+    /// <summary>
     /// Check if a plugin is registered
     /// </summary>
     bool IsRegistered(string pluginId);
+
+    /// <summary>
+    /// Check if a plugin is started
+    /// </summary>
+    bool IsStarted(string pluginId);
 
     /// <summary>
     /// Get count of registered plugins
@@ -64,6 +74,11 @@ public interface IPluginRegistry
     /// Get all started plugin IDs
     /// </summary>
     IEnumerable<string> GetStartedPluginIds();
+
+    /// <summary>
+    /// Get plugins by author
+    /// </summary>
+    IEnumerable<IPlugin> GetByAuthor(string author);
 
     /// <summary>
     /// Clear all registrations
@@ -221,6 +236,9 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public bool IsRegistered(string pluginId)
     {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+            
         lock (_lock)
         {
             return _registeredPlugins.ContainsKey(pluginId);
@@ -232,10 +250,48 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public bool IsStarted(string pluginId)
     {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+            
         lock (_lock)
         {
             return _startedPlugins.Contains(pluginId);
         }
+    }
+
+    /// <summary>
+    /// Get all registered metadata (returns a snapshot copy for thread safety)
+    /// </summary>
+    public IEnumerable<PluginMetadata> GetAllMetadata()
+    {
+        lock (_lock)
+        {
+            return new List<PluginMetadata>(_pluginMetadataCache.Values);
+        }
+    }
+
+    /// <summary>
+    /// Get plugins by author
+    /// </summary>
+    public IEnumerable<IPlugin> GetByAuthor(string author)
+    {
+        if (string.IsNullOrWhiteSpace(author))
+            return Array.Empty<IPlugin>();
+            
+        var results = new List<IPlugin>();
+        lock (_lock)
+        {
+            foreach (var kvp in _registeredPlugins)
+            {
+                var metadata = _pluginMetadataCache.GetValueOrDefault(kvp.Key);
+                if (metadata?.Author != null && 
+                    metadata.Author.Equals(author, StringComparison.OrdinalIgnoreCase))
+                {
+                    results.Add(kvp.Value);
+                }
+            }
+        }
+        return results;
     }
 
     /// <summary>

@@ -286,6 +286,12 @@ public class PluginManager : IPluginManager
     /// </summary>
     private async Task LoadPluginFromFileAsync(string pluginFilePath)
     {
+        if (string.IsNullOrWhiteSpace(pluginFilePath))
+        {
+            Log.Instance.Warning("LoadPluginFromFileAsync: Plugin file path is empty");
+            return;
+        }
+
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -294,8 +300,7 @@ public class PluginManager : IPluginManager
             var pluginsDirectory = _fileSystemManager.GetPluginsDirectory();
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginFilePath, pluginsDirectory))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Plugin file path is outside allowed directory: {pluginFilePath}");
+                Log.Instance.Warning($"SECURITY: Plugin file path is outside allowed directory: {pluginFilePath}");
                 return;
             }
 
@@ -303,8 +308,14 @@ public class PluginManager : IPluginManager
             var fileName = Path.GetFileName(pluginFilePath);
             if (!PathSecurity.IsValidFileName(fileName))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Invalid plugin file name: {fileName}");
+                Log.Instance.Warning($"SECURITY: Invalid plugin file name: {fileName}");
+                return;
+            }
+
+            // Check if file exists
+            if (!File.Exists(pluginFilePath))
+            {
+                Log.Instance.Warning($"Plugin file not found: {pluginFilePath}");
                 return;
             }
 
@@ -312,19 +323,33 @@ public class PluginManager : IPluginManager
             var signatureResult = await _signatureValidator.ValidateAsync(pluginFilePath);
             if (!signatureResult.IsValid)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Plugin signature validation failed for {pluginFilePath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
-
-                // Reject plugin if signature is invalid
-                throw new global::System.Security.SecurityException($"Plugin signature validation failed: {signatureResult.ErrorMessage}");
+                Log.Instance.Warning($"Plugin signature validation failed for {pluginFilePath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
+                return;
             }
 
             // Use the plugin loader to load the plugin
-            var plugin = await _loader.LoadFromFileAsync(pluginFilePath, _signatureValidator);
+            IPlugin? plugin;
+            try
+            {
+                plugin = await _loader.LoadFromFileAsync(pluginFilePath, _signatureValidator);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error loading plugin assembly from {pluginFilePath}", ex);
+                return;
+            }
+
             if (plugin == null)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to load plugin from {pluginFilePath}");
+                Log.Instance.Warning($"Plugin loader returned null for {pluginFilePath}");
+                return;
+            }
+
+            // Validate plugin ID
+            if (string.IsNullOrWhiteSpace(plugin.Id))
+            {
+                Log.Instance.Warning($"Plugin from {pluginFilePath} has invalid or empty ID");
+                _loader.Unload(plugin.Id);
                 return;
             }
 
@@ -345,25 +370,31 @@ public class PluginManager : IPluginManager
 
             if (pluginAttribute != null)
             {
-                var versionProp = pluginAttribute.GetType().GetProperty("Version");
-                var minHostVersionProp = pluginAttribute.GetType().GetProperty("MinimumHostVersion");
-                var authorProp = pluginAttribute.GetType().GetProperty("Author");
+                try
+                {
+                    var versionProp = pluginAttribute.GetType().GetProperty("Version");
+                    var minHostVersionProp = pluginAttribute.GetType().GetProperty("MinimumHostVersion");
+                    var authorProp = pluginAttribute.GetType().GetProperty("Author");
 
-                if (versionProp != null)
-                    pluginVersion = versionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
+                    if (versionProp != null)
+                        pluginVersion = versionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
 
-                if (minHostVersionProp != null)
-                    minimumHostVersion = minHostVersionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
+                    if (minHostVersionProp != null)
+                        minimumHostVersion = minHostVersionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
 
-                if (authorProp != null)
-                    author = authorProp.GetValue(pluginAttribute)?.ToString();
+                    if (authorProp != null)
+                        author = authorProp.GetValue(pluginAttribute)?.ToString();
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Error reading plugin attributes for {plugin.Id}: {ex.Message}");
+                }
             }
 
             // Check version compatibility
             if (!IsVersionCompatible(minimumHostVersion))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
+                Log.Instance.Warning($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
                 _loader.Unload(plugin.Id);
                 return;
             }
@@ -410,8 +441,7 @@ public class PluginManager : IPluginManager
                         return;
                     }
 
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Replacing duplicate plugin {plugin.Id} v{pluginVersion} with newer file {pluginFilePath} ({currentWriteTime:O}) over {existingMetadata.FilePath} ({existingWriteTime:O}).");
+                    Log.Instance.Info($"Replacing duplicate plugin {plugin.Id} v{pluginVersion} with newer file {pluginFilePath} ({currentWriteTime:O}) over {existingMetadata.FilePath} ({existingWriteTime:O}).");
                 }
             }
 
@@ -419,16 +449,12 @@ public class PluginManager : IPluginManager
             _registry.Register(plugin, metadata);
             _fileSystemManager.UpdateFileCache(pluginFilePath);
 
-            if (Log.Instance.IsTraceEnabled)
-            {
-                var pluginTypeInfo = hasGetFeatureExtension ? "SDK" : "direct";
-                Log.Instance.Trace($"Successfully loaded {pluginTypeInfo} plugin: {plugin.Id} ({plugin.Name}) v{pluginVersion} (MinHost: {minimumHostVersion}) from {pluginFilePath}");
-            }
+            var pluginTypeInfo = hasGetFeatureExtension ? "SDK" : "direct";
+            Log.Instance.Info($"Successfully loaded {pluginTypeInfo} plugin: {plugin.Id} ({plugin.Name}) v{pluginVersion} (MinHost: {minimumHostVersion}) from {pluginFilePath}");
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to load plugin assembly from {pluginFilePath}: {ex.Message}", ex);
+            Log.Instance.Error($"Failed to load plugin from {pluginFilePath}", ex);
         }
     }
 
@@ -790,13 +816,23 @@ public class PluginManager : IPluginManager
         _registry.Register(plugin, metadata);
     }
 
+    public async Task InstallPluginAsync(string pluginId)
+    {
+        await Task.Run(() => InstallPlugin(pluginId));
+    }
+
+    public async Task<bool> UninstallPluginAsync(string pluginId)
+    {
+        return await Task.Run(() => UninstallPlugin(pluginId));
+    }
+
     public async Task<bool> PermanentlyDeletePluginAsync(string pluginId)
     {
         // SECURITY: Validate plugin ID format
         if (!PathSecurity.IsValidPluginId(pluginId))
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"PermanentlyDeletePlugin: Invalid plugin ID format: {pluginId}");
+                Log.Instance.Trace($"PermanentlyDeletePluginAsync: Invalid plugin ID format: {pluginId}");
             return false;
         }
 
@@ -1024,6 +1060,121 @@ public class PluginManager : IPluginManager
         finally
         {
             TrustedPluginPackageStore.Remove(pluginId);
+        }
+    }
+
+    public bool CheckDependencies(string pluginId, out List<string> missingDependencies)
+    {
+        missingDependencies = new List<string>();
+        
+        var metadata = _registry.GetMetadata(pluginId);
+        if (metadata?.Dependencies == null || metadata.Dependencies.Length == 0)
+            return true;
+
+        foreach (var depId in metadata.Dependencies)
+        {
+            if (!_registry.IsRegistered(depId) || !IsInstalled(depId))
+            {
+                missingDependencies.Add(depId);
+            }
+        }
+
+        return missingDependencies.Count == 0;
+    }
+
+    public IEnumerable<string> GetDependentPlugins(string pluginId)
+    {
+        var dependents = new List<string>();
+        
+        foreach (var plugin in _registry.GetAll())
+        {
+            if (plugin.Dependencies != null && plugin.Dependencies.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
+            {
+                dependents.Add(plugin.Id);
+            }
+        }
+        
+        return dependents;
+    }
+
+    public PluginHealthStatus CheckPluginHealth(string pluginId)
+    {
+        if (!_registry.IsRegistered(pluginId))
+            return PluginHealthStatus.NotFound;
+
+        // Check dependencies
+        if (!CheckDependencies(pluginId, out _))
+            return PluginHealthStatus.MissingDependencies;
+
+        // Check version compatibility
+        var metadata = _registry.GetMetadata(pluginId);
+        if (metadata != null && !IsVersionCompatible(metadata.MinimumHostVersion))
+            return PluginHealthStatus.VersionIncompatible;
+
+        // Check if plugin files exist
+        if (metadata?.FilePath != null && !File.Exists(metadata.FilePath))
+            return PluginHealthStatus.Error;
+
+        // Plugin is healthy
+        return PluginHealthStatus.Healthy;
+    }
+    
+    /// <summary>
+    /// Check for plugin updates (returns a dictionary of pluginId -> availableVersion)
+    /// </summary>
+    public async Task<Dictionary<string, string>> CheckForUpdatesAsync()
+    {
+        var updates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Checking for plugin updates...");
+            
+            // Get all registered plugins
+            var plugins = _registry.GetAll();
+            
+            // For each plugin, check if there's an update (placeholder implementation)
+            // In a real app, you would connect to a plugin repository API
+            foreach (var plugin in plugins)
+            {
+                var metadata = _registry.GetMetadata(plugin.Id);
+                if (metadata == null)
+                    continue;
+                
+                // This is a placeholder - actual implementation would query a repository
+                // For now, we'll just log that we're checking
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Checking updates for {plugin.Id} (v{metadata.Version})");
+            }
+            
+            Log.Instance.Info($"Update check complete. Found {updates.Count} available updates.");
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error("Error checking for plugin updates", ex);
+        }
+        
+        return updates;
+    }
+    
+    /// <summary>
+    /// Check if a specific plugin has an update available
+    /// </summary>
+    public async Task<bool> HasUpdateAsync(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+            
+        try
+        {
+            var updates = await CheckForUpdatesAsync();
+            return updates.ContainsKey(pluginId);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error checking update for plugin {pluginId}", ex);
+            return false;
         }
     }
 
