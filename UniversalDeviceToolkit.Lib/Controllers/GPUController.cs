@@ -38,6 +38,7 @@ public class GPUController : IDisposable
 
     private Task? _refreshTask;
     private CancellationTokenSource? _refreshCancellationTokenSource;
+    private readonly object _startStopLock = new();
 
     private GPUState _state = GPUState.Unknown;
     private List<Process> _processes = [];
@@ -53,11 +54,18 @@ public class GPUController : IDisposable
     /// 当GPU状态刷新时触发的事件。
     /// </summary>
     public event EventHandler<GPUStatus>? Refreshed;
-    
+
     /// <summary>
     /// 获取GPU监控服务是否已启动。
     /// </summary>
-    public bool IsStarted { get => _refreshTask != null; }
+    public bool IsStarted
+    {
+        get
+        {
+            lock (_startStopLock)
+                return _refreshTask != null;
+        }
+    }
 
     /// <summary>
     /// 初始化GPUController的新实例。
@@ -117,45 +125,56 @@ public class GPUController : IDisposable
 
     public Task StartAsync(int delay = 1_000, int interval = 5_000)
     {
-        if (IsStarted)
+        lock (_startStopLock)
+        {
+            if (_refreshTask != null)
+                return Task.CompletedTask;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Starting GPU service [interval={interval}ms]");
+
+            Log.Instance.Info($"GPU monitoring started [controller={nameof(GPUController)}]");
+
+            _currentInterval = interval;
+            _refreshCancellationTokenSource = new CancellationTokenSource();
+            var token = _refreshCancellationTokenSource.Token;
+            _refreshTask = Task.Run(() => RefreshLoopAsync(delay, interval, token), token);
             return Task.CompletedTask;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting GPU service [interval={interval}ms]");
-
-        Log.Instance.Info($"GPU monitoring started [controller={nameof(GPUController)}]");
-
-        _currentInterval = interval;
-        _refreshCancellationTokenSource = new CancellationTokenSource();
-        var token = _refreshCancellationTokenSource.Token;
-        _refreshTask = Task.Run(() => RefreshLoopAsync(delay, interval, token), token);
-        return Task.CompletedTask;
+        }
     }
 
     public async Task StopAsync(bool waitForFinish = false)
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Stopping GPU service");
+        Task? taskToWait = null;
 
-        Log.Instance.Info($"GPU monitoring stopped [controller={nameof(GPUController)}]");
+        lock (_startStopLock)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Stopping GPU service");
 
-        if (_refreshCancellationTokenSource is not null)
-            await _refreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            Log.Instance.Info($"GPU monitoring stopped [controller={nameof(GPUController)}]");
 
-        if (waitForFinish && _refreshTask is not null)
+            if (_refreshCancellationTokenSource is not null)
+            {
+                _refreshCancellationTokenSource.Cancel();
+                taskToWait = _refreshTask;
+            }
+
+            _refreshCancellationTokenSource = null;
+            _refreshTask = null;
+        }
+
+        if (waitForFinish && taskToWait is not null)
         {
             try
             {
-                await _refreshTask.ConfigureAwait(false);
+                await taskToWait.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
                 // Expected when GPU service is stopped, no action needed
             }
         }
-
-        _refreshCancellationTokenSource = null;
-        _refreshTask = null;
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"GPU service stopped");

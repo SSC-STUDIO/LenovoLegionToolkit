@@ -18,7 +18,7 @@ public static class RetryHelper
     {
         maximumRetries ??= 3;
         timeout ??= TimeSpan.Zero;
-        matchingException ??= (_) => true;
+        matchingException ??= (ex) => ex is not OperationCanceledException;
 
         var retries = 0;
         while (true)
@@ -31,6 +31,9 @@ public static class RetryHelper
             catch (Exception ex)
             {
                 if (ex is MaximumRetriesReachedException)
+                    throw;
+
+                if (ex is OperationCanceledException)
                     throw;
 
                 if (!matchingException(ex))

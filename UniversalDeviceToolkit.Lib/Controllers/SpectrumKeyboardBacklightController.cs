@@ -337,14 +337,29 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
             if (_auroraRefreshCancellationTokenSource is not null)
                 await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
-            // Immediately set task to null without waiting - let it run in background
-            // This prevents blocking the shutdown process
             var orphanedTask = _auroraRefreshTask;
             _auroraRefreshTask = null;
 
+            if (orphanedTask is not null)
+            {
+                try
+                {
+                    await orphanedTask.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                }
+                catch (TimeoutException)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Aurora task did not complete within 5 seconds, abandoning.");
+                }
+                catch (OperationCanceledException)
+                {
+                    // Expected when task is cancelled
+                }
+            }
+
             sw.Stop();
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora stopped (orphaned task) in {sw.ElapsedMilliseconds}ms. Task status: {orphanedTask?.Status}");
+                Log.Instance.Trace($"Aurora stopped in {sw.ElapsedMilliseconds}ms.");
         }
         catch (Exception ex)
         {
