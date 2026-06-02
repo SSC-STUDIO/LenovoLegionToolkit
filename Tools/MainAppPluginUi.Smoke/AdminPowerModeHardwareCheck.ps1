@@ -118,9 +118,13 @@ try {
     if ($delegatedResultReady) {
         $beforeHardwareValue = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BeforeHardwareValue'
         $afterHardwareValue = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'AfterHardwareValue'
+        $requestedHardwareDelta = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RequestedHardwareDelta'
+        $hardwareValueDelta = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareValueDelta'
+        $hardwareValueChanged = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareValueChanged'
         $afterPowerMode = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'AfterSmartFanMode'
         $persistedPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'PersistedVerificationPassed'
         $hardwarePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareVerificationPassed'
+        $measuredPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'MeasuredVerificationPassed'
         $restorePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RestoreVerificationPassed'
         $overallPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'OverallPassed'
         $capability = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'Capability'
@@ -134,6 +138,15 @@ try {
         if ($null -ne $afterHardwareValue) {
             Write-Result 'AfterCpuLongTerm' $afterHardwareValue
         }
+        if ($null -ne $requestedHardwareDelta) {
+            Write-Result 'RequestedCpuLongTermDelta' $requestedHardwareDelta
+        }
+        if ($null -ne $hardwareValueDelta) {
+            Write-Result 'MeasuredCpuLongTermDelta' $hardwareValueDelta
+        }
+        if ($null -ne $hardwareValueChanged) {
+            Write-Result 'MeasuredCpuLongTermChanged' $hardwareValueChanged
+        }
         if ($null -ne $afterPowerMode) {
             Write-Result 'AfterPowerMode' $afterPowerMode
         }
@@ -142,6 +155,9 @@ try {
         }
         if ($null -ne $hardwarePassed) {
             Write-Result 'HardwareVerificationPassed' $hardwarePassed
+        }
+        if ($null -ne $measuredPassed) {
+            Write-Result 'MeasuredVerificationPassed' $measuredPassed
         }
         if ($null -ne $restorePassed) {
             Write-Result 'RestoreVerificationPassed' $restorePassed

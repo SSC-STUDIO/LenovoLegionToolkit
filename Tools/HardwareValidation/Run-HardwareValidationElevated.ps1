@@ -223,15 +223,23 @@ try {
         'OriginalPresetValue',
         'BeforeHardwareValue',
         'RequestedPresetValue',
+        'RequestedHardwareDelta',
         'PersistedPresetValue',
         'AfterHardwareValue',
+        'HardwareValueDelta',
+        'HardwareValueChanged',
         'AfterSmartFanMode',
         'PersistedVerificationPassed',
         'HardwareVerificationPassed',
+        'MeasuredVerificationPassed',
         'RestoredPresetValue',
         'RestoredHardwareValue',
+        'RestoredHardwareDeltaFromBefore',
         'RestoredSmartFanMode',
-        'RestoreVerificationPassed'
+        'RestoreVerificationPassed',
+        'BatchMeasuredChangedCount',
+        'BatchMeasuredDeltas',
+        'BatchMeasuredChangeObserved'
     )) {
         $value = Get-VerificationLine -Content $combinedLogContent -Pattern $field
         if ($null -ne $value) {
@@ -241,6 +249,7 @@ try {
 
     $hardwarePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'HardwareVerificationPassed'
     $restorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'RestoreVerificationPassed'
+    $measuredPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'MeasuredVerificationPassed'
     $persistedPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'PersistedVerificationPassed'
     $isVerifyCurrentPreset =
         $Command -eq 'godmode' -and
@@ -252,15 +261,18 @@ try {
         $CommandArguments[0] -eq 'verify-current-preset-batch'
     $batchPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchVerificationPassed'
     $batchRestorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchRestoreVerificationPassed'
+    $batchMeasuredChangeObserved = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchMeasuredChangeObserved'
     $overallPassed = if ($isVerifyCurrentPreset) {
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         $persistedPassed -eq 'True' -and
         $hardwarePassed -eq 'True' -and
+        $measuredPassed -eq 'True' -and
         $restorePassed -eq 'True'
     }
     elseif ($isVerifyCurrentPresetBatch) {
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         $batchPassed -eq 'True' -and
+        $batchMeasuredChangeObserved -eq 'True' -and
         $batchRestorePassed -eq 'True'
     }
     else {

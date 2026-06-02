@@ -174,6 +174,14 @@ static class ProgramEntry
             return Fail($"Active preset does not contain configurable value for {capabilityId}.");
 
         var targetValue = ClampToStepper(originalStepper.Value, originalStepper.Value.Value + delta);
+        if (targetValue == originalStepper.Value.Value)
+        {
+            if (GetAlternateStepperValue(originalStepper.Value) is not { } alternateValue)
+                return Fail($"Could not compute a measurable alternate value for {capabilityId}.");
+
+            targetValue = alternateValue;
+        }
+
         var updatedPreset = SetCapabilityStepper(activePreset, capabilityId, originalStepper.Value.WithValue(targetValue));
 
         var presets = new Dictionary<Guid, GodModePreset>(originalState.Presets)
@@ -200,18 +208,26 @@ static class ProgramEntry
             var persistedStepper = GetCapabilityStepper(persistedPreset, capabilityId);
             var afterHardwareValue = await ReadCapabilityValueAsync(capabilityId).ConfigureAwait(false);
             var afterPowerMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
+            var requestedHardwareDelta = targetValue - beforeHardwareValue;
+            var hardwareValueDelta = afterHardwareValue - beforeHardwareValue;
+            var hardwareValueChanged = afterHardwareValue != beforeHardwareValue;
+            var measuredVerificationPassed = afterHardwareValue == targetValue && hardwareValueChanged;
 
             Console.WriteLine($"Capability: {capabilityId}");
             Console.WriteLine($"OriginalPresetValue: {originalStepper.Value.Value}");
             Console.WriteLine($"BeforeHardwareValue: {beforeHardwareValue}");
             Console.WriteLine($"RequestedPresetValue: {targetValue}");
+            Console.WriteLine($"RequestedHardwareDelta: {requestedHardwareDelta}");
             Console.WriteLine($"PersistedPresetValue: {persistedStepper?.Value ?? -1}");
             Console.WriteLine($"AfterHardwareValue: {afterHardwareValue}");
+            Console.WriteLine($"HardwareValueDelta: {hardwareValueDelta}");
+            Console.WriteLine($"HardwareValueChanged: {hardwareValueChanged}");
             Console.WriteLine($"AfterSmartFanMode: {afterPowerMode}");
             Console.WriteLine($"PersistedVerificationPassed: {persistedStepper?.Value == targetValue}");
             Console.WriteLine($"HardwareVerificationPassed: {afterHardwareValue == targetValue}");
+            Console.WriteLine($"MeasuredVerificationPassed: {measuredVerificationPassed}");
 
-            verificationPassed = persistedStepper?.Value == targetValue && afterHardwareValue == targetValue;
+            verificationPassed = persistedStepper?.Value == targetValue && measuredVerificationPassed;
 
             return verificationPassed
                 ? 0
@@ -230,6 +246,7 @@ static class ProgramEntry
             var restoredStepper = GetCapabilityStepper(restoredPreset, capabilityId);
             var restoredHardwareValue = await ReadCapabilityValueAsync(capabilityId).ConfigureAwait(false);
             var restoredPowerMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
+            var restoredHardwareDeltaFromBefore = restoredHardwareValue - beforeHardwareValue;
             var restorePassed =
                 restoredStepper?.Value == originalStepper.Value.Value &&
                 restoredPowerMode == originalPowerMode &&
@@ -237,6 +254,7 @@ static class ProgramEntry
 
             Console.WriteLine($"RestoredPresetValue: {restoredStepper?.Value ?? -1}");
             Console.WriteLine($"RestoredHardwareValue: {restoredHardwareValue}");
+            Console.WriteLine($"RestoredHardwareDeltaFromBefore: {restoredHardwareDeltaFromBefore}");
             Console.WriteLine($"RestoredSmartFanMode: {restoredPowerMode}");
             Console.WriteLine($"RestoreVerificationPassed: {restorePassed}");
         }
@@ -295,6 +313,8 @@ static class ProgramEntry
             var persistedPreset = persistedState.Presets[persistedState.ActivePresetId];
             var afterPowerMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
             var passedCount = 0;
+            var changedCount = 0;
+            var measuredDeltas = new List<string>();
 
             Console.WriteLine($"BatchCapabilities: {string.Join(", ", plans.Select(plan => plan.CapabilityId))}");
             Console.WriteLine($"BatchCapabilityCount: {plans.Count}");
@@ -304,25 +324,41 @@ static class ProgramEntry
             {
                 var persistedStepper = GetCapabilityStepper(persistedPreset, plan.CapabilityId);
                 var afterHardwareValue = await ReadCapabilityValueAsync(plan.CapabilityId).ConfigureAwait(false);
+                var requestedHardwareDelta = plan.TargetValue - plan.BeforeHardwareValue;
+                var hardwareValueDelta = afterHardwareValue - plan.BeforeHardwareValue;
                 var persistedPassed = persistedStepper?.Value == plan.TargetValue;
                 var hardwarePassed = afterHardwareValue == plan.TargetValue;
+                var hardwareValueChanged = afterHardwareValue != plan.BeforeHardwareValue;
+                var measuredPassed = hardwarePassed && hardwareValueChanged;
 
-                if (persistedPassed && hardwarePassed)
+                if (hardwareValueChanged)
+                    changedCount++;
+
+                measuredDeltas.Add($"{plan.CapabilityId}={hardwareValueDelta}");
+
+                if (persistedPassed && measuredPassed)
                     passedCount++;
 
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].OriginalPresetValue: {plan.OriginalStepper.Value}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].BeforeHardwareValue: {plan.BeforeHardwareValue}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RequestedPresetValue: {plan.TargetValue}");
+                Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RequestedHardwareDelta: {requestedHardwareDelta}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].PersistedPresetValue: {persistedStepper?.Value ?? -1}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].AfterHardwareValue: {afterHardwareValue}");
+                Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].HardwareValueDelta: {hardwareValueDelta}");
+                Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].HardwareValueChanged: {hardwareValueChanged}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].PersistedVerificationPassed: {persistedPassed}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].HardwareVerificationPassed: {hardwarePassed}");
+                Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].MeasuredVerificationPassed: {measuredPassed}");
             }
 
             var powerModeObservedGodMode = afterPowerMode == (int)PowerModeState.GodMode;
             verificationPassed = passedCount == plans.Count;
 
             Console.WriteLine($"BatchPassedCount: {passedCount}");
+            Console.WriteLine($"BatchMeasuredChangedCount: {changedCount}");
+            Console.WriteLine($"BatchMeasuredDeltas: {string.Join(", ", measuredDeltas)}");
+            Console.WriteLine($"BatchMeasuredChangeObserved: {changedCount > 0}");
             Console.WriteLine($"BatchPowerModeObservedGodMode: {powerModeObservedGodMode}");
             Console.WriteLine($"BatchVerificationPassed: {verificationPassed}");
 
@@ -349,6 +385,7 @@ static class ProgramEntry
             {
                 var restoredStepper = GetCapabilityStepper(restoredPreset, plan.CapabilityId);
                 var restoredHardwareValue = await ReadCapabilityValueAsync(plan.CapabilityId).ConfigureAwait(false);
+                var restoredHardwareDeltaFromBefore = restoredHardwareValue - plan.BeforeHardwareValue;
                 var capabilityRestorePassed =
                     restoredStepper?.Value == plan.OriginalStepper.Value &&
                     (!verificationPassed || restoredHardwareValue == plan.BeforeHardwareValue);
@@ -357,6 +394,7 @@ static class ProgramEntry
 
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RestoredPresetValue: {restoredStepper?.Value ?? -1}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RestoredHardwareValue: {restoredHardwareValue}");
+                Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RestoredHardwareDeltaFromBefore: {restoredHardwareDeltaFromBefore}");
                 Console.WriteLine($"CapabilityResult[{plan.CapabilityId}].RestoreVerificationPassed: {capabilityRestorePassed}");
             }
 

@@ -120,12 +120,24 @@ try {
         $batchPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchVerificationPassed'
         $batchRestorePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchRestoreVerificationPassed'
         $batchCapabilities = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchCapabilities'
+        $batchMeasuredChangedCount = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchMeasuredChangedCount'
+        $batchMeasuredDeltas = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchMeasuredDeltas'
+        $batchMeasuredChangeObserved = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BatchMeasuredChangeObserved'
 
         if ($null -ne $batchCapabilities) {
             Write-Result 'HardwareValidationBatchCapabilities' $batchCapabilities
         }
         if ($null -ne $batchPassed) {
             Write-Result 'HardwareValidationBatchPassed' $batchPassed
+        }
+        if ($null -ne $batchMeasuredChangedCount) {
+            Write-Result 'HardwareValidationBatchMeasuredChangedCount' $batchMeasuredChangedCount
+        }
+        if ($null -ne $batchMeasuredDeltas) {
+            Write-Result 'HardwareValidationBatchMeasuredDeltas' $batchMeasuredDeltas
+        }
+        if ($null -ne $batchMeasuredChangeObserved) {
+            Write-Result 'HardwareValidationBatchMeasuredChangeObserved' $batchMeasuredChangeObserved
         }
         if ($null -ne $batchRestorePassed) {
             Write-Result 'HardwareValidationBatchRestorePassed' $batchRestorePassed
