@@ -21,6 +21,11 @@ namespace UniversalDeviceToolkit.WPF.Windows.Dashboard
 {
 public partial class GodModeSettingsWindow
 {
+    private const string DEFAULT_PRESET_NAME_FALLBACK = "Preset";
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
+
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
     private readonly GodModeController _godModeController = IoCContainer.Resolve<GodModeController>();
 
@@ -175,9 +180,7 @@ public partial class GodModeSettingsWindow
         IReadOnlyDictionary<Guid, GodModePreset> presets,
         Guid? excludePresetId = null)
     {
-        var normalizedRequestedName = requestedName.Trim();
-        if (string.IsNullOrWhiteSpace(normalizedRequestedName))
-            return normalizedRequestedName;
+        var normalizedRequestedName = NormalizePresetName(requestedName);
 
         var existingNames = presets
             .Where(kv => !excludePresetId.HasValue || kv.Key != excludePresetId.Value)
@@ -198,6 +201,17 @@ public partial class GodModeSettingsWindow
             suffix++;
         }
     }
+
+    internal static string NormalizePresetName(string? requestedName)
+    {
+        var normalizedRequestedName = requestedName?.Trim();
+        return string.IsNullOrWhiteSpace(normalizedRequestedName)
+            ? GetDefaultPresetName()
+            : normalizedRequestedName;
+    }
+
+    internal static string GetDefaultPresetName() =>
+        T("GodModeSettingsWindow_DefaultPresetName", DEFAULT_PRESET_NAME_FALLBACK);
 
     internal static GodModeState AddPreset(GodModeState state, string requestedName, Guid? newPresetId = null)
     {
@@ -568,7 +582,8 @@ public partial class GodModeSettingsWindow
         if (!_state.HasValue)
             return;
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message);
+        var defaultName = GetUniquePresetName(GetDefaultPresetName(), _state.Value.Presets);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, defaultName);
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Add preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
         if (string.IsNullOrWhiteSpace(result))

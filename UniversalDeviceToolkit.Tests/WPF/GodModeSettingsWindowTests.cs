@@ -44,6 +44,21 @@ public class GodModeSettingsWindowTests
     }
 
     [Fact]
+    public void GetUniquePresetName_WhenNameIsBlank_ShouldUseDefaultPresetName()
+    {
+        var defaultName = GodModeSettingsWindow.GetDefaultPresetName();
+        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
+            new Dictionary<Guid, GodModePreset>
+            {
+                [Guid.NewGuid()] = new() { Name = defaultName }
+            });
+
+        var uniqueName = GodModeSettingsWindow.GetUniquePresetName("   ", presets);
+
+        uniqueName.Should().Be($"{defaultName} (2)");
+    }
+
+    [Fact]
     public void AddPreset_ShouldAddNewPresetAndSelectIt()
     {
         var activePresetId = Guid.NewGuid();
@@ -77,6 +92,25 @@ public class GodModeSettingsWindowTests
         var updatedState = GodModeSettingsWindow.AddPreset(state, "Performance", newPresetId);
 
         updatedState.Presets[newPresetId].Name.Should().Be("Performance (3)");
+    }
+
+    [Fact]
+    public void AddPreset_WhenNameIsBlank_ShouldUseVisibleDefaultName()
+    {
+        var activePresetId = Guid.NewGuid();
+        var newPresetId = Guid.NewGuid();
+        var defaultName = GodModeSettingsWindow.GetDefaultPresetName();
+        var state = CreateState(activePresetId, new Dictionary<Guid, GodModePreset>
+        {
+            [activePresetId] = new() { Name = "Performance", SourcePowerMode = PowerModeState.Performance },
+            [Guid.NewGuid()] = new() { Name = defaultName }
+        });
+
+        var updatedState = GodModeSettingsWindow.AddPreset(state, "   ", newPresetId);
+
+        updatedState.ActivePresetId.Should().Be(newPresetId);
+        updatedState.Presets[newPresetId].Name.Should().Be($"{defaultName} (2)");
+        updatedState.Presets[newPresetId].SourcePowerMode.Should().BeNull();
     }
 
     [Fact]
