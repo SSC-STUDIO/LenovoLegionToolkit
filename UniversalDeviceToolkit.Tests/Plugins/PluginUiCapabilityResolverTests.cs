@@ -54,12 +54,12 @@ public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
         var capabilities = PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId);
 
         capabilities.SupportsSettingsPage.Should().BeTrue();
-        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+        capabilities.SupportsOptimizationCategory.Should().BeFalse();
         capabilities.SupportsFeaturePage.Should().BeFalse();
     }
 
     [Fact]
-    public void ResolveFromInstalledManifest_WhenManifestHasOptimizationActionsOnly_ShouldReportOptimizationCategory()
+    public void ResolveFromInstalledManifest_WhenManifestHasOptimizationActionsOnly_ShouldNotReportExecutableOptimizationCategory()
     {
         var pluginId = "optimization-only-plugin";
         var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
@@ -84,7 +84,7 @@ public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
 
         capabilities.SupportsSettingsPage.Should().BeFalse();
         capabilities.SupportsFeaturePage.Should().BeFalse();
-        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+        capabilities.SupportsOptimizationCategory.Should().BeFalse();
     }
 
     [Fact]

@@ -303,7 +303,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task DownloadAndInstallPluginAsync_WithManifestOptimizationActions_ShouldAllowManifestOnlyPlugin()
+    public async Task DownloadAndInstallPluginAsync_WithManifestOptimizationActionsOnly_ShouldRejectNoOpManifestPlugin()
     {
         // Arrange
         const string pluginId = "manifest-optimization";
@@ -323,13 +323,13 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var installed = await service.DownloadAndInstallPluginAsync(manifest);
 
         // Assert
-        installed.Should().BeTrue();
+        installed.Should().BeFalse();
         _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
-        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Once);
     }
 
     [Fact]
-    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActionKey_ShouldAllowManifestOnlyPlugin()
+    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActionKeyOnly_ShouldRejectNoOpManifestPlugin()
     {
         // Arrange
         const string pluginId = "store-optimization-key";
@@ -349,13 +349,13 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var installed = await service.DownloadAndInstallPluginAsync(manifest);
 
         // Assert
-        installed.Should().BeTrue();
+        installed.Should().BeFalse();
         _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
-        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Once);
     }
 
     [Fact]
-    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActions_ShouldPersistInstalledManifestActions()
+    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActionsOnly_ShouldRejectNoOpManifestPlugin()
     {
         // Arrange
         const string pluginId = "store-optimization";
@@ -375,14 +375,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var installed = await service.DownloadAndInstallPluginAsync(manifest);
 
         // Assert
-        installed.Should().BeTrue();
-
-        var installedManifestPath = Path.Combine(PluginPaths.GetPluginDirectory(pluginId), "plugin.manifest.json");
-        File.Exists(installedManifestPath).Should().BeTrue();
-
-        var installedManifest = File.ReadAllText(installedManifestPath);
-        installedManifest.Should().Contain("\"optimizationActions\"");
-        installedManifest.Should().Contain("\"apply-test\"");
+        installed.Should().BeFalse();
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Once);
     }
 
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)

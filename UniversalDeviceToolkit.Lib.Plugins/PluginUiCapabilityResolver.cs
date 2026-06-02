@@ -70,8 +70,7 @@ public static class PluginUiCapabilityResolver
     }
 
     public static bool SupportsOptimizationActions(PluginManifest? manifest) =>
-        manifest?.Contributes?.OptimizationActions?.Any(action =>
-            !string.IsNullOrWhiteSpace(GetOptimizationActionId(action))) == true;
+        false;
 
     public static string GetOptimizationActionId(PluginManifestOptimizationContribution? action)
     {
@@ -97,14 +96,11 @@ public static class PluginUiCapabilityResolver
             HasContribution(contributes, "featurePage") ||
             ReadBool(root, "hasFeaturePage", "featurePage", "supportsFeaturePage", "hasPluginPage");
 
-        var supportsOptimization =
-            HasOptimizationContribution(contributes);
-
         return new PluginUiCapabilities
         {
             SupportsSettingsPage = supportsSettings,
             SupportsFeaturePage = supportsFeature,
-            SupportsOptimizationCategory = supportsOptimization,
+            SupportsOptimizationCategory = false,
         };
     }
 
@@ -128,31 +124,6 @@ public static class PluginUiCapabilityResolver
                 (item.Value.ValueKind != JsonValueKind.String || !string.IsNullOrWhiteSpace(item.Value.GetString()))),
             JsonValueKind.True => true,
             JsonValueKind.String => !string.IsNullOrWhiteSpace(property.GetString()),
-            _ => false,
-        };
-    }
-
-    private static bool HasOptimizationContribution(JsonElement? root)
-    {
-        if (root is null)
-            return false;
-
-        if (!TryGetProperty(root.Value, "optimizationActions", out var property))
-            return false;
-
-        return property.ValueKind switch
-        {
-            JsonValueKind.Array => property.EnumerateArray().Any(HasOptimizationContributionAction),
-            JsonValueKind.Object => HasOptimizationContributionAction(property),
-            _ => false,
-        };
-    }
-
-    private static bool HasOptimizationContributionAction(JsonElement action)
-    {
-        return action.ValueKind switch
-        {
-            JsonValueKind.Object => !string.IsNullOrWhiteSpace(ReadString(action, "id", "key")),
             _ => false,
         };
     }
@@ -183,23 +154,6 @@ public static class PluginUiCapabilityResolver
         }
 
         return false;
-    }
-
-    private static string? ReadString(JsonElement root, params string[] propertyNames)
-    {
-        foreach (var propertyName in propertyNames)
-        {
-            foreach (var property in root.EnumerateObject())
-            {
-                if (!string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                if (property.Value.ValueKind == JsonValueKind.String)
-                    return property.Value.GetString();
-            }
-        }
-
-        return null;
     }
 
     private static string FirstNonEmpty(params string?[] values)
