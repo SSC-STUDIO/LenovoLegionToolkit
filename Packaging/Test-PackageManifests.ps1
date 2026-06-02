@@ -8,6 +8,10 @@ param(
 
     [string]$ExpectedInstallerSha256,
 
+    [string]$ExpectedPublisher = 'SSC-STUDIO',
+
+    [string]$InstallerScriptPath = 'MakeInstaller.iss',
+
     [string]$WingetManifestDirectory,
 
     [string[]]$ScoopManifestPaths
@@ -75,6 +79,26 @@ function Assert-Equal {
     }
 }
 
+function Get-InnoDefine {
+    param(
+        [Parameter(Mandatory = $true)][string]$ScriptPath,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    if (-not (Test-Path -LiteralPath $ScriptPath)) {
+        throw "Inno Setup script not found at '$ScriptPath'."
+    }
+
+    $pattern = '^\s*#define\s+' + [regex]::Escape($Name) + '\s+"(?<value>[^"]+)"\s*$'
+    foreach ($line in Get-Content -LiteralPath $ScriptPath) {
+        if ($line -match $pattern) {
+            return $Matches.value
+        }
+    }
+
+    throw "Could not find Inno Setup define '$Name'."
+}
+
 $legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
 $expectedInstallerUrl = "https://github.com/$Repository/releases/download/v$Version/$legacyAssetName"
 
@@ -101,10 +125,20 @@ if ([string]::IsNullOrWhiteSpace($WingetManifestDirectory)) {
 }
 
 $resolvedWingetDirectory = Resolve-RepositoryPath $WingetManifestDirectory
+$wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
 $wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+if (-not (Test-Path -LiteralPath $wingetLocaleManifestPath)) {
+    throw "winget locale manifest not found at '$wingetLocaleManifestPath'."
+}
 if (-not (Test-Path -LiteralPath $wingetInstallerManifestPath)) {
     throw "winget installer manifest not found at '$wingetInstallerManifestPath'."
 }
+
+$resolvedInstallerScriptPath = Resolve-RepositoryPath $InstallerScriptPath
+$installerPublisher = Get-InnoDefine -ScriptPath $resolvedInstallerScriptPath -Name 'MyAppPublisher'
+$wingetLocaleLines = Get-Content -LiteralPath $wingetLocaleManifestPath
+Assert-Equal 'installer AppPublisher' $installerPublisher $ExpectedPublisher
+Assert-Equal 'winget Publisher' (Read-YamlScalar -Lines $wingetLocaleLines -Key 'Publisher') $ExpectedPublisher
 
 $wingetLines = Get-Content -LiteralPath $wingetInstallerManifestPath
 Assert-Equal 'winget PackageVersion' (Read-YamlScalar -Lines $wingetLines -Key 'PackageVersion') $Version

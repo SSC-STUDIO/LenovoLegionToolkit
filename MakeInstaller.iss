@@ -3,7 +3,7 @@
 #define MyAppName "Universal Device Toolkit"
 #define MyAppNameCompact "UniversalDeviceToolkit"
 #define MyAppNameCompactLegacy "LenovoLegionToolkit"
-#define MyAppPublisher "ChenRunsen"
+#define MyAppPublisher "SSC-STUDIO"
 #define MyAppURL "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
 #define MyAppExeName "Universal Device Toolkit.exe"
 
