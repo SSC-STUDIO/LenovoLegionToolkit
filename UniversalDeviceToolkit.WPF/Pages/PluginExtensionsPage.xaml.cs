@@ -1252,7 +1252,7 @@ private string _currentSearchText = string.Empty;
             {
                 try
                 {
-                    await InstallOnlinePluginAsync(update);
+                    await InstallOnlinePluginAsync(update, navigateToOptimizationCategoryOnSuccess: false);
                 }
                 catch (Exception ex)
                 {
@@ -1312,7 +1312,7 @@ private string _currentSearchText = string.Empty;
             {
                 try
                 {
-                    await InstallOnlinePluginAsync(candidate);
+                    await InstallOnlinePluginAsync(candidate, navigateToOptimizationCategoryOnSuccess: false);
 
                     if (IsPluginInstalledForUi(candidate.Id))
                         installedCount++;
@@ -1417,7 +1417,7 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private async Task InstallOnlinePluginAsync(PluginManifest manifest)
+    private async Task InstallOnlinePluginAsync(PluginManifest manifest, bool navigateToOptimizationCategoryOnSuccess = true)
     {
         if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
         {
@@ -1457,6 +1457,9 @@ private string _currentSearchText = string.Empty;
                 if (Application.Current.MainWindow is MainWindow mainWindow)
                     mainWindow.UpdateInstalledPluginsNavigationItems();
 
+                if (navigateToOptimizationCategoryOnSuccess)
+                    await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest);
+
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
             else
@@ -1486,6 +1489,27 @@ private string _currentSearchText = string.Empty;
             UpdateSpecificPluginUI(manifest.Id);
         }
     }
+
+    private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(PluginManifest manifest)
+    {
+        var plugin = await GetRegisteredPluginForUiAsync(manifest.Id, forceRefresh: true);
+        var manifestMetadata = ResolvePluginManifestMetadata(manifest.Id) ?? manifest;
+        var capabilities = ResolvePluginCapabilities(plugin, true, manifest.Id, manifestMetadata);
+
+        var hasExecutable = TryResolvePluginExecutable(manifest.Id, out _, out _);
+        if (!ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
+        {
+            return;
+        }
+
+        NavigateToPluginOptimizationCategory(manifest.Id);
+    }
+
+    internal static bool ShouldNavigateToOptimizationAfterInstall(PluginUiCapabilities capabilities, bool hasExecutable) =>
+        capabilities.SupportsOptimizationCategory &&
+        !capabilities.SupportsFeaturePage &&
+        !capabilities.SupportsSettingsPage &&
+        !hasExecutable;
 
     private async void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
     {
