@@ -100,6 +100,8 @@ public class SensorsGroupController : IDisposable
         "CPU SoC",
         "SoC",
         "SOC",
+        "System Agent",
+        "PCH",
         "CPU Uncore",
         "Uncore",
         "Ring",
@@ -175,6 +177,10 @@ public class SensorsGroupController : IDisposable
         "GPU Package",
         "GPU Power",
         "Board Power Draw",
+        "GPU Board Power",
+        "Total Board Power",
+        "GPU Chip Power",
+        "Chip Power",
         "Package Power",
         "Power",
     ];
@@ -182,6 +188,9 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Core Voltage",
         "Core Voltage",
+        "VDDC",
+        "VDDCI",
+        "MVDD",
         "GPU Core",
         "GPU Voltage",
         "Voltage",
@@ -224,6 +233,7 @@ public class SensorsGroupController : IDisposable
     [
         "Memory Available",
         "Available Memory",
+        "Memory Free",
         "Free Memory",
     ];
     private static readonly string[] MEMORY_LOAD_SENSOR_PREFERENCES =
@@ -1388,15 +1398,18 @@ public class SensorsGroupController : IDisposable
                 continue;
 
             if (IsLikelyCpuCorePowerSensorName(name))
-                cores = value;
+                cores = AddComponentPower(cores, value);
             else if (IsLikelyCpuMemoryPowerSensorName(name))
-                memory = value;
+                memory = AddComponentPower(memory, value);
             else if (IsLikelyCpuPlatformPowerSensorName(name))
-                platform = value;
+                platform = AddComponentPower(platform, value);
         }
 
         return (cores, memory, platform);
     }
+
+    private static float AddComponentPower(float current, float value) =>
+        current <= MIN_VALID_POWER_READING ? value : current + value;
 
     private static bool IsLikelyCpuCorePowerSensorName(string sensorName) =>
         !sensorName.Contains("GT", StringComparison.OrdinalIgnoreCase) &&

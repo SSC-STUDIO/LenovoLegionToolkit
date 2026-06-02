@@ -305,6 +305,19 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeBoardAndChipPowerAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU Chip Power",
+            "GPU Board Power"
+        ]);
+
+        result.Should().Be("GPU Board Power");
+    }
+
+    [Fact]
     public void SelectGpuTemperatureSensorName_ShouldPreferGpuCoreTemperatureAliases()
     {
         var result = SensorsGroupController.SelectGpuTemperatureSensorName(
@@ -365,6 +378,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuVoltageSensorName_ShouldRecognizeVddcAlias()
+    {
+        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        [
+            "Voltage",
+            "VDDC"
+        ]);
+
+        result.Should().Be("VDDC");
+    }
+
+    [Fact]
     public void SelectMemoryUsedSensorName_ShouldRecognizeUsedMemoryAlias()
     {
         var result = SensorsGroupController.SelectMemoryUsedSensorName(
@@ -386,6 +411,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Free Memory");
+    }
+
+    [Fact]
+    public void SelectMemoryAvailableSensorName_ShouldRecognizeMemoryFreeAlias()
+    {
+        var result = SensorsGroupController.SelectMemoryAvailableSensorName(
+        [
+            "GPU Memory Free",
+            "Memory Free"
+        ]);
+
+        result.Should().Be("Memory Free");
     }
 
     [Fact]
@@ -480,6 +517,8 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Graphics").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
     }
 
@@ -555,5 +594,19 @@ public class SensorsGroupControllerTests
 
         result.cores.Should().Be(24f);
         result.platform.Should().Be(3.5f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapPchAndSystemAgentAsPlatformPower()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("IA Cores", 24f),
+            ("System Agent", 1.5f),
+            ("PCH", 2.5f)
+        ]);
+
+        result.cores.Should().Be(24f);
+        result.platform.Should().Be(4f);
     }
 }
