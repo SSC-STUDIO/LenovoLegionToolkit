@@ -153,7 +153,9 @@ public partial class WindowsOptimizationPage : Page
     {
         Dispatcher.InvokeAsync(async () =>
         {
-            await Task.Delay(300);
+            if (e.IsInstalled)
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(true);
+
             ViewModel.Initialize();
 
             if (e.IsInstalled)

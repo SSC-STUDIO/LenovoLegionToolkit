@@ -114,14 +114,28 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                 continue;
 
             var actions = manifest.Contributes?.OptimizationActions?
-                .Where(action => !string.IsNullOrWhiteSpace(action.Id))
-                .Select(action => new WindowsOptimizationActionDefinition(
-                    action.Id,
-                    string.IsNullOrWhiteSpace(action.Title) ? action.Id : action.Title,
-                    string.IsNullOrWhiteSpace(manifest.Description) ? action.Id : manifest.Description,
-                    _ => Task.CompletedTask,
-                    Recommended: false,
-                    IsAppliedAsync: _ => Task.FromResult(false)))
+                .Select(action =>
+                {
+                    var actionId = PluginUiCapabilityResolver.GetOptimizationActionId(action);
+                    if (string.IsNullOrWhiteSpace(actionId))
+                        return null;
+
+                    var description = FirstNonEmpty(
+                        action.Description,
+                        manifest.Store?.Description,
+                        manifest.Description,
+                        actionId);
+
+                    return new WindowsOptimizationActionDefinition(
+                        actionId,
+                        FirstNonEmpty(action.Title, actionId),
+                        description,
+                        _ => Task.CompletedTask,
+                        Recommended: action.Recommended ?? false,
+                        IsAppliedAsync: _ => Task.FromResult(false));
+                })
+                .Where(action => action is not null)
+                .Cast<WindowsOptimizationActionDefinition>()
                 .ToArray();
 
             if (actions is null || actions.Length == 0)
@@ -176,4 +190,15 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
     private bool IsManifestPluginInstalled(string pluginId) =>
         _pluginManager.GetInstalledPluginIds().Contains(pluginId, StringComparer.OrdinalIgnoreCase) ||
         _pluginManager.IsInstalled(pluginId);
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value.Trim();
+        }
+
+        return string.Empty;
+    }
 }

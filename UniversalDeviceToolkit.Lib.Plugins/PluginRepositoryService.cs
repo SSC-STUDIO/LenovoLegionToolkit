@@ -26,6 +26,19 @@ public class PluginRepositoryService : IDisposable
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
     private readonly string _storeCachePath;
+    private static readonly JsonSerializerOptions ManifestJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true
+    };
+
+    private static readonly string[] InstalledManifestFileNames =
+    [
+        "plugin.manifest.json",
+        "plugin.json",
+        "Plugin.json"
+    ];
+
     // The plugin store is currently published from master.
     // Keep the source list explicit so the app does not waste time hitting the missing main/store.json endpoint first,
     // and include a CDN mirror because raw.githubusercontent.com can intermittently reset connections on Windows.
@@ -948,6 +961,7 @@ public class PluginRepositoryService : IDisposable
                 File.Copy(file, destPath, overwrite: true);
             }
 
+            EnsureInstalledManifest(pluginDir, manifest);
             TryStageCanonicalPluginSharedAssembly(pluginDir);
             TryStageCanonicalPluginSdkAssembly(pluginDir);
             if (trustAsOfficialOnlinePackage)
@@ -1010,6 +1024,137 @@ public class PluginRepositoryService : IDisposable
         }
 
         return Task.CompletedTask;
+    }
+
+    private static void EnsureInstalledManifest(string pluginDir, PluginManifest storeManifest)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(pluginDir) || string.IsNullOrWhiteSpace(storeManifest.Id))
+                return;
+
+            Directory.CreateDirectory(pluginDir);
+
+            var installedManifest = TryReadInstalledManifest(pluginDir, out _);
+            var manifestToWrite = MergeInstalledManifest(installedManifest, storeManifest);
+            var manifestPath = Path.Combine(pluginDir, "plugin.manifest.json");
+
+            File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifestToWrite, ManifestJsonOptions));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to persist plugin manifest metadata for {storeManifest.Id}: {ex.Message}", ex);
+        }
+    }
+
+    private static PluginManifest? TryReadInstalledManifest(string pluginDir, out string? manifestPath)
+    {
+        manifestPath = null;
+
+        foreach (var manifestFileName in InstalledManifestFileNames)
+        {
+            var candidate = Path.Combine(pluginDir, manifestFileName);
+            if (!File.Exists(candidate))
+                continue;
+
+            try
+            {
+                manifestPath = candidate;
+                return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(candidate), ManifestJsonOptions);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to read installed plugin manifest {candidate}: {ex.Message}", ex);
+            }
+        }
+
+        return null;
+    }
+
+    private static PluginManifest MergeInstalledManifest(PluginManifest? installedManifest, PluginManifest storeManifest)
+    {
+        var merged = ClonePluginManifest(installedManifest ?? storeManifest);
+
+        merged.Id = FirstNonEmpty(merged.Id, storeManifest.Id);
+        merged.Name = FirstNonEmpty(merged.Name, storeManifest.Name, storeManifest.Id);
+        merged.Description = FirstNonEmpty(merged.Description, storeManifest.Description);
+        merged.Details = FirstNonEmptyNullable(merged.Details, storeManifest.Details);
+        merged.UsageGuide = FirstNonEmptyNullable(merged.UsageGuide, storeManifest.UsageGuide);
+        merged.Icon = FirstNonEmpty(merged.Icon, storeManifest.Icon);
+        merged.IconBackground = FirstNonEmpty(merged.IconBackground, storeManifest.IconBackground);
+        merged.Author = FirstNonEmpty(merged.Author, storeManifest.Author);
+        merged.Version = FirstNonEmpty(merged.Version, storeManifest.Version);
+        merged.MinimumHostVersion = FirstNonEmpty(merged.MinimumHostVersion, storeManifest.MinimumHostVersion);
+        merged.DownloadUrl = FirstNonEmpty(merged.DownloadUrl, storeManifest.DownloadUrl);
+        merged.FileHash = FirstNonEmpty(merged.FileHash, storeManifest.FileHash);
+        merged.FileSize = merged.FileSize > 0 ? merged.FileSize : storeManifest.FileSize;
+        merged.ReleaseDate = FirstNonEmpty(merged.ReleaseDate, storeManifest.ReleaseDate);
+        merged.Changelog = FirstNonEmpty(merged.Changelog, storeManifest.Changelog);
+        merged.IsSystemPlugin = merged.IsSystemPlugin || storeManifest.IsSystemPlugin;
+        merged.Dependencies ??= storeManifest.Dependencies?.ToArray();
+        merged.Tags ??= storeManifest.Tags?.ToArray();
+        merged.Store ??= CloneStore(storeManifest.Store);
+        merged.Localizations ??= CloneLocalizations(storeManifest.Localizations);
+        merged.Contributes = MergeContributions(merged.Contributes, storeManifest.Contributes);
+
+        return merged;
+    }
+
+    private static PluginManifestContributions? MergeContributions(
+        PluginManifestContributions? installed,
+        PluginManifestContributions? store)
+    {
+        if (installed is null)
+            return CloneContributions(store);
+
+        var merged = CloneContributions(installed)!;
+        merged.FeaturePage ??= ClonePageContribution(store?.FeaturePage);
+        merged.SettingsPage ??= ClonePageContribution(store?.SettingsPage);
+        merged.Runtime ??= store?.Runtime is null
+            ? null
+            : new PluginManifestRuntimeContribution { Class = store.Runtime.Class };
+        merged.OptimizationActions = MergeOptimizationActions(
+            installed.OptimizationActions,
+            store?.OptimizationActions);
+
+        return merged;
+    }
+
+    private static List<PluginManifestOptimizationContribution>? MergeOptimizationActions(
+        IEnumerable<PluginManifestOptimizationContribution>? installed,
+        IEnumerable<PluginManifestOptimizationContribution>? store)
+    {
+        var actions = new List<PluginManifestOptimizationContribution>();
+        var actionIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        AddOptimizationActions(installed);
+        AddOptimizationActions(store);
+
+        return actions.Count == 0 ? null : actions;
+
+        void AddOptimizationActions(IEnumerable<PluginManifestOptimizationContribution>? source)
+        {
+            if (source is null)
+                return;
+
+            foreach (var action in source)
+            {
+                var actionId = PluginUiCapabilityResolver.GetOptimizationActionId(action);
+                if (string.IsNullOrWhiteSpace(actionId) || !actionIds.Add(actionId))
+                    continue;
+
+                actions.Add(new PluginManifestOptimizationContribution
+                {
+                    Id = string.IsNullOrWhiteSpace(action.Id) ? actionId : action.Id,
+                    Key = action.Key,
+                    Title = action.Title,
+                    Description = action.Description,
+                    Recommended = action.Recommended
+                });
+            }
+        }
     }
 
     /// <summary>
@@ -1645,6 +1790,9 @@ public class PluginRepositoryService : IDisposable
                     .Select(action => new PluginManifestOptimizationContribution
                     {
                         Id = action.Id,
+                        Key = action.Key,
+                        Description = action.Description,
+                        Recommended = action.Recommended,
                         Title = action.Title
                     })
                     .ToList()
@@ -1658,6 +1806,23 @@ public class PluginRepositoryService : IDisposable
                 Class = contribution.Class,
                 Title = contribution.Title
             };
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value.Trim();
+        }
+
+        return string.Empty;
+    }
+
+    private static string? FirstNonEmptyNullable(params string?[] values)
+    {
+        var value = FirstNonEmpty(values);
+        return string.IsNullOrWhiteSpace(value) ? null : value;
+    }
 
     /// <summary>
     /// Cleanup temporary download directory

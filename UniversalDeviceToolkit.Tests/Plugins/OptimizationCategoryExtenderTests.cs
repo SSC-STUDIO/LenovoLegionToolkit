@@ -196,6 +196,48 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenInstalledManifestUsesActionKey_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "manifest-key-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "manifest-key-plugin",
+              "name": "Manifest Key Plugin",
+              "description": "Manifest-level description",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "key": "manifest-key.action",
+                    "title": "Manifest key action",
+                    "description": "Action-level description",
+                    "recommended": true
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var category = categories.Should().ContainSingle().Subject;
+        category.Key.Should().Be(pluginId);
+        category.Actions.Should().ContainSingle();
+        category.Actions[0].Key.Should().Be("manifest-key.action");
+        category.Actions[0].DescriptionResourceKey.Should().Be("Action-level description");
+        category.Actions[0].Recommended.Should().BeTrue();
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenInstalledManifestHasSettingsPageOnly_ShouldSkipEmptyCategory()
     {
         var pluginId = "settings-only-plugin";

@@ -328,6 +328,37 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActions_ShouldPersistInstalledManifestActions()
+    {
+        // Arrange
+        const string pluginId = "store-optimization";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+
+        var installedManifestPath = Path.Combine(PluginPaths.GetPluginDirectory(pluginId), "plugin.manifest.json");
+        File.Exists(installedManifestPath).Should().BeTrue();
+
+        var installedManifest = File.ReadAllText(installedManifestPath);
+        installedManifest.Should().Contain("\"optimizationActions\"");
+        installedManifest.Should().Contain("\"apply-test\"");
+    }
+
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));

@@ -65,8 +65,20 @@ public static class PluginUiCapabilityResolver
         {
             SupportsSettingsPage = HasContribution(contributes.SettingsPage),
             SupportsFeaturePage = HasContribution(contributes.FeaturePage),
-            SupportsOptimizationCategory = contributes.OptimizationActions?.Count > 0,
+            SupportsOptimizationCategory = SupportsOptimizationActions(manifest),
         };
+    }
+
+    public static bool SupportsOptimizationActions(PluginManifest? manifest) =>
+        manifest?.Contributes?.OptimizationActions?.Any(action =>
+            !string.IsNullOrWhiteSpace(GetOptimizationActionId(action))) == true;
+
+    public static string GetOptimizationActionId(PluginManifestOptimizationContribution? action)
+    {
+        if (action is null)
+            return string.Empty;
+
+        return FirstNonEmpty(action.Id, action.Key);
     }
 
     private static PluginUiCapabilities ReadCapabilitiesFromJson(string manifestPath)
@@ -85,11 +97,8 @@ public static class PluginUiCapabilityResolver
             HasContribution(contributes, "featurePage") ||
             ReadBool(root, "hasFeaturePage", "featurePage", "supportsFeaturePage", "hasPluginPage");
 
-        var optimizationCategoryId = ReadString(root, "optimizationCategoryId", "optimizationCategory", "categoryId");
         var supportsOptimization =
-            HasOptimizationContribution(contributes) ||
-            ReadBool(root, "hasOptimizationCategory", "supportsOptimizationCategory", "optimizationCategory")
-            || !string.IsNullOrWhiteSpace(optimizationCategoryId);
+            HasOptimizationContribution(contributes);
 
         return new PluginUiCapabilities
         {
@@ -133,10 +142,17 @@ public static class PluginUiCapabilityResolver
 
         return property.ValueKind switch
         {
-            JsonValueKind.Array => property.GetArrayLength() > 0,
-            JsonValueKind.Object => true,
-            JsonValueKind.True => true,
-            JsonValueKind.String => !string.IsNullOrWhiteSpace(property.GetString()),
+            JsonValueKind.Array => property.EnumerateArray().Any(HasOptimizationContributionAction),
+            JsonValueKind.Object => HasOptimizationContributionAction(property),
+            _ => false,
+        };
+    }
+
+    private static bool HasOptimizationContributionAction(JsonElement action)
+    {
+        return action.ValueKind switch
+        {
+            JsonValueKind.Object => !string.IsNullOrWhiteSpace(ReadString(action, "id", "key")),
             _ => false,
         };
     }
@@ -184,6 +200,17 @@ public static class PluginUiCapabilityResolver
         }
 
         return null;
+    }
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value.Trim();
+        }
+
+        return string.Empty;
     }
 
     private static bool TryGetProperty(JsonElement root, string propertyName, out JsonElement value)

@@ -171,7 +171,7 @@ private string _currentSearchText = string.Empty;
     }
 
     private int GetInstallableOnlinePluginCount() =>
-        _onlinePlugins.Count(plugin => !_pluginManager.IsInstalled(plugin.Id));
+        _onlinePlugins.Count(plugin => !IsPluginInstalledForUi(plugin.Id));
 
     private void UpdateBulkActionButtonsVisibility()
     {
@@ -204,7 +204,7 @@ private string _currentSearchText = string.Empty;
         }
 
         var totalPlugins = _allPlugins.Count;
-        var installedPlugins = _allPlugins.Count(plugin => _pluginManager.IsInstalled(plugin.Id));
+        var installedPlugins = _allPlugins.Count(plugin => IsPluginInstalledForUi(plugin.Id));
         var updatesReady = _availableUpdates.Count;
         var discoverablePlugins = Math.Max(0, totalPlugins - installedPlugins);
         var isWaitingForMetadata = totalPlugins == 0 && !_onlineMetadataLoadCompleted;
@@ -337,8 +337,8 @@ private string _currentSearchText = string.Empty;
 // Apply filter
         filteredPlugins = _currentFilter switch
         {
-            "Installed" => filteredPlugins.Where(p => _pluginManager.IsInstalled(p.Id)),
-            "NotInstalled" => filteredPlugins.Where(p => !_pluginManager.IsInstalled(p.Id)),
+            "Installed" => filteredPlugins.Where(p => IsPluginInstalledForUi(p.Id)),
+            "NotInstalled" => filteredPlugins.Where(p => !IsPluginInstalledForUi(p.Id)),
             _ => filteredPlugins
         };
 
@@ -389,11 +389,11 @@ private string _currentSearchText = string.Empty;
         {
             try
             {
-                var isInstalled = _pluginManager.IsInstalled(plugin.Id);
+                var isInstalled = IsPluginInstalledForUi(plugin.Id);
 
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - IsInstalled check returned {isInstalled}");
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - UI installed check returned {isInstalled}");
                 }
 
                 PluginManifest? updatePlugin = null;
@@ -485,7 +485,7 @@ private string _currentSearchText = string.Empty;
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
                     }
 
-                    existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                    existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     existingViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     existingViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                 }
@@ -510,7 +510,7 @@ private string _currentSearchText = string.Empty;
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
                     }
 
-                    pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                    pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     pluginViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     pluginViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
 
@@ -693,6 +693,27 @@ private string _currentSearchText = string.Empty;
                 pluginIds.Add(plugin.Id);
             }
 
+            foreach (var installedPluginId in _pluginManager.GetInstalledPluginIds().Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                if (pluginIds.Contains(installedPluginId))
+                    continue;
+
+                var manifest = ResolvePluginManifestMetadata(installedPluginId) ?? new PluginManifest
+                {
+                    Id = installedPluginId,
+                    Name = installedPluginId,
+                    Description = string.Empty
+                };
+
+                if (string.IsNullOrWhiteSpace(manifest.Id))
+                    manifest.Id = installedPluginId;
+                if (string.IsNullOrWhiteSpace(manifest.Name))
+                    manifest.Name = installedPluginId;
+
+                allPluginsList.Add(new PluginManifestAdapter(manifest));
+                pluginIds.Add(installedPluginId);
+            }
+
             // Then add online plugins (using adapters), but skip already installed ones
             if (_onlinePlugins != null && _onlinePlugins.Count > 0)
             {
@@ -717,7 +738,7 @@ private string _currentSearchText = string.Empty;
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {_allPlugins.Count} total plugins");
                 foreach (var plugin in _allPlugins)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - {plugin.Id}: {plugin.Name} (System: {plugin.IsSystemPlugin}, Installed: {_pluginManager.IsInstalled(plugin.Id)})");
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - {plugin.Id}: {plugin.Name} (System: {plugin.IsSystemPlugin}, Installed: {IsPluginInstalledForUi(plugin.Id)})");
                 }
             }
         }
@@ -874,7 +895,7 @@ private string _currentSearchText = string.Empty;
 
     private bool IsAvailableUpdateNewerThanInstalled(string pluginId, string? availableVersion)
     {
-        if (string.IsNullOrWhiteSpace(pluginId) || !_pluginManager.IsInstalled(pluginId))
+        if (string.IsNullOrWhiteSpace(pluginId) || !IsPluginInstalledForUi(pluginId))
             return false;
 
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
@@ -921,6 +942,35 @@ private string _currentSearchText = string.Empty;
         }
 
         return false;
+    }
+
+    private bool IsPluginInstalledForUi(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        if (_pluginManager.IsInstalled(pluginId))
+            return true;
+
+        try
+        {
+            var hasInstalledRecord = _pluginManager
+                .GetInstalledPluginIds()
+                .Contains(pluginId, StringComparer.OrdinalIgnoreCase);
+            if (!hasInstalledRecord)
+                return false;
+
+            return PluginUiCapabilityResolver
+                .ResolveFromInstalledManifest(pluginId)
+                .SupportsOptimizationCategory;
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to resolve UI installed state for {pluginId}: {ex.Message}", ex);
+
+            return false;
+        }
     }
 
     private void ReconcileAvailableUpdatesWithInstalledVersions()
@@ -1115,7 +1165,7 @@ private string _currentSearchText = string.Empty;
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UpdateSpecificPluginUI called for {pluginId}");
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled from manager: {_pluginManager.IsInstalled(pluginId)}");
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled for UI: {IsPluginInstalledForUi(pluginId)}");
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - Available updates: {_availableUpdates.Count}");
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - ViewModel count: {_pluginViewModels.Count}");
             }
@@ -1124,7 +1174,7 @@ private string _currentSearchText = string.Empty;
             var viewModel = _pluginViewModels.FirstOrDefault(vm => vm.PluginId == pluginId);
             if (viewModel != null)
             {
-                var isInstalled = _pluginManager.IsInstalled(pluginId);
+                var isInstalled = IsPluginInstalledForUi(pluginId);
                 var updateAvailable = isInstalled && TryGetAvailableUpdate(pluginId, out _);
 
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -1146,7 +1196,7 @@ private string _currentSearchText = string.Empty;
                     plugin = EnsureRegisteredPluginForUi(pluginId, isInstalled) ?? plugin;
                     var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
                     var capabilities = ResolvePluginCapabilities(plugin, isInstalled, pluginId, manifestMetadata);
-                    viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                    viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(pluginId);
                     viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                 }
@@ -1230,7 +1280,7 @@ private string _currentSearchText = string.Empty;
     private async void BulkInstallButton_Click(object sender, RoutedEventArgs e)
     {
         var installCandidates = _onlinePlugins
-            .Where(plugin => !_pluginManager.IsInstalled(plugin.Id))
+            .Where(plugin => !IsPluginInstalledForUi(plugin.Id))
             .ToList();
 
         if (!installCandidates.Any())
@@ -1264,7 +1314,7 @@ private string _currentSearchText = string.Empty;
                 {
                     await InstallOnlinePluginAsync(candidate);
 
-                    if (_pluginManager.IsInstalled(candidate.Id))
+                    if (IsPluginInstalledForUi(candidate.Id))
                         installedCount++;
                 }
                 catch (Exception ex)
@@ -1582,18 +1632,24 @@ private string _currentSearchText = string.Empty;
         try
         {
             // Ensure plugin is installed
-            if (!_pluginManager.IsInstalled(pluginId))
+            if (!IsPluginInstalledForUi(pluginId))
             {
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
                 return;
             }
 
             var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
-            if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
-                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
-
             var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
             var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
+
+            if (plugin is null &&
+                !capabilities.SupportsOptimizationCategory &&
+                await TryRepairInstalledOnlinePluginAsync(pluginId))
+            {
+                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+                manifestMetadata = ResolvePluginManifestMetadata(pluginId);
+                capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
+            }
 
             if (TryResolvePluginExecutable(pluginId, out var exeFile, out var pluginDir))
             {
@@ -1674,15 +1730,11 @@ private string _currentSearchText = string.Empty;
     {
         try
         {
-            if (!_pluginManager.IsInstalled(pluginId))
+            if (!IsPluginInstalledForUi(pluginId))
             {
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
                 return;
             }
-
-            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
-            if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
-                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
 
             await OpenPluginEntryPointAsync(pluginId);
         }
@@ -2486,7 +2538,7 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
             if (!ReferenceEquals(_pluginsListBox.SelectedItem, selectedViewModel))
                 _pluginsListBox.SelectedItem = selectedViewModel;
 
-            var isInstalled = _pluginManager.IsInstalled(selectedViewModel.PluginId);
+            var isInstalled = IsPluginInstalledForUi(selectedViewModel.PluginId);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
 
