@@ -3317,9 +3317,6 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Spanningsbereik</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Gemiddelde Temp</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Zijkant</value>
   </data>

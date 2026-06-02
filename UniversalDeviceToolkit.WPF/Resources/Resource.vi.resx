@@ -3316,9 +3316,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Phạm vi điện áp</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Nhiệt độ trung bình</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Thanh bên</value>
   </data>

@@ -3317,9 +3317,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Диапазон напряжений</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Средняя температура</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Боковая панель</value>
   </data>

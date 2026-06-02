@@ -3314,9 +3314,6 @@ Vyžaduje reštart.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Rozsah napätia</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Priemerná teplota</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Postranný panel</value>
   </data>

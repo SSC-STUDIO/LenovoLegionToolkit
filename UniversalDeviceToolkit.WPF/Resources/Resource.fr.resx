@@ -3316,9 +3316,6 @@ Nécessite un redémarrage.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Plage de tension</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Température moyenne</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Barre latérale</value>
   </data>

@@ -3473,9 +3473,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Voltage Range</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Avg Temp</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Sidebar</value>
   </data>

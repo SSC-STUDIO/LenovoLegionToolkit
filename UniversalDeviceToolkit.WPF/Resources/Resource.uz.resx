@@ -3314,9 +3314,6 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Kuchlanish Oralig'i</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>O'rtacha Harorat</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Yon panel</value>
   </data>

@@ -3316,9 +3316,6 @@ Nepieciešama restartēšana.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Sprieguma diapazons</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Vidējā temperatūra</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Sānjosla</value>
   </data>

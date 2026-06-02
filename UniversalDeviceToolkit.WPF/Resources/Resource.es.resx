@@ -3319,9 +3319,6 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Rango de voltaje</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Temp. promedio</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Barra lateral</value>
   </data>

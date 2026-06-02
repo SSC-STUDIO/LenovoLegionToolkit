@@ -3311,9 +3311,6 @@ Richiede il riavvio.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Intervallo di Tensione</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Temperatura Media</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Barra Laterale</value>
   </data>

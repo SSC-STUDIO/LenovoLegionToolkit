@@ -3312,9 +3312,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Rang de tensió</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Temp. mitjana</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Barra lateral</value>
   </data>

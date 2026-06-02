@@ -6760,15 +6760,6 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Avg Temp.
-        /// </summary>
-        public static string SensorsControl_AvgTemp {
-            get {
-                return ResourceManager.GetString("SensorsControl_AvgTemp", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to CPU.
         /// </summary>
         public static string SensorsControl_CPU_Title {

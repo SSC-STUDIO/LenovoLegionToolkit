@@ -3475,9 +3475,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>電壓範圍</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>平均溫度</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>應用側邊欄</value>
   </data>

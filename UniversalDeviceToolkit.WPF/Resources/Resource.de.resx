@@ -3316,9 +3316,6 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Spannungsbereich</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Durchschnittstemperatur</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Seitenleiste</value>
   </data>

@@ -3317,9 +3317,6 @@ Obsługiwane formaty obrazka: {1}.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Zakres napięcia</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Średnia temperatura</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Pasek boczny</value>
   </data>

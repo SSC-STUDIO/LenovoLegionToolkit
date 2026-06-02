@@ -3309,9 +3309,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>نطاق الجهد</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>متوسط درجة الحرارة</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>الشريط الجانبي</value>
   </data>

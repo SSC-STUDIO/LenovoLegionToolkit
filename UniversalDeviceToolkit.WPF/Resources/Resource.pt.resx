@@ -3316,9 +3316,6 @@ Formatos suportados são: {1}.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Intervalo de Voltagem</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Temp Média</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Barra Lateral</value>
   </data>

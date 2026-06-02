@@ -3313,9 +3313,6 @@ Necesită repornirea.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Interval de tensiune</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Temperatura medie</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Bară laterală</value>
   </data>

@@ -3316,9 +3316,6 @@ Brytermoduser kan kreve omstart.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Spenningsområde</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Gjennomsnittstemp.</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Sidefelt</value>
   </data>

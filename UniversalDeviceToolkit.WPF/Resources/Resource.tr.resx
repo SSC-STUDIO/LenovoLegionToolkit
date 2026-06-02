@@ -3318,9 +3318,6 @@ Tümünü daralt</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Voltaj Aralığı</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Ortalama Sıcaklık</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Yan Panel</value>
   </data>

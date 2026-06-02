@@ -3315,9 +3315,6 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Feszültségtartomány</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Átlaghőmérséklet</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Oldalsáv</value>
   </data>

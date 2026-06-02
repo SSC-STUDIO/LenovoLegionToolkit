@@ -3317,9 +3317,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Εύρος Τάσης</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Μέση Θερμοκρασία</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Πλευρικό Πλαίσιο</value>
   </data>

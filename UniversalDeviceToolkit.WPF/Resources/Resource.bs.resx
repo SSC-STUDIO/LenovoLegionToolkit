@@ -3314,9 +3314,6 @@ Zahtijeva ponovno pokretanje.</value>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>Raspon napona</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>Prosječna temperatura</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Bočna traka</value>
   </data>

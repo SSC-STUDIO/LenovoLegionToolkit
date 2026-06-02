@@ -3303,9 +3303,6 @@
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
     <value>전압 범위</value>
   </data>
-  <data name="SensorsControl_AvgTemp" xml:space="preserve">
-    <value>평균 온도</value>
-  </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>사이드바</value>
   </data>
