@@ -182,7 +182,7 @@ $wingetInstallerManifest = @"
 PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: $Version
 InstallerType: inno
-Scope: user
+Scope: machine
 UpgradeBehavior: install
 ReleaseDate: $ReleaseDate
 Installers:

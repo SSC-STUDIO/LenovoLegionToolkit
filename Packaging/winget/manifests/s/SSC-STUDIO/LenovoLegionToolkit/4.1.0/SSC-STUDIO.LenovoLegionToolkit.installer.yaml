@@ -3,7 +3,7 @@
 PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: 4.1.0
 InstallerType: inno
-Scope: user
+Scope: machine
 UpgradeBehavior: install
 ReleaseDate: 2026-05-31
 Installers:

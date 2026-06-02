@@ -3,7 +3,7 @@
 PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: X.Y.Z
 InstallerType: inno
-Scope: user
+Scope: machine
 UpgradeBehavior: install
 ReleaseDate: YYYY-MM-DD
 Installers:
