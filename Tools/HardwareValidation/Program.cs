@@ -206,6 +206,7 @@ static class ProgramEntry
             var hardwareValueDelta = afterHardwareValue - beforeHardwareValue;
             var hardwareValueChanged = afterHardwareValue != beforeHardwareValue;
             var measuredVerificationPassed = afterHardwareValue == targetValue && hardwareValueChanged;
+            var powerModeVerificationPassed = afterPowerMode == (int)PowerModeState.GodMode;
 
             Console.WriteLine($"Capability: {capabilityId}");
             Console.WriteLine($"OriginalPresetValue: {originalStepper.Value.Value}");
@@ -217,11 +218,15 @@ static class ProgramEntry
             Console.WriteLine($"HardwareValueDelta: {hardwareValueDelta}");
             Console.WriteLine($"HardwareValueChanged: {hardwareValueChanged}");
             Console.WriteLine($"AfterSmartFanMode: {afterPowerMode}");
+            Console.WriteLine($"PowerModeVerificationPassed: {powerModeVerificationPassed}");
             Console.WriteLine($"PersistedVerificationPassed: {persistedStepper?.Value == targetValue}");
             Console.WriteLine($"HardwareVerificationPassed: {afterHardwareValue == targetValue}");
             Console.WriteLine($"MeasuredVerificationPassed: {measuredVerificationPassed}");
 
-            verificationPassed = persistedStepper?.Value == targetValue && measuredVerificationPassed;
+            verificationPassed =
+                persistedStepper?.Value == targetValue &&
+                measuredVerificationPassed &&
+                powerModeVerificationPassed;
 
             return verificationPassed
                 ? 0
@@ -349,7 +354,7 @@ static class ProgramEntry
             }
 
             var powerModeObservedGodMode = afterPowerMode == (int)PowerModeState.GodMode;
-            verificationPassed = passedCount == plans.Count;
+            verificationPassed = passedCount == plans.Count && powerModeObservedGodMode;
 
             Console.WriteLine($"BatchPassedCount: {passedCount}");
             Console.WriteLine($"BatchMeasuredChangedCount: {changedCount}");

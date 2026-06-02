@@ -220,6 +220,7 @@ try {
         'BatchVerificationPassed',
         'BatchRestoredSmartFanMode',
         'BatchRestoreVerificationPassed',
+        'BatchPowerModeObservedGodMode',
         'OriginalPresetValue',
         'BeforeHardwareValue',
         'RequestedPresetValue',
@@ -229,6 +230,7 @@ try {
         'HardwareValueDelta',
         'HardwareValueChanged',
         'AfterSmartFanMode',
+        'PowerModeVerificationPassed',
         'PersistedVerificationPassed',
         'HardwareVerificationPassed',
         'MeasuredVerificationPassed',
@@ -251,6 +253,7 @@ try {
     $restorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'RestoreVerificationPassed'
     $measuredPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'MeasuredVerificationPassed'
     $persistedPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'PersistedVerificationPassed'
+    $powerModePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'PowerModeVerificationPassed'
     $isVerifyCurrentPreset =
         $Command -eq 'godmode' -and
         $CommandArguments.Count -gt 0 -and
@@ -262,10 +265,12 @@ try {
     $batchPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchVerificationPassed'
     $batchRestorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchRestoreVerificationPassed'
     $batchMeasuredChangeObserved = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchMeasuredChangeObserved'
+    $batchPowerModePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchPowerModeObservedGodMode'
     $overallPassed = if ($isVerifyCurrentPreset) {
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         $persistedPassed -eq 'True' -and
         $hardwarePassed -eq 'True' -and
+        $powerModePassed -eq 'True' -and
         $measuredPassed -eq 'True' -and
         $restorePassed -eq 'True'
     }
@@ -273,6 +278,7 @@ try {
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         $batchPassed -eq 'True' -and
         $batchMeasuredChangeObserved -eq 'True' -and
+        $batchPowerModePassed -eq 'True' -and
         $batchRestorePassed -eq 'True'
     }
     else {
