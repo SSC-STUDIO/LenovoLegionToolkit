@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.DeviceSupport;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
@@ -46,7 +46,7 @@ public class PowerModeFeatureTests : UnitTestBase
     }
 
     [Fact]
-    public async Task IsSupportedAsync_WhenResolvedAsInterface_ShouldUsePowerModeStateAvailability()
+    public async Task IsSupportedAsync_WhenResolvedAsInterface_ShouldUseLenovoPowerModeAvailability()
     {
         ResetCompatibilityCache();
 
@@ -63,11 +63,78 @@ public class PowerModeFeatureTests : UnitTestBase
                 Properties = new MachineInformation.PropertyData()
             });
 
-            var feature = (IFeature<PowerModeState>)RuntimeHelpers.GetUninitializedObject(typeof(PowerModeFeature));
+            var feature = (IFeature<PowerModeState>)new TestPowerModeFeature(
+                () => Task.FromResult(PowerModeState.Balance),
+                wmiSupported: false);
 
             var result = await feature.IsSupportedAsync();
 
             result.Should().BeTrue();
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task IsSupportedAsync_WhenBasicNonLenovoDeviceReportsPowerModes_ShouldReturnFalse()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "Dell Inc.",
+                MachineType = "0000",
+                Model = "Alienware m18 R2",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new TestPowerModeFeature(
+                () => Task.FromResult(PowerModeState.Balance),
+                wmiSupported: false);
+
+            var result = await feature.IsSupportedAsync();
+
+            result.Should().BeFalse();
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenBasicNonLenovoDeviceReportsPowerModes_ShouldRejectBeforeLenovoWmiWrite()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "Dell Inc.",
+                MachineType = "0000",
+                Model = "Alienware m18 R2",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new TestPowerModeFeature(
+                () => throw new InvalidOperationException("Should not read Lenovo WMI."),
+                wmiSupported: false);
+
+            var act = () => feature.SetStateAsync(PowerModeState.Performance);
+
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                .WithMessage("Power mode switching is not supported on this device.");
         }
         finally
         {
@@ -332,11 +399,12 @@ public class PowerModeFeatureTests : UnitTestBase
 
     private static void ResetCompatibilityCache()
     {
+        LenovoDeviceSupportProvider.Instance.SetInstalledCatalog(null);
         typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
         typeof(Compatibility).GetField("_isCompatible", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
     }
 
-    private sealed class TestPowerModeFeature(Func<Task<PowerModeState>> readState) : PowerModeFeature(
+    private sealed class TestPowerModeFeature(Func<Task<PowerModeState>> readState, bool wmiSupported = true) : PowerModeFeature(
         null!,
         null!,
         null!,
@@ -344,6 +412,8 @@ public class PowerModeFeatureTests : UnitTestBase
         null!)
     {
         internal override Task<PowerModeState> ReadStateCoreAsync() => readState();
+
+        internal override Task<bool> IsWmiSupportedAsync() => Task.FromResult(wmiSupported);
     }
 }
 

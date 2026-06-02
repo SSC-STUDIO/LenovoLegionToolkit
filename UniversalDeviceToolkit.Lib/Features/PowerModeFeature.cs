@@ -34,10 +34,11 @@ public class PowerModeFeature(
 
     public new async Task<bool> IsSupportedAsync()
     {
-        if (await base.IsSupportedAsync().ConfigureAwait(false))
+        if (await IsWmiSupportedAsync().ConfigureAwait(false))
             return true;
 
-        return (await GetAllStatesAsync().ConfigureAwait(false)).Length > 0;
+        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        return HasLenovoPowerModeCapability(mi);
     }
 
     public new async Task<PowerModeState> GetStateAsync()
@@ -88,6 +89,9 @@ public class PowerModeFeature(
 
     public override async Task SetStateAsync(PowerModeState state)
     {
+        if (!await IsSupportedAsync().ConfigureAwait(false))
+            throw new InvalidOperationException("Power mode switching is not supported on this device.");
+
         if (state == PowerModeState.Extreme)
             throw new InvalidOperationException($"Unsupported power mode {state}");
 
@@ -193,5 +197,17 @@ public class PowerModeFeature(
         }
 
         return PowerModeState.Balance;
+    }
+
+    internal virtual Task<bool> IsWmiSupportedAsync() => base.IsSupportedAsync();
+
+    internal static bool HasLenovoPowerModeCapability(MachineInformation machineInformation)
+    {
+        if (!Compatibility.IsSupportedDevice(machineInformation))
+            return false;
+
+        var supportedPowerModes = machineInformation.SupportedPowerModes ?? [];
+        return supportedPowerModes.Any(mode => mode is PowerModeState.Quiet or PowerModeState.Balance or PowerModeState.Performance or PowerModeState.GodMode)
+               || machineInformation.Properties.SupportsGodMode;
     }
 }
