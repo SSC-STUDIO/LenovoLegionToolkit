@@ -1,10 +1,14 @@
+using System;
+using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using FluentAssertions;
 using UniversalDeviceToolkit.WPF.CLI;
+using UniversalDeviceToolkit.WPF.CLI.Features;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -109,6 +113,90 @@ public class IpcServerTests
         method!.Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task ListFeaturesAsync_WhenCacheExists_ShouldReturnCachedFeatureList()
+    {
+        var method = typeof(IpcServer).GetMethod("ListFeaturesAsync", BindingFlags.NonPublic | BindingFlags.Static);
+        var cacheField = typeof(IpcServer).GetField("_supportedFeaturesCache", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+        cacheField.Should().NotBeNull();
+
+        var original = cacheField!.GetValue(null);
+        cacheField.SetValue(null, "power-mode\nbattery");
+        try
+        {
+            var resultTask = method!.Invoke(null, []) as Task<string?>;
+            resultTask.Should().NotBeNull();
+
+            var result = await resultTask!;
+
+            result.Should().Be("power-mode\nbattery");
+        }
+        finally
+        {
+            cacheField.SetValue(null, original);
+        }
+    }
+
+    [Fact]
+    public async Task BuildSupportedFeatureListAsync_WhenFeatureProbeFails_ShouldSkipOnlyFailedFeature()
+    {
+        var registrations = new IFeatureRegistration[]
+        {
+            new TestFeatureRegistration("power-mode", true),
+            new TestFeatureRegistration("battery", false),
+            new TestFeatureRegistration("refresh-rate", true),
+            new TestFeatureRegistration("broken", throwOnSupportCheck: true),
+        };
+
+        var method = typeof(IpcServer).GetMethod("BuildSupportedFeatureListAsync", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = await InvokeBuildSupportedFeatureListAsync(method!, registrations);
+
+        GetFeatureList(result).Should().Be("power-mode\nrefresh-rate");
+        GetHasProbeFailures(result).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task BuildSupportedFeatureListAsync_WhenFeatureProbesSucceed_ShouldReturnCacheableFeatureList()
+    {
+        var registrations = new IFeatureRegistration[]
+        {
+            new TestFeatureRegistration("power-mode", true),
+            new TestFeatureRegistration("battery", false),
+            new TestFeatureRegistration("refresh-rate", true),
+        };
+
+        var method = typeof(IpcServer).GetMethod("BuildSupportedFeatureListAsync", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = await InvokeBuildSupportedFeatureListAsync(method!, registrations);
+
+        GetFeatureList(result).Should().Be("power-mode\nrefresh-rate");
+        GetHasProbeFailures(result).Should().BeFalse();
+    }
+
+    private static async Task<object> InvokeBuildSupportedFeatureListAsync(MethodInfo method, IFeatureRegistration[] registrations)
+    {
+        var task = method.Invoke(null, [registrations]) as Task;
+        task.Should().NotBeNull();
+
+        await task!;
+
+        var result = task.GetType().GetProperty("Result")?.GetValue(task);
+        result.Should().NotBeNull();
+        return result!;
+    }
+
+    private static string GetFeatureList(object result)
+        => result.GetType().GetProperty("FeatureList")?.GetValue(result) as string
+           ?? throw new InvalidOperationException("Missing FeatureList result property.");
+
+    private static bool GetHasProbeFailures(object result)
+        => result.GetType().GetProperty("HasProbeFailures")?.GetValue(result) as bool?
+           ?? throw new InvalidOperationException("Missing HasProbeFailures result property.");
+
     private static bool IsAdministratorReadWriteAllowRule(PipeAccessRule rule)
     {
         return rule.AccessControlType == AccessControlType.Allow &&
@@ -124,5 +212,24 @@ public class IpcServerTests
                WindowsIdentity.GetCurrent().User is { } currentUser &&
                sid.Equals(currentUser) &&
                rule.PipeAccessRights.HasFlag(PipeAccessRights.ReadWrite);
+    }
+
+    private sealed class TestFeatureRegistration(string name, bool supported = false, bool throwOnSupportCheck = false) : IFeatureRegistration
+    {
+        public string Name { get; } = name;
+
+        public Task<bool> IsSupportedAsync()
+        {
+            if (throwOnSupportCheck)
+                throw new InvalidOperationException("Probe failed");
+
+            return Task.FromResult(supported);
+        }
+
+        public Task<IEnumerable<string>> GetValuesAsync() => throw new NotSupportedException();
+
+        public Task<string> GetValueAsync() => throw new NotSupportedException();
+
+        public Task SetValueAsync(string value) => throw new NotSupportedException();
     }
 }

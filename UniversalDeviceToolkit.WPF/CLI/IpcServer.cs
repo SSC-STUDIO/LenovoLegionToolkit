@@ -36,6 +36,9 @@ public class IpcServer(
     UpdateCheckSettings updateCheckSettings
     )
 {
+    private static readonly SemaphoreSlim SupportedFeaturesCacheSemaphore = new(1, 1);
+    private static string? _supportedFeaturesCache;
+
     private CancellationTokenSource _cancellationTokenSource = new();
     private Task _handler = Task.CompletedTask;
 
@@ -261,16 +264,57 @@ public class IpcServer(
 
     private static async Task<string?> ListFeaturesAsync()
     {
-        var features = new List<string>();
+        if (_supportedFeaturesCache is { } cached)
+            return cached;
 
-        foreach (var feature in FeatureRegistry.All)
+        await SupportedFeaturesCacheSemaphore.WaitAsync().ConfigureAwait(false);
+        try
         {
-            if (await feature.IsSupportedAsync().ConfigureAwait(false))
-                features.Add(feature.Name);
-        }
+            if (_supportedFeaturesCache is { } cachedAfterWait)
+                return cachedAfterWait;
 
-        return string.Join('\n', features);
+            var result = await BuildSupportedFeatureListAsync(FeatureRegistry.All).ConfigureAwait(false);
+            if (!result.HasProbeFailures)
+                _supportedFeaturesCache = result.FeatureList;
+
+            return result.FeatureList;
+        }
+        finally
+        {
+            SupportedFeaturesCacheSemaphore.Release();
+        }
     }
+
+    private static async Task<SupportedFeatureProbeResult> GetSupportedFeatureNameAsync(IFeatureRegistration feature)
+    {
+        try
+        {
+            var name = await feature.IsSupportedAsync().ConfigureAwait(false)
+                ? feature.Name
+                : null;
+
+            return new(name, Failed: false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Feature support probe failed. [name={feature.Name}]", ex);
+
+            return new(Name: null, Failed: true);
+        }
+    }
+
+    private static async Task<SupportedFeatureListResult> BuildSupportedFeatureListAsync(IEnumerable<IFeatureRegistration> registrations)
+    {
+        var features = await Task.WhenAll(registrations.Select(GetSupportedFeatureNameAsync)).ConfigureAwait(false);
+        return new(
+            string.Join('\n', features.Select(feature => feature.Name).OfType<string>()),
+            features.Any(feature => feature.Failed));
+    }
+
+    private readonly record struct SupportedFeatureProbeResult(string? Name, bool Failed);
+
+    private readonly record struct SupportedFeatureListResult(string FeatureList, bool HasProbeFailures);
 
     private static async Task<string?> ListFeatureValuesAsync(string name)
     {
