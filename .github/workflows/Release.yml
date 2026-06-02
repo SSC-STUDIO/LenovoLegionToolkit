@@ -97,11 +97,7 @@ jobs:
 
         $prunePaths = @(
           (Join-Path $env:BUILD_OUTPUT 'x86'),
-          (Join-Path $env:BUILD_OUTPUT 'arm64'),
-          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.exe'),
-          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.dll'),
-          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.deps.json'),
-          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.runtimeconfig.json')
+          (Join-Path $env:BUILD_OUTPUT 'arm64')
         )
 
         foreach ($path in $prunePaths) {
@@ -109,6 +105,8 @@ jobs:
             Remove-Item -Recurse -Force $path
           }
         }
+
+        ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
 
     - name: Smoke CLI help and version
       shell: pwsh

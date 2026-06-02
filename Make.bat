@@ -45,6 +45,7 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
 CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
+IF %ERROR_COUNT% NEQ 0 GOTO END
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -BuildDir "%BUILD_DIR%" -OnlineBuildDir "%BUILD_ONLINE_DIR%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%"
 IF %ERRORLEVEL% NEQ 0 (
@@ -96,10 +97,9 @@ dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c D
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
-echo Building Spectrum Tester (Debug)...
-dotnet publish UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolkit.SpectrumTester.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
-
+echo Test and validation tools are separate from the main debug payload.
+echo Build SpectrumTester explicitly when needed:
+echo   dotnet publish UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolkit.SpectrumTester.csproj -c Debug -o Build\Tools\SpectrumTester
 echo.
 echo Building CLI (Debug)...
 dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
@@ -178,12 +178,9 @@ if "%TARGET_DIR%"=="" exit /b 0
 if exist "%TARGET_DIR%\x86" rmdir /s /q "%TARGET_DIR%\x86"
 if exist "%TARGET_DIR%\arm64" rmdir /s /q "%TARGET_DIR%\arm64"
 
-if exist "%TARGET_DIR%\SpectrumTester.exe" del /q "%TARGET_DIR%\SpectrumTester.exe"
-if exist "%TARGET_DIR%\SpectrumTester.dll" del /q "%TARGET_DIR%\SpectrumTester.dll"
-if exist "%TARGET_DIR%\SpectrumTester.deps.json" del /q "%TARGET_DIR%\SpectrumTester.deps.json"
-if exist "%TARGET_DIR%\SpectrumTester.runtimeconfig.json" del /q "%TARGET_DIR%\SpectrumTester.runtimeconfig.json"
-
-exit /b 0
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Assert-ShippingPayload.ps1" -PayloadPath "%TARGET_DIR%"
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+exit /b %ERROR_COUNT%
 
 :END
 echo.
