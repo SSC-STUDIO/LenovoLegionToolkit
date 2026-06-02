@@ -65,6 +65,42 @@ public class SensorsGroupController : IDisposable
         "CPU Utilization",
         "Package",
     ];
+    private static readonly string[] CPU_PACKAGE_POWER_SENSOR_PREFERENCES =
+    [
+        "CPU Package",
+        "Package Power",
+        "CPU PPT",
+        "PPT",
+        "Processor Power",
+        "CPU Total",
+        "Total CPU",
+        "CPU Power",
+        "Package",
+    ];
+    private static readonly string[] CPU_CORE_POWER_SENSOR_PREFERENCES =
+    [
+        "CPU Cores",
+        "CPU Core",
+        "Core Power",
+        "Cores",
+    ];
+    private static readonly string[] CPU_MEMORY_POWER_SENSOR_PREFERENCES =
+    [
+        "CPU Memory",
+        "Memory Controller",
+        "DRAM",
+        "MCH",
+    ];
+    private static readonly string[] CPU_PLATFORM_POWER_SENSOR_PREFERENCES =
+    [
+        "CPU Platform",
+        "CPU SoC",
+        "SoC",
+        "SOC",
+        "CPU Uncore",
+        "Uncore",
+        "Ring",
+    ];
     private static readonly string[] GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "GPU Memory Junction",
@@ -487,6 +523,7 @@ public class SensorsGroupController : IDisposable
         _pCoreClockSensors.Clear();
         _eCoreClockSensors.Clear();
         _cpuCoreClockSensors.Clear();
+        _cpuComponentPowerSensors.Clear();
         _memoryTempSensors.Clear();
         _storageTempSensors.Clear();
 
@@ -531,8 +568,8 @@ public class SensorsGroupController : IDisposable
                     case SensorType.Clock when s.Name.Contains("Core", StringComparison.OrdinalIgnoreCase) && !s.Name.Contains("Average") && !s.Name.Contains("Effective"):
                         _cpuCoreClockSensors.Add(s);
                         break;
-                    case SensorType.Power when s.Name.Contains(SENSOR_NAME_PACKAGE):
-                        _cpuPackagePowerSensor = s;
+                    case SensorType.Power when IsLikelyCpuPackagePowerSensorName(s.Name):
+                        _cpuPackagePowerSensor ??= s;
                         break;
                     case SensorType.Power when IsLikelyCpuComponentPowerSensorName(s.Name):
                         _cpuComponentPowerSensors.Add(s);
@@ -543,6 +580,7 @@ public class SensorsGroupController : IDisposable
             _cpuTempSensor ??= SelectCpuTemperatureSensor(_cpuHardware.Sensors);
             _cpuUsageSensor ??= SelectCpuUsageSensor(_cpuHardware.Sensors);
             _cpuCoreVoltageSensor ??= SelectCpuVoltageSensor(_cpuHardware.Sensors);
+            _cpuPackagePowerSensor ??= SelectCpuPackagePowerSensor(_cpuHardware.Sensors);
         }
 
         var mainGpu = _gpuHardware ?? _amdGpuHardware;
@@ -867,6 +905,38 @@ public class SensorsGroupController : IDisposable
             .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
             .FirstOrDefault();
     }
+
+    private static ISensor? SelectCpuPackagePowerSensor(IEnumerable<ISensor> sensors)
+    {
+        var powerSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Power)
+            .ToArray();
+
+        if (powerSensors.Length == 0)
+            return null;
+
+        var preferredName = SelectCpuPackagePowerSensorName(powerSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return powerSensors.FirstOrDefault(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase));
+
+        return null;
+    }
+
+    internal static string? SelectCpuPackagePowerSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(
+            sensorNames.Where(name =>
+                !string.IsNullOrWhiteSpace(name) &&
+                !name.Contains("GPU", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Core", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Cores", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("SoC", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("SOC", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Memory", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("DRAM", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Platform", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Uncore", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("Ring", StringComparison.OrdinalIgnoreCase)),
+            CPU_PACKAGE_POWER_SENSOR_PREFERENCES);
 
     private static ISensor? SelectGpuVramTemperatureSensor(IEnumerable<ISensor> sensors)
     {
@@ -1295,10 +1365,13 @@ public class SensorsGroupController : IDisposable
     private static bool IsLikelyGpuVoltageSensorName(string sensorName) =>
         SelectGpuVoltageSensorName([sensorName]) is not null;
 
+    internal static bool IsLikelyCpuPackagePowerSensorName(string sensorName) =>
+        SelectCpuPackagePowerSensorName([sensorName]) is not null;
+
     internal static bool IsLikelyCpuComponentPowerSensorName(string sensorName) =>
-        sensorName.Contains("CPU Cores", StringComparison.OrdinalIgnoreCase)
-        || sensorName.Contains("CPU Memory", StringComparison.OrdinalIgnoreCase)
-        || sensorName.Contains("CPU Platform", StringComparison.OrdinalIgnoreCase);
+        IsLikelyCpuCorePowerSensorName(sensorName)
+        || IsLikelyCpuMemoryPowerSensorName(sensorName)
+        || IsLikelyCpuPlatformPowerSensorName(sensorName);
 
     internal static (float cores, float memory, float platform) ResolveCpuComponentPowers(IEnumerable<(string name, float value)> components)
     {
@@ -1311,16 +1384,28 @@ public class SensorsGroupController : IDisposable
             if (value <= MIN_VALID_POWER_READING)
                 continue;
 
-            if (name.Contains("CPU Cores", StringComparison.OrdinalIgnoreCase))
+            if (IsLikelyCpuCorePowerSensorName(name))
                 cores = value;
-            else if (name.Contains("CPU Memory", StringComparison.OrdinalIgnoreCase))
+            else if (IsLikelyCpuMemoryPowerSensorName(name))
                 memory = value;
-            else if (name.Contains("CPU Platform", StringComparison.OrdinalIgnoreCase))
+            else if (IsLikelyCpuPlatformPowerSensorName(name))
                 platform = value;
         }
 
         return (cores, memory, platform);
     }
+
+    private static bool IsLikelyCpuCorePowerSensorName(string sensorName) =>
+        CPU_CORE_POWER_SENSOR_PREFERENCES.Any(keyword =>
+            sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    private static bool IsLikelyCpuMemoryPowerSensorName(string sensorName) =>
+        CPU_MEMORY_POWER_SENSOR_PREFERENCES.Any(keyword =>
+            sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    private static bool IsLikelyCpuPlatformPowerSensorName(string sensorName) =>
+        CPU_PLATFORM_POWER_SENSOR_PREFERENCES.Any(keyword =>
+            sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
 
     internal static float ResolveCpuPower(float packagePower, IEnumerable<float> componentPowers)
     {

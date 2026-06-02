@@ -73,6 +73,19 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdPptAlias()
+    {
+        var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "GPU Package",
+            "CPU Core",
+            "CPU PPT"
+        ]);
+
+        result.Should().Be("CPU PPT");
+    }
+
+    [Fact]
     public void SelectCpuUsageSensorName_ShouldPreferCpuTotalBeforeCoreMaxOrThreadLoads()
     {
         var result = SensorsGroupController.SelectCpuUsageSensorName(
@@ -459,8 +472,11 @@ public class SensorsGroupControllerTests
     public void IsLikelyCpuComponentPowerSensorName_ShouldRecognizeCpuComponentPowerAliases()
     {
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
     }
 
@@ -493,5 +509,20 @@ public class SensorsGroupControllerTests
         result.cores.Should().Be(24f);
         result.memory.Should().Be(3.5f);
         result.platform.Should().Be(7f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapAmdCoreSocAndMemoryAliases()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("CPU Core", 24f),
+            ("CPU SoC", 6f),
+            ("DRAM", 3f)
+        ]);
+
+        result.cores.Should().Be(24f);
+        result.memory.Should().Be(3f);
+        result.platform.Should().Be(6f);
     }
 }
