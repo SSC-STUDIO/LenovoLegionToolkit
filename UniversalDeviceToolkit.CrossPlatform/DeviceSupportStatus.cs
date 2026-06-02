@@ -94,6 +94,10 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
         BasicPack("star-labs-basic", "Star Labs Basic", "Star Labs", ["Star Labs Systems", "StarLabs", "Star Labs Systems Ltd"], ["StarFighter", "StarBook", "StarLite", "StarLite Mk", "Byte"]),
         BasicPack("slimbook-basic", "Slimbook Basic", "SLIMBOOK", ["Slimbook", "Slimbook S.L.", "Slimbook SL"], ["Elemental", "Excalibur", "EVO", "Executive", "Creative", "KDE Slimbook", "Fedora Slimbook", "Manjaro Slimbook", "Slimbook One", "Slimbook Zero"]),
         BasicPack("clevo-tongfang-basic", "Clevo/Tongfang Basic", "CLEVO", ["Notebook", "Tongfang", "Eluktronics", "MECHREVO", "THUNDEROBOT", "Hasee", "SAGER"], ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear"]),
+        BasicPack("universal-workstation-basic", "Universal Workstation Basic", "*", [], ["Workstation", "Precision", "ZBook", "ThinkStation", "ProArt Station", "Creator Workstation"]),
+        BasicPack("universal-motherboard-basic", "Universal Motherboard Basic", "*", [], ["Motherboard", "Custom PC", "To Be Filled By O.E.M.", "SYS-", "MS-7", "B650", "X670", "Z690", "Z790", "B760", "X570", "B550", "TRX40", "WRX80"]),
+        BasicPack("universal-desktop-basic", "Universal Desktop Basic", "*", [], ["Desktop", "Tower", "Mini PC", "MiniPC", "AIO", "All-in-One", "All in One", "System Product Name"]),
+        BasicPack("universal-barebone-basic", "Universal Barebone Basic", "*", [], ["Barebone", "Notebook", "Default string"]),
         BasicPack("handheld-pc-basic", "Handheld PC Basic", "*", [], ["Steam Deck", "GPD", "AYANEO", "AOKZOE", "ONEXPLAYER", "ONE-NETBOOK", "ROG Ally", "Legion Go"]),
         BasicPack("mini-pc-basic", "Mini PC Basic", "*", [], ["MINISFORUM", "Beelink", "GEEKOM", "ZOTAC"])
     ];

@@ -70,6 +70,11 @@ public sealed class DeviceSupportStatusTests
     [InlineData("Notebook", "oryp13", "system76-basic")]
     [InlineData("Star Labs Systems", "StarFighter", "star-labs-basic")]
     [InlineData("SLIMBOOK", "KDE Slimbook VII", "slimbook-basic")]
+    [InlineData("Super Micro Computer, Inc.", "X13 Workstation", "universal-workstation-basic")]
+    [InlineData("ASRock", "Z790 Taichi", "universal-motherboard-basic")]
+    [InlineData("Default string", "System Product Name", "universal-desktop-basic")]
+    [InlineData("CLEVO", "Barebone GM7", "universal-barebone-basic")]
+    [InlineData("To Be Filled By O.E.M.", "To Be Filled By O.E.M.", "universal-motherboard-basic")]
     public void Evaluate_ShouldMatchExpandedBrandBasicPacks(string vendor, string model, string expectedPackId)
     {
         var support = _evaluator.Evaluate(

@@ -16,7 +16,6 @@ return command.ToLowerInvariant() switch
     "plugins" => PrintPlugins(commandArguments),
     "controls" => PrintControls(),
     "set" => SetControl(commandArguments),
-    "verify" => VerifyControl(commandArguments),
     "elevate" => Elevate(commandArguments),
     "support" => PrintSupport(),
     "doctor" => PrintDoctor(),
@@ -261,43 +260,6 @@ static int SetControl(IReadOnlyList<string> arguments)
     return result.Succeeded ? 0 : 1;
 }
 
-static int VerifyControl(IReadOnlyList<string> arguments)
-{
-    if (arguments.Count < 2)
-    {
-        Console.Error.WriteLine("Usage: udt verify <control-id> <value>");
-        return 2;
-    }
-
-    var fileSystem = new PhysicalFileSystem();
-    var commandRunner = new ProcessCommandRunner();
-    var options = PerformanceEffectVerificationOptions.Default;
-    var sampler = new CpuFrequencyLoadSampler(
-        () => new SystemTelemetryReader(fileSystem, commandRunner).Read(),
-        options);
-    var verifier = new PerformanceEffectVerifier(
-        sampler.Sample,
-        (controlId, value) => new HardwareControlSurfaceWriter(fileSystem, commandRunner).Set(controlId, value),
-        () => Thread.Sleep(options.StabilizationDelay),
-        options);
-    var report = verifier.Verify(arguments[0], arguments[1]);
-
-    Console.WriteLine("Performance verification");
-    Console.WriteLine($"Control: {report.ControlId}");
-    Console.WriteLine($"Requested value: {report.RequestedValue}");
-    Console.WriteLine($"Sample window: {report.SampleDuration.TotalSeconds:0.#}s CPU load, {report.LoadWorkerCount} workers");
-    Console.WriteLine(report.ControlResult.Succeeded ? "Control write: succeeded" : "Control write: failed");
-    Console.WriteLine($"Detail: {report.ControlResult.Detail}");
-    PrintCpuFrequencySummary("Before CPU frequency", report.BeforeCpuFrequency);
-    PrintCpuFrequencySummary("After CPU frequency", report.AfterCpuFrequency);
-    Console.WriteLine($"Average CPU frequency delta: {FormatMegahertz(report.AverageFrequencyDeltaMHz)}");
-
-    foreach (var note in report.Notes)
-        Console.WriteLine($"Note: {note}");
-
-    return report.Succeeded ? 0 : 1;
-}
-
 static int Elevate(IReadOnlyList<string> arguments)
 {
     var result = new ElevationLauncher().Launch(arguments);
@@ -346,7 +308,6 @@ static int PrintHelp()
     Console.WriteLine("  udt plugins   Inspect plugin manifests without loading Windows/WPF assemblies.");
     Console.WriteLine("  udt controls  Print writable and hidden cross-platform hardware controls.");
     Console.WriteLine("  udt set <id> <value>  Set a writable cross-platform control.");
-    Console.WriteLine("  udt verify <id> <value>  Set a control and sample CPU frequency before/after.");
     Console.WriteLine("  udt elevate <command> [arguments]  Restart a write command through Windows UAC when needed.");
     Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
     Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
@@ -458,20 +419,6 @@ static string FormatWatts(double? value) => value is null ? "unknown" : $"{value
 static string FormatVolts(double? value) => value is null ? "unknown" : $"{value:0.##} V";
 
 static string FormatBoolean(bool? value) => value is null ? "unknown" : value.Value ? "yes" : "no";
-
-static string FormatMegahertz(double? value) => value is null ? "unknown" : $"{value:0.#} MHz";
-
-static void PrintCpuFrequencySummary(string label, CpuFrequencySummary summary)
-{
-    if (summary.Count == 0)
-    {
-        Console.WriteLine($"{label}: unavailable");
-        return;
-    }
-
-    Console.WriteLine(
-        $"{label}: avg {FormatMegahertz(summary.AverageMHz)}, min {FormatMegahertz(summary.MinMHz)}, max {FormatMegahertz(summary.MaxMHz)}, {summary.Count} readings ({ValueOrUnknown(summary.Source)})");
-}
 
 static string FormatEnergy(double? nowWh, double? fullWh, double? designWh)
 {
