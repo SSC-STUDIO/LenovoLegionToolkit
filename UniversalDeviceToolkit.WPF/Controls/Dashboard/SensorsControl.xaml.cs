@@ -232,14 +232,6 @@ public partial class SensorsControl
         UpdateDetailText("_batteryHealthText", $"{info.BatteryHealth:0.00}%");
         if (FindName("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar) healthBar.Value = info.BatteryHealth;
 
-        if (FindName("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
-            FindName("_batteryTempText") is ContentControl tempLabel)
-        {
-            var temp = info.BatteryTemperatureC ?? 0;
-            // Assuming 60C is max reasonable battery temp for bar scaling
-            UpdateValue(tempBar, tempLabel, 60, temp, GetTemperatureText(info.BatteryTemperatureC));
-        }
-
         if (FindName("_batteryRateBar") is System.Windows.Controls.Primitives.RangeBase rateBar &&
             FindName("_batteryRateText") is ContentControl rateLabel)
         {

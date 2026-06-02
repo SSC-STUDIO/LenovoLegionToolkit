@@ -148,7 +148,6 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Charge}" Style="{StaticResource StatLabelStyle}" />
@@ -163,17 +162,11 @@
                             </ProgressBar>
                             <Label x:Name="_batteryHealthText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryTemperatureBar" Grid.Row="2" Grid.Column="1" Margin="8,0,4,0" Maximum="100" Height="6">
+                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_batteryRateBar" Grid.Row="2" Grid.Column="1" Margin="8,0,4,0" Maximum="100" Height="6">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryTempText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryRateBar" Grid.Row="3" Grid.Column="1" Margin="8,0,4,0" Maximum="100" Height="6">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <Label x:Name="_batteryRateText" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_batteryRateText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
 
                         <StackPanel Margin="0,8,0,0">
