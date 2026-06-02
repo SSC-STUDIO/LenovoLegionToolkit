@@ -35,6 +35,18 @@ public sealed class CrossPlatformProjectTests
         source.Should().NotContain("NamedPipe");
     }
 
+    [Fact]
+    public void CrossPlatformCliAssetScript_ShouldPackageLaunchers()
+    {
+        var scriptText = File.ReadAllText(Path.Combine(RepositoryRoot, "Scripts", "Build-CrossPlatformCliAsset.ps1"));
+
+        scriptText.Should().Contain("Write-CrossPlatformLaunchers");
+        scriptText.Should().Contain("'udt.cmd'");
+        scriptText.Should().Contain("'README.txt'");
+        scriptText.Should().Contain("dotnet \"$SCRIPT_DIR/udt.dll\" \"$@\"");
+        scriptText.Should().Contain("dotnet \"%~dp0udt.dll\" %*");
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

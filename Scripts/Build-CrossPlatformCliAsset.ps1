@@ -93,6 +93,46 @@ function Add-HashLine {
     Set-Content -LiteralPath $HashPath -Value $lines -Encoding ASCII
 }
 
+function Write-CrossPlatformLaunchers {
+    param([Parameter(Mandatory = $true)][string]$OutputPath)
+
+    $unixLauncherPath = Join-Path $OutputPath 'udt'
+    $windowsLauncherPath = Join-Path $OutputPath 'udt.cmd'
+    $readmePath = Join-Path $OutputPath 'README.txt'
+
+    $unixLauncher = @'
+#!/usr/bin/env sh
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec dotnet "$SCRIPT_DIR/udt.dll" "$@"
+'@
+
+    $windowsLauncher = @'
+@echo off
+dotnet "%~dp0udt.dll" %*
+'@
+
+    $readme = @'
+Universal Device Toolkit cross-platform diagnostics CLI
+
+Requires the .NET 10 runtime.
+
+Windows:
+  udt.cmd status
+
+macOS/Linux:
+  sh ./udt status
+  chmod +x ./udt
+  ./udt status
+
+Any OS:
+  dotnet udt.dll status
+'@
+
+    Set-Content -LiteralPath $unixLauncherPath -Value $unixLauncher -Encoding ASCII
+    Set-Content -LiteralPath $windowsLauncherPath -Value $windowsLauncher -Encoding ASCII
+    Set-Content -LiteralPath $readmePath -Value $readme -Encoding ASCII
+}
+
 $project = Resolve-RepoPath $ProjectPath
 $publishOutputPath = Resolve-RepoPath $PublishOutput
 $releaseOutputPath = Resolve-RepoPath $ReleaseOutput
@@ -113,7 +153,9 @@ if ($LASTEXITCODE -ne 0) {
     throw 'Cross-platform CLI publish failed.'
 }
 
-$requiredFiles = @('udt.dll', 'udt.deps.json', 'udt.runtimeconfig.json')
+Write-CrossPlatformLaunchers -OutputPath $publishOutputPath
+
+$requiredFiles = @('udt.dll', 'udt.deps.json', 'udt.runtimeconfig.json', 'udt', 'udt.cmd', 'README.txt')
 foreach ($fileName in $requiredFiles) {
     $filePath = Join-Path $publishOutputPath $fileName
     if (-not (Test-Path -LiteralPath $filePath)) {
