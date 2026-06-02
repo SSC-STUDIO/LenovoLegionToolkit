@@ -140,6 +140,8 @@ jobs:
       shell: pwsh
       run: |
         ./Scripts/Build-LanguageAssets.ps1 -BuildDir $env:BUILD_OUTPUT -OnlineBuildDir $env:ONLINE_BUILD_OUTPUT -ReleaseOutput $env:RELEASE_OUTPUT -PagesOutput $env:PAGES_OUTPUT -Version $env:VERSION -Repository '${{ github.repository }}'
+        ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
+        ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT
 
     - name: Build installers
       shell: pwsh
