@@ -43,6 +43,11 @@ public interface IPluginFileSystemManager
     void UpdateFileCache(string filePath);
 
     /// <summary>
+    /// Clear the plugin file timestamp cache before a forced rescan.
+    /// </summary>
+    void ClearFileCache();
+
+    /// <summary>
     /// Get culture folders that should be skipped during plugin scanning
     /// </summary>
     HashSet<string> GetCultureFolders();

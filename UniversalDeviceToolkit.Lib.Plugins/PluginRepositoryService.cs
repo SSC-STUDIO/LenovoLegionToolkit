@@ -226,9 +226,20 @@ public class PluginRepositoryService : IDisposable
 
             if (installed)
             {
-                // Mark as installed before the scan so startup hooks can run during reload.
                 _pluginManager.InstallPlugin(manifest.Id);
-                await _pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+
+                if (!IsInstalledPluginUsable(manifest))
+                {
+                    var error = $"Plugin {manifest.Id} was installed to disk but could not be loaded by the host.";
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace(error);
+
+                    _pluginManager.UninstallPlugin(manifest.Id);
+                    DownloadFailed?.Invoke(this, error);
+                    return false;
+                }
+
                 DownloadCompleted?.Invoke(this, manifest.Id);
             }
 
@@ -240,6 +251,21 @@ public class PluginRepositoryService : IDisposable
             DownloadFailed?.Invoke(this, ex.Message);
             return false;
         }
+    }
+
+    private bool IsInstalledPluginUsable(PluginManifest manifest)
+    {
+        if (_pluginManager.TryGetPlugin(manifest.Id, out var plugin) && plugin is not null and not PluginManifestAdapter)
+            return true;
+
+        if (manifest.Contributes?.OptimizationActions?.Any(action => !string.IsNullOrWhiteSpace(action.Id)) == true)
+        {
+            var pluginManifestPath = Path.Combine(_pluginsDirectory, manifest.Id, "plugin.manifest.json");
+            var pluginJsonPath = Path.Combine(_pluginsDirectory, manifest.Id, "plugin.json");
+            return File.Exists(pluginManifestPath) || File.Exists(pluginJsonPath);
+        }
+
+        return false;
     }
 
     /// <summary>

@@ -53,7 +53,7 @@ public interface IPluginManager : IDisposable
     /// Scan and load plugins from the plugins directory
     /// </summary>
     /// <returns>A task that completes when the scan is finished</returns>
-    Task ScanAndLoadPluginsAsync();
+    Task ScanAndLoadPluginsAsync(bool forceRefresh = false);
 
     /// <summary>
     /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)

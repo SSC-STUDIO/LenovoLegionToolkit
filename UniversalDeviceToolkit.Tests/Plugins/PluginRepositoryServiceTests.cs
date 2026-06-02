@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -244,11 +246,173 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         result.Should().Be(expected);
     }
 
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WhenRuntimeDoesNotLoad_ShouldRollbackInstalledState()
+    {
+        // Arrange
+        const string pluginId = "broken-runtime";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        var scanCalls = new List<bool>();
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Callback<bool>(forceRefresh => scanCalls.Add(forceRefresh))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeFalse();
+        scanCalls.Should().ContainSingle().Which.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Once);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WhenRuntimeLoads_ShouldKeepPluginInstalled()
+    {
+        // Arrange
+        const string pluginId = "working-runtime";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out plugin))
+            .Returns(true);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithManifestOptimizationActions_ShouldAllowManifestOnlyPlugin()
+    {
+        // Arrange
+        const string pluginId = "manifest-optimization";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: true);
+        var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
     private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));
         var httpClientFactory = new StubHttpClientFactory(httpClient);
         return new PluginRepositoryService(_pluginManager.Object, httpClientFactory);
+    }
+
+    private string CreatePluginPackage(string pluginId, bool includeOptimizationAction)
+    {
+        var packageDirectory = CreateTempDirectory();
+        var pluginDirectory = Path.Combine(packageDirectory, pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+
+        File.WriteAllText(Path.Combine(pluginDirectory, $"{pluginId}.dll"), "fake plugin dll");
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.json"),
+            CreateManifestJson(pluginId, includeOptimizationAction));
+
+        var packagePath = Path.Combine(packageDirectory, $"{pluginId}.zip");
+        ZipFile.CreateFromDirectory(pluginDirectory, packagePath);
+        TempFiles.Add(packagePath);
+        return packagePath;
+    }
+
+    private static PluginManifest CreateInstallManifest(
+        string pluginId,
+        string packagePath,
+        bool includeOptimizationAction = false)
+    {
+        var manifest = new PluginManifest
+        {
+            Id = pluginId,
+            Name = pluginId,
+            Description = "Test plugin",
+            Version = "1.0.0",
+            MinimumHostVersion = "1.0.0",
+            DownloadUrl = new Uri(packagePath).AbsoluteUri
+        };
+
+        if (includeOptimizationAction)
+        {
+            manifest.Contributes = new PluginManifestContributions
+            {
+                OptimizationActions =
+                [
+                    new PluginManifestOptimizationContribution
+                    {
+                        Id = "apply-test",
+                        Title = "Apply test"
+                    }
+                ]
+            };
+        }
+
+        return manifest;
+    }
+
+    private static string CreateManifestJson(string pluginId, bool includeOptimizationAction)
+    {
+        if (!includeOptimizationAction)
+        {
+            return $$"""
+            {
+              "id": "{{pluginId}}",
+              "name": "{{pluginId}}",
+              "description": "Test plugin"
+            }
+            """;
+        }
+
+        return $$"""
+        {
+          "id": "{{pluginId}}",
+          "name": "{{pluginId}}",
+          "description": "Test plugin",
+          "contributes": {
+            "optimizationActions": [
+              {
+                "id": "apply-test",
+                "title": "Apply test"
+              }
+            ]
+          }
+        }
+        """;
     }
 
     private sealed class StubHttpClientFactory(HttpClient client) : HttpClientFactory

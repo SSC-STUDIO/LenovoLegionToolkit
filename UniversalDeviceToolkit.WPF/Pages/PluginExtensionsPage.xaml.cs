@@ -1485,7 +1485,7 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private void PluginConfigureButton_Click(object sender, RoutedEventArgs e)
+    private async void PluginConfigureButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
@@ -1493,7 +1493,7 @@ private string _currentSearchText = string.Empty;
         if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginConfigureButton_Click called for {pluginId}");
 
-        OpenPluginConfiguration(pluginId);
+        await OpenPluginConfigurationAsync(pluginId);
     }
 
     private void PluginUpdateInfoButton_Click(object sender, RoutedEventArgs e)
@@ -1519,7 +1519,7 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private void OpenPluginConfiguration(string pluginId)
+    private async Task OpenPluginConfigurationAsync(string pluginId)
     {
         try
         {
@@ -1533,7 +1533,7 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            var plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
+            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
             var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
             var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
@@ -1588,9 +1588,9 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            var plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
+            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
             if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
-                plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
+                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
 
             var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
             var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
@@ -1647,7 +1647,7 @@ private string _currentSearchText = string.Empty;
             }
             else if (capabilities.SupportsSettingsPage)
             {
-                OpenPluginConfiguration(pluginId);
+                await OpenPluginConfigurationAsync(pluginId);
             }
             else
             {
@@ -1680,12 +1680,9 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            var plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
+            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
             if (plugin is null && await TryRepairInstalledOnlinePluginAsync(pluginId))
-                plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: true);
-
-            var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
-            var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
+                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
 
             await OpenPluginEntryPointAsync(pluginId);
         }
@@ -1782,6 +1779,38 @@ private string _currentSearchText = string.Empty;
         plugin = _pluginManager.GetRegisteredPlugins()
             .FirstOrDefault(p => string.Equals(p.Id, pluginId, StringComparison.OrdinalIgnoreCase));
         return plugin is PluginManifestAdapter ? null : plugin;
+    }
+
+    private async Task<IPlugin?> GetRegisteredPluginForUiAsync(string pluginId, bool forceRefresh)
+    {
+        var plugin = GetRegisteredPluginForUi(pluginId, reloadIfMissing: false);
+        if (plugin is not null)
+            return plugin;
+
+        if (!forceRefresh)
+            return null;
+
+        _pluginIdsReloadedForUi.Add(pluginId);
+
+        try
+        {
+            await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                LocalizationHelper.SetPluginResourceCultures();
+                UpdateSpecificPluginUI(pluginId);
+
+                var loadedPlugin = _pluginManager.GetRegisteredPlugins()
+                    .FirstOrDefault(p => string.Equals(p.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+                return loadedPlugin is PluginManifestAdapter ? null : loadedPlugin;
+            });
+        }
+        catch (Exception ex)
+        {
+            _pluginIdsReloadedForUi.Remove(pluginId);
+            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage failed to load plugin runtime for UI: {pluginId}", ex);
+            return null;
+        }
     }
 
     private void TryReloadPluginForUi(string pluginId)

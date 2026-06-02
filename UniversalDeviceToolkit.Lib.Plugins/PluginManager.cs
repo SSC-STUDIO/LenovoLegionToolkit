@@ -42,7 +42,7 @@ public class PluginManager : IPluginManager
     /// <summary>
     /// Scan and load plugins from the plugins directory
     /// </summary>
-    public async Task ScanAndLoadPluginsAsync()
+    public async Task ScanAndLoadPluginsAsync(bool forceRefresh = false)
     {
         try
         {
@@ -58,6 +58,14 @@ public class PluginManager : IPluginManager
                 Log.Instance.Trace($"Scanning plugins directory: {pluginsDirectory}");
 
             RegisterAssemblyResolver(pluginsDirectory);
+
+            if (forceRefresh)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Clearing plugin file cache before forced scan.");
+
+                _fileSystemManager.ClearFileCache();
+            }
 
             var pluginFiles = _fileSystemManager.GetPluginDllFiles();
 

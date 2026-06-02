@@ -207,6 +207,55 @@ public class PluginManagerTests : IDisposable
         _mockLoader.Verify(l => l.LoadFromFileAsync(pluginFile, _mockSignatureValidator.Object), Times.Once);
     }
 
+    [Fact]
+    public async Task ScanAndLoadPlugins_WithForceRefresh_ShouldClearFileCacheBeforeScanning()
+    {
+        // Arrange
+        var tempDir = CreateTempDirectory();
+        _mockFileSystemManager
+            .Setup(f => f.GetPluginsDirectory())
+            .Returns(tempDir);
+        _mockFileSystemManager
+            .Setup(f => f.GetPluginDllFiles())
+            .Returns(new List<string>());
+        _mockFileSystemManager
+            .Setup(f => f.GetCultureFolders())
+            .Returns(new HashSet<string>());
+
+        var manager = CreateManager();
+
+        // Act
+        await manager.ScanAndLoadPluginsAsync(forceRefresh: true);
+
+        // Assert
+        _mockFileSystemManager.Verify(f => f.ClearFileCache(), Times.Once);
+        _mockFileSystemManager.Verify(f => f.GetPluginDllFiles(), Times.Once);
+    }
+
+    [Fact]
+    public async Task ScanAndLoadPlugins_WithoutForceRefresh_ShouldKeepFileCache()
+    {
+        // Arrange
+        var tempDir = CreateTempDirectory();
+        _mockFileSystemManager
+            .Setup(f => f.GetPluginsDirectory())
+            .Returns(tempDir);
+        _mockFileSystemManager
+            .Setup(f => f.GetPluginDllFiles())
+            .Returns(new List<string>());
+        _mockFileSystemManager
+            .Setup(f => f.GetCultureFolders())
+            .Returns(new HashSet<string>());
+
+        var manager = CreateManager();
+
+        // Act
+        await manager.ScanAndLoadPluginsAsync();
+
+        // Assert
+        _mockFileSystemManager.Verify(f => f.ClearFileCache(), Times.Never);
+    }
+
     #endregion
 
     #region Event Tests
