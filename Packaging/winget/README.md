@@ -14,6 +14,7 @@ The repo may contain a versioned draft folder such as `manifests/s/SSC-STUDIO/Le
 - Publisher: `SSC-STUDIO`
 - License: `GPL-3.0`
 - Installer type: `inno`
+- Installer scope: `machine`
 - Architecture: `x64`
 
 ## Release Checklist
@@ -25,21 +26,24 @@ The repo may contain a versioned draft folder such as `manifests/s/SSC-STUDIO/Le
 2. Confirm the release also includes the checksum manifest:
    `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 3. Do not create or submit a new version manifest until the final release asset URL and SHA256 are available.
-4. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
-   A helper script can populate the versioned winget folder and the Scoop draft manifest from the final release metadata:
+4. Generate the versioned winget folder and Scoop draft manifest from the final release metadata:
    ```powershell
    .\Packaging\Prepare-PackageManifests.ps1 -Version X.Y.Z -ReleaseDate YYYY-MM-DD -InstallerSha256 <SHA256>
    ```
-5. Validate the manifest locally:
+5. Validate the package metadata against the release checksum manifest:
+   ```powershell
+   .\Packaging\Test-PackageManifests.ps1 -Version X.Y.Z -HashManifestPath path\to\UniversalDeviceToolkit_vX.Y.Z_SHA256.txt
+   ```
+6. Validate the winget schema locally:
    ```powershell
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    ```
-6. Test install and uninstall from the manifest on a clean Windows machine:
+7. Test install and uninstall from the manifest on a clean Windows machine:
    ```powershell
    winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget uninstall SSC-STUDIO.LenovoLegionToolkit
    ```
-7. Submit the manifest folder to `microsoft/winget-pkgs`.
+8. Submit the manifest folder to `microsoft/winget-pkgs`.
 
 ## Notes
 

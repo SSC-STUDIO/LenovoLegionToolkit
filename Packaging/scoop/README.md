@@ -25,14 +25,18 @@ This repo may also contain a versioned draft manifest such as `lenovolegiontoolk
    ```powershell
    .\Packaging\Prepare-PackageManifests.ps1 -Version X.Y.Z -ReleaseDate YYYY-MM-DD -InstallerSha256 <SHA256> -UpdatePublishedScoopManifest
    ```
-4. Validate locally with Scoop on a clean machine:
+4. Validate the repo copy against the release checksum manifest:
+   ```powershell
+   .\Packaging\Test-PackageManifests.ps1 -Version X.Y.Z -HashManifestPath path\to\UniversalDeviceToolkit_vX.Y.Z_SHA256.txt
+   ```
+5. Validate locally with Scoop on a clean machine:
    ```powershell
    scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
    scoop install ssc-studio/lenovolegiontoolkit
    scoop update ssc-studio/lenovolegiontoolkit
    scoop uninstall lenovolegiontoolkit
    ```
-5. Push the manifest update to `SSC-STUDIO/scoop-bucket`.
+6. Push the manifest update to `SSC-STUDIO/scoop-bucket`.
 
 ## Notes
 

@@ -8,6 +8,10 @@ param(
 
     [string]$ExpectedInstallerSha256,
 
+    [string]$ExpectedPackageIdentifier = 'SSC-STUDIO.LenovoLegionToolkit',
+
+    [string]$ExpectedPackageName = 'Universal Device Toolkit',
+
     [string]$ExpectedPublisher = 'SSC-STUDIO',
 
     [string]$InstallerScriptPath = 'MakeInstaller.iss',
@@ -125,8 +129,12 @@ if ([string]::IsNullOrWhiteSpace($WingetManifestDirectory)) {
 }
 
 $resolvedWingetDirectory = Resolve-RepositoryPath $WingetManifestDirectory
+$wingetVersionManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
 $wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
 $wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+if (-not (Test-Path -LiteralPath $wingetVersionManifestPath)) {
+    throw "winget version manifest not found at '$wingetVersionManifestPath'."
+}
 if (-not (Test-Path -LiteralPath $wingetLocaleManifestPath)) {
     throw "winget locale manifest not found at '$wingetLocaleManifestPath'."
 }
@@ -136,12 +144,23 @@ if (-not (Test-Path -LiteralPath $wingetInstallerManifestPath)) {
 
 $resolvedInstallerScriptPath = Resolve-RepositoryPath $InstallerScriptPath
 $installerPublisher = Get-InnoDefine -ScriptPath $resolvedInstallerScriptPath -Name 'MyAppPublisher'
+$wingetVersionLines = Get-Content -LiteralPath $wingetVersionManifestPath
 $wingetLocaleLines = Get-Content -LiteralPath $wingetLocaleManifestPath
+
 Assert-Equal 'installer AppPublisher' $installerPublisher $ExpectedPublisher
+Assert-Equal 'winget version PackageIdentifier' (Read-YamlScalar -Lines $wingetVersionLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
+Assert-Equal 'winget version PackageVersion' (Read-YamlScalar -Lines $wingetVersionLines -Key 'PackageVersion') $Version
+Assert-Equal 'winget version DefaultLocale' (Read-YamlScalar -Lines $wingetVersionLines -Key 'DefaultLocale') 'en-US'
+Assert-Equal 'winget version ManifestType' (Read-YamlScalar -Lines $wingetVersionLines -Key 'ManifestType') 'version'
+Assert-Equal 'winget locale PackageIdentifier' (Read-YamlScalar -Lines $wingetLocaleLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
+Assert-Equal 'winget locale PackageVersion' (Read-YamlScalar -Lines $wingetLocaleLines -Key 'PackageVersion') $Version
 Assert-Equal 'winget Publisher' (Read-YamlScalar -Lines $wingetLocaleLines -Key 'Publisher') $ExpectedPublisher
+Assert-Equal 'winget PackageName' (Read-YamlScalar -Lines $wingetLocaleLines -Key 'PackageName') $ExpectedPackageName
 
 $wingetLines = Get-Content -LiteralPath $wingetInstallerManifestPath
+Assert-Equal 'winget installer PackageIdentifier' (Read-YamlScalar -Lines $wingetLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
 Assert-Equal 'winget PackageVersion' (Read-YamlScalar -Lines $wingetLines -Key 'PackageVersion') $Version
+Assert-Equal 'winget InstallerType' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerType') 'inno'
 Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'machine'
 Assert-Equal 'winget InstallerUrl' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerUrl') $expectedInstallerUrl
 Assert-Equal 'winget InstallerSha256' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerSha256').ToUpperInvariant() $expectedInstallerSha256Upper
@@ -152,8 +171,14 @@ if ($ScoopManifestPaths.Count -eq 0) {
         "Packaging\scoop\lenovolegiontoolkit.$Version.draft.json"
     )
 
-    $ScoopManifestPaths = $defaultScoopPaths |
-        Where-Object { Test-Path -LiteralPath (Resolve-RepositoryPath $_) }
+    $ScoopManifestPaths = @(
+        $defaultScoopPaths |
+            Where-Object { Test-Path -LiteralPath (Resolve-RepositoryPath $_) }
+    )
+}
+
+if ($ScoopManifestPaths.Count -eq 0) {
+    throw 'No Scoop manifests were provided or found for validation.'
 }
 
 foreach ($scoopManifestPath in $ScoopManifestPaths) {

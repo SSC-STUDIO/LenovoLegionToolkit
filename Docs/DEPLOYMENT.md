@@ -358,10 +358,14 @@ Before submitting a new version:
 
 1. Publish a stable GitHub Release with Full and Online assets (`UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, portable ZIPs as needed), the compatibility alias `LenovoLegionToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
 2. Do not draft a new version manifest until the release asset URL and installer SHA256 are final.
-3. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
-4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.
-5. Validate locally on Windows:
+3. Generate the versioned winget folder and Scoop draft from the final release metadata:
    ```powershell
+   .\Packaging\Prepare-PackageManifests.ps1 -Version X.Y.Z -ReleaseDate YYYY-MM-DD -InstallerSha256 <SHA256>
+   ```
+4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.
+5. Validate the package metadata against the release checksum manifest, then validate locally on Windows:
+   ```powershell
+   .\Packaging\Test-PackageManifests.ps1 -Version X.Y.Z -HashManifestPath path\to\UniversalDeviceToolkit_vX.Y.Z_SHA256.txt
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget uninstall SSC-STUDIO.LenovoLegionToolkit
@@ -379,14 +383,18 @@ Before submitting a new version:
 1. Publish a stable GitHub Release with the final installer and checksum file.
 2. Do not draft or submit a Scoop manifest update until the installer URL and SHA256 are final.
 3. Update the `lenovolegiontoolkit` manifest in `SSC-STUDIO/scoop-bucket` with the new version, URL, and hash. Do not rename the manifest during the Universal Device Toolkit transition.
-4. Validate on a clean machine:
+4. Validate the repo copy against the release checksum manifest:
+   ```powershell
+   .\Packaging\Test-PackageManifests.ps1 -Version X.Y.Z -HashManifestPath path\to\UniversalDeviceToolkit_vX.Y.Z_SHA256.txt
+   ```
+5. Validate on a clean machine:
    ```powershell
    scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
    scoop install ssc-studio/lenovolegiontoolkit
    scoop update ssc-studio/lenovolegiontoolkit
    scoop uninstall lenovolegiontoolkit
    ```
-5. Push the manifest update to `SSC-STUDIO/scoop-bucket`.
+6. Push the manifest update to `SSC-STUDIO/scoop-bucket`.
 
 ### High-Traffic Release Readiness
 
