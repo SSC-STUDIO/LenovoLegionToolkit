@@ -15,7 +15,7 @@ public class BatteryDischargeRateMonitorService : IDisposable
 
     public Task StartStopIfNeededAsync()
     {
-        if (!Battery.TestBatterySupport())
+        if (!Battery.IsBatteryMonitoringSupported())
             return Task.CompletedTask;
 
         CancellationTokenSource? newCts = null;

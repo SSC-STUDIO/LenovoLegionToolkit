@@ -17,24 +17,23 @@ public static class Battery
     private static int _minDischargeRate = int.MaxValue;
     private static int _maxDischargeRate = 0;
 
-    // Public method to test battery operations safely
-    public static bool TestBatterySupport()
+    public static bool IsBatteryMonitoringSupported()
     {
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Testing battery support...");
+                Log.Instance.Trace($"Checking battery monitoring support...");
 
             var batteryTag = GetBatteryTag();
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery support test successful, tag: {batteryTag}");
+                Log.Instance.Trace($"Battery monitoring support detected, tag: {batteryTag}");
             
             return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery support test failed: {ex.Message}");
+                Log.Instance.Trace($"Battery monitoring is not supported: {ex.Message}");
             return false;
         }
     }
