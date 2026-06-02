@@ -173,14 +173,9 @@ static class ProgramEntry
         if (originalStepper is null)
             return Fail($"Active preset does not contain configurable value for {capabilityId}.");
 
-        var targetValue = ClampToStepper(originalStepper.Value, originalStepper.Value.Value + delta);
-        if (targetValue == originalStepper.Value.Value)
-        {
-            if (GetAlternateStepperValue(originalStepper.Value) is not { } alternateValue)
-                return Fail($"Could not compute a measurable alternate value for {capabilityId}.");
-
-            targetValue = alternateValue;
-        }
+        var beforeHardwareValue = await ReadCapabilityValueAsync(capabilityId).ConfigureAwait(false);
+        if (GetMeasurableStepperValue(originalStepper.Value, delta, beforeHardwareValue) is not { } targetValue)
+            return Fail($"Could not compute a measurable alternate value for {capabilityId}. Current hardware value is {beforeHardwareValue}.");
 
         var updatedPreset = SetCapabilityStepper(activePreset, capabilityId, originalStepper.Value.WithValue(targetValue));
 
@@ -194,7 +189,6 @@ static class ProgramEntry
             Presets = presets.AsReadOnlyDictionary()
         };
 
-        var beforeHardwareValue = await ReadCapabilityValueAsync(capabilityId).ConfigureAwait(false);
         var verificationPassed = false;
 
         try
@@ -241,6 +235,8 @@ static class ProgramEntry
             if (originalPowerMode == (int)PowerModeState.GodMode)
                 await controller.ApplyStateAsync().ConfigureAwait(false);
 
+            await WriteCapabilityValueAsync(capabilityId, beforeHardwareValue).ConfigureAwait(false);
+
             var restoredState = await controller.GetStateAsync().ConfigureAwait(false);
             var restoredPreset = restoredState.Presets[restoredState.ActivePresetId];
             var restoredStepper = GetCapabilityStepper(restoredPreset, capabilityId);
@@ -282,11 +278,11 @@ static class ProgramEntry
             if (originalStepper is null)
                 return Fail($"Active preset does not contain configurable value for {capabilityId}.");
 
-            var targetValue = GetAlternateStepperValue(originalStepper.Value);
-            if (targetValue is null)
-                return Fail($"Could not compute an alternate verification value for {capabilityId}.");
-
             var beforeHardwareValue = await ReadCapabilityValueAsync(capabilityId).ConfigureAwait(false);
+            var targetValue = GetAlternateStepperValue(originalStepper.Value, beforeHardwareValue);
+            if (targetValue is null)
+                return Fail($"Could not compute an alternate verification value for {capabilityId}. Current hardware value is {beforeHardwareValue}.");
+
             plans.Add(new BatchVerificationPlan(capabilityId, originalStepper.Value, targetValue.Value, beforeHardwareValue));
             updatedPreset = SetCapabilityStepper(updatedPreset, capabilityId, originalStepper.Value.WithValue(targetValue.Value));
         }
@@ -373,6 +369,9 @@ static class ProgramEntry
 
             if (originalPowerMode == (int)PowerModeState.GodMode)
                 await controller.ApplyStateAsync().ConfigureAwait(false);
+
+            foreach (var plan in plans)
+                await WriteCapabilityValueAsync(plan.CapabilityId, plan.BeforeHardwareValue).ConfigureAwait(false);
 
             var restoredState = await controller.GetStateAsync().ConfigureAwait(false);
             var restoredPreset = restoredState.Presets[restoredState.ActivePresetId];
@@ -558,37 +557,37 @@ static class ProgramEntry
         return capabilities;
     }
 
-    private static int? GetAlternateStepperValue(StepperValue value)
+    private static int? GetMeasurableStepperValue(StepperValue value, int delta, int beforeHardwareValue)
+    {
+        var requestedTarget = ClampToStepper(value, value.Value + delta);
+        if (requestedTarget != value.Value && requestedTarget != beforeHardwareValue)
+            return requestedTarget;
+
+        return GetAlternateStepperValue(value, beforeHardwareValue);
+    }
+
+    private static int? GetAlternateStepperValue(StepperValue value, int? excludedHardwareValue = null)
+    {
+        return EnumerateStepperValues(value)
+            .Where(candidate => candidate != value.Value)
+            .Where(candidate => !excludedHardwareValue.HasValue || candidate != excludedHardwareValue.Value)
+            .OrderBy(candidate => Math.Abs(candidate - value.Value))
+            .ThenBy(candidate => candidate)
+            .Cast<int?>()
+            .FirstOrDefault();
+    }
+
+    private static IEnumerable<int> EnumerateStepperValues(StepperValue value)
     {
         if (value.Steps.Length > 0)
-        {
-            return value.Steps
-                .Distinct()
-                .Where(step => step != value.Value)
-                .OrderBy(step => Math.Abs(step - value.Value))
-                .ThenBy(step => step)
-                .Cast<int?>()
-                .FirstOrDefault();
-        }
+            return value.Steps.Distinct();
 
-        if (value.Step > 0)
-        {
-            if (value.Value + value.Step <= value.Max)
-                return value.Value + value.Step;
+        var step = value.Step > 0 ? value.Step : 1;
+        var values = new List<int>();
+        for (var candidate = value.Min; candidate <= value.Max; candidate += step)
+            values.Add(candidate);
 
-            if (value.Value - value.Step >= value.Min)
-                return value.Value - value.Step;
-        }
-        else
-        {
-            if (value.Value < value.Max)
-                return value.Value + 1;
-
-            if (value.Value > value.Min)
-                return value.Value - 1;
-        }
-
-        return null;
+        return values;
     }
 
     private static int ClampToStepper(StepperValue value, int targetValue)
