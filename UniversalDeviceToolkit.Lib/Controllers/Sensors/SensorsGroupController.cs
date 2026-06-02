@@ -79,6 +79,7 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] CPU_CORE_POWER_SENSOR_PREFERENCES =
     [
+        "IA Cores",
         "CPU Cores",
         "CPU Core",
         "Core Power",
@@ -94,6 +95,8 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] CPU_PLATFORM_POWER_SENSOR_PREFERENCES =
     [
         "CPU Platform",
+        "CPU Graphics",
+        "GT Cores",
         "CPU SoC",
         "SoC",
         "SOC",
@@ -1396,6 +1399,8 @@ public class SensorsGroupController : IDisposable
     }
 
     private static bool IsLikelyCpuCorePowerSensorName(string sensorName) =>
+        !sensorName.Contains("GT", StringComparison.OrdinalIgnoreCase) &&
+        !sensorName.Contains("Graphics", StringComparison.OrdinalIgnoreCase) &&
         CPU_CORE_POWER_SENSOR_PREFERENCES.Any(keyword =>
             sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
 

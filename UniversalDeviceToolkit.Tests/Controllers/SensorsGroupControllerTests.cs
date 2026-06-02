@@ -473,9 +473,12 @@ public class SensorsGroupControllerTests
     {
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("IA Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Graphics").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
     }
@@ -524,5 +527,33 @@ public class SensorsGroupControllerTests
         result.cores.Should().Be(24f);
         result.memory.Should().Be(3f);
         result.platform.Should().Be(6f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapIntelRaplAliases()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("IA Cores", 28f),
+            ("CPU Graphics", 4f),
+            ("DRAM", 2f)
+        ]);
+
+        result.cores.Should().Be(28f);
+        result.memory.Should().Be(2f);
+        result.platform.Should().Be(4f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapIntelGtCoresAsPlatformPower()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("IA Cores", 24f),
+            ("GT Cores", 3.5f)
+        ]);
+
+        result.cores.Should().Be(24f);
+        result.platform.Should().Be(3.5f);
     }
 }
