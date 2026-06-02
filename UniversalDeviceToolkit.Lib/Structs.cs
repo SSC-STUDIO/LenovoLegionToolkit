@@ -49,41 +49,6 @@ public readonly struct BatteryInformation(
     public DateTime? ManufactureDate { get; } = manufactureDate;
     public DateTime? FirstUseDate { get; } = firstUseDate;
     public string? ModelName { get; } = modelName;
-    
-    // 平均温度 (新增)
-    public double? AvgTemperatureC { get; }
-    
-    public BatteryInformation WithAvgTemp(double? avgTemp)
-    {
-         return new BatteryInformation(
-             IsCharging, BatteryPercentage, BatteryLifeRemaining, FullBatteryLifeRemaining,
-             DischargeRate, MinDischargeRate, MaxDischargeRate,
-             EstimateChargeRemaining, DesignCapacity, FullChargeCapacity,
-             CycleCount, IsLowBattery, BatteryTemperatureC,
-             ManufactureDate, FirstUseDate, ModelName, avgTemp);
-    }
-    
-    private BatteryInformation(
-    bool isCharging,
-    int batteryPercentage,
-    int batteryLifeRemaining,
-    int fullBatteryLifeRemaining,
-    int dischargeRate,
-    int minDischargeRate,
-    int maxDischargeRate,
-    int estimateChargeRemaining,
-    int designCapacity,
-    int fullChargeCapacity,
-    int cycleCount,
-    bool isLowBattery,
-    double? temperatureC,
-    DateTime? manufactureDate,
-    DateTime? firstUseDate,
-    string? modelName,
-    double? avgTemperatureC) : this(isCharging, batteryPercentage, batteryLifeRemaining, fullBatteryLifeRemaining, dischargeRate, minDischargeRate, maxDischargeRate, estimateChargeRemaining, designCapacity, fullChargeCapacity, cycleCount, isLowBattery, temperatureC, manufactureDate, firstUseDate, modelName)
-    {
-        AvgTemperatureC = avgTemperatureC;
-    }
 
     public double BatteryHealth =>
         DesignCapacity > 0
