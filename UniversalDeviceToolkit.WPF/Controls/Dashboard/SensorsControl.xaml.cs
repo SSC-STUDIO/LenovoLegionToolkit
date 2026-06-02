@@ -587,16 +587,6 @@ public partial class SensorsControl
             _sessionSensorData = null;
     }
 
-    internal static SensorsData? ReplaceSessionSensorDataForTests(SensorsData? data)
-    {
-        lock (SessionSensorDataLock)
-        {
-            var previous = _sessionSensorData;
-            _sessionSensorData = data;
-            return previous;
-        }
-    }
-
     private void QueueExtendedDetailValuesRefresh()
     {
         if (!_detailsExpanded || !_sensorRuntimeAvailable || _sensorsGroupController is null)

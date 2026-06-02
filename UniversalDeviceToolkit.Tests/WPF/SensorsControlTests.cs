@@ -4,6 +4,7 @@ using LenovoLegionToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
+using System.Reflection;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -311,7 +312,7 @@ public class SensorsControlTests
     [Fact]
     public void CacheSessionSensorDataForDisplay_ShouldKeepPartialUsefulSnapshotAndIgnoreEmptySnapshot()
     {
-        var original = SensorsControl.ReplaceSessionSensorDataForTests(null);
+        var original = ReplaceSessionSensorData(null);
         try
         {
             var partial = new SensorsData(
@@ -338,7 +339,26 @@ public class SensorsControlTests
         }
         finally
         {
-            SensorsControl.ReplaceSessionSensorDataForTests(original);
+            ReplaceSessionSensorData(original);
+        }
+    }
+
+    private static SensorsData? ReplaceSessionSensorData(SensorsData? data)
+    {
+        var lockField = typeof(SensorsControl).GetField("SessionSensorDataLock", BindingFlags.NonPublic | BindingFlags.Static);
+        var dataField = typeof(SensorsControl).GetField("_sessionSensorData", BindingFlags.NonPublic | BindingFlags.Static);
+
+        lockField.Should().NotBeNull();
+        dataField.Should().NotBeNull();
+
+        var syncRoot = lockField!.GetValue(null);
+        syncRoot.Should().NotBeNull();
+
+        lock (syncRoot!)
+        {
+            var previous = dataField!.GetValue(null) as SensorsData?;
+            dataField.SetValue(null, data);
+            return previous;
         }
     }
 
