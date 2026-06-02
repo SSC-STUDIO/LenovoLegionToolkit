@@ -27,7 +27,7 @@ public class DashboardSettings() : AbstractSettings<DashboardSettings.DashboardS
     {
         var normalized = store ?? new DashboardSettingsStore();
 
-        normalized.Groups ??= DashboardGroup.DefaultGroups;
+        normalized.Groups = NormalizeGroups(normalized.Groups);
 
         var isLegacySchema = normalized.SchemaVersion < 3;
         if (isLegacySchema)
@@ -89,5 +89,24 @@ public class DashboardSettings() : AbstractSettings<DashboardSettings.DashboardS
 
         normalized.SchemaVersion = CurrentSchemaVersion;
         return normalized;
+    }
+
+    private static DashboardGroup[] NormalizeGroups(DashboardGroup[]? groups)
+    {
+        if (groups is null)
+            return DashboardGroup.DefaultGroups;
+
+        return groups
+            .Where(group => global::System.Enum.IsDefined(group.Type))
+            .Select(group =>
+            {
+                var items = (group.Items ?? [])
+                    .Where(global::System.Enum.IsDefined)
+                    .Distinct()
+                    .ToArray();
+
+                return new DashboardGroup(group.Type, group.CustomName, items);
+            })
+            .ToArray();
     }
 }

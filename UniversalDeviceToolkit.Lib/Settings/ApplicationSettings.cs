@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -97,7 +98,52 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         if (store is null)
             return Default;
 
+        return Normalize(store);
+    }
+
+    public override async Task<ApplicationSettingsStore?> LoadStoreAsync()
+    {
+        var store = await base.LoadStoreAsync().ConfigureAwait(false);
+
+        if (store is null)
+            return Default;
+
+        return Normalize(store);
+    }
+
+    private static ApplicationSettingsStore Normalize(ApplicationSettingsStore store)
+    {
+        store.PowerPlans ??= [];
+        store.PowerModes ??= [];
+        store.Notifications ??= new();
+        store.ExcludedRefreshRates ??= [];
+        store.SmartKeySinglePressActionList ??= [];
+        store.SmartKeyDoublePressActionList ??= [];
+        store.ExcludedProcesses ??= [];
+        store.CustomCleanupRules = NormalizeCleanupRules(store.CustomCleanupRules);
+        store.InstalledExtensions ??= [];
+        store.PendingDeletionExtensions ??= [];
+        store.NavigationItemsVisibility ??= new ApplicationSettingsStore().NavigationItemsVisibility;
         return store;
+    }
+
+    private static List<CustomCleanupRule> NormalizeCleanupRules(List<CustomCleanupRule>? rules)
+    {
+        if (rules is null)
+            return [];
+
+        var normalized = new List<CustomCleanupRule>();
+        foreach (var rule in rules)
+        {
+            if (rule is null)
+                continue;
+
+            rule.DirectoryPath ??= string.Empty;
+            rule.Extensions ??= [];
+            normalized.Add(rule);
+        }
+
+        return normalized;
     }
 }
 

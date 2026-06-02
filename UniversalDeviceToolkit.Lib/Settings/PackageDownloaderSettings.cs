@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 
@@ -10,5 +11,19 @@ public class PackageDownloaderSettings()
         public string? DownloadPath { get; set; }
         public bool OnlyShowUpdates { get; set; }
         public HashSet<string> HiddenPackages { get; set; } = [];
+    }
+
+    public override PackageDownloaderSettingsStore? LoadStore() => Normalize(base.LoadStore());
+
+    public override async Task<PackageDownloaderSettingsStore?> LoadStoreAsync() =>
+        Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
+
+    private static PackageDownloaderSettingsStore? Normalize(PackageDownloaderSettingsStore? store)
+    {
+        if (store is null)
+            return null;
+
+        store.HiddenPackages ??= [];
+        return store;
     }
 }

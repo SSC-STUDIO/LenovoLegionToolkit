@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Settings;
@@ -38,5 +39,30 @@ public class OsdSettings() : AbstractSettings<OsdSettings.OsdSettingsStore>("osd
         public string WarningColor { get; set; } = "#FFFF00";
         public string CriticalColor { get; set; } = "#FF0000";
         public int SnapThreshold { get; set; } = 20;
+    }
+
+    public override OsdSettingsStore? LoadStore() => Normalize(base.LoadStore());
+
+    public override async Task<OsdSettingsStore?> LoadStoreAsync() =>
+        Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
+
+    private static OsdSettingsStore? Normalize(OsdSettingsStore? store)
+    {
+        if (store is null)
+            return null;
+
+        store.Items = NormalizeItems(store.Items);
+        return store;
+    }
+
+    private static List<OsdItem> NormalizeItems(List<OsdItem>? items)
+    {
+        if (items is null)
+            return Enum.GetValues<OsdItem>().ToList();
+
+        return items
+            .Where(Enum.IsDefined)
+            .Distinct()
+            .ToList();
     }
 }

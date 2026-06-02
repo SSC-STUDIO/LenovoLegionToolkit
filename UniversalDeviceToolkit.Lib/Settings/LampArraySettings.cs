@@ -72,7 +72,34 @@ public class LampArraySettings : AbstractSettings<LampArraySettings.LampArraySet
         if (store is null)
             return null;
 
-        store.PerLampEffects ??= [];
+        NormalizeEffectConfig(store.DefaultEffect);
+        store.PerLampEffects = NormalizePerLampEffects(store.PerLampEffects);
         return store;
+    }
+
+    private static Dictionary<int, LampEffectConfig> NormalizePerLampEffects(Dictionary<int, LampEffectConfig>? effects)
+    {
+        if (effects is null)
+            return [];
+
+        var normalized = new Dictionary<int, LampEffectConfig>();
+        foreach (var (lampIndex, effect) in effects)
+        {
+            if (effect is null)
+                continue;
+
+            NormalizeEffectConfig(effect);
+            normalized[lampIndex] = effect;
+        }
+
+        return normalized;
+    }
+
+    private static void NormalizeEffectConfig(LampEffectConfig? effect)
+    {
+        if (effect is null)
+            return;
+
+        effect.Parameters ??= [];
     }
 }

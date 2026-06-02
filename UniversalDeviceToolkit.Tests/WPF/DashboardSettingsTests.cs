@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using FluentAssertions;
+using LenovoLegionToolkit.Lib.Serialization;
 using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.WPF.Settings;
 using Xunit;
@@ -75,6 +77,57 @@ public class DashboardSettingsTests
         };
 
         var normalized = Normalize(store);
+
+        normalized.Groups.Should().NotBeNull();
+        normalized.Groups!.SelectMany(group => group.Items).Should().Contain(DashboardItem.PowerMode);
+        normalized.Groups.SelectMany(group => group.Items).Should().Contain(DashboardItem.ItsMode);
+    }
+
+    [Fact]
+    public void Normalize_WhenGroupItemsAreNull_ShouldRepairDashboard()
+    {
+        var store = new DashboardSettings.DashboardSettingsStore
+        {
+            SchemaVersion = 4,
+            ShowSensors = true,
+            SensorsRefreshIntervalSeconds = 1,
+            Groups =
+            [
+                new DashboardGroup(DashboardGroupType.Power, null, null!),
+                new DashboardGroup(DashboardGroupType.Custom, "Empty", null!)
+            ]
+        };
+
+        var normalized = Normalize(store);
+
+        normalized.Groups.Should().NotBeNull();
+        normalized.Groups!.Should().OnlyContain(group => group.Items != null);
+        normalized.Groups.SelectMany(group => group.Items).Should().Contain(DashboardItem.PowerMode);
+        normalized.Groups.SelectMany(group => group.Items).Should().Contain(DashboardItem.ItsMode);
+    }
+
+    [Fact]
+    public void Normalize_WhenDeserializedDashboardJsonHasNullItems_ShouldNotThrow()
+    {
+        var store = JsonSerializer.Deserialize<DashboardSettings.DashboardSettingsStore>(
+            """
+            {
+              "SchemaVersion": 4,
+              "ShowSensors": true,
+              "SensorsRefreshIntervalSeconds": 1,
+              "Groups": [
+                {
+                  "Type": "Power",
+                  "CustomName": null,
+                  "Items": null
+                }
+              ]
+            }
+            """,
+            LltJson.CreateSettingsOptions());
+
+        store.Should().NotBeNull();
+        var normalized = Normalize(store!);
 
         normalized.Groups.Should().NotBeNull();
         normalized.Groups!.SelectMany(group => group.Items).Should().Contain(DashboardItem.PowerMode);

@@ -1,6 +1,7 @@
 using LenovoLegionToolkit.Lib.Settings;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.WPF.Settings;
 
@@ -21,6 +22,11 @@ public class PluginSettings : AbstractSettings<PluginSettings.PluginSettingsStor
         /// </summary>
         public Dictionary<string, string> PluginLanguages { get; set; } = new();
     }
+
+    public override PluginSettingsStore? LoadStore() => Normalize(base.LoadStore());
+
+    public override async Task<PluginSettingsStore?> LoadStoreAsync() =>
+        Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
 
     /// <summary>
     /// Get the culture for a specific plugin
@@ -57,5 +63,14 @@ public class PluginSettings : AbstractSettings<PluginSettings.PluginSettingsStor
             Store.PluginLanguages[pluginId] = cultureInfo.Name;
         }
         SynchronizeStore();
+    }
+
+    private static PluginSettingsStore? Normalize(PluginSettingsStore? store)
+    {
+        if (store is null)
+            return null;
+
+        store.PluginLanguages ??= new();
+        return store;
     }
 }

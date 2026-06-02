@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib;
 
 namespace LenovoLegionToolkit.Lib.Settings;
@@ -39,4 +41,45 @@ public class GodModeSettings() : AbstractSettings<GodModeSettings.GodModeSetting
     }
 
     // ReSharper disable once StringLiteralTypo
+
+    public override GodModeSettingsStore? LoadStore() => Normalize(base.LoadStore());
+
+    public override async Task<GodModeSettingsStore?> LoadStoreAsync() =>
+        Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
+
+    private static GodModeSettingsStore? Normalize(GodModeSettingsStore? store)
+    {
+        if (store is null)
+            return null;
+
+        store.Presets = store.Presets?
+            .Where(kv => kv.Value is not null)
+            .ToDictionary(kv => kv.Key, kv => NormalizePreset(kv.Value))
+            ?? [];
+        return store;
+    }
+
+    private static GodModeSettingsStore.Preset NormalizePreset(GodModeSettingsStore.Preset preset) => new()
+    {
+        Name = preset.Name ?? string.Empty,
+        PowerPlanGuid = preset.PowerPlanGuid,
+        PowerMode = preset.PowerMode,
+        SourcePowerMode = preset.SourcePowerMode,
+        CPULongTermPowerLimit = preset.CPULongTermPowerLimit,
+        CPUShortTermPowerLimit = preset.CPUShortTermPowerLimit,
+        CPUPeakPowerLimit = preset.CPUPeakPowerLimit,
+        CPUCrossLoadingPowerLimit = preset.CPUCrossLoadingPowerLimit,
+        CPUPL1Tau = preset.CPUPL1Tau,
+        APUsPPTPowerLimit = preset.APUsPPTPowerLimit,
+        CPUTemperatureLimit = preset.CPUTemperatureLimit,
+        GPUPowerBoost = preset.GPUPowerBoost,
+        GPUConfigurableTGP = preset.GPUConfigurableTGP,
+        GPUTemperatureLimit = preset.GPUTemperatureLimit,
+        GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline = preset.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline,
+        GPUToCPUDynamicBoost = preset.GPUToCPUDynamicBoost,
+        FanTable = preset.FanTable,
+        FanFullSpeed = preset.FanFullSpeed,
+        MinValueOffset = preset.MinValueOffset,
+        MaxValueOffset = preset.MaxValueOffset,
+    };
 }
