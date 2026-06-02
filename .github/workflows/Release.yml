@@ -78,8 +78,8 @@ jobs:
     - name: Restore solution
       run: dotnet restore UniversalDeviceToolkit.sln
 
-    - name: Build solution
-      run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
+    - name: Build release test project
+      run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
 
     - name: Test solution
       run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage"
