@@ -3,11 +3,16 @@ param(
     [string]$PayloadPath
 )
 
+$ErrorActionPreference = 'Stop'
+
 $resolvedPath = Resolve-Path -LiteralPath $PayloadPath -ErrorAction SilentlyContinue
 if (-not $resolvedPath) {
     Write-Error "Shipping payload directory not found: $PayloadPath"
     exit 1
 }
+
+$pathTrimChars = [char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+$payloadRoot = $resolvedPath.Path.TrimEnd($pathTrimChars)
 
 $forbiddenExactNames = @(
     'SpectrumTester.exe',
@@ -31,10 +36,45 @@ $forbiddenNamePrefixes = @(
     'xunit.'
 )
 
+$forbiddenPathSegments = @(
+    'Tools',
+    'Tests'
+)
+
+$forbiddenNamePatterns = @(
+    '*.Tests.*',
+    '*.Smoke.*',
+    '*Validation*',
+    '*TestHost*'
+)
+
 $violations = @()
 $files = Get-ChildItem -LiteralPath $resolvedPath.Path -Recurse -File -ErrorAction Stop
 foreach ($file in $files) {
     $isForbidden = $false
+
+    $relativePath = $file.FullName
+    if ($relativePath.StartsWith($payloadRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        $relativePath = $relativePath.Substring($payloadRoot.Length).TrimStart($pathTrimChars)
+    }
+
+    $pathSegments = $relativePath -split '[\\/]'
+    foreach ($segment in $pathSegments) {
+        foreach ($forbiddenSegment in $forbiddenPathSegments) {
+            if ([string]::Equals($segment, $forbiddenSegment, [StringComparison]::OrdinalIgnoreCase)) {
+                $isForbidden = $true
+                break
+            }
+        }
+
+        if ($isForbidden) { break }
+    }
+
+    if ($isForbidden) {
+        $violations += $file
+        continue
+    }
+
     foreach ($forbiddenName in $forbiddenExactNames) {
         if ([string]::Equals($file.Name, $forbiddenName, [StringComparison]::OrdinalIgnoreCase)) {
             $isForbidden = $true
@@ -49,6 +89,18 @@ foreach ($file in $files) {
 
     foreach ($prefix in $forbiddenNamePrefixes) {
         if ($file.Name.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
+            $isForbidden = $true
+            $violations += $file
+            break
+        }
+    }
+
+    if ($isForbidden) {
+        continue
+    }
+
+    foreach ($pattern in $forbiddenNamePatterns) {
+        if ($file.Name -like $pattern) {
             $violations += $file
             break
         }
@@ -56,9 +108,9 @@ foreach ($file in $files) {
 }
 
 if ($violations.Count -gt 0) {
-    Write-Error "Shipping payload contains test or validation tool artifacts:"
+    [Console]::Error.WriteLine("Shipping payload contains test or validation tool artifacts:")
     foreach ($violation in $violations | Sort-Object FullName) {
-        Write-Error " - $($violation.FullName)"
+        [Console]::Error.WriteLine(" - $($violation.FullName)")
     }
 
     exit 1
