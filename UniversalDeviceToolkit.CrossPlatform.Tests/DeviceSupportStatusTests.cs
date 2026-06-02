@@ -32,6 +32,37 @@ public sealed class DeviceSupportStatusTests
         support.EnabledFeatures.Should().Contain("read-only-telemetry");
     }
 
+    [Theory]
+    [InlineData("TIMI", "Redmi G Pro 2024", "xiaomi-basic")]
+    [InlineData("realme", "realme Book Prime", "realme-basic")]
+    [InlineData("Infinix Mobility Limited", "INBook X2", "infinix-basic")]
+    [InlineData("Gateway", "Gateway 14.1 Ultra Slim", "gateway-basic")]
+    [InlineData("CHUWI", "CoreBook X", "chuwi-basic")]
+    [InlineData("TECLAST", "F15 Plus", "teclast-basic")]
+    [InlineData("Jumper", "EZbook X3", "jumper-basic")]
+    [InlineData("Mechanical Revolution", "Kuangshi 16 Super", "mechrevo-basic")]
+    [InlineData("Hasee", "ZhanShen Z8", "hasee-basic")]
+    [InlineData("THUNDEROBOT", "911 Zero", "thunderobot-basic")]
+    [InlineData("MACHENIKE", "F117", "machenike-basic")]
+    [InlineData("COLORFUL", "Evol X15", "colorful-basic")]
+    [InlineData("MAIBENBEN", "MaiBook X", "maibenben-basic")]
+    [InlineData("Valve Corporation", "Steam Deck", "valve-handheld-basic")]
+    [InlineData("GPD", "GPD WIN 4", "gpd-handheld-basic")]
+    [InlineData("AYANEO", "AYANEO NEXT", "ayaneo-handheld-basic")]
+    [InlineData("ONEXPLAYER", "OneXPlayer 2 Pro", "one-netbook-handheld-basic")]
+    [InlineData("AZW", "Beelink SER8", "beelink-basic")]
+    public void Evaluate_ShouldMatchExpandedBrandBasicPacks(string vendor, string model, string expectedPackId)
+    {
+        var support = _evaluator.Evaluate(
+            new HardwareIdentity(vendor, model, model, "SERIAL", "test"),
+            isWindows: false);
+
+        support.DevicePackId.Should().Be(expectedPackId);
+        support.SupportLevel.Should().Be("Safe basic mode");
+        support.EnabledFeatures.Should().Contain(["diagnostics", "hardware-identity", "read-only-telemetry"]);
+        support.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes"]);
+    }
+
     [Fact]
     public void Evaluate_ShouldMatchLenovoLegionButStayInBasicMode()
     {
