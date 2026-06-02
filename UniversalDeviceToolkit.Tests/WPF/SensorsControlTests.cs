@@ -31,6 +31,14 @@ public class SensorsControlTests
             SensorData.Empty);
 
         SensorsControl.HasSummarySensorData(data).Should().BeFalse();
+        SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
+    }
+
+    [Fact]
+    public void HasSummarySensorData_WhenNoSummaryMetricsExist_ShouldReturnFalse()
+    {
+        SensorsControl.HasSummarySensorData(SensorsData.Empty).Should().BeFalse();
+        SensorsControl.HasAnySummarySensorData(SensorsData.Empty).Should().BeFalse();
     }
 
     [Fact]
@@ -65,6 +73,7 @@ public class SensorsControlTests
                 maxFanSpeed: -1));
 
         SensorsControl.HasSummarySensorData(data).Should().BeTrue();
+        SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
     }
 
     [Fact]
@@ -226,6 +235,111 @@ public class SensorsControlTests
         var text = SensorsControl.FormatFallbackRangeText("71 °C", "55 °C ~ 82 °C");
 
         text.Should().Be("55 °C ~ 82 °C");
+    }
+
+    [Fact]
+    public void MergeSensorDataForDisplay_WhenCurrentSampleDropsMetric_ShouldKeepPreviousValue()
+    {
+        var previous = new SensorsData(
+            new SensorData(
+                utilization: 35,
+                maxUtilization: 100,
+                coreClock: 4200,
+                maxCoreClock: 5200,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 71,
+                maxTemperature: 100,
+                wattage: 58,
+                voltage: 1.127,
+                fanSpeed: 2400,
+                maxFanSpeed: 5200).WithMinMax(1.05, 1.2, 55, 82),
+            SensorData.Empty);
+        var current = new SensorsData(
+            new SensorData(
+                utilization: 40,
+                maxUtilization: 100,
+                coreClock: -1,
+                maxCoreClock: -1,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: -1,
+                maxTemperature: -1,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            SensorData.Empty);
+
+        var merged = SensorsControl.MergeSensorDataForDisplay(current, previous);
+
+        merged.CPU.Utilization.Should().Be(40);
+        merged.CPU.CoreClock.Should().Be(4200);
+        merged.CPU.Temperature.Should().Be(71);
+        merged.CPU.Wattage.Should().Be(58);
+        merged.CPU.Voltage.Should().Be(1.127);
+        merged.CPU.FanSpeed.Should().Be(2400);
+        merged.CPU.MaxCoreClock.Should().Be(5200);
+        merged.CPU.MinTemperature.Should().Be(55);
+        merged.CPU.MaxTemperatureRecord.Should().Be(82);
+    }
+
+    [Fact]
+    public void MergeSensorDataForDisplay_WhenNoPreviousSampleExists_ShouldReturnCurrentSample()
+    {
+        var current = new SensorsData(
+            new SensorData(
+                utilization: 25,
+                maxUtilization: 100,
+                coreClock: 3500,
+                maxCoreClock: -1,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 66,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            SensorData.Empty);
+
+        var merged = SensorsControl.MergeSensorDataForDisplay(current, null);
+
+        merged.Should().Be(current);
+    }
+
+    [Fact]
+    public void CacheSessionSensorDataForDisplay_ShouldKeepPartialUsefulSnapshotAndIgnoreEmptySnapshot()
+    {
+        var original = SensorsControl.ReplaceSessionSensorDataForTests(null);
+        try
+        {
+            var partial = new SensorsData(
+                new SensorData(
+                    utilization: 25,
+                    maxUtilization: 100,
+                    coreClock: -1,
+                    maxCoreClock: -1,
+                    memoryClock: -1,
+                    maxMemoryClock: -1,
+                    temperature: -1,
+                    maxTemperature: -1,
+                    wattage: -1,
+                    voltage: 0,
+                    fanSpeed: -1,
+                    maxFanSpeed: -1),
+                SensorData.Empty);
+
+            SensorsControl.CacheSessionSensorDataForDisplay(partial);
+            SensorsControl.TryGetSessionSensorDataForDisplay().Should().Be(partial);
+
+            SensorsControl.CacheSessionSensorDataForDisplay(SensorsData.Empty);
+            SensorsControl.TryGetSessionSensorDataForDisplay().Should().Be(partial);
+        }
+        finally
+        {
+            SensorsControl.ReplaceSessionSensorDataForTests(original);
+        }
     }
 
     private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");

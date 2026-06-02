@@ -2,20 +2,28 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
-public class GenericSensorsController(GPUController gpuController) : AbstractSensorsController(gpuController)
+public class GenericSensorsController(GPUController gpuController, IDelayProvider? delayProvider = null) : AbstractSensorsController(gpuController)
 {
+    private static readonly TimeSpan SupportProbeRetryDelay = TimeSpan.FromMilliseconds(250);
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
+
     protected override bool ShouldGateGpuInfoByLenovoController => false;
 
     public override async Task<bool> IsSupportedAsync()
     {
         try
         {
+            if (await CanReadGenericSnapshotAsyncCore().ConfigureAwait(false))
+                return true;
+
+            await _delayProvider.Delay(SupportProbeRetryDelay, CancellationToken.None).ConfigureAwait(false);
             return await CanReadGenericSnapshotAsyncCore().ConfigureAwait(false);
         }
         catch (Exception ex)

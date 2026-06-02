@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
@@ -274,8 +275,11 @@ public class GenericSensorsControllerTests : UnitTestBase
                 _gpuVoltage));
     }
 
-    private sealed class TestableGenericSensorsController(GPUController gpuController, Func<Task<bool>> canReadSnapshot)
-        : GenericSensorsController(gpuController)
+    private sealed class TestableGenericSensorsController(
+        GPUController gpuController,
+        Func<Task<bool>> canReadSnapshot,
+        IDelayProvider? delayProvider = null)
+        : GenericSensorsController(gpuController, delayProvider)
     {
         protected override Task<bool> CanReadGenericSnapshotAsyncCore() => canReadSnapshot();
     }
@@ -309,6 +313,27 @@ public class GenericSensorsControllerTests : UnitTestBase
         var supported = await controller.IsSupportedAsync();
 
         supported.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GenericSensorsController_IsSupportedAsync_ShouldRetryWhenFirstSnapshotHasNoData()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var delayProvider = new Mock<IDelayProvider>();
+        delayProvider
+            .Setup(provider => provider.Delay(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        var attempts = 0;
+        using var controller = new TestableGenericSensorsController(
+            gpuController,
+            () => Task.FromResult(Interlocked.Increment(ref attempts) > 1),
+            delayProvider.Object);
+
+        var supported = await controller.IsSupportedAsync();
+
+        supported.Should().BeTrue();
+        attempts.Should().Be(2);
+        delayProvider.Verify(provider => provider.Delay(TimeSpan.FromMilliseconds(250), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

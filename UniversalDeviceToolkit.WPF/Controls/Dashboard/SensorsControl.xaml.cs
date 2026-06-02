@@ -26,6 +26,8 @@ public partial class SensorsControl
     private const string MegahertzUnit = "MHz";
     private const string RpmUnit = "RPM";
     private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
+    private static readonly object SessionSensorDataLock = new();
+    private static SensorsData? _sessionSensorData;
 
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
@@ -43,7 +45,9 @@ public partial class SensorsControl
     private Task? _batteryRefreshTask;
     private readonly TaskCompletionSource _firstSensorDataTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private bool _hasRenderedSensorData;
+    private SensorsData? _lastRenderedSensorData;
     private int _extendedDetailsRefreshVersion;
+    private Task? _extendedDetailsRefreshTask;
 
     private string _cpuName = string.Empty;
     private string _gpuName = string.Empty;
@@ -54,6 +58,7 @@ public partial class SensorsControl
         InitializeContextMenu();
         ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
         SetInitialSensorPlaceholders();
+        InitializeFromSessionCache();
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
@@ -64,15 +69,18 @@ public partial class SensorsControl
     internal static bool HasSummarySensorData(SensorsData data) =>
         HasSummarySensorData(data.CPU) && HasSummarySensorData(data.GPU);
 
+    internal static bool HasAnySummarySensorData(SensorsData data) =>
+        HasSummarySensorData(data.CPU) || HasSummarySensorData(data.GPU);
+
     private async Task FetchHardwareNamesAsync()
     {
         try
         {
             if (_sensorsGroupController is not null
-                && await _sensorsGroupController.IsSupportedAsync() is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
+                && await _sensorsGroupController.IsSupportedAsync().ConfigureAwait(false) is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
             {
-                _cpuName = await _sensorsGroupController.GetCpuNameAsync();
-                _gpuName = await _sensorsGroupController.GetGpuNameAsync();
+                _cpuName = await _sensorsGroupController.GetCpuNameAsync().ConfigureAwait(false);
+                _gpuName = await _sensorsGroupController.GetGpuNameAsync().ConfigureAwait(false);
             }
 
             _cpuName = NormalizeHardwareNameOrFallback(_cpuName, T("SensorsControl_UnknownCpu", "Unknown CPU"));
@@ -139,8 +147,6 @@ public partial class SensorsControl
         if (_batteryRefreshTask is not null)
             await _batteryRefreshTask;
         _batteryRefreshTask = null;
-
-        UpdateValues(SensorsData.Empty);
     }
 
     private void RefreshBattery()
@@ -160,11 +166,11 @@ public partial class SensorsControl
                 try
                 {
                     var batteryInfo = Battery.GetBatteryInformation();
-                    var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync();
+                    var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
                     var onBatterySince = Battery.GetOnBatterySince();
                     Dispatcher.Invoke(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince));
 
-                    await Task.Delay(TimeSpan.FromSeconds(2), token);
+                    await Task.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { }  // Expected when battery refresh is cancelled, no action needed
                 catch (Exception ex)
@@ -325,7 +331,7 @@ public partial class SensorsControl
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Sensors refresh started...");
 
-            if (!await _controller.IsSupportedAsync())
+            if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Sensors not supported.");
@@ -334,7 +340,7 @@ public partial class SensorsControl
                 {
                     _sensorRuntimeAvailable = false;
                     SetSensorSectionsVisible(true);
-                    UpdateValues(SensorsData.Empty);
+                    ResetSensorValues();
                     _firstSensorDataTaskCompletionSource.TrySetResult();
                 });
                 return;
@@ -346,18 +352,18 @@ public partial class SensorsControl
                 SetSensorSectionsVisible(true);
             });
 
-            await _controller.PrepareAsync();
+            await _controller.PrepareAsync().ConfigureAwait(false);
 
             while (!token.IsCancellationRequested)
             {
                 try
                 {
                     var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible) || _forceDetailedRefresh;
-                    var data = await _controller.GetDataAsync(detailed);
+                    var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
                     if (detailed)
                         _forceDetailedRefresh = false;
-                    Dispatcher.Invoke(() => UpdateValues(data));
-                    await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
+                    Dispatcher.Invoke(() => UpdateValues(data, completesInitialLoad: true));
+                    await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {
@@ -367,8 +373,6 @@ public partial class SensorsControl
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Sensors refresh failed.", ex);
-
-                    Dispatcher.Invoke(() => UpdateValues(SensorsData.Empty));
                 }
             }
 
@@ -377,9 +381,14 @@ public partial class SensorsControl
         }, token);
     }
 
-    private void UpdateValues(SensorsData data)
+    private void UpdateValues(SensorsData data, bool completesInitialLoad = false)
     {
-        if (!_hasRenderedSensorData && HasSummarySensorData(data))
+        var shouldCompleteInitialLoad = completesInitialLoad && HasSummarySensorData(data);
+        data = MergeSensorDataForDisplay(data, _lastRenderedSensorData);
+        _lastRenderedSensorData = data;
+        CacheSessionSensorDataForDisplay(data);
+
+        if (!_hasRenderedSensorData && shouldCompleteInitialLoad)
         {
             _hasRenderedSensorData = true;
             _firstSensorDataTaskCompletionSource.TrySetResult();
@@ -401,7 +410,7 @@ public partial class SensorsControl
 
         if (FindName("_cpuTempRange") is TextBlock cpuTempRange)
         {
-             if (data.CPU.MinTemperature < int.MaxValue && data.CPU.MaxTemperatureRecord > int.MinValue)
+             if (IsTemperatureRangeAvailable(data.CPU.MinTemperature, data.CPU.MaxTemperatureRecord))
                  cpuTempRange.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
                  cpuTempRange.Text = NotAvailableText();
@@ -414,7 +423,7 @@ public partial class SensorsControl
 
         if (FindName("_cpuVoltageRange") is TextBlock cpuVoltageRange)
         {
-             if (data.CPU.MinVoltage < double.MaxValue && data.CPU.MaxVoltage > double.MinValue)
+             if (IsVoltageRangeAvailable(data.CPU.MinVoltage, data.CPU.MaxVoltage))
                  cpuVoltageRange.Text = $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V";
              else
                  cpuVoltageRange.Text = NotAvailableText();
@@ -456,7 +465,7 @@ public partial class SensorsControl
         
         if (FindName("_gpuTempRange") is TextBlock gpuTempRange)
         {
-             if (data.GPU.MinTemperature < int.MaxValue && data.GPU.MaxTemperatureRecord > int.MinValue)
+             if (IsTemperatureRangeAvailable(data.GPU.MinTemperature, data.GPU.MaxTemperatureRecord))
                  gpuTempRange.Text = $"{data.GPU.MinTemperature}{CelsiusUnit} ~ {data.GPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
                  gpuTempRange.Text = NotAvailableText();
@@ -469,13 +478,134 @@ public partial class SensorsControl
         
         if (FindName("_gpuVoltageRange") is TextBlock gpuVoltageRange)
         {
-             if (data.GPU.MinVoltage < double.MaxValue && data.GPU.MaxVoltage > double.MinValue)
+             if (IsVoltageRangeAvailable(data.GPU.MinVoltage, data.GPU.MaxVoltage))
                  gpuVoltageRange.Text = $"{data.GPU.MinVoltage:0.000} V ~ {data.GPU.MaxVoltage:0.000} V";
              else
                  gpuVoltageRange.Text = NotAvailableText();
         }
 
-        var _ = UpdateExtendedDetailValuesAsync();
+        QueueExtendedDetailValuesRefresh();
+    }
+
+    private void ResetSensorValues()
+    {
+        _lastRenderedSensorData = null;
+        ClearSessionSensorData();
+        UpdateValues(SensorsData.Empty);
+    }
+
+    private void InitializeFromSessionCache()
+    {
+        var cached = TryGetSessionSensorDataForDisplay();
+        if (cached is null)
+            return;
+
+        UpdateValues(cached.Value);
+    }
+
+    internal static SensorsData MergeSensorDataForDisplay(SensorsData current, SensorsData? previous) =>
+        previous is { } previousData
+            ? new SensorsData(
+                MergeSensorDataForDisplay(current.CPU, previousData.CPU),
+                MergeSensorDataForDisplay(current.GPU, previousData.GPU))
+            : current;
+
+    private static SensorData MergeSensorDataForDisplay(SensorData current, SensorData previous)
+    {
+        var utilization = KeepCurrentOrPrevious(current.Utilization, previous.Utilization, IsNonNegative);
+        var coreClock = KeepCurrentOrPrevious(current.CoreClock, previous.CoreClock, IsNonNegative);
+        var memoryClock = KeepCurrentOrPrevious(current.MemoryClock, previous.MemoryClock, IsNonNegative);
+        var temperature = KeepCurrentOrPrevious(current.Temperature, previous.Temperature, IsNonNegative);
+        var wattage = KeepCurrentOrPrevious(current.Wattage, previous.Wattage, IsNonNegative);
+        var voltage = KeepCurrentOrPrevious(current.Voltage, previous.Voltage, value => value > 0);
+        var fanSpeed = KeepCurrentOrPrevious(current.FanSpeed, previous.FanSpeed, IsNonNegative);
+
+        var merged = new SensorData(
+            utilization,
+            ResolveMaximum(current.MaxUtilization, current.Utilization, previous.MaxUtilization),
+            coreClock,
+            ResolveMaximum(current.MaxCoreClock, current.CoreClock, previous.MaxCoreClock),
+            memoryClock,
+            ResolveMaximum(current.MaxMemoryClock, current.MemoryClock, previous.MaxMemoryClock),
+            temperature,
+            ResolveMaximum(current.MaxTemperature, current.Temperature, previous.MaxTemperature),
+            wattage,
+            voltage,
+            fanSpeed,
+            ResolveMaximum(current.MaxFanSpeed, current.FanSpeed, previous.MaxFanSpeed));
+
+        var (minVoltage, maxVoltage) = IsVoltageRangeAvailable(current.MinVoltage, current.MaxVoltage)
+            ? (current.MinVoltage, current.MaxVoltage)
+            : IsVoltageRangeAvailable(previous.MinVoltage, previous.MaxVoltage)
+                ? (previous.MinVoltage, previous.MaxVoltage)
+                : (current.MinVoltage, current.MaxVoltage);
+
+        var (minTemperature, maxTemperatureRecord) = IsTemperatureRangeAvailable(current.MinTemperature, current.MaxTemperatureRecord)
+            ? (current.MinTemperature, current.MaxTemperatureRecord)
+            : IsTemperatureRangeAvailable(previous.MinTemperature, previous.MaxTemperatureRecord)
+                ? (previous.MinTemperature, previous.MaxTemperatureRecord)
+                : (current.MinTemperature, current.MaxTemperatureRecord);
+
+        return merged.WithMinMax(minVoltage, maxVoltage, minTemperature, maxTemperatureRecord);
+    }
+
+    private static int ResolveMaximum(int currentMaximum, int currentValue, int previousMaximum)
+    {
+        if (IsNonNegative(currentMaximum))
+            return currentMaximum;
+
+        if (IsNonNegative(previousMaximum))
+            return previousMaximum;
+
+        return IsNonNegative(currentValue) ? Math.Max(currentValue, 1) : currentMaximum;
+    }
+
+    private static int KeepCurrentOrPrevious(int current, int previous, Func<int, bool> isValid) =>
+        isValid(current) ? current : previous;
+
+    private static double KeepCurrentOrPrevious(double current, double previous, Func<double, bool> isValid) =>
+        isValid(current) ? current : previous;
+
+    internal static void CacheSessionSensorDataForDisplay(SensorsData data)
+    {
+        if (!HasAnySummarySensorData(data))
+            return;
+
+        lock (SessionSensorDataLock)
+            _sessionSensorData = data;
+    }
+
+    internal static SensorsData? TryGetSessionSensorDataForDisplay()
+    {
+        lock (SessionSensorDataLock)
+            return _sessionSensorData;
+    }
+
+    private static void ClearSessionSensorData()
+    {
+        lock (SessionSensorDataLock)
+            _sessionSensorData = null;
+    }
+
+    internal static SensorsData? ReplaceSessionSensorDataForTests(SensorsData? data)
+    {
+        lock (SessionSensorDataLock)
+        {
+            var previous = _sessionSensorData;
+            _sessionSensorData = data;
+            return previous;
+        }
+    }
+
+    private void QueueExtendedDetailValuesRefresh()
+    {
+        if (!_detailsExpanded || !_sensorRuntimeAvailable || _sensorsGroupController is null)
+            return;
+
+        if (_extendedDetailsRefreshTask is { IsCompleted: false })
+            return;
+
+        _extendedDetailsRefreshTask = UpdateExtendedDetailValuesAsync();
     }
 
     private void CardControl_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -529,8 +659,8 @@ public partial class SensorsControl
 
         try
         {
-            var data = await _controller.GetDataAsync(true);
-            await Dispatcher.InvokeAsync(() => UpdateValues(data));
+            var data = await _controller.GetDataAsync(true).ConfigureAwait(false);
+            await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true));
         }
         catch (Exception ex)
         {
@@ -599,6 +729,14 @@ public partial class SensorsControl
         || data.CoreClock >= 0
         || data.Temperature >= 0
         || data.FanSpeed >= 0;
+
+    private static bool IsNonNegative(int value) => value >= 0;
+
+    private static bool IsTemperatureRangeAvailable(int minTemperature, int maxTemperature) =>
+        minTemperature > 0 && maxTemperature > 0;
+
+    private static bool IsVoltageRangeAvailable(double minVoltage, double maxVoltage) =>
+        minVoltage > 0 && maxVoltage > 0;
 
     private void SetInitialSensorPlaceholders()
     {
