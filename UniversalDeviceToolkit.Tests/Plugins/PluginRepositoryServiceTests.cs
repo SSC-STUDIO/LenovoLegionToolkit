@@ -329,6 +329,32 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActionKey_ShouldAllowManifestOnlyPlugin()
+    {
+        // Arrange
+        const string pluginId = "store-optimization-key";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true, useOptimizationActionKey: true);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
     public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActions_ShouldPersistInstalledManifestActions()
     {
         // Arrange
@@ -386,7 +412,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     private static PluginManifest CreateInstallManifest(
         string pluginId,
         string packagePath,
-        bool includeOptimizationAction = false)
+        bool includeOptimizationAction = false,
+        bool useOptimizationActionKey = false)
     {
         var manifest = new PluginManifest
         {
@@ -406,7 +433,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
                 [
                     new PluginManifestOptimizationContribution
                     {
-                        Id = "apply-test",
+                        Id = useOptimizationActionKey ? string.Empty : "apply-test",
+                        Key = useOptimizationActionKey ? "apply-test" : string.Empty,
                         Title = "Apply test"
                     }
                 ]

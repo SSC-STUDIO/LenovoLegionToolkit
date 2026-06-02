@@ -59,6 +59,35 @@ public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void ResolveFromInstalledManifest_WhenManifestHasOptimizationActionsOnly_ShouldReportOptimizationCategory()
+    {
+        var pluginId = "optimization-only-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "optimization-only-plugin",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "optimization-only.action",
+                    "title": "Optimization-only action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var capabilities = PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId);
+
+        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsFeaturePage.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+    }
+
+    [Fact]
     public void ResolveFromInstalledManifest_WhenOptimizationFlagHasNoActions_ShouldNotReportOptimizationCategory()
     {
         var pluginId = "flag-only-plugin";

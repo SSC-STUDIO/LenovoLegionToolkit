@@ -271,7 +271,7 @@ public class PluginRepositoryService : IDisposable
         if (_pluginManager.TryGetPlugin(manifest.Id, out var plugin) && plugin is not null and not PluginManifestAdapter)
             return true;
 
-        if (manifest.Contributes?.OptimizationActions?.Any(action => !string.IsNullOrWhiteSpace(action.Id)) == true)
+        if (PluginUiCapabilityResolver.SupportsOptimizationActions(manifest))
         {
             var pluginManifestPath = Path.Combine(_pluginsDirectory, manifest.Id, "plugin.manifest.json");
             var pluginJsonPath = Path.Combine(_pluginsDirectory, manifest.Id, "plugin.json");
