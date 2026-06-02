@@ -49,6 +49,7 @@ public sealed class DeviceSupportStatusTests
     [InlineData("TIMI", "Redmi G Pro 2024", "xiaomi-basic")]
     [InlineData("realme", "realme Book Prime", "realme-basic")]
     [InlineData("Infinix Mobility Limited", "INBook X2", "infinix-basic")]
+    [InlineData("Motorola Mobility LLC", "Moto Book 60 14IRH10R", "motorola-basic")]
     [InlineData("Gateway", "Gateway 14.1 Ultra Slim", "gateway-basic")]
     [InlineData("CHUWI", "CoreBook X", "chuwi-basic")]
     [InlineData("TECLAST", "F15 Plus", "teclast-basic")]

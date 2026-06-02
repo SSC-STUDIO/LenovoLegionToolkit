@@ -58,6 +58,7 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
         BasicPack("gigabyte-basic", "GIGABYTE Basic", "GIGABYTE", ["Gigabyte Technology Co., Ltd.", "Gigabyte Technology Co., Ltd"], ["AORUS", "AERO", "GIGABYTE G"]),
         BasicPack("razer-basic", "Razer Basic", "Razer", ["Razer Inc.", "Razer Inc"], ["Blade", "Razer Book"]),
         BasicPack("samsung-basic", "Samsung Basic", "SAMSUNG ELECTRONICS CO., LTD.", ["Samsung", "Samsung Electronics", "SAMSUNG ELECTRONICS CO., LTD"], ["Galaxy Book", "Notebook 9"]),
+        BasicPack("motorola-basic", "Motorola Basic", "Motorola", ["Motorola Mobility", "Motorola Mobility LLC", "MOTOROLA"], ["Moto Book", "MotoBook", "Motobook", "14IRH10R"]),
         BasicPack("huawei-basic", "HUAWEI Basic", "HUAWEI", ["Huawei Technologies Co., Ltd.", "Huawei Technologies Co., Ltd"], ["MateBook"]),
         BasicPack("xiaomi-basic", "Xiaomi Basic", "Xiaomi", ["Xiaomi Inc.", "Xiaomi Corporation", "Redmi", "TIMI"], ["Mi Notebook", "RedmiBook", "Redmi G", "Xiaomi Book", "Xiaomi Book Pro", "Book Pro"]),
         BasicPack("realme-basic", "realme Basic", "realme", ["realme Chongqing MobileTelecommunications Corp., Ltd.", "realme"], ["realme Book"]),
