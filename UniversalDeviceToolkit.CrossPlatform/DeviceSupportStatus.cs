@@ -75,7 +75,7 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
         BasicPack("teclast-basic", "TECLAST Basic", "TECLAST", ["Teclast", "Guangzhou Shangke Information Technology"], ["F15", "F16", "F7", "X6"]),
         BasicPack("jumper-basic", "Jumper Basic", "Jumper", ["Jumper Computer", "Jumper Tech"], ["EZbook", "EZpad"]),
         BasicPack("medion-basic", "MEDION Basic", "MEDION", ["MEDION AG"], ["ERAZER", "AKOYA"]),
-        BasicPack("xmg-schenker-basic", "XMG/SCHENKER Basic", "SCHENKER", ["Schenker Technologies GmbH", "XMG", "TUXEDO"], ["XMG", "SCHENKER", "TUXEDO"]),
+        BasicPack("xmg-schenker-basic", "XMG/SCHENKER Basic", "SCHENKER", ["Schenker Technologies GmbH", "XMG", "TUXEDO"], ["XMG", "SCHENKER", "TUXEDO", "InfinityBook", "Stellaris", "Pulse", "Polaris", "Aura"]),
         BasicPack("hasee-basic", "Hasee Basic", "HASEE", ["Hasee", "Hasee Computer"], ["Hasee", "ZhanShen", "Zhan Shen"]),
         BasicPack("thunderobot-basic", "THUNDEROBOT Basic", "THUNDEROBOT", ["Thunderobot", "Raytheon"], ["Thunderobot", "911", "Zero", "Black Warrior"]),
         BasicPack("machenike-basic", "MACHENIKE Basic", "MACHENIKE", ["Machenike"], ["MACHENIKE", "Machenike", "T58", "F117", "L16"]),
@@ -90,6 +90,9 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
         BasicPack("beelink-basic", "Beelink Basic", "Beelink", ["AZW", "Shenzhen AZW Technology Co., Ltd.", "Beelink"], ["SER", "GTR", "EQ", "Beelink"]),
         BasicPack("geekom-basic", "GEEKOM Basic", "GEEKOM", ["Geekom", "GEEKOM"], ["Mini IT", "MiniAir", "A7", "GT"]),
         BasicPack("zotac-basic", "ZOTAC Basic", "ZOTAC", ["ZOTAC International"], ["ZBOX", "MAGNUS", "ZOTAC"]),
+        BasicPack("system76-basic", "System76 Basic", "System76", ["System76, Inc.", "System 76", "Notebook"], ["Adder WS", "addw", "Bonobo WS", "bonw", "Darter Pro", "darp", "Galago Pro", "galp", "Gazelle", "gaze", "Kudu", "Lemur Pro", "lemp", "Meerkat", "meer", "Oryx Pro", "oryp", "Pangolin Pro", "panp", "Serval WS", "serw", "Thelio"]),
+        BasicPack("star-labs-basic", "Star Labs Basic", "Star Labs", ["Star Labs Systems", "StarLabs", "Star Labs Systems Ltd"], ["StarFighter", "StarBook", "StarLite", "StarLite Mk", "Byte"]),
+        BasicPack("slimbook-basic", "Slimbook Basic", "SLIMBOOK", ["Slimbook", "Slimbook S.L.", "Slimbook SL"], ["Elemental", "Excalibur", "EVO", "Executive", "Creative", "KDE Slimbook", "Fedora Slimbook", "Manjaro Slimbook", "Slimbook One", "Slimbook Zero"]),
         BasicPack("clevo-tongfang-basic", "Clevo/Tongfang Basic", "CLEVO", ["Notebook", "Tongfang", "Eluktronics", "MECHREVO", "THUNDEROBOT", "Hasee", "SAGER"], ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear"]),
         BasicPack("handheld-pc-basic", "Handheld PC Basic", "*", [], ["Steam Deck", "GPD", "AYANEO", "AOKZOE", "ONEXPLAYER", "ONE-NETBOOK", "ROG Ally", "Legion Go"]),
         BasicPack("mini-pc-basic", "Mini PC Basic", "*", [], ["MINISFORUM", "Beelink", "GEEKOM", "ZOTAC"])

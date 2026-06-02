@@ -88,7 +88,11 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("MINISFORUM", "UM890 Pro"), "minisforum-basic" },
         { MachineInformationTestData.Create("AZW", "Beelink GTR7"), "beelink-basic" },
         { MachineInformationTestData.Create("GEEKOM", "MiniAir 12"), "geekom-basic" },
-        { MachineInformationTestData.Create("ZOTAC", "ZBOX CI669"), "zotac-basic" }
+        { MachineInformationTestData.Create("ZOTAC", "ZBOX CI669"), "zotac-basic" },
+        { MachineInformationTestData.Create("System76", "Lemur Pro lemp13"), "system76-basic" },
+        { MachineInformationTestData.Create("Star Labs Systems", "StarBook"), "star-labs-basic" },
+        { MachineInformationTestData.Create("SLIMBOOK", "Executive 16"), "slimbook-basic" },
+        { MachineInformationTestData.Create("TUXEDO", "Stellaris 16"), "xmg-schenker-basic" }
     };
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
@@ -174,6 +178,22 @@ public sealed class DeviceSupportModelSimulationTests
                 "Valve Corporation",
                 "Steam Deck"),
             "valve-handheld-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "Notebook",
+                "oryp13"),
+            "system76-basic"
+        },
+        {
+            MachineInformationTestData.WithBaseBoard(
+                "",
+                "",
+                "StarLabs",
+                "StarLite Mk V"),
+            "star-labs-basic"
         },
         {
             MachineInformationTestData.WithChassis(

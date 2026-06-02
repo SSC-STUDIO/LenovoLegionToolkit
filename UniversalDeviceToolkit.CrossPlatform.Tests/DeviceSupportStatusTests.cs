@@ -60,11 +60,16 @@ public sealed class DeviceSupportStatusTests
     [InlineData("MACHENIKE", "F117", "machenike-basic")]
     [InlineData("COLORFUL", "Evol X15", "colorful-basic")]
     [InlineData("MAIBENBEN", "MaiBook X", "maibenben-basic")]
+    [InlineData("TUXEDO", "InfinityBook Pro 14", "xmg-schenker-basic")]
     [InlineData("Valve Corporation", "Steam Deck", "valve-handheld-basic")]
     [InlineData("GPD", "GPD WIN 4", "gpd-handheld-basic")]
     [InlineData("AYANEO", "AYANEO NEXT", "ayaneo-handheld-basic")]
     [InlineData("ONEXPLAYER", "OneXPlayer 2 Pro", "one-netbook-handheld-basic")]
     [InlineData("AZW", "Beelink SER8", "beelink-basic")]
+    [InlineData("System76", "Oryx Pro oryp13", "system76-basic")]
+    [InlineData("Notebook", "oryp13", "system76-basic")]
+    [InlineData("Star Labs Systems", "StarFighter", "star-labs-basic")]
+    [InlineData("SLIMBOOK", "KDE Slimbook VII", "slimbook-basic")]
     public void Evaluate_ShouldMatchExpandedBrandBasicPacks(string vendor, string model, string expectedPackId)
     {
         var support = _evaluator.Evaluate(
