@@ -92,7 +92,17 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("System76", "Lemur Pro lemp13"), "system76-basic" },
         { MachineInformationTestData.Create("Star Labs Systems", "StarBook"), "star-labs-basic" },
         { MachineInformationTestData.Create("SLIMBOOK", "Executive 16"), "slimbook-basic" },
-        { MachineInformationTestData.Create("TUXEDO", "Stellaris 16"), "xmg-schenker-basic" }
+        { MachineInformationTestData.Create("TUXEDO", "Stellaris 16"), "xmg-schenker-basic" },
+        { MachineInformationTestData.Create("Monster Notebook", "Tulpar T7 V20"), "monster-tulpar-basic" },
+        { MachineInformationTestData.Create("Dream Machines", "RG4070-16"), "dream-machines-basic" },
+        { MachineInformationTestData.Create("PC Specialist Ltd", "Recoil 17"), "pcspecialist-basic" },
+        { MachineInformationTestData.Create("Eurocom Corporation", "Nightsky ARX15"), "eurocom-basic" },
+        { MachineInformationTestData.Create("ORIGIN PC", "EON16-S"), "origin-pc-basic" },
+        { MachineInformationTestData.Create("iBUYPOWER", "Y60 Gaming Desktop"), "cyberpower-ibuypower-basic" },
+        { MachineInformationTestData.Create("Casper Bilgisayar", "Excalibur G870"), "casper-excalibur-basic" },
+        { MachineInformationTestData.Create("AVITA", "LIBER V14"), "nexstgo-avita-basic" },
+        { MachineInformationTestData.Create("Positivo Tecnologia", "Motion C4500"), "positivo-basic" },
+        { MachineInformationTestData.Create("Wortmann AG", "TERRA MOBILE 1517"), "wortmann-terra-basic" }
     };
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
