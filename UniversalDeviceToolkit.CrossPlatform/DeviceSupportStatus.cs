@@ -50,7 +50,7 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
         BasicPack("lenovo-legion-basic", "Lenovo Legion Basic", "LENOVO", ["Lenovo"], ["Legion", "LOQ", "Y7000", "Y9000", "R7000", "R9000"]),
         BasicPack("lenovo-think-basic", "Lenovo Think Basic", "LENOVO", ["Lenovo"], ["ThinkPad", "ThinkBook", "ThinkCentre", "ThinkStation"]),
         BasicPack("asus-basic", "ASUS Basic", "ASUSTeK COMPUTER INC.", ["ASUS", "ASUSTeK COMPUTER INC", "ASUSTeK COMPUTER INCORPORATED"], ["ROG", "TUF", "Zephyrus", "Strix", "VivoBook", "Vivobook", "Zenbook", "ProArt", "ExpertBook"]),
-        BasicPack("dell-basic", "Dell Basic", "Dell Inc.", ["Dell", "Dell Computer Corporation"], ["Alienware", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "OptiPlex", "Vostro"]),
+        BasicPack("dell-basic", "Dell Basic", "Dell Inc.", ["Dell", "Dell Computer Corporation", "Alienware"], ["Alienware", "Area-51m", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "m15", "m16", "m18", "x14", "x15", "x16", "x17", "OptiPlex", "Vostro"]),
         BasicPack("hp-basic", "HP Basic", "HP", ["HP Inc.", "Hewlett-Packard", "Hewlett-Packard Company"], ["OMEN", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook", "Spectre"]),
         BasicPack("acer-basic", "Acer Basic", "Acer", ["Acer Incorporated", "Acer Inc."], ["Predator", "Nitro", "Swift", "Aspire", "TravelMate", "ConceptD", "Extensa", "Spin"]),
         BasicPack("msi-basic", "MSI Basic", "Micro-Star International Co., Ltd.", ["MSI", "Micro-Star International", "MICRO-STAR INTERNATIONAL CO., LTD"], ["Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit"]),

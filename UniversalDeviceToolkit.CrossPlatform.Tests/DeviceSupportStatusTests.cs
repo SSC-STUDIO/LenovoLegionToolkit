@@ -32,6 +32,19 @@ public sealed class DeviceSupportStatusTests
         support.EnabledFeatures.Should().Contain("read-only-telemetry");
     }
 
+    [Fact]
+    public void Evaluate_ShouldMatchAlienwareVendorAlias()
+    {
+        var support = _evaluator.Evaluate(
+            new HardwareIdentity("Alienware", "Alienware m18 R2", "m18 R2", "SERIAL", "test"),
+            isWindows: false);
+
+        support.DevicePackId.Should().Be("dell-basic");
+        support.DisplayName.Should().Be("Dell Basic");
+        support.SupportLevel.Should().Be("Safe basic mode");
+        support.IsHardwareControlAvailable.Should().BeFalse();
+    }
+
     [Theory]
     [InlineData("TIMI", "Redmi G Pro 2024", "xiaomi-basic")]
     [InlineData("realme", "realme Book Prime", "realme-basic")]
