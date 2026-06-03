@@ -1,4 +1,5 @@
 using FluentAssertions;
+using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Pages;
 using Xunit;
@@ -35,6 +36,48 @@ public class PluginViewModelTests
             .BeTrue();
     }
 
+    [Fact]
+    public void ResolveRuntimePluginCapabilities_WhenRuntimePluginProvidesOptimizationCategory_ShouldExposeOptimizationEntryPoint()
+    {
+        var plugin = new OptimizationOnlyRuntimePlugin();
+
+        var capabilities = PluginExtensionsPage.ResolveRuntimePluginCapabilities(plugin);
+
+        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsFeaturePage.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+        PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public void ResolveRuntimePluginCapabilities_WhenPluginIsManifestAdapter_ShouldNotTreatManifestActionsAsExecutableCategory()
+    {
+        var manifest = new PluginManifest
+        {
+            Id = "manifest-only-plugin",
+            Name = "Manifest Only Plugin",
+            Contributes = new PluginManifestContributions
+            {
+                OptimizationActions =
+                [
+                    new PluginManifestOptimizationContribution
+                    {
+                        Id = "manifest-only.action",
+                        Title = "Manifest-only action"
+                    }
+                ]
+            }
+        };
+
+        var capabilities = PluginExtensionsPage.ResolveRuntimePluginCapabilities(new PluginManifestAdapter(manifest));
+
+        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsFeaturePage.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeFalse();
+    }
+
     [Theory]
     [InlineData(true, false, false)]
     [InlineData(false, true, false)]
@@ -64,5 +107,34 @@ public class PluginViewModelTests
         PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
             .Should()
             .BeFalse();
+    }
+
+    private sealed class OptimizationOnlyRuntimePlugin : IPlugin, IOptimizationCategoryProvider
+    {
+        public string Id => "runtime-optimization-plugin";
+        public string Name => "Runtime Optimization Plugin";
+        public string Description => "Provides a runtime optimization category.";
+        public string Icon => "PlugConnected24";
+        public bool IsSystemPlugin => false;
+        public string[]? Dependencies => null;
+
+        public WindowsOptimizationCategoryDefinition? GetOptimizationCategory() =>
+            new(
+                "runtime-optimization",
+                "RuntimeOptimization_Title",
+                "RuntimeOptimization_Description",
+                [
+                    new WindowsOptimizationActionDefinition(
+                        "runtime-optimization.action",
+                        "RuntimeOptimizationAction_Title",
+                        "RuntimeOptimizationAction_Description",
+                        _ => Task.CompletedTask)
+                ],
+                Id);
+
+        public void OnInstalled() { }
+        public void OnUninstalled() { }
+        public void OnShutdown() { }
+        public void Stop() { }
     }
 }

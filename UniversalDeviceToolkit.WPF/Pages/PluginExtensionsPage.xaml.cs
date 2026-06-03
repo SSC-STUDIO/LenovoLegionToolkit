@@ -1087,7 +1087,7 @@ private string _currentSearchText = string.Empty;
         return capabilities;
     }
 
-    private static PluginUiCapabilities ResolveRuntimePluginCapabilities(IPlugin plugin)
+    internal static PluginUiCapabilities ResolveRuntimePluginCapabilities(IPlugin plugin)
     {
         var supportsSettingsPage = false;
         var supportsFeaturePage = false;
