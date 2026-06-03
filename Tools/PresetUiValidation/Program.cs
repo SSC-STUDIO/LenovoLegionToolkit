@@ -136,6 +136,11 @@ internal static class Program
             var createCountPassed = namesAfterCreate.Count == originalCount + 1;
             var createActivePassed = string.Equals(selectedAfterCreate, createdName, StringComparison.Ordinal);
             var createNamePassed = createdName.StartsWith(createRequestedName, StringComparison.Ordinal);
+            var persistedAfterCreate = await controller.GetStateAsync().ConfigureAwait(true);
+            var persistedCreateActiveName = persistedAfterCreate.Presets[persistedAfterCreate.ActivePresetId].Name;
+            var persistedCreateVerificationPassed = persistedAfterCreate.Presets.Count == originalCount + 1
+                                                     && persistedAfterCreate.Presets.Values.Any(p => string.Equals(p.Name, createdName, StringComparison.Ordinal))
+                                                     && string.Equals(persistedCreateActiveName, createdName, StringComparison.Ordinal);
 
             _ = window.Dispatcher.BeginInvoke(() => editButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
             WriteLine("Stage: RenameClicked");
@@ -151,6 +156,12 @@ internal static class Program
             var renameActivePassed = string.Equals(GetSelectedPresetName(comboBox), renamedName, StringComparison.Ordinal);
             var renameNamePassed = !namesAfterRename.Contains(createdName, StringComparer.OrdinalIgnoreCase)
                                    && namesAfterRename.Contains(renamedName, StringComparer.Ordinal);
+            var persistedAfterRename = await controller.GetStateAsync().ConfigureAwait(true);
+            var persistedRenameActiveName = persistedAfterRename.Presets[persistedAfterRename.ActivePresetId].Name;
+            var persistedRenameVerificationPassed = persistedAfterRename.Presets.Count == originalCount + 1
+                                                     && !persistedAfterRename.Presets.Values.Any(p => string.Equals(p.Name, createdName, StringComparison.OrdinalIgnoreCase))
+                                                     && persistedAfterRename.Presets.Values.Any(p => string.Equals(p.Name, renamedName, StringComparison.Ordinal))
+                                                     && string.Equals(persistedRenameActiveName, renamedName, StringComparison.Ordinal);
 
             _ = window.Dispatcher.BeginInvoke(() => deleteButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
             WriteLine("Stage: DeleteClicked");
@@ -174,9 +185,11 @@ internal static class Program
             PrintValue("CreateCountVerificationPassed", createCountPassed);
             PrintValue("CreateActiveVerificationPassed", createActivePassed);
             PrintValue("CreateNameVerificationPassed", createNamePassed);
+            PrintValue("CreatePersistedVerificationPassed", persistedCreateVerificationPassed);
             PrintValue("RenameCountVerificationPassed", renameCountPassed);
             PrintValue("RenameActiveVerificationPassed", renameActivePassed);
             PrintValue("RenameNameVerificationPassed", renameNamePassed);
+            PrintValue("RenamePersistedVerificationPassed", persistedRenameVerificationPassed);
             PrintValue("DeleteMissingVerificationPassed", deleteMissingPassed);
             PrintValue("DeleteCountVerificationPassed", deleteCountPassed);
             PrintValue("DeleteActiveVerificationPassed", deleteActivePassed);
@@ -185,9 +198,11 @@ internal static class Program
             var passed = createCountPassed
                          && createActivePassed
                          && createNamePassed
+                         && persistedCreateVerificationPassed
                          && renameCountPassed
                          && renameActivePassed
                          && renameNamePassed
+                         && persistedRenameVerificationPassed
                          && deleteMissingPassed
                          && deleteCountPassed
                          && deleteActivePassed
