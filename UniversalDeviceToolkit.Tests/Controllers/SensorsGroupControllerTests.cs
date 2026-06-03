@@ -47,6 +47,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuTemperatureSensorName_ShouldRecognizeProcessorPackageTemperatureAliases()
+    {
+        var result = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "Processor Package Temperature"
+        ]);
+
+        result.Should().Be("Processor Package Temperature");
+    }
+
+    [Fact]
     public void SelectCpuVoltageSensorName_ShouldPreferCoreVoltageAliases()
     {
         var result = SensorsGroupController.SelectCpuVoltageSensorName(
@@ -73,6 +85,24 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuVoltageSensorName_ShouldRecognizeCpuZAndAmdVoltageAliases()
+    {
+        var cpuZResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "CPU VID",
+            "System Agent Voltage"
+        ]);
+        var amdResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "SVI2 TFN",
+            "Cache Voltage"
+        ]);
+
+        cpuZResult.Should().Be("CPU VID");
+        amdResult.Should().Be("SVI2 TFN");
+    }
+
+    [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdPptAlias()
     {
         var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
@@ -83,6 +113,19 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("CPU PPT");
+    }
+
+    [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeProcessorPackagePowerAliases()
+    {
+        var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "IA Cores",
+            "Processor Package Power",
+            "GPU Package"
+        ]);
+
+        result.Should().Be("Processor Package Power");
     }
 
     [Fact]
@@ -318,6 +361,19 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeAsicAndTotalGraphicsPowerAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU ASIC Power",
+            "Total Graphics Power"
+        ]);
+
+        result.Should().Be("Total Graphics Power");
+    }
+
+    [Fact]
     public void SelectGpuTemperatureSensorName_ShouldPreferGpuCoreTemperatureAliases()
     {
         var result = SensorsGroupController.SelectGpuTemperatureSensorName(
@@ -342,6 +398,19 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuCoreClockSensorName_ShouldRecognizeGraphicsAndShaderClockAliases()
+    {
+        var result = SensorsGroupController.SelectGpuCoreClockSensorName(
+        [
+            "Clock",
+            "Shader Clock",
+            "Graphics Clock"
+        ]);
+
+        result.Should().Be("Graphics Clock");
+    }
+
+    [Fact]
     public void SelectGpuMemoryClockSensorName_ShouldPreferGpuMemoryClockAliases()
     {
         var result = SensorsGroupController.SelectGpuMemoryClockSensorName(
@@ -351,6 +420,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("GPU Memory");
+    }
+
+    [Fact]
+    public void SelectGpuMemoryClockSensorName_ShouldRecognizeFramebufferClockAliases()
+    {
+        var result = SensorsGroupController.SelectGpuMemoryClockSensorName(
+        [
+            "Clock",
+            "FB Clock"
+        ]);
+
+        result.Should().Be("FB Clock");
     }
 
     [Fact]
@@ -387,6 +468,19 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("VDDC");
+    }
+
+    [Fact]
+    public void SelectGpuVoltageSensorName_ShouldPreferGpuVddcAliases()
+    {
+        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        [
+            "Voltage",
+            "NVVDD",
+            "GPU VDDC"
+        ]);
+
+        result.Should().Be("GPU VDDC");
     }
 
     [Fact]
@@ -516,9 +610,14 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Graphics").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Cores").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("SoC Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("Uncore Power").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("EDC").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("TDC").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
     }
 
@@ -608,5 +707,21 @@ public class SensorsGroupControllerTests
 
         result.cores.Should().Be(24f);
         result.platform.Should().Be(4f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapAdditionalPlatformPowerAliases()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("IA Power", 18f),
+            ("GT Power", 2f),
+            ("Uncore Power", 1.5f),
+            ("EDC", 0.5f),
+            ("TDC", 0.25f)
+        ]);
+
+        result.cores.Should().Be(18f);
+        result.platform.Should().BeApproximately(4.25f, 0.001f);
     }
 }

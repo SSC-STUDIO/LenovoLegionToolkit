@@ -36,6 +36,9 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] CPU_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "CPU Package",
+        "CPU Package Temperature",
+        "Processor Package",
+        "Processor Package Temperature",
         "Package",
         "Tctl/Tdie",
         "Tctl",
@@ -49,9 +52,14 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] CPU_VOLTAGE_SENSOR_PREFERENCES =
     [
         "CPU Core Voltage",
+        "CPU VCore",
         "Core Voltage",
         "Vcore",
         "VCore",
+        "Core VID",
+        "CPU VID",
+        "SVI2 TFN",
+        "SVI3 TFN",
         "VID",
         "Core",
         "CPU",
@@ -68,18 +76,27 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] CPU_PACKAGE_POWER_SENSOR_PREFERENCES =
     [
         "CPU Package",
+        "CPU Package Power",
         "Package Power",
         "CPU PPT",
+        "PPT Limit",
+        "Processor Package Power",
         "PPT",
         "Processor Power",
+        "Processor Power Draw",
         "CPU Total",
         "Total CPU",
         "CPU Power",
+        "CPU Power Draw",
+        "Package Power Draw",
         "Package",
     ];
     private static readonly string[] CPU_CORE_POWER_SENSOR_PREFERENCES =
     [
         "IA Cores",
+        "IA Power",
+        "IA Limit",
+        "Core Power Draw",
         "CPU Cores",
         "CPU Core",
         "Core Power",
@@ -97,14 +114,19 @@ public class SensorsGroupController : IDisposable
         "CPU Platform",
         "CPU Graphics",
         "GT Cores",
+        "GT Power",
         "CPU SoC",
         "SoC",
         "SOC",
+        "SoC Power",
         "System Agent",
         "PCH",
         "CPU Uncore",
         "Uncore",
+        "Uncore Power",
         "Ring",
+        "EDC",
+        "TDC",
     ];
     private static readonly string[] GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES =
     [
@@ -179,18 +201,26 @@ public class SensorsGroupController : IDisposable
         "Board Power Draw",
         "GPU Board Power",
         "Total Board Power",
+        "Total Graphics Power",
+        "Graphics Power",
+        "GPU ASIC Power",
+        "ASIC Power",
         "GPU Chip Power",
         "Chip Power",
+        "TGP",
         "Package Power",
         "Power",
     ];
     private static readonly string[] GPU_VOLTAGE_SENSOR_PREFERENCES =
     [
         "GPU Core Voltage",
+        "GPU VDDC",
+        "GPU VCore",
         "Core Voltage",
         "VDDC",
         "VDDCI",
         "MVDD",
+        "NVVDD",
         "GPU Core",
         "GPU Voltage",
         "Voltage",
@@ -210,7 +240,10 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Core",
         "Core Clock",
+        "Graphics Clock",
         "Graphics",
+        "SM Clock",
+        "Shader Clock",
         "GPU Clock",
         "Core",
         "Clock",
@@ -219,6 +252,8 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Memory",
         "Memory Clock",
+        "FB Clock",
+        "VRAM Memory Clock",
         "VRAM Clock",
         "VRAM",
         "Memory",
@@ -1414,6 +1449,8 @@ public class SensorsGroupController : IDisposable
     private static bool IsLikelyCpuCorePowerSensorName(string sensorName) =>
         !sensorName.Contains("GT", StringComparison.OrdinalIgnoreCase) &&
         !sensorName.Contains("Graphics", StringComparison.OrdinalIgnoreCase) &&
+        !sensorName.Contains("Uncore", StringComparison.OrdinalIgnoreCase) &&
+        !sensorName.Contains("Ring", StringComparison.OrdinalIgnoreCase) &&
         CPU_CORE_POWER_SENSOR_PREFERENCES.Any(keyword =>
             sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
 
