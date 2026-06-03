@@ -1,0 +1,58 @@
+using FluentAssertions;
+using Xunit;
+
+namespace UniversalDeviceToolkit.Tests.Utils;
+
+public sealed class ShippingPayloadGuardTests
+{
+    [Fact]
+    public void ShippingPayloadGuard_ShouldRejectTestAndValidationArtifacts()
+    {
+        var script = ReadRepositoryFile("Scripts", "Assert-ShippingPayload.ps1");
+
+        script.Should().Contain("'UniversalDeviceToolkit.Tests'");
+        script.Should().Contain("'UniversalDeviceToolkit.CrossPlatform.Tests'");
+        script.Should().Contain("'MainAppPluginUi.Smoke'");
+        script.Should().Contain("'HardwareValidation'");
+        script.Should().Contain("'PresetUiValidation'");
+        script.Should().Contain("'SensorInventoryDump'");
+        script.Should().Contain("'testhost'");
+        script.Should().Contain("'*.Tests.*'");
+        script.Should().Contain("'*.Smoke.*'");
+        script.Should().Contain("'*Validation*'");
+    }
+
+    [Fact]
+    public void ReleaseWorkflow_ShouldValidateAllShippingPayloads()
+    {
+        var workflow = ReadRepositoryFile(".github", "workflows", "Release.yml");
+        var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
+
+        workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
+        workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
+        workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
+
+        crossPlatformScript.Should().Contain("$shippingPayloadGuard = Resolve-RepoPath 'Scripts\\Assert-ShippingPayload.ps1'");
+        crossPlatformScript.Should().Contain("& $shippingPayloadGuard -PayloadPath $publishOutputPath");
+    }
+
+    private static string ReadRepositoryFile(params string[] pathParts)
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine([repositoryRoot, .. pathParts]));
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                return directory.FullName;
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Could not find repository root.");
+    }
+}
