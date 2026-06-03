@@ -68,6 +68,9 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("Dell Computer Corporation", "Dell G16 7630"), "dell-basic" },
         { MachineInformationTestData.Create("Acer Incorporated", "Predator Helios Neo 16"), "acer-basic" },
         { MachineInformationTestData.Create("Acer", "Nitro V 16"), "acer-basic" },
+        { MachineInformationTestData.Create("LENOVO", "IdeaPad Flex 5 Chromebook Plus"), "lenovo-chromebook-basic" },
+        { MachineInformationTestData.Create("Google LLC", "Pixelbook Go"), "google-chromebook-basic" },
+        { MachineInformationTestData.Create("SAMSUNG ELECTRONICS CO., LTD.", "Galaxy Chromebook Plus"), "samsung-basic" },
         { MachineInformationTestData.Create("Xiaomi Corporation", "Xiaomi Book Pro 16"), "xiaomi-basic" },
         { MachineInformationTestData.Create("TIMI", "Redmi G Pro 2024"), "xiaomi-basic" },
         { MachineInformationTestData.Create("Huawei Technologies Co., Ltd.", "MateBook GT 14"), "huawei-basic" },
@@ -93,16 +96,26 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("Star Labs Systems", "StarBook"), "star-labs-basic" },
         { MachineInformationTestData.Create("SLIMBOOK", "Executive 16"), "slimbook-basic" },
         { MachineInformationTestData.Create("TUXEDO", "Stellaris 16"), "xmg-schenker-basic" },
+        { MachineInformationTestData.Create("NEC Personal Computers, Ltd.", "LAVIE NEXTREME Carbon"), "nec-lavie-basic" },
+        { MachineInformationTestData.Create("Sharp Corporation", "Mebius Chromebook"), "sharp-basic" },
         { MachineInformationTestData.Create("Monster Notebook", "Tulpar T7 V20"), "monster-tulpar-basic" },
         { MachineInformationTestData.Create("Dream Machines", "RG4070-16"), "dream-machines-basic" },
         { MachineInformationTestData.Create("PC Specialist Ltd", "Recoil 17"), "pcspecialist-basic" },
         { MachineInformationTestData.Create("Eurocom Corporation", "Nightsky ARX15"), "eurocom-basic" },
+        { MachineInformationTestData.Create("Eluktronics", "MECH-17 GP3"), "eluktronics-basic" },
+        { MachineInformationTestData.Create("MAINGEAR", "Vector Pro 2"), "maingear-basic" },
         { MachineInformationTestData.Create("ORIGIN PC", "EON16-S"), "origin-pc-basic" },
+        { MachineInformationTestData.Create("Corsair", "Voyager a1600"), "corsair-basic" },
         { MachineInformationTestData.Create("iBUYPOWER", "Y60 Gaming Desktop"), "cyberpower-ibuypower-basic" },
         { MachineInformationTestData.Create("Casper Bilgisayar", "Excalibur G870"), "casper-excalibur-basic" },
         { MachineInformationTestData.Create("AVITA", "LIBER V14"), "nexstgo-avita-basic" },
         { MachineInformationTestData.Create("Positivo Tecnologia", "Motion C4500"), "positivo-basic" },
-        { MachineInformationTestData.Create("Wortmann AG", "TERRA MOBILE 1517"), "wortmann-terra-basic" }
+        { MachineInformationTestData.Create("Wortmann AG", "TERRA MOBILE 1517"), "wortmann-terra-basic" },
+        { MachineInformationTestData.Create("GMKtec", "NucBox K8 Plus"), "gmktec-basic" },
+        { MachineInformationTestData.Create("MORE FINE", "M600 Mini PC"), "morefine-basic" },
+        { MachineInformationTestData.Create("ACEMAGICIAN", "Tank03"), "acemagic-basic" },
+        { MachineInformationTestData.Create("AOOSTAR", "GEM12 Pro"), "aoostar-basic" },
+        { MachineInformationTestData.Create("TRIGKEY", "Mini PC S7"), "regional-mini-pc-basic" }
     };
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
