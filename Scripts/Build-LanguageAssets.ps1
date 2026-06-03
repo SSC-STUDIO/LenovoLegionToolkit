@@ -744,15 +744,17 @@ function Finalize-ReleaseAssets {
     $crossPlatformCliName = Get-CrossPlatformCliAssetName $Version
     $hashName = Get-HashAssetName $Version
     $legacySetupName = Get-LegacySetupAssetName $Version
+    $crossPlatformCliPath = Join-Path $releaseOutputPath $crossPlatformCliName
 
     Copy-Item -LiteralPath $fullInstallerSource -Destination (Join-Path $releaseOutputPath $fullSetupName) -Force
     Copy-Item -LiteralPath $fullInstallerSource -Destination (Join-Path $releaseOutputPath $legacySetupName) -Force
     Copy-Item -LiteralPath $onlineInstallerSource -Destination (Join-Path $releaseOutputPath $onlineSetupName) -Force
 
-    $hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)
-    if (Test-Path -LiteralPath (Join-Path $releaseOutputPath $crossPlatformCliName)) {
-        $hashAssetNames += $crossPlatformCliName
+    if (-not (Test-Path -LiteralPath $crossPlatformCliPath)) {
+        throw "Cross-platform CLI asset not found at '$crossPlatformCliPath'. Release finalization requires the macOS/Linux diagnostics package."
     }
+
+    $hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName, $crossPlatformCliName)
 
     Write-HashFile -AssetNames $hashAssetNames -ReleaseOutputPath $releaseOutputPath -HashFileName $hashName
     Write-StableCatalog -ReleaseOutputPath $releaseOutputPath -PagesOutputPath $pagesOutputPath

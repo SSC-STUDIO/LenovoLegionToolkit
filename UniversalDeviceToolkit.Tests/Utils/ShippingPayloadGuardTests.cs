@@ -26,14 +26,22 @@ public sealed class ShippingPayloadGuardTests
     public void ReleaseWorkflow_ShouldValidateAllShippingPayloads()
     {
         var workflow = ReadRepositoryFile(".github", "workflows", "Release.yml");
+        var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
 
+        workflow.Should().Contain("CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$releaseVersion");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
+        workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
 
         crossPlatformScript.Should().Contain("$shippingPayloadGuard = Resolve-RepoPath 'Scripts\\Assert-ShippingPayload.ps1'");
         crossPlatformScript.Should().Contain("& $shippingPayloadGuard -PayloadPath $publishOutputPath");
+
+        languageAssetsScript.Should().Contain("Get-CrossPlatformCliAssetName");
+        languageAssetsScript.Should().Contain("Release finalization requires the macOS/Linux diagnostics package.");
+        languageAssetsScript.Should().Contain("$hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName, $crossPlatformCliName)");
+        languageAssetsScript.Should().Contain("$downloads['cli']");
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)
