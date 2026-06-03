@@ -28,6 +28,7 @@ public sealed class ShippingPayloadGuardTests
         var workflow = ReadRepositoryFile(".github", "workflows", "Release.yml");
         var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
+        var makeScript = ReadRepositoryFile("Make.bat");
 
         workflow.Should().Contain("CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$releaseVersion");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
@@ -42,6 +43,11 @@ public sealed class ShippingPayloadGuardTests
         languageAssetsScript.Should().Contain("Release finalization requires the macOS/Linux diagnostics package.");
         languageAssetsScript.Should().Contain("$hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName, $crossPlatformCliName)");
         languageAssetsScript.Should().Contain("$downloads['cli']");
+
+        makeScript.Should().Contain("Scripts\\Build-CrossPlatformCliAsset.ps1");
+        makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
+            .Should()
+            .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)

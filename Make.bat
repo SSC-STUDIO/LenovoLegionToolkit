@@ -65,6 +65,12 @@ IF %ERRORLEVEL% NEQ 0 (
     set ERROR_COUNT=1
 )
 
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-CrossPlatformCliAsset.ps1" -Version "%VERSION%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -SkipHashUpdate
+IF %ERRORLEVEL% NEQ 0 (
+    echo Cross-platform CLI asset build failed.
+    set ERROR_COUNT=1
+)
+
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Full.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Online.exe"
 IF %ERRORLEVEL% NEQ 0 (
     echo Release asset finalization failed.
