@@ -41,13 +41,37 @@ public sealed class PresetUiValidationGuardTests
 
     private static string FindRepositoryRoot()
     {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
+        var candidates = new[]
         {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Directory.GetCurrentDirectory(),
+            AppContext.BaseDirectory
+        };
 
-            directory = directory.Parent;
+        foreach (var candidate in candidates)
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+                continue;
+
+            var directory = new DirectoryInfo(candidate);
+            while (directory is not null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                    return directory.FullName;
+
+                directory = directory.Parent;
+            }
+        }
+
+        var fallback = new DirectoryInfo(AppContext.BaseDirectory);
+        while (fallback is not null)
+        {
+            var nestedSolution = Directory.EnumerateFiles(fallback.FullName, "UniversalDeviceToolkit.sln", SearchOption.AllDirectories)
+                .FirstOrDefault();
+            if (nestedSolution is not null)
+                return Path.GetDirectoryName(nestedSolution)!;
+
+            fallback = fallback.Parent;
         }
 
         throw new DirectoryNotFoundException("Could not find repository root.");
