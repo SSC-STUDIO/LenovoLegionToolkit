@@ -74,7 +74,7 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public void GetPluginCategories_WhenInstalledManifestHasOptimizationActionsOnly_ShouldSkipNoOpManifestCategory()
+    public void GetPluginCategories_WhenInstalledManifestHasOptimizationActionsOnly_ShouldIncludeManifestCategory()
     {
         var pluginId = "manifest-plugin";
         var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
@@ -103,17 +103,18 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var pluginManager = new Mock<IPluginManager>();
         pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
         pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
 
         var extender = new OptimizationCategoryExtender(pluginManager.Object);
 
         var categories = extender.GetPluginCategories();
 
-        categories.Should().BeEmpty();
+        AssertManifestCategory(categories, pluginId, "Manifest Plugin", "Manifest description", "manifest.action", "Manifest action");
     }
 
     [Fact]
-    public void GetPluginCategories_WhenImportedPluginHasManifestActionsOnly_ShouldSkipNoOpManifestCategory()
+    public void GetPluginCategories_WhenImportedPluginHasManifestActionsOnly_ShouldIncludeManifestCategory()
     {
         var pluginId = "local-plugin";
         var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", pluginId);
@@ -138,17 +139,18 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var pluginManager = new Mock<IPluginManager>();
         pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
         pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
 
         var extender = new OptimizationCategoryExtender(pluginManager.Object);
 
         var categories = extender.GetPluginCategories();
 
-        categories.Should().BeEmpty();
+        AssertManifestCategory(categories, pluginId, "Local Plugin", "Local manifest description", "local.action", "Local action");
     }
 
     [Fact]
-    public void GetPluginCategories_WhenManifestOnlyPluginIsInInstalledList_ShouldSkipNoOpManifestCategory()
+    public void GetPluginCategories_WhenManifestOnlyPluginIsInInstalledList_ShouldIncludeManifestCategory()
     {
         var pluginId = "manifest-only-plugin";
         var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
@@ -180,11 +182,11 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var categories = extender.GetPluginCategories();
 
-        categories.Should().BeEmpty();
+        AssertManifestCategory(categories, pluginId, "Manifest Only Plugin", "Manifest-only optimization contribution", "manifest-only.action", "Manifest-only action");
     }
 
     [Fact]
-    public void GetPluginCategories_WhenInstalledManifestUsesActionKeyOnly_ShouldSkipNoOpManifestCategory()
+    public void GetPluginCategories_WhenInstalledManifestUsesActionKeyOnly_ShouldIncludeManifestCategory()
     {
         var pluginId = "manifest-key-plugin";
         var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
@@ -217,11 +219,12 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var categories = extender.GetPluginCategories();
 
-        categories.Should().BeEmpty();
+        var category = AssertManifestCategory(categories, pluginId, "Manifest Key Plugin", "Manifest-level description", "manifest-key.action", "Manifest key action");
+        category.Actions[0].DescriptionResourceKey.Should().Be("Action-level description");
     }
 
     [Fact]
-    public void GetPluginCategories_WhenInstalledIdUsesLegacyAssemblyName_ShouldSkipNoOpManifestCategory()
+    public void GetPluginCategories_WhenInstalledIdUsesLegacyAssemblyName_ShouldIncludeManifestCategory()
     {
         var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "LenovoLegionToolkit.Plugins.CustomMouse");
         Directory.CreateDirectory(pluginDirectory);
@@ -251,7 +254,7 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var categories = extender.GetPluginCategories();
 
-        categories.Should().BeEmpty();
+        AssertManifestCategory(categories, "custom-mouse", "Custom Mouse", "Legacy assembly directory manifest", "custom-mouse.action", "Custom Mouse action");
     }
 
     [Fact]
@@ -304,6 +307,26 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         category.PluginId.Should().Be("legacy-plugin");
         category.ResourceAnchorType.Should().BeNull();
         category.Actions.Should().BeSameAs(actions);
+    }
+
+    private static WindowsOptimizationCategoryDefinition AssertManifestCategory(
+        IReadOnlyList<WindowsOptimizationCategoryDefinition> categories,
+        string pluginId,
+        string title,
+        string description,
+        string actionKey,
+        string actionTitle)
+    {
+        var category = categories.Should().ContainSingle().Subject;
+        category.Key.Should().Be($"plugin.{pluginId}");
+        category.PluginId.Should().Be(pluginId);
+        category.TitleResourceKey.Should().Be(title);
+        category.DescriptionResourceKey.Should().Be(description);
+        category.Actions.Should().ContainSingle();
+        category.Actions[0].Key.Should().Be(actionKey);
+        category.Actions[0].TitleResourceKey.Should().Be(actionTitle);
+        category.Actions[0].Recommended.Should().BeFalse();
+        return category;
     }
 
     private sealed class TestOptimizationProvider(string id, WindowsOptimizationCategoryDefinition category) : IPlugin, IOptimizationCategoryProvider

@@ -52,7 +52,7 @@ public class PluginViewModelTests
     }
 
     [Fact]
-    public void ResolveRuntimePluginCapabilities_WhenPluginIsManifestAdapter_ShouldNotTreatManifestActionsAsExecutableCategory()
+    public void ResolveRuntimePluginCapabilities_WhenPluginIsManifestAdapter_ShouldExposeOptimizationEntryPoint()
     {
         var manifest = new PluginManifest
         {
@@ -75,7 +75,7 @@ public class PluginViewModelTests
 
         capabilities.SupportsSettingsPage.Should().BeFalse();
         capabilities.SupportsFeaturePage.Should().BeFalse();
-        capabilities.SupportsOptimizationCategory.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeTrue();
     }
 
     [Theory]

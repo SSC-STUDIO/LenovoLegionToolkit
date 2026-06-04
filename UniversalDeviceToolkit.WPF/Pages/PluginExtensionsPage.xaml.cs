@@ -1089,6 +1089,9 @@ private string _currentSearchText = string.Empty;
 
     internal static PluginUiCapabilities ResolveRuntimePluginCapabilities(IPlugin plugin)
     {
+        if (plugin is PluginManifestAdapter adapter)
+            return PluginUiCapabilityResolver.ResolveFromManifest(adapter.Manifest);
+
         var supportsSettingsPage = false;
         var supportsFeaturePage = false;
         var supportsOptimizationCategory = false;

@@ -70,7 +70,9 @@ public static class PluginUiCapabilityResolver
     }
 
     public static bool SupportsOptimizationActions(PluginManifest? manifest) =>
-        false;
+        manifest?.Contributes?.OptimizationActions?.Any(action =>
+            !string.IsNullOrWhiteSpace(GetOptimizationActionId(action)) &&
+            !string.IsNullOrWhiteSpace(action.Title)) == true;
 
     public static string GetOptimizationActionId(PluginManifestOptimizationContribution? action)
     {
@@ -100,8 +102,36 @@ public static class PluginUiCapabilityResolver
         {
             SupportsSettingsPage = supportsSettings,
             SupportsFeaturePage = supportsFeature,
-            SupportsOptimizationCategory = false,
+            SupportsOptimizationCategory = HasOptimizationActions(contributes),
         };
+    }
+
+    internal static PluginManifest? ReadInstalledManifest(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return null;
+
+        try
+        {
+            foreach (var pluginDirectory in GetInstalledPluginDirectories(pluginId))
+            {
+                foreach (var manifestFileName in ManifestFileNames)
+                {
+                    var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
+                    if (!File.Exists(manifestPath))
+                        continue;
+
+                    return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read installed manifest for {pluginId}: {ex.Message}", ex);
+        }
+
+        return null;
     }
 
     private static bool HasContribution(PluginManifestPageContribution? contribution) =>
@@ -126,6 +156,27 @@ public static class PluginUiCapabilityResolver
             JsonValueKind.String => !string.IsNullOrWhiteSpace(property.GetString()),
             _ => false,
         };
+    }
+
+    private static bool HasOptimizationActions(JsonElement? contributes)
+    {
+        if (contributes is null || !TryGetProperty(contributes.Value, "optimizationActions", out var actions))
+            return false;
+
+        return actions.ValueKind == JsonValueKind.Array &&
+               actions.EnumerateArray().Any(action =>
+                   action.ValueKind == JsonValueKind.Object &&
+                   ReadNonEmptyString(action, "title") is not null &&
+                   (ReadNonEmptyString(action, "id") is not null || ReadNonEmptyString(action, "key") is not null));
+    }
+
+    private static string? ReadNonEmptyString(JsonElement root, string propertyName)
+    {
+        if (!TryGetProperty(root, propertyName, out var property) || property.ValueKind != JsonValueKind.String)
+            return null;
+
+        var value = property.GetString();
+        return string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
     private static JsonElement? ReadObject(JsonElement root, string propertyName) =>

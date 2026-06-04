@@ -14,6 +14,8 @@ public class PluginManifestAdapter : IPlugin
         _manifest = manifest;
     }
 
+    public PluginManifest Manifest => _manifest;
+
     public string Id => _manifest.Id;
     public string Name => _manifest.Name;
     public string Description => _manifest.Description;
