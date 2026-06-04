@@ -304,7 +304,6 @@ public class SensorsGroupController : IDisposable
     private const float MAX_VALID_CPU_POWER = 400f;
     private const float MIN_VALID_POWER_READING = 0f;
     private const int MAX_CPU_POWER_STUCK_RETRIES = 10;
-    private const float MIN_ACTIVE_GPU_POWER = 10f;
     private const float MB_PER_GB = 1024f;
 
     #endregion
@@ -1478,6 +1477,16 @@ public class SensorsGroupController : IDisposable
         return total > MIN_VALID_POWER_READING ? total : INVALID_VALUE_FLOAT;
     }
 
+    internal static float ResolveGpuPower(float currentPower, float previousPower)
+    {
+        if (currentPower > MIN_VALID_POWER_READING)
+            return currentPower;
+
+        return previousPower > MIN_VALID_POWER_READING
+            ? previousPower
+            : INVALID_VALUE_FLOAT;
+    }
+
     internal static (float used, float total, float utilization) ResolveGpuVramMetrics(float used, float total, float free)
     {
         if (total <= 0 && used >= 0 && free >= 0)
@@ -1880,8 +1889,9 @@ public class SensorsGroupController : IDisposable
                             _cachedGpuVramTotal = gpuVramMetrics.total > 0 ? gpuVramMetrics.total : _cachedGpuVramTotal;
 
                             float gPower = _gpuPowerSensor?.Value ?? INVALID_VALUE_FLOAT;
-                            _lastGpuPower = gPower;
-                            _snapshotGpuPower = _lastGpuPower > MIN_ACTIVE_GPU_POWER ? _lastGpuPower : INVALID_VALUE_FLOAT;
+                            _snapshotGpuPower = ResolveGpuPower(gPower, _lastGpuPower);
+                            if (_snapshotGpuPower > MIN_VALID_POWER_READING)
+                                _lastGpuPower = _snapshotGpuPower;
                             _snapshotGpuVoltage = _gpuCoreVoltageSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuVramTemp = _gpuVramTemperatureSensor?.Value ?? INVALID_VALUE_FLOAT;
                             _snapshotGpuHotSpotTemp = _gpuHotSpotSensor?.Value ?? INVALID_VALUE_FLOAT;

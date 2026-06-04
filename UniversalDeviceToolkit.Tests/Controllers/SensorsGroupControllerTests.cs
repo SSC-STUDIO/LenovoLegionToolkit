@@ -374,6 +374,30 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void ResolveGpuPower_WhenLowPositivePowerExists_ShouldKeepCurrentValue()
+    {
+        var result = SensorsGroupController.ResolveGpuPower(4.5f, 22f);
+
+        result.Should().Be(4.5f);
+    }
+
+    [Fact]
+    public void ResolveGpuPower_WhenCurrentPowerDropsOut_ShouldKeepPreviousValue()
+    {
+        var result = SensorsGroupController.ResolveGpuPower(-1f, 22f);
+
+        result.Should().Be(22f);
+    }
+
+    [Fact]
+    public void ResolveGpuPower_WhenNoPowerExists_ShouldReturnUnavailable()
+    {
+        var result = SensorsGroupController.ResolveGpuPower(0f, -1f);
+
+        result.Should().Be(-1f);
+    }
+
+    [Fact]
     public void SelectGpuTemperatureSensorName_ShouldPreferGpuCoreTemperatureAliases()
     {
         var result = SensorsGroupController.SelectGpuTemperatureSensorName(

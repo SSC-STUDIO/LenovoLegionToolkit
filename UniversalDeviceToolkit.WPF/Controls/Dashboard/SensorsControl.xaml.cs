@@ -232,6 +232,13 @@ public partial class SensorsControl
         UpdateDetailText("_batteryHealthText", $"{info.BatteryHealth:0.00}%");
         if (FindName("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar) healthBar.Value = info.BatteryHealth;
 
+        if (FindName("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
+            FindName("_batteryTempText") is ContentControl tempLabel)
+        {
+            var temperature = info.BatteryTemperatureC ?? -1;
+            UpdateValue(tempBar, tempLabel, 60, temperature, GetTemperatureText(info.BatteryTemperatureC));
+        }
+
         if (FindName("_batteryRateBar") is System.Windows.Controls.Primitives.RangeBase rateBar &&
             FindName("_batteryRateText") is ContentControl rateLabel)
         {
@@ -259,6 +266,7 @@ public partial class SensorsControl
 
         UpdateDetailText("_batteryCycles", $"{info.CycleCount:N0}");
         UpdateDetailText("_batteryDate", info.ManufactureDate?.ToString(LocalizationHelper.ShortDateFormat) ?? string.Empty);
+        UpdateDetailText("_batteryTemperature", FormatNullableTemperature(info.BatteryTemperatureC, _applicationSettings.Store.TemperatureUnit));
 
     }
 
@@ -829,7 +837,7 @@ public partial class SensorsControl
                 UpdateDetailText("_gpuVramTemperature", GetTemperatureText(gpuVramTemperatureTask.Result >= 0 ? (double?)gpuVramTemperatureTask.Result : null));
                 UpdateDetailText("_gpuHotSpotTemperature", GetTemperatureText(gpuHotSpotTemperatureTask.Result >= 0 ? (double?)gpuHotSpotTemperatureTask.Result : null));
                 UpdateDetailText("_gpuPcieThroughput", FormatThroughputPair(gpuPcieRxThroughputTask.Result, gpuPcieTxThroughputTask.Result));
-                UpdateDetailText("_gpuWattage", FormatPower(gpuPowerTask.Result));
+                UpdateDetailText("_gpuWattage", FormatPowerKeepingPrevious(gpuPowerTask.Result, _gpuWattage.Text));
                 UpdateDetailText("_cpuWattage", FormatCpuPowerBreakdown(cpuPowerTask.Result, cpuComponentPowersTask.Result));
                 UpdateDetailText("_cpuVoltage", FormatVoltage(cpuVoltageTask.Result));
                 UpdateDetailText("_cpuPCoreClock", FormatFrequency(cpuPCoreClockTask.Result));
@@ -952,6 +960,16 @@ public partial class SensorsControl
 
     internal static string FormatPower(float wattage) =>
         wattage >= 0 ? $"{wattage:0.#} W" : NotAvailableText();
+
+    internal static string FormatPowerKeepingPrevious(float wattage, string? previousText) =>
+        wattage >= 0
+            ? FormatPower(wattage)
+            : !string.IsNullOrWhiteSpace(previousText) && previousText != NotAvailableText()
+                ? previousText
+                : NotAvailableText();
+
+    internal static string FormatNullableTemperature(double? temperature, TemperatureUnit temperatureUnit) =>
+        temperature is { } value ? FormatTemperature(value, temperatureUnit) : NotAvailableText();
 
     internal static string FormatFrequency(float frequencyMHz) =>
         frequencyMHz > 0 ? $"{frequencyMHz / 1000.0:0.0} {GigahertzUnit}" : NotAvailableText();

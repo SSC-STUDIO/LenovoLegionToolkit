@@ -207,6 +207,30 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void FormatPowerKeepingPrevious_WhenPowerUnavailableAndPreviousExists_ShouldKeepPreviousValue()
+    {
+        var text = SensorsControl.FormatPowerKeepingPrevious(-1f, "12.3 W");
+
+        text.Should().Be("12.3 W");
+    }
+
+    [Fact]
+    public void FormatPowerKeepingPrevious_WhenPowerUnavailableAndPreviousMissing_ShouldReturnNotAvailable()
+    {
+        var text = SensorsControl.FormatPowerKeepingPrevious(-1f, NotAvailableText());
+
+        text.Should().Be(NotAvailableText());
+    }
+
+    [Fact]
+    public void FormatNullableTemperature_WhenTemperatureExists_ShouldUseConfiguredUnit()
+    {
+        var text = SensorsControl.FormatNullableTemperature(30, TemperatureUnit.F);
+
+        text.Should().Be("86 °F");
+    }
+
+    [Fact]
     public void FormatFrequency_WhenFrequencyAvailable_ShouldFormatInGigahertz()
     {
         var text = SensorsControl.FormatFrequency(4200f);
