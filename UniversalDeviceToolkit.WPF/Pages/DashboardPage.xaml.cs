@@ -58,7 +58,7 @@ public partial class DashboardPage
     private async Task RefreshAsync()
     {
         _loader.IsLoading = true;
-        _dashboardContentRoot.Visibility = Visibility.Collapsed;
+        SetDashboardContentReady(false);
 
         _scrollViewer.ScrollToTop();
 
@@ -115,9 +115,16 @@ public partial class DashboardPage
         LayoutGroups(ActualWidth);
 
         await WaitForDashboardDataAsync();
-        _dashboardContentRoot.Visibility = Visibility.Visible;
+        SetDashboardContentReady(true);
         _loader.IsLoading = false;
         await Task.Delay(TimeSpan.FromMilliseconds(250));
+    }
+
+    private void SetDashboardContentReady(bool ready)
+    {
+        _dashboardContentRoot.Visibility = Visibility.Visible;
+        _dashboardContentRoot.Opacity = ready ? 1 : 0;
+        _dashboardContentRoot.IsHitTestVisible = ready;
     }
 
     private async Task WaitForDashboardDataAsync()

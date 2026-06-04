@@ -78,6 +78,46 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void HasSummarySensorData_WhenCpuAndGpuArriveInSeparateSamples_ShouldReturnTrueAfterDisplayMerge()
+    {
+        var cpuSample = new SensorsData(
+            new SensorData(
+                utilization: 42,
+                maxUtilization: 100,
+                coreClock: -1,
+                maxCoreClock: -1,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: -1,
+                maxTemperature: -1,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            SensorData.Empty);
+        var gpuSample = new SensorsData(
+            SensorData.Empty,
+            new SensorData(
+                utilization: -1,
+                maxUtilization: -1,
+                coreClock: 1350,
+                maxCoreClock: 2100,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: -1,
+                maxTemperature: -1,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1));
+
+        var renderedData = SensorsControl.MergeSensorDataForDisplay(gpuSample, cpuSample);
+
+        SensorsControl.HasSummarySensorData(gpuSample).Should().BeFalse();
+        SensorsControl.HasSummarySensorData(renderedData).Should().BeTrue();
+    }
+
+    [Fact]
     public void FormatUsageInGigabytes_WhenUsageAndTotalAreAvailable_ShouldIncludePercentage()
     {
         var text = SensorsControl.FormatUsageInGigabytes(6.4f, 8f);

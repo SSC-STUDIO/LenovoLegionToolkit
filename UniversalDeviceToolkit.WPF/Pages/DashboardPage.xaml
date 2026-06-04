@@ -36,7 +36,7 @@
         <controls:LoadableControl
             x:Name="_loader"
             Margin="0,0,0,12"
-            ContentVisibilityWhileLoading="Collapsed">
+            ContentVisibilityWhileLoading="Visible">
             <controls:LoadableControl.LoadingContent>
                 <StackPanel
                     Margin="0,16,16,0"
@@ -162,7 +162,10 @@
                 </StackPanel>
             </controls:LoadableControl.LoadingContent>
 
-            <Grid x:Name="_dashboardContentRoot" Visibility="Collapsed">
+            <Grid
+                x:Name="_dashboardContentRoot"
+                IsHitTestVisible="False"
+                Opacity="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

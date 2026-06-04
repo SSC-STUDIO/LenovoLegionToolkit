@@ -383,8 +383,8 @@ public partial class SensorsControl
 
     private void UpdateValues(SensorsData data, bool completesInitialLoad = false)
     {
-        var shouldCompleteInitialLoad = completesInitialLoad && HasSummarySensorData(data);
         data = MergeSensorDataForDisplay(data, _lastRenderedSensorData);
+        var shouldCompleteInitialLoad = completesInitialLoad && HasSummarySensorData(data);
         _lastRenderedSensorData = data;
         CacheSessionSensorDataForDisplay(data);
 
