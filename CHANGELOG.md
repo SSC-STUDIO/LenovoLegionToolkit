@@ -12,10 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes yet.
 
-## [4.2.0] - 2026-05-31
+## [4.2.0] - 2026-06-04
 
 ### Highlights / 重点
-- Beta release for in-app update from v4.1.0. Existing installs can check for updates normally and install the Full or Online setup package from GitHub Releases.
+- Stable release for in-app updates from v4.1.0. Existing installs can check for updates normally and install the Full, Online, or cross-platform diagnostics CLI package from GitHub Releases.
 - Added a real-time on-screen display (OSD) overlay for hardware metrics, ported from upstream Lenovo Legion Toolkit behavior.
 
 ### Added / 新增
