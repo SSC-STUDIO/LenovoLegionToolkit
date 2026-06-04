@@ -239,6 +239,22 @@ function Get-VerificationLines {
   )
 }
 
+function Get-CompatibilityLines {
+  param(
+    [string[]]$Names
+  )
+
+  $lines = New-Object System.Collections.Generic.List[string]
+  $hasCrossPlatformCli = @($Names | Where-Object { $_ -match '_CLI_cross-platform\.zip$' }).Count -gt 0
+
+  $lines.Add('- Desktop app and hardware controls: Windows 10/11 x64')
+  if ($hasCrossPlatformCli) {
+    $lines.Add('- Cross-platform diagnostics CLI: Windows, macOS, and Linux with .NET 10 runtime')
+  }
+
+  return $lines.ToArray()
+}
+
 $section = Get-ReleaseSection -Path $ChangelogPath -ReleaseVersion $Version
 $releaseDate = if ($section) { $section.Date } elseif (-not [string]::IsNullOrWhiteSpace($ReleaseDate)) { $ReleaseDate } else { 'Unknown' }
 $changeBody = if ($section) { $section.Body } else { '' }
@@ -246,6 +262,7 @@ $highlights = Get-SectionSummary -Body $changeBody
 $changesBody = Remove-LeadingHighlightsSection -Body $changeBody
 $downloads = Get-DownloadLines -ReleaseVersion $Version -Names $AssetNames
 $onlineResources = Get-OnlineResourceLines -ReleaseVersion $Version -Names $AssetNames
+$compatibility = Get-CompatibilityLines -Names $AssetNames
 $verification = Get-VerificationLines -Names $AssetNames
 
 $lines = New-Object System.Collections.Generic.List[string]
@@ -270,8 +287,7 @@ $lines.Add('## Online resources')
 $lines.AddRange([string[]]$onlineResources)
 $lines.Add('')
 $lines.Add('## Compatibility')
-$lines.Add('- Desktop app and hardware controls: Windows 10/11 x64')
-$lines.Add('- Cross-platform diagnostics CLI: Windows, macOS, and Linux with .NET 10 runtime')
+$lines.AddRange([string[]]$compatibility)
 $lines.Add('')
 $lines.Add('## Verification')
 $lines.AddRange([string[]]$verification)
