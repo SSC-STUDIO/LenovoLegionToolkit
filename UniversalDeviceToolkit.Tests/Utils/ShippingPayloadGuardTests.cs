@@ -30,12 +30,17 @@ public sealed class ShippingPayloadGuardTests
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
         var makeScript = ReadRepositoryFile("Make.bat");
 
-        workflow.Should().Contain("CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$releaseVersion");
+        workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
+        workflow.Should().Contain("CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$versionLabel");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
+        workflow.Should().Contain("-AssetVersion $env:VERSION");
         workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
 
+        crossPlatformScript.Should().Contain("[string]$AssetVersion");
+        crossPlatformScript.Should().Contain("$resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }");
+        crossPlatformScript.Should().Contain("${AssetPrefix}_v${resolvedAssetVersion}_CLI_cross-platform.zip");
         crossPlatformScript.Should().Contain("$shippingPayloadGuard = Resolve-RepoPath 'Scripts\\Assert-ShippingPayload.ps1'");
         crossPlatformScript.Should().Contain("& $shippingPayloadGuard -PayloadPath $publishOutputPath");
 

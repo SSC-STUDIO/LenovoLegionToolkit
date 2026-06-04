@@ -3,6 +3,8 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Version,
 
+    [string]$AssetVersion,
+
     [string]$ProjectPath = 'UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj',
 
     [string]$PublishOutput = 'Build-CrossPlatformCli',
@@ -136,9 +138,10 @@ Any OS:
 $project = Resolve-RepoPath $ProjectPath
 $publishOutputPath = Resolve-RepoPath $PublishOutput
 $releaseOutputPath = Resolve-RepoPath $ReleaseOutput
-$assetName = "${AssetPrefix}_v${Version}_CLI_cross-platform.zip"
+$resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }
+$assetName = "${AssetPrefix}_v${resolvedAssetVersion}_CLI_cross-platform.zip"
 $assetPath = Join-Path $releaseOutputPath $assetName
-$resolvedHashFileName = if ([string]::IsNullOrWhiteSpace($HashFileName)) { "${AssetPrefix}_v${Version}_SHA256.txt" } else { $HashFileName }
+$resolvedHashFileName = if ([string]::IsNullOrWhiteSpace($HashFileName)) { "${AssetPrefix}_v${resolvedAssetVersion}_SHA256.txt" } else { $HashFileName }
 $hashPath = Join-Path $releaseOutputPath $resolvedHashFileName
 
 if (-not (Test-Path -LiteralPath $project)) {
