@@ -257,7 +257,7 @@ jobs:
         path: release-assets/pages
 
     - name: Deploy Pages resources
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v5
 
     - name: Upload release artifact
       uses: actions/upload-artifact@v7
