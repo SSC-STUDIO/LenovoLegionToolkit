@@ -37,6 +37,8 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
         workflow.Should().Contain("-AssetVersion $env:VERSION");
         workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
+        workflow.Should().Contain("./Packaging/Prepare-PackageManifests.ps1");
+        workflow.Should().Contain("-HashManifestPath \"$env:RELEASE_OUTPUT\\$env:HASH_ASSET\"");
 
         crossPlatformScript.Should().Contain("[string]$AssetVersion");
         crossPlatformScript.Should().Contain("$resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }");

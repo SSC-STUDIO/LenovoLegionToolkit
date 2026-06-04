@@ -4,9 +4,10 @@ param(
     [ValidatePattern('^\d+\.\d+\.\d+$')]
     [string]$Version,
 
-    [Parameter(Mandatory)]
     [ValidatePattern('^[A-Fa-f0-9]{64}$')]
     [string]$InstallerSha256,
+
+    [string]$HashManifestPath,
 
     [Parameter(Mandatory)]
     [ValidatePattern('^\d{4}-\d{2}-\d{2}$')]
@@ -40,12 +41,75 @@ if ([string]::IsNullOrWhiteSpace($RootPath))
 }
 
 $repoRoot = (Resolve-Path $RootPath).Path
+
+function Resolve-RepositoryPath
+{
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+
+    if ([System.IO.Path]::IsPathRooted($Path))
+    {
+        return $Path
+    }
+
+    return Join-Path $repoRoot $Path
+}
+
+function Get-HashFromManifest
+{
+    param(
+        [Parameter(Mandatory)]
+        [string]$ManifestPath,
+
+        [Parameter(Mandatory)]
+        [string]$AssetName
+    )
+
+    if (-not (Test-Path -LiteralPath $ManifestPath))
+    {
+        throw "SHA256 manifest not found at '$ManifestPath'."
+    }
+
+    foreach ($line in Get-Content -LiteralPath $ManifestPath)
+    {
+        if ($line -match '^(?<hash>[0-9a-fA-F]{64})\s+(?<name>.+)$' -and
+            $Matches.name.Trim() -ieq $AssetName)
+        {
+            return $Matches.hash
+        }
+    }
+
+    throw "SHA256 manifest '$ManifestPath' does not contain '$AssetName'."
+}
+
+$legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
+
+if (-not [string]::IsNullOrWhiteSpace($HashManifestPath))
+{
+    $manifestHash = Get-HashFromManifest -ManifestPath (Resolve-RepositoryPath $HashManifestPath) -AssetName $legacyAssetName
+    if ([string]::IsNullOrWhiteSpace($InstallerSha256))
+    {
+        $InstallerSha256 = $manifestHash
+    }
+    elseif ($InstallerSha256.ToUpperInvariant() -cne $manifestHash.ToUpperInvariant())
+    {
+        throw "Installer SHA256 '$InstallerSha256' does not match '$legacyAssetName' in '$HashManifestPath'."
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($InstallerSha256))
+{
+    throw 'Provide either -InstallerSha256 or -HashManifestPath.'
+}
+
 $installerSha256Upper = $InstallerSha256.ToUpperInvariant()
 $installerSha256Lower = $InstallerSha256.ToLowerInvariant()
 
 if ([string]::IsNullOrWhiteSpace($InstallerUrl))
 {
-    $InstallerUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/LenovoLegionToolkit_v${Version}_Setup.exe"
+    $InstallerUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/$legacyAssetName"
 }
 
 function Ensure-Directory

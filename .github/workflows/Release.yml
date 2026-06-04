@@ -181,6 +181,13 @@ jobs:
       if: ${{ !contains(github.ref_name, '-') }}
       shell: pwsh
       run: |
+        $releaseDate = [DateTime]::UtcNow.ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
+        ./Packaging/Prepare-PackageManifests.ps1 `
+          -Version $env:BUILD_VERSION `
+          -ReleaseDate $releaseDate `
+          -HashManifestPath "$env:RELEASE_OUTPUT\$env:HASH_ASSET" `
+          -UpdatePublishedScoopManifest
+
         ./Packaging/Test-PackageManifests.ps1 `
           -Version $env:BUILD_VERSION `
           -Repository '${{ github.repository }}' `
