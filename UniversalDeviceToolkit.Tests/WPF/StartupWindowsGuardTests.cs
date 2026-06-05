@@ -1,6 +1,9 @@
 using System;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -29,6 +32,7 @@ public sealed class StartupWindowsGuardTests
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "DeviceSetupWindow.xaml.cs");
         var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh.resx");
+        var zhHansResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
 
         source.Should().Contain("DeviceSetupWindow_BasicModeSummary");
         source.Should().Contain("DeviceSetupWindow_MatchingPackSummary");
@@ -40,6 +44,31 @@ public sealed class StartupWindowsGuardTests
 
         zhResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
         zhResources.Should().Contain("<value>设备包：{0}</value>");
+        zhHansResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
+        zhHansResources.Should().Contain("<value>设备包：{0}</value>");
+        zhHansResources.Should().Contain("检测到匹配的设备包");
+        zhHansResources.Should().NotContain("detected a matching device pack");
+    }
+
+    [Fact]
+    public void DeviceSetupWindow_zhHansResources_ShouldNotFallBackToEnglish()
+    {
+        var culture = new CultureInfo("zh-Hans");
+
+        var summary = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "DeviceSetupWindow_MatchingPackSummary",
+            "fallback",
+            culture);
+        var packFormat = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "DeviceSetupWindow_DevicePackFormat",
+            "fallback",
+            culture);
+
+        summary.Should().Contain("检测到匹配的设备包");
+        summary.Should().NotContain("detected a matching device pack");
+        packFormat.Should().Be("设备包：{0}");
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)
