@@ -1435,8 +1435,8 @@ private string _currentSearchText = string.Empty;
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
             }
 
-            // Immediately update specific plugin's UI state
-            UpdateSpecificPluginUI(pluginId);
+            await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
+            await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(pluginId);
 
             // Show success message
             if (Application.Current.MainWindow is MainWindow mainWindow)
@@ -1484,16 +1484,10 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
-                _pluginIdsReloadedForUi.Remove(manifest.Id);
-                await _pluginManager.ScanAndLoadPluginsAsync();
                 _recentInstalledVersions[manifest.Id] = manifest.Version;
                 RemoveAvailableUpdate(manifest.Id);
                 ReconcileAvailableUpdatesWithInstalledVersions();
-                LocalizationHelper.SetPluginResourceCultures();
-                UpdateAllPluginsUI();
-
-                if (Application.Current.MainWindow is MainWindow mainWindow)
-                    mainWindow.UpdateInstalledPluginsNavigationItems();
+                await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);
 
                 if (navigateToOptimizationCategoryOnSuccess)
                     await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest);
@@ -1530,17 +1524,22 @@ private string _currentSearchText = string.Empty;
 
     private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(PluginManifest manifest)
     {
-        var plugin = await GetRegisteredPluginForUiAsync(manifest.Id, forceRefresh: true);
-        var manifestMetadata = ResolvePluginManifestMetadata(manifest.Id) ?? manifest;
-        var capabilities = ResolvePluginCapabilities(plugin, true, manifest.Id, manifestMetadata);
+        await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest.Id, manifest);
+    }
 
-        var hasExecutable = TryResolvePluginExecutable(manifest.Id, out _, out _);
+    private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(string pluginId, PluginManifest? fallbackManifest = null)
+    {
+        var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+        var manifestMetadata = ResolvePluginManifestMetadata(pluginId) ?? fallbackManifest;
+        var capabilities = ResolvePluginCapabilities(plugin, true, pluginId, manifestMetadata);
+
+        var hasExecutable = TryResolvePluginExecutable(pluginId, out _, out _);
         if (!ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
         {
             return;
         }
 
-        NavigateToPluginOptimizationCategory(manifest.Id);
+        NavigateToPluginOptimizationCategory(pluginId);
     }
 
     internal static bool ShouldNavigateToOptimizationAfterInstall(PluginUiCapabilities capabilities, bool hasExecutable) =>
@@ -1548,6 +1547,17 @@ private string _currentSearchText = string.Empty;
         !capabilities.SupportsFeaturePage &&
         !capabilities.SupportsSettingsPage &&
         !hasExecutable;
+
+    private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
+    {
+        _pluginIdsReloadedForUi.Remove(pluginId);
+        await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime).ConfigureAwait(true);
+        LocalizationHelper.SetPluginResourceCultures();
+        UpdateAllPluginsUI();
+
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+            mainWindow.UpdateInstalledPluginsNavigationItems();
+    }
 
     private async void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
     {
@@ -1875,7 +1885,8 @@ private string _currentSearchText = string.Empty;
             return onlinePlugin;
 
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
-        return TryReadInstalledPluginManifest(pluginId, metadata?.FilePath);
+        return TryReadInstalledPluginManifest(pluginId, metadata?.FilePath) ??
+               PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
     }
 
     private IPlugin? GetRegisteredPluginForUi(string pluginId, bool reloadIfMissing)

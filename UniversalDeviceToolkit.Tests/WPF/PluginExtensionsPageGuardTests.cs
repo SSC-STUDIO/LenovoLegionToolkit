@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -44,9 +47,102 @@ public sealed class PluginExtensionsPageGuardTests
         lifecycleBlock.Should().Contain("_pluginInstallCoordinator.Changed -=");
     }
 
+    [Fact]
+    public void LocalInstall_ShouldRefreshRuntimeUiAndOpenOptimizationOnlyPlugins()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
+        var installHandler = ExtractMethod(source, "private async void PluginInstallButton_Click");
+
+        installHandler.Should().Contain("_pluginManager.InstallPlugin(pluginId);");
+        installHandler.Should().Contain("await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);");
+        installHandler.Should().Contain("await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(pluginId);");
+    }
+
+    [Fact]
+    public void SharedInstallRefresh_ShouldReloadRuntimeResourcesUiAndMainNavigation()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
+        var refreshMethod = ExtractMethod(source, "private async Task RefreshInstalledPluginUiAfterInstallAsync");
+        var onlineInstallMethod = ExtractMethod(source, "private async Task InstallOnlinePluginAsync");
+
+        refreshMethod.Should().Contain("_pluginIdsReloadedForUi.Remove(pluginId);");
+        refreshMethod.Should().Contain("await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime)");
+        refreshMethod.Should().Contain("LocalizationHelper.SetPluginResourceCultures();");
+        refreshMethod.Should().Contain("UpdateAllPluginsUI();");
+        refreshMethod.Should().Contain("mainWindow.UpdateInstalledPluginsNavigationItems();");
+
+        onlineInstallMethod.Should().Contain("await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);");
+    }
+
+    [Fact]
+    public void ManifestOnlyInstalledPlugins_ShouldHaveMetadataFallbackForOptimizationNavigation()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
+        var resolveMethod = ExtractMethod(source, "private PluginManifest? ResolvePluginManifestMetadata");
+
+        resolveMethod.Should().Contain("TryReadInstalledPluginManifest(pluginId, metadata?.FilePath) ??");
+        resolveMethod.Should().Contain("PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);");
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-        return File.ReadAllText(Path.Combine([root, .. pathParts]));
+        var expectedRelativePath = Path.Combine(pathParts);
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
+    }
+
+    private static IEnumerable<string> GetRepositoryRootCandidates()
+    {
+        var roots = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(static root => !string.IsNullOrWhiteSpace(root)))
+        {
+            var directory = new DirectoryInfo(root!);
+            while (directory != null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                    yield return directory.FullName;
+
+                directory = directory.Parent;
+            }
+        }
     }
 }
