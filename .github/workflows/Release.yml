@@ -188,18 +188,18 @@ jobs:
     - name: Finalize release assets
       shell: pwsh
       run: |
-        $finalizeArgs = @(
-          '-FinalizeOnly',
-          '-ReleaseOutput', $env:RELEASE_OUTPUT,
-          '-PagesOutput', $env:PAGES_OUTPUT,
-          '-Version', $env:VERSION,
-          '-FullInstallerPath', "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Full.exe",
-          '-OnlineInstallerPath', "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Online.exe",
-          '-Repository', '${{ github.repository }}'
-        )
+        $finalizeArgs = @{
+          FinalizeOnly = $true
+          ReleaseOutput = $env:RELEASE_OUTPUT
+          PagesOutput = $env:PAGES_OUTPUT
+          Version = $env:VERSION
+          FullInstallerPath = "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Full.exe"
+          OnlineInstallerPath = "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Online.exe"
+          Repository = '${{ github.repository }}'
+        }
 
         if ($env:ENABLE_CROSS_PLATFORM_CLI -eq 'true') {
-          $finalizeArgs += '-IncludeCrossPlatformCli'
+          $finalizeArgs['IncludeCrossPlatformCli'] = $true
         }
 
         ./Scripts/Build-LanguageAssets.ps1 @finalizeArgs

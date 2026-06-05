@@ -46,6 +46,10 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Full\" MakeInstaller.iss");
         workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Online\" MakeInstaller.iss");
         workflow.Should().Contain("Expected installer output was not created");
+        workflow.Should().Contain("$finalizeArgs = @{");
+        workflow.Should().Contain("FinalizeOnly = $true");
+        workflow.Should().Contain("Repository = '${{ github.repository }}'");
+        workflow.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");
