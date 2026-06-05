@@ -373,7 +373,25 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ActiveCategories));
         UpdateSelectedActions();
 
-        _ = ScanOptimizationStatesAsync();
+        StartOptimizationStateScan();
+    }
+
+    private void StartOptimizationStateScan()
+    {
+        _ = ObserveOptimizationStateScanAsync();
+    }
+
+    private async Task ObserveOptimizationStateScanAsync()
+    {
+        try
+        {
+            await ScanOptimizationStatesAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to scan Windows optimization states.", ex);
+        }
     }
 
     private static string ResolveOptimizationText(Type? resourceAnchorType, ResourceManager? categoryResourceManager, string key)
@@ -829,26 +847,20 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         _isRefreshingStates = true;
         try
         {
-            foreach (var category in OptimizationCategories)
+            var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);
+            foreach (var action in actions)
             {
-                if (category?.Actions == null) continue;
+                // Scan to detect actual system state
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
                 
-                foreach (var action in category.Actions)
+                // Ensure UI updates happen on UI thread
+                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
                 {
-                    if (action == null) continue;
-                    
-                    // Scan to detect actual system state
-                    var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
-                    
-                    // Ensure UI updates happen on UI thread
-                    if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-                    {
-                        await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
-                    }
-                    else
-                    {
-                        action.IsSelected = isApplied;
-                    }
+                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
+                }
+                else
+                {
+                    action.IsSelected = isApplied;
                 }
             }
             
@@ -873,6 +885,24 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         {
             _isRefreshingStates = false;
         }
+    }
+
+    private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && !dispatcher.CheckAccess())
+            return await dispatcher.InvokeAsync(SnapshotOptimizationActions).Task.ConfigureAwait(false);
+
+        return SnapshotOptimizationActions();
+    }
+
+    private List<OptimizationActionViewModel> SnapshotOptimizationActions()
+    {
+        return OptimizationCategories
+            .Where(category => category?.Actions != null)
+            .SelectMany(category => category.Actions)
+            .Where(action => action != null)
+            .ToList();
     }
 
     public void NotifyDriverSelectionChanged()
