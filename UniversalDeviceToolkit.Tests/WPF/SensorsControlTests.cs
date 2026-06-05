@@ -252,6 +252,28 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControl_ShouldHideUnavailableOptionalCpuDetails()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var source = ReadSensorsControlSource();
+
+        xaml.Should().Contain("x:Name=\"_cpuWattageTitle\"");
+        xaml.Should().Contain("x:Name=\"_cpuVoltageTitle\"");
+        xaml.Should().Contain("x:Name=\"_cpuTempRangeTitle\"");
+        xaml.Should().Contain("x:Name=\"_cpuVoltageRangeTitle\"");
+        source.Should().Contain("UpdateOptionalDetailText(\"_cpuMemoryTemperatureTitle\", \"_cpuMemoryTemperature\"");
+        source.Should().Contain("UpdateOptionalDetailText(\"_cpuMotherboardTemperatureTitle\", \"_cpuMotherboardTemperature\"");
+        source.Should().Contain("UpdateOptionalDetailText(\"_cpuSsdTemperatureTitle\", \"_cpuSsdTemperature\"");
+        source.Should().Contain("T(\"SensorsControl_Motherboard_Temperature\", \"Board Temperature\")");
+        source.Should().NotContain("SensorsControl_MotherboardTemperature_Title");
+
+        SensorsControl.IsUsefulDetailValue("55 °C").Should().BeTrue();
+        SensorsControl.IsUsefulDetailValue("不可用").Should().BeFalse();
+        SensorsControl.IsUsefulDetailValue("N/A").Should().BeFalse();
+        SensorsControl.IsUsefulDetailValue("-").Should().BeFalse();
+    }
+
+    [Fact]
     public void FormatUsageInGigabytes_WhenUsageAndTotalAreAvailable_ShouldIncludePercentage()
     {
         var text = SensorsControl.FormatUsageInGigabytes(6.4f, 8f);

@@ -283,6 +283,30 @@ public partial class SensorsControl
         else if (FindName(name) is Label lbl) lbl.Content = displayText;
     }
 
+    private void UpdateOptionalDetailText(string titleName, string valueName, string? text)
+    {
+        var displayText = NormalizeDetailValueText(text);
+        var visible = IsUsefulDetailValue(displayText);
+
+        if (FindName(titleName) is UIElement titleElement)
+            titleElement.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+
+        if (FindName(valueName) is TextBlock textBlock)
+        {
+            textBlock.Text = displayText;
+            textBlock.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+        else if (FindName(valueName) is Label label)
+        {
+            label.Content = displayText;
+            label.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+        else if (FindName(valueName) is UIElement valueElement)
+        {
+            valueElement.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
     private void SetVisibility(string name, bool visible)
     {
         if (FindName(name) is UIElement el) el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
@@ -407,31 +431,23 @@ public partial class SensorsControl
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
             $"{data.CPU.FanSpeed} {RpmUnit}", $"{data.CPU.MaxFanSpeed} {RpmUnit}");
 
-        if (FindName("_cpuWattage") is TextBlock cpuWattage)
-        {
-            cpuWattage.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText();
-        }
+        UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText());
 
-        if (FindName("_cpuTempRange") is TextBlock cpuTempRange)
-        {
-             if (IsTemperatureRangeAvailable(data.CPU.MinTemperature, data.CPU.MaxTemperatureRecord))
-                 cpuTempRange.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
-             else
-                 cpuTempRange.Text = NotAvailableText();
-        }
+        UpdateOptionalDetailText(
+            "_cpuTempRangeTitle",
+            "_cpuTempRange",
+            IsTemperatureRangeAvailable(data.CPU.MinTemperature, data.CPU.MaxTemperatureRecord)
+                ? $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}"
+                : NotAvailableText());
 
-        if (FindName("_cpuVoltage") is TextBlock cpuVoltage)
-        {
-            cpuVoltage.Text = data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : NotAvailableText();
-        }
+        UpdateOptionalDetailText("_cpuVoltageTitle", "_cpuVoltage", data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : NotAvailableText());
 
-        if (FindName("_cpuVoltageRange") is TextBlock cpuVoltageRange)
-        {
-             if (IsVoltageRangeAvailable(data.CPU.MinVoltage, data.CPU.MaxVoltage))
-                 cpuVoltageRange.Text = $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V";
-             else
-                 cpuVoltageRange.Text = NotAvailableText();
-        }
+        UpdateOptionalDetailText(
+            "_cpuVoltageRangeTitle",
+            "_cpuVoltageRange",
+            IsVoltageRangeAvailable(data.CPU.MinVoltage, data.CPU.MaxVoltage)
+                ? $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V"
+                : NotAvailableText());
 
         UpdateValue(_gpuUtilizationBar, _gpuUtilizationLabel, data.GPU.MaxUtilization, data.GPU.Utilization,
             $"{data.GPU.Utilization} %");
@@ -747,22 +763,22 @@ public partial class SensorsControl
 
     private void SetInitialSensorPlaceholders()
     {
-        UpdateDetailText("_cpuWattage", NotAvailableText());
-        UpdateDetailText("_cpuVoltage", NotAvailableText());
+        UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", NotAvailableText());
+        UpdateOptionalDetailText("_cpuVoltageTitle", "_cpuVoltage", NotAvailableText());
         UpdateDetailText("_cpuPCoreClockTitle", T("SensorsControl_PCoreClock_Title", "P Core Clock"));
-        UpdateDetailText("_cpuPCoreClock", NotAvailableText());
+        UpdateOptionalDetailText("_cpuPCoreClockTitle", "_cpuPCoreClock", NotAvailableText());
         UpdateDetailText("_cpuECoreClockTitle", T("SensorsControl_ECoreClock_Title", "E Core Clock"));
-        UpdateDetailText("_cpuECoreClock", NotAvailableText());
-        UpdateDetailText("_cpuTempRange", NotAvailableText());
-        UpdateDetailText("_cpuVoltageRange", NotAvailableText());
+        UpdateOptionalDetailText("_cpuECoreClockTitle", "_cpuECoreClock", NotAvailableText());
+        UpdateOptionalDetailText("_cpuTempRangeTitle", "_cpuTempRange", NotAvailableText());
+        UpdateOptionalDetailText("_cpuVoltageRangeTitle", "_cpuVoltageRange", NotAvailableText());
         UpdateDetailText("_cpuMemoryUsageTitle", T("SensorsControl_MemoryUsage_Title", "Memory Usage"));
-        UpdateDetailText("_cpuMemoryUsage", NotAvailableText());
+        UpdateOptionalDetailText("_cpuMemoryUsageTitle", "_cpuMemoryUsage", NotAvailableText());
         UpdateDetailText("_cpuMemoryTemperatureTitle", T("SensorsControl_MemoryTemperature_Title", "Memory Temperature"));
-        UpdateDetailText("_cpuMemoryTemperature", NotAvailableText());
-        UpdateDetailText("_cpuMotherboardTemperatureTitle", T("SensorsControl_MotherboardTemperature_Title", "Motherboard Temperature"));
-        UpdateDetailText("_cpuMotherboardTemperature", NotAvailableText());
+        UpdateOptionalDetailText("_cpuMemoryTemperatureTitle", "_cpuMemoryTemperature", NotAvailableText());
+        UpdateDetailText("_cpuMotherboardTemperatureTitle", T("SensorsControl_Motherboard_Temperature", "Board Temperature"));
+        UpdateOptionalDetailText("_cpuMotherboardTemperatureTitle", "_cpuMotherboardTemperature", NotAvailableText());
         UpdateDetailText("_cpuSsdTemperatureTitle", T("SensorsControl_SsdTemperature_Title", "SSD Temperature"));
-        UpdateDetailText("_cpuSsdTemperature", NotAvailableText());
+        UpdateOptionalDetailText("_cpuSsdTemperatureTitle", "_cpuSsdTemperature", NotAvailableText());
         UpdateDetailText("_gpuWattage", NotAvailableText());
         UpdateDetailText("_gpuVoltage", NotAvailableText());
         UpdateDetailText("_gpuTempRange", NotAvailableText());
@@ -859,17 +875,17 @@ public partial class SensorsControl
                 UpdateDetailText("_gpuHotSpotTemperature", GetTemperatureText(gpuHotSpotTemperatureTask.Result >= 0 ? (double?)gpuHotSpotTemperatureTask.Result : null));
                 UpdateDetailText("_gpuPcieThroughput", FormatThroughputPair(gpuPcieRxThroughputTask.Result, gpuPcieTxThroughputTask.Result));
                 UpdateDetailText("_gpuWattage", FormatPowerKeepingPrevious(gpuPowerTask.Result, _gpuWattage.Text));
-                UpdateDetailText("_cpuWattage", FormatCpuPowerBreakdown(cpuPowerTask.Result, cpuComponentPowersTask.Result));
-                UpdateDetailText("_cpuVoltage", FormatVoltage(cpuVoltageTask.Result));
-                UpdateDetailText("_cpuPCoreClock", FormatFrequency(cpuPCoreClockTask.Result));
-                UpdateDetailText("_cpuECoreClock", FormatFrequency(cpuECoreClockTask.Result));
-                UpdateDetailText("_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsedTask.Result, memoryTotalTask.Result, memoryUsageTask.Result));
-                UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperatureTask.Result > 0 ? memoryTemperatureTask.Result : null));
-                UpdateDetailText("_cpuMotherboardTemperature", GetTemperatureText(motherboardTemperatureTask.Result > 0 ? motherboardTemperatureTask.Result : null));
-                UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperaturesTask.Result, _applicationSettings.Store.TemperatureUnit));
+                UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", FormatCpuPowerBreakdown(cpuPowerTask.Result, cpuComponentPowersTask.Result));
+                UpdateOptionalDetailText("_cpuVoltageTitle", "_cpuVoltage", FormatVoltage(cpuVoltageTask.Result));
+                UpdateOptionalDetailText("_cpuPCoreClockTitle", "_cpuPCoreClock", FormatFrequency(cpuPCoreClockTask.Result));
+                UpdateOptionalDetailText("_cpuECoreClockTitle", "_cpuECoreClock", FormatFrequency(cpuECoreClockTask.Result));
+                UpdateOptionalDetailText("_cpuMemoryUsageTitle", "_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsedTask.Result, memoryTotalTask.Result, memoryUsageTask.Result));
+                UpdateOptionalDetailText("_cpuMemoryTemperatureTitle", "_cpuMemoryTemperature", GetTemperatureText(memoryTemperatureTask.Result > 0 ? memoryTemperatureTask.Result : null));
+                UpdateOptionalDetailText("_cpuMotherboardTemperatureTitle", "_cpuMotherboardTemperature", GetTemperatureText(motherboardTemperatureTask.Result > 0 ? motherboardTemperatureTask.Result : null));
+                UpdateOptionalDetailText("_cpuSsdTemperatureTitle", "_cpuSsdTemperature", FormatTemperaturePair(ssdTemperaturesTask.Result, _applicationSettings.Store.TemperatureUnit));
                 UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltageTask.Result));
-                UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
-                UpdateDetailText("_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
+                UpdateOptionalDetailText("_cpuTempRangeTitle", "_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
+                UpdateOptionalDetailText("_cpuVoltageRangeTitle", "_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
                 UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
                 UpdateDetailText("_gpuVoltageRange", FormatFallbackRangeText(_gpuVoltage.Text, _gpuVoltageRange.Text));
 
@@ -1015,6 +1031,15 @@ public partial class SensorsControl
             return NotAvailableText();
 
         return text;
+    }
+
+    internal static bool IsUsefulDetailValue(string? text)
+    {
+        var normalized = NormalizeDetailValueText(text);
+        return !normalized.Equals(NotAvailableText(), StringComparison.OrdinalIgnoreCase)
+               && !normalized.Equals("N/A", StringComparison.OrdinalIgnoreCase)
+               && !normalized.Equals("Unavailable", StringComparison.OrdinalIgnoreCase)
+               && !normalized.Equals("不可用", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string? FormatThroughput(float bytesPerSecond)

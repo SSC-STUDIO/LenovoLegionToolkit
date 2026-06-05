@@ -99,10 +99,10 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuWattageTitle" Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuWattage" Text="" Margin="0,0,0,8" />
 
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuVoltageTitle" Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock x:Name="_cpuPCoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
@@ -115,10 +115,10 @@
                                     <TextBlock x:Name="_cpuMemoryUsage" Text="" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuTempRangeTitle" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuTempRange" Text="" Margin="0,0,0,8" />
 
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuVoltageRangeTitle" Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
 
                                     <TextBlock x:Name="_cpuMemoryTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
