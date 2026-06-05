@@ -43,6 +43,10 @@ public class SensorsGroupController : IDisposable
         "Tctl/Tdie",
         "Tctl",
         "Tdie",
+        "CPU Die",
+        "CPU CCD",
+        "CCD",
+        "Tjunction",
         "Core Max",
         "Core Average",
         "Average",
@@ -58,6 +62,10 @@ public class SensorsGroupController : IDisposable
         "VCore",
         "Core VID",
         "CPU VID",
+        "VDDCR CPU",
+        "CPU VDD",
+        "VDD CPU",
+        "VCC Core",
         "SVI2 TFN",
         "SVI3 TFN",
         "VID",
@@ -71,6 +79,7 @@ public class SensorsGroupController : IDisposable
         "Total",
         "CPU Usage",
         "CPU Utilization",
+        "CPU Utility",
         "Package",
     ];
     private static readonly string[] CPU_PACKAGE_POWER_SENSOR_PREFERENCES =
@@ -132,6 +141,7 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Memory Junction",
         "Memory Junction",
+        "VRAM Junction",
         "VRAM Temperature",
         "Memory Temperature",
         "VRAM",
@@ -146,9 +156,12 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] MEMORY_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "DIMM",
+        "SPD Hub",
         "DRAM",
         "DDR",
         "SPD",
+        "TSOD",
+        "PMIC",
         "Memory",
         "RAM",
     ];
@@ -161,9 +174,15 @@ public class SensorsGroupController : IDisposable
         "Mainboard",
         "Board",
         "VRM",
+        "VRM MOS",
         "MOSFET",
+        "MOS Temperature",
         "MOS",
+        "Super I/O",
+        "Super IO",
         "System",
+        "T_Sensor",
+        "TSensor",
         "SYSTIN",
         "AUXTIN",
         "TMPIN",
@@ -173,7 +192,9 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_VRAM_USED_SENSOR_PREFERENCES =
     [
         "GPU Memory Used",
+        "GPU Dedicated Memory Used",
         "Dedicated Memory Used",
+        "Dedicated Video Memory Used",
         "D3D Dedicated Memory Used",
         "D3D Shared Memory Used",
         "Shared Memory Used",
@@ -184,7 +205,9 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Memory Total",
         "D3D Shared Memory Total",
+        "GPU Dedicated Memory Total",
         "Dedicated Memory Total",
+        "Dedicated Video Memory Total",
         "Shared Memory Total",
         "VRAM Total",
         "Memory Total",
@@ -193,7 +216,9 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_VRAM_FREE_SENSOR_PREFERENCES =
     [
         "GPU Memory Free",
+        "GPU Dedicated Memory Free",
         "Dedicated Memory Free",
+        "Dedicated Video Memory Free",
         "D3D Dedicated Memory Free",
         "D3D Shared Memory Free",
         "Shared Memory Free",
@@ -203,13 +228,21 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_PCIE_RX_THROUGHPUT_SENSOR_PREFERENCES =
     [
         "GPU PCIe Rx",
+        "GPU PCIe Read",
+        "PCIe Read",
         "PCIe Rx",
+        "PCIe RX",
+        "Bus Read",
         "Bus Rx",
     ];
     private static readonly string[] GPU_PCIE_TX_THROUGHPUT_SENSOR_PREFERENCES =
     [
         "GPU PCIe Tx",
+        "GPU PCIe Write",
+        "PCIe Write",
         "PCIe Tx",
+        "PCIe TX",
+        "Bus Write",
         "Bus Tx",
     ];
     private static readonly string[] GPU_POWER_SENSOR_PREFERENCES =
@@ -217,8 +250,10 @@ public class SensorsGroupController : IDisposable
         "GPU Package",
         "GPU Power",
         "Board Power Draw",
+        "Board Power",
         "GPU Board Power",
         "Total Board Power",
+        "GPU Total Power",
         "Total Graphics Power",
         "Graphics Power",
         "GPU ASIC Power",
@@ -233,10 +268,12 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Core Voltage",
         "GPU VDDC",
+        "GPU VDD",
         "GPU VCore",
         "Core Voltage",
         "VDDC",
         "VDDCI",
+        "VDD",
         "MVDD",
         "NVVDD",
         "GPU Core",
@@ -298,7 +335,11 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] STORAGE_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "Composite",
+        "NVMe Composite",
         "Drive Temperature",
+        "SSD Temperature",
+        "Controller Temperature",
+        "NAND Temperature",
         "Temperature",
     ];
     private static readonly string[] GPU_USAGE_SENSOR_PREFERENCES =

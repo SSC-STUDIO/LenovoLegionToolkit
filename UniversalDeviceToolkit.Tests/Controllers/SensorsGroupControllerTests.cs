@@ -76,6 +76,30 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuTemperatureSensorName_ShouldRecognizeCpuZAndHwInfoDieAliases()
+    {
+        var dieResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "CPU Die"
+        ]);
+        var ccdResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "CPU CCD1"
+        ]);
+        var junctionResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "Tjunction"
+        ]);
+
+        dieResult.Should().Be("CPU Die");
+        ccdResult.Should().Be("CPU CCD1");
+        junctionResult.Should().Be("Tjunction");
+    }
+
+    [Fact]
     public void SelectCpuVoltageSensorName_ShouldPreferCoreVoltageAliases()
     {
         var result = SensorsGroupController.SelectCpuVoltageSensorName(
@@ -117,6 +141,30 @@ public class SensorsGroupControllerTests
 
         cpuZResult.Should().Be("CPU VID");
         amdResult.Should().Be("SVI2 TFN");
+    }
+
+    [Fact]
+    public void SelectCpuVoltageSensorName_ShouldRecognizeVddAndVccCoreAliases()
+    {
+        var vddResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "System Agent Voltage",
+            "CPU VDD"
+        ]);
+        var vddcrResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "Cache Voltage",
+            "VDDCR CPU"
+        ]);
+        var vccResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "SA Voltage",
+            "VCC Core"
+        ]);
+
+        vddResult.Should().Be("CPU VDD");
+        vddcrResult.Should().Be("VDDCR CPU");
+        vccResult.Should().Be("VCC Core");
     }
 
     [Fact]
@@ -193,6 +241,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("VRAM Temperature");
+    }
+
+    [Fact]
+    public void SelectGpuVramTemperatureSensorName_ShouldRecognizeJunctionAliases()
+    {
+        var result = SensorsGroupController.SelectGpuVramTemperatureSensorName(
+        [
+            "GPU Temperature",
+            "VRAM Junction"
+        ]);
+
+        result.Should().Be("VRAM Junction");
     }
 
     [Fact]
@@ -293,6 +353,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuPcieRxThroughputSensorName_ShouldRecognizePcieReadAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPcieRxThroughputSensorName(
+        [
+            "GPU Memory",
+            "PCIe Read"
+        ]);
+
+        result.Should().Be("PCIe Read");
+    }
+
+    [Fact]
     public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizeGpuPcieTxAlias()
     {
         var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
@@ -302,6 +374,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("GPU PCIe Tx");
+    }
+
+    [Fact]
+    public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizePcieWriteAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
+        [
+            "GPU Core",
+            "PCIe Write"
+        ]);
+
+        result.Should().Be("PCIe Write");
     }
 
     [Fact]
@@ -388,6 +472,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Total Graphics Power");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeBoardPowerAlias()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "Board Power"
+        ]);
+
+        result.Should().Be("Board Power");
     }
 
     [Fact]
@@ -525,6 +621,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuVoltageSensorName_ShouldRecognizeGpuVddAlias()
+    {
+        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        [
+            "Voltage",
+            "GPU VDD"
+        ]);
+
+        result.Should().Be("GPU VDD");
+    }
+
+    [Fact]
     public void SelectMemoryUsedSensorName_ShouldRecognizeUsedMemoryAlias()
     {
         var result = SensorsGroupController.SelectMemoryUsedSensorName(
@@ -597,6 +705,24 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectStorageTemperatureSensorName_ShouldRecognizeNvmeAndControllerAliases()
+    {
+        var nvmeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "NVMe Composite"
+        ]);
+        var controllerResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Controller Temperature"
+        ]);
+
+        nvmeResult.Should().Be("NVMe Composite");
+        controllerResult.Should().Be("Controller Temperature");
+    }
+
+    [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldPreferPchAndChipsetAliases()
     {
         var pchResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
@@ -632,6 +758,24 @@ public class SensorsGroupControllerTests
 
         vrmResult.Should().Be("VRM");
         tmpinResult.Should().Be("AUXTIN0");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeSuperIoAndExternalSensorAliases()
+    {
+        var superIoResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "Super I/O"
+        ]);
+        var tSensorResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "T_Sensor"
+        ]);
+
+        superIoResult.Should().Be("Super I/O");
+        tSensorResult.Should().Be("T_Sensor");
     }
 
     [Fact]
