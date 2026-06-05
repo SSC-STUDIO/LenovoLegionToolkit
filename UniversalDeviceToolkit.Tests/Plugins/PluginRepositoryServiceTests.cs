@@ -75,7 +75,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
@@ -105,7 +105,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle();
@@ -135,7 +135,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
