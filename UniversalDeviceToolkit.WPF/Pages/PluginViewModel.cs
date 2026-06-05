@@ -24,6 +24,7 @@ namespace UniversalDeviceToolkit.WPF.Pages
         private bool _supportsConfiguration;
         private bool _supportsFeaturePage;
         private bool _supportsOptimizationCategory;
+        private bool _supportsExecutableEntryPoint;
         private bool _isInstalling;
         private double _installProgress;
         private string _installStatusText = string.Empty;
@@ -439,7 +440,23 @@ public string PluginId
             }
         }
 
-        public bool SupportsOpenAction => _supportsFeaturePage || _supportsOptimizationCategory;
+        public bool SupportsExecutableEntryPoint
+        {
+            get => _supportsExecutableEntryPoint;
+            set
+            {
+                if (_supportsExecutableEntryPoint != value)
+                {
+                    _supportsExecutableEntryPoint = value;
+                    OnPropertyChanged(nameof(SupportsExecutableEntryPoint));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(ShouldShowInstalledActions));
+                    OnPropertyChanged(nameof(CapabilitySummary));
+                }
+            }
+        }
+
+        public bool SupportsOpenAction => _supportsFeaturePage || _supportsOptimizationCategory || _supportsExecutableEntryPoint;
 
         public bool IsInstalling
         {

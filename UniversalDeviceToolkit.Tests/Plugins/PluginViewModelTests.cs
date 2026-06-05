@@ -24,6 +24,22 @@ public class PluginViewModelTests
     }
 
     [Fact]
+    public void SupportsOpenAction_WhenExecutableEntryPointIsAvailable_ShouldBeTrueWithoutHostedPages()
+    {
+        var plugin = MockFactory.CreateMockPlugin(id: "user-feedback");
+        var viewModel = new PluginViewModel(plugin, isInstalled: true)
+        {
+            SupportsFeaturePage = false,
+            SupportsOptimizationCategory = false,
+            SupportsConfiguration = false,
+            SupportsExecutableEntryPoint = true
+        };
+
+        viewModel.SupportsOpenAction.Should().BeTrue();
+        viewModel.ShouldShowInstalledActions.Should().BeTrue();
+    }
+
+    [Fact]
     public void ShouldNavigateToOptimizationAfterInstall_WhenOnlyOptimizationCategoryIsAvailable_ShouldReturnTrue()
     {
         var capabilities = new PluginUiCapabilities

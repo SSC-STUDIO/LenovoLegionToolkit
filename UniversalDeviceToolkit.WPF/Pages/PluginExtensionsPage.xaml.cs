@@ -439,6 +439,7 @@ private string _currentSearchText = string.Empty;
                 var manifestMetadata = updatePlugin ?? onlinePlugin ?? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath);
                 var resolvedPlugin = EnsureRegisteredPluginForUi(plugin.Id, isInstalled) ?? plugin;
                 var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled, plugin.Id, manifestMetadata);
+                var supportsExecutableEntryPoint = isInstalled && TryResolvePluginExecutable(plugin.Id, out _, out _);
                 var localizedName = GetPluginLocalizedName(plugin, manifestMetadata);
                 var localizedDescription = GetPluginLocalizedDescription(plugin, manifestMetadata);
                 var detailedDescription = GetPluginDetailedDescription(manifestMetadata);
@@ -482,12 +483,13 @@ private string _currentSearchText = string.Empty;
                     if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
                         LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
                     existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     existingViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     existingViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    existingViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
                 }
                 else
                 {
@@ -507,12 +509,13 @@ private string _currentSearchText = string.Empty;
                     if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
                         LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
                     pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     pluginViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     pluginViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    pluginViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
 
                     _pluginViewModels.Add(pluginViewModel);
                 }
@@ -1216,12 +1219,14 @@ private string _currentSearchText = string.Empty;
                     viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(pluginId);
                     viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    viewModel.SupportsExecutableEntryPoint = TryResolvePluginExecutable(pluginId, out _, out _);
                 }
                 else
                 {
                     viewModel.SupportsConfiguration = false;
                     viewModel.SupportsFeaturePage = false;
                     viewModel.SupportsOptimizationCategory = false;
+                    viewModel.SupportsExecutableEntryPoint = false;
                 }
 
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
