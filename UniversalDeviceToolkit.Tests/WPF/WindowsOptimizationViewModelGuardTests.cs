@@ -13,9 +13,11 @@ public sealed class WindowsOptimizationViewModelGuardTests
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
         var initialize = ExtractMethod(source, "public void Initialize()");
+        var initializeCore = ExtractMethod(source, "private void InitializeCore()");
 
-        initialize.Should().Contain("StartOptimizationStateScan();");
+        initialize.Should().Contain("RunOnDispatcher(InitializeCore);");
         initialize.Should().NotContain("_ = ScanOptimizationStatesAsync();");
+        initializeCore.Should().Contain("StartOptimizationStateScan();");
 
         var observer = ExtractMethod(source, "private async Task ObserveOptimizationStateScanAsync()");
         observer.Should().Contain("await ScanOptimizationStatesAsync().ConfigureAwait(false);");
@@ -31,13 +33,17 @@ public sealed class WindowsOptimizationViewModelGuardTests
         var snapshotMethod = ExtractMethod(source, "private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()");
         var snapshotBuilder = ExtractMethod(source, "private List<OptimizationActionViewModel> SnapshotOptimizationActions()");
 
+        source.Should().Contain("private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);");
+        scanMethod.Should().Contain("await _optimizationStateScanLock.WaitAsync().ConfigureAwait(false);");
         scanMethod.Should().Contain("var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);");
         scanMethod.Should().Contain("foreach (var action in actions)");
         scanMethod.Should().NotContain("foreach (var category in OptimizationCategories)");
+        scanMethod.Should().Contain("_optimizationStateScanLock.Release();");
 
         snapshotMethod.Should().Contain("dispatcher.InvokeAsync(SnapshotOptimizationActions)");
         snapshotBuilder.Should().Contain("OptimizationCategories");
-        snapshotBuilder.Should().Contain(".SelectMany(category => category.Actions)");
+        snapshotBuilder.Should().Contain(".ToList()");
+        snapshotBuilder.Should().Contain(".SelectMany(category => category.Actions.ToList())");
         snapshotBuilder.Should().Contain(".ToList();");
     }
 
