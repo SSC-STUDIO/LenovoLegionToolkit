@@ -318,6 +318,10 @@ public class SensorsControlTests
         xaml.Should().Contain("x:Name=\"_batteryCapacityPanel\"");
         xaml.Should().Contain("x:Name=\"_cpuUtilizationSparkline\"");
         xaml.Should().Contain("x:Name=\"_gpuTemperatureSparkline\"");
+        xaml.Should().Contain("x:Name=\"_cpuUtilizationArea\"");
+        xaml.Should().Contain("x:Name=\"_gpuTemperatureArea\"");
+        xaml.Should().Contain("x:Name=\"_cpuChartUtilizationText\"");
+        xaml.Should().Contain("x:Name=\"_gpuChartTemperatureText\"");
         xaml.Should().Contain("AutomationProperties.AutomationId=\"DashboardSensorsCpuChart\"");
     }
 
@@ -328,6 +332,16 @@ public class SensorsControlTests
     public void ShouldAutoExpandDetails_ShouldUseWideDashboardThreshold(double width, bool expected)
     {
         SensorsControl.ShouldAutoExpandDetails(width).Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(919, 420, false)]
+    [InlineData(920, 359, false)]
+    [InlineData(920, 360, true)]
+    [InlineData(1120, 120, true)]
+    public void ShouldAutoExpandDetails_ShouldUseAvailableCardArea(double width, double height, bool expected)
+    {
+        SensorsControl.ShouldAutoExpandDetails(width, height).Should().Be(expected);
     }
 
     [Fact]
@@ -349,6 +363,24 @@ public class SensorsControlTests
         points.utilization.Select(point => point.Y).Should().OnlyContain(y => y >= 0 && y <= 60);
         points.utilization[0].Should().Be(new System.Windows.Point(0, 60));
         points.utilization[^1].Should().Be(new System.Windows.Point(120, 0));
+    }
+
+    [Fact]
+    public void CreateSensorChartAreaPoints_ShouldClosePolylineToChartBaseline()
+    {
+        var linePoints = new System.Windows.Media.PointCollection
+        {
+            new(0, 60),
+            new(60, 30),
+            new(120, 0)
+        };
+
+        var areaPoints = SensorsControl.CreateSensorChartAreaPoints(linePoints, width: 120, height: 60);
+
+        areaPoints.Should().HaveCount(5);
+        areaPoints[0].Should().Be(new System.Windows.Point(0, 60));
+        areaPoints[1].Should().Be(linePoints[0]);
+        areaPoints[^1].Should().Be(new System.Windows.Point(120, 60));
     }
 
     [Fact]

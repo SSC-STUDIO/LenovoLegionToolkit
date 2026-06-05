@@ -31,8 +31,10 @@ public partial class SensorsControl
     private const string MegahertzUnit = "MHz";
     private const string RpmUnit = "RPM";
     private const double AutoExpandedDetailsMinWidth = 1120;
+    private const double AutoExpandedDetailsTallWidth = 920;
+    private const double AutoExpandedDetailsMinHeight = 360;
     private const int SensorChartSampleLimit = 36;
-    private const double SensorChartHeight = 62;
+    private const double SensorChartHeight = 76;
     private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
     private static readonly object SessionSensorDataLock = new();
     private static SensorsData? _sessionSensorData;
@@ -202,9 +204,14 @@ public partial class SensorsControl
         SetDetailsExpanded(ShouldAutoExpandDetails(), refreshDetailedValues: IsVisible);
     }
 
-    internal static bool ShouldAutoExpandDetails(double width) => width >= AutoExpandedDetailsMinWidth;
+    internal static bool ShouldAutoExpandDetails(double width) =>
+        ShouldAutoExpandDetails(width, height: 0);
 
-    private bool ShouldAutoExpandDetails() => ShouldAutoExpandDetails(ActualWidth);
+    internal static bool ShouldAutoExpandDetails(double width, double height) =>
+        width >= AutoExpandedDetailsMinWidth ||
+        (width >= AutoExpandedDetailsTallWidth && height >= AutoExpandedDetailsMinHeight);
+
+    private bool ShouldAutoExpandDetails() => ShouldAutoExpandDetails(ActualWidth, ActualHeight);
 
     private void RefreshBattery()
     {
@@ -490,8 +497,26 @@ public partial class SensorsControl
         if (shouldCompleteInitialLoad)
             CompleteInitialSensorDataLoad();
 
-        UpdateSensorChart(_cpuChartSamples, data.CPU, _cpuChartCanvas, _cpuUtilizationSparkline, _cpuClockSparkline, _cpuTemperatureSparkline);
-        UpdateSensorChart(_gpuChartSamples, data.GPU, _gpuChartCanvas, _gpuUtilizationSparkline, _gpuClockSparkline, _gpuTemperatureSparkline);
+        UpdateSensorChart(
+            _cpuChartSamples,
+            data.CPU,
+            _cpuChartCanvas,
+            _cpuUtilizationSparkline,
+            _cpuClockSparkline,
+            _cpuTemperatureSparkline,
+            _cpuUtilizationArea,
+            _cpuClockArea,
+            _cpuTemperatureArea);
+        UpdateSensorChart(
+            _gpuChartSamples,
+            data.GPU,
+            _gpuChartCanvas,
+            _gpuUtilizationSparkline,
+            _gpuClockSparkline,
+            _gpuTemperatureSparkline,
+            _gpuUtilizationArea,
+            _gpuClockArea,
+            _gpuTemperatureArea);
 
         UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
             $"{data.CPU.Utilization}%");
@@ -501,6 +526,15 @@ public partial class SensorsControl
             GetTemperatureText(data.CPU.Temperature), GetTemperatureText(data.CPU.MaxTemperature));
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
             $"{data.CPU.FanSpeed} {RpmUnit}", $"{data.CPU.MaxFanSpeed} {RpmUnit}");
+        UpdateSensorChartMetricText(
+            "_cpuChartUtilizationText",
+            data.CPU.Utilization >= 0 ? $"{data.CPU.Utilization}%" : NotAvailableText());
+        UpdateSensorChartMetricText(
+            "_cpuChartClockText",
+            data.CPU.CoreClock > 0 ? $"{data.CPU.CoreClock / 1000.0:0.0} {GigahertzUnit}" : NotAvailableText());
+        UpdateSensorChartMetricText(
+            "_cpuChartTemperatureText",
+            data.CPU.Temperature > 0 ? GetTemperatureText(data.CPU.Temperature) : NotAvailableText());
 
         UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText());
 
@@ -548,6 +582,15 @@ public partial class SensorsControl
             GetTemperatureText(data.GPU.Temperature), GetTemperatureText(data.GPU.MaxTemperature));
         UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
             $"{data.GPU.FanSpeed} {RpmUnit}", $"{data.GPU.MaxFanSpeed} {RpmUnit}");
+        UpdateSensorChartMetricText(
+            "_gpuChartUtilizationText",
+            data.GPU.Utilization >= 0 ? $"{data.GPU.Utilization}%" : NotAvailableText());
+        UpdateSensorChartMetricText(
+            "_gpuChartClockText",
+            data.GPU.CoreClock > 0 ? $"{data.GPU.CoreClock / 1000.0:0.0} {GigahertzUnit}" : NotAvailableText());
+        UpdateSensorChartMetricText(
+            "_gpuChartTemperatureText",
+            data.GPU.Temperature > 0 ? GetTemperatureText(data.GPU.Temperature) : NotAvailableText());
 
         if (FindName("_gpuWattage") is TextBlock gpuWattage)
         {
@@ -806,7 +849,10 @@ public partial class SensorsControl
         FrameworkElement chartSurface,
         System.Windows.Shapes.Polyline utilizationLine,
         System.Windows.Shapes.Polyline clockLine,
-        System.Windows.Shapes.Polyline temperatureLine)
+        System.Windows.Shapes.Polyline temperatureLine,
+        System.Windows.Shapes.Polygon utilizationArea,
+        System.Windows.Shapes.Polygon clockArea,
+        System.Windows.Shapes.Polygon temperatureArea)
     {
         if (TryCreateSensorChartSample(data) is not { } sample)
             return;
@@ -831,6 +877,9 @@ public partial class SensorsControl
         utilizationLine.Points = points.utilization;
         clockLine.Points = points.clock;
         temperatureLine.Points = points.temperature;
+        utilizationArea.Points = CreateSensorChartAreaPoints(points.utilization, width, SensorChartHeight);
+        clockArea.Points = CreateSensorChartAreaPoints(points.clock, width, SensorChartHeight);
+        temperatureArea.Points = CreateSensorChartAreaPoints(points.temperature, width, SensorChartHeight);
     }
 
     private static SensorChartSample? TryCreateSensorChartSample(SensorData data)
@@ -886,6 +935,23 @@ public partial class SensorsControl
         return points;
     }
 
+    internal static PointCollection CreateSensorChartAreaPoints(PointCollection linePoints, double width, double height)
+    {
+        var areaPoints = new PointCollection(linePoints.Count + 2);
+        if (linePoints.Count == 0)
+            return areaPoints;
+
+        var usableWidth = Math.Max(width, 1);
+        var usableHeight = Math.Max(height, 1);
+        areaPoints.Add(new Point(0, usableHeight));
+
+        foreach (var point in linePoints)
+            areaPoints.Add(point);
+
+        areaPoints.Add(new Point(usableWidth, usableHeight));
+        return areaPoints;
+    }
+
     private static double NormalizeSensorChartMetric(double value, double maximum, double fallbackMaximum)
     {
         if (value < 0)
@@ -902,6 +968,12 @@ public partial class SensorsControl
     {
         if (FindName(name) is RangeBase range)
             range.Value = ClampPercentage(value);
+    }
+
+    private void UpdateSensorChartMetricText(string name, string? text)
+    {
+        if (FindName(name) is TextBlock textBlock)
+            textBlock.Text = NormalizeDetailValueText(text);
     }
 
     private static double ClampPercentage(double value)
