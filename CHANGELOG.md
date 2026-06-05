@@ -17,12 +17,21 @@ No unreleased changes yet.
 ### Highlights / 重点
 - Stable release for in-app updates from v4.1.0. Existing installs can check for updates normally and install the Full or Online setup package from GitHub Releases.
 - Added a real-time on-screen display (OSD) overlay for hardware metrics, ported from upstream Lenovo Legion Toolkit behavior.
+- Rolls up post-4.1.0 fixes for God Mode preset refresh, installed optimization-only plugins, dashboard sensor loading, expanded sensor aliases, shipping-test isolation, real hardware validation guards, and broader 2020+ basic-mode device matching.
 
 ### Added / 新增
 - Added on-screen display (OSD) overlay with Panel and Bar styles, configurable metrics, and settings under Application behavior when hardware sensors are enabled / 新增屏幕显示（OSD）浮层，支持 Panel 与 Bar 两种样式、可配置指标，并在启用硬件传感器时于应用行为设置中提供配置入口
 
 ### Fixed / 修复
 - Fixed the dashboard power mode settings gear staying hidden on some Legion machines (including Y9000P 2025) when custom mode is available from hardware / 修复部分拯救者机型（含 Y9000P 2025）在硬件已支持自定义模式时，仪表盘性能模式齿轮仍无法打开设置的问题
+
+- Fixed optimization-only plugins after install so manifest and convention-provided System Optimization child actions are visible and usable even when the plugin has no standalone page.
+- Fixed dashboard CPU/GPU skeleton timing so loading remains visible until renderable live sensor data is available, and kept battery detailed average temperature out of the dashboard.
+- Expanded sensor collection by including nested hardware sensors and additional CPU/GPU/platform aliases used by third-party tools.
+- Fixed basic-mode device matching for broader 2020+ brand coverage, including regional brands, family-only catalog packs, and gaming subbrand DMI vendors such as ROG, Alienware, OMEN, Predator, AORUS, and ERAZER.
+- Tightened shipping payload guards so test, smoke, validation, and tool projects cannot be referenced by or shipped with the main app.
+- Added real hardware validation guard coverage for measurable power-mode readback instead of relying only on simulated state changes.
+- Multi-platform work remains diagnostics groundwork in 4.x; formal macOS/Linux release assets are deferred to 5.x.
 
 ## [4.1.0] - 2026-05-31
 

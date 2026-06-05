@@ -16,7 +16,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 
 Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add CPU, GPU, network, shell, mouse, and other specialized tools without bloating the base application.
 
-UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. The full desktop hardware-control app remains Windows-first; macOS and Linux support starts with the `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI and safe basic-mode discovery.
+UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. The full desktop hardware-control app remains Windows-first; macOS and Linux work before 5.x is limited to diagnostics groundwork, safe basic-mode discovery, and local development of the `UniversalDeviceToolkit.CrossPlatform` CLI.
 
 
 <img src="Assets/Screenshot_main.png" width="700" />
@@ -118,7 +118,7 @@ If UDT starts in basic mode, it is doing that intentionally to avoid showing uns
 
 ### macOS and Linux
 
-The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. The repository now includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point intended for macOS/Linux and Windows diagnostics:
+The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. Multi-platform release assets are planned for 5.x and later. Until then, the repository includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point intended for local macOS/Linux and Windows diagnostics:
 
 ```powershell
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- status
