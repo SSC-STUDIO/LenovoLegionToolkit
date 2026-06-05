@@ -3098,6 +3098,21 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
     <value>Select language</value>
   </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Device pack: Basic mode</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Device pack: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Preparing device setup...</value>
+  </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Not connected</value>
   </data>

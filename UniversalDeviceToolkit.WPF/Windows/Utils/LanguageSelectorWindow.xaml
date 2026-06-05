@@ -6,10 +6,12 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static utils:AppDisplayName.Value}"
+    Width="450"
+    Height="245"
     MinWidth="450"
-    MinHeight="260"
+    MinHeight="245"
     MaxWidth="450"
-    MaxHeight="300"
+    MaxHeight="245"
     Closed="LanguageSelectorWindow_OnClosed"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -32,9 +34,9 @@
             ShowMaximize="false"
             ShowMinimize="false" />
 
-        <Grid Grid.Row="1" Margin="16">
+        <Grid Grid.Row="1" Margin="20,18,20,20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -45,14 +47,15 @@
             <StackPanel
                 Grid.Row="0"
                 Grid.Column="0"
-                Margin="0,0,16,0">
-                <wpfui:SymbolIcon FontSize="56" Symbol="LocalLanguage24" />
+                Margin="0,0,18,0"
+                VerticalAlignment="Top">
+                <wpfui:SymbolIcon FontSize="48" Symbol="LocalLanguage24" />
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="1">
 
                 <TextBlock
-                    Margin="0,0,0,16"
+                    Margin="0,0,0,12"
                     Focusable="True"
                     FontWeight="Medium"
                     Text="{x:Static resources:Resource.LanguageSelectorWindow_SelectLanguage}"
@@ -98,8 +101,8 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="0,16,0,0"
-                HorizontalAlignment="Center">
+                Margin="0,20,0,0"
+                HorizontalAlignment="Right">
 
                 <wpfui:Button
                     x:Name="_okButton"
@@ -107,7 +110,7 @@
                     MinWidth="120"
                     Appearance="Primary"
                     Click="OK_Click"
-                    Content="{x:Static resources:Resource.OK}" />
+                    Content="{x:Static resources:Resource.Continue}" />
             </Grid>
         </Grid>
     </Grid>

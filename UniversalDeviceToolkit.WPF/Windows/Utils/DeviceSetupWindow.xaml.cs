@@ -4,6 +4,7 @@ using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils;
 
@@ -12,6 +13,9 @@ public partial class DeviceSetupWindow
     private readonly DevicePack? _recommendedPack;
     private readonly TaskCompletionSource<DeviceSetupResult> _taskCompletionSource = new();
     private bool _isPreparing;
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     public Task<DeviceSetupResult> ShouldContinue => _taskCompletionSource.Task;
 
@@ -27,13 +31,19 @@ public partial class DeviceSetupWindow
 
         if (recommendedPack is null || isBasicMode)
         {
-            _summaryText.Text = "This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.";
-            _packText.Text = "Device pack: Basic mode";
+            _summaryText.Text = T(
+                "DeviceSetupWindow_BasicModeSummary",
+                "This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.");
+            _packText.Text = T("DeviceSetupWindow_BasicModePack", "Device pack: Basic mode");
         }
         else
         {
-            _summaryText.Text = "Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.";
-            _packText.Text = $"Device pack: {recommendedPack.DisplayName}";
+            _summaryText.Text = T(
+                "DeviceSetupWindow_MatchingPackSummary",
+                "Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.");
+            _packText.Text = string.Format(
+                T("DeviceSetupWindow_DevicePackFormat", "Device pack: {0}"),
+                recommendedPack.DisplayName);
         }
     }
 
@@ -48,7 +58,7 @@ public partial class DeviceSetupWindow
         _isPreparing = true;
         _confirmButton.IsEnabled = false;
         _skipButton.IsEnabled = false;
-        _statusText.Text = "Preparing device setup...";
+        _statusText.Text = T("DeviceSetupWindow_Preparing", "Preparing device setup...");
         _statusText.Visibility = Visibility.Visible;
 
         await Task.Yield();
