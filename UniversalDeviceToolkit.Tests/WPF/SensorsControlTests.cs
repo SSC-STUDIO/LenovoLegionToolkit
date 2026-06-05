@@ -168,6 +168,19 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControl_ShouldUpdateBatteryStatusTextBlock()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var source = ReadSensorsControlSource();
+
+        xaml.Should().Contain("<TextBlock x:Name=\"_batteryStatusLabel\"");
+        source.Should().Contain("FindName(\"_batteryStatusLabel\") is TextBlock statusLabel");
+        source.Should().Contain("statusLabel.Text = GetBatteryStatusText(batteryInfo);");
+        source.Should().NotContain("FindName(\"_batteryStatusLabel\") is ContentControl statusLabel");
+        source.Should().NotContain("statusLabel.Content = GetBatteryStatusText(batteryInfo);");
+    }
+
+    [Fact]
     public void SensorsControlMarkup_ShouldExposeMotherboardTemperatureInCpuDetails()
     {
         var xaml = ReadSensorsControlXaml();
@@ -500,6 +513,12 @@ public class SensorsControlTests
     {
         var root = FindRepositoryRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml"));
+    }
+
+    private static string ReadSensorsControlSource()
+    {
+        var root = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml.cs"));
     }
 
     private static string FindRepositoryRoot()

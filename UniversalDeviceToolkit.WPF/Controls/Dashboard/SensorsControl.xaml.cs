@@ -200,9 +200,9 @@ public partial class SensorsControl
                 : FindResource("TextFillColorPrimaryBrush") as System.Windows.Media.Brush;
         }
 
-        if (FindName("_batteryStatusLabel") is ContentControl statusLabel)
+        if (FindName("_batteryStatusLabel") is TextBlock statusLabel)
         {
-            statusLabel.Content = GetBatteryStatusText(batteryInfo);
+            statusLabel.Text = GetBatteryStatusText(batteryInfo);
             statusLabel.Visibility = (batteryInfo.IsLowBattery || powerAdapterStatus == PowerAdapterStatus.ConnectedLowWattage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
