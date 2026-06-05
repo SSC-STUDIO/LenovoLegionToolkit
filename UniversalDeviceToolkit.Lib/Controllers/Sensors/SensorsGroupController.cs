@@ -155,8 +155,22 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] MEMORY_TEMPERATURE_SENSOR_PREFERENCES =
     [
-        "DIMM",
+        "DIMM Temperature",
+        "DIMM Thermal Sensor",
+        "DIMM Thermal",
+        "Memory Temperature",
+        "Memory Module Temperature",
+        "Module Temperature",
+        "RAM Temperature",
+        "DRAM Temperature",
+        "DDR5 SPD Hub",
+        "DDR4 TSOD",
+        "SPD Hub Temperature",
         "SPD Hub",
+        "TSOD Temperature",
+        "PMIC Temperature",
+        "Thermal Sensor on DIMM",
+        "DIMM",
         "DRAM",
         "DDR",
         "SPD",
@@ -167,27 +181,50 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] MOTHERBOARD_TEMPERATURE_SENSOR_PREFERENCES =
     [
+        "PCH Temperature",
         "PCH",
+        "Chipset Temperature",
         "Chipset",
+        "Platform Controller Hub Temperature",
         "Platform Controller Hub",
+        "Motherboard Temperature",
         "Motherboard",
+        "Mainboard Temperature",
         "Mainboard",
+        "Board Temperature",
         "Board",
-        "VRM",
+        "VRM MOS Temperature",
+        "VRM Temperature",
         "VRM MOS",
+        "VRM",
         "MOSFET",
         "MOS Temperature",
         "MOS",
         "Super I/O",
         "Super IO",
+        "System Temperature",
+        "Sys Temp",
         "System",
         "T_Sensor",
         "TSensor",
         "SYSTIN",
         "AUXTIN",
         "TMPIN",
+        "Temp1",
+        "Temp 1",
+        "Temperature #1",
+        "EC Temp",
         "EC",
         "Embedded Controller",
+    ];
+    private static readonly string[] BOARD_SENSOR_HARDWARE_NAME_EXCLUSIONS =
+    [
+        "Battery",
+        "Network",
+        "Ethernet",
+        "Wi-Fi",
+        "WiFi",
+        "Wireless",
     ];
     private static readonly string[] GPU_VRAM_USED_SENSOR_PREFERENCES =
     [
@@ -334,12 +371,30 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] STORAGE_TEMPERATURE_SENSOR_PREFERENCES =
     [
+        "NVMe Composite Temperature",
+        "Composite Temperature",
+        "Drive Composite Temperature",
         "Composite",
         "NVMe Composite",
+        "Drive Temperature 1",
+        "Drive Temperature 2",
         "Drive Temperature",
         "SSD Temperature",
+        "Disk Temperature",
+        "HDD Temperature",
         "Controller Temperature",
+        "ASIC Controller Temperature",
+        "ASIC Controller",
+        "ASIC Temperature",
+        "NAND Temperature 1",
+        "NAND Temperature 2",
         "NAND Temperature",
+        "NAND 1",
+        "NAND 2",
+        "Temperature 1",
+        "Temperature 2",
+        "Temperature #1",
+        "Temperature #2",
         "Temperature",
     ];
     private static readonly string[] GPU_USAGE_SENSOR_PREFERENCES =
@@ -819,7 +874,7 @@ public class SensorsGroupController : IDisposable
             _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: false));
         }
 
-        foreach (var hw in _hardware.Where(h => h.HardwareType == HardwareType.Motherboard))
+        foreach (var hw in _hardware.Where(IsBoardTemperatureHardware))
         {
             if (hw.Sensors == null) continue;
             _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: true));
@@ -1158,9 +1213,38 @@ public class SensorsGroupController : IDisposable
         return temperatureSensors;
     }
 
-    private static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
+    internal static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
         MEMORY_TEMPERATURE_SENSOR_PREFERENCES.Any(keyword =>
             sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    internal static bool IsBoardTemperatureHardware(IHardware hardware)
+    {
+        if (hardware.HardwareType == HardwareType.Motherboard)
+            return true;
+
+        if (IsDedicatedMetricHardwareType(hardware.HardwareType.ToString()))
+            return false;
+
+        if (BOARD_SENSOR_HARDWARE_NAME_EXCLUSIONS.Any(keyword =>
+            hardware.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+            return false;
+
+        var sensors = hardware.Sensors;
+        return sensors is not null && sensors.Any(sensor =>
+            sensor.SensorType == SensorType.Temperature &&
+            (IsLikelyMemoryTemperatureSensorName(sensor.Name) ||
+             SelectMotherboardTemperatureSensorName([sensor.Name]) is not null));
+    }
+
+    private static bool IsDedicatedMetricHardwareType(string hardwareTypeName) =>
+        hardwareTypeName.Contains("Cpu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Gpu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Memory", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Storage", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Network", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Battery", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Psu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Cooler", StringComparison.OrdinalIgnoreCase);
 
     private static IEnumerable<ISensor> SelectMotherboardTemperatureSensors(IEnumerable<ISensor> sensors)
     {

@@ -681,6 +681,21 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void IsLikelyMemoryTemperatureSensorName_ShouldRecognizeDimmSpdAndTsodAliases()
+    {
+        string[] names =
+        [
+            "DIMM Thermal Sensor",
+            "DDR5 SPD Hub Temperature",
+            "TSOD Temperature",
+            "PMIC Temperature",
+            "Memory Module Temperature"
+        ];
+
+        names.Should().OnlyContain(name => SensorsGroupController.IsLikelyMemoryTemperatureSensorName(name));
+    }
+
+    [Fact]
     public void SelectStorageTemperatureSensorName_ShouldPreferCompositeTemperature()
     {
         var result = SensorsGroupController.SelectStorageTemperatureSensorName(
@@ -720,6 +735,30 @@ public class SensorsGroupControllerTests
 
         nvmeResult.Should().Be("NVMe Composite");
         controllerResult.Should().Be("Controller Temperature");
+    }
+
+    [Fact]
+    public void SelectStorageTemperatureSensorName_ShouldRecognizeDriveCompositeAndControllerAliases()
+    {
+        var compositeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Drive Composite Temperature"
+        ]);
+        var asicResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "ASIC Controller Temperature"
+        ]);
+        var temperature1Result = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Temperature 1"
+        ]);
+
+        compositeResult.Should().Be("Drive Composite Temperature");
+        asicResult.Should().Be("ASIC Controller Temperature");
+        temperature1Result.Should().Be("Temperature 1");
     }
 
     [Fact]
@@ -779,6 +818,30 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeEmbeddedControllerAndGenericBoardAliases()
+    {
+        var ecResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "EC Temp"
+        ]);
+        var temp1Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "Temperature #1"
+        ]);
+        var systemResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "System Temperature"
+        ]);
+
+        ecResult.Should().Be("EC Temp");
+        temp1Result.Should().Be("Temperature #1");
+        systemResult.Should().Be("System Temperature");
+    }
+
+    [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldIgnoreMemoryCpuAndGpuSensors()
     {
         var result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
@@ -789,6 +852,31 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public void IsBoardTemperatureHardware_ShouldIncludeSuperIoControllersWithBoardTemperatureSensors()
+    {
+        var sensor = CreateSensor("SYSTIN", SensorType.Temperature);
+        var superIo = CreateHardwareWithSensors(
+            "Nuvoton NCT6798D",
+            Enum.Parse<HardwareType>("SuperIO"),
+            sensor.Object);
+
+        var result = SensorsGroupController.IsBoardTemperatureHardware(superIo.Object);
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsBoardTemperatureHardware_ShouldExcludeDedicatedMetricHardware()
+    {
+        var sensor = CreateSensor("PCH Temperature", SensorType.Temperature);
+        var cpu = CreateHardwareWithSensors("Intel Core", HardwareType.Cpu, sensor.Object);
+        var storage = CreateHardwareWithSensors("NVMe SSD", HardwareType.Storage, sensor.Object);
+
+        SensorsGroupController.IsBoardTemperatureHardware(cpu.Object).Should().BeFalse();
+        SensorsGroupController.IsBoardTemperatureHardware(storage.Object).Should().BeFalse();
     }
 
     [Fact]
@@ -969,5 +1057,23 @@ public class SensorsGroupControllerTests
         hardware.SetupGet(h => h.SubHardware).Returns(subHardware);
         hardware.SetupGet(h => h.Sensors).Returns([]);
         return hardware;
+    }
+
+    private static Mock<IHardware> CreateHardwareWithSensors(string name, HardwareType hardwareType, params ISensor[] sensors)
+    {
+        var hardware = new Mock<IHardware>();
+        hardware.SetupGet(h => h.Name).Returns(name);
+        hardware.SetupGet(h => h.HardwareType).Returns(hardwareType);
+        hardware.SetupGet(h => h.SubHardware).Returns([]);
+        hardware.SetupGet(h => h.Sensors).Returns(sensors);
+        return hardware;
+    }
+
+    private static Mock<ISensor> CreateSensor(string name, SensorType sensorType)
+    {
+        var sensor = new Mock<ISensor>();
+        sensor.SetupGet(s => s.Name).Returns(name);
+        sensor.SetupGet(s => s.SensorType).Returns(sensorType);
+        return sensor;
     }
 }
