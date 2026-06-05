@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>LanguagePackUi.Smoke</RootNamespace>
     <UseWPF>true</UseWPF>
+    <EnableUdtTestHooks>true</EnableUdtTestHooks>
   </PropertyGroup>
 
   <ItemGroup>

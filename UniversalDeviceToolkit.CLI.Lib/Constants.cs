@@ -8,7 +8,9 @@ namespace UniversalDeviceToolkit.CLI.Lib;
 public static class Constants
 {
     public const string DEFAULT_PIPE_NAME = "LenovoLegionToolkit-IPC-0";
+#if UDT_TEST_HOOKS
     public const string APPDATA_OVERRIDE_ENVIRONMENT_VARIABLE = "UDT_APPDATA_OVERRIDE";
+#endif
     public static string PIPE_NAME => GetPipeNameFromEnvironment();
 
     public static string GetPipeName(string? isolationPath = null)
@@ -34,7 +36,11 @@ public static class Constants
 
     public static string GetPipeNameFromEnvironment()
     {
+#if UDT_TEST_HOOKS
         var overridePath = Environment.GetEnvironmentVariable(APPDATA_OVERRIDE_ENVIRONMENT_VARIABLE);
         return GetPipeName(overridePath);
+#else
+        return DEFAULT_PIPE_NAME;
+#endif
     }
 }

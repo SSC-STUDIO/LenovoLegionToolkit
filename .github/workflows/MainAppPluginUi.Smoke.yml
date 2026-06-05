@@ -91,7 +91,7 @@ jobs:
 
       - name: Build main app
         shell: pwsh
-        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
       - name: Build UI smoke tool
         shell: pwsh

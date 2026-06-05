@@ -1294,6 +1294,7 @@ public partial class App
 
     private static string ResolveSingleInstanceObjectName(string baseName)
     {
+#if UDT_TEST_HOOKS
         var isolationKey = ResolveSingleInstanceIsolationKey();
         if (string.IsNullOrWhiteSpace(isolationKey))
             return baseName;
@@ -1305,8 +1306,12 @@ public partial class App
         return string.IsNullOrWhiteSpace(sanitizedKey)
             ? baseName
             : $"{baseName}_{sanitizedKey}";
+#else
+        return baseName;
+#endif
     }
 
+#if UDT_TEST_HOOKS
     private static string? ResolveSingleInstanceIsolationKey()
     {
         var overridePath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
@@ -1322,6 +1327,7 @@ public partial class App
             return overridePath;
         }
     }
+#endif
 
     private static void ApplyStartupOverrides(Flags flags)
     {

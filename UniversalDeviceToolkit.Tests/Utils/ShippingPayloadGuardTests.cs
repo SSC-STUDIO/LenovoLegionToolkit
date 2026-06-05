@@ -21,6 +21,7 @@ public sealed class ShippingPayloadGuardTests
         script.Should().Contain("'*.Tests.*'");
         script.Should().Contain("'*.Smoke.*'");
         script.Should().Contain("'*Validation*'");
+        script.Should().Contain("'UDT_APPDATA_OVERRIDE'");
     }
 
     [Fact]
@@ -31,6 +32,7 @@ public sealed class ShippingPayloadGuardTests
         var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
         var makeScript = ReadRepositoryFile("Make.bat");
+        var mainAppSmokeWorkflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
 
         workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
         workflow.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
@@ -50,6 +52,7 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("FinalizeOnly = $true");
         workflow.Should().Contain("Repository = '${{ github.repository }}'");
         workflow.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
+        workflow.Should().NotContain("/p:EnableUdtTestHooks=true");
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");
@@ -77,6 +80,8 @@ public sealed class ShippingPayloadGuardTests
         makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
             .Should()
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
+
+        mainAppSmokeWorkflow.Should().Contain("/p:EnableUdtTestHooks=true");
     }
 
     [Fact]

@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <RootNamespace>PresetUiValidation</RootNamespace>
+    <EnableUdtTestHooks>true</EnableUdtTestHooks>
   </PropertyGroup>
 
   <ItemGroup>

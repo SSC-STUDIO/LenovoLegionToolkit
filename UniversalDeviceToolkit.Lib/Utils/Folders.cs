@@ -5,7 +5,9 @@ namespace LenovoLegionToolkit.Lib.Utils;
 
 public static class Folders
 {
+#if UDT_TEST_HOOKS
     public const string AppDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
+#endif
 
     public static string Program => AppDomain.CurrentDomain.SetupInformation.ApplicationBase ?? string.Empty;
     public static string LegacyAppData => Path.Combine(
@@ -16,6 +18,7 @@ public static class Folders
     {
         get
         {
+#if UDT_TEST_HOOKS
             var overridePath = Environment.GetEnvironmentVariable(AppDataOverrideEnvironmentVariable);
             if (!string.IsNullOrWhiteSpace(overridePath))
             {
@@ -23,6 +26,7 @@ public static class Folders
                 Directory.CreateDirectory(fullOverridePath);
                 return fullOverridePath;
             }
+#endif
 
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var folderPath = Path.Combine(appData, AppIdentity.CompactName);

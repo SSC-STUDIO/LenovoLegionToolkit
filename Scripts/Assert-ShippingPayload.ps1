@@ -48,6 +48,10 @@ $forbiddenNamePatterns = @(
     '*TestHost*'
 )
 
+$forbiddenBinaryMarkers = @(
+    'UDT_APPDATA_OVERRIDE'
+)
+
 $violations = @()
 $files = Get-ChildItem -LiteralPath $resolvedPath.Path -Recurse -File -ErrorAction Stop
 foreach ($file in $files) {
@@ -101,8 +105,18 @@ foreach ($file in $files) {
 
     foreach ($pattern in $forbiddenNamePatterns) {
         if ($file.Name -like $pattern) {
+            $isForbidden = $true
             $violations += $file
             break
+        }
+    }
+
+    if (-not $isForbidden) {
+        foreach ($marker in $forbiddenBinaryMarkers) {
+            if (Select-String -LiteralPath $file.FullName -SimpleMatch $marker -Quiet) {
+                $violations += $file
+                break
+            }
         }
     }
 }
