@@ -239,7 +239,6 @@ public class PluginRepositoryService : IDisposable
 
             if (installed)
             {
-                _pluginManager.InstallPlugin(manifest.Id);
                 await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
 
                 if (!IsInstalledPluginUsable(manifest))
@@ -248,10 +247,13 @@ public class PluginRepositoryService : IDisposable
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace(error);
 
-                    _pluginManager.UninstallPlugin(manifest.Id);
+                    await RemoveUnusableInstalledPayloadAsync(manifest.Id).ConfigureAwait(false);
                     DownloadFailed?.Invoke(this, error);
                     return false;
                 }
+
+                _pluginManager.InstallPlugin(manifest.Id);
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
 
                 DownloadCompleted?.Invoke(this, manifest.Id);
             }
@@ -273,6 +275,12 @@ public class PluginRepositoryService : IDisposable
 
         return PluginUiCapabilityResolver.SupportsOptimizationActions(manifest) ||
                PluginUiCapabilityResolver.ResolveFromInstalledManifest(manifest.Id).SupportsOptimizationCategory;
+    }
+
+    private Task RemoveUnusableInstalledPayloadAsync(string pluginId)
+    {
+        TrustedPluginPackageStore.Remove(pluginId);
+        return RestorePluginDirectoryAsync(Path.Combine(_pluginsDirectory, pluginId), backupDir: null, pluginId);
     }
 
     /// <summary>

@@ -18,7 +18,7 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     {
         // Arrange
         const string pluginId = "test-local-plugin";
-        var pluginManager = new Mock<IPluginManager>();
+        var pluginManager = CreatePluginManagerMock();
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(pluginId);
@@ -32,11 +32,36 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldForceRefreshRuntimeAroundMarkingImportedPluginInstalled()
+    {
+        const string pluginId = "test-local-plugin";
+        var sequence = new MockSequence();
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.InSequence(sequence)
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(true))
+            .Returns(Task.CompletedTask);
+        pluginManager.InSequence(sequence)
+            .Setup(manager => manager.InstallPlugin(pluginId));
+        pluginManager.InSequence(sequence)
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(true))
+            .Returns(Task.CompletedTask);
+        var service = new PluginInstallationService(pluginManager.Object);
+        var pluginsRoot = CreateTempDirectory();
+        var zipPath = CreatePluginZipPackage(pluginId);
+
+        var result = await service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        result.Should().BeTrue();
+        pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+    }
+
+    [Fact]
     public async Task ExtractAndInstallPluginAsync_ShouldPlaceImportedFilesUnderLocalPluginDirectory()
     {
         // Arrange
         const string pluginId = "test-local-plugin";
-        var pluginManager = new Mock<IPluginManager>();
+        var pluginManager = CreatePluginManagerMock();
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(pluginId);
@@ -59,7 +84,7 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     public async Task ExtractAndInstallPluginAsync_ShouldFilterSharedAndSdkAssembliesFromImportedPluginDirectory()
     {
         const string pluginId = "test-local-plugin";
-        var pluginManager = new Mock<IPluginManager>();
+        var pluginManager = CreatePluginManagerMock();
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(pluginId, includeSharedRuntimeFiles: true);
@@ -94,7 +119,7 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     public async Task ExtractAndInstallPluginAsync_ShouldHonorManifestIdEvenWhenJsonUsesPascalCase()
     {
         const string manifestPluginId = "shell-integration";
-        var pluginManager = new Mock<IPluginManager>();
+        var pluginManager = CreatePluginManagerMock();
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(
@@ -112,6 +137,15 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         result.Should().BeTrue();
         Directory.Exists(Path.Combine(pluginsRoot, "local", manifestPluginId)).Should().BeTrue();
         pluginManager.Verify(manager => manager.InstallPlugin(manifestPluginId), Times.Once);
+    }
+
+    private static Mock<IPluginManager> CreatePluginManagerMock()
+    {
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        return pluginManager;
     }
 
     private string CreatePluginZipPackage(string pluginId, bool includeSharedRuntimeFiles = false, string? manifestContent = null)

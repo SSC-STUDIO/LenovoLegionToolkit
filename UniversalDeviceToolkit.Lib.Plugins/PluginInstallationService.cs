@@ -98,9 +98,14 @@ public class PluginInstallationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Successfully installed plugin {pluginId} to {targetDir}");
 
+            // Force-load the imported payload before marking it installed so runtime
+            // capabilities such as optimization categories are immediately available.
+            await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+
             // Mirror marketplace installs so local ZIP imports participate in the same
             // InstalledExtensions-based state and startup lifecycle.
             _pluginManager.InstallPlugin(pluginId);
+            await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
 
             if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
             {
