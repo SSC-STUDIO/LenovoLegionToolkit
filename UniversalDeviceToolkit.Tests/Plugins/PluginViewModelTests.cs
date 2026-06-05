@@ -78,6 +78,43 @@ public class PluginViewModelTests
         capabilities.SupportsOptimizationCategory.Should().BeTrue();
     }
 
+    [Fact]
+    public void ResolveInstalledPluginCapabilities_WhenOnlyInstalledManifestHasSettingsPage_ShouldNotExposeConfiguration()
+    {
+        var installedManifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsSettingsPage = true,
+            SupportsOptimizationCategory = true
+        };
+
+        var capabilities = PluginExtensionsPage.ResolveInstalledPluginCapabilities(
+            plugin: null,
+            manifestCapabilities: default,
+            installedManifestCapabilities);
+
+        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsFeaturePage.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+        PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginCapabilities_WhenRuntimePluginProvidesSettingsPage_ShouldExposeConfiguration()
+    {
+        var plugin = new RuntimeSettingsPlugin();
+
+        var capabilities = PluginExtensionsPage.ResolveInstalledPluginCapabilities(
+            plugin,
+            manifestCapabilities: default,
+            installedManifestCapabilities: default);
+
+        capabilities.SupportsSettingsPage.Should().BeTrue();
+        capabilities.SupportsFeaturePage.Should().BeFalse();
+        capabilities.SupportsOptimizationCategory.Should().BeFalse();
+    }
+
     [Theory]
     [InlineData(true, false, false)]
     [InlineData(false, true, false)]
@@ -136,5 +173,16 @@ public class PluginViewModelTests
         public void OnUninstalled() { }
         public void OnShutdown() { }
         public void Stop() { }
+    }
+
+    private sealed class RuntimeSettingsPlugin : PluginBase
+    {
+        public override string Id => "runtime-settings-plugin";
+        public override string Name => "Runtime Settings Plugin";
+        public override string Description => "Provides a runtime settings page.";
+        public override string Icon => "PlugConnected24";
+        public override bool IsSystemPlugin => false;
+
+        public override object? GetSettingsPage() => new object();
     }
 }

@@ -1077,12 +1077,26 @@ private string _currentSearchText = string.Empty;
         if (string.IsNullOrWhiteSpace(pluginId))
             return manifestCapabilities;
 
-        var capabilities = manifestCapabilities;
+        return ResolveInstalledPluginCapabilities(
+            plugin,
+            manifestCapabilities,
+            PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId));
+    }
+
+    internal static PluginUiCapabilities ResolveInstalledPluginCapabilities(
+        IPlugin? plugin,
+        PluginUiCapabilities manifestCapabilities,
+        PluginUiCapabilities installedManifestCapabilities)
+    {
+        var capabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory =
+                manifestCapabilities.SupportsOptimizationCategory ||
+                installedManifestCapabilities.SupportsOptimizationCategory
+        };
 
         if (plugin is not null and not PluginManifestAdapter)
             capabilities = capabilities.Merge(ResolveRuntimePluginCapabilities(plugin));
-
-        capabilities = capabilities.Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId));
 
         return capabilities;
     }
