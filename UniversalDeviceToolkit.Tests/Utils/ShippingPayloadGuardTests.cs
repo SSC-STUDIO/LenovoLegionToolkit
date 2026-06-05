@@ -100,6 +100,25 @@ public sealed class ShippingPayloadGuardTests
     }
 
     [Fact]
+    public void Repository_ShouldNotContainMainAppDebugPatchScripts()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var files = Directory
+            .EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)
+            .Where(path => !IsIgnoredRepositoryPath(repositoryRoot, path))
+            .ToArray();
+
+        files.Should().NotContain(
+            path => Path.GetFileName(path).Contains("_patch_app_debug", StringComparison.OrdinalIgnoreCase),
+            "temporary debug patch scripts must not be checked in");
+
+        files.Should().NotContain(
+            path => Path.GetFileName(path).EndsWith(".ps1", StringComparison.OrdinalIgnoreCase) &&
+                    File.ReadAllText(path).Contains("AgentDebugLog.Write", StringComparison.Ordinal),
+            "scripts must not inject debug logging into the shipping WPF app");
+    }
+
+    [Fact]
     public void ReleaseNotes_ShouldOnlyAdvertiseCrossPlatformCliWhenCliAssetIsPresent()
     {
         var notesWithoutCli = RunReleaseNotesScript(
@@ -204,6 +223,17 @@ public sealed class ShippingPayloadGuardTests
     }
 
     private static string EscapePowerShellSingleQuotedString(string value) => value.Replace("'", "''", StringComparison.Ordinal);
+
+    private static bool IsIgnoredRepositoryPath(string repositoryRoot, string path)
+    {
+        var relativePath = Path.GetRelativePath(repositoryRoot, path);
+        var segments = relativePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        return segments.Any(static segment =>
+            segment.Equals(".git", StringComparison.OrdinalIgnoreCase) ||
+            segment.Equals("bin", StringComparison.OrdinalIgnoreCase) ||
+            segment.Equals("obj", StringComparison.OrdinalIgnoreCase));
+    }
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {
