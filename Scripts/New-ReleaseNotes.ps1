@@ -150,6 +150,31 @@ function Add-AssetLine {
   $Lines.Add("- ``$AssetName`` - $Description")
 }
 
+function Get-MajorVersion {
+  param(
+    [Parameter(Mandatory = $true)][string]$Value,
+    [Parameter(Mandatory = $true)][string]$Name
+  )
+
+  if ($Value -notmatch '^(?<major>\d+)\.') {
+    throw "$Name '$Value' must start with a semantic major version."
+  }
+
+  return [int]$Matches.major
+}
+
+function Assert-CrossPlatformCliReleaseAllowed {
+  param(
+    [Parameter(Mandatory = $true)][string]$ReleaseVersion,
+    [Parameter(Mandatory = $true)][string[]]$Names
+  )
+
+  $hasCrossPlatformCli = @($Names | Where-Object { $_ -match '_CLI_cross-platform\.zip$' }).Count -gt 0
+  if ($hasCrossPlatformCli -and (Get-MajorVersion -Value $ReleaseVersion -Name 'Version') -lt 5) {
+    throw "Cross-platform CLI assets are not published before 5.x.x. Version '$ReleaseVersion' was requested."
+  }
+}
+
 function Get-DownloadLines {
   param(
     [string]$ReleaseVersion,
@@ -258,6 +283,7 @@ function Get-CompatibilityLines {
 $section = Get-ReleaseSection -Path $ChangelogPath -ReleaseVersion $Version
 $releaseDate = if ($section) { $section.Date } elseif (-not [string]::IsNullOrWhiteSpace($ReleaseDate)) { $ReleaseDate } else { 'Unknown' }
 $changeBody = if ($section) { $section.Body } else { '' }
+Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version -Names $AssetNames
 $highlights = Get-SectionSummary -Body $changeBody
 $changesBody = Remove-LeadingHighlightsSection -Body $changeBody
 $downloads = Get-DownloadLines -ReleaseVersion $Version -Names $AssetNames

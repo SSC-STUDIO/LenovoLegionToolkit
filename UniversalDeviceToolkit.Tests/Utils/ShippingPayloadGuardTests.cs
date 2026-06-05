@@ -56,15 +56,21 @@ public sealed class ShippingPayloadGuardTests
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");
+        releaseNotesScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version -Names $AssetNames");
+        releaseNotesScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
 
         crossPlatformScript.Should().Contain("[string]$AssetVersion");
         crossPlatformScript.Should().Contain("$resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }");
         crossPlatformScript.Should().Contain("${AssetPrefix}_v${resolvedAssetVersion}_CLI_cross-platform.zip");
+        crossPlatformScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -BuildVersion $Version -PublishedVersion $resolvedAssetVersion");
+        crossPlatformScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
         crossPlatformScript.Should().Contain("$shippingPayloadGuard = Resolve-RepoPath 'Scripts\\Assert-ShippingPayload.ps1'");
         crossPlatformScript.Should().Contain("& $shippingPayloadGuard -PayloadPath $publishOutputPath");
 
         languageAssetsScript.Should().Contain("Get-CrossPlatformCliAssetName");
         languageAssetsScript.Should().Contain("[switch]$IncludeCrossPlatformCli");
+        languageAssetsScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version");
+        languageAssetsScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli)");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli -and (Test-Path -LiteralPath (Join-Path $ReleaseOutputPath $crossPlatformCliName)))");
         languageAssetsScript.Should().Contain("$hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)");
@@ -158,7 +164,49 @@ public sealed class ShippingPayloadGuardTests
         notesWithCli.Should().Contain("Cross-platform diagnostics CLI: Windows, macOS, and Linux with .NET 10 runtime");
     }
 
-    private static string RunReleaseNotesScript(string version, string[] assetNames)
+    [Fact]
+    public void ReleaseScripts_ShouldRejectCrossPlatformCliAssetsBeforeFive()
+    {
+        var releaseNotesFailure = RunReleaseNotesScript(
+            "4.2.0",
+            [
+                "UniversalDeviceToolkit_v4.2.0_CLI_cross-platform.zip",
+            ],
+            expectSuccess: false);
+
+        releaseNotesFailure.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
+
+        var repositoryRoot = FindRepositoryRoot();
+        RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Build-LanguageAssets.ps1"),
+                [
+                    "-FinalizeOnly",
+                    "-ReleaseOutput", NewTempDirectory("UDT-release-output"),
+                    "-PagesOutput", NewTempDirectory("UDT-pages-output"),
+                    "-Version", "4.2.0",
+                    "-FullInstallerPath", NewTempFile("UDT-full", ".exe"),
+                    "-OnlineInstallerPath", NewTempFile("UDT-online", ".exe"),
+                    "-IncludeCrossPlatformCli",
+                ],
+                repositoryRoot,
+                expectSuccess: false)
+            .Should()
+            .Contain("Cross-platform CLI assets are not published before 5.x.x.");
+
+        RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Build-CrossPlatformCliAsset.ps1"),
+                [
+                    "-Version", "4.2.0",
+                    "-ReleaseOutput", NewTempDirectory("UDT-cli-output"),
+                    "-SkipHashUpdate",
+                ],
+                repositoryRoot,
+                expectSuccess: false)
+            .Should()
+            .Contain("Cross-platform CLI assets are not published before 5.x.x.");
+    }
+
+    private static string RunReleaseNotesScript(string version, string[] assetNames, bool expectSuccess = true)
     {
         var repositoryRoot = FindRepositoryRoot();
         var tempDirectory = Path.Combine(Path.GetTempPath(), $"UDT-release-notes-{Guid.NewGuid():N}");
@@ -217,14 +265,73 @@ public sealed class ShippingPayloadGuardTests
             var error = process.StandardError.ReadToEnd();
 
             process.WaitForExit(30_000).Should().BeTrue("release notes generation should finish quickly");
-            process.ExitCode.Should().Be(0, error);
+            if (expectSuccess)
+            {
+                process.ExitCode.Should().Be(0, error);
+            }
+            else
+            {
+                process.ExitCode.Should().NotBe(0, output);
+            }
 
-            return output;
+            return output + error;
         }
         finally
         {
             Directory.Delete(tempDirectory, recursive: true);
         }
+    }
+
+    private static string RunPowerShellScript(string scriptPath, string[] arguments, string workingDirectory, bool expectSuccess = true)
+    {
+        var startInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "powershell.exe",
+            WorkingDirectory = workingDirectory,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+        };
+
+        startInfo.ArgumentList.Add("-NoProfile");
+        startInfo.ArgumentList.Add("-ExecutionPolicy");
+        startInfo.ArgumentList.Add("Bypass");
+        startInfo.ArgumentList.Add("-File");
+        startInfo.ArgumentList.Add(scriptPath);
+        foreach (var argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = System.Diagnostics.Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start PowerShell.");
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+
+        process.WaitForExit(30_000).Should().BeTrue($"{Path.GetFileName(scriptPath)} should finish quickly");
+        if (expectSuccess)
+        {
+            process.ExitCode.Should().Be(0, error);
+        }
+        else
+        {
+            process.ExitCode.Should().NotBe(0, output);
+        }
+
+        return output + error;
+    }
+
+    private static string NewTempDirectory(string prefix)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{prefix}-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    private static string NewTempFile(string prefix, string extension)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{prefix}-{Guid.NewGuid():N}{extension}");
+        File.WriteAllBytes(path, []);
+        return path;
     }
 
     private static string EscapePowerShellSingleQuotedString(string value) => value.Replace("'", "''", StringComparison.Ordinal);

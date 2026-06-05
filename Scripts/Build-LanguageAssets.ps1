@@ -35,6 +35,27 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Get-MajorVersion {
+    param(
+        [Parameter(Mandatory = $true)][string]$Value,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    if ($Value -notmatch '^(?<major>\d+)\.') {
+        throw "$Name '$Value' must start with a semantic major version."
+    }
+
+    return [int]$Matches.major
+}
+
+function Assert-CrossPlatformCliReleaseAllowed {
+    param([Parameter(Mandatory = $true)][string]$ReleaseVersion)
+
+    if ((Get-MajorVersion -Value $ReleaseVersion -Name 'Version') -lt 5) {
+        throw "Cross-platform CLI assets are not published before 5.x.x. Version '$ReleaseVersion' was requested."
+    }
+}
+
 function Resolve-RepoPath {
     param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -416,6 +437,10 @@ function Write-StableCatalog {
     $resourcesStableCatalogPath = Join-Path $PagesOutputPath 'resources\stable\catalog.json'
     $releaseBaseUrl = "https://github.com/$Repository/releases/download/v$Version"
 
+    if ($IncludeCrossPlatformCli) {
+        Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version
+    }
+
     $fullSetupName = Get-FullSetupAssetName $Version
     $onlineSetupName = Get-OnlineSetupAssetName $Version
     $fullZipName = Get-FullZipAssetName $Version
@@ -718,6 +743,10 @@ function Prepare-ReleaseAssets {
 }
 
 function Finalize-ReleaseAssets {
+    if ($IncludeCrossPlatformCli) {
+        Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version
+    }
+
     if ([string]::IsNullOrWhiteSpace($FullInstallerPath)) {
         throw 'FullInstallerPath is required with -FinalizeOnly.'
     }
@@ -766,6 +795,10 @@ function Finalize-ReleaseAssets {
 
     Write-Host "Finalized installer aliases and SHA256 file in '$releaseOutputPath'."
     Write-Host "Finalized stable catalogs in '$pagesOutputPath\stable\catalog.json' and '$pagesOutputPath\resources\stable\catalog.json'."
+}
+
+if ($IncludeCrossPlatformCli) {
+    Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version
 }
 
 if ($FinalizeOnly) {
