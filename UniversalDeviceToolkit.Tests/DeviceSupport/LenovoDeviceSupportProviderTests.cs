@@ -352,12 +352,63 @@ public sealed class LenovoDeviceSupportProviderTests
             Model = "Lenovo Future Device"
         };
 
-        // Act
-        var availability = provider.Evaluate(machineInformation);
+        try
+        {
+            // Act
+            var availability = provider.Evaluate(machineInformation);
 
-        // Assert
-        availability.IsSupported.Should().BeTrue();
-        availability.IsBasicMode.Should().BeFalse();
-        availability.DevicePackId.Should().Be("lenovo-custom-installed");
+            // Assert
+            availability.IsSupported.Should().BeTrue();
+            availability.IsBasicMode.Should().BeFalse();
+            availability.DevicePackId.Should().Be("lenovo-custom-installed");
+        }
+        finally
+        {
+            provider.SetInstalledCatalog(null);
+        }
+    }
+
+    [Fact]
+    public void Evaluate_WhenInstalledCatalogMatchesOnlyFamilySignal_ShouldUseInstalledPack()
+    {
+        // Arrange
+        var provider = LenovoDeviceSupportProvider.Instance;
+        provider.SetInstalledCatalog(new DeviceSupportCatalog
+        {
+            DevicePacks =
+            [
+                new DevicePack
+                {
+                    Id = "asus-rog-family-installed",
+                    DisplayName = "ASUS ROG Family Installed",
+                    Vendor = "ASUS",
+                    Families = ["ROG"],
+                    EnabledFeatures = ["plugins", "system-optimization"],
+                    HiddenFeatures = ["lenovo-hardware-controls"]
+                }
+            ]
+        });
+        var machineInformation = MachineInformationTestData.WithComputerSystem(
+            "ASUS",
+            "",
+            "ASUSTeK COMPUTER INC.",
+            "",
+            "ROG");
+
+        try
+        {
+            // Act
+            var availability = provider.Evaluate(machineInformation);
+
+            // Assert
+            availability.IsSupported.Should().BeFalse();
+            availability.IsBasicMode.Should().BeTrue();
+            availability.DevicePackId.Should().Be("asus-rog-family-installed");
+            availability.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
+        }
+        finally
+        {
+            provider.SetInstalledCatalog(null);
+        }
     }
 }

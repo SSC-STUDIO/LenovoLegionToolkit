@@ -108,16 +108,27 @@ public class CatalogDeviceSupportProvider(
             return false;
 
         var modelSignals = GetModelSignals(machineInformation).ToArray();
+        var modelPrefixes = GetCollectionOrEmpty(pack.ModelPrefixes);
+        var machineTypes = GetCollectionOrEmpty(pack.MachineTypes);
+        var modelKeywords = GetCollectionOrEmpty(pack.ModelKeywords);
+        var families = GetCollectionOrEmpty(pack.Families);
 
-        if (GetCollectionOrEmpty(pack.ModelPrefixes).Any(prefix => modelSignals.Any(signal => signal.Contains(prefix, StringComparison.OrdinalIgnoreCase))))
+        if (modelPrefixes.Any(prefix => modelSignals.Any(signal => signal.Contains(prefix, StringComparison.OrdinalIgnoreCase))))
             return true;
 
-        if (GetCollectionOrEmpty(pack.ModelKeywords).Any(keyword => modelSignals.Any(signal => signal.Contains(keyword, StringComparison.OrdinalIgnoreCase))))
+        if (modelKeywords.Any(keyword => modelSignals.Any(signal => signal.Contains(keyword, StringComparison.OrdinalIgnoreCase))))
             return true;
 
-        return GetCollectionOrEmpty(pack.ModelPrefixes).Count == 0 &&
-               GetCollectionOrEmpty(pack.MachineTypes).Count == 0 &&
-               GetCollectionOrEmpty(pack.ModelKeywords).Count == 0;
+        if (modelPrefixes.Count == 0 &&
+            machineTypes.Count == 0 &&
+            modelKeywords.Count == 0 &&
+            families.Any(family => modelSignals.Any(signal => signal.Contains(family, StringComparison.OrdinalIgnoreCase))))
+            return true;
+
+        return modelPrefixes.Count == 0 &&
+               machineTypes.Count == 0 &&
+               modelKeywords.Count == 0 &&
+               families.Count == 0;
     }
 
     private static bool VendorMatches(DevicePack pack, MachineInformation machineInformation)
