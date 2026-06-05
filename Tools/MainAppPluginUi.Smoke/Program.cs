@@ -40,6 +40,7 @@ internal static class Program
     private const string ThemeEnvironmentVariable = "UDT_SMOKE_THEME";
     private const string AnimationSpeedEnvironmentVariable = "UDT_SMOKE_ANIMATION_SPEED_MS";
     private const string DisableAnimationsEnvironmentVariable = "UDT_SMOKE_DISABLE_ANIMATIONS";
+    private const string PowerModeHardwareVerifyEnvironmentVariable = "UDT_SMOKE_POWER_MODE_HARDWARE_VERIFY";
     private const string SmokeAutomationEnvironmentVariable = "UDT_SMOKE_AUTOMATION";
 
     private static string? GetEnvVar(string environmentVariableName) =>
@@ -97,6 +98,7 @@ internal static class Program
     private static string? _activeSmokeAppDataDirectory;
     private static double _animationSpeedMultiplier = 1.0;
     private static bool _animationsDisabled = false;
+    private static bool _powerModeHardwareVerificationEnabled;
 
     private enum PluginInstallSource
     {
@@ -301,6 +303,7 @@ internal static class Program
             ConfigureScreenshotSession(args);
             ConfigureObservationSession(args);
             ConfigureAnimationSettings(args);
+            ConfigurePowerModeHardwareVerification(args);
             _activeScenario = ResolveScenario(args);
             _activeTheme = ResolveTheme(args);
             var repositoryRoot = ResolveRepositoryRoot(args);
@@ -629,6 +632,16 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Animation speed multiplier: {_animationSpeedMultiplier:F2}x (base: {BaseAnimationDurationMs}ms)");
     }
 
+    private static void ConfigurePowerModeHardwareVerification(IReadOnlyList<string> args)
+    {
+        _powerModeHardwareVerificationEnabled = ResolveBooleanSwitch(
+            args,
+            "--power-mode-hardware-verify",
+            PowerModeHardwareVerifyEnvironmentVariable);
+
+        Console.WriteLine($"[main-smoke] Power-mode hardware verification: {_powerModeHardwareVerificationEnabled}");
+    }
+
     private static SmokeScenario ResolveScenario(IReadOnlyList<string> args)
     {
         var rawValue = TryReadOptionValue(args, "--scenario")
@@ -783,6 +796,7 @@ MainAppPluginUi.Smoke.dll [--repo-root <path>] [--app-dir <installed-or-publishe
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
+                            [--power-mode-hardware-verify]
                             [--list-plugins] [--help]
 
 Options:
@@ -790,7 +804,7 @@ Options:
   --app-dir              Optional installed or published app directory to launch instead of the repo Release build output.
   --plugin               Comma-separated plugin id filter. Defaults to the smoke-supported plugin set.
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Default source is online for every smoke-supported plugin. Local sources require matching plugin build directories or the smoke fails fast.
-  --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions; 'dashboard' validates sensor card expand/collapse; 'power-mode' validates the performance-mode entry without changing hardware mode.
+  --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions; 'dashboard' validates sensor card expand/collapse; 'power-mode' validates the performance-mode entry without changing hardware mode unless --power-mode-hardware-verify is set.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
@@ -801,6 +815,7 @@ Options:
   --failure-hold-ms      Keep the failure state visible before exit. Default: 15000 when --watch is enabled.
   --disable-animations   Disable UI animations for faster test execution in non-watch mode.
   --animation-speed-ms   Override animation speed in milliseconds. Default: 350ms. Lower values speed up tests.
+  --power-mode-hardware-verify  For the power-mode scenario, opt in to a real hardware write/readback verification via Tools\HardwareValidation. The tool restores the original power mode.
   --list-plugins         Print the smoke-supported plugin ids and default install sources, then exit.
   --help                 Print this help text and exit.
 
@@ -818,6 +833,7 @@ Environment variables:
   UDT_SMOKE_FAILURE_HOLD_MS
   UDT_SMOKE_ANIMATION_SPEED_MS
   UDT_SMOKE_DISABLE_ANIMATIONS
+  UDT_SMOKE_POWER_MODE_HARDWARE_VERIFY
 """);
     }
 
@@ -5547,6 +5563,15 @@ Environment variables:
         Console.WriteLine("[main-smoke] Reading original power mode.");
         var originalPowerMode = ReadElementText(comboBox);
         Console.WriteLine($"[main-smoke] Original power mode resolved as '{originalPowerMode}'.");
+        if (_powerModeHardwareVerificationEnabled)
+        {
+            SelectPowerModeForGodModeSettings(mainWindow, comboBox);
+            RunPowerModeHardwareVerification();
+            mainWindow = ResolveLiveWindow(mainWindow);
+            comboBox = TryFindPowerModeComboBox(mainWindow, TimeSpan.FromSeconds(10)) ?? comboBox;
+            CaptureMainWindow(mainWindow, "power-mode-hardware-verified");
+        }
+
         Console.WriteLine("[main-smoke] Resolving power-mode settings button.");
         var settingsButton = TryWaitForAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton", TimeSpan.FromSeconds(6));
         Console.WriteLine(settingsButton is null
@@ -5591,7 +5616,87 @@ Environment variables:
         CloseWindow(settingsWindow);
         Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
 
-        Console.WriteLine("[main-smoke] Power Mode UI verified without changing the selected hardware mode.");
+        Console.WriteLine(_powerModeHardwareVerificationEnabled
+            ? "[main-smoke] Power Mode UI and hardware readback verification completed."
+            : "[main-smoke] Power Mode UI verified without changing the selected hardware mode.");
+    }
+
+    private static void RunPowerModeHardwareVerification()
+    {
+        var repositoryRoot = _activeRepositoryRoot
+                             ?? throw new InvalidOperationException("Repository root is not available for power-mode hardware verification.");
+        var hardwareValidationProject = Path.Combine(repositoryRoot, "Tools", "HardwareValidation", "HardwareValidation.csproj");
+        if (!File.Exists(hardwareValidationProject))
+            throw new FileNotFoundException($"HardwareValidation project was not found: {hardwareValidationProject}");
+
+        Console.WriteLine("[main-smoke] Running power-mode hardware verification via Tools\\HardwareValidation.");
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            WorkingDirectory = repositoryRoot,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
+        startInfo.ArgumentList.Add("run");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add(hardwareValidationProject);
+        startInfo.ArgumentList.Add("--");
+        startInfo.ArgumentList.Add("power-mode");
+        startInfo.ArgumentList.Add("set-verify");
+        startInfo.ArgumentList.Add(((int)PowerModeState.Performance).ToString(CultureInfo.InvariantCulture));
+
+        using var process = Process.Start(startInfo)
+                            ?? throw new InvalidOperationException("Failed to start HardwareValidation process.");
+
+        var stdoutTask = process.StandardOutput.ReadToEndAsync();
+        var stderrTask = process.StandardError.ReadToEndAsync();
+        if (!process.WaitForExit(TimeSpan.FromSeconds(90)))
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch
+            {
+                // Best-effort cleanup; the timeout failure below is more useful.
+            }
+
+            throw new TimeoutException("Timed out waiting for HardwareValidation power-mode verification.");
+        }
+
+        var stdout = stdoutTask.GetAwaiter().GetResult();
+        var stderr = stderrTask.GetAwaiter().GetResult();
+        if (!string.IsNullOrWhiteSpace(stdout))
+            Console.WriteLine(stdout.Trim());
+        if (!string.IsNullOrWhiteSpace(stderr))
+            Console.Error.WriteLine(stderr.Trim());
+
+        var powerModePassed = TryReadResultFlag(stdout, "PowerModeVerificationPassed");
+        var restorePassed = TryReadResultFlag(stdout, "RestoreVerificationPassed");
+        var overallPassed = TryReadResultFlag(stdout, "OverallPassed");
+        Console.WriteLine($"[main-smoke] PowerModeHardwareVerificationPassed: {powerModePassed}");
+        Console.WriteLine($"[main-smoke] PowerModeHardwareRestorePassed: {restorePassed}");
+        Console.WriteLine($"[main-smoke] PowerModeHardwareOverallPassed: {overallPassed}");
+
+        if (process.ExitCode != 0 || powerModePassed != true || restorePassed != true || overallPassed != true)
+            throw new InvalidOperationException($"Power-mode hardware verification failed. ExitCode={process.ExitCode}");
+    }
+
+    private static bool? TryReadResultFlag(string content, string key)
+    {
+        using var reader = new StringReader(content);
+        string? line;
+        while ((line = reader.ReadLine()) is not null)
+        {
+            if (!line.StartsWith($"{key}: ", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            return bool.TryParse(line[(key.Length + 2)..].Trim(), out var parsed) ? parsed : null;
+        }
+
+        return null;
     }
 
     private static void SelectPowerModeForGodModeSettings(AutomationElement mainWindow, AutomationElement comboBox)

@@ -16,6 +16,9 @@ return exitCode;
 
 static class ProgramEntry
 {
+    private static readonly TimeSpan PowerModeVerificationTimeout = TimeSpan.FromSeconds(8);
+    private static readonly TimeSpan PowerModeVerificationPollDelay = TimeSpan.FromMilliseconds(250);
+
     private static readonly CapabilityID[] DefaultBatchCapabilities =
     [
         CapabilityID.CPULongTermPowerLimit,
@@ -88,9 +91,73 @@ static class ProgramEntry
                 await WMI.LenovoGameZoneData.SetSmartFanModeAsync(mode).ConfigureAwait(false);
                 Console.WriteLine($"SetSmartFanMode: {mode}");
                 return 0;
+            case "set-verify":
+                if (args.Length < 2 || !int.TryParse(args[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var verifiedMode))
+                    return Fail("power-mode set-verify requires an integer mode value.");
+
+                var restore = !args.Skip(2).Any(static arg => arg.Equals("--no-restore", StringComparison.OrdinalIgnoreCase));
+                return await SetAndVerifyPowerModeAsync(verifiedMode, restore).ConfigureAwait(false);
             default:
                 return Fail($"Unknown power-mode subcommand '{args[0]}'.");
         }
+    }
+
+    private static async Task<int> SetAndVerifyPowerModeAsync(int requestedMode, bool restore)
+    {
+        var beforeMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
+        var requestedChange = beforeMode != requestedMode;
+
+        Console.WriteLine($"BeforeSmartFanMode: {beforeMode}");
+        Console.WriteLine($"RequestedSmartFanMode: {requestedMode}");
+        Console.WriteLine($"RestoreRequested: {restore}");
+        Console.WriteLine($"PowerModeChangeRequested: {requestedChange}");
+
+        var verificationPassed = false;
+        var restorePassed = !restore;
+        var afterMode = beforeMode;
+        var measuredChangeObserved = false;
+
+        try
+        {
+            await WMI.LenovoGameZoneData.SetSmartFanModeAsync(requestedMode).ConfigureAwait(false);
+            afterMode = await WaitForSmartFanModeAsync(requestedMode, PowerModeVerificationTimeout).ConfigureAwait(false);
+            verificationPassed = afterMode == requestedMode;
+            measuredChangeObserved = beforeMode != afterMode;
+
+            Console.WriteLine($"AfterSmartFanMode: {afterMode}");
+            Console.WriteLine($"PowerModeDelta: {afterMode - beforeMode}");
+            Console.WriteLine($"MeasuredPowerModeChangeObserved: {measuredChangeObserved}");
+            Console.WriteLine($"PowerModeVerificationPassed: {verificationPassed}");
+        }
+        finally
+        {
+            if (restore)
+            {
+                await WMI.LenovoGameZoneData.SetSmartFanModeAsync(beforeMode).ConfigureAwait(false);
+                var restoredMode = await WaitForSmartFanModeAsync(beforeMode, PowerModeVerificationTimeout).ConfigureAwait(false);
+                restorePassed = restoredMode == beforeMode;
+                Console.WriteLine($"RestoredSmartFanMode: {restoredMode}");
+                Console.WriteLine($"RestoreVerificationPassed: {restorePassed}");
+            }
+        }
+
+        var overallPassed = verificationPassed && (!requestedChange || measuredChangeObserved) && restorePassed;
+        Console.WriteLine($"OverallPassed: {overallPassed}");
+        return overallPassed ? 0 : 1;
+    }
+
+    private static async Task<int> WaitForSmartFanModeAsync(int expectedMode, TimeSpan timeout)
+    {
+        var deadline = DateTimeOffset.UtcNow + timeout;
+        var lastMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
+
+        while (lastMode != expectedMode && DateTimeOffset.UtcNow < deadline)
+        {
+            await Task.Delay(PowerModeVerificationPollDelay).ConfigureAwait(false);
+            lastMode = await WMI.LenovoGameZoneData.GetSmartFanModeAsync().ConfigureAwait(false);
+        }
+
+        return lastMode;
     }
 
     private static async Task<int> RunFeatureAsync(string[] args)
@@ -630,6 +697,7 @@ static class ProgramEntry
         Console.WriteLine("  capabilities");
         Console.WriteLine("  power-mode get");
         Console.WriteLine("  power-mode set <int>");
+        Console.WriteLine("  power-mode set-verify <int> [--no-restore]");
         Console.WriteLine("  feature get <CapabilityID>");
         Console.WriteLine("  feature set <CapabilityID> <int>");
         Console.WriteLine("  godmode status");

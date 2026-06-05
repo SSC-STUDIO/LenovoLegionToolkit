@@ -250,6 +250,21 @@ public class MainAppPluginUiSmokeArgumentParsingTests
     }
 
     [Fact]
+    public void HasOption_WithPowerModeHardwareVerify_ReturnsTrue()
+    {
+        var programType = Assembly.Load("MainAppPluginUi.Smoke").GetType("MainAppPluginUi.Smoke.Program", throwOnError: true)!;
+        var hasOption = programType.GetMethod("HasOption", BindingFlags.NonPublic | BindingFlags.Static);
+
+        hasOption.Should().NotBeNull();
+
+        var result = hasOption!.Invoke(
+            null,
+            new object[] { new[] { "--scenario", "power-mode", "--power-mode-hardware-verify" }, "--power-mode-hardware-verify" });
+
+        result.Should().Be(true);
+    }
+
+    [Fact]
     public void TryReadOptionValue_WithPresentOption_ReturnsValue()
     {
         var programType = Assembly.Load("MainAppPluginUi.Smoke").GetType("MainAppPluginUi.Smoke.Program", throwOnError: true)!;
@@ -299,15 +314,24 @@ public class MainAppPluginUiSmokeArgumentParsingTests
 
     private static string FindRepositoryRoot()
     {
-        var current = new DirectoryInfo(AppContext.BaseDirectory);
-
-        while (current is not null)
+        var candidates = new[]
         {
-            var solutionPath = Path.Combine(current.FullName, "UniversalDeviceToolkit.sln");
-            if (File.Exists(solutionPath))
-                return current.FullName;
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Directory.GetCurrentDirectory(),
+            AppContext.BaseDirectory
+        };
 
-            current = current.Parent;
+        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
+        {
+            var current = new DirectoryInfo(Path.GetFullPath(candidate!));
+            while (current is not null)
+            {
+                var solutionPath = Path.Combine(current.FullName, "UniversalDeviceToolkit.sln");
+                if (File.Exists(solutionPath))
+                    return current.FullName;
+
+                current = current.Parent;
+            }
         }
 
         throw new DirectoryNotFoundException("Could not locate repository root for MainAppPluginUi.Smoke argument parsing tests.");

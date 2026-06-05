@@ -1,6 +1,6 @@
 param(
     [string]$HardwareValidationDllPath,
-    [ValidateSet('StatusCheck', 'CpuVerify', 'BatchDefault')]
+    [ValidateSet('StatusCheck', 'CpuVerify', 'BatchDefault', 'PowerModeVerify')]
     [string]$Scenario,
     [string]$Command = 'godmode',
     [string[]]$CommandArguments = @('verify-current-preset', 'CPULongTermPowerLimit', '1'),
@@ -52,6 +52,12 @@ function Resolve-Scenario {
             return @{
                 Command = 'godmode'
                 CommandArguments = @('verify-current-preset-batch', 'CPULongTermPowerLimit', 'GPUConfigurableTGP', 'GPUTemperatureLimit')
+            }
+        }
+        'PowerModeVerify' {
+            return @{
+                Command = 'power-mode'
+                CommandArguments = @('set-verify', '2')
             }
         }
         default {
@@ -230,6 +236,12 @@ try {
         'HardwareValueDelta',
         'HardwareValueChanged',
         'AfterSmartFanMode',
+        'BeforeSmartFanMode',
+        'RequestedSmartFanMode',
+        'RestoreRequested',
+        'PowerModeChangeRequested',
+        'PowerModeDelta',
+        'MeasuredPowerModeChangeObserved',
         'PowerModeVerificationPassed',
         'PersistedVerificationPassed',
         'HardwareVerificationPassed',
@@ -254,6 +266,8 @@ try {
     $measuredPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'MeasuredVerificationPassed'
     $persistedPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'PersistedVerificationPassed'
     $powerModePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'PowerModeVerificationPassed'
+    $powerModeRestorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'RestoreVerificationPassed'
+    $powerModeOverallPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'OverallPassed'
     $isVerifyCurrentPreset =
         $Command -eq 'godmode' -and
         $CommandArguments.Count -gt 0 -and
@@ -262,6 +276,13 @@ try {
         $Command -eq 'godmode' -and
         $CommandArguments.Count -gt 0 -and
         $CommandArguments[0] -eq 'verify-current-preset-batch'
+    $isPowerModeVerify =
+        $Command -eq 'power-mode' -and
+        $CommandArguments.Count -gt 0 -and
+        $CommandArguments[0] -eq 'set-verify'
+    $powerModeRestoreRequired =
+        $isPowerModeVerify -and
+        -not ($CommandArguments | Where-Object { $_ -eq '--no-restore' })
     $batchPassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchVerificationPassed'
     $batchRestorePassed = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchRestoreVerificationPassed'
     $batchMeasuredChangeObserved = Get-VerificationLine -Content $combinedLogContent -Pattern 'BatchMeasuredChangeObserved'
@@ -280,6 +301,12 @@ try {
         $batchMeasuredChangeObserved -eq 'True' -and
         $batchPowerModePassed -eq 'True' -and
         $batchRestorePassed -eq 'True'
+    }
+    elseif ($isPowerModeVerify) {
+        (-not $timedOut -and $process.ExitCode -eq 0) -and
+        $powerModePassed -eq 'True' -and
+        ((-not $powerModeRestoreRequired) -or $powerModeRestorePassed -eq 'True') -and
+        $powerModeOverallPassed -eq 'True'
     }
     else {
         -not $timedOut -and $process.ExitCode -eq 0

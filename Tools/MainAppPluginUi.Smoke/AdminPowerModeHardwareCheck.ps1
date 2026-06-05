@@ -67,11 +67,13 @@ $logPath = if ($LogPathOverride) { Resolve-AbsolutePath $LogPathOverride } elsei
 $hardwareValidationResultPath = [System.IO.Path]::ChangeExtension($resultPath, '.hardware.result.txt')
 $hardwareValidationLogPath = [System.IO.Path]::ChangeExtension($logPath, '.hardware.log.txt')
 $hardwareValidationScriptPath = Join-Path $repoRoot 'Tools\HardwareValidation\Run-HardwareValidationElevated.ps1'
+$uiSmokeResultPath = [System.IO.Path]::ChangeExtension($resultPath, '.ui.result.txt')
+$uiSmokeLogPath = [System.IO.Path]::ChangeExtension($logPath, '.ui.log.txt')
 
 [System.IO.Directory]::CreateDirectory([System.IO.Path]::GetDirectoryName($resultPath)) | Out-Null
 [System.IO.Directory]::CreateDirectory([System.IO.Path]::GetDirectoryName($logPath)) | Out-Null
 
-foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardwareValidationLogPath)) {
+foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardwareValidationLogPath, $uiSmokeResultPath, $uiSmokeLogPath)) {
     if (Test-Path -LiteralPath $path) {
         Remove-Item -LiteralPath $path -Force
     }
@@ -79,15 +81,58 @@ foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardw
 
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
 Write-Result 'DelegatedTo' $hardwareValidationScriptPath
-Write-Result 'Scenario' 'CpuVerify'
+Write-Result 'Scenario' 'PowerModeUiAndHardwareVerify'
 Write-Result 'TimeoutSeconds' $TimeoutSeconds
 
 Push-Location $repoRoot
 try {
+    $smokeProject = Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\MainAppPluginUi.Smoke.csproj'
+    $smokeProcessStartInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $smokeProcessStartInfo.FileName = 'dotnet'
+    $smokeProcessStartInfo.WorkingDirectory = $repoRoot
+    $smokeProcessStartInfo.UseShellExecute = $false
+    $smokeProcessStartInfo.RedirectStandardOutput = $true
+    $smokeProcessStartInfo.RedirectStandardError = $true
+    $smokeProcessStartInfo.CreateNoWindow = $true
+    $smokeProcessStartInfo.ArgumentList.Add('run')
+    $smokeProcessStartInfo.ArgumentList.Add('--project')
+    $smokeProcessStartInfo.ArgumentList.Add($smokeProject)
+    $smokeProcessStartInfo.ArgumentList.Add('--')
+    $smokeProcessStartInfo.ArgumentList.Add('--scenario')
+    $smokeProcessStartInfo.ArgumentList.Add('power-mode')
+    $smokeProcessStartInfo.ArgumentList.Add('--disable-animations')
+    $smokeProcessStartInfo.ArgumentList.Add('--screenshots')
+    $smokeProcessStartInfo.ArgumentList.Add('failures')
+
+    $smokeProcess = [System.Diagnostics.Process]::new()
+    $smokeProcess.StartInfo = $smokeProcessStartInfo
+    $null = $smokeProcess.Start()
+    Write-Result 'UiSmokeProcessId' $smokeProcess.Id
+    $smokeStdoutTask = $smokeProcess.StandardOutput.ReadToEndAsync()
+    $smokeStderrTask = $smokeProcess.StandardError.ReadToEndAsync()
+    $smokeTimedOut = -not $smokeProcess.WaitForExit($TimeoutSeconds * 1000)
+    if ($smokeTimedOut) {
+        Write-Result 'UiSmokeTimedOut' 'True'
+        try {
+            $smokeProcess.Kill($true)
+        }
+        catch {
+            Write-Result 'UiSmokeKillError' $_.Exception.Message
+        }
+    }
+    $null = $smokeProcess.WaitForExit()
+    $smokeStdout = $smokeStdoutTask.GetAwaiter().GetResult()
+    $smokeStderr = $smokeStderrTask.GetAwaiter().GetResult()
+    Set-Content -LiteralPath $uiSmokeLogPath -Value (($smokeStdout, $smokeStderr) -join [Environment]::NewLine).Trim() -Encoding UTF8
+    $uiSmokeExitCode = if ($smokeTimedOut) { '<timed-out>' } else { [string]$smokeProcess.ExitCode }
+    $uiSmokePassed = (-not $smokeTimedOut) -and $smokeProcess.ExitCode -eq 0
+    Write-Result 'UiSmokeExitCode' $uiSmokeExitCode
+    Write-Result 'UiSmokePassed' ([string]$uiSmokePassed)
+
     $delegatedArguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $hardwareValidationScriptPath,
-        '-Scenario', 'CpuVerify',
+        '-Scenario', 'PowerModeVerify',
         '-ResultPath', $hardwareValidationResultPath,
         '-LogPath', $hardwareValidationLogPath,
         '-TimeoutSeconds', $TimeoutSeconds
@@ -116,55 +161,35 @@ try {
     Write-Result 'DelegatedLogReady' $delegatedLogReady
 
     if ($delegatedResultReady) {
-        $beforeHardwareValue = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BeforeHardwareValue'
-        $afterHardwareValue = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'AfterHardwareValue'
-        $requestedHardwareDelta = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RequestedHardwareDelta'
-        $hardwareValueDelta = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareValueDelta'
-        $hardwareValueChanged = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareValueChanged'
+        $beforePowerMode = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'BeforeSmartFanMode'
+        $requestedPowerMode = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RequestedSmartFanMode'
         $afterPowerMode = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'AfterSmartFanMode'
-        $persistedPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'PersistedVerificationPassed'
-        $hardwarePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'HardwareVerificationPassed'
-        $measuredPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'MeasuredVerificationPassed'
-        $restorePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RestoreVerificationPassed'
-        $overallPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'OverallPassed'
-        $capability = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'Capability'
-
-        if ($null -ne $capability) {
-            Write-Result 'Capability' $capability
+        $powerModeChanged = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'MeasuredPowerModeChangeObserved'
+        $powerModePassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'PowerModeVerificationPassed'
+        $powerModeRestored = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'RestoreVerificationPassed'
+        $hardwareOverallPassed = Get-ResultValue -FilePath $hardwareValidationResultPath -Key 'OverallPassed'
+        if ($null -ne $beforePowerMode) {
+            Write-Result 'BeforePowerMode' $beforePowerMode
         }
-        if ($null -ne $beforeHardwareValue) {
-            Write-Result 'BeforeCpuLongTerm' $beforeHardwareValue
-        }
-        if ($null -ne $afterHardwareValue) {
-            Write-Result 'AfterCpuLongTerm' $afterHardwareValue
-        }
-        if ($null -ne $requestedHardwareDelta) {
-            Write-Result 'RequestedCpuLongTermDelta' $requestedHardwareDelta
-        }
-        if ($null -ne $hardwareValueDelta) {
-            Write-Result 'MeasuredCpuLongTermDelta' $hardwareValueDelta
-        }
-        if ($null -ne $hardwareValueChanged) {
-            Write-Result 'MeasuredCpuLongTermChanged' $hardwareValueChanged
+        if ($null -ne $requestedPowerMode) {
+            Write-Result 'RequestedPowerMode' $requestedPowerMode
         }
         if ($null -ne $afterPowerMode) {
             Write-Result 'AfterPowerMode' $afterPowerMode
         }
-        if ($null -ne $persistedPassed) {
-            Write-Result 'PersistedVerificationPassed' $persistedPassed
+        if ($null -ne $powerModeChanged) {
+            Write-Result 'MeasuredPowerModeChanged' $powerModeChanged
         }
-        if ($null -ne $hardwarePassed) {
-            Write-Result 'HardwareVerificationPassed' $hardwarePassed
+        if ($null -ne $powerModePassed) {
+            Write-Result 'PowerModeVerificationPassed' $powerModePassed
         }
-        if ($null -ne $measuredPassed) {
-            Write-Result 'MeasuredVerificationPassed' $measuredPassed
+        if ($null -ne $powerModeRestored) {
+            Write-Result 'PowerModeRestorePassed' $powerModeRestored
         }
-        if ($null -ne $restorePassed) {
-            Write-Result 'RestoreVerificationPassed' $restorePassed
+        if ($null -ne $hardwareOverallPassed) {
+            Write-Result 'HardwareValidationPassed' $hardwareOverallPassed
         }
-        if ($null -ne $overallPassed) {
-            Write-Result 'HardwareValidationPassed' $overallPassed
-        }
+        Write-Result 'OverallPassed' ([string]($uiSmokePassed -and $hardwareOverallPassed -eq 'True'))
     }
     else {
         Write-Result 'HardwareValidationPassed' 'False'
