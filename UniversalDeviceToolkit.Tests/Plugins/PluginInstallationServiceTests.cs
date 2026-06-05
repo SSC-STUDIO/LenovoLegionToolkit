@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -78,6 +79,42 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         Directory.GetFiles(installedPluginDirectory, "*.dll", SearchOption.TopDirectoryOnly)
             .Should()
             .NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldTrustImportedPayloadForProductionSignaturePolicy()
+    {
+        const string pluginId = "test-local-plugin";
+        var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+
+        try
+        {
+            var pluginManager = CreatePluginManagerMock();
+            var service = new PluginInstallationService(pluginManager.Object);
+            var pluginsRoot = CreateTempDirectory();
+            var zipPath = CreatePluginZipPackage(pluginId);
+
+            var result = await service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+            result.Should().BeTrue();
+
+            var installedPluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
+            var installedDll = Directory.GetFiles(installedPluginDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+                .Should()
+                .ContainSingle()
+                .Subject;
+            var signatureResult = await new PluginSignatureValidator(PluginSignatureSettings.Production)
+                .ValidateAsync(installedDll);
+
+            signatureResult.Status.Should().Be(PluginSignatureStatus.NotSigned);
+            signatureResult.IsAllowedByPolicy.Should().BeTrue();
+            signatureResult.IsValid.Should().BeTrue();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, originalAppDataOverride);
+        }
     }
 
     [Fact]

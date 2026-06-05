@@ -47,6 +47,7 @@ public class PluginInstallationService
         var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
         string? backupDir = null;
         string? targetDir = null;
+        string? pluginId = null;
 
         try
         {
@@ -56,7 +57,7 @@ public class PluginInstallationService
             ExtractZipSafely(zipFilePath, tempDir);
 
             // Analyze and fix the plugin structure
-            var pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir).ConfigureAwait(false);
+            pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir).ConfigureAwait(false);
             if (string.IsNullOrEmpty(pluginId))
             {
                 throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and include a main DLL (either LenovoLegionToolkit.Plugins.*.dll or an ID-based name like custom-mouse.dll).");
@@ -98,6 +99,8 @@ public class PluginInstallationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Successfully installed plugin {pluginId} to {targetDir}");
 
+            TrustedPluginPackageStore.TrustPluginDirectory(pluginId, targetDir);
+
             // Force-load the imported payload before marking it installed so runtime
             // capabilities such as optimization categories are immediately available.
             await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
@@ -137,6 +140,14 @@ public class PluginInstallationService
 
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Rolled back imported plugin directory for {Path.GetFileName(targetDir)} from backup {backupDir}.");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(pluginId))
+                    {
+                        if (Directory.Exists(targetDir))
+                            TrustedPluginPackageStore.TrustPluginDirectory(pluginId, targetDir);
+                        else
+                            TrustedPluginPackageStore.Remove(pluginId);
                     }
                 }
                 catch (Exception rollbackEx)
