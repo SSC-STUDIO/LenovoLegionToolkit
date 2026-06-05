@@ -164,6 +164,26 @@ if (-not $hardwareValidationDll -or
     $hardwareValidationDll = Join-Path $repoRoot 'Tools\HardwareValidation\bin\Release\net10.0-windows10.0.26100.0\HardwareValidation.dll'
 }
 
+if (-not (Test-Path -LiteralPath $hardwareValidationDll)) {
+    $hardwareValidationProject = Join-Path $repoRoot 'Tools\HardwareValidation\HardwareValidation.csproj'
+    dotnet build $hardwareValidationProject -c Release /m:1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "HardwareValidation build failed for '$hardwareValidationProject'."
+    }
+
+    $hardwareValidationDll = Get-ChildItem `
+        -LiteralPath (Join-Path $repoRoot 'Tools\HardwareValidation\bin\Release') `
+        -Filter 'HardwareValidation.dll' `
+        -Recurse `
+        -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1 -ExpandProperty FullName
+}
+
+if (-not $hardwareValidationDll -or -not (Test-Path -LiteralPath $hardwareValidationDll)) {
+    throw "HardwareValidation.dll was not found after build."
+}
+
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $resultPath = if ($ResultPath) { Resolve-AbsolutePath $ResultPath } else { Join-Path $repoRoot ("Tools\HardwareValidation\HardwareValidation-{0}.result.txt" -f $timestamp) }
 $logPath = if ($LogPath) { Resolve-AbsolutePath $LogPath } else { Join-Path $repoRoot ("Tools\HardwareValidation\HardwareValidation-{0}.log.txt" -f $timestamp) }

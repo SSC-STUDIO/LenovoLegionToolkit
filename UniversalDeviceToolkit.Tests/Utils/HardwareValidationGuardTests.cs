@@ -26,6 +26,8 @@ public sealed class HardwareValidationGuardTests
         script.Should().Contain("$powerModePassed -eq 'True'");
         script.Should().Contain("'BatchPowerModeObservedGodMode'");
         script.Should().Contain("$batchPowerModePassed -eq 'True'");
+        script.Should().Contain("dotnet build $hardwareValidationProject -c Release /m:1");
+        script.Should().Contain("HardwareValidation.dll was not found after build.");
     }
 
     [Fact]
@@ -71,9 +73,18 @@ public sealed class HardwareValidationGuardTests
         script.Should().Contain("'-Scenario', 'PowerModeVerify'");
         script.Should().Contain("'PowerModeVerificationPassed'");
         script.Should().Contain("'OverallPassed'");
+        script.Should().Contain("[switch]$SkipElevationCheck");
+        script.Should().Contain("-Verb RunAs");
+        script.Should().Contain("-SkipElevationCheck");
+        script.Should().Contain("Write-Result 'IsAdmin'");
+        script.Should().Contain("function Stop-DescendantProcesses");
+        script.Should().Contain("Stop-DescendantProcesses -ParentProcessId $smokeProcess.Id");
 
         source.Should().Contain("RunPowerModeUiHardwareReadbackVerification(mainWindow, comboBox)");
         source.Should().Contain("SelectPowerModeComboBoxItem(comboBox, targetMode)");
+        source.Should().Contain("TryResolveExpectedSmartFanModeRawValue(targetMode)");
+        source.Should().Contain("TryResolvePowerModeStateFromSmartFanMode(beforeMode)");
+        source.Should().Contain("afterMode == expectedAfterMode");
         source.Should().Contain("TryResolveLocalizedPowerModeState(text)");
         source.Should().Contain("Resource.ResourceManager.GetString(resourceKey, culture)");
         source.Should().Contain("UiPowerModeHardwareVerificationPassed: {hardwarePassed}");
@@ -117,8 +128,9 @@ public sealed class HardwareValidationGuardTests
     public void ValidationDelegates_ShouldPassResolvedRepositoryRootToChildProcesses()
     {
         var powerModeSmoke = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "AdminPowerModeHardwareCheck.ps1");
-        powerModeSmoke.Should().Contain("$smokeProcessStartInfo.ArgumentList.Add('--repo-root')");
-        powerModeSmoke.Should().Contain("$smokeProcessStartInfo.ArgumentList.Add($repoRoot)");
+        powerModeSmoke.Should().Contain("$smokeProcessArguments = @(");
+        powerModeSmoke.Should().Contain("'--repo-root',");
+        powerModeSmoke.Should().Contain("$repoRoot,");
         powerModeSmoke.Should().Contain("'-RepoRoot', $repoRoot");
         powerModeSmoke.Should().Contain("-WorkingDirectory $repoRoot");
 

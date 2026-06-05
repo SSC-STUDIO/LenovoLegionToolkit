@@ -273,13 +273,14 @@ public partial class SensorsControl
 
     }
 
-    private void UpdateDetailText(string name, string text)
+    private void UpdateDetailText(string name, string? text)
     {
+        var displayText = NormalizeDetailValueText(text);
         if (FindName(name) is TextBlock tb) 
         {
-            tb.Text = text == "-" ? string.Empty : text;
+            tb.Text = displayText;
         }
-        else if (FindName(name) is Label lbl) lbl.Content = text == "-" ? string.Empty : text;
+        else if (FindName(name) is Label lbl) lbl.Content = displayText;
     }
 
     private void SetVisibility(string name, bool visible)
@@ -670,7 +671,7 @@ public partial class SensorsControl
     private string GetTemperatureText(double? temperature)
     {
         if (temperature is null)
-            return "-";
+            return NotAvailableText();
 
         return FormatTemperature(temperature.Value, _applicationSettings.Store.TemperatureUnit);
     }
@@ -682,7 +683,7 @@ public partial class SensorsControl
             bar.Minimum = 0;
             bar.Maximum = 1;
             bar.Value = 0;
-            label.Content = "-";
+            label.Content = NotAvailableText();
             label.ToolTip = null;
             label.Tag = 0;
         }
@@ -885,7 +886,7 @@ public partial class SensorsControl
                     else
                     {
                         gpuMemoryClockBar.Value = 0;
-                        gpuMemoryClockText.Text = NotAvailableText();
+                        gpuMemoryClockText.Text = NormalizeDetailValueText(null);
                     }
                 }
             });
@@ -908,7 +909,7 @@ public partial class SensorsControl
         {
             return percentage >= 0
                 ? $"{percentage:0}%"
-                : "-";
+                : NotAvailableText();
         }
 
         if (totalGb <= 0)
@@ -936,7 +937,7 @@ public partial class SensorsControl
             ({ } a, { } b) => $"{a} / {b}",
             ({ } a, null) => a,
             (null, { } b) => b,
-            _ => "-"
+            _ => NotAvailableText()
         };
     }
 
@@ -950,7 +951,7 @@ public partial class SensorsControl
             ({ } a, { } b) => $"Rx {a} / Tx {b}",
             ({ } a, null) => $"Rx {a}",
             (null, { } b) => $"Tx {b}",
-            _ => "-"
+            _ => NotAvailableText()
         };
     }
 
@@ -1007,6 +1008,14 @@ public partial class SensorsControl
 
     internal static string FormatTemperatureRangeText(string? primaryTemperatureText, string? existingRangeText) =>
         FormatFallbackRangeText(primaryTemperatureText, existingRangeText);
+
+    internal static string NormalizeDetailValueText(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || text == "-")
+            return NotAvailableText();
+
+        return text;
+    }
 
     private static string? FormatThroughput(float bytesPerSecond)
     {

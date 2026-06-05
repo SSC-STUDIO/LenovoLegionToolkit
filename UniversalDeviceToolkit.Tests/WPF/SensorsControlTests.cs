@@ -282,6 +282,15 @@ public class SensorsControlTests
 
         text.Should().Be("41 °C");
     }
+
+    [Fact]
+    public void FormatTemperaturePair_WhenBothSsdTemperaturesAreUnavailable_ShouldReturnNotAvailable()
+    {
+        var text = SensorsControl.FormatTemperaturePair((-1f, -1f), TemperatureUnit.C);
+
+        text.Should().Be(NotAvailableText());
+    }
+
     [Fact]
     public void FormatThroughputPair_WhenRxAndTxExist_ShouldReturnBothDirections()
     {
@@ -296,6 +305,14 @@ public class SensorsControlTests
         var text = SensorsControl.FormatThroughputPair(1024f, -1f);
 
         text.Should().Be("Rx 1.00 KB/s");
+    }
+
+    [Fact]
+    public void FormatThroughputPair_WhenBothDirectionsAreUnavailable_ShouldReturnNotAvailable()
+    {
+        var text = SensorsControl.FormatThroughputPair(-1f, -1f);
+
+        text.Should().Be(NotAvailableText());
     }
 
     [Fact]
@@ -434,6 +451,16 @@ public class SensorsControlTests
         var text = SensorsControl.FormatFallbackRangeText("71 °C", "55 °C ~ 82 °C");
 
         text.Should().Be("55 °C ~ 82 °C");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("-")]
+    public void NormalizeDetailValueText_WhenTextIsBlankOrPlaceholder_ShouldReturnNotAvailable(string? text)
+    {
+        SensorsControl.NormalizeDetailValueText(text).Should().Be(NotAvailableText());
     }
 
     [Fact]

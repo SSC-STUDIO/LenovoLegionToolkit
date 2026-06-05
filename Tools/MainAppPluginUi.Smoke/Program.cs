@@ -5626,15 +5626,18 @@ Environment variables:
     {
         var beforeMode = ReadHardwareSmartFanMode();
         var targetMode = ChooseUiHardwareReadbackTarget(beforeMode, comboBox);
+        var expectedAfterMode = TryResolveExpectedSmartFanModeRawValue(targetMode)
+            ?? throw new NotSupportedException($"Power mode '{targetMode}' has no known SmartFan raw value.");
 
         Console.WriteLine($"[main-smoke] BeforeSmartFanMode: {beforeMode}");
-        Console.WriteLine($"[main-smoke] RequestedSmartFanMode: {(int)targetMode}");
+        Console.WriteLine($"[main-smoke] RequestedPowerModeState: {targetMode}");
+        Console.WriteLine($"[main-smoke] RequestedSmartFanMode: {expectedAfterMode}");
         Console.WriteLine("[main-smoke] Selecting power mode in the main UI and waiting for hardware readback.");
 
         var selectedText = SelectPowerModeComboBoxItem(comboBox, targetMode);
-        var afterMode = WaitForHardwareSmartFanMode((int)targetMode, PowerModeHardwareReadbackTimeout);
+        var afterMode = WaitForHardwareSmartFanMode(expectedAfterMode, PowerModeHardwareReadbackTimeout);
         var hardwareChanged = afterMode != beforeMode;
-        var hardwarePassed = afterMode == (int)targetMode && hardwareChanged;
+        var hardwarePassed = afterMode == expectedAfterMode && hardwareChanged;
 
         Console.WriteLine($"[main-smoke] UiSelectedPowerMode: {selectedText}");
         Console.WriteLine($"[main-smoke] AfterSmartFanMode: {afterMode}");
@@ -5657,7 +5660,7 @@ Environment variables:
             .Where(mode => mode is not null)
             .Select(mode => mode!.Value)
             .Distinct()
-            .Where(mode => (int)mode != beforeMode)
+            .Where(mode => TryResolveExpectedSmartFanModeRawValue(mode) is { } rawMode && rawMode != beforeMode)
             .ToArray();
 
         foreach (var preferredMode in new[] { PowerModeState.Performance, PowerModeState.Balance, PowerModeState.Quiet, PowerModeState.GodMode })
@@ -5704,7 +5707,7 @@ Environment variables:
 
     private static bool RestoreHardwarePowerModeFromUi(AutomationElement mainWindow, AutomationElement comboBox, int beforeMode)
     {
-        if (!Enum.IsDefined(typeof(PowerModeState), beforeMode))
+        if (TryResolvePowerModeStateFromSmartFanMode(beforeMode) is not { } restoreMode)
         {
             Console.WriteLine($"[main-smoke] Original hardware power mode '{beforeMode}' is not a known UI mode; restoring with direct hardware API.");
             WMI.LenovoGameZoneData.SetSmartFanModeAsync(beforeMode).GetAwaiter().GetResult();
@@ -5713,7 +5716,6 @@ Environment variables:
 
         try
         {
-            var restoreMode = (PowerModeState)beforeMode;
             comboBox = FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox;
             SelectPowerModeComboBoxItem(comboBox, restoreMode);
         }
@@ -5727,6 +5729,24 @@ Environment variables:
         Console.WriteLine($"[main-smoke] RestoredSmartFanMode: {restoredMode}");
         return restoredMode == beforeMode;
     }
+
+    private static int? TryResolveExpectedSmartFanModeRawValue(PowerModeState mode) => mode switch
+    {
+        PowerModeState.Quiet => 1,
+        PowerModeState.Balance => 2,
+        PowerModeState.Performance => 3,
+        PowerModeState.GodMode => 255,
+        _ => null
+    };
+
+    private static PowerModeState? TryResolvePowerModeStateFromSmartFanMode(int rawMode) => rawMode switch
+    {
+        1 => PowerModeState.Quiet,
+        2 => PowerModeState.Balance,
+        3 => PowerModeState.Performance,
+        255 => PowerModeState.GodMode,
+        _ => null
+    };
 
     private static int ReadHardwareSmartFanMode()
     {

@@ -2,6 +2,7 @@ param(
     [string]$ResultPathOverride,
     [string]$LogPathOverride,
     [int]$TimeoutSeconds = 180,
+    [switch]$SkipElevationCheck,
     [string]$RepoRoot
 )
 
@@ -94,6 +95,26 @@ function Get-LogValue {
     return ($line.Line -replace $pattern, '').Trim()
 }
 
+function Quote-NativeArgument {
+    param([string]$Value)
+
+    if ($null -eq $Value) {
+        return '""'
+    }
+
+    if ($Value -notmatch '[\s"]') {
+        return $Value
+    }
+
+    return '"' + ($Value -replace '(\\*)"', '$1$1\"' -replace '(\\+)$', '$1$1') + '"'
+}
+
+function Join-ProcessArguments {
+    param([string[]]$Arguments)
+
+    return ($Arguments | ForEach-Object { Quote-NativeArgument ([string]$_) }) -join ' '
+}
+
 function Wait-ForFile {
     param(
         [string]$Path,
@@ -110,6 +131,42 @@ function Wait-ForFile {
     }
 
     return $false
+}
+
+function Get-DescendantProcessIds {
+    param([int]$ParentProcessId)
+
+    $processes = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Select-Object ProcessId, ParentProcessId)
+    $queue = [System.Collections.Generic.Queue[int]]::new()
+    $ids = [System.Collections.Generic.List[int]]::new()
+    $queue.Enqueue($ParentProcessId)
+
+    while ($queue.Count -gt 0) {
+        $currentParentId = $queue.Dequeue()
+        foreach ($process in $processes | Where-Object { $_.ParentProcessId -eq $currentParentId }) {
+            $processId = [int]$process.ProcessId
+            $ids.Add($processId)
+            $queue.Enqueue($processId)
+        }
+    }
+
+    return $ids
+}
+
+function Stop-DescendantProcesses {
+    param([int]$ParentProcessId)
+
+    $processIds = @(Get-DescendantProcessIds -ParentProcessId $ParentProcessId)
+    [array]::Reverse($processIds)
+    foreach ($processId in $processIds) {
+        try {
+            Stop-Process -Id $processId -Force -ErrorAction Stop
+            Write-Result 'StoppedDescendantProcessId' ([string]$processId)
+        }
+        catch {
+            Write-Result 'StopDescendantProcessError' ("{0}: {1}" -f $processId, $_.Exception.Message)
+        }
+    }
 }
 
 $repoRoot = Resolve-RepositoryRoot -Path $RepoRoot
@@ -130,8 +187,27 @@ foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardw
     }
 }
 
+$principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $SkipElevationCheck.IsPresent -and -not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    $arguments = @(
+        '-NoProfile',
+        '-ExecutionPolicy', 'Bypass',
+        '-File', $PSCommandPath,
+        '-RepoRoot', $repoRoot,
+        '-ResultPathOverride', $resultPath,
+        '-LogPathOverride', $logPath,
+        '-TimeoutSeconds', [string]$TimeoutSeconds,
+        '-SkipElevationCheck'
+    )
+
+    Start-Process -FilePath 'powershell.exe' -Verb RunAs -WorkingDirectory $repoRoot -ArgumentList (Join-ProcessArguments -Arguments $arguments) -Wait
+    exit 0
+}
+
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
 Write-Result 'RepositoryRoot' $repoRoot
+Write-Result 'IsAdmin' ([string]$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+Write-Result 'SkipElevationCheck' ([string]$SkipElevationCheck.IsPresent)
 Write-Result 'DelegatedTo' $hardwareValidationScriptPath
 Write-Result 'Scenario' 'PowerModeUiAndHardwareVerify'
 Write-Result 'UiSmokeScenario' 'power-mode'
@@ -153,18 +229,17 @@ try {
     $smokeProcessStartInfo.RedirectStandardOutput = $true
     $smokeProcessStartInfo.RedirectStandardError = $true
     $smokeProcessStartInfo.CreateNoWindow = $true
-    $smokeProcessStartInfo.ArgumentList.Add('run')
-    $smokeProcessStartInfo.ArgumentList.Add('--project')
-    $smokeProcessStartInfo.ArgumentList.Add($smokeProject)
-    $smokeProcessStartInfo.ArgumentList.Add('--')
-    $smokeProcessStartInfo.ArgumentList.Add('--repo-root')
-    $smokeProcessStartInfo.ArgumentList.Add($repoRoot)
-    $smokeProcessStartInfo.ArgumentList.Add('--scenario')
-    $smokeProcessStartInfo.ArgumentList.Add('power-mode')
-    $smokeProcessStartInfo.ArgumentList.Add('--disable-animations')
-    $smokeProcessStartInfo.ArgumentList.Add('--screenshots')
-    $smokeProcessStartInfo.ArgumentList.Add('failures')
-    $smokeProcessStartInfo.ArgumentList.Add('--power-mode-hardware-verify')
+    $smokeProcessArguments = @(
+        'run',
+        '--project', $smokeProject,
+        '--',
+        '--repo-root', $repoRoot,
+        '--scenario', 'power-mode',
+        '--disable-animations',
+        '--screenshots', 'failures',
+        '--power-mode-hardware-verify'
+    )
+    $smokeProcessStartInfo.Arguments = Join-ProcessArguments -Arguments $smokeProcessArguments
 
     $smokeProcess = [System.Diagnostics.Process]::new()
     $smokeProcess.StartInfo = $smokeProcessStartInfo
@@ -185,6 +260,7 @@ try {
     $null = $smokeProcess.WaitForExit()
     $smokeStdout = $smokeStdoutTask.GetAwaiter().GetResult()
     $smokeStderr = $smokeStderrTask.GetAwaiter().GetResult()
+    Stop-DescendantProcesses -ParentProcessId $smokeProcess.Id
     Set-Content -LiteralPath $uiSmokeLogPath -Value (($smokeStdout, $smokeStderr) -join [Environment]::NewLine).Trim() -Encoding UTF8
     $uiSmokeExitCode = if ($smokeTimedOut) { '<timed-out>' } else { [string]$smokeProcess.ExitCode }
     $uiSmokePassed = (-not $smokeTimedOut) -and $smokeProcess.ExitCode -eq 0
