@@ -75,6 +75,25 @@ function Get-ResultValue {
     return ($line.Line -replace ("^{0}: " -f [Regex]::Escape($Key)), '').Trim()
 }
 
+function Get-LogValue {
+    param(
+        [string]$FilePath,
+        [string]$Key
+    )
+
+    if (-not (Test-Path -LiteralPath $FilePath)) {
+        return $null
+    }
+
+    $pattern = "^\[main-smoke\]\s+{0}: " -f [Regex]::Escape($Key)
+    $line = Select-String -LiteralPath $FilePath -Pattern $pattern | Select-Object -Last 1
+    if (-not $line) {
+        return $null
+    }
+
+    return ($line.Line -replace $pattern, '').Trim()
+}
+
 function Wait-ForFile {
     param(
         [string]$Path,
@@ -173,6 +192,30 @@ try {
     Write-Result 'UiSmokePassed' ([string]$uiSmokePassed)
     Write-Result 'UiSmokeHardwareVerificationRequested' 'True'
 
+    $uiBeforePowerMode = Get-LogValue -FilePath $uiSmokeLogPath -Key 'BeforeSmartFanMode'
+    $uiRequestedPowerMode = Get-LogValue -FilePath $uiSmokeLogPath -Key 'RequestedSmartFanMode'
+    $uiAfterPowerMode = Get-LogValue -FilePath $uiSmokeLogPath -Key 'AfterSmartFanMode'
+    $uiPowerModeDelta = Get-LogValue -FilePath $uiSmokeLogPath -Key 'PowerModeDelta'
+    $uiPowerModeChanged = Get-LogValue -FilePath $uiSmokeLogPath -Key 'UiPowerModeHardwareChanged'
+    $uiPowerModePassed = Get-LogValue -FilePath $uiSmokeLogPath -Key 'UiPowerModeHardwareVerificationPassed'
+    $uiPowerModeRestored = Get-LogValue -FilePath $uiSmokeLogPath -Key 'UiPowerModeHardwareRestorePassed'
+    $uiHardwareOverallPassed = Get-LogValue -FilePath $uiSmokeLogPath -Key 'PowerModeHardwareOverallPassed'
+
+    foreach ($field in @(
+        @{ Label = 'UiBeforePowerMode'; Value = $uiBeforePowerMode },
+        @{ Label = 'UiRequestedPowerMode'; Value = $uiRequestedPowerMode },
+        @{ Label = 'UiAfterPowerMode'; Value = $uiAfterPowerMode },
+        @{ Label = 'UiPowerModeDelta'; Value = $uiPowerModeDelta },
+        @{ Label = 'UiPowerModeChanged'; Value = $uiPowerModeChanged },
+        @{ Label = 'UiPowerModeVerificationPassed'; Value = $uiPowerModePassed },
+        @{ Label = 'UiPowerModeRestorePassed'; Value = $uiPowerModeRestored },
+        @{ Label = 'UiPowerModeHardwareOverallPassed'; Value = $uiHardwareOverallPassed }
+    )) {
+        if ($null -ne $field.Value) {
+            Write-Result $field.Label $field.Value
+        }
+    }
+
     $delegatedArguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $hardwareValidationScriptPath,
@@ -234,7 +277,13 @@ try {
         if ($null -ne $hardwareOverallPassed) {
             Write-Result 'HardwareValidationPassed' $hardwareOverallPassed
         }
-        Write-Result 'OverallPassed' ([string]($uiSmokePassed -and $hardwareOverallPassed -eq 'True'))
+        Write-Result 'OverallPassed' ([string](
+            $uiSmokePassed -and
+            $uiPowerModeChanged -eq 'True' -and
+            $uiPowerModePassed -eq 'True' -and
+            $uiPowerModeRestored -eq 'True' -and
+            $uiHardwareOverallPassed -eq 'True' -and
+            $hardwareOverallPassed -eq 'True'))
     }
     else {
         Write-Result 'HardwareValidationPassed' 'False'

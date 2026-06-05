@@ -56,15 +56,29 @@ public sealed class HardwareValidationGuardTests
     public void MainAppPowerModeHardwareCheck_ShouldRunUiSmokeAndHardwareReadback()
     {
         var script = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "AdminPowerModeHardwareCheck.ps1");
+        var source = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "Program.cs");
 
         script.Should().Contain("'PowerModeUiAndHardwareVerify'");
         script.Should().Contain("'--scenario'");
         script.Should().Contain("'power-mode'");
         script.Should().Contain("'--power-mode-hardware-verify'");
         script.Should().Contain("'UiSmokeHardwareVerificationRequested' 'True'");
+        script.Should().Contain("Get-LogValue -FilePath $uiSmokeLogPath -Key 'UiPowerModeHardwareVerificationPassed'");
+        script.Should().Contain("$uiPowerModeChanged -eq 'True'");
+        script.Should().Contain("$uiPowerModePassed -eq 'True'");
+        script.Should().Contain("$uiPowerModeRestored -eq 'True'");
+        script.Should().Contain("$uiHardwareOverallPassed -eq 'True'");
         script.Should().Contain("'-Scenario', 'PowerModeVerify'");
         script.Should().Contain("'PowerModeVerificationPassed'");
         script.Should().Contain("'OverallPassed'");
+
+        source.Should().Contain("RunPowerModeUiHardwareReadbackVerification(mainWindow, comboBox)");
+        source.Should().Contain("SelectPowerModeComboBoxItem(comboBox, targetMode)");
+        source.Should().Contain("TryResolveLocalizedPowerModeState(text)");
+        source.Should().Contain("Resource.ResourceManager.GetString(resourceKey, culture)");
+        source.Should().Contain("UiPowerModeHardwareVerificationPassed: {hardwarePassed}");
+        source.Should().Contain("UiPowerModeHardwareChanged: {hardwareChanged}");
+        source.Should().NotContain("RunPowerModeHardwareVerification()");
     }
 
     [Fact]

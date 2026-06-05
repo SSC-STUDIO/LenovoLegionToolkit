@@ -76,6 +76,8 @@ internal static class Program
     private static readonly TimeSpan WindowAnimationDuration = TimeSpan.FromMilliseconds(BaseAnimationDurationMs);
     private static readonly TimeSpan WindowAnimationGracePeriod = TimeSpan.FromMilliseconds(150);
     private static readonly TimeSpan MessageBoxDetectionTimeout = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan PowerModeHardwareReadbackTimeout = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan PowerModeHardwareReadbackPollDelay = TimeSpan.FromMilliseconds(300);
     private static readonly string[] DefaultPluginIds = { "custom-mouse", "shell-integration", "vive-tool", "network-acceleration" };
     // Empirical values: WPF.UI MessageBox and NotificationPopup typically fit within 600x400 pixels
     private static readonly int MessageBoxMaxWidth = 600;
@@ -5565,8 +5567,7 @@ Environment variables:
         Console.WriteLine($"[main-smoke] Original power mode resolved as '{originalPowerMode}'.");
         if (_powerModeHardwareVerificationEnabled)
         {
-            SelectPowerModeForGodModeSettings(mainWindow, comboBox);
-            RunPowerModeHardwareVerification();
+            RunPowerModeUiHardwareReadbackVerification(mainWindow, comboBox);
             mainWindow = ResolveLiveWindow(mainWindow);
             comboBox = TryFindPowerModeComboBox(mainWindow, TimeSpan.FromSeconds(10)) ?? comboBox;
             CaptureMainWindow(mainWindow, "power-mode-hardware-verified");
@@ -5621,82 +5622,189 @@ Environment variables:
             : "[main-smoke] Power Mode UI verified without changing the selected hardware mode.");
     }
 
-    private static void RunPowerModeHardwareVerification()
+    private static void RunPowerModeUiHardwareReadbackVerification(AutomationElement mainWindow, AutomationElement comboBox)
     {
-        var repositoryRoot = _activeRepositoryRoot
-                             ?? throw new InvalidOperationException("Repository root is not available for power-mode hardware verification.");
-        var hardwareValidationProject = Path.Combine(repositoryRoot, "Tools", "HardwareValidation", "HardwareValidation.csproj");
-        if (!File.Exists(hardwareValidationProject))
-            throw new FileNotFoundException($"HardwareValidation project was not found: {hardwareValidationProject}");
+        var beforeMode = ReadHardwareSmartFanMode();
+        var targetMode = ChooseUiHardwareReadbackTarget(beforeMode, comboBox);
 
-        Console.WriteLine("[main-smoke] Running power-mode hardware verification via Tools\\HardwareValidation.");
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = "dotnet",
-            WorkingDirectory = repositoryRoot,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        };
-        startInfo.ArgumentList.Add("run");
-        startInfo.ArgumentList.Add("--project");
-        startInfo.ArgumentList.Add(hardwareValidationProject);
-        startInfo.ArgumentList.Add("--");
-        startInfo.ArgumentList.Add("power-mode");
-        startInfo.ArgumentList.Add("set-verify");
-        startInfo.ArgumentList.Add(((int)PowerModeState.Performance).ToString(CultureInfo.InvariantCulture));
+        Console.WriteLine($"[main-smoke] BeforeSmartFanMode: {beforeMode}");
+        Console.WriteLine($"[main-smoke] RequestedSmartFanMode: {(int)targetMode}");
+        Console.WriteLine("[main-smoke] Selecting power mode in the main UI and waiting for hardware readback.");
 
-        using var process = Process.Start(startInfo)
-                            ?? throw new InvalidOperationException("Failed to start HardwareValidation process.");
+        var selectedText = SelectPowerModeComboBoxItem(comboBox, targetMode);
+        var afterMode = WaitForHardwareSmartFanMode((int)targetMode, PowerModeHardwareReadbackTimeout);
+        var hardwareChanged = afterMode != beforeMode;
+        var hardwarePassed = afterMode == (int)targetMode && hardwareChanged;
 
-        var stdoutTask = process.StandardOutput.ReadToEndAsync();
-        var stderrTask = process.StandardError.ReadToEndAsync();
-        if (!process.WaitForExit(TimeSpan.FromSeconds(90)))
-        {
-            try
-            {
-                process.Kill(entireProcessTree: true);
-            }
-            catch
-            {
-                // Best-effort cleanup; the timeout failure below is more useful.
-            }
+        Console.WriteLine($"[main-smoke] UiSelectedPowerMode: {selectedText}");
+        Console.WriteLine($"[main-smoke] AfterSmartFanMode: {afterMode}");
+        Console.WriteLine($"[main-smoke] PowerModeDelta: {afterMode - beforeMode}");
+        Console.WriteLine($"[main-smoke] UiPowerModeHardwareChanged: {hardwareChanged}");
+        Console.WriteLine($"[main-smoke] UiPowerModeHardwareVerificationPassed: {hardwarePassed}");
 
-            throw new TimeoutException("Timed out waiting for HardwareValidation power-mode verification.");
-        }
+        var restorePassed = RestoreHardwarePowerModeFromUi(mainWindow, comboBox, beforeMode);
+        Console.WriteLine($"[main-smoke] UiPowerModeHardwareRestorePassed: {restorePassed}");
+        Console.WriteLine($"[main-smoke] PowerModeHardwareOverallPassed: {hardwarePassed && restorePassed}");
 
-        var stdout = stdoutTask.GetAwaiter().GetResult();
-        var stderr = stderrTask.GetAwaiter().GetResult();
-        if (!string.IsNullOrWhiteSpace(stdout))
-            Console.WriteLine(stdout.Trim());
-        if (!string.IsNullOrWhiteSpace(stderr))
-            Console.Error.WriteLine(stderr.Trim());
-
-        var powerModePassed = TryReadResultFlag(stdout, "PowerModeVerificationPassed");
-        var restorePassed = TryReadResultFlag(stdout, "RestoreVerificationPassed");
-        var overallPassed = TryReadResultFlag(stdout, "OverallPassed");
-        Console.WriteLine($"[main-smoke] PowerModeHardwareVerificationPassed: {powerModePassed}");
-        Console.WriteLine($"[main-smoke] PowerModeHardwareRestorePassed: {restorePassed}");
-        Console.WriteLine($"[main-smoke] PowerModeHardwareOverallPassed: {overallPassed}");
-
-        if (process.ExitCode != 0 || powerModePassed != true || restorePassed != true || overallPassed != true)
-            throw new InvalidOperationException($"Power-mode hardware verification failed. ExitCode={process.ExitCode}");
+        if (!hardwarePassed || !restorePassed)
+            throw new InvalidOperationException("UI-triggered power-mode hardware readback verification failed.");
     }
 
-    private static bool? TryReadResultFlag(string content, string key)
+    private static PowerModeState ChooseUiHardwareReadbackTarget(int beforeMode, AutomationElement comboBox)
     {
-        using var reader = new StringReader(content);
-        string? line;
-        while ((line = reader.ReadLine()) is not null)
-        {
-            if (!line.StartsWith($"{key}: ", StringComparison.OrdinalIgnoreCase))
-                continue;
+        var supportedOptions = GetComboBoxOptionNames(comboBox)
+            .Select(TryResolvePowerModeStateFromText)
+            .Where(mode => mode is not null)
+            .Select(mode => mode!.Value)
+            .Distinct()
+            .Where(mode => (int)mode != beforeMode)
+            .ToArray();
 
-            return bool.TryParse(line[(key.Length + 2)..].Trim(), out var parsed) ? parsed : null;
+        foreach (var preferredMode in new[] { PowerModeState.Performance, PowerModeState.Balance, PowerModeState.Quiet, PowerModeState.GodMode })
+        {
+            if (supportedOptions.Contains(preferredMode))
+                return preferredMode;
+        }
+
+        throw new InvalidOperationException(
+            $"Power Mode combo box has no selectable mode different from hardware mode '{beforeMode}'.");
+    }
+
+    private static string SelectPowerModeComboBoxItem(AutomationElement comboBox, PowerModeState targetMode)
+    {
+        if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
+        {
+            var expander = (ExpandCollapsePattern)expandPattern;
+            expander.Expand();
+        }
+
+        Thread.Sleep(250);
+
+        var items = GetComboBoxItems(comboBox);
+        var item = items.FirstOrDefault(candidate => TryResolvePowerModeStateFromText(ReadElementText(candidate)) == targetMode);
+        if (item is not null)
+        {
+            var selectedName = ReadElementText(item);
+            Console.WriteLine($"[main-smoke] Selecting localized power-mode item '{selectedName}' for '{targetMode}'.");
+            Click(item);
+            Thread.Sleep(180);
+            CollapseComboBox(comboBox);
+            return selectedName;
+        }
+
+        return targetMode switch
+        {
+            PowerModeState.Quiet => SelectComboBoxItemByNamesOrContains(comboBox, "Quiet", "安静", "静音"),
+            PowerModeState.Balance => SelectComboBoxItemByNamesOrContains(comboBox, "Balance", "Balanced", "平衡"),
+            PowerModeState.Performance => SelectComboBoxItemByNamesOrContains(comboBox, "Performance", "性能"),
+            PowerModeState.GodMode => SelectComboBoxItemByNamesOrContains(comboBox, "God Mode", "GodMode", "Custom", "自定义"),
+            _ => throw new NotSupportedException($"Power mode '{targetMode}' is not supported by the UI hardware smoke.")
+        };
+    }
+
+    private static bool RestoreHardwarePowerModeFromUi(AutomationElement mainWindow, AutomationElement comboBox, int beforeMode)
+    {
+        if (!Enum.IsDefined(typeof(PowerModeState), beforeMode))
+        {
+            Console.WriteLine($"[main-smoke] Original hardware power mode '{beforeMode}' is not a known UI mode; restoring with direct hardware API.");
+            WMI.LenovoGameZoneData.SetSmartFanModeAsync(beforeMode).GetAwaiter().GetResult();
+            return WaitForHardwareSmartFanMode(beforeMode, PowerModeHardwareReadbackTimeout) == beforeMode;
+        }
+
+        try
+        {
+            var restoreMode = (PowerModeState)beforeMode;
+            comboBox = FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox;
+            SelectPowerModeComboBoxItem(comboBox, restoreMode);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException or NotSupportedException)
+        {
+            Console.WriteLine($"[main-smoke] UI restore could not select the original mode, falling back to direct hardware restore. Reason: {ex.Message}");
+            WMI.LenovoGameZoneData.SetSmartFanModeAsync(beforeMode).GetAwaiter().GetResult();
+        }
+
+        var restoredMode = WaitForHardwareSmartFanMode(beforeMode, PowerModeHardwareReadbackTimeout);
+        Console.WriteLine($"[main-smoke] RestoredSmartFanMode: {restoredMode}");
+        return restoredMode == beforeMode;
+    }
+
+    private static int ReadHardwareSmartFanMode()
+    {
+        return WMI.LenovoGameZoneData.GetSmartFanModeAsync().GetAwaiter().GetResult();
+    }
+
+    private static int WaitForHardwareSmartFanMode(int expectedMode, TimeSpan timeout)
+    {
+        var deadline = DateTimeOffset.UtcNow + timeout;
+        var currentMode = ReadHardwareSmartFanMode();
+        while (currentMode != expectedMode && DateTimeOffset.UtcNow < deadline)
+        {
+            Thread.Sleep(PowerModeHardwareReadbackPollDelay);
+            currentMode = ReadHardwareSmartFanMode();
+        }
+
+        return currentMode;
+    }
+
+    private static PowerModeState? TryResolvePowerModeStateFromText(string text)
+    {
+        if (TryResolveLocalizedPowerModeState(text) is { } localizedMode)
+            return localizedMode;
+
+        return NormalizePowerModeValue(text) switch
+        {
+            "quiet" => PowerModeState.Quiet,
+            "balance" => PowerModeState.Balance,
+            "performance" => PowerModeState.Performance,
+            "godmode" => PowerModeState.GodMode,
+            _ => null
+        };
+    }
+
+    private static PowerModeState? TryResolveLocalizedPowerModeState(string text)
+    {
+        var normalizedText = NormalizeComparableText(text);
+        if (string.IsNullOrWhiteSpace(normalizedText))
+            return null;
+
+        foreach (var culture in GetPowerModeResourceCultures())
+        {
+            foreach (var mode in new[] { PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.GodMode })
+            {
+                var resourceKey = $"PowerModeState_{mode}";
+                var localizedName = LenovoLegionToolkit.Lib.Resources.Resource.ResourceManager.GetString(resourceKey, culture);
+                if (NormalizeComparableText(localizedName) == normalizedText)
+                    return mode;
+            }
         }
 
         return null;
+    }
+
+    private static IEnumerable<CultureInfo> GetPowerModeResourceCultures()
+    {
+        yield return CultureInfo.InvariantCulture;
+        yield return CultureInfo.CurrentCulture;
+        yield return CultureInfo.CurrentUICulture;
+
+        foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            yield return culture;
+    }
+
+    private static string NormalizeComparableText(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        var normalized = text.Trim().Normalize(NormalizationForm.FormD);
+        var builder = new StringBuilder(normalized.Length);
+        foreach (var character in normalized)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.NonSpacingMark)
+                builder.Append(char.ToLowerInvariant(character));
+        }
+
+        return builder.ToString().Normalize(NormalizationForm.FormC);
     }
 
     private static void SelectPowerModeForGodModeSettings(AutomationElement mainWindow, AutomationElement comboBox)
@@ -5993,9 +6101,7 @@ Environment variables:
 
                 if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var collapsePattern))
                 {
-                    var expander = (ExpandCollapsePattern)collapsePattern;
-                    if (expander.Current.ExpandCollapseState is ExpandCollapseState.Expanded or ExpandCollapseState.PartiallyExpanded)
-                        expander.Collapse();
+                    CollapseComboBox(comboBox);
                 }
 
                 Thread.Sleep(120);
@@ -6011,6 +6117,16 @@ Environment variables:
         }
 
         return [];
+    }
+
+    private static void CollapseComboBox(AutomationElement comboBox)
+    {
+        if (!comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var collapsePattern))
+            return;
+
+        var expander = (ExpandCollapsePattern)collapsePattern;
+        if (expander.Current.ExpandCollapseState is ExpandCollapseState.Expanded or ExpandCollapseState.PartiallyExpanded)
+            expander.Collapse();
     }
 
     private static AutomationElement[] GetComboBoxItems(AutomationElement comboBox)
