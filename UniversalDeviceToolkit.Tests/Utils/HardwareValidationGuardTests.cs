@@ -65,6 +65,55 @@ public sealed class HardwareValidationGuardTests
         script.Should().Contain("'OverallPassed'");
     }
 
+    [Fact]
+    public void ElevatedValidationScripts_ShouldResolveRepositoryRootDynamically()
+    {
+        foreach (var pathParts in ElevatedValidationScriptPaths)
+        {
+            var script = ReadRepositoryFile(pathParts);
+
+            script.Should().NotContain(@"D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit");
+            script.Should().Contain("[string]$RepoRoot");
+            script.Should().Contain("function Resolve-RepositoryRoot");
+            script.Should().Contain("Write-Result 'RepositoryRoot' $repoRoot");
+        }
+    }
+
+    [Fact]
+    public void ValidationDelegates_ShouldPassResolvedRepositoryRootToChildProcesses()
+    {
+        var powerModeSmoke = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "AdminPowerModeHardwareCheck.ps1");
+        powerModeSmoke.Should().Contain("$smokeProcessStartInfo.ArgumentList.Add('--repo-root')");
+        powerModeSmoke.Should().Contain("$smokeProcessStartInfo.ArgumentList.Add($repoRoot)");
+        powerModeSmoke.Should().Contain("'-RepoRoot', $repoRoot");
+        powerModeSmoke.Should().Contain("-WorkingDirectory $repoRoot");
+
+        var directHardwareSmoke = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "AdminDirectHardwareSmoke.ps1");
+        directHardwareSmoke.Should().Contain("'-RepoRoot', $repoRoot");
+        directHardwareSmoke.Should().Contain("-WorkingDirectory $repoRoot");
+
+        var presetCrudSmoke = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "AdminPresetCrudSmoke.ps1");
+        presetCrudSmoke.Should().Contain("'-RepoRoot', $repoRoot");
+        presetCrudSmoke.Should().Contain("-WorkingDirectory $repoRoot");
+
+        var hardwareValidation = ReadRepositoryFile("Tools", "HardwareValidation", "Run-HardwareValidationElevated.ps1");
+        hardwareValidation.Should().Contain("'-RepoRoot', $repoRoot");
+        hardwareValidation.Should().Contain("-WorkingDirectory $repoRoot");
+
+        var presetValidation = ReadRepositoryFile("Tools", "PresetUiValidation", "Run-PresetUiValidationElevated.ps1");
+        presetValidation.Should().Contain("'-RepoRoot', $repoRoot");
+        presetValidation.Should().Contain("-WorkingDirectory $repoRoot");
+    }
+
+    private static string[][] ElevatedValidationScriptPaths =>
+    [
+        ["Tools", "MainAppPluginUi.Smoke", "AdminPowerModeHardwareCheck.ps1"],
+        ["Tools", "MainAppPluginUi.Smoke", "AdminDirectHardwareSmoke.ps1"],
+        ["Tools", "MainAppPluginUi.Smoke", "AdminPresetCrudSmoke.ps1"],
+        ["Tools", "HardwareValidation", "Run-HardwareValidationElevated.ps1"],
+        ["Tools", "PresetUiValidation", "Run-PresetUiValidationElevated.ps1"]
+    ];
+
     private static string ReadRepositoryFile(params string[] pathParts)
     {
         var repositoryRoot = FindRepositoryRoot();

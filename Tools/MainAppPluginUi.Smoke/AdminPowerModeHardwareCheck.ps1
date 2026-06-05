@@ -1,11 +1,11 @@
 param(
     [string]$ResultPathOverride,
     [string]$LogPathOverride,
-    [int]$TimeoutSeconds = 180
+    [int]$TimeoutSeconds = 180,
+    [string]$RepoRoot
 )
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = 'D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit'
 
 function Resolve-AbsolutePath {
     param([string]$Path)
@@ -15,6 +15,37 @@ function Resolve-AbsolutePath {
     }
 
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
+function Resolve-RepositoryRoot {
+    param([string]$Path)
+
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($Path)) {
+        $candidates += $Path
+    }
+
+    $candidates += (Join-Path $PSScriptRoot '..\..')
+    $candidates += (Get-Location).Path
+
+    foreach ($candidate in $candidates) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) {
+            continue
+        }
+
+        try {
+            $resolved = Resolve-AbsolutePath $candidate
+        }
+        catch {
+            continue
+        }
+
+        if (Test-Path -LiteralPath (Join-Path $resolved 'UniversalDeviceToolkit.sln')) {
+            return $resolved
+        }
+    }
+
+    throw 'Could not resolve repository root. Pass -RepoRoot pointing at UniversalDeviceToolkit.sln.'
 }
 
 function Write-Result {
@@ -62,6 +93,7 @@ function Wait-ForFile {
     return $false
 }
 
+$repoRoot = Resolve-RepositoryRoot -Path $RepoRoot
 $resultPath = if ($ResultPathOverride) { Resolve-AbsolutePath $ResultPathOverride } elseif ($env:UDT_SMOKE_RESULT_PATH) { Resolve-AbsolutePath $env:UDT_SMOKE_RESULT_PATH } else { Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\AdminPowerModeHardwareCheck.result.txt' }
 $logPath = if ($LogPathOverride) { Resolve-AbsolutePath $LogPathOverride } elseif ($env:UDT_SMOKE_LOG_PATH) { Resolve-AbsolutePath $env:UDT_SMOKE_LOG_PATH } else { Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\AdminPowerModeHardwareCheck.smoke.txt' }
 $hardwareValidationResultPath = [System.IO.Path]::ChangeExtension($resultPath, '.hardware.result.txt')
@@ -80,8 +112,15 @@ foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardw
 }
 
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
+Write-Result 'RepositoryRoot' $repoRoot
 Write-Result 'DelegatedTo' $hardwareValidationScriptPath
 Write-Result 'Scenario' 'PowerModeUiAndHardwareVerify'
+Write-Result 'UiSmokeScenario' 'power-mode'
+Write-Result 'HardwareValidationScenario' 'PowerModeVerify'
+Write-Result 'UiSmokeResultPath' $uiSmokeResultPath
+Write-Result 'UiSmokeLogPath' $uiSmokeLogPath
+Write-Result 'HardwareValidationResultPath' $hardwareValidationResultPath
+Write-Result 'HardwareValidationLogPath' $hardwareValidationLogPath
 Write-Result 'TimeoutSeconds' $TimeoutSeconds
 
 Push-Location $repoRoot
@@ -98,6 +137,8 @@ try {
     $smokeProcessStartInfo.ArgumentList.Add('--project')
     $smokeProcessStartInfo.ArgumentList.Add($smokeProject)
     $smokeProcessStartInfo.ArgumentList.Add('--')
+    $smokeProcessStartInfo.ArgumentList.Add('--repo-root')
+    $smokeProcessStartInfo.ArgumentList.Add($repoRoot)
     $smokeProcessStartInfo.ArgumentList.Add('--scenario')
     $smokeProcessStartInfo.ArgumentList.Add('power-mode')
     $smokeProcessStartInfo.ArgumentList.Add('--disable-animations')
@@ -132,13 +173,14 @@ try {
     $delegatedArguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $hardwareValidationScriptPath,
+        '-RepoRoot', $repoRoot,
         '-Scenario', 'PowerModeVerify',
         '-ResultPath', $hardwareValidationResultPath,
         '-LogPath', $hardwareValidationLogPath,
         '-TimeoutSeconds', $TimeoutSeconds
     )
 
-    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $delegatedArguments -PassThru -WindowStyle Hidden
+    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $delegatedArguments -PassThru -WindowStyle Hidden -WorkingDirectory $repoRoot
     Write-Result 'DelegatedProcessId' $process.Id
 
     if (-not $process.WaitForExit(($TimeoutSeconds + 30) * 1000)) {

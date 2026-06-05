@@ -1,11 +1,11 @@
 param(
     [string]$ResultPath,
     [string]$LogPath,
-    [int]$TimeoutSeconds = 180
+    [int]$TimeoutSeconds = 180,
+    [string]$RepoRoot
 )
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = 'D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit'
 
 function Resolve-AbsolutePath {
     param([string]$Path)
@@ -15,6 +15,37 @@ function Resolve-AbsolutePath {
     }
 
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
+function Resolve-RepositoryRoot {
+    param([string]$Path)
+
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($Path)) {
+        $candidates += $Path
+    }
+
+    $candidates += (Join-Path $PSScriptRoot '..\..')
+    $candidates += (Get-Location).Path
+
+    foreach ($candidate in $candidates) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) {
+            continue
+        }
+
+        try {
+            $resolved = Resolve-AbsolutePath $candidate
+        }
+        catch {
+            continue
+        }
+
+        if (Test-Path -LiteralPath (Join-Path $resolved 'UniversalDeviceToolkit.sln')) {
+            return $resolved
+        }
+    }
+
+    throw 'Could not resolve repository root. Pass -RepoRoot pointing at UniversalDeviceToolkit.sln.'
 }
 
 function Write-Result {
@@ -62,6 +93,7 @@ function Wait-ForFile {
     return $false
 }
 
+$repoRoot = Resolve-RepositoryRoot -Path $RepoRoot
 $resultPath = if ($ResultPath) { Resolve-AbsolutePath $ResultPath } else { Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\AdminDirectHardwareSmoke.result.txt' }
 $logPath = if ($LogPath) { Resolve-AbsolutePath $LogPath } else { Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\AdminDirectHardwareSmoke.smoke.txt' }
 $hardwareValidationResultPath = [System.IO.Path]::ChangeExtension($resultPath, '.hardware.result.txt')
@@ -78,8 +110,12 @@ foreach ($path in @($resultPath, $logPath, $hardwareValidationResultPath, $hardw
 }
 
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
+Write-Result 'RepositoryRoot' $repoRoot
 Write-Result 'DelegatedTo' $hardwareValidationScriptPath
 Write-Result 'Scenario' 'BatchDefault'
+Write-Result 'HardwareValidationScenario' 'BatchDefault'
+Write-Result 'HardwareValidationResultPath' $hardwareValidationResultPath
+Write-Result 'HardwareValidationLogPath' $hardwareValidationLogPath
 Write-Result 'TimeoutSeconds' $TimeoutSeconds
 
 Push-Location $repoRoot
@@ -87,13 +123,14 @@ try {
     $delegatedArguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $hardwareValidationScriptPath,
+        '-RepoRoot', $repoRoot,
         '-Scenario', 'BatchDefault',
         '-ResultPath', $hardwareValidationResultPath,
         '-LogPath', $hardwareValidationLogPath,
         '-TimeoutSeconds', $TimeoutSeconds
     )
 
-    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $delegatedArguments -PassThru -WindowStyle Hidden
+    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $delegatedArguments -PassThru -WindowStyle Hidden -WorkingDirectory $repoRoot
     Write-Result 'DelegatedProcessId' $process.Id
 
     if (-not $process.WaitForExit(($TimeoutSeconds + 30) * 1000)) {
