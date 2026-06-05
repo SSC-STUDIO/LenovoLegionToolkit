@@ -1,15 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Controllers.GodMode;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
-using LenovoLegionToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent
 {
 public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IGodModePresetChangedAutomationPipelineTrigger>
 {
-    private readonly GodModeSettings _settings = IoCContainer.Resolve<GodModeSettings>();
+    private readonly GodModeController _godModeController = IoCContainer.Resolve<GodModeController>();
 
     private readonly IGodModePresetChangedAutomationPipelineTrigger _trigger;
 
@@ -31,9 +33,22 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
         return _trigger.DeepCopy(state);
     }
 
-    private void GodModePresetPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
+    private async void GodModePresetPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
-        foreach (var (guid, preset) in _settings.Store.Presets)
+        IReadOnlyDictionary<Guid, GodModePreset> presets;
+        try
+        {
+            presets = (await _godModeController.GetStateAsync()).Presets;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to load God Mode presets for automation trigger configuration.", ex);
+            presets = new Dictionary<Guid, GodModePreset>();
+        }
+
+        _content.Children.Clear();
+        foreach (var (guid, preset) in presets.OrderBy(kv => kv.Value.Name))
         {
             var radio = new RadioButton
             {

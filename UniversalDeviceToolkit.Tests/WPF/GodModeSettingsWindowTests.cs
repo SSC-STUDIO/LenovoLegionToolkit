@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.WPF.Controls.Automation;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Xunit;
 
@@ -164,6 +165,36 @@ public class GodModeSettingsWindowTests
 
         updatedState.ActivePresetId.Should().Be(activePresetId);
         updatedState.Presets.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void GetPresetName_WhenPresetWasRenamed_ShouldReturnLatestNameFromCurrentState()
+    {
+        var presetId = Guid.NewGuid();
+        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
+            new Dictionary<Guid, GodModePreset>
+            {
+                [presetId] = new() { Name = "Renamed performance" },
+                [Guid.NewGuid()] = new() { Name = "Quiet" }
+            });
+
+        var name = AutomationPipelineControl.GetPresetName(presetId, presets);
+
+        name.Should().Be("Renamed performance");
+    }
+
+    [Fact]
+    public void GetPresetName_WhenPresetIsMissing_ShouldReturnPlaceholder()
+    {
+        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
+            new Dictionary<Guid, GodModePreset>
+            {
+                [Guid.NewGuid()] = new() { Name = "Quiet" }
+            });
+
+        var name = AutomationPipelineControl.GetPresetName(Guid.NewGuid(), presets);
+
+        name.Should().Be("-");
     }
 
     private static GodModeState CreateState(Guid activePresetId, Dictionary<Guid, GodModePreset> presets) => new()
