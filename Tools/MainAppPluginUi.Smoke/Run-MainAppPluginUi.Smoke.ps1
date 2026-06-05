@@ -3,7 +3,7 @@ param(
     [string]$RepositoryRoot,
     [string]$PluginIds = 'custom-mouse,shell-integration,vive-tool,network-acceleration',
     [string]$PluginSources = '*=online',
-    [ValidateSet('', 'custom', 'shell-local', 'combo-local', 'driver-download', 'system-optimization')]
+    [ValidateSet('', 'custom', 'shell-local', 'combo-local', 'driver-download', 'system-optimization', 'dashboard', 'power-mode')]
     [string]$Scenario = 'custom',
     [ValidateSet('system', 'light', 'dark')]
     [string]$Theme = 'system',
@@ -15,7 +15,8 @@ param(
     [int]$StepDelayMs = 1200,
     [int]$SuccessHoldMs = 5000,
     [int]$FailureHoldMs = 15000,
-    [switch]$KeepArtifacts
+    [switch]$KeepArtifacts,
+    [switch]$PowerModeHardwareVerify
 )
 
 Set-StrictMode -Version Latest
@@ -72,6 +73,10 @@ if ($KeepArtifacts.IsPresent) {
     $commandArguments += '--keep-artifacts'
 }
 
+if ($PowerModeHardwareVerify.IsPresent) {
+    $commandArguments += '--power-mode-hardware-verify'
+}
+
 $metadata = [ordered]@{
     repositoryRoot = $resolvedRepositoryRoot
     pluginIds = $PluginIds
@@ -88,6 +93,7 @@ $metadata = [ordered]@{
     successHoldMs = $SuccessHoldMs
     failureHoldMs = $FailureHoldMs
     keepArtifacts = $KeepArtifacts.IsPresent
+    powerModeHardwareVerify = $PowerModeHardwareVerify.IsPresent
     startedAt = [DateTimeOffset]::Now.ToString('O')
 }
 $metadata | ConvertTo-Json -Depth 5 | Set-Content -Path $metadataPath -Encoding UTF8

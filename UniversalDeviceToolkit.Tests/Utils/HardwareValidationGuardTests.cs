@@ -60,9 +60,29 @@ public sealed class HardwareValidationGuardTests
         script.Should().Contain("'PowerModeUiAndHardwareVerify'");
         script.Should().Contain("'--scenario'");
         script.Should().Contain("'power-mode'");
+        script.Should().Contain("'--power-mode-hardware-verify'");
+        script.Should().Contain("'UiSmokeHardwareVerificationRequested' 'True'");
         script.Should().Contain("'-Scenario', 'PowerModeVerify'");
         script.Should().Contain("'PowerModeVerificationPassed'");
         script.Should().Contain("'OverallPassed'");
+    }
+
+    [Fact]
+    public void MainAppUiSmokeRunner_ShouldExposePowerModeHardwareVerificationScenario()
+    {
+        var runner = ReadRepositoryFile("Tools", "MainAppPluginUi.Smoke", "Run-MainAppPluginUi.Smoke.ps1");
+        var workflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
+
+        runner.Should().Contain("'power-mode'");
+        runner.Should().Contain("[switch]$PowerModeHardwareVerify");
+        runner.Should().Contain("$commandArguments += '--power-mode-hardware-verify'");
+
+        workflow.Should().Contain("- power-mode");
+        workflow.Should().Contain("power_mode_hardware_verify");
+        workflow.Should().Contain("[string[]]@('custom', 'shell-local', 'combo-local')");
+        workflow.Should().Contain("Scenario '$env:SCENARIO' does not install plugins; skipping local package validation.");
+        workflow.Should().Contain("POWER_MODE_HARDWARE_VERIFY: ${{ inputs.power_mode_hardware_verify }}");
+        workflow.Should().Contain("PowerModeHardwareVerify = [System.Convert]::ToBoolean($env:POWER_MODE_HARDWARE_VERIFY)");
     }
 
     [Fact]

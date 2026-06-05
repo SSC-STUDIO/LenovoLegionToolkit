@@ -116,6 +116,7 @@ Write-Result 'RepositoryRoot' $repoRoot
 Write-Result 'DelegatedTo' $hardwareValidationScriptPath
 Write-Result 'Scenario' 'PowerModeUiAndHardwareVerify'
 Write-Result 'UiSmokeScenario' 'power-mode'
+Write-Result 'UiSmokePowerModeHardwareVerify' 'True'
 Write-Result 'HardwareValidationScenario' 'PowerModeVerify'
 Write-Result 'UiSmokeResultPath' $uiSmokeResultPath
 Write-Result 'UiSmokeLogPath' $uiSmokeLogPath
@@ -144,6 +145,7 @@ try {
     $smokeProcessStartInfo.ArgumentList.Add('--disable-animations')
     $smokeProcessStartInfo.ArgumentList.Add('--screenshots')
     $smokeProcessStartInfo.ArgumentList.Add('failures')
+    $smokeProcessStartInfo.ArgumentList.Add('--power-mode-hardware-verify')
 
     $smokeProcess = [System.Diagnostics.Process]::new()
     $smokeProcess.StartInfo = $smokeProcessStartInfo
@@ -169,6 +171,7 @@ try {
     $uiSmokePassed = (-not $smokeTimedOut) -and $smokeProcess.ExitCode -eq 0
     Write-Result 'UiSmokeExitCode' $uiSmokeExitCode
     Write-Result 'UiSmokePassed' ([string]$uiSmokePassed)
+    Write-Result 'UiSmokeHardwareVerificationRequested' 'True'
 
     $delegatedArguments = @(
         '-ExecutionPolicy', 'Bypass',
