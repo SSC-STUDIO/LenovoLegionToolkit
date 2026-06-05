@@ -52,6 +52,55 @@ $forbiddenBinaryMarkers = @(
     'UDT_APPDATA_OVERRIDE'
 )
 
+function Test-ContainsBytes {
+    param(
+        [Parameter(Mandatory = $true)][byte[]]$Haystack,
+        [Parameter(Mandatory = $true)][byte[]]$Needle
+    )
+
+    if ($Needle.Length -eq 0 -or $Haystack.Length -lt $Needle.Length) {
+        return $false
+    }
+
+    for ($i = 0; $i -le $Haystack.Length - $Needle.Length; $i++) {
+        $matched = $true
+        for ($j = 0; $j -lt $Needle.Length; $j++) {
+            if ($Haystack[$i + $j] -ne $Needle[$j]) {
+                $matched = $false
+                break
+            }
+        }
+
+        if ($matched) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Test-ContainsBinaryMarker {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Marker
+    )
+
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $encodedMarkers = @(
+        [System.Text.Encoding]::UTF8.GetBytes($Marker),
+        [System.Text.Encoding]::Unicode.GetBytes($Marker),
+        [System.Text.Encoding]::BigEndianUnicode.GetBytes($Marker)
+    )
+
+    foreach ($encodedMarker in $encodedMarkers) {
+        if (Test-ContainsBytes -Haystack $bytes -Needle $encodedMarker) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 $violations = @()
 $files = Get-ChildItem -LiteralPath $resolvedPath.Path -Recurse -File -ErrorAction Stop
 foreach ($file in $files) {
@@ -113,7 +162,7 @@ foreach ($file in $files) {
 
     if (-not $isForbidden) {
         foreach ($marker in $forbiddenBinaryMarkers) {
-            if (Select-String -LiteralPath $file.FullName -SimpleMatch $marker -Quiet) {
+            if (Test-ContainsBinaryMarker -Path $file.FullName -Marker $marker) {
                 $violations += $file
                 break
             }

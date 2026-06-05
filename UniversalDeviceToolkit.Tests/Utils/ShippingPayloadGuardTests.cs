@@ -22,6 +22,38 @@ public sealed class ShippingPayloadGuardTests
         script.Should().Contain("'*.Smoke.*'");
         script.Should().Contain("'*Validation*'");
         script.Should().Contain("'UDT_APPDATA_OVERRIDE'");
+        script.Should().Contain("Test-ContainsBinaryMarker");
+        script.Should().Contain("[System.Text.Encoding]::UTF8.GetBytes($Marker)");
+        script.Should().Contain("[System.Text.Encoding]::Unicode.GetBytes($Marker)");
+        script.Should().Contain("[System.Text.Encoding]::BigEndianUnicode.GetBytes($Marker)");
+        script.Should().Contain("[System.IO.File]::ReadAllBytes($Path)");
+        script.Should().NotContain("Select-String -LiteralPath $file.FullName -SimpleMatch $marker -Quiet");
+    }
+
+    [Fact]
+    public void ShippingPayloadGuard_ShouldRejectUtf16BinaryTestHookMarkers()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var payloadRoot = NewTempDirectory("UDT-shipping-marker-payload");
+
+        try
+        {
+            var markerPath = Path.Combine(payloadRoot, "Universal Device Toolkit.dll");
+            File.WriteAllBytes(markerPath, System.Text.Encoding.Unicode.GetBytes("prefix UDT_APPDATA_OVERRIDE suffix"));
+
+            var output = RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Assert-ShippingPayload.ps1"),
+                ["-PayloadPath", payloadRoot],
+                repositoryRoot,
+                expectSuccess: false);
+
+            output.Should().Contain("Shipping payload contains test or validation tool artifacts:");
+            output.Should().Contain(markerPath);
+        }
+        finally
+        {
+            Directory.Delete(payloadRoot, recursive: true);
+        }
     }
 
     [Fact]
