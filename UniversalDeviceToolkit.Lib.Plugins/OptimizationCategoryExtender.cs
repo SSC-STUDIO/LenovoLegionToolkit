@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Utils;
@@ -41,6 +42,10 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                     else if (plugin is PluginBase pluginBase)
                     {
                         category = pluginBase.GetOptimizationCategory();
+                    }
+                    else
+                    {
+                        category = TryGetOptimizationCategoryByConvention(plugin);
                     }
 
                     if (category != null)
@@ -138,6 +143,34 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             FirstNonEmpty(manifest.Description, manifest.Name, pluginId),
             actions,
             FirstNonEmpty(manifest.Id, pluginId));
+    }
+
+    private static WindowsOptimizationCategoryDefinition? TryGetOptimizationCategoryByConvention(IPlugin plugin)
+    {
+        try
+        {
+            var method = plugin.GetType().GetMethod(
+                "GetOptimizationCategory",
+                BindingFlags.Public | BindingFlags.Instance,
+                binder: null,
+                types: Type.EmptyTypes,
+                modifiers: null);
+
+            if (method is null ||
+                !typeof(WindowsOptimizationCategoryDefinition).IsAssignableFrom(method.ReturnType))
+            {
+                return null;
+            }
+
+            return method.Invoke(plugin, null) as WindowsOptimizationCategoryDefinition;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get convention optimization category from plugin {plugin.Id}: {ex.Message}", ex);
+
+            return null;
+        }
     }
 
     private static WindowsOptimizationActionDefinition? CreateManifestAction(PluginManifestOptimizationContribution action)

@@ -60,6 +60,26 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenPluginUsesPublicConventionMethod_ShouldIncludeCategory()
+    {
+        var plugin = new ConventionOptimizationPlugin("convention-plugin");
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin> { plugin });
+        pluginManager.Setup(m => m.IsInstalled("convention-plugin")).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var category = categories.Should().ContainSingle().Subject;
+        category.Key.Should().Be("convention.category");
+        category.PluginId.Should().Be("convention-plugin");
+        category.Actions.Should().ContainSingle();
+        category.Actions[0].Key.Should().Be("convention.action");
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenProviderThrows_ShouldSkipPlugin()
     {
         var failing = new ThrowingOptimizationProvider("failing-plugin");
@@ -356,6 +376,34 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         public string[]? Dependencies => null;
 
         public WindowsOptimizationCategoryDefinition? GetOptimizationCategory() => throw new InvalidOperationException("boom");
+
+        public void OnInstalled() { }
+        public void OnUninstalled() { }
+        public void OnShutdown() { }
+        public void Stop() { }
+    }
+
+    private sealed class ConventionOptimizationPlugin(string id) : IPlugin
+    {
+        public string Id => id;
+        public string Name => id;
+        public string Description => "test";
+        public string Icon => "PlugConnected24";
+        public bool IsSystemPlugin => false;
+        public string[]? Dependencies => null;
+
+        public WindowsOptimizationCategoryDefinition GetOptimizationCategory() =>
+            new(
+                "convention.category",
+                "Convention category",
+                "Convention description",
+                [
+                    new WindowsOptimizationActionDefinition(
+                        "convention.action",
+                        "Convention action",
+                        "Convention action description",
+                        _ => System.Threading.Tasks.Task.CompletedTask)
+                ]);
 
         public void OnInstalled() { }
         public void OnUninstalled() { }
