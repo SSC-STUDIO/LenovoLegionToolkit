@@ -309,6 +309,49 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControlMarkup_ShouldExposeExpandedSensorCharts()
+    {
+        var xaml = ReadSensorsControlXaml();
+
+        xaml.Should().Contain("x:Name=\"_cpuChartPanel\"");
+        xaml.Should().Contain("x:Name=\"_gpuChartPanel\"");
+        xaml.Should().Contain("x:Name=\"_batteryCapacityPanel\"");
+        xaml.Should().Contain("x:Name=\"_cpuUtilizationSparkline\"");
+        xaml.Should().Contain("x:Name=\"_gpuTemperatureSparkline\"");
+        xaml.Should().Contain("AutomationProperties.AutomationId=\"DashboardSensorsCpuChart\"");
+    }
+
+    [Theory]
+    [InlineData(1119, false)]
+    [InlineData(1120, true)]
+    [InlineData(1280, true)]
+    public void ShouldAutoExpandDetails_ShouldUseWideDashboardThreshold(double width, bool expected)
+    {
+        SensorsControl.ShouldAutoExpandDetails(width).Should().Be(expected);
+    }
+
+    [Fact]
+    public void CreateSensorChartPoints_ShouldMapSamplesIntoChartBounds()
+    {
+        var samples = new[]
+        {
+            new SensorsControl.SensorChartSample(0, 50, 100),
+            new SensorsControl.SensorChartSample(25, 75, 50),
+            new SensorsControl.SensorChartSample(100, 0, 25),
+        };
+
+        var points = SensorsControl.CreateSensorChartPoints(samples, width: 120, height: 60);
+
+        points.utilization.Should().HaveCount(3);
+        points.clock.Should().HaveCount(3);
+        points.temperature.Should().HaveCount(3);
+        points.utilization.Select(point => point.X).Should().OnlyContain(x => x >= 0 && x <= 120);
+        points.utilization.Select(point => point.Y).Should().OnlyContain(y => y >= 0 && y <= 60);
+        points.utilization[0].Should().Be(new System.Windows.Point(0, 60));
+        points.utilization[^1].Should().Be(new System.Windows.Point(120, 0));
+    }
+
+    [Fact]
     public void FormatUsageInGigabytes_WhenUsageAndTotalAreAvailable_ShouldIncludePercentage()
     {
         var text = SensorsControl.FormatUsageInGigabytes(6.4f, 8f);

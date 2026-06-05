@@ -31,6 +31,20 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Margin" Value="0,16,0,0" />
         </Style>
+        <Style x:Key="SensorChartCardStyle" TargetType="Border">
+            <Setter Property="Height" Value="108" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style x:Key="SensorChartLegendTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppCaptionTextBlockStyle}">
+            <Setter Property="Margin" Value="4,0,12,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
     </UserControl.Resources>
 
     <wpfui:CardControl
@@ -93,6 +107,30 @@
                         </Grid>
 
                         <StackPanel x:Name="_cpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsCpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                            <Border x:Name="_cpuChartPanel" AutomationProperties.AutomationId="DashboardSensorsCpuChart" Style="{StaticResource SensorChartCardStyle}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Canvas x:Name="_cpuChartCanvas" Grid.Row="0" Height="62" ClipToBounds="True">
+                                        <Line X1="0" Y1="12" X2="420" Y2="12" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.55" />
+                                        <Line X1="0" Y1="31" X2="420" Y2="31" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.35" />
+                                        <Line X1="0" Y1="50" X2="420" Y2="50" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.55" />
+                                        <Polyline x:Name="_cpuUtilizationSparkline" Stroke="{DynamicResource SystemAccentColorBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                        <Polyline x:Name="_cpuClockSparkline" Stroke="{DynamicResource SystemFillColorSuccessBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                        <Polyline x:Name="_cpuTemperatureSparkline" Stroke="{DynamicResource SystemFillColorCautionBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                    </Canvas>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemAccentColorBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemFillColorCautionBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -187,6 +225,38 @@
                         </StackPanel>
 
                         <StackPanel x:Name="_batteryDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsBatteryDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                            <Border x:Name="_batteryCapacityPanel" AutomationProperties.AutomationId="DashboardSensorsBatteryCapacityChart" Style="{StaticResource SensorChartCardStyle}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Capacity}" Style="{StaticResource AppCaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                    <ProgressBar x:Name="_batteryCapBar" Grid.Row="0" Grid.Column="1" Margin="10,0,8,0" Height="8" Minimum="0" Maximum="100">
+                                        <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
+                                    </ProgressBar>
+                                    <TextBlock x:Name="_batteryCapChartText" Grid.Row="0" Grid.Column="2" Text="-" MinWidth="48" TextAlignment="Right" Style="{StaticResource AppCaptionTextBlockStyle}" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_FullCapacity}" Margin="0,8,0,0" Style="{StaticResource AppCaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                    <ProgressBar x:Name="_batteryFullCapBar" Grid.Row="1" Grid.Column="1" Margin="10,8,8,0" Height="8" Minimum="0" Maximum="100">
+                                        <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
+                                    </ProgressBar>
+                                    <TextBlock x:Name="_batteryFullCapChartText" Grid.Row="1" Grid.Column="2" Text="-" Margin="0,8,0,0" MinWidth="48" TextAlignment="Right" Style="{StaticResource AppCaptionTextBlockStyle}" />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Health}" Margin="0,8,0,0" Style="{StaticResource AppCaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                    <ProgressBar x:Name="_batteryHealthDetailBar" Grid.Row="2" Grid.Column="1" Margin="10,8,8,0" Height="8" Minimum="0" Maximum="100">
+                                        <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
+                                    </ProgressBar>
+                                    <TextBlock x:Name="_batteryHealthChartText" Grid.Row="2" Grid.Column="2" Text="-" Margin="0,8,0,0" MinWidth="48" TextAlignment="Right" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                </Grid>
+                            </Border>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -260,6 +330,30 @@
                         </Grid>
 
                         <StackPanel x:Name="_gpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsGpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
+                            <Border x:Name="_gpuChartPanel" AutomationProperties.AutomationId="DashboardSensorsGpuChart" Style="{StaticResource SensorChartCardStyle}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Canvas x:Name="_gpuChartCanvas" Grid.Row="0" Height="62" ClipToBounds="True">
+                                        <Line X1="0" Y1="12" X2="420" Y2="12" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.55" />
+                                        <Line X1="0" Y1="31" X2="420" Y2="31" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.35" />
+                                        <Line X1="0" Y1="50" X2="420" Y2="50" Stroke="{DynamicResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.55" />
+                                        <Polyline x:Name="_gpuUtilizationSparkline" Stroke="{DynamicResource SystemAccentColorBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                        <Polyline x:Name="_gpuClockSparkline" Stroke="{DynamicResource SystemFillColorSuccessBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                        <Polyline x:Name="_gpuTemperatureSparkline" Stroke="{DynamicResource SystemFillColorCautionBrush}" StrokeThickness="2" StrokeLineJoin="Round" />
+                                    </Canvas>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemAccentColorBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource SystemFillColorCautionBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource SensorChartLegendTextStyle}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                             <Grid>
                                 <Grid.ColumnDefinitions>

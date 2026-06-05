@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using Humanizer;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -20,11 +23,16 @@ namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {
 public partial class SensorsControl
 {
+    internal readonly record struct SensorChartSample(double Utilization, double Clock, double Temperature);
+
     private const string CelsiusUnit = "\u00B0C";
     private const string FahrenheitUnit = "\u00B0F";
     private const string GigahertzUnit = "GHz";
     private const string MegahertzUnit = "MHz";
     private const string RpmUnit = "RPM";
+    private const double AutoExpandedDetailsMinWidth = 1120;
+    private const int SensorChartSampleLimit = 36;
+    private const double SensorChartHeight = 62;
     private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
     private static readonly object SessionSensorDataLock = new();
     private static SensorsData? _sessionSensorData;
@@ -36,7 +44,10 @@ public partial class SensorsControl
     private bool _sensorRuntimeAvailable = true;
     private volatile bool _forceDetailedRefresh;
     private bool _detailsExpanded;
+    private bool _manualDetailsOverride;
     private DateTime _lastDetailsToggleClick = DateTime.MinValue;
+    private readonly Queue<SensorChartSample> _cpuChartSamples = new();
+    private readonly Queue<SensorChartSample> _gpuChartSamples = new();
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
@@ -63,6 +74,7 @@ public partial class SensorsControl
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
+        SizeChanged += SensorsControl_SizeChanged;
     }
 
     public Task FirstSensorDataReadyTask
@@ -157,6 +169,7 @@ public partial class SensorsControl
     {
         if (IsVisible)
         {
+            ApplyAutomaticDetailExpansion();
             Refresh();
             RefreshBattery();
             return;
@@ -178,6 +191,20 @@ public partial class SensorsControl
             await _batteryRefreshTask;
         _batteryRefreshTask = null;
     }
+
+    private void SensorsControl_SizeChanged(object sender, SizeChangedEventArgs e) => ApplyAutomaticDetailExpansion();
+
+    private void ApplyAutomaticDetailExpansion()
+    {
+        if (_manualDetailsOverride)
+            return;
+
+        SetDetailsExpanded(ShouldAutoExpandDetails(), refreshDetailedValues: IsVisible);
+    }
+
+    internal static bool ShouldAutoExpandDetails(double width) => width >= AutoExpandedDetailsMinWidth;
+
+    private bool ShouldAutoExpandDetails() => ShouldAutoExpandDetails(ActualWidth);
 
     private void RefreshBattery()
     {
@@ -252,6 +279,7 @@ public partial class SensorsControl
 
         // Details
         UpdateBatteryDetails(batteryInfo, onBatterySince);
+        UpdateBatteryCapacityChart(batteryInfo);
     }
 
     private void UpdateBatteryDetails(BatteryInformation info, DateTime? onBatterySince)
@@ -298,6 +326,22 @@ public partial class SensorsControl
         UpdateDetailText("_batteryDate", info.ManufactureDate?.ToString(LocalizationHelper.ShortDateFormat) ?? string.Empty);
         UpdateDetailText("_batteryTemperature", FormatNullableTemperature(info.BatteryTemperatureC, _applicationSettings.Store.TemperatureUnit));
 
+    }
+
+    private void UpdateBatteryCapacityChart(BatteryInformation info)
+    {
+        var chargePercentage = ClampPercentage(info.BatteryPercentage);
+        var healthPercentage = ClampPercentage(info.BatteryHealth);
+        var fullCapacityPercentage = info.DesignCapacity > 0
+            ? ClampPercentage((info.FullChargeCapacity / (double)info.DesignCapacity) * 100.0)
+            : healthPercentage;
+
+        SetRangeValue("_batteryCapBar", chargePercentage);
+        SetRangeValue("_batteryFullCapBar", fullCapacityPercentage);
+        SetRangeValue("_batteryHealthDetailBar", healthPercentage);
+        UpdateDetailText("_batteryCapChartText", $"{chargePercentage:0}%");
+        UpdateDetailText("_batteryFullCapChartText", $"{fullCapacityPercentage:0}%");
+        UpdateDetailText("_batteryHealthChartText", $"{healthPercentage:0}%");
     }
 
     private void UpdateDetailText(string name, string? text)
@@ -445,6 +489,9 @@ public partial class SensorsControl
 
         if (shouldCompleteInitialLoad)
             CompleteInitialSensorDataLoad();
+
+        UpdateSensorChart(_cpuChartSamples, data.CPU, _cpuChartCanvas, _cpuUtilizationSparkline, _cpuClockSparkline, _cpuTemperatureSparkline);
+        UpdateSensorChart(_gpuChartSamples, data.GPU, _gpuChartCanvas, _gpuUtilizationSparkline, _gpuClockSparkline, _gpuTemperatureSparkline);
 
         UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
             $"{data.CPU.Utilization}%");
@@ -672,7 +719,13 @@ public partial class SensorsControl
 
     private void ToggleDetails()
     {
-        _detailsExpanded = !AreDetailsVisible();
+        _manualDetailsOverride = true;
+        SetDetailsExpanded(!AreDetailsVisible(), refreshDetailedValues: true);
+    }
+
+    private void SetDetailsExpanded(bool expanded, bool refreshDetailedValues)
+    {
+        _detailsExpanded = expanded;
         var newState = _detailsExpanded ? Visibility.Visible : Visibility.Collapsed;
 
         if (_sensorRuntimeAvailable)
@@ -683,7 +736,7 @@ public partial class SensorsControl
 
         SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
 
-        if (newState == Visibility.Visible)
+        if (refreshDetailedValues && newState == Visibility.Visible)
         {
             _forceDetailedRefresh = true;
             _ = RefreshDetailedValuesAsync();
@@ -745,6 +798,118 @@ public partial class SensorsControl
             label.ToolTip = toolTipText is null ? null : string.Format(Resource.SensorsControl_Maximum, toolTipText);
             label.Tag = value;
         }
+    }
+
+    private void UpdateSensorChart(
+        Queue<SensorChartSample> samples,
+        SensorData data,
+        FrameworkElement chartSurface,
+        System.Windows.Shapes.Polyline utilizationLine,
+        System.Windows.Shapes.Polyline clockLine,
+        System.Windows.Shapes.Polyline temperatureLine)
+    {
+        if (TryCreateSensorChartSample(data) is not { } sample)
+            return;
+
+        samples.Enqueue(sample);
+        while (samples.Count > SensorChartSampleLimit)
+            samples.Dequeue();
+
+        var width = chartSurface.ActualWidth;
+        if (double.IsNaN(width) || width <= 0)
+            width = chartSurface.Width;
+        if (double.IsNaN(width) || width <= 0)
+            width = 420;
+
+        if (chartSurface is Canvas canvas)
+        {
+            foreach (var guideLine in canvas.Children.OfType<System.Windows.Shapes.Line>())
+                guideLine.X2 = width;
+        }
+
+        var points = CreateSensorChartPoints(samples, width, SensorChartHeight);
+        utilizationLine.Points = points.utilization;
+        clockLine.Points = points.clock;
+        temperatureLine.Points = points.temperature;
+    }
+
+    private static SensorChartSample? TryCreateSensorChartSample(SensorData data)
+    {
+        if (data.Utilization < 0 && data.CoreClock <= 0 && data.Temperature <= 0)
+            return null;
+
+        var utilization = NormalizeSensorChartMetric(data.Utilization, data.MaxUtilization, fallbackMaximum: 100);
+        var clock = NormalizeSensorChartMetric(data.CoreClock, data.MaxCoreClock, fallbackMaximum: Math.Max(data.CoreClock, 1));
+        var temperature = NormalizeSensorChartMetric(data.Temperature, data.MaxTemperature, fallbackMaximum: 100);
+
+        if (utilization < 0 && clock < 0 && temperature < 0)
+            return null;
+
+        return new(
+            utilization >= 0 ? utilization : 0,
+            clock >= 0 ? clock : 0,
+            temperature >= 0 ? temperature : 0);
+    }
+
+    internal static (PointCollection utilization, PointCollection clock, PointCollection temperature) CreateSensorChartPoints(
+        IEnumerable<SensorChartSample> samples,
+        double width,
+        double height)
+    {
+        var sampleArray = samples.ToArray();
+        return (
+            CreateMetricChartPoints(sampleArray.Select(static sample => sample.Utilization), width, height),
+            CreateMetricChartPoints(sampleArray.Select(static sample => sample.Clock), width, height),
+            CreateMetricChartPoints(sampleArray.Select(static sample => sample.Temperature), width, height));
+    }
+
+    private static PointCollection CreateMetricChartPoints(IEnumerable<double> values, double width, double height)
+    {
+        var valueArray = values.ToArray();
+        var points = new PointCollection(valueArray.Length);
+
+        if (valueArray.Length == 0)
+            return points;
+
+        var usableWidth = Math.Max(width, 1);
+        var usableHeight = Math.Max(height, 1);
+        var step = valueArray.Length > 1 ? usableWidth / (valueArray.Length - 1) : 0;
+
+        for (var index = 0; index < valueArray.Length; index++)
+        {
+            var value = ClampPercentage(valueArray[index]);
+            var x = valueArray.Length == 1 ? usableWidth : index * step;
+            var y = usableHeight - (value / 100.0 * usableHeight);
+            points.Add(new Point(x, y));
+        }
+
+        return points;
+    }
+
+    private static double NormalizeSensorChartMetric(double value, double maximum, double fallbackMaximum)
+    {
+        if (value < 0)
+            return -1;
+
+        var resolvedMaximum = maximum > 0 ? maximum : fallbackMaximum;
+        if (resolvedMaximum <= 0)
+            return -1;
+
+        return ClampPercentage((value / resolvedMaximum) * 100.0);
+    }
+
+    private void SetRangeValue(string name, double value)
+    {
+        if (FindName(name) is RangeBase range)
+            range.Value = ClampPercentage(value);
+    }
+
+    private static double ClampPercentage(double value)
+    {
+        if (double.IsNaN(value) || double.IsInfinity(value))
+            return 0;
+
+        return Math.Clamp(value, 0, 100);
     }
 
     private void SetSensorSectionsVisible(bool visible)
