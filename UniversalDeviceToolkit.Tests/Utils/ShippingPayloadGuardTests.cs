@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System.Xml.Linq;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
@@ -66,6 +67,26 @@ public sealed class ShippingPayloadGuardTests
         makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
             .Should()
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void MainAppProject_ShouldNotReferenceTestOrValidationTools()
+    {
+        var projectPath = Path.Combine(FindRepositoryRoot(), "UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj");
+        var project = XDocument.Load(projectPath);
+        var projectReferences = project
+            .Descendants("ProjectReference")
+            .Select(element => element.Attribute("Include")?.Value)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .Select(static value => value!.Replace('/', '\\'))
+            .ToArray();
+
+        projectReferences.Should().NotContain(reference =>
+            reference.Contains("\\Tools\\", StringComparison.OrdinalIgnoreCase) ||
+            reference.Contains("\\Tests\\", StringComparison.OrdinalIgnoreCase) ||
+            reference.Contains(".Smoke", StringComparison.OrdinalIgnoreCase) ||
+            reference.Contains("Validation", StringComparison.OrdinalIgnoreCase),
+            "shipping app project references must stay limited to production libraries");
     }
 
     [Fact]
@@ -182,6 +203,13 @@ public sealed class ShippingPayloadGuardTests
 
     private static string FindRepositoryRoot()
     {
+        var overrideRoot = Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT");
+        if (!string.IsNullOrWhiteSpace(overrideRoot) &&
+            File.Exists(Path.Combine(overrideRoot, "UniversalDeviceToolkit.sln")))
+        {
+            return Path.GetFullPath(overrideRoot);
+        }
+
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         while (directory is not null)
         {
