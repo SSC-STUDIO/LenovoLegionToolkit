@@ -277,10 +277,6 @@ public partial class App
         IoCContainer.Resolve<ThemeManager>().Apply();
         AnimationHelper.UpdateAnimationParameters(persistedSettings);
 
-        // Check for unsent crash reports from previous session
-        // This shows a modal dialog before the main window appears
-        CheckPendingCrashReports();
-
         if (flags.Minimized)
         {
             if (Log.Instance.IsTraceEnabled)
@@ -297,6 +293,9 @@ public partial class App
 
             mainWindow.Show();
         }
+
+        // Surface reports from a previous session without blocking the main UI.
+        _ = Dispatcher.BeginInvoke(CheckPendingCrashReports, DispatcherPriority.Background);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Start up complete");
@@ -377,8 +376,12 @@ public partial class App
             {
                 try
                 {
-                    var notificationWindow = new CrashReportNotificationWindow(mostRecentReport);
-                    notificationWindow.ShowDialog();
+                    var notificationWindow = new CrashReportNotificationWindow(mostRecentReport)
+                    {
+                        Owner = Application.Current?.MainWindow as Window,
+                        ShowInTaskbar = false
+                    };
+                    notificationWindow.Show();
 
                     // Delete other reports (keep only the most recent one shown)
                     foreach (var otherReport in reports.Where(r => r != mostRecentReport))
