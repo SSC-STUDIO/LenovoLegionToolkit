@@ -48,12 +48,9 @@ public sealed class PresetUiValidationGuardTests
             AppContext.BaseDirectory
         };
 
-        foreach (var candidate in candidates)
+        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
         {
-            if (string.IsNullOrWhiteSpace(candidate))
-                continue;
-
-            var directory = new DirectoryInfo(candidate);
+            var directory = new DirectoryInfo(Path.GetFullPath(candidate!));
             while (directory is not null)
             {
                 if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
@@ -61,17 +58,6 @@ public sealed class PresetUiValidationGuardTests
 
                 directory = directory.Parent;
             }
-        }
-
-        var fallback = new DirectoryInfo(AppContext.BaseDirectory);
-        while (fallback is not null)
-        {
-            var nestedSolution = Directory.EnumerateFiles(fallback.FullName, "UniversalDeviceToolkit.sln", SearchOption.AllDirectories)
-                .FirstOrDefault();
-            if (nestedSolution is not null)
-                return Path.GetDirectoryName(nestedSolution)!;
-
-            fallback = fallback.Parent;
         }
 
         throw new DirectoryNotFoundException("Could not find repository root.");
