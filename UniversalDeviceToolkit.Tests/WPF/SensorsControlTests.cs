@@ -168,6 +168,21 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControlMarkup_ShouldExposeMotherboardTemperatureInCpuDetails()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var cpuDetailsStart = xaml.IndexOf("x:Name=\"_cpuDetailsPanel\"", StringComparison.Ordinal);
+        cpuDetailsStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var cpuDetailsEnd = xaml.IndexOf("x:Name=\"_batterySectionColumn\"", cpuDetailsStart, StringComparison.Ordinal);
+        cpuDetailsEnd.Should().BeGreaterThan(cpuDetailsStart);
+
+        var cpuDetailsXaml = xaml[cpuDetailsStart..cpuDetailsEnd];
+        cpuDetailsXaml.Should().Contain("x:Name=\"_cpuMotherboardTemperatureTitle\"");
+        cpuDetailsXaml.Should().Contain("x:Name=\"_cpuMotherboardTemperature\"");
+    }
+
+    [Fact]
     public void FormatUsageInGigabytes_WhenUsageAndTotalAreAvailable_ShouldIncludePercentage()
     {
         var text = SensorsControl.FormatUsageInGigabytes(6.4f, 8f);

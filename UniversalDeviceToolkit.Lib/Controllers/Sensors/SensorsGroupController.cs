@@ -152,6 +152,24 @@ public class SensorsGroupController : IDisposable
         "Memory",
         "RAM",
     ];
+    private static readonly string[] MOTHERBOARD_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "PCH",
+        "Chipset",
+        "Platform Controller Hub",
+        "Motherboard",
+        "Mainboard",
+        "Board",
+        "VRM",
+        "MOSFET",
+        "MOS",
+        "System",
+        "SYSTIN",
+        "AUXTIN",
+        "TMPIN",
+        "EC",
+        "Embedded Controller",
+    ];
     private static readonly string[] GPU_VRAM_USED_SENSOR_PREFERENCES =
     [
         "GPU Memory Used",
@@ -369,6 +387,7 @@ public class SensorsGroupController : IDisposable
     private ISensor? _memoryAvailableSensor;
     private float _cachedMemoryTotal = INVALID_VALUE_FLOAT;
     private readonly List<ISensor> _memoryTempSensors = [];
+    private readonly List<ISensor> _motherboardTempSensors = [];
     private readonly List<ISensor> _storageTempSensors = [];
 
     private volatile bool _isResetting;
@@ -472,6 +491,7 @@ public class SensorsGroupController : IDisposable
     private float _snapshotMemUsed = INVALID_VALUE_FLOAT;
     private float _snapshotMemTotal = INVALID_VALUE_FLOAT;
     private double _snapshotMemMaxTemp = INVALID_VALUE_DOUBLE;
+    private double _snapshotMotherboardMaxTemp = INVALID_VALUE_DOUBLE;
     private (float, float) _snapshotSsdTemps = (INVALID_VALUE_FLOAT, INVALID_VALUE_FLOAT);
 
     public async Task<LibreHardwareMonitorInitialState> IsSupportedAsync()
@@ -572,6 +592,7 @@ public class SensorsGroupController : IDisposable
         _cpuCoreClockSensors.Clear();
         _cpuComponentPowerSensors.Clear();
         _memoryTempSensors.Clear();
+        _motherboardTempSensors.Clear();
         _storageTempSensors.Clear();
 
         _cpuPackagePowerSensor = null;
@@ -761,6 +782,7 @@ public class SensorsGroupController : IDisposable
         {
             if (hw.Sensors == null) continue;
             _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: true));
+            _motherboardTempSensors.AddRange(SelectMotherboardTemperatureSensors(hw.Sensors));
         }
 
         foreach (var storage in _hardware.Where(h => h.HardwareType == HardwareType.Storage))
@@ -1098,6 +1120,39 @@ public class SensorsGroupController : IDisposable
     private static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
         MEMORY_TEMPERATURE_SENSOR_PREFERENCES.Any(keyword =>
             sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    private static IEnumerable<ISensor> SelectMotherboardTemperatureSensors(IEnumerable<ISensor> sensors)
+    {
+        var temperatureSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (temperatureSensors.Length == 0)
+            return [];
+
+        var preferredName = SelectMotherboardTemperatureSensorName(temperatureSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return temperatureSensors
+                .Where(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+
+        return temperatureSensors
+            .Where(sensor => !IsLikelyMemoryTemperatureSensorName(sensor.Name))
+            .Where(sensor => !sensor.Name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .Where(sensor => !sensor.Name.Contains("GPU", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(sensor => sensor.Name, StringComparer.OrdinalIgnoreCase)
+            .Take(1)
+            .ToArray();
+    }
+
+    internal static string? SelectMotherboardTemperatureSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(
+            sensorNames.Where(name =>
+                !string.IsNullOrWhiteSpace(name) &&
+                !IsLikelyMemoryTemperatureSensorName(name) &&
+                !name.Contains("CPU", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("GPU", StringComparison.OrdinalIgnoreCase)),
+            MOTHERBOARD_TEMPERATURE_SENSOR_PREFERENCES);
 
     private static ISensor? SelectGpuVramUsedSensor(IEnumerable<ISensor> sensors)
     {
@@ -1719,6 +1774,11 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotMemMaxTemp);
     }
 
+    public Task<double> GetHighestMotherboardTemperatureAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotMotherboardMaxTemp);
+    }
+
     private async Task<LibreHardwareMonitorInitialState> InitializeAsync()
     {
         if (_initialized)
@@ -1945,6 +2005,7 @@ public class SensorsGroupController : IDisposable
                         }
 
                         _snapshotMemMaxTemp = _memoryTempSensors.Count > 0 ? (double)(_memoryTempSensors.Max(s => s.Value) ?? 0) : INVALID_VALUE_DOUBLE;
+                        _snapshotMotherboardMaxTemp = _motherboardTempSensors.Count > 0 ? (double)(_motherboardTempSensors.Max(s => s.Value) ?? 0) : INVALID_VALUE_DOUBLE;
 
                         float t1 = _storageTempSensors.Count > 0 ? _storageTempSensors[0].Value ?? INVALID_VALUE_FLOAT : INVALID_VALUE_FLOAT;
                         float t2 = _storageTempSensors.Count > 1 ? _storageTempSensors[1].Value ?? INVALID_VALUE_FLOAT : INVALID_VALUE_FLOAT;

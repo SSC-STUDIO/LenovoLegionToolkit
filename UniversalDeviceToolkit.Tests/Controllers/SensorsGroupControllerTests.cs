@@ -597,6 +597,57 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldPreferPchAndChipsetAliases()
+    {
+        var pchResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "CPU Package",
+            "GPU Core",
+            "PCH Temperature"
+        ]);
+        var chipsetResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "Memory",
+            "Chipset"
+        ]);
+
+        pchResult.Should().Be("PCH Temperature");
+        chipsetResult.Should().Be("Chipset");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeBoardControllerAliases()
+    {
+        var vrmResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "Memory",
+            "VRM"
+        ]);
+        var tmpinResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "AUXTIN0",
+            "CPU Package"
+        ]);
+
+        vrmResult.Should().Be("VRM");
+        tmpinResult.Should().Be("AUXTIN0");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldIgnoreMemoryCpuAndGpuSensors()
+    {
+        var result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM",
+            "CPU Package",
+            "GPU Core"
+        ]);
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public void SelectMemoryHardwareName_ShouldPreferTotalMemory()
     {
         var result = SensorsGroupController.SelectMemoryHardwareName(

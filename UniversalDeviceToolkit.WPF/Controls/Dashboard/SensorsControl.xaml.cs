@@ -750,6 +750,8 @@ public partial class SensorsControl
         UpdateDetailText("_cpuMemoryUsage", NotAvailableText());
         UpdateDetailText("_cpuMemoryTemperatureTitle", T("SensorsControl_MemoryTemperature_Title", "Memory Temperature"));
         UpdateDetailText("_cpuMemoryTemperature", NotAvailableText());
+        UpdateDetailText("_cpuMotherboardTemperatureTitle", T("SensorsControl_MotherboardTemperature_Title", "Motherboard Temperature"));
+        UpdateDetailText("_cpuMotherboardTemperature", NotAvailableText());
         UpdateDetailText("_cpuSsdTemperatureTitle", T("SensorsControl_SsdTemperature_Title", "SSD Temperature"));
         UpdateDetailText("_cpuSsdTemperature", NotAvailableText());
         UpdateDetailText("_gpuWattage", NotAvailableText());
@@ -809,6 +811,7 @@ public partial class SensorsControl
             var memoryUsedTask = _sensorsGroupController.GetMemoryUsedAsync();
             var memoryTotalTask = _sensorsGroupController.GetMemoryTotalAsync();
             var memoryTemperatureTask = _sensorsGroupController.GetHighestMemoryTemperatureAsync();
+            var motherboardTemperatureTask = _sensorsGroupController.GetHighestMotherboardTemperatureAsync();
             var ssdTemperaturesTask = _sensorsGroupController.GetSsdTemperaturesAsync();
             var cpuComponentPowersTask = _sensorsGroupController.GetCpuComponentPowersAsync();
 
@@ -832,6 +835,7 @@ public partial class SensorsControl
                 memoryUsedTask,
                 memoryTotalTask,
                 memoryTemperatureTask,
+                motherboardTemperatureTask,
                 ssdTemperaturesTask,
                 cpuComponentPowersTask).ConfigureAwait(false);
 
@@ -852,6 +856,7 @@ public partial class SensorsControl
                 UpdateDetailText("_cpuECoreClock", FormatFrequency(cpuECoreClockTask.Result));
                 UpdateDetailText("_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsedTask.Result, memoryTotalTask.Result, memoryUsageTask.Result));
                 UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperatureTask.Result > 0 ? memoryTemperatureTask.Result : null));
+                UpdateDetailText("_cpuMotherboardTemperature", GetTemperatureText(motherboardTemperatureTask.Result > 0 ? motherboardTemperatureTask.Result : null));
                 UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperaturesTask.Result, _applicationSettings.Store.TemperatureUnit));
                 UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltageTask.Result));
                 UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
