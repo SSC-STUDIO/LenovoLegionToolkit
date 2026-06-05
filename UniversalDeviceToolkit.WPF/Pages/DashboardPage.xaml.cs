@@ -62,7 +62,16 @@ public partial class DashboardPage
 
         _scrollViewer.ScrollToTop();
 
-        _sensors.Visibility = _dashboardSettings.Store.ShowSensors ? Visibility.Visible : Visibility.Collapsed;
+        Task? sensorsReadyTask = null;
+        if (_dashboardSettings.Store.ShowSensors)
+        {
+            sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();
+            _sensors.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            _sensors.Visibility = Visibility.Collapsed;
+        }
 
         _dashboardGroupControls.Clear();
         _content.ColumnDefinitions.Clear();
@@ -114,7 +123,7 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await WaitForDashboardDataAsync();
+        await WaitForDashboardDataAsync(sensorsReadyTask);
         SetDashboardContentReady(true);
         _loader.IsLoading = false;
         await Task.Delay(TimeSpan.FromMilliseconds(250));
@@ -127,17 +136,13 @@ public partial class DashboardPage
         _dashboardContentRoot.IsHitTestVisible = ready;
     }
 
-    private async Task WaitForDashboardDataAsync()
+    private async Task WaitForDashboardDataAsync(Task? sensorsReadyTask)
     {
         var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
         if (groupInitializationTasks.Length > 0)
             await Task.WhenAll(groupInitializationTasks);
 
         var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
-
-        Task? sensorsReadyTask = null;
-        if (_dashboardSettings.Store.ShowSensors && _sensors.Visibility == Visibility.Visible)
-            sensorsReadyTask = _sensors.FirstSensorDataReadyTask;
 
         if (contentReadyTasks.Length > 0)
         {

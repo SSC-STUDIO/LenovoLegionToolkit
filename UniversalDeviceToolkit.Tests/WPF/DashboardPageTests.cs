@@ -29,10 +29,28 @@ public class DashboardPageTests
             .And.Contain("IsHitTestVisible=\"False\"");
     }
 
+    [Fact]
+    public void DashboardPage_ShouldRestartSensorInitialLoadForEachRefresh()
+    {
+        var source = ReadDashboardPageSource();
+        var restartIndex = source.IndexOf("sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();", StringComparison.Ordinal);
+        var visibleIndex = source.IndexOf("_sensors.Visibility = Visibility.Visible;", StringComparison.Ordinal);
+
+        restartIndex.Should().BeGreaterThanOrEqualTo(0);
+        visibleIndex.Should().BeGreaterThan(restartIndex);
+        source.Should().NotContain("_sensors.FirstSensorDataReadyTask");
+    }
+
     private static string ReadDashboardPageXaml()
     {
         var root = FindRepositoryRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "DashboardPage.xaml"));
+    }
+
+    private static string ReadDashboardPageSource()
+    {
+        var root = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "DashboardPage.xaml.cs"));
     }
 
     private static string FindRepositoryRoot()

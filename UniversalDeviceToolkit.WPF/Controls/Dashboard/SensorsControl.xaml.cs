@@ -43,7 +43,8 @@ public partial class SensorsControl
 
     private CancellationTokenSource? _batteryCts;
     private Task? _batteryRefreshTask;
-    private readonly TaskCompletionSource _firstSensorDataTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly object _initialSensorDataLoadLock = new();
+    private TaskCompletionSource _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
     private bool _hasRenderedSensorData;
     private SensorsData? _lastRenderedSensorData;
     private int _extendedDetailsRefreshVersion;
@@ -64,7 +65,33 @@ public partial class SensorsControl
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
     }
 
-    public Task FirstSensorDataReadyTask => _firstSensorDataTaskCompletionSource.Task;
+    public Task FirstSensorDataReadyTask
+    {
+        get
+        {
+            lock (_initialSensorDataLoadLock)
+                return _firstSensorDataTaskCompletionSource.Task;
+        }
+    }
+
+    public Task RestartInitialSensorDataLoad()
+    {
+        lock (_initialSensorDataLoadLock)
+        {
+            if (_lastRenderedSensorData is { } data && CanCompleteInitialLoadFromCachedSensorData(data))
+            {
+                _hasRenderedSensorData = true;
+                _firstSensorDataTaskCompletionSource.TrySetResult();
+                return _firstSensorDataTaskCompletionSource.Task;
+            }
+
+            _hasRenderedSensorData = false;
+            if (_firstSensorDataTaskCompletionSource.Task.IsCompleted)
+                _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
+
+            return _firstSensorDataTaskCompletionSource.Task;
+        }
+    }
 
     internal static bool HasInitialSummarySensorData(SensorsData data) =>
         HasInitialSummarySensorData(data.CPU) && HasInitialSummarySensorData(data.GPU);
@@ -369,7 +396,7 @@ public partial class SensorsControl
                     _sensorRuntimeAvailable = false;
                     SetSensorSectionsVisible(true);
                     ResetSensorValues();
-                    _firstSensorDataTaskCompletionSource.TrySetResult();
+                    CompleteInitialSensorDataLoad();
                 });
                 return;
             }
@@ -416,11 +443,8 @@ public partial class SensorsControl
         _lastRenderedSensorData = data;
         CacheSessionSensorDataForDisplay(data);
 
-        if (!_hasRenderedSensorData && shouldCompleteInitialLoad)
-        {
-            _hasRenderedSensorData = true;
-            _firstSensorDataTaskCompletionSource.TrySetResult();
-        }
+        if (shouldCompleteInitialLoad)
+            CompleteInitialSensorDataLoad();
 
         UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
             $"{data.CPU.Utilization}%");
@@ -522,7 +546,16 @@ public partial class SensorsControl
 
         UpdateValues(cached.Value);
         if (CanCompleteInitialLoadFromCachedSensorData(cached.Value))
+            CompleteInitialSensorDataLoad();
+    }
+
+    private void CompleteInitialSensorDataLoad()
+    {
+        lock (_initialSensorDataLoadLock)
         {
+            if (_hasRenderedSensorData)
+                return;
+
             _hasRenderedSensorData = true;
             _firstSensorDataTaskCompletionSource.TrySetResult();
         }
@@ -739,19 +772,25 @@ public partial class SensorsControl
 
     private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
 
-    private static bool HasInitialSummarySensorData(SensorData data) =>
-        HasRenderableProgressMetric(data.Utilization, data.MaxUtilization)
-        && HasRenderableProgressMetric(data.CoreClock, data.MaxCoreClock)
-        && HasRenderableProgressMetric(data.Temperature, data.MaxTemperature);
+    private static TaskCompletionSource CreateInitialSensorDataTaskCompletionSource() =>
+        new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private static bool HasAnySummarySensorData(SensorData data) =>
-        data.Utilization >= 0
-        || data.CoreClock >= 0
-        || data.Temperature >= 0
-        || data.FanSpeed >= 0;
+        HasRenderableUtilization(data.Utilization, data.MaxUtilization)
+        || data.CoreClock > 0
+        || data.Temperature > 0
+        || data.FanSpeed > 0;
 
-    private static bool HasRenderableProgressMetric(int value, int max) =>
-        value >= 0 && max >= 0;
+    private static bool HasInitialSummarySensorData(SensorData data) =>
+        HasRenderableUtilization(data.Utilization, data.MaxUtilization)
+        && HasRenderablePositiveProgressMetric(data.CoreClock, data.MaxCoreClock)
+        && HasRenderablePositiveProgressMetric(data.Temperature, data.MaxTemperature);
+
+    private static bool HasRenderableUtilization(int value, int max) =>
+        value >= 0 && max > 0;
+
+    private static bool HasRenderablePositiveProgressMetric(int value, int max) =>
+        value > 0 && max > 0;
 
     private static bool IsNonNegative(int value) => value >= 0;
 

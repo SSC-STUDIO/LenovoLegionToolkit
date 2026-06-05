@@ -113,6 +113,41 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void HasInitialSummarySensorData_WhenClockAndTemperatureAreZero_ShouldReturnFalse()
+    {
+        var data = new SensorsData(
+            new SensorData(
+                utilization: 0,
+                maxUtilization: 100,
+                coreClock: 0,
+                maxCoreClock: 5200,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 0,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            new SensorData(
+                utilization: 0,
+                maxUtilization: 100,
+                coreClock: 0,
+                maxCoreClock: 2100,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 0,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1));
+
+        SensorsControl.HasInitialSummarySensorData(data).Should().BeFalse();
+        SensorsControl.CanCompleteInitialLoadFromCachedSensorData(data).Should().BeFalse();
+    }
+
+    [Fact]
     public void HasInitialSummarySensorData_WhenCpuAndGpuArriveInSeparateSamples_ShouldReturnTrueAfterDisplayMerge()
     {
         var cpuSample = new SensorsData(
