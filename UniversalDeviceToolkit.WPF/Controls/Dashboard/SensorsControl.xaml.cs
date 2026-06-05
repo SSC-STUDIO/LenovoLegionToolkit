@@ -72,6 +72,9 @@ public partial class SensorsControl
     internal static bool HasAnySummarySensorData(SensorsData data) =>
         HasAnySummarySensorData(data.CPU) || HasAnySummarySensorData(data.GPU);
 
+    internal static bool CanCompleteInitialLoadFromCachedSensorData(SensorsData data) =>
+        HasInitialSummarySensorData(data);
+
     private async Task FetchHardwareNamesAsync()
     {
         try
@@ -501,6 +504,11 @@ public partial class SensorsControl
             return;
 
         UpdateValues(cached.Value);
+        if (CanCompleteInitialLoadFromCachedSensorData(cached.Value))
+        {
+            _hasRenderedSensorData = true;
+            _firstSensorDataTaskCompletionSource.TrySetResult();
+        }
     }
 
     internal static SensorsData MergeSensorDataForDisplay(SensorsData current, SensorsData? previous) =>

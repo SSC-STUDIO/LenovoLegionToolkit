@@ -153,6 +153,62 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void CanCompleteInitialLoadFromCachedSensorData_WhenCachedDataIsComplete_ShouldReturnTrue()
+    {
+        var cached = new SensorsData(
+            new SensorData(
+                utilization: 42,
+                maxUtilization: 100,
+                coreClock: 4200,
+                maxCoreClock: 5200,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 71,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            new SensorData(
+                utilization: 35,
+                maxUtilization: 100,
+                coreClock: 1350,
+                maxCoreClock: 2100,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 62,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1));
+
+        SensorsControl.CanCompleteInitialLoadFromCachedSensorData(cached).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CanCompleteInitialLoadFromCachedSensorData_WhenCachedDataIsPartial_ShouldReturnFalse()
+    {
+        var partial = new SensorsData(
+            new SensorData(
+                utilization: 42,
+                maxUtilization: 100,
+                coreClock: 4200,
+                maxCoreClock: 5200,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 71,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            SensorData.Empty);
+
+        SensorsControl.CanCompleteInitialLoadFromCachedSensorData(partial).Should().BeFalse();
+    }
+
+    [Fact]
     public void SensorsControlMarkup_ShouldNotShowAverageBatteryTemperatureInDetails()
     {
         var xaml = ReadSensorsControlXaml();
