@@ -88,6 +88,7 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("LENOVO", "IdeaCentre 5", "lenovo-ideacentre-basic")]
     [InlineData("LENOVO", "Legion Tower 7i", "lenovo-legion-desktop-basic")]
     [InlineData("LENOVO", "XiaoXin Pro 16", "lenovo-xiaoxin-basic")]
+    [InlineData("LENOVO", "小新 Pro 16 2024", "lenovo-xiaoxin-basic")]
     [InlineData("LENOVO", "Lenovo V15 G4", "lenovo-v-series-basic")]
     [InlineData("Dell Inc.", "Alienware m18", "dell-basic")]
     [InlineData("Dell", "Latitude 7450", "dell-basic")]
