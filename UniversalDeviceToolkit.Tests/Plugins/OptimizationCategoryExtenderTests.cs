@@ -60,6 +60,55 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenRuntimePluginIdDiffersFromInstalledManifestId_ShouldIncludeProviderCategory()
+    {
+        var installedPluginId = "shell-integration";
+        var runtimePluginId = "LenovoLegionToolkit.Plugins.ShellIntegration";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(installedPluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var pluginFilePath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.ShellIntegration.dll");
+        File.WriteAllText(pluginFilePath, string.Empty);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "shell-integration",
+              "name": "Shell Integration",
+              "contributes": {
+                "optimizationActions": []
+              }
+            }
+            """);
+
+        var category = new WindowsOptimizationCategoryDefinition(
+            "shell.category",
+            "Shell category",
+            "Shell category description",
+            Array.Empty<WindowsOptimizationActionDefinition>(),
+            runtimePluginId);
+        var provider = new TestOptimizationProvider(runtimePluginId, category);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin> { provider });
+        pluginManager.Setup(m => m.GetPluginMetadata(runtimePluginId)).Returns(new PluginMetadata
+        {
+            Id = runtimePluginId,
+            FilePath = pluginFilePath
+        });
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { installedPluginId });
+        pluginManager.Setup(m => m.IsInstalled(runtimePluginId)).Returns(false);
+        pluginManager.Setup(m => m.IsInstalled(installedPluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var result = categories.Should().ContainSingle().Subject;
+        result.Key.Should().Be("shell.category");
+        result.PluginId.Should().Be(installedPluginId);
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenPluginUsesPublicConventionMethod_ShouldIncludeCategory()
     {
         var plugin = new ConventionOptimizationPlugin("convention-plugin");
@@ -131,6 +180,58 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         var categories = extender.GetPluginCategories();
 
         AssertManifestCategory(categories, pluginId, "Manifest Plugin", "Manifest description", "manifest.action", "Manifest action");
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenRuntimePluginIdDiffersAndManifestHasActions_ShouldIncludeManifestCategory()
+    {
+        var installedPluginId = "optimization-pack";
+        var runtimePluginId = "Vendor.OptimizationPack.Runtime";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(installedPluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var pluginFilePath = Path.Combine(pluginDirectory, "Vendor.OptimizationPack.Runtime.dll");
+        File.WriteAllText(pluginFilePath, string.Empty);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "optimization-pack",
+              "name": "Optimization Pack",
+              "description": "Runtime id mismatch manifest",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "optimization-pack.action",
+                    "title": "Optimization action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var plugin = new BasicPlugin(runtimePluginId);
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin> { plugin });
+        pluginManager.Setup(m => m.GetPluginMetadata(runtimePluginId)).Returns(new PluginMetadata
+        {
+            Id = runtimePluginId,
+            FilePath = pluginFilePath
+        });
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { installedPluginId });
+        pluginManager.Setup(m => m.IsInstalled(runtimePluginId)).Returns(false);
+        pluginManager.Setup(m => m.IsInstalled(installedPluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        AssertManifestCategory(
+            categories,
+            installedPluginId,
+            "Optimization Pack",
+            "Runtime id mismatch manifest",
+            "optimization-pack.action",
+            "Optimization action");
     }
 
     [Fact]
@@ -404,6 +505,21 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         public string[]? Dependencies => null;
 
         public WindowsOptimizationCategoryDefinition? GetOptimizationCategory() => category;
+
+        public void OnInstalled() { }
+        public void OnUninstalled() { }
+        public void OnShutdown() { }
+        public void Stop() { }
+    }
+
+    private sealed class BasicPlugin(string id) : IPlugin
+    {
+        public string Id => id;
+        public string Name => id;
+        public string Description => "test";
+        public string Icon => "PlugConnected24";
+        public bool IsSystemPlugin => false;
+        public string[]? Dependencies => null;
 
         public void OnInstalled() { }
         public void OnUninstalled() { }
