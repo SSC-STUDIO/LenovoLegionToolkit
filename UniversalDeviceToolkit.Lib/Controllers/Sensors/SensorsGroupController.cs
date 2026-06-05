@@ -516,7 +516,7 @@ public class SensorsGroupController : IDisposable
 
                 _computer.Open();
                 _computer.Accept(new UpdateVisitor());
-                _hardware.AddRange(_computer.Hardware);
+                _hardware.AddRange(EnumerateHardwareTree(_computer.Hardware));
                 RefreshSensorCache();
             }
             catch (Exception ex)
@@ -775,6 +775,20 @@ public class SensorsGroupController : IDisposable
             Log.Instance.Trace($"LibreHardwareMonitor hardware summary: [{hardwareSummary}]");
             Log.Instance.Trace($"LibreHardwareMonitor CPU temperature sensor: {(_cpuTempSensor is null ? "not found" : _cpuTempSensor.Name)}");
             Log.Instance.Trace($"LibreHardwareMonitor CPU package power sensor: {(_cpuPackagePowerSensor is null ? "not found" : _cpuPackagePowerSensor.Name)}");
+        }
+    }
+
+    internal static IEnumerable<IHardware> EnumerateHardwareTree(IEnumerable<IHardware> hardware)
+    {
+        foreach (var item in hardware)
+        {
+            if (item is null)
+                continue;
+
+            yield return item;
+
+            foreach (var child in EnumerateHardwareTree(item.SubHardware ?? []))
+                yield return child;
         }
     }
 
@@ -1956,7 +1970,7 @@ public class SensorsGroupController : IDisposable
                     return;
                 }
 
-                _hardware.AddRange(_computer.Hardware); RefreshSensorCache();
+                _hardware.AddRange(EnumerateHardwareTree(_computer.Hardware)); RefreshSensorCache();
             }
         }
         finally { _isResetting = false; }

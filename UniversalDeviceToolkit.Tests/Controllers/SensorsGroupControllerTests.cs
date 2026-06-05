@@ -1,5 +1,7 @@
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
+using LibreHardwareMonitor.Hardware;
+using Moq;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
@@ -7,6 +9,21 @@ namespace UniversalDeviceToolkit.Tests.Controllers;
 [Trait("Category", TestCategories.Controller)]
 public class SensorsGroupControllerTests
 {
+    [Fact]
+    public void EnumerateHardwareTree_ShouldIncludeNestedSubHardware()
+    {
+        var embeddedController = CreateHardware("Embedded Controller", HardwareType.Motherboard);
+        var lpc = CreateHardware("LPC", HardwareType.Motherboard, embeddedController.Object);
+        var motherboard = CreateHardware("Motherboard", HardwareType.Motherboard, lpc.Object);
+        var cpu = CreateHardware("CPU", HardwareType.Cpu);
+
+        var result = SensorsGroupController.EnumerateHardwareTree([motherboard.Object, cpu.Object])
+            .Select(hardware => hardware.Name)
+            .ToArray();
+
+        result.Should().Equal("Motherboard", "LPC", "Embedded Controller", "CPU");
+    }
+
     [Fact]
     public void SelectCpuTemperatureSensorName_ShouldPreferPackageSensors()
     {
@@ -747,5 +764,15 @@ public class SensorsGroupControllerTests
 
         result.cores.Should().Be(18f);
         result.platform.Should().BeApproximately(4.25f, 0.001f);
+    }
+
+    private static Mock<IHardware> CreateHardware(string name, HardwareType hardwareType, params IHardware[] subHardware)
+    {
+        var hardware = new Mock<IHardware>();
+        hardware.SetupGet(h => h.Name).Returns(name);
+        hardware.SetupGet(h => h.HardwareType).Returns(hardwareType);
+        hardware.SetupGet(h => h.SubHardware).Returns(subHardware);
+        hardware.SetupGet(h => h.Sensors).Returns([]);
+        return hardware;
     }
 }
