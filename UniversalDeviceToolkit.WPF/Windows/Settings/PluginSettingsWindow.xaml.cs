@@ -47,8 +47,11 @@ public partial class PluginSettingsWindow : BaseWindow
 
             var plugin = _pluginManager.GetRegisteredPlugins()
                 .FirstOrDefault(p => p.Id == _pluginId);
-            
-            if (plugin == null)
+
+            var metadata = _pluginManager.GetPluginMetadata(_pluginId);
+            var manifest = GetPluginManifest(plugin, _pluginId);
+
+            if (!CanShowPluginSettings(plugin, manifest))
             {
                 MessageBox.Show(
                     string.Format(Resource.PluginSettingsWindow_PluginNotFound, _pluginId),
@@ -59,12 +62,11 @@ public partial class PluginSettingsWindow : BaseWindow
                 return;
             }
 
-            var metadata = _pluginManager.GetPluginMetadata(_pluginId);
-            
-            var pluginName = string.IsNullOrWhiteSpace(plugin.Name) ? _pluginId : plugin.Name;
-            var pluginDescription = string.IsNullOrWhiteSpace(plugin.Description)
+            var pluginName = FirstNonEmpty(plugin?.Name, manifest?.Name, metadata?.Name, _pluginId);
+            var pluginDescription = FirstNonEmpty(plugin?.Description, manifest?.Description, metadata?.Description);
+            pluginDescription = string.IsNullOrWhiteSpace(pluginDescription)
                 ? Resource.PluginSettingsWindow_NoConfigMessage
-                : plugin.Description;
+                : pluginDescription;
 
             _titleTextBlock.Text = $"{pluginName} {Resource.PluginSettingsWindow_Settings}";
             Title = _titleTextBlock.Text;
@@ -74,21 +76,22 @@ public partial class PluginSettingsWindow : BaseWindow
             var pluginIcon = PluginIconResolver.Resolve(
                 _pluginId,
                 pluginName,
-                !string.IsNullOrWhiteSpace(plugin.Icon) ? plugin.Icon : metadata?.Icon,
+                FirstNonEmpty(plugin?.Icon, manifest?.Icon, metadata?.Icon),
                 metadata?.FilePath,
                 pluginsDirectory);
             _pluginIconHost.Content = PluginIconResolver.CreateElement(pluginIcon);
             AutomationProperties.SetAutomationId(_pluginIconHost, $"PluginSettingsIcon_{_pluginId}");
             _pluginIdTextBlock.Text = _pluginId;
-            _pluginVersionTextBlock.Text = !string.IsNullOrWhiteSpace(metadata?.Version) ? $"v{metadata.Version}" : "v1.0.0";
+            _pluginVersionTextBlock.Text = $"v{FirstNonEmpty(metadata?.Version, manifest?.Version, "1.0.0")}";
             _settingsSectionTitleTextBlock.Text = Resource.PluginSettingsWindow_Settings;
             _emptyStateTitleTextBlock.Text = Resource.PluginSettingsWindow_NoConfigMessage;
             _closeButton.Content = null;
             _closeButton.ToolTip = Resource.PluginSettingsWindow_Close;
 
-            if (!string.IsNullOrWhiteSpace(metadata?.Author))
+            var author = FirstNonEmpty(metadata?.Author, manifest?.Author);
+            if (!string.IsNullOrWhiteSpace(author))
             {
-                _pluginAuthorTextBlock.Text = string.Format(Resource.PluginSettingsWindow_Author, metadata.Author);
+                _pluginAuthorTextBlock.Text = string.Format(Resource.PluginSettingsWindow_Author, author);
                 _pluginAuthorBadge.Visibility = Visibility.Visible;
             }
             else
@@ -98,7 +101,7 @@ public partial class PluginSettingsWindow : BaseWindow
 
             // Try to get plugin's custom settings page using reflection
             bool hasSettingsPage = false;
-            if (plugin != null)
+            if (plugin is not null and not PluginManifestAdapter)
             {
                 try
                 {
@@ -198,6 +201,30 @@ public partial class PluginSettingsWindow : BaseWindow
             _emptyStateHintTextBlock.Text =
                 $"{pluginDescription}{Environment.NewLine}{Environment.NewLine}This plugin settings UI targets Wpf.Ui {pluginVersion}, but the host is running Wpf.Ui {hostVersion}. The page is hidden to keep the app stable.";
         }
+    }
+
+    internal static bool CanShowPluginSettings(IPlugin? plugin, PluginManifest? manifest)
+    {
+        if (plugin is not null)
+            return true;
+
+        return PluginUiCapabilityResolver.ResolveFromManifest(manifest).SupportsSettingsPage;
+    }
+
+    private static PluginManifest? GetPluginManifest(IPlugin? plugin, string pluginId) =>
+        plugin is PluginManifestAdapter adapter
+            ? adapter.Manifest
+            : PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value.Trim();
+        }
+
+        return string.Empty;
     }
 
     private static bool HasIncompatibleWpfUiDependency(PluginMetadata? metadata)

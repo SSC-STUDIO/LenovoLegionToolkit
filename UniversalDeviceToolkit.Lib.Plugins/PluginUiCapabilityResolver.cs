@@ -106,7 +106,7 @@ public static class PluginUiCapabilityResolver
         };
     }
 
-    internal static PluginManifest? ReadInstalledManifest(string pluginId)
+    public static PluginManifest? ReadInstalledManifest(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return null;

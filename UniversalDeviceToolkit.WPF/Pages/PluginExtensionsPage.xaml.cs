@@ -51,6 +51,7 @@ private string _currentSearchText = string.Empty;
     private bool _onlineMetadataLoadFailed = false;
     private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pluginIdsReloadedForUi = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isPluginInstallCoordinatorSubscribed;
 
     public PluginExtensionsPage()
     {
@@ -58,7 +59,7 @@ private string _currentSearchText = string.Empty;
         Loaded += PluginExtensionsPage_Loaded;
         IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
         Unloaded += PluginExtensionsPage_Unloaded;
-        _pluginInstallCoordinator.Changed += PluginInstallCoordinator_Changed;
+        AttachPluginInstallCoordinator();
 
         // Subscribe to plugin state changes
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
@@ -575,6 +576,7 @@ private string _currentSearchText = string.Empty;
 
     private async void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
+        AttachPluginInstallCoordinator();
         LocalizationHelper.SetPluginResourceCultures();
 
         if (_hasStartedInitialFetch)
@@ -607,6 +609,7 @@ private string _currentSearchText = string.Empty;
     {
         if ((bool)e.NewValue)
         {
+            AttachPluginInstallCoordinator();
             EnsurePluginExtensionsNavigationState();
 
             // Use Dispatcher to ensure UI updates happen after plugin scanning
@@ -621,7 +624,25 @@ private string _currentSearchText = string.Empty;
 
     private void PluginExtensionsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        DetachPluginInstallCoordinator();
+    }
+
+    private void AttachPluginInstallCoordinator()
+    {
+        if (_isPluginInstallCoordinatorSubscribed)
+            return;
+
+        _pluginInstallCoordinator.Changed += PluginInstallCoordinator_Changed;
+        _isPluginInstallCoordinatorSubscribed = true;
+    }
+
+    private void DetachPluginInstallCoordinator()
+    {
+        if (!_isPluginInstallCoordinatorSubscribed)
+            return;
+
         _pluginInstallCoordinator.Changed -= PluginInstallCoordinator_Changed;
+        _isPluginInstallCoordinatorSubscribed = false;
     }
 
     private void PluginInstallCoordinator_Changed(object? sender, EventArgs e)
@@ -965,7 +986,7 @@ private string _currentSearchText = string.Empty;
 
             return PluginUiCapabilityResolver
                 .ResolveFromInstalledManifest(pluginId)
-                .SupportsOptimizationCategory;
+                .HasAny;
         }
         catch (Exception ex)
         {
