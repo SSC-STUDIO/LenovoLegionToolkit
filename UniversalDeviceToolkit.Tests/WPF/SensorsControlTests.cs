@@ -13,7 +13,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public class SensorsControlTests
 {
     [Fact]
-    public void HasSummarySensorData_WhenOnlyCpuHasData_ShouldReturnFalse()
+    public void HasInitialSummarySensorData_WhenOnlyCpuHasData_ShouldReturnFalse()
     {
         var data = new SensorsData(
             new SensorData(
@@ -31,19 +31,19 @@ public class SensorsControlTests
                 maxFanSpeed: -1),
             SensorData.Empty);
 
-        SensorsControl.HasSummarySensorData(data).Should().BeFalse();
+        SensorsControl.HasInitialSummarySensorData(data).Should().BeFalse();
         SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
     }
 
     [Fact]
-    public void HasSummarySensorData_WhenNoSummaryMetricsExist_ShouldReturnFalse()
+    public void HasInitialSummarySensorData_WhenNoSummaryMetricsExist_ShouldReturnFalse()
     {
-        SensorsControl.HasSummarySensorData(SensorsData.Empty).Should().BeFalse();
+        SensorsControl.HasInitialSummarySensorData(SensorsData.Empty).Should().BeFalse();
         SensorsControl.HasAnySummarySensorData(SensorsData.Empty).Should().BeFalse();
     }
 
     [Fact]
-    public void HasSummarySensorData_WhenCpuAndGpuHaveSummaryMetrics_ShouldReturnTrue()
+    public void HasInitialSummarySensorData_WhenCpuAndGpuHaveOnlyOneSummaryMetricEach_ShouldReturnFalse()
     {
         var data = new SensorsData(
             new SensorData(
@@ -73,23 +73,58 @@ public class SensorsControlTests
                 fanSpeed: -1,
                 maxFanSpeed: -1));
 
-        SensorsControl.HasSummarySensorData(data).Should().BeTrue();
+        SensorsControl.HasInitialSummarySensorData(data).Should().BeFalse();
         SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
     }
 
     [Fact]
-    public void HasSummarySensorData_WhenCpuAndGpuArriveInSeparateSamples_ShouldReturnTrueAfterDisplayMerge()
+    public void HasInitialSummarySensorData_WhenCpuAndGpuHaveRenderableVisibleMetrics_ShouldReturnTrue()
+    {
+        var data = new SensorsData(
+            new SensorData(
+                utilization: 42,
+                maxUtilization: 100,
+                coreClock: 4200,
+                maxCoreClock: 5200,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 71,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1),
+            new SensorData(
+                utilization: 35,
+                maxUtilization: 100,
+                coreClock: 1350,
+                maxCoreClock: 2100,
+                memoryClock: -1,
+                maxMemoryClock: -1,
+                temperature: 62,
+                maxTemperature: 100,
+                wattage: -1,
+                voltage: 0,
+                fanSpeed: -1,
+                maxFanSpeed: -1));
+
+        SensorsControl.HasInitialSummarySensorData(data).Should().BeTrue();
+        SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
+    }
+
+    [Fact]
+    public void HasInitialSummarySensorData_WhenCpuAndGpuArriveInSeparateSamples_ShouldReturnTrueAfterDisplayMerge()
     {
         var cpuSample = new SensorsData(
             new SensorData(
                 utilization: 42,
                 maxUtilization: 100,
-                coreClock: -1,
-                maxCoreClock: -1,
+                coreClock: 4200,
+                maxCoreClock: 5200,
                 memoryClock: -1,
                 maxMemoryClock: -1,
-                temperature: -1,
-                maxTemperature: -1,
+                temperature: 71,
+                maxTemperature: 100,
                 wattage: -1,
                 voltage: 0,
                 fanSpeed: -1,
@@ -98,14 +133,14 @@ public class SensorsControlTests
         var gpuSample = new SensorsData(
             SensorData.Empty,
             new SensorData(
-                utilization: -1,
-                maxUtilization: -1,
+                utilization: 35,
+                maxUtilization: 100,
                 coreClock: 1350,
                 maxCoreClock: 2100,
                 memoryClock: -1,
                 maxMemoryClock: -1,
-                temperature: -1,
-                maxTemperature: -1,
+                temperature: 62,
+                maxTemperature: 100,
                 wattage: -1,
                 voltage: 0,
                 fanSpeed: -1,
@@ -113,8 +148,23 @@ public class SensorsControlTests
 
         var renderedData = SensorsControl.MergeSensorDataForDisplay(gpuSample, cpuSample);
 
-        SensorsControl.HasSummarySensorData(gpuSample).Should().BeFalse();
-        SensorsControl.HasSummarySensorData(renderedData).Should().BeTrue();
+        SensorsControl.HasInitialSummarySensorData(gpuSample).Should().BeFalse();
+        SensorsControl.HasInitialSummarySensorData(renderedData).Should().BeTrue();
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_ShouldNotShowAverageBatteryTemperatureInDetails()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var batteryDetailsStart = xaml.IndexOf("x:Name=\"_batteryDetailsPanel\"", StringComparison.Ordinal);
+        batteryDetailsStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var batteryDetailsEnd = xaml.IndexOf("x:Name=\"_gpuSection\"", batteryDetailsStart, StringComparison.Ordinal);
+        batteryDetailsEnd.Should().BeGreaterThan(batteryDetailsStart);
+
+        var batteryDetailsXaml = xaml[batteryDetailsStart..batteryDetailsEnd].ToLowerInvariant();
+        batteryDetailsXaml.Should().NotContain("average");
+        batteryDetailsXaml.Should().NotContain("平均");
     }
 
     [Fact]
@@ -430,4 +480,34 @@ public class SensorsControlTests
 
     private static string T(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
+
+    private static string ReadSensorsControlXaml()
+    {
+        var root = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml"));
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var candidates = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Directory.GetCurrentDirectory(),
+            AppContext.BaseDirectory
+        };
+
+        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
+        {
+            var current = Path.GetFullPath(candidate!);
+            while (!string.IsNullOrWhiteSpace(current))
+            {
+                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
+                    return current;
+
+                current = Directory.GetParent(current)?.FullName;
+            }
+        }
+
+        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
+    }
 }

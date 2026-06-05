@@ -66,11 +66,11 @@ public partial class SensorsControl
 
     public Task FirstSensorDataReadyTask => _firstSensorDataTaskCompletionSource.Task;
 
-    internal static bool HasSummarySensorData(SensorsData data) =>
-        HasSummarySensorData(data.CPU) && HasSummarySensorData(data.GPU);
+    internal static bool HasInitialSummarySensorData(SensorsData data) =>
+        HasInitialSummarySensorData(data.CPU) && HasInitialSummarySensorData(data.GPU);
 
     internal static bool HasAnySummarySensorData(SensorsData data) =>
-        HasSummarySensorData(data.CPU) || HasSummarySensorData(data.GPU);
+        HasAnySummarySensorData(data.CPU) || HasAnySummarySensorData(data.GPU);
 
     private async Task FetchHardwareNamesAsync()
     {
@@ -384,7 +384,7 @@ public partial class SensorsControl
     private void UpdateValues(SensorsData data, bool completesInitialLoad = false)
     {
         data = MergeSensorDataForDisplay(data, _lastRenderedSensorData);
-        var shouldCompleteInitialLoad = completesInitialLoad && HasSummarySensorData(data);
+        var shouldCompleteInitialLoad = completesInitialLoad && HasInitialSummarySensorData(data);
         _lastRenderedSensorData = data;
         CacheSessionSensorDataForDisplay(data);
 
@@ -714,11 +714,19 @@ public partial class SensorsControl
 
     private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
 
-    private static bool HasSummarySensorData(SensorData data) =>
+    private static bool HasInitialSummarySensorData(SensorData data) =>
+        HasRenderableProgressMetric(data.Utilization, data.MaxUtilization)
+        && HasRenderableProgressMetric(data.CoreClock, data.MaxCoreClock)
+        && HasRenderableProgressMetric(data.Temperature, data.MaxTemperature);
+
+    private static bool HasAnySummarySensorData(SensorData data) =>
         data.Utilization >= 0
         || data.CoreClock >= 0
         || data.Temperature >= 0
         || data.FanSpeed >= 0;
+
+    private static bool HasRenderableProgressMetric(int value, int max) =>
+        value >= 0 && max >= 0;
 
     private static bool IsNonNegative(int value) => value >= 0;
 
