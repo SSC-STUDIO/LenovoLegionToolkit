@@ -239,8 +239,52 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var categories = extender.GetPluginCategories();
 
-        var category = AssertManifestCategory(categories, pluginId, "Manifest Key Plugin", "Manifest-level description", "manifest-key.action", "Manifest key action");
+        var category = AssertManifestCategory(
+            categories,
+            pluginId,
+            "Manifest Key Plugin",
+            "Manifest-level description",
+            "manifest-key.action",
+            "Manifest key action",
+            recommended: true);
         category.Actions[0].DescriptionResourceKey.Should().Be("Action-level description");
+        category.Actions[0].Recommended.Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenInstalledManifestOmitsRecommended_ShouldDefaultManifestActionToNotRecommended()
+    {
+        var pluginId = "manifest-default-recommended-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "manifest-default-recommended-plugin",
+              "name": "Manifest Default Recommended Plugin",
+              "description": "Manifest-level description",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "manifest-default.action",
+                    "title": "Manifest default action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var category = AssertManifestCategory(categories, pluginId, "Manifest Default Recommended Plugin", "Manifest-level description", "manifest-default.action", "Manifest default action");
+        category.Actions[0].Recommended.Should().BeFalse();
     }
 
     [Fact]
@@ -335,7 +379,8 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         string title,
         string description,
         string actionKey,
-        string actionTitle)
+        string actionTitle,
+        bool recommended = false)
     {
         var category = categories.Should().ContainSingle().Subject;
         category.Key.Should().Be($"plugin.{pluginId}");
@@ -345,7 +390,7 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         category.Actions.Should().ContainSingle();
         category.Actions[0].Key.Should().Be(actionKey);
         category.Actions[0].TitleResourceKey.Should().Be(actionTitle);
-        category.Actions[0].Recommended.Should().BeFalse();
+        category.Actions[0].Recommended.Should().Be(recommended);
         return category;
     }
 

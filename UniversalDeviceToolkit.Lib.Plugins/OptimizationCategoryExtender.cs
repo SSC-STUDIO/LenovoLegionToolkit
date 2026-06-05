@@ -185,7 +185,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             title,
             FirstNonEmpty(action.Description, title),
             _ => Task.CompletedTask,
-            Recommended: false);
+            Recommended: action.Recommended ?? false);
     }
 
     private static string FirstNonEmpty(params string?[] values)
