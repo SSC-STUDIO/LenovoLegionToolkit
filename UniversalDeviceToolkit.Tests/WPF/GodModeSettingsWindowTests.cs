@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Controls.Automation;
@@ -197,9 +198,87 @@ public class GodModeSettingsWindowTests
         name.Should().Be("-");
     }
 
+    [Fact]
+    public void PresetCrudHandlers_ShouldRefreshComboBoxFromPersistedState()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml.cs");
+        var refreshMethod = ExtractMethod(source, "private async Task PersistAndRefreshPresetListAsync()");
+        var addHandler = ExtractMethod(source, "private async void AddPresetsButton_Click");
+        var renameHandler = ExtractMethod(source, "private async void EditPresetsButton_Click");
+        var deleteHandler = ExtractMethod(source, "private async void DeletePresetsButton_Click");
+
+        refreshMethod.Should().Contain("await PersistStateAsync();");
+        refreshMethod.Should().Contain("await SetStateAsync(_state.Value);");
+        addHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+        renameHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+        deleteHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+    }
+
     private static GodModeState CreateState(Guid activePresetId, Dictionary<Guid, GodModePreset> presets) => new()
     {
         ActivePresetId = activePresetId,
         Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
     };
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
+    private static string ReadRepositoryFile(params string[] pathParts)
+    {
+        var expectedRelativePath = Path.Combine(pathParts);
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
+    }
+
+    private static IEnumerable<string> GetRepositoryRootCandidates()
+    {
+        var roots = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(static root => !string.IsNullOrWhiteSpace(root)))
+        {
+            var directory = new DirectoryInfo(root!);
+            while (directory != null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                    yield return directory.FullName;
+
+                directory = directory.Parent;
+            }
+        }
+    }
 }
