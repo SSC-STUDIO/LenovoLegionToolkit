@@ -151,14 +151,28 @@ jobs:
     - name: Build installers
       shell: pwsh
       run: |
-        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:BUILD_OUTPUT /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Full
+        New-Item -ItemType Directory -Path $env:INSTALLER_OUTPUT -Force | Out-Null
+
+        iscc /O"$env:INSTALLER_OUTPUT" /F"UniversalDeviceToolkitSetup-Full" MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir="$env:BUILD_OUTPUT"
         if ($LASTEXITCODE -ne 0) {
           throw "Full Inno Setup build failed."
         }
 
-        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir=$env:ONLINE_BUILD_OUTPUT /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Online
+        iscc /O"$env:INSTALLER_OUTPUT" /F"UniversalDeviceToolkitSetup-Online" MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir="$env:ONLINE_BUILD_OUTPUT"
         if ($LASTEXITCODE -ne 0) {
           throw "Online Inno Setup build failed."
+        }
+
+        $expectedInstallerPaths = @(
+          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Full.exe",
+          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Online.exe"
+        )
+
+        Get-ChildItem -LiteralPath $env:INSTALLER_OUTPUT -Filter '*.exe' | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize
+        foreach ($installerPath in $expectedInstallerPaths) {
+          if (-not (Test-Path -LiteralPath $installerPath)) {
+            throw "Expected installer output was not created: $installerPath"
+          }
         }
 
     - name: Publish cross-platform CLI asset

@@ -43,6 +43,9 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
         workflow.Should().Contain("./Packaging/Prepare-PackageManifests.ps1");
         workflow.Should().Contain("-HashManifestPath \"$env:RELEASE_OUTPUT\\$env:HASH_ASSET\"");
+        workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Full\" MakeInstaller.iss");
+        workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Online\" MakeInstaller.iss");
+        workflow.Should().Contain("Expected installer output was not created");
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");
@@ -64,6 +67,9 @@ public sealed class ShippingPayloadGuardTests
         makeScript.Should().Contain("ENABLE_CROSS_PLATFORM_CLI");
         makeScript.Should().Contain("IF !VERSION_MAJOR! GEQ 5 SET ENABLE_CROSS_PLATFORM_CLI=1");
         makeScript.Should().Contain("%CROSS_PLATFORM_CLI_FINALIZE_ARG%");
+        makeScript.Should().Contain("iscc /O\"BuildInstaller\" /F\"UniversalDeviceToolkitSetup-Full\" MakeInstaller.iss");
+        makeScript.Should().Contain("iscc /O\"BuildInstaller\" /F\"UniversalDeviceToolkitSetup-Online\" MakeInstaller.iss");
+        makeScript.Should().Contain("Expected online installer was not created.");
         makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
             .Should()
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));

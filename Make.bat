@@ -56,15 +56,26 @@ IF %ERRORLEVEL% NEQ 0 (
     set ERROR_COUNT=1
 )
 
-iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_DIR%" /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Full
+if not exist "BuildInstaller" mkdir "BuildInstaller"
+
+iscc /O"BuildInstaller" /F"UniversalDeviceToolkitSetup-Full" MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_DIR%"
 IF %ERRORLEVEL% NEQ 0 (
     echo Inno Setup failed for full installer.
     set ERROR_COUNT=1
 )
 
-iscc MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_ONLINE_DIR%" /DMyAppOutputBaseFilename=UniversalDeviceToolkitSetup-Online
+iscc /O"BuildInstaller" /F"UniversalDeviceToolkitSetup-Online" MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_ONLINE_DIR%"
 IF %ERRORLEVEL% NEQ 0 (
     echo Inno Setup failed for online installer.
+    set ERROR_COUNT=1
+)
+
+if not exist "BuildInstaller\UniversalDeviceToolkitSetup-Full.exe" (
+    echo Expected full installer was not created.
+    set ERROR_COUNT=1
+)
+if not exist "BuildInstaller\UniversalDeviceToolkitSetup-Online.exe" (
+    echo Expected online installer was not created.
     set ERROR_COUNT=1
 )
 
