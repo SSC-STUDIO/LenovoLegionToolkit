@@ -120,6 +120,25 @@ public sealed class ShippingPayloadGuardTests
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
 
         mainAppSmokeWorkflow.Should().Contain("/p:EnableUdtTestHooks=true");
+        mainAppSmokeWorkflow.Should().Contain("dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
+        mainAppSmokeWorkflow.Should().NotContain("dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
+    }
+
+    [Fact]
+    public void ShippingAppProjects_ShouldRejectPublishWithTestHooks()
+    {
+        var directoryTargets = ReadRepositoryFile("Directory.Build.targets");
+        directoryTargets.Should().Contain("RejectShippingAppPublishWithTestHooks");
+        directoryTargets.Should().Contain("BeforeTargets=\"PrepareForPublish\"");
+        directoryTargets.Should().Contain("'$(IsUdtShippingApp)' == 'true'");
+        directoryTargets.Should().Contain("'$(EnableUdtTestHooks)' == 'true'");
+        directoryTargets.Should().Contain("'$(AllowUdtTestHookPublish)' != 'true'");
+
+        var wpfProject = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj");
+        var cliProject = ReadRepositoryFile("UniversalDeviceToolkit.CLI", "UniversalDeviceToolkit.CLI.csproj");
+
+        wpfProject.Should().Contain("<IsUdtShippingApp>true</IsUdtShippingApp>");
+        cliProject.Should().Contain("<IsUdtShippingApp>true</IsUdtShippingApp>");
     }
 
     [Fact]

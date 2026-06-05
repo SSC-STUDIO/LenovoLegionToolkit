@@ -6,6 +6,7 @@
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <Nullable>enable</Nullable>
         <Copyright>$(ProjectCopyright)</Copyright>
+        <IsUdtShippingApp>true</IsUdtShippingApp>
         <AssemblyName>llt</AssemblyName>
         <Platforms>x64</Platforms>
         <NeutralLanguage>en</NeutralLanguage>
