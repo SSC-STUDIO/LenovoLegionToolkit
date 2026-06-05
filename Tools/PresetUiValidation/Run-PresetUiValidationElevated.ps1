@@ -200,14 +200,17 @@ try {
             'CreateCountVerificationPassed',
             'CreateActiveVerificationPassed',
             'CreateNameVerificationPassed',
+            'CreateUiRefreshVerificationPassed',
             'CreatePersistedVerificationPassed',
             'RenameCountVerificationPassed',
             'RenameActiveVerificationPassed',
             'RenameNameVerificationPassed',
+            'RenameUiRefreshVerificationPassed',
             'RenamePersistedVerificationPassed',
             'DeleteMissingVerificationPassed',
             'DeleteCountVerificationPassed',
             'DeleteActiveVerificationPassed',
+            'DeleteUiRefreshVerificationPassed',
             'PersistedDeleteVerificationPassed',
             'PresetUiCrudVerificationPassed',
             'RestorePresetStateVerificationPassed'
@@ -222,6 +225,9 @@ try {
     $overallPassed =
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'PresetUiCrudVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'CreateUiRefreshVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'RenameUiRefreshVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'DeleteUiRefreshVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'CreatePersistedVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'RenamePersistedVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'RestorePresetStateVerificationPassed') -eq 'True'

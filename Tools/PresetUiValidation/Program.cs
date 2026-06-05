@@ -11,6 +11,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.WPF.Controls;
+using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -115,9 +116,10 @@ internal static class Program
             var deleteButton = GetDeleteButton(window);
             var editButton = GetEditButton(window);
 
-            var originalNames = GetPresetNames(comboBox);
-            var originalCount = originalNames.Count;
-            var originalSelected = GetSelectedPresetName(comboBox);
+            var originalSnapshot = GetPresetSnapshot(comboBox);
+            var originalNames = originalSnapshot.Names;
+            var originalIds = originalSnapshot.Ids;
+            var originalCount = originalSnapshot.Count;
 
             const string createRequestedName = "Temporary UI Validation Preset";
             const string renameRequestedName = "Temporary UI Validation Preset Renamed";
@@ -127,19 +129,26 @@ internal static class Program
             var createDialog = await WaitForWindowAsync<InputDialogWindow>();
             WriteLine("Stage: AddDialogShown");
             SubmitInputDialog(createDialog, createRequestedName);
-            await WaitUntilAsync(() => GetPresetNames(comboBox).Count == originalCount + 1);
+            await WaitUntilAsync(() => GetPresetSnapshot(comboBox).Count == originalCount + 1);
             WriteLine("Stage: AddVerified");
 
-            var namesAfterCreate = GetPresetNames(comboBox);
-            var createdName = namesAfterCreate.Except(originalNames, StringComparer.OrdinalIgnoreCase).Single();
-            var selectedAfterCreate = GetSelectedPresetName(comboBox);
-            var createCountPassed = namesAfterCreate.Count == originalCount + 1;
-            var createActivePassed = string.Equals(selectedAfterCreate, createdName, StringComparison.Ordinal);
+            var snapshotAfterCreate = GetPresetSnapshot(comboBox);
+            var createdPreset = snapshotAfterCreate.Items.Single(kv => !originalIds.Contains(kv.Key));
+            var createdPresetId = createdPreset.Key;
+            var createdName = createdPreset.Value;
+            var createCountPassed = snapshotAfterCreate.Count == originalCount + 1;
+            var createActivePassed = snapshotAfterCreate.SelectedId == createdPresetId
+                                     && string.Equals(snapshotAfterCreate.SelectedName, createdName, StringComparison.Ordinal);
             var createNamePassed = createdName.StartsWith(createRequestedName, StringComparison.Ordinal);
+            var createUiRefreshPassed = snapshotAfterCreate.Items.ContainsKey(createdPresetId)
+                                        && string.Equals(snapshotAfterCreate.Items[createdPresetId], createdName, StringComparison.Ordinal)
+                                        && snapshotAfterCreate.SelectedId == createdPresetId;
             var persistedAfterCreate = await controller.GetStateAsync().ConfigureAwait(true);
             var persistedCreateActiveName = persistedAfterCreate.Presets[persistedAfterCreate.ActivePresetId].Name;
             var persistedCreateVerificationPassed = persistedAfterCreate.Presets.Count == originalCount + 1
-                                                     && persistedAfterCreate.Presets.Values.Any(p => string.Equals(p.Name, createdName, StringComparison.Ordinal))
+                                                     && persistedAfterCreate.ActivePresetId == createdPresetId
+                                                     && persistedAfterCreate.Presets.TryGetValue(createdPresetId, out var persistedCreatedPreset)
+                                                     && string.Equals(persistedCreatedPreset.Name, createdName, StringComparison.Ordinal)
                                                      && string.Equals(persistedCreateActiveName, createdName, StringComparison.Ordinal);
 
             _ = window.Dispatcher.BeginInvoke(() => editButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
@@ -147,65 +156,89 @@ internal static class Program
             var renameDialog = await WaitForWindowAsync<InputDialogWindow>();
             WriteLine("Stage: RenameDialogShown");
             SubmitInputDialog(renameDialog, renameRequestedName);
-            await WaitUntilAsync(() => GetPresetNames(comboBox).Any(n => n.StartsWith(renameRequestedName, StringComparison.Ordinal)));
+            await WaitUntilAsync(() =>
+            {
+                var snapshot = GetPresetSnapshot(comboBox);
+                return snapshot.Items.TryGetValue(createdPresetId, out var name)
+                       && name.StartsWith(renameRequestedName, StringComparison.Ordinal);
+            });
             WriteLine("Stage: RenameVerified");
 
-            var namesAfterRename = GetPresetNames(comboBox);
-            var renamedName = namesAfterRename.Single(n => n.StartsWith(renameRequestedName, StringComparison.Ordinal));
-            var renameCountPassed = namesAfterRename.Count == originalCount + 1;
-            var renameActivePassed = string.Equals(GetSelectedPresetName(comboBox), renamedName, StringComparison.Ordinal);
-            var renameNamePassed = !namesAfterRename.Contains(createdName, StringComparer.OrdinalIgnoreCase)
-                                   && namesAfterRename.Contains(renamedName, StringComparer.Ordinal);
+            var snapshotAfterRename = GetPresetSnapshot(comboBox);
+            var renamedName = snapshotAfterRename.Items[createdPresetId];
+            var renameCountPassed = snapshotAfterRename.Count == originalCount + 1;
+            var renameActivePassed = snapshotAfterRename.SelectedId == createdPresetId
+                                     && string.Equals(snapshotAfterRename.SelectedName, renamedName, StringComparison.Ordinal);
+            var renameNamePassed = !snapshotAfterRename.Names.Contains(createdName, StringComparer.OrdinalIgnoreCase)
+                                   && snapshotAfterRename.Names.Contains(renamedName, StringComparer.Ordinal);
+            var renameUiRefreshPassed = snapshotAfterRename.Items.ContainsKey(createdPresetId)
+                                        && string.Equals(snapshotAfterRename.Items[createdPresetId], renamedName, StringComparison.Ordinal)
+                                        && snapshotAfterRename.SelectedId == createdPresetId;
             var persistedAfterRename = await controller.GetStateAsync().ConfigureAwait(true);
             var persistedRenameActiveName = persistedAfterRename.Presets[persistedAfterRename.ActivePresetId].Name;
             var persistedRenameVerificationPassed = persistedAfterRename.Presets.Count == originalCount + 1
+                                                     && persistedAfterRename.ActivePresetId == createdPresetId
+                                                     && persistedAfterRename.Presets.TryGetValue(createdPresetId, out var persistedRenamedPreset)
                                                      && !persistedAfterRename.Presets.Values.Any(p => string.Equals(p.Name, createdName, StringComparison.OrdinalIgnoreCase))
-                                                     && persistedAfterRename.Presets.Values.Any(p => string.Equals(p.Name, renamedName, StringComparison.Ordinal))
+                                                     && string.Equals(persistedRenamedPreset.Name, renamedName, StringComparison.Ordinal)
                                                      && string.Equals(persistedRenameActiveName, renamedName, StringComparison.Ordinal);
 
             _ = window.Dispatcher.BeginInvoke(() => deleteButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
             WriteLine("Stage: DeleteClicked");
-            await WaitUntilAsync(() => GetPresetNames(comboBox).Count == originalCount);
+            await WaitUntilAsync(() =>
+            {
+                var snapshot = GetPresetSnapshot(comboBox);
+                return snapshot.Count == originalCount && !snapshot.Items.ContainsKey(createdPresetId);
+            });
             WriteLine("Stage: DeleteVerified");
 
-            var namesAfterDelete = GetPresetNames(comboBox);
-            var deleteMissingPassed = !namesAfterDelete.Contains(renamedName, StringComparer.OrdinalIgnoreCase);
-            var deleteCountPassed = namesAfterDelete.Count == originalCount;
-            var selectedAfterDelete = GetSelectedPresetName(comboBox);
-            var deleteActivePassed = !string.Equals(selectedAfterDelete, renamedName, StringComparison.OrdinalIgnoreCase)
-                                     && namesAfterDelete.Contains(selectedAfterDelete, StringComparer.Ordinal);
+            var snapshotAfterDelete = GetPresetSnapshot(comboBox);
+            var deleteMissingPassed = !snapshotAfterDelete.Items.ContainsKey(createdPresetId)
+                                      && !snapshotAfterDelete.Names.Contains(renamedName, StringComparer.OrdinalIgnoreCase);
+            var deleteCountPassed = snapshotAfterDelete.Count == originalCount;
+            var deleteActivePassed = snapshotAfterDelete.SelectedId != createdPresetId
+                                     && snapshotAfterDelete.SelectedId.HasValue
+                                     && snapshotAfterDelete.Items.ContainsKey(snapshotAfterDelete.SelectedId.Value);
+            var deleteUiRefreshPassed = snapshotAfterDelete.Items.Keys.OrderBy(id => id).SequenceEqual(originalIds.OrderBy(id => id));
 
             var persistedState = await controller.GetStateAsync().ConfigureAwait(true);
             var persistedNames = persistedState.Presets.Values.Select(p => p.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
             var expectedNames = originalNames.OrderBy(n => n, StringComparer.Ordinal).ToArray();
-            var persistedDeleteVerificationPassed = persistedNames.SequenceEqual(expectedNames, StringComparer.Ordinal);
+            var persistedDeleteVerificationPassed = !persistedState.Presets.ContainsKey(createdPresetId)
+                                                     && persistedNames.SequenceEqual(expectedNames, StringComparer.Ordinal);
 
             PrintValue("OriginalPresetCount", originalCount);
             PrintValue("CreatePresetExists", createNamePassed);
             PrintValue("CreateCountVerificationPassed", createCountPassed);
             PrintValue("CreateActiveVerificationPassed", createActivePassed);
             PrintValue("CreateNameVerificationPassed", createNamePassed);
+            PrintValue("CreateUiRefreshVerificationPassed", createUiRefreshPassed);
             PrintValue("CreatePersistedVerificationPassed", persistedCreateVerificationPassed);
             PrintValue("RenameCountVerificationPassed", renameCountPassed);
             PrintValue("RenameActiveVerificationPassed", renameActivePassed);
             PrintValue("RenameNameVerificationPassed", renameNamePassed);
+            PrintValue("RenameUiRefreshVerificationPassed", renameUiRefreshPassed);
             PrintValue("RenamePersistedVerificationPassed", persistedRenameVerificationPassed);
             PrintValue("DeleteMissingVerificationPassed", deleteMissingPassed);
             PrintValue("DeleteCountVerificationPassed", deleteCountPassed);
             PrintValue("DeleteActiveVerificationPassed", deleteActivePassed);
+            PrintValue("DeleteUiRefreshVerificationPassed", deleteUiRefreshPassed);
             PrintValue("PersistedDeleteVerificationPassed", persistedDeleteVerificationPassed);
 
             var passed = createCountPassed
                          && createActivePassed
                          && createNamePassed
+                         && createUiRefreshPassed
                          && persistedCreateVerificationPassed
                          && renameCountPassed
                          && renameActivePassed
                          && renameNamePassed
+                         && renameUiRefreshPassed
                          && persistedRenameVerificationPassed
                          && deleteMissingPassed
                          && deleteCountPassed
                          && deleteActivePassed
+                         && deleteUiRefreshPassed
                          && persistedDeleteVerificationPassed;
 
             PrintValue("PresetUiCrudVerificationPassed", passed);
@@ -304,10 +337,29 @@ internal static class Program
         return editButton ?? throw new InvalidOperationException("Edit preset button not found.");
     }
 
-    private static List<string> GetPresetNames(ComboBox comboBox) =>
-        comboBox.Items.Cast<object>().Select(item => item.ToString() ?? string.Empty).ToList();
+    private static PresetComboBoxSnapshot GetPresetSnapshot(ComboBox comboBox)
+    {
+        var items = comboBox
+            .GetItems<KeyValuePair<Guid, GodModePreset>>()
+            .ToDictionary(kv => kv.Key, kv => kv.Value.Name);
 
-    private static string GetSelectedPresetName(ComboBox comboBox) => comboBox.SelectedItem?.ToString() ?? string.Empty;
+        comboBox.TryGetSelectedItem<KeyValuePair<Guid, GodModePreset>>(out var selectedItem);
+        var selectedId = selectedItem.Key == Guid.Empty && !items.ContainsKey(selectedItem.Key)
+            ? (Guid?)null
+            : selectedItem.Key;
+
+        return new PresetComboBoxSnapshot(items, selectedId);
+    }
+
+    private sealed class PresetComboBoxSnapshot(IReadOnlyDictionary<Guid, string> items, Guid? selectedId)
+    {
+        public IReadOnlyDictionary<Guid, string> Items { get; } = items;
+        public Guid? SelectedId { get; } = selectedId;
+        public string? SelectedName => SelectedId is { } id && Items.TryGetValue(id, out var name) ? name : null;
+        public int Count => Items.Count;
+        public IReadOnlyCollection<Guid> Ids => Items.Keys.ToArray();
+        public IReadOnlyCollection<string> Names => Items.Values.ToArray();
+    }
 
     private static T GetField<T>(object instance, string fieldName) where T : class
     {
