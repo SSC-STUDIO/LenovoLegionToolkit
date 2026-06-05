@@ -3845,4 +3845,19 @@
   <data name="SensorItem_PchTemperature" xml:space="preserve">
     <value>南桥温度</value>
   </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>插件 {0} 已安装。可使用“打开”启动可用入口。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，并已在系统优化中打开。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>已安装，但没有可用入口</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，但运行时界面无法加载。请重启应用或重新安装插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，但没有提供用户可见入口。它可能只提供后台服务或清单数据。</value>
+  </data>
 </root>

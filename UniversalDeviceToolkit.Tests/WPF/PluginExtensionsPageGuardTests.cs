@@ -48,14 +48,15 @@ public sealed class PluginExtensionsPageGuardTests
     }
 
     [Fact]
-    public void LocalInstall_ShouldRefreshRuntimeUiAndOpenOptimizationOnlyPlugins()
+    public void LocalInstall_ShouldRefreshRuntimeUiAndShowCapabilityAwareFeedback()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
         var installHandler = ExtractMethod(source, "private async void PluginInstallButton_Click");
 
         installHandler.Should().Contain("_pluginManager.InstallPlugin(pluginId);");
         installHandler.Should().Contain("await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);");
-        installHandler.Should().Contain("await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(pluginId);");
+        installHandler.Should().Contain("await ShowInstalledPluginFeedbackAsync(pluginId);");
+        installHandler.Should().NotContain("PluginExtensionsPage_InstallSuccessMessage");
     }
 
     [Fact]
@@ -72,6 +73,7 @@ public sealed class PluginExtensionsPageGuardTests
         refreshMethod.Should().Contain("mainWindow.UpdateInstalledPluginsNavigationItems();");
 
         onlineInstallMethod.Should().Contain("await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);");
+        onlineInstallMethod.Should().Contain("await ShowInstalledPluginFeedbackAsync(manifest.Id, manifest);");
     }
 
     [Fact]
@@ -82,6 +84,28 @@ public sealed class PluginExtensionsPageGuardTests
 
         resolveMethod.Should().Contain("TryReadInstalledPluginManifest(pluginId, metadata?.FilePath) ??");
         resolveMethod.Should().Contain("PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);");
+    }
+
+    [Fact]
+    public void InstalledFeedback_ShouldExplainPluginsWithoutUsableEntry()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
+        var feedbackMethod = ExtractMethod(source, "private async Task ShowInstalledPluginFeedbackAsync");
+        var resolveMethod = ExtractMethod(source, "internal static InstalledPluginFeedback ResolveInstalledPluginFeedback");
+        var resources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.resx");
+        var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh.resx");
+
+        feedbackMethod.Should().Contain("ResolveInstalledPluginFeedback(runtimeCapabilities, manifestCapabilities, hasExecutable, plugin is null)");
+        feedbackMethod.Should().Contain("PluginExtensionsPage_InstalledButRuntimeUnavailableMessage");
+        feedbackMethod.Should().Contain("PluginExtensionsPage_InstalledButNoEntryMessage");
+        feedbackMethod.Should().Contain("PluginExtensionsPage_InstallSuccessOptimizationMessage");
+        resolveMethod.Should().Contain("runtimeCapabilities.HasAny || hasExecutable");
+        resolveMethod.Should().Contain("runtimeMissing && manifestCapabilities.HasAny");
+        resolveMethod.Should().Contain("InstalledPluginFeedback.RuntimeNotLoaded");
+        resolveMethod.Should().Contain("InstalledPluginFeedback.NoUserFacingEntry");
+
+        resources.Should().Contain("<data name=\"PluginExtensionsPage_InstalledButNoEntryMessage\"");
+        zhResources.Should().Contain("<data name=\"PluginExtensionsPage_InstalledButNoEntryMessage\"");
     }
 
     private static string ExtractMethod(string source, string signature)

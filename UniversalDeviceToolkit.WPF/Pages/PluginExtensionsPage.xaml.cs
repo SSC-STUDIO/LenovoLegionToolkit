@@ -1436,13 +1436,8 @@ private string _currentSearchText = string.Empty;
             }
 
             await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
-            await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(pluginId);
+            await ShowInstalledPluginFeedbackAsync(pluginId);
 
-            // Show success message
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, Resource.PluginExtensionsPage_InstallSuccessMessage, SnackbarType.Success);
-            }
         }
         catch (Exception ex)
         {
@@ -1490,9 +1485,9 @@ private string _currentSearchText = string.Empty;
                 await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);
 
                 if (navigateToOptimizationCategoryOnSuccess)
-                    await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest);
-
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
+                    await ShowInstalledPluginFeedbackAsync(manifest.Id, manifest);
+                else
+                    SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
             else
             {
@@ -1522,24 +1517,57 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(PluginManifest manifest)
-    {
-        await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest.Id, manifest);
-    }
-
-    private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(string pluginId, PluginManifest? fallbackManifest = null)
+    private async Task ShowInstalledPluginFeedbackAsync(string pluginId, PluginManifest? fallbackManifest = null)
     {
         var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
         var manifestMetadata = ResolvePluginManifestMetadata(pluginId) ?? fallbackManifest;
+        var runtimeCapabilities = plugin is null ? default : ResolveRuntimePluginCapabilities(plugin);
+        var manifestCapabilities = PluginUiCapabilityResolver
+            .ResolveFromManifest(manifestMetadata)
+            .Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId));
         var capabilities = ResolvePluginCapabilities(plugin, true, pluginId, manifestMetadata);
-
         var hasExecutable = TryResolvePluginExecutable(pluginId, out _, out _);
-        if (!ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
+        var feedback = ResolveInstalledPluginFeedback(runtimeCapabilities, manifestCapabilities, hasExecutable, plugin is null);
+
+        if (feedback == InstalledPluginFeedback.EntryAvailable &&
+            ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
         {
+            if (NavigateToPluginOptimizationCategory(pluginId))
+            {
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_InstallSuccess,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_InstallSuccessOptimizationMessage", "Plugin {0} was installed and opened in System Optimization."),
+                        GetInstalledPluginFeedbackName(plugin, pluginId, manifestMetadata)),
+                    SnackbarType.Success);
+                return;
+            }
+        }
+
+        var pluginName = GetInstalledPluginFeedbackName(plugin, pluginId, manifestMetadata);
+
+        if (feedback == InstalledPluginFeedback.EntryAvailable)
+        {
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_InstallSuccess,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_InstallSuccessWithEntryMessage", "Plugin {0} was installed. Use Open to launch its available entry point."),
+                    pluginName),
+                SnackbarType.Success);
             return;
         }
 
-        NavigateToPluginOptimizationCategory(pluginId);
+        SnackbarHelper.Show(
+            T("PluginExtensionsPage_InstalledButNoEntryTitle", "Installed, but no entry point"),
+            string.Format(
+                Resource.Culture ?? CultureInfo.CurrentUICulture,
+                feedback == InstalledPluginFeedback.RuntimeNotLoaded
+                    ? T("PluginExtensionsPage_InstalledButRuntimeUnavailableMessage", "Plugin {0} was installed, but its runtime UI could not be loaded. Restart the app or reinstall the plugin.")
+                    : T("PluginExtensionsPage_InstalledButNoEntryMessage", "Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data."),
+                pluginName),
+            feedback == InstalledPluginFeedback.RuntimeNotLoaded ? SnackbarType.Warning : SnackbarType.Info);
     }
 
     internal static bool ShouldNavigateToOptimizationAfterInstall(PluginUiCapabilities capabilities, bool hasExecutable) =>
@@ -1547,6 +1575,44 @@ private string _currentSearchText = string.Empty;
         !capabilities.SupportsFeaturePage &&
         !capabilities.SupportsSettingsPage &&
         !hasExecutable;
+
+    internal enum InstalledPluginFeedback
+    {
+        EntryAvailable,
+        RuntimeNotLoaded,
+        NoUserFacingEntry
+    }
+
+    internal static InstalledPluginFeedback ResolveInstalledPluginFeedback(
+        PluginUiCapabilities runtimeCapabilities,
+        PluginUiCapabilities manifestCapabilities,
+        bool hasExecutable,
+        bool runtimeMissing)
+    {
+        if (runtimeCapabilities.HasAny || hasExecutable)
+            return InstalledPluginFeedback.EntryAvailable;
+
+        if (runtimeMissing && manifestCapabilities.HasAny)
+            return InstalledPluginFeedback.RuntimeNotLoaded;
+
+        if (!runtimeMissing && manifestCapabilities.HasAny)
+            return InstalledPluginFeedback.EntryAvailable;
+
+        return runtimeMissing
+            ? InstalledPluginFeedback.RuntimeNotLoaded
+            : InstalledPluginFeedback.NoUserFacingEntry;
+    }
+
+    private string GetInstalledPluginFeedbackName(IPlugin? plugin, string pluginId, PluginManifest? manifest)
+    {
+        if (plugin is not null)
+            return GetPluginLocalizedName(plugin, manifest);
+
+        var manifestName = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
+        return !string.IsNullOrWhiteSpace(manifestName)
+            ? RemovePluginSuffix(manifestName)
+            : pluginId;
+    }
 
     private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
     {

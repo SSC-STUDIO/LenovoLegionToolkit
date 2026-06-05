@@ -3829,4 +3829,19 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="SensorItem_PchTemperature" xml:space="preserve">
     <value>PCH Temperature</value>
   </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Plugin {0} was installed. Use Open to launch its available entry point.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Plugin {0} was installed and opened in System Optimization.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Installed, but no entry point</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Plugin {0} was installed, but its runtime UI could not be loaded. Restart the app or reinstall the plugin.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data.</value>
+  </data>
 </root>

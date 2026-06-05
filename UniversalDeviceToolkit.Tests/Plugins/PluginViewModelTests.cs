@@ -178,6 +178,69 @@ public class PluginViewModelTests
             .BeFalse();
     }
 
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeEntryPointExists_ShouldReportEntryAvailable()
+    {
+        var runtimeCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(runtimeCapabilities, default, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenExecutableEntryPointExists_ShouldReportEntryAvailable()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: true, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingButManifestHasEntryPoint_ShouldReportRuntimeNotLoaded()
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.RuntimeNotLoaded);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeLoadedAndManifestHasEntryPoint_ShouldReportEntryAvailable()
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingAndNoEntryPoint_ShouldReportRuntimeNotLoaded()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.RuntimeNotLoaded);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeLoadedButNoEntryPoint_ShouldReportNoUserFacingEntry()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.NoUserFacingEntry);
+    }
+
     private sealed class OptimizationOnlyRuntimePlugin : IPlugin, IOptimizationCategoryProvider
     {
         public string Id => "runtime-optimization-plugin";
