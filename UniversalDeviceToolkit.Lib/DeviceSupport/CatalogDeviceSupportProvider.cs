@@ -119,6 +119,9 @@ public class CatalogDeviceSupportProvider(
         if (modelKeywords.Any(keyword => modelSignals.Any(signal => signal.Contains(keyword, StringComparison.OrdinalIgnoreCase))))
             return true;
 
+        if (!PackUsesWildcardVendor(pack) && FamilyMatchesVendorAlias(pack, families, machineInformation))
+            return true;
+
         if (modelPrefixes.Count == 0 &&
             machineTypes.Count == 0 &&
             modelKeywords.Count == 0 &&
@@ -140,7 +143,7 @@ public class CatalogDeviceSupportProvider(
         if (string.IsNullOrWhiteSpace(pack.Vendor))
             return false;
 
-        if (pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase))
+        if (PackUsesWildcardVendor(pack))
             return true;
 
         return vendorSignals.Any(vendor =>
@@ -164,6 +167,23 @@ public class CatalogDeviceSupportProvider(
         if (!string.IsNullOrWhiteSpace(hardware.Chassis.Manufacturer))
             yield return hardware.Chassis.Manufacturer;
     }
+
+    private static bool PackUsesWildcardVendor(DevicePack pack) =>
+        pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase);
+
+    private static bool FamilyMatchesVendorAlias(DevicePack pack, IReadOnlyCollection<string> families, MachineInformation machineInformation) =>
+        families.Count > 0 &&
+        GetVendorSignals(machineInformation).Any(vendor =>
+        {
+            var normalizedVendor = NormalizeVendorName(vendor);
+            return GetCollectionOrEmpty(pack.VendorAliases).Any(alias =>
+                VendorNameMatches(alias, vendor, normalizedVendor) &&
+                families.Any(family =>
+                    !string.IsNullOrWhiteSpace(family) &&
+                    !string.IsNullOrWhiteSpace(alias) &&
+                    (alias.Contains(family, StringComparison.OrdinalIgnoreCase) ||
+                     family.Contains(alias, StringComparison.OrdinalIgnoreCase))));
+        });
 
     private static IEnumerable<string> GetModelSignals(MachineInformation machineInformation)
     {

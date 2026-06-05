@@ -37,6 +37,32 @@ public sealed class DeviceSupportModelSimulationTests
         availability.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
     }
 
+    [Theory]
+    [InlineData("ROG", "G835", "asus-basic")]
+    [InlineData("TUF Gaming", "FA608", "asus-basic")]
+    [InlineData("Alienware", "m18 R2", "dell-basic")]
+    [InlineData("OMEN", "Max 16", "hp-basic")]
+    [InlineData("Victus", "16", "hp-basic")]
+    [InlineData("Predator", "PHN16", "acer-basic")]
+    [InlineData("Nitro", "ANV16", "acer-basic")]
+    [InlineData("AORUS", "16X", "gigabyte-basic")]
+    [InlineData("ERAZER", "Beast X40", "medion-basic")]
+    public void Evaluate_WhenDmiVendorUsesGamingSubBrandAndModelUsesSku_ShouldUseParentBasicPack(
+        string vendor,
+        string model,
+        string expectedPackId)
+    {
+        var machineInformation = MachineInformationTestData.Create(vendor, model);
+
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeFalse();
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be(expectedPackId);
+        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "language", "theme"]);
+        availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes", "gpu-overclock", "fan-curve"]);
+    }
+
     [Fact]
     public void Evaluate_WithSimulatedLegionMachineType_ShouldStillEnableLenovoHardwarePack()
     {
