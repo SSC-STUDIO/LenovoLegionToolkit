@@ -1091,12 +1091,7 @@ private string _currentSearchText = string.Empty;
         PluginUiCapabilities manifestCapabilities,
         PluginUiCapabilities installedManifestCapabilities)
     {
-        var capabilities = new PluginUiCapabilities
-        {
-            SupportsOptimizationCategory =
-                manifestCapabilities.SupportsOptimizationCategory ||
-                installedManifestCapabilities.SupportsOptimizationCategory
-        };
+        var capabilities = manifestCapabilities.Merge(installedManifestCapabilities);
 
         if (plugin is not null and not PluginManifestAdapter)
             capabilities = capabilities.Merge(ResolveRuntimePluginCapabilities(plugin));

@@ -403,6 +403,8 @@ public string PluginId
                     _supportsConfiguration = value;
                     OnPropertyChanged(nameof(SupportsConfiguration));
                     OnPropertyChanged(nameof(ShouldShowConfigureButton));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(ShouldShowInstalledActions));
                     OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
@@ -456,7 +458,7 @@ public string PluginId
             }
         }
 
-        public bool SupportsOpenAction => _supportsFeaturePage || _supportsOptimizationCategory || _supportsExecutableEntryPoint;
+        public bool SupportsOpenAction => _supportsFeaturePage || _supportsOptimizationCategory || _supportsExecutableEntryPoint || _supportsConfiguration;
 
         public bool IsInstalling
         {

@@ -273,8 +273,8 @@ public class PluginRepositoryService : IDisposable
         if (_pluginManager.TryGetPlugin(manifest.Id, out var plugin) && plugin is not null and not PluginManifestAdapter)
             return true;
 
-        return PluginUiCapabilityResolver.SupportsOptimizationActions(manifest) ||
-               PluginUiCapabilityResolver.ResolveFromInstalledManifest(manifest.Id).SupportsOptimizationCategory;
+        return PluginUiCapabilityResolver.ResolveFromManifest(manifest).HasAny ||
+               PluginUiCapabilityResolver.ResolveFromInstalledManifest(manifest.Id).HasAny;
     }
 
     private Task RemoveUnusableInstalledPayloadAsync(string pluginId)

@@ -361,6 +361,41 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithManifestSettingsPageOnly_ShouldKeepManifestPluginInstalled()
+    {
+        // Arrange
+        const string pluginId = "user-feedback";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.Contributes = new PluginManifestContributions
+        {
+            SettingsPage = new PluginManifestPageContribution
+            {
+                Class = "UserFeedback.Settings",
+                Title = "Feedback"
+            }
+        };
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
     public async Task DownloadAndInstallPluginAsync_WithStoreOptimizationActionKeyOnly_ShouldKeepManifestPluginInstalled()
     {
         // Arrange

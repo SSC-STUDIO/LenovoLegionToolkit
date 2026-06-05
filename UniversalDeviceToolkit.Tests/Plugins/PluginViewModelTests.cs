@@ -40,6 +40,22 @@ public class PluginViewModelTests
     }
 
     [Fact]
+    public void SupportsOpenAction_WhenConfigurationIsAvailable_ShouldBeTrueWithoutHostedPages()
+    {
+        var plugin = MockFactory.CreateMockPlugin(id: "user-feedback");
+        var viewModel = new PluginViewModel(plugin, isInstalled: true)
+        {
+            SupportsFeaturePage = false,
+            SupportsOptimizationCategory = false,
+            SupportsExecutableEntryPoint = false,
+            SupportsConfiguration = true
+        };
+
+        viewModel.SupportsOpenAction.Should().BeTrue();
+        viewModel.ShouldShowInstalledActions.Should().BeTrue();
+    }
+
+    [Fact]
     public void ShouldNavigateToOptimizationAfterInstall_WhenOnlyOptimizationCategoryIsAvailable_ShouldReturnTrue()
     {
         var capabilities = new PluginUiCapabilities
@@ -95,7 +111,7 @@ public class PluginViewModelTests
     }
 
     [Fact]
-    public void ResolveInstalledPluginCapabilities_WhenOnlyInstalledManifestHasSettingsPage_ShouldNotExposeConfiguration()
+    public void ResolveInstalledPluginCapabilities_WhenInstalledManifestHasSettingsPage_ShouldExposeConfiguration()
     {
         var installedManifestCapabilities = new PluginUiCapabilities
         {
@@ -108,12 +124,12 @@ public class PluginViewModelTests
             manifestCapabilities: default,
             installedManifestCapabilities);
 
-        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsSettingsPage.Should().BeTrue();
         capabilities.SupportsFeaturePage.Should().BeFalse();
         capabilities.SupportsOptimizationCategory.Should().BeTrue();
         PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
             .Should()
-            .BeTrue();
+            .BeFalse();
     }
 
     [Fact]
