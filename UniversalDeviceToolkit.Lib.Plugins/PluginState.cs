@@ -32,6 +32,42 @@ public enum PluginState
 }
 
 /// <summary>
+/// 插件健康状态枚举
+/// </summary>
+public enum PluginHealthStatus
+{
+    /// <summary>
+    /// 插件正常
+    /// </summary>
+    Healthy,
+    
+    /// <summary>
+    /// 插件有警告
+    /// </summary>
+    Warning,
+    
+    /// <summary>
+    /// 插件有错误
+    /// </summary>
+    Error,
+    
+    /// <summary>
+    /// 插件未找到
+    /// </summary>
+    NotFound,
+    
+    /// <summary>
+    /// 插件依赖缺失
+    /// </summary>
+    MissingDependencies,
+    
+    /// <summary>
+    /// 插件版本不兼容
+    /// </summary>
+    VersionIncompatible
+}
+
+/// <summary>
 /// 插件状态变更事件参数
 /// </summary>
 public class PluginStateChangedEventArgs : global::System.EventArgs
