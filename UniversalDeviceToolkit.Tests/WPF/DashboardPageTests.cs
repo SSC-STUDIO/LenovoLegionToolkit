@@ -14,7 +14,7 @@ public class DashboardPageTests
     }
 
     [Fact]
-    public void GetDashboardSensorDataReadyTimeout_ShouldBeNonBlocking()
+    public void GetDashboardSensorDataReadyTimeout_ShouldKeepInitialLoadingBounded()
     {
         DashboardPage.GetDashboardSensorDataReadyTimeout().Should().BeLessThan(TimeSpan.FromSeconds(5));
     }
@@ -42,15 +42,20 @@ public class DashboardPageTests
     }
 
     [Fact]
-    public void DashboardPage_ShouldObserveSensorReadinessWithoutBlockingContent()
+    public void DashboardPage_ShouldWaitForSensorReadinessBeforeEndingInitialLoading()
     {
         var source = ReadDashboardPageSource();
 
         source.Should().Contain("await WaitForDashboardShellAsync(sensorsReadyTask);");
-        source.Should().Contain("ObserveDashboardSensorDataAsync(sensorsReadyTask);");
-        ExtractMethod(source, "private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)")
+        source.Should().Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask);");
+        var shellMethod = ExtractMethod(source, "private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)");
+        shellMethod
             .Should()
-            .NotContain("WaitAsync(GetDashboardSensorDataReadyTimeout())");
+            .Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask);");
+        ExtractMethod(source, "private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask)")
+            .Should()
+            .Contain("WaitAsync(GetDashboardSensorDataReadyTimeout())")
+            .And.Contain("catch (TimeoutException)");
     }
 
     private static string ExtractMethod(string source, string signature)

@@ -1096,6 +1096,7 @@ public partial class SensorsControl
 
     private void SetInitialSensorPlaceholders()
     {
+        SetInitialSensorSummaryPlaceholders();
         UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", NotAvailableText());
         UpdateOptionalDetailText("_cpuVoltageTitle", "_cpuVoltage", NotAvailableText());
         UpdateDetailText("_cpuPCoreClockTitle", T("SensorsControl_PCoreClock_Title", "P Core Clock"));
@@ -1128,6 +1129,30 @@ public partial class SensorsControl
         UpdateModelNameText("_cpuModelName", _cpuName);
         UpdateModelNameText("_gpuModelName", _gpuName);
         UpdateModelNameText("_batteryModelName", null);
+    }
+
+    private void SetInitialSensorSummaryPlaceholders()
+    {
+        UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, -1, -1, NotAvailableText());
+        UpdateValue(_cpuCoreClockBar, _cpuCoreClockLabel, -1, -1, NotAvailableText());
+        UpdateValue(_cpuTemperatureBar, _cpuTemperatureLabel, -1, -1, NotAvailableText());
+        UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, -1, -1, NotAvailableText());
+        UpdateValue(_gpuUtilizationBar, _gpuUtilizationLabel, -1, -1, NotAvailableText());
+        UpdateValue(_gpuCoreClockBar, _gpuCoreClockLabel, -1, -1, NotAvailableText());
+        UpdateValue(_gpuTemperatureBar, _gpuTemperatureLabel, -1, -1, NotAvailableText());
+        UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, -1, -1, NotAvailableText());
+        UpdateSensorChartMetricText("_cpuChartUtilizationText", NotAvailableText());
+        UpdateSensorChartMetricText("_cpuChartClockText", NotAvailableText());
+        UpdateSensorChartMetricText("_cpuChartTemperatureText", NotAvailableText());
+        UpdateSensorChartMetricText("_gpuChartUtilizationText", NotAvailableText());
+        UpdateSensorChartMetricText("_gpuChartClockText", NotAvailableText());
+        UpdateSensorChartMetricText("_gpuChartTemperatureText", NotAvailableText());
+        UpdateSensorTile("_cpuLoadTileText", "_cpuLoadTileBar", NotAvailableText(), 0);
+        UpdateSensorTile("_cpuPowerTileText", "_cpuPowerTileBar", NotAvailableText(), 0);
+        UpdateSensorTile("_cpuThermalTileText", "_cpuThermalTileBar", NotAvailableText(), 0);
+        UpdateSensorTile("_gpuLoadTileText", "_gpuLoadTileBar", NotAvailableText(), 0);
+        UpdateSensorTile("_gpuPowerTileText", "_gpuPowerTileBar", NotAvailableText(), 0);
+        UpdateSensorTile("_gpuThermalTileText", "_gpuThermalTileBar", NotAvailableText(), 0);
     }
 
     private async Task UpdateExtendedDetailValuesAsync()

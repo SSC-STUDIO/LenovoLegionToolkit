@@ -209,5 +209,84 @@ public class GPUControllerTests : UnitTestBase
         state.Should().Be(GPUState.Unknown);
     }
 
+    [Fact]
+    public void GPUController_ShouldTreatMissingPnpDeviceIdAsNonFatal()
+    {
+        var source = ReadGpuControllerSource();
+        var refreshMethod = ExtractMethod(source, "private async Task RefreshStateAsync()");
+        var helperMethod = ExtractMethod(source, "private static async Task<string?> TryGetGpuInstanceIdAsync(string? pnpDeviceIdPart)");
+        var loopMethod = ExtractMethod(source, "private async Task RefreshLoopAsync(int delay, int interval, CancellationToken token)");
+
+        source.Should().Contain("public bool IsStarted { get => _refreshTask is { IsCompleted: false }; }");
+        refreshMethod.Should().Contain("var gpuInstanceId = await TryGetGpuInstanceIdAsync(pnpDeviceIdPart)");
+        refreshMethod.Should().NotContain("throw new InvalidOperationException(\"pnpDeviceIdPart is null or empty\")");
+        helperMethod.Should().Contain("string.IsNullOrWhiteSpace(pnpDeviceIdPart)");
+        helperMethod.Should().Contain("return null;");
+        loopMethod.Should().Contain("catch (Exception ex) when (ex is not OperationCanceledException)");
+        loopMethod.Should().NotContain("throw;");
+    }
+
     #endregion
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
+    private static string ReadGpuControllerSource()
+    {
+        var expectedRelativePath = Path.Combine("UniversalDeviceToolkit.Lib", "Controllers", "GPUController.cs");
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
+    }
+
+    private static IEnumerable<string> GetRepositoryRootCandidates()
+    {
+        var roots = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(static root => !string.IsNullOrWhiteSpace(root)))
+        {
+            var directory = new DirectoryInfo(root!);
+            while (directory != null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                    yield return directory.FullName;
+
+                directory = directory.Parent;
+            }
+        }
+    }
 }

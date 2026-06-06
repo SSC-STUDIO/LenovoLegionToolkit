@@ -57,7 +57,7 @@ public class GPUController : IDisposable
     /// <summary>
     /// 获取GPU监控服务是否已启动。
     /// </summary>
-    public bool IsStarted { get => _refreshTask != null; }
+    public bool IsStarted { get => _refreshTask is { IsCompleted: false }; }
 
     /// <summary>
     /// 初始化GPUController的新实例。
@@ -126,6 +126,7 @@ public class GPUController : IDisposable
         Log.Instance.Info($"GPU monitoring started [controller={nameof(GPUController)}]");
 
         _currentInterval = interval;
+        _refreshCancellationTokenSource?.Dispose();
         _refreshCancellationTokenSource = new CancellationTokenSource();
         var token = _refreshCancellationTokenSource.Token;
         _refreshTask = Task.Run(() => RefreshLoopAsync(delay, interval, token), token);
@@ -227,8 +228,6 @@ public class GPUController : IDisposable
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Warning($"GPU controller exception", ex);
-
-            throw;
         }
         finally
         {
@@ -292,13 +291,34 @@ public class GPUController : IDisposable
         TryGetPerformanceState(gpu);
 
         var pnpDeviceIdPart = NVAPI.GetGPUId(gpu);
-        if (string.IsNullOrEmpty(pnpDeviceIdPart))
-            throw new InvalidOperationException("pnpDeviceIdPart is null or empty");
-
-        var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
+        var gpuInstanceId = await TryGetGpuInstanceIdAsync(pnpDeviceIdPart).ConfigureAwait(false);
         var processNames = NVAPIExtensions.GetActiveProcesses(gpu);
 
-        DetermineGpuState(gpu, gpuInstanceId, processNames, pnpDeviceIdPart, previousState);
+        DetermineGpuState(gpu, gpuInstanceId, processNames, previousState);
+    }
+
+    private static async Task<string?> TryGetGpuInstanceIdAsync(string? pnpDeviceIdPart)
+    {
+        if (string.IsNullOrWhiteSpace(pnpDeviceIdPart))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("GPU PNP device ID part is unavailable.");
+
+            return null;
+        }
+
+        try
+        {
+            var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
+            return string.IsNullOrWhiteSpace(gpuInstanceId) ? null : gpuInstanceId;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve GPU PNP device ID [part={pnpDeviceIdPart}].", ex);
+
+            return null;
+        }
     }
 
     private void ResetState()
@@ -347,7 +367,7 @@ public class GPUController : IDisposable
         }
     }
 
-    private void DetermineGpuState(NvAPIWrapper.GPU.PhysicalGPU gpu, string? gpuInstanceId, List<Process> processNames, string pnpDeviceIdPart, GPUState previousState)
+    private void DetermineGpuState(NvAPIWrapper.GPU.PhysicalGPU gpu, string? gpuInstanceId, List<Process> processNames, GPUState previousState)
     {
         if (NVAPI.IsDisplayConnected(gpu))
         {
@@ -355,7 +375,7 @@ public class GPUController : IDisposable
         }
         else if (processNames.Count != 0)
         {
-            HandleActive(gpuInstanceId, processNames, pnpDeviceIdPart, previousState);
+            HandleActive(gpuInstanceId, processNames, previousState);
         }
         else
         {
@@ -374,7 +394,7 @@ public class GPUController : IDisposable
         CheckStateChange(previousState);
     }
 
-    private void HandleActive(string? gpuInstanceId, List<Process> processNames, string pnpDeviceIdPart, GPUState previousState)
+    private void HandleActive(string? gpuInstanceId, List<Process> processNames, GPUState previousState)
     {
         _processes = processNames;
         _state = GPUState.Active;
