@@ -111,6 +111,32 @@ public sealed class HardwareValidationGuardTests
     }
 
     [Fact]
+    public void PerformanceEffectVerificationRunner_ShouldComposeUiAndHardwareReadbackChecks()
+    {
+        var script = ReadRepositoryFile("Tools", "HardwareValidation", "Run-PerformanceEffectVerification.ps1");
+        var readme = ReadRepositoryFile("Tools", "HardwareValidation", "README.md");
+
+        script.Should().Contain("Scenario' 'PerformanceEffectVerification'");
+        script.Should().Contain("-Verb RunAs");
+        script.Should().Contain("-SkipElevationCheck");
+        script.Should().Contain("dotnet build $mainAppProject -c Release /p:EnableUdtTestHooks=true /m:1");
+        script.Should().Contain("dotnet build $smokeProject -c Release /m:1");
+        script.Should().Contain("'UiPowerModeHardware'");
+        script.Should().Contain("AdminPowerModeHardwareCheck.ps1");
+        script.Should().Contain("'-Scenario', 'BatchDefault'");
+        script.Should().Contain("'-Scenario', 'PowerModeVerify'");
+        script.Should().Contain("'BatchMeasuredDeltas'");
+        script.Should().Contain("'MeasuredPowerModeChangeObserved'");
+        script.Should().Contain("Write-Result 'OverallPassed' ([string]$overallPassed)");
+
+        readme.Should().Contain("Run-PerformanceEffectVerification.ps1");
+        readme.Should().Contain("UI power mode verification");
+        readme.Should().Contain("God Mode batch verification");
+        readme.Should().Contain("Direct power mode verification");
+        readme.Should().Contain("OverallPassed: True");
+    }
+
+    [Fact]
     public void ElevatedValidationScripts_ShouldResolveRepositoryRootDynamically()
     {
         foreach (var pathParts in ElevatedValidationScriptPaths)
@@ -157,6 +183,7 @@ public sealed class HardwareValidationGuardTests
         ["Tools", "MainAppPluginUi.Smoke", "AdminDirectHardwareSmoke.ps1"],
         ["Tools", "MainAppPluginUi.Smoke", "AdminPresetCrudSmoke.ps1"],
         ["Tools", "HardwareValidation", "Run-HardwareValidationElevated.ps1"],
+        ["Tools", "HardwareValidation", "Run-PerformanceEffectVerification.ps1"],
         ["Tools", "PresetUiValidation", "Run-PresetUiValidationElevated.ps1"]
     ];
 
