@@ -33,8 +33,8 @@ public partial class SensorsControl
     private const double AutoExpandedDetailsMinWidth = 1120;
     private const double AutoExpandedDetailsTallWidth = 920;
     private const double AutoExpandedDetailsMinHeight = 360;
-    private const int SensorChartSampleLimit = 36;
-    private const double SensorChartHeight = 76;
+    private const int SensorChartSampleLimit = 48;
+    private const double SensorChartHeight = 108;
     private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
     private static readonly object SessionSensorDataLock = new();
     private static SensorsData? _sessionSensorData;
@@ -313,6 +313,7 @@ public partial class SensorsControl
         }
 
         UpdateModelNameText("_batteryModelName", info.ModelName ?? T("SensorsControl_UnknownBattery", "Unknown battery"));
+        UpdateBatterySummaryTiles(info);
 
         // Advanced Details
         UpdateDetailText("_batteryRateRange", $"{info.MinDischargeRate / 1000.0:+0.0;-0.0;0.0} W ~ {info.MaxDischargeRate / 1000.0:+0.0;-0.0;0.0} W");
@@ -349,6 +350,18 @@ public partial class SensorsControl
         UpdateDetailText("_batteryCapChartText", $"{chargePercentage:0}%");
         UpdateDetailText("_batteryFullCapChartText", $"{fullCapacityPercentage:0}%");
         UpdateDetailText("_batteryHealthChartText", $"{healthPercentage:0}%");
+    }
+
+    private void UpdateBatterySummaryTiles(BatteryInformation info)
+    {
+        var chargePercentage = ClampPercentage(info.BatteryPercentage);
+        var healthPercentage = ClampPercentage(info.BatteryHealth);
+        var rateWatts = info.DischargeRate / 1000.0;
+        var absoluteRateWatts = Math.Abs(rateWatts);
+
+        UpdateSensorTile("_batteryChargeTileText", "_batteryChargeTileBar", $"{chargePercentage:0}%", chargePercentage);
+        UpdateSensorTile("_batteryHealthTileText", "_batteryHealthTileBar", $"{healthPercentage:0}%", healthPercentage);
+        UpdateSensorTile("_batteryRateTileText", "_batteryRateTileBar", $"{rateWatts:+0.0;-0.0;0.0} W", ScaleToPercentage(absoluteRateWatts, 100));
     }
 
     private void UpdateDetailText(string name, string? text)
@@ -535,6 +548,21 @@ public partial class SensorsControl
         UpdateSensorChartMetricText(
             "_cpuChartTemperatureText",
             data.CPU.Temperature > 0 ? GetTemperatureText(data.CPU.Temperature) : NotAvailableText());
+        UpdateSensorTile(
+            "_cpuLoadTileText",
+            "_cpuLoadTileBar",
+            data.CPU.Utilization >= 0 ? $"{data.CPU.Utilization}%" : NotAvailableText(),
+            ScaleToPercentage(data.CPU.Utilization, data.CPU.MaxUtilization > 0 ? data.CPU.MaxUtilization : 100));
+        UpdateSensorTile(
+            "_cpuPowerTileText",
+            "_cpuPowerTileBar",
+            data.CPU.Wattage >= 0 ? FormatPower(data.CPU.Wattage) : NotAvailableText(),
+            ScaleToPercentage(data.CPU.Wattage, 140));
+        UpdateSensorTile(
+            "_cpuThermalTileText",
+            "_cpuThermalTileBar",
+            data.CPU.Temperature > 0 ? GetTemperatureText(data.CPU.Temperature) : NotAvailableText(),
+            ScaleToPercentage(data.CPU.Temperature, data.CPU.MaxTemperature > 0 ? data.CPU.MaxTemperature : 100));
 
         UpdateOptionalDetailText("_cpuWattageTitle", "_cpuWattage", data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText());
 
@@ -591,6 +619,21 @@ public partial class SensorsControl
         UpdateSensorChartMetricText(
             "_gpuChartTemperatureText",
             data.GPU.Temperature > 0 ? GetTemperatureText(data.GPU.Temperature) : NotAvailableText());
+        UpdateSensorTile(
+            "_gpuLoadTileText",
+            "_gpuLoadTileBar",
+            data.GPU.Utilization >= 0 ? $"{data.GPU.Utilization}%" : NotAvailableText(),
+            ScaleToPercentage(data.GPU.Utilization, data.GPU.MaxUtilization > 0 ? data.GPU.MaxUtilization : 100));
+        UpdateSensorTile(
+            "_gpuPowerTileText",
+            "_gpuPowerTileBar",
+            data.GPU.Wattage >= 0 ? FormatPower(data.GPU.Wattage) : NotAvailableText(),
+            ScaleToPercentage(data.GPU.Wattage, 175));
+        UpdateSensorTile(
+            "_gpuThermalTileText",
+            "_gpuThermalTileBar",
+            data.GPU.Temperature > 0 ? GetTemperatureText(data.GPU.Temperature) : NotAvailableText(),
+            ScaleToPercentage(data.GPU.Temperature, data.GPU.MaxTemperature > 0 ? data.GPU.MaxTemperature : 100));
 
         if (FindName("_gpuWattage") is TextBlock gpuWattage)
         {
@@ -974,6 +1017,20 @@ public partial class SensorsControl
     {
         if (FindName(name) is TextBlock textBlock)
             textBlock.Text = NormalizeDetailValueText(text);
+    }
+
+    private void UpdateSensorTile(string textName, string barName, string text, double percentage)
+    {
+        UpdateSensorChartMetricText(textName, text);
+        SetRangeValue(barName, percentage);
+    }
+
+    private static double ScaleToPercentage(double value, double maximum)
+    {
+        if (value < 0 || maximum <= 0)
+            return 0;
+
+        return ClampPercentage(value / maximum * 100.0);
     }
 
     private static double ClampPercentage(double value)

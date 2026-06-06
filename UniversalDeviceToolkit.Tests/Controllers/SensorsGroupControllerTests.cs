@@ -194,6 +194,32 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdApuPowerAliases()
+    {
+        var stapmResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU SoC",
+            "APU STAPM"
+        ]);
+        var coreSocResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU SoC",
+            "Core+SoC Power"
+        ]);
+        var socketResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU Socket Power"
+        ]);
+
+        stapmResult.Should().Be("APU STAPM");
+        coreSocResult.Should().Be("Core+SoC Power");
+        socketResult.Should().Be("CPU Socket Power");
+    }
+
+    [Fact]
     public void SelectCpuUsageSensorName_ShouldPreferCpuTotalBeforeCoreMaxOrThreadLoads()
     {
         var result = SensorsGroupController.SelectCpuUsageSensorName(
@@ -484,6 +510,19 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Board Power");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeAmdPowerDrawAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU PPT",
+            "Average GPU Power"
+        ]);
+
+        result.Should().Be("GPU PPT");
     }
 
     [Fact]

@@ -483,8 +483,8 @@ public partial class StatusWindow
             ? SensorsControl.FormatTemperature((float)memorySensors.Value.temperature, temperatureUnit)
             : null;
 
-        var parts = new[] { usage == "-" ? null : usage, temperature }
-            .Where(part => !string.IsNullOrWhiteSpace(part))
+        var parts = new[] { usage, temperature }
+            .Where(SensorsControl.IsUsefulDetailValue)
             .ToArray();
 
         return parts.Length == 0
@@ -498,9 +498,9 @@ public partial class StatusWindow
             return null;
 
         var text = SensorsControl.FormatTemperaturePair(ssdTemperatures.Value, temperatureUnit);
-        return text == "-"
-            ? null
-            : text;
+        return SensorsControl.IsUsefulDetailValue(text)
+            ? text
+            : null;
     }
 }
 }

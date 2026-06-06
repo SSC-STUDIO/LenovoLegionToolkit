@@ -123,7 +123,7 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await WaitForDashboardDataAsync(sensorsReadyTask);
+        await WaitForDashboardShellAsync(sensorsReadyTask);
         SetDashboardContentReady(true);
         _loader.IsLoading = false;
         await Task.Delay(TimeSpan.FromMilliseconds(250));
@@ -136,7 +136,7 @@ public partial class DashboardPage
         _dashboardContentRoot.IsHitTestVisible = ready;
     }
 
-    private async Task WaitForDashboardDataAsync(Task? sensorsReadyTask)
+    private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)
     {
         var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
         if (groupInitializationTasks.Length > 0)
@@ -157,26 +157,37 @@ public partial class DashboardPage
         }
 
         if (sensorsReadyTask is not null)
-        {
-            try
-            {
-                await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout());
-                return;
-            }
-            catch (TimeoutException)
-            {
-                // Sensor backends can be unavailable or slow on some hardware. Keep a finite escape hatch.
-            }
-        }
+            ObserveDashboardSensorDataAsync(sensorsReadyTask);
 
         await Task.Delay(GetDashboardFallbackLoadingDelay());
     }
 
+    private void ObserveDashboardSensorDataAsync(Task sensorsReadyTask)
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout()).ConfigureAwait(false);
+            }
+            catch (TimeoutException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Dashboard sensor data was not ready before the non-blocking timeout.");
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Dashboard sensor data readiness failed.", ex);
+            }
+        });
+    }
+
     internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
 
-    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
+    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(4);
 
-    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(350);
+    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
 
     private void DashboardPage_SizeChanged(object sender, SizeChangedEventArgs e)
     {

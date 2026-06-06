@@ -307,6 +307,42 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenInstalledIdMatchesManifestButDirectoryNameDiffers_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "shell-integration";
+        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", "LenovoLegionToolkit.Plugins.ShellIntegration");
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "shell-integration",
+              "name": "Shell Integration",
+              "description": "Shell manifest optimization contribution",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "shell-integration.action",
+                    "title": "Shell integration action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        AssertManifestCategory(categories, pluginId, "Shell Integration", "Shell manifest optimization contribution", "shell-integration.action", "Shell integration action");
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenInstalledManifestUsesActionKeyOnly_ShouldIncludeManifestCategory()
     {
         var pluginId = "manifest-key-plugin";

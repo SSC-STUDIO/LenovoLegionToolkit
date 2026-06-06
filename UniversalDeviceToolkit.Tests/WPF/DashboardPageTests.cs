@@ -10,13 +10,13 @@ public class DashboardPageTests
     [Fact]
     public void GetDashboardFallbackLoadingDelay_ShouldRemainShortAndStable()
     {
-        DashboardPage.GetDashboardFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(350));
+        DashboardPage.GetDashboardFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(120));
     }
 
     [Fact]
-    public void GetDashboardSensorDataReadyTimeout_ShouldGiveSensorsLongerThanRegularCards()
+    public void GetDashboardSensorDataReadyTimeout_ShouldBeNonBlocking()
     {
-        DashboardPage.GetDashboardSensorDataReadyTimeout().Should().BeGreaterThan(DashboardPage.GetDashboardGroupContentReadyTimeout());
+        DashboardPage.GetDashboardSensorDataReadyTimeout().Should().BeLessThan(TimeSpan.FromSeconds(5));
     }
 
     [Fact]
@@ -39,6 +39,44 @@ public class DashboardPageTests
         restartIndex.Should().BeGreaterThanOrEqualTo(0);
         visibleIndex.Should().BeGreaterThan(restartIndex);
         source.Should().NotContain("_sensors.FirstSensorDataReadyTask");
+    }
+
+    [Fact]
+    public void DashboardPage_ShouldObserveSensorReadinessWithoutBlockingContent()
+    {
+        var source = ReadDashboardPageSource();
+
+        source.Should().Contain("await WaitForDashboardShellAsync(sensorsReadyTask);");
+        source.Should().Contain("ObserveDashboardSensorDataAsync(sensorsReadyTask);");
+        ExtractMethod(source, "private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)")
+            .Should()
+            .NotContain("WaitAsync(GetDashboardSensorDataReadyTimeout())");
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
     }
 
     private static string ReadDashboardPageXaml()

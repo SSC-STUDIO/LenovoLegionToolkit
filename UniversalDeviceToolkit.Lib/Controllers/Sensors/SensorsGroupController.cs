@@ -84,6 +84,18 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] CPU_PACKAGE_POWER_SENSOR_PREFERENCES =
     [
+        "Core+SoC Power",
+        "Core + SoC Power",
+        "Core and SoC Power",
+        "CPU Core+SoC",
+        "CPU Core + SoC",
+        "APU STAPM",
+        "STAPM",
+        "APU PPT",
+        "APU Package",
+        "APU Power",
+        "CPU Socket Power",
+        "Socket Power",
         "CPU Package",
         "CPU Package Power",
         "Package Power",
@@ -285,19 +297,26 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_POWER_SENSOR_PREFERENCES =
     [
         "GPU Package",
+        "GPU PPT",
         "GPU Power",
+        "GPU Power Draw",
         "Board Power Draw",
         "Board Power",
         "GPU Board Power",
+        "GPU Total Board Power",
         "Total Board Power",
         "GPU Total Power",
         "Total Graphics Power",
+        "Average GPU Power",
+        "Current GPU Power",
         "Graphics Power",
         "GPU ASIC Power",
         "ASIC Power",
         "GPU Chip Power",
         "Chip Power",
         "TGP",
+        "PPT",
+        "Power Draw",
         "Package Power",
         "Power",
     ];
@@ -1103,18 +1122,7 @@ public class SensorsGroupController : IDisposable
 
     internal static string? SelectCpuPackagePowerSensorName(IEnumerable<string> sensorNames) =>
         SelectPreferredSensorName(
-            sensorNames.Where(name =>
-                !string.IsNullOrWhiteSpace(name) &&
-                !name.Contains("GPU", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Core", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Cores", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("SoC", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("SOC", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Memory", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("DRAM", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Platform", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Uncore", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Ring", StringComparison.OrdinalIgnoreCase)),
+            sensorNames.Where(IsLikelyCpuPackagePowerCandidateName),
             CPU_PACKAGE_POWER_SENSOR_PREFERENCES);
 
     private static ISensor? SelectGpuVramTemperatureSensor(IEnumerable<ISensor> sensors)
@@ -1608,6 +1616,40 @@ public class SensorsGroupController : IDisposable
 
     internal static bool IsLikelyCpuPackagePowerSensorName(string sensorName) =>
         SelectCpuPackagePowerSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyCpuPackagePowerCandidateName(string? sensorName)
+    {
+        if (string.IsNullOrWhiteSpace(sensorName))
+            return false;
+
+        if (sensorName.Contains("GPU", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Memory", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("DRAM", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Platform", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Uncore", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Ring", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var hasCore = sensorName.Contains("Core", StringComparison.OrdinalIgnoreCase) ||
+                      sensorName.Contains("Cores", StringComparison.OrdinalIgnoreCase);
+        var hasSoc = Regex.IsMatch(sensorName, @"\bSoC\b", RegexOptions.IgnoreCase);
+
+        if (hasCore && hasSoc)
+            return true;
+
+        if (hasCore)
+        {
+            return sensorName.Contains("Package", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("PPT", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("STAPM", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("APU", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("Socket", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return !hasSoc;
+    }
 
     internal static bool IsLikelyCpuComponentPowerSensorName(string sensorName) =>
         IsLikelyCpuCorePowerSensorName(sensorName)
