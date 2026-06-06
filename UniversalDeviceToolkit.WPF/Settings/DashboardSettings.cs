@@ -29,6 +29,14 @@ public class DashboardSettings() : AbstractSettings<DashboardSettings.DashboardS
 
         normalized.Groups = NormalizeGroups(normalized.Groups);
 
+        // Ensure all groups have non-null items
+        normalized.Groups = normalized.Groups
+            .Select(group => new DashboardGroup(
+                group.Type, 
+                group.CustomName, 
+                group.Items ?? Array.Empty<DashboardItem>()))
+            .ToArray();
+
         var isLegacySchema = normalized.SchemaVersion < 3;
         if (isLegacySchema)
         {
