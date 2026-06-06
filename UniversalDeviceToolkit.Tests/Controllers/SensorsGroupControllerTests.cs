@@ -168,6 +168,61 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuVoltageSensorName_ShouldRecognizeInputAndEffectiveVidAliases()
+    {
+        var inputResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "SA Voltage",
+            "VCCIN"
+        ]);
+        var vidResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "System Agent Voltage",
+            "CPU Core VID Effective"
+        ]);
+        var iaResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "Cache Voltage",
+            "IA Voltage"
+        ]);
+
+        inputResult.Should().Be("VCCIN");
+        vidResult.Should().Be("CPU Core VID Effective");
+        iaResult.Should().Be("IA Voltage");
+    }
+
+    [Fact]
+    public void IsLikelyCpuHybridCoreClockSensorName_ShouldRecognizeCommonAliases()
+    {
+        string[] pCoreNames =
+        [
+            "CPU P-Core #0",
+            "CPU P Core 1",
+            "Performance Core #2 Clock",
+            "CPU Performance Core 3"
+        ];
+        string[] eCoreNames =
+        [
+            "CPU E-Core #8",
+            "CPU E Core 9",
+            "Efficient Core #10 Clock",
+            "Efficiency Core 11"
+        ];
+
+        pCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuPCoreClockSensorName(name));
+        eCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuECoreClockSensorName(name));
+    }
+
+    [Fact]
+    public void IsLikelyCpuHybridCoreClockSensorName_ShouldIgnoreAverageAndEffectiveClocks()
+    {
+        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Average").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Effective Clock").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Average").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Effective Clock").Should().BeFalse();
+    }
+
+    [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdPptAlias()
     {
         var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
@@ -728,7 +783,10 @@ public class SensorsGroupControllerTests
             "DDR5 SPD Hub Temperature",
             "TSOD Temperature",
             "PMIC Temperature",
-            "Memory Module Temperature"
+            "Memory Module Temperature",
+            "DIMM #1",
+            "Memory Slot A1",
+            "DDR Module Temperature"
         ];
 
         names.Should().OnlyContain(name => SensorsGroupController.IsLikelyMemoryTemperatureSensorName(name));
@@ -878,6 +936,30 @@ public class SensorsGroupControllerTests
         ecResult.Should().Be("EC Temp");
         temp1Result.Should().Be("Temperature #1");
         systemResult.Should().Be("System Temperature");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeAcpiThermalZoneAliases()
+    {
+        var acpiResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "ACPI Thermal Zone"
+        ]);
+        var zoneResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "TZ00"
+        ]);
+        var temp2Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "Temperature #2"
+        ]);
+
+        acpiResult.Should().Be("ACPI Thermal Zone");
+        zoneResult.Should().Be("TZ00");
+        temp2Result.Should().Be("Temperature #2");
     }
 
     [Fact]

@@ -66,6 +66,15 @@ public class SensorsGroupController : IDisposable
         "CPU VDD",
         "VDD CPU",
         "VCC Core",
+        "IA Voltage",
+        "IA VR Voltage",
+        "Core VIDs",
+        "CPU Core VID",
+        "CPU Input Voltage",
+        "VCCIN",
+        "VDDCR_VDD",
+        "SVI2 TFN CPU",
+        "SVI3 TFN CPU",
         "SVI2 TFN",
         "SVI3 TFN",
         "VID",
@@ -149,6 +158,26 @@ public class SensorsGroupController : IDisposable
         "EDC",
         "TDC",
     ];
+    private static readonly string[] CPU_P_CORE_CLOCK_SENSOR_PREFERENCES =
+    [
+        "CPU P-Core",
+        "P-Core",
+        "P Core",
+        "Performance Core",
+        "Performance-Core",
+        "CPU Performance",
+    ];
+    private static readonly string[] CPU_E_CORE_CLOCK_SENSOR_PREFERENCES =
+    [
+        "CPU E-Core",
+        "E-Core",
+        "E Core",
+        "Efficient Core",
+        "Efficiency Core",
+        "Efficient-Core",
+        "CPU Efficient",
+        "CPU Efficiency",
+    ];
     private static readonly string[] GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "GPU Memory Junction",
@@ -175,6 +204,10 @@ public class SensorsGroupController : IDisposable
         "Module Temperature",
         "RAM Temperature",
         "DRAM Temperature",
+        "DIMM Module",
+        "DIMM #",
+        "Memory Slot",
+        "DDR Module",
         "DDR5 SPD Hub",
         "DDR4 TSOD",
         "SPD Hub Temperature",
@@ -225,6 +258,15 @@ public class SensorsGroupController : IDisposable
         "Temp1",
         "Temp 1",
         "Temperature #1",
+        "Temp2",
+        "Temp 2",
+        "Temperature #2",
+        "ACPI Thermal Zone",
+        "Thermal Zone",
+        "TZ00",
+        "TZ01",
+        "TZS0",
+        "TZS1",
         "EC Temp",
         "EC",
         "Embedded Controller",
@@ -742,11 +784,13 @@ public class SensorsGroupController : IDisposable
                     case SensorType.Voltage when IsLikelyCpuVoltageSensorName(s.Name):
                         _cpuCoreVoltageSensor ??= s;
                         break;
-                    case SensorType.Clock when s.Name.Contains("P-Core"):
+                    case SensorType.Clock when IsLikelyCpuPCoreClockSensorName(s.Name):
                         _pCoreClockSensors.Add(s);
+                        _cpuCoreClockSensors.Add(s);
                         break;
-                    case SensorType.Clock when s.Name.Contains("E-Core"):
+                    case SensorType.Clock when IsLikelyCpuECoreClockSensorName(s.Name):
                         _eCoreClockSensors.Add(s);
+                        _cpuCoreClockSensors.Add(s);
                         break;
                     case SensorType.Clock when s.Name.Contains("Core", StringComparison.OrdinalIgnoreCase) && !s.Name.Contains("Average") && !s.Name.Contains("Effective"):
                         _cpuCoreClockSensors.Add(s);
@@ -759,7 +803,7 @@ public class SensorsGroupController : IDisposable
                         break;
                 }
             }
-            IsHybrid = _pCoreClockSensors.Count > 0;
+            IsHybrid = _pCoreClockSensors.Count > 0 || _eCoreClockSensors.Count > 0;
             _cpuTempSensor ??= SelectCpuTemperatureSensor(_cpuHardware.Sensors);
             _cpuUsageSensor ??= SelectCpuUsageSensor(_cpuHardware.Sensors);
             _cpuCoreVoltageSensor ??= SelectCpuVoltageSensor(_cpuHardware.Sensors);
@@ -1607,6 +1651,26 @@ public class SensorsGroupController : IDisposable
 
     private static bool IsLikelyGpuCoreClockSensorName(string sensorName) =>
         SelectGpuCoreClockSensorName([sensorName]) is not null;
+
+    internal static bool IsLikelyCpuPCoreClockSensorName(string sensorName) =>
+        IsLikelyCpuCoreClockSensorName(sensorName, CPU_P_CORE_CLOCK_SENSOR_PREFERENCES);
+
+    internal static bool IsLikelyCpuECoreClockSensorName(string sensorName) =>
+        IsLikelyCpuCoreClockSensorName(sensorName, CPU_E_CORE_CLOCK_SENSOR_PREFERENCES);
+
+    private static bool IsLikelyCpuCoreClockSensorName(string? sensorName, IEnumerable<string> preferences)
+    {
+        if (string.IsNullOrWhiteSpace(sensorName))
+            return false;
+
+        if (sensorName.Contains("Average", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Effective", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return SelectPreferredSensorName([sensorName], preferences) is not null;
+    }
 
     private static bool IsLikelyGpuMemoryClockSensorName(string sensorName) =>
         SelectGpuMemoryClockSensorName([sensorName]) is not null;
