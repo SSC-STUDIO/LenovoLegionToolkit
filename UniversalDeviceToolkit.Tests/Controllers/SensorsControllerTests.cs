@@ -206,7 +206,7 @@ public class ISensorsControllerTests : UnitTestBase
 [Trait("Category", TestCategories.Controller)]
 public class GenericSensorsControllerTests : UnitTestBase
 {
-    private sealed class FallbackSensorsController : AbstractSensorsController
+    private class FallbackSensorsController : AbstractSensorsController
     {
         private readonly int _cpuUtilization;
         private readonly int _cpuTemperature;
@@ -273,6 +273,28 @@ public class GenericSensorsControllerTests : UnitTestBase
                 _gpuMemoryClock,
                 _gpuWattage,
                 _gpuVoltage));
+    }
+
+    private sealed class CpuWattageFallbackSensorsController(
+        GPUController gpuController,
+        int performanceCounterWattage,
+        int wmiWattage,
+        int libreHardwareMonitorWattage)
+        : FallbackSensorsController(
+            gpuController,
+            cpuUtilization: -1,
+            cpuTemperature: -1,
+            cpuCoreClock: -1,
+            gpuUtilization: -1,
+            gpuTemperature: -1,
+            gpuCoreClock: -1)
+    {
+        protected override int GetCpuWattageFromPerformanceCounter() => performanceCounterWattage;
+
+        protected override Task<int> GetCpuWattageFromWmiAsync() => Task.FromResult(wmiWattage);
+
+        protected override Task<int> GetCpuWattageFromLibreHardwareMonitorAsync() =>
+            Task.FromResult(libreHardwareMonitorWattage);
     }
 
     private sealed class TestableGenericSensorsController(
@@ -361,6 +383,21 @@ public class GenericSensorsControllerTests : UnitTestBase
         data.GPU.MemoryClock.Should().Be(9200);
         data.GPU.MaxCoreClock.Should().Be(1785);
         data.GPU.MaxMemoryClock.Should().Be(9200);
+    }
+
+    [Fact]
+    public async Task AbstractSensorsController_GetDataAsync_ShouldContinueCpuWattageFallbackWhenWmiReturnsZero()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        using var controller = new CpuWattageFallbackSensorsController(
+            gpuController,
+            performanceCounterWattage: -1,
+            wmiWattage: 0,
+            libreHardwareMonitorWattage: 42);
+
+        var data = await controller.GetDataAsync(detailed: true);
+
+        data.CPU.Wattage.Should().Be(42);
     }
 
     [Fact]

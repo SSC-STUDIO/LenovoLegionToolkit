@@ -275,6 +275,25 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdMobileSpptAliases()
+    {
+        var apuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core Power (SVI3 TFN)",
+            "CPU SoC Power (SVI3 TFN)",
+            "APU sPPT"
+        ]);
+        var cpuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU sPPT"
+        ]);
+
+        apuResult.Should().Be("APU sPPT");
+        cpuResult.Should().Be("CPU sPPT");
+    }
+
+    [Fact]
     public void SelectCpuUsageSensorName_ShouldPreferCpuTotalBeforeCoreMaxOrThreadLoads()
     {
         var result = SensorsGroupController.SelectCpuUsageSensorName(
@@ -578,6 +597,24 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("GPU PPT");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldPreferSpecificPowerConsumptionBeforeGenericPower()
+    {
+        var consumptionResult = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU Power Consumption"
+        ]);
+        var coreResult = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU Core Power"
+        ]);
+
+        consumptionResult.Should().Be("GPU Power Consumption");
+        coreResult.Should().Be("GPU Core Power");
     }
 
     [Fact]
@@ -1050,6 +1087,7 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("IA Cores").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR CPU Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
@@ -1058,6 +1096,7 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("SoC Power").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR SoC Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("Uncore Power").Should().BeTrue();
@@ -1110,6 +1149,20 @@ public class SensorsGroupControllerTests
         result.cores.Should().Be(24f);
         result.memory.Should().Be(3f);
         result.platform.Should().Be(6f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapAmdSviPowerAliases()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("VDDCR CPU Power", 22f),
+            ("CPU Core Power (SVI3 TFN)", 4f),
+            ("VDDCR SoC Power", 5f)
+        ]);
+
+        result.cores.Should().Be(26f);
+        result.platform.Should().Be(5f);
     }
 
     [Fact]
