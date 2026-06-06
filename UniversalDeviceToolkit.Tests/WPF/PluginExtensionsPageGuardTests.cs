@@ -100,9 +100,15 @@ public sealed class PluginExtensionsPageGuardTests
         feedbackMethod.Should().Contain("PluginExtensionsPage_InstalledButNoEntryMessage");
         feedbackMethod.Should().Contain("PluginExtensionsPage_InstallSuccessOptimizationMessage");
         resolveMethod.Should().Contain("runtimeCapabilities.HasAny || hasExecutable");
+        resolveMethod.Should().Contain("manifestCapabilities.SupportsOptimizationCategory");
+        resolveMethod.Should().Contain("!manifestCapabilities.SupportsFeaturePage");
+        resolveMethod.Should().Contain("!manifestCapabilities.SupportsSettingsPage");
         resolveMethod.Should().Contain("runtimeMissing && manifestCapabilities.HasAny");
         resolveMethod.Should().Contain("InstalledPluginFeedback.RuntimeNotLoaded");
         resolveMethod.Should().Contain("InstalledPluginFeedback.NoUserFacingEntry");
+        resolveMethod.IndexOf("manifestCapabilities.SupportsOptimizationCategory", StringComparison.Ordinal)
+            .Should()
+            .BeLessThan(resolveMethod.IndexOf("runtimeMissing && manifestCapabilities.HasAny", StringComparison.Ordinal));
 
         resources.Should().Contain("<data name=\"PluginExtensionsPage_InstalledButNoEntryMessage\"");
         zhResources.Should().Contain("<data name=\"PluginExtensionsPage_InstalledButNoEntryMessage\"");

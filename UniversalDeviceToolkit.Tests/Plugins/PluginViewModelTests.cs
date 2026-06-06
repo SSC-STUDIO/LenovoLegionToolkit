@@ -200,11 +200,30 @@ public class PluginViewModelTests
     }
 
     [Fact]
-    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingButManifestHasEntryPoint_ShouldReportRuntimeNotLoaded()
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingButManifestOnlyHasOptimizationCategory_ShouldReportEntryAvailable()
     {
         var manifestCapabilities = new PluginUiCapabilities
         {
             SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingAndManifestNeedsRuntimeUi_ShouldReportRuntimeNotLoaded(
+        bool supportsFeaturePage,
+        bool supportsSettingsPage)
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true,
+            SupportsFeaturePage = supportsFeaturePage,
+            SupportsSettingsPage = supportsSettingsPage
         };
 
         PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: true)

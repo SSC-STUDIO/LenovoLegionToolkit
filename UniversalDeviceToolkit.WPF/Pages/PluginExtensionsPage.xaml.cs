@@ -1592,6 +1592,13 @@ private string _currentSearchText = string.Empty;
         if (runtimeCapabilities.HasAny || hasExecutable)
             return InstalledPluginFeedback.EntryAvailable;
 
+        if (manifestCapabilities.SupportsOptimizationCategory &&
+            !manifestCapabilities.SupportsFeaturePage &&
+            !manifestCapabilities.SupportsSettingsPage)
+        {
+            return InstalledPluginFeedback.EntryAvailable;
+        }
+
         if (runtimeMissing && manifestCapabilities.HasAny)
             return InstalledPluginFeedback.RuntimeNotLoaded;
 
