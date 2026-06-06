@@ -590,9 +590,35 @@ public class SensorsControlTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("-")]
+    [InlineData("N/A")]
+    [InlineData("Unavailable")]
+    [InlineData("不可用")]
     public void NormalizeDetailValueText_WhenTextIsBlankOrPlaceholder_ShouldReturnNotAvailable(string? text)
     {
         SensorsControl.NormalizeDetailValueText(text).Should().Be(NotAvailableText());
+    }
+
+    [Theory]
+    [InlineData("Unavailable")]
+    [InlineData("不可用")]
+    [InlineData(" N/A ")]
+    public void IsUsefulDetailValue_WhenTextIsLocalizedUnavailable_ShouldReturnFalse(string text)
+    {
+        SensorsControl.IsUsefulDetailValue(text).Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData("71 °C", "Unavailable", "71 °C")]
+    [InlineData("71 °C", "不可用", "71 °C")]
+    [InlineData("不可用", "Unavailable", null)]
+    public void FormatFallbackRangeText_WhenExistingRangeIsLocalizedUnavailable_ShouldFallbackToPrimaryValue(
+        string primaryValue,
+        string existingRangeText,
+        string? expected)
+    {
+        var text = SensorsControl.FormatFallbackRangeText(primaryValue, existingRangeText);
+
+        text.Should().Be(expected ?? NotAvailableText());
     }
 
     [Fact]

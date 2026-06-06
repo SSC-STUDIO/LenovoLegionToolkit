@@ -1360,8 +1360,8 @@ public partial class SensorsControl
     internal static string FormatPowerKeepingPrevious(float wattage, string? previousText) =>
         wattage >= 0
             ? FormatPower(wattage)
-            : !string.IsNullOrWhiteSpace(previousText) && previousText != NotAvailableText()
-                ? previousText
+            : !IsUnavailableDetailValue(previousText)
+                ? previousText!.Trim()
                 : NotAvailableText();
 
     internal static string FormatNullableTemperature(double? temperature, TemperatureUnit temperatureUnit) =>
@@ -1372,11 +1372,11 @@ public partial class SensorsControl
 
     internal static string FormatFallbackRangeText(string? primaryValue, string? existingRangeText)
     {
-        if (!string.IsNullOrWhiteSpace(existingRangeText) && existingRangeText != NotAvailableText())
-            return existingRangeText;
+        if (!IsUnavailableDetailValue(existingRangeText))
+            return existingRangeText!.Trim();
 
-        return !string.IsNullOrWhiteSpace(primaryValue) && primaryValue != NotAvailableText()
-            ? primaryValue
+        return !IsUnavailableDetailValue(primaryValue)
+            ? primaryValue!.Trim()
             : NotAvailableText();
     }
 
@@ -1385,19 +1385,26 @@ public partial class SensorsControl
 
     internal static string NormalizeDetailValueText(string? text)
     {
-        if (string.IsNullOrWhiteSpace(text) || text == "-")
+        if (IsUnavailableDetailValue(text))
             return NotAvailableText();
 
-        return text;
+        return text!.Trim();
     }
 
     internal static bool IsUsefulDetailValue(string? text)
+        => !IsUnavailableDetailValue(text);
+
+    private static bool IsUnavailableDetailValue(string? text)
     {
-        var normalized = NormalizeDetailValueText(text);
-        return !normalized.Equals(NotAvailableText(), StringComparison.OrdinalIgnoreCase)
-               && !normalized.Equals("N/A", StringComparison.OrdinalIgnoreCase)
-               && !normalized.Equals("Unavailable", StringComparison.OrdinalIgnoreCase)
-               && !normalized.Equals("不可用", StringComparison.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(text))
+            return true;
+
+        var normalized = text.Trim();
+        return normalized.Equals("-", StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals(NotAvailableText(), StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals("N/A", StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals("Unavailable", StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals("\u4E0D\u53EF\u7528", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string? FormatThroughput(float bytesPerSecond)
