@@ -16,7 +16,7 @@ public class DashboardPageTests
     [Fact]
     public void GetDashboardSensorDataReadyTimeout_ShouldKeepInitialLoadingBounded()
     {
-        DashboardPage.GetDashboardSensorDataReadyTimeout().Should().BeLessThan(TimeSpan.FromSeconds(5));
+        DashboardPage.GetDashboardSensorDataReadyTimeout().Should().Be(TimeSpan.FromSeconds(12));
     }
 
     [Fact]

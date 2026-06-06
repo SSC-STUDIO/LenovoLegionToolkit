@@ -182,7 +182,7 @@ public partial class DashboardPage
 
     internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
 
-    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(4);
+    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
 
     internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
 
