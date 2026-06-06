@@ -129,7 +129,8 @@ public sealed class ShippingPayloadGuardTests
     {
         var directoryTargets = ReadRepositoryFile("Directory.Build.targets");
         directoryTargets.Should().Contain("RejectShippingAppPublishWithTestHooks");
-        directoryTargets.Should().Contain("BeforeTargets=\"PrepareForPublish\"");
+        directoryTargets.Should().Contain("BeforeTargets=\"BeforeBuild;SetGenerateManifests;PrepareForPublish\"");
+        directoryTargets.Should().Contain("'$(_IsPublishing)' == 'true'");
         directoryTargets.Should().Contain("'$(IsUdtShippingApp)' == 'true'");
         directoryTargets.Should().Contain("'$(EnableUdtTestHooks)' == 'true'");
         directoryTargets.Should().Contain("'$(AllowUdtTestHookPublish)' != 'true'");
