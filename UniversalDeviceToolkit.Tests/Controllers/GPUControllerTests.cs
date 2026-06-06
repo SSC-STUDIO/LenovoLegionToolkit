@@ -213,11 +213,13 @@ public class GPUControllerTests : UnitTestBase
     public void GPUController_ShouldTreatMissingPnpDeviceIdAsNonFatal()
     {
         var source = ReadGpuControllerSource();
+        var isStartedProperty = ExtractProperty(source, "public bool IsStarted");
         var refreshMethod = ExtractMethod(source, "private async Task RefreshStateAsync()");
         var helperMethod = ExtractMethod(source, "private static async Task<string?> TryGetGpuInstanceIdAsync(string? pnpDeviceIdPart)");
         var loopMethod = ExtractMethod(source, "private async Task RefreshLoopAsync(int delay, int interval, CancellationToken token)");
 
-        source.Should().Contain("public bool IsStarted { get => _refreshTask is { IsCompleted: false }; }");
+        isStartedProperty.Should().Contain("lock (_startStopLock)");
+        isStartedProperty.Should().Contain("return _refreshTask is { IsCompleted: false };");
         refreshMethod.Should().Contain("var gpuInstanceId = await TryGetGpuInstanceIdAsync(pnpDeviceIdPart)");
         refreshMethod.Should().NotContain("throw new InvalidOperationException(\"pnpDeviceIdPart is null or empty\")");
         helperMethod.Should().Contain("string.IsNullOrWhiteSpace(pnpDeviceIdPart)");
@@ -227,6 +229,17 @@ public class GPUControllerTests : UnitTestBase
     }
 
     #endregion
+
+    private static string ExtractProperty(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var nextMember = source.IndexOf("    /// <summary>", start + signature.Length, StringComparison.Ordinal);
+        nextMember.Should().BeGreaterThan(start);
+
+        return source[start..nextMember];
+    }
 
     private static string ExtractMethod(string source, string signature)
     {
