@@ -30,12 +30,10 @@ public class GodModePresetAutomationStepControl : AbstractAutomationStepControl<
 
     public override IAutomationStep CreateAutomationStep()
     {
-        var presetId = Guid.Empty;
-
         if (_comboBox.TryGetSelectedItem(out KeyValuePair<Guid, GodModePreset> value))
-            presetId = value.Key;
+            return new GodModePresetAutomationStep(value.Key);
 
-        return new GodModePresetAutomationStep(presetId);
+        return new GodModePresetAutomationStep(AutomationStep.PresetId);
     }
 
     protected override UIElement GetCustomControl()
@@ -49,13 +47,27 @@ public class GodModePresetAutomationStepControl : AbstractAutomationStepControl<
     protected override async Task RefreshAsync()
     {
         var state = await AutomationStep.GetStateAsync();
-        var presets = state.Presets;
-        var selectedPreset = presets.FirstOrDefault(kv => kv.Key == AutomationStep.PresetId);
+        var presets = state.Presets
+            .OrderBy(kv => kv.Value.Name)
+            .ToArray();
+        var selectedPreset = ResolveSelectedPreset(state, AutomationStep.PresetId);
 
         _comboBox.SetItems(presets, selectedPreset, kv => kv.Value.Name);
-        _comboBox.IsEnabled = presets.Count != 0;
+        _comboBox.IsEnabled = presets.Length != 0;
     }
 
     protected override void OnFinishedLoading() => _comboBox.Visibility = Visibility.Visible;
-}
 
+    internal static KeyValuePair<Guid, GodModePreset> ResolveSelectedPreset(GodModeState state, Guid requestedPresetId)
+    {
+        if (state.Presets.TryGetValue(requestedPresetId, out var requestedPreset))
+            return new(requestedPresetId, requestedPreset);
+
+        if (state.Presets.TryGetValue(state.ActivePresetId, out var activePreset))
+            return new(state.ActivePresetId, activePreset);
+
+        return state.Presets
+            .OrderBy(kv => kv.Value.Name)
+            .FirstOrDefault();
+    }
+}

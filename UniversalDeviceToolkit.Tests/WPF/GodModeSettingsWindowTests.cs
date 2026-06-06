@@ -5,6 +5,7 @@ using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Controls.Automation;
+using UniversalDeviceToolkit.WPF.Controls.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Xunit;
 
@@ -199,6 +200,56 @@ public class GodModeSettingsWindowTests
     }
 
     [Fact]
+    public void ResolveSelectedPreset_WhenRequestedPresetExists_ShouldKeepRequestedPreset()
+    {
+        var activePresetId = Guid.NewGuid();
+        var requestedPresetId = Guid.NewGuid();
+        var state = CreateState(activePresetId, new Dictionary<Guid, GodModePreset>
+        {
+            [activePresetId] = new() { Name = "Balance" },
+            [requestedPresetId] = new() { Name = "Performance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, requestedPresetId);
+
+        selectedPreset.Key.Should().Be(requestedPresetId);
+        selectedPreset.Value.Name.Should().Be("Performance");
+    }
+
+    [Fact]
+    public void ResolveSelectedPreset_WhenRequestedPresetWasDeleted_ShouldUseActivePreset()
+    {
+        var activePresetId = Guid.NewGuid();
+        var state = CreateState(activePresetId, new Dictionary<Guid, GodModePreset>
+        {
+            [activePresetId] = new() { Name = "Balance" },
+            [Guid.NewGuid()] = new() { Name = "Performance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, Guid.NewGuid());
+
+        selectedPreset.Key.Should().Be(activePresetId);
+        selectedPreset.Value.Name.Should().Be("Balance");
+    }
+
+    [Fact]
+    public void ResolveSelectedPreset_WhenActivePresetIsMissing_ShouldUseFirstPresetByName()
+    {
+        var quietPresetId = Guid.NewGuid();
+        var balancePresetId = Guid.NewGuid();
+        var state = CreateState(Guid.NewGuid(), new Dictionary<Guid, GodModePreset>
+        {
+            [quietPresetId] = new() { Name = "Quiet" },
+            [balancePresetId] = new() { Name = "Balance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, Guid.NewGuid());
+
+        selectedPreset.Key.Should().Be(balancePresetId);
+        selectedPreset.Value.Name.Should().Be("Balance");
+    }
+
+    [Fact]
     public void PresetCrudHandlers_ShouldRefreshComboBoxFromPersistedState()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml.cs");
@@ -212,6 +263,19 @@ public class GodModeSettingsWindowTests
         addHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
         renameHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
         deleteHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+    }
+
+    [Fact]
+    public void GodModePresetAutomationStepControlRefresh_ShouldUseCurrentStateAndAvoidEmptyPresetId()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Controls", "Automation", "Steps", "GodModePresetAutomationStepControl.cs");
+        var refreshMethod = ExtractMethod(source, "protected override async Task RefreshAsync()");
+        var createMethod = ExtractMethod(source, "public override IAutomationStep CreateAutomationStep()");
+
+        refreshMethod.Should().Contain(".OrderBy(kv => kv.Value.Name)");
+        refreshMethod.Should().Contain("ResolveSelectedPreset(state, AutomationStep.PresetId)");
+        createMethod.Should().Contain("return new GodModePresetAutomationStep(AutomationStep.PresetId);");
+        createMethod.Should().NotContain("Guid.Empty");
     }
 
     private static GodModeState CreateState(Guid activePresetId, Dictionary<Guid, GodModePreset> presets) => new()
