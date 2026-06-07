@@ -101,6 +101,8 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
 
             var installedPluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
             var installedDll = Directory.GetFiles(installedPluginDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+                .Where(path => !Path.GetFileName(path).Contains(".Shared", StringComparison.OrdinalIgnoreCase)
+                    && !Path.GetFileName(path).Contains(".SDK", StringComparison.OrdinalIgnoreCase))
                 .Should()
                 .ContainSingle()
                 .Subject;

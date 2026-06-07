@@ -946,7 +946,7 @@ public readonly struct StepperValue(int value, int min, int max, int step, int[]
         $" {nameof(Min)}: {Min}," +
         $" {nameof(Max)}: {Max}," +
         $" {nameof(Step)}: {Step}," +
-        $" {nameof(Steps)}: [{string.Join(", ", Steps)}]," +
+        $" {nameof(Steps)}: [{string.Join(", ", Steps ?? [])}]," +
         $" {nameof(DefaultValue)} : {DefaultValue}";
 }
 

@@ -27,6 +27,12 @@
     <DefineConstants Condition="'$(EnableUdtTestHooks)' == 'true'">$(DefineConstants);UDT_TEST_HOOKS</DefineConstants>
   </PropertyGroup>
 
+  <ItemDefinitionGroup Condition="'$(EnableUdtTestHooks)' == 'true'">
+    <ProjectReference>
+      <AdditionalProperties>%(AdditionalProperties);EnableUdtTestHooks=true</AdditionalProperties>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">
     <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true" WorkingDirectory="$(MSBuildThisFileDirectory)" Condition="'$(SkipGitInfoLookup)' != 'True'">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHashRaw" />

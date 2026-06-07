@@ -43,7 +43,8 @@ public partial class SensorsControl
 
     private CancellationTokenSource? _batteryCts;
     private Task? _batteryRefreshTask;
-    private readonly TaskCompletionSource _firstSensorDataTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly object _initialSensorDataLoadLock = new();
+    private TaskCompletionSource _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
     private bool _hasRenderedSensorData;
     private SensorsData? _lastRenderedSensorData;
     private int _extendedDetailsRefreshVersion;
@@ -97,13 +98,42 @@ public partial class SensorsControl
             _sensorsGrid.Columns = columns;
     }
 
-    public Task FirstSensorDataReadyTask => _firstSensorDataTaskCompletionSource.Task;
+    public Task FirstSensorDataReadyTask
+    {
+        get
+        {
+            lock (_initialSensorDataLoadLock)
+                return _firstSensorDataTaskCompletionSource.Task;
+        }
+    }
+
+    public Task RestartInitialSensorDataLoad()
+    {
+        lock (_initialSensorDataLoadLock)
+        {
+            if (_lastRenderedSensorData is { } data && CanCompleteInitialLoadFromCachedSensorData(data))
+            {
+                _hasRenderedSensorData = true;
+                _firstSensorDataTaskCompletionSource.TrySetResult();
+                return _firstSensorDataTaskCompletionSource.Task;
+            }
+
+            _hasRenderedSensorData = false;
+            if (_firstSensorDataTaskCompletionSource.Task.IsCompleted)
+                _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
+
+            return _firstSensorDataTaskCompletionSource.Task;
+        }
+    }
 
     internal static bool HasInitialSummarySensorData(SensorsData data) =>
         HasInitialSummarySensorData(data.CPU) && HasInitialSummarySensorData(data.GPU);
 
     internal static bool HasAnySummarySensorData(SensorsData data) =>
         HasAnySummarySensorData(data.CPU) || HasAnySummarySensorData(data.GPU);
+
+    internal static bool CanCompleteInitialLoadFromCachedSensorData(SensorsData data) =>
+        HasInitialSummarySensorData(data);
 
     private async Task FetchHardwareNamesAsync()
     {
@@ -386,7 +416,7 @@ public partial class SensorsControl
                     _sensorRuntimeAvailable = false;
                     SetSensorSectionsVisible(true);
                     ResetSensorValues();
-                    _firstSensorDataTaskCompletionSource.TrySetResult();
+                    CompleteInitialSensorDataLoad();
                 });
                 return;
             }
@@ -434,10 +464,7 @@ public partial class SensorsControl
         CacheSessionSensorDataForDisplay(data);
 
         if (!_hasRenderedSensorData && shouldCompleteInitialLoad)
-        {
-            _hasRenderedSensorData = true;
-            _firstSensorDataTaskCompletionSource.TrySetResult();
-        }
+            CompleteInitialSensorDataLoad();
 
         UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
             $"{data.CPU.Utilization}%");
@@ -798,6 +825,18 @@ public partial class SensorsControl
 
     private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
 
+    private static TaskCompletionSource CreateInitialSensorDataTaskCompletionSource() =>
+        new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    private void CompleteInitialSensorDataLoad()
+    {
+        lock (_initialSensorDataLoadLock)
+        {
+            _hasRenderedSensorData = true;
+            _firstSensorDataTaskCompletionSource.TrySetResult();
+        }
+    }
+
     private static bool HasInitialSummarySensorData(SensorData data) =>
         HasRenderableProgressMetric(data.Utilization, data.MaxUtilization)
         && HasRenderableProgressMetric(data.CoreClock, data.MaxCoreClock)
@@ -1080,6 +1119,16 @@ public partial class SensorsControl
 
     internal static string FormatTemperatureRangeText(string? primaryTemperatureText, string? existingRangeText) =>
         FormatFallbackRangeText(primaryTemperatureText, existingRangeText);
+
+    internal static bool IsUsefulDetailValue(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        var trimmed = text.Trim();
+        return !string.Equals(trimmed, "-", StringComparison.Ordinal)
+            && !string.Equals(trimmed, NotAvailableText(), StringComparison.OrdinalIgnoreCase);
+    }
 
     private static string? FormatThroughput(float bytesPerSecond)
     {
