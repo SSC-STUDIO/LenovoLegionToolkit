@@ -7,7 +7,7 @@
   "architecture": {
     "64bit": {
       "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.1/LenovoLegionToolkit_v4.2.1_Setup.exe",
-      "hash": "18b834596fa71f531154e100b0d69896449745db744a88fb497872e7e62ee0ff"
+      "hash": "03131c9fd11bf9fe6800c2b58dc7fe5aeb5241b2abd8d365bb206de7d1a2338d"
     }
   },
   "innosetup": true,

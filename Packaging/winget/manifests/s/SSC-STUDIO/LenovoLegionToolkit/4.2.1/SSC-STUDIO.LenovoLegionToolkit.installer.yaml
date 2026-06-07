@@ -9,6 +9,6 @@ ReleaseDate: 2026-06-07
 Installers:
 - Architecture: x64
   InstallerUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.1/LenovoLegionToolkit_v4.2.1_Setup.exe
-  InstallerSha256: 18B834596FA71F531154E100B0D69896449745DB744A88FB497872E7E62EE0FF
+  InstallerSha256: 03131C9FD11BF9FE6800C2B58DC7FE5AEB5241B2ABD8D365BB206DE7D1A2338D
 ManifestType: installer
 ManifestVersion: 1.10.0
