@@ -153,7 +153,7 @@ public class SensorsControlTests
     }
 
     [Fact]
-    public void SensorsControlMarkup_ShouldNotShowAverageBatteryTemperatureInDetails()
+    public void SensorsControlMarkup_ShouldShowAverageBatteryTemperatureInDetails()
     {
         var xaml = ReadSensorsControlXaml();
         var batteryDetailsStart = xaml.IndexOf("x:Name=\"_batteryDetailsPanel\"", StringComparison.Ordinal);
@@ -163,8 +163,8 @@ public class SensorsControlTests
         batteryDetailsEnd.Should().BeGreaterThan(batteryDetailsStart);
 
         var batteryDetailsXaml = xaml[batteryDetailsStart..batteryDetailsEnd].ToLowerInvariant();
-        batteryDetailsXaml.Should().NotContain("average");
-        batteryDetailsXaml.Should().NotContain("平均");
+        batteryDetailsXaml.Should().Contain("_batteryaveragetemperaturetitle");
+        batteryDetailsXaml.Should().Contain("_batteryaveragetemperature");
     }
 
     [Fact]

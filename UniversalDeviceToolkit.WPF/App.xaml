@@ -28,6 +28,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardAction.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardExpander.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/Charts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/DynamicScrollBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/InfoBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/NavigationStore.xaml" />

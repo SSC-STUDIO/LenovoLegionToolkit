@@ -40,4 +40,26 @@
     <sys:Double x:Key="ButtonHeightStandard" xmlns:sys="clr-namespace:System;assembly=mscorlib">32</sys:Double>
     <sys:Double x:Key="ButtonHeightLarge" xmlns:sys="clr-namespace:System;assembly=mscorlib">36</sys:Double>
 
+    <!-- Chart / Visualization Palette -->
+    <!-- Series colors shared by trend charts, radial gauges and legends. -->
+    <Color x:Key="ChartUtilizationColor">#FF4F9DF7</Color>
+    <Color x:Key="ChartCoreClockColor">#FF6FBF73</Color>
+    <Color x:Key="ChartTemperatureColor">#FFD9883B</Color>
+    <Color x:Key="ChartBatteryColor">#FF6FBF73</Color>
+    <Color x:Key="ChartCautionColor">#FFE0A92E</Color>
+    <Color x:Key="ChartCriticalColor">#FFE05656</Color>
+
+    <SolidColorBrush x:Key="ChartUtilizationBrush" Color="{StaticResource ChartUtilizationColor}" />
+    <SolidColorBrush x:Key="ChartCoreClockBrush" Color="{StaticResource ChartCoreClockColor}" />
+    <SolidColorBrush x:Key="ChartTemperatureBrush" Color="{StaticResource ChartTemperatureColor}" />
+    <SolidColorBrush x:Key="ChartBatteryBrush" Color="{StaticResource ChartBatteryColor}" />
+    <SolidColorBrush x:Key="ChartCautionBrush" Color="{StaticResource ChartCautionColor}" />
+    <SolidColorBrush x:Key="ChartCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
+    <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
+
+    <!-- Gauge Size Tokens -->
+    <sys:Double x:Key="GaugeSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">88</sys:Double>
+    <sys:Double x:Key="GaugeSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">110</sys:Double>
+    <sys:Double x:Key="GaugeSizeLG" xmlns:sys="clr-namespace:System;assembly=mscorlib">132</sys:Double>
+
 </ResourceDictionary>

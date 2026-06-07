@@ -56,12 +56,45 @@ public partial class SensorsControl
     {
         InitializeComponent();
         InitializeContextMenu();
+        InitializeTrendCharts();
         ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
         SetInitialSensorPlaceholders();
         InitializeFromSessionCache();
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
+        SizeChanged += SensorsControl_SizeChanged;
+    }
+
+    private const string TrendUtilizationKey = "util";
+    private const string TrendCoreClockKey = "clock";
+    private const string TrendTemperatureKey = "temp";
+
+    private void InitializeTrendCharts()
+    {
+        foreach (var chart in new[] { _cpuTrendChart, _gpuTrendChart })
+        {
+            if (chart is null)
+                continue;
+
+            chart.DefineSeries(TrendUtilizationKey, GetChartColor("ChartUtilizationColor", System.Windows.Media.Colors.DodgerBlue), 100);
+            chart.DefineSeries(TrendCoreClockKey, GetChartColor("ChartCoreClockColor", System.Windows.Media.Colors.MediumSeaGreen));
+            chart.DefineSeries(TrendTemperatureKey, GetChartColor("ChartTemperatureColor", System.Windows.Media.Colors.Goldenrod), 110);
+        }
+    }
+
+    private System.Windows.Media.Color GetChartColor(string resourceKey, System.Windows.Media.Color fallback) =>
+        TryFindResource(resourceKey) is System.Windows.Media.Color color ? color : fallback;
+
+    private void SensorsControl_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (!e.WidthChanged || _sensorsGrid is null)
+            return;
+
+        // Stack the three sensor sections vertically on narrow widths, side-by-side when wide.
+        var columns = e.NewSize.Width >= 900 ? 3 : e.NewSize.Width >= 560 ? 2 : 1;
+        if (_sensorsGrid.Columns != columns)
+            _sensorsGrid.Columns = columns;
     }
 
     public Task FirstSensorDataReadyTask => _firstSensorDataTaskCompletionSource.Task;
@@ -191,6 +224,17 @@ public partial class SensorsControl
 
         bar.BeginAnimation(System.Windows.Controls.Primitives.RangeBase.ValueProperty, null);
         bar.Value = batteryInfo.BatteryPercentage;
+
+        if (_batteryGauge is not null)
+        {
+            _batteryGauge.Maximum = 100;
+            _batteryGauge.Value = batteryInfo.BatteryPercentage;
+            _batteryGauge.ValueText = $"{batteryInfo.BatteryPercentage:N0}%";
+            _batteryGauge.RingBrush = (batteryInfo.IsLowBattery
+                ? TryFindResource("ChartCautionBrush")
+                : TryFindResource("ChartBatteryBrush")) as System.Windows.Media.Brush
+                ?? _batteryGauge.RingBrush;
+        }
         
         if (FindName("_batteryPercentageLabel") is ContentControl label)
         {
@@ -257,16 +301,17 @@ public partial class SensorsControl
              UpdateDetailText("_batteryCap", $"{info.EstimateChargeRemaining / 1000.0:0.00} Wh");
              UpdateDetailText("_batteryFullCap", $"{info.FullChargeCapacity / 1000.0:0.00} Wh");
              UpdateDetailText("_batteryDesignCap", $"{info.DesignCapacity / 1000.0:0.00} Wh");
-             
-             if (FindName("_batteryCapBar") is System.Windows.Controls.Primitives.RangeBase capBar) 
-                capBar.Value = (info.EstimateChargeRemaining / (double)info.DesignCapacity) * 100.0;
-             if (FindName("_batteryFullCapBar") is System.Windows.Controls.Primitives.RangeBase fullBar) 
-                fullBar.Value = (info.FullChargeCapacity / (double)info.DesignCapacity) * 100.0;
+
+             if (_batteryCapGauge is not null)
+                _batteryCapGauge.Value = (info.EstimateChargeRemaining / (double)info.DesignCapacity) * 100.0;
+             if (_batteryFullCapGauge is not null)
+                _batteryFullCapGauge.Value = (info.FullChargeCapacity / (double)info.DesignCapacity) * 100.0;
         }
 
         UpdateDetailText("_batteryCycles", $"{info.CycleCount:N0}");
         UpdateDetailText("_batteryDate", info.ManufactureDate?.ToString(LocalizationHelper.ShortDateFormat) ?? string.Empty);
         UpdateDetailText("_batteryTemperature", FormatNullableTemperature(info.BatteryTemperatureC, _applicationSettings.Store.TemperatureUnit));
+        UpdateDetailText("_batteryAverageTemperature", FormatNullableTemperature(info.AvgTemperatureC, _applicationSettings.Store.TemperatureUnit));
 
     }
 
@@ -484,7 +529,48 @@ public partial class SensorsControl
                  gpuVoltageRange.Text = NotAvailableText();
         }
 
+        UpdateGaugesAndTrends(data);
+
         QueueExtendedDetailValuesRefresh();
+    }
+
+    private void UpdateGaugesAndTrends(SensorsData data)
+    {
+        // CPU / GPU utilization gauges (center ring of each section).
+        if (_cpuGauge is not null)
+        {
+            var util = data.CPU.Utilization >= 0 ? data.CPU.Utilization : 0;
+            _cpuGauge.Maximum = data.CPU.MaxUtilization > 0 ? data.CPU.MaxUtilization : 100;
+            _cpuGauge.Value = util;
+            _cpuGauge.ValueText = data.CPU.Utilization >= 0 ? $"{data.CPU.Utilization}%" : "-";
+        }
+
+        if (_gpuGauge is not null)
+        {
+            var util = data.GPU.Utilization >= 0 ? data.GPU.Utilization : 0;
+            _gpuGauge.Maximum = data.GPU.MaxUtilization > 0 ? data.GPU.MaxUtilization : 100;
+            _gpuGauge.Value = util;
+            _gpuGauge.ValueText = data.GPU.Utilization >= 0 ? $"{data.GPU.Utilization}%" : "-";
+        }
+
+        // Trend charts: push the latest summary samples (utilization %, core clock GHz, temperature).
+        PushTrendSamples(_cpuTrendChart, data.CPU);
+        PushTrendSamples(_gpuTrendChart, data.GPU);
+    }
+
+    private static void PushTrendSamples(Charts.TrendChartControl? chart, SensorData data)
+    {
+        if (chart is null)
+            return;
+
+        if (data.Utilization >= 0)
+            chart.AddSample(TrendUtilizationKey, data.Utilization);
+
+        if (data.CoreClock >= 0)
+            chart.AddSample(TrendCoreClockKey, data.CoreClock / 1000.0);
+
+        if (data.Temperature >= 0)
+            chart.AddSample(TrendTemperatureKey, data.Temperature);
     }
 
     private void ResetSensorValues()
@@ -693,8 +779,6 @@ public partial class SensorsControl
     {
         SetVisibility("_cpuSection", visible);
         SetVisibility("_gpuSection", visible);
-        SetVisibility("_cpuGpuSeparatorLeft", visible);
-        SetVisibility("_cpuGpuSeparatorRight", visible);
 
         if (!visible)
         {
@@ -752,6 +836,8 @@ public partial class SensorsControl
         UpdateDetailText("_cpuMemoryTemperature", NotAvailableText());
         UpdateDetailText("_cpuSsdTemperatureTitle", T("SensorsControl_SsdTemperature_Title", "SSD Temperature"));
         UpdateDetailText("_cpuSsdTemperature", NotAvailableText());
+        UpdateDetailText("_batteryAverageTemperatureTitle", T("SensorsControl_AverageTemperature_Title", "Average Temperature"));
+        UpdateDetailText("_batteryAverageTemperature", NotAvailableText());
         UpdateDetailText("_gpuWattage", NotAvailableText());
         UpdateDetailText("_gpuVoltage", NotAvailableText());
         UpdateDetailText("_gpuTempRange", NotAvailableText());

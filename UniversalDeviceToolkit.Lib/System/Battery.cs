@@ -16,6 +16,8 @@ public static class Battery
     private static readonly object _batteryDataLock = new();
     private static int _minDischargeRate = int.MaxValue;
     private static int _maxDischargeRate = 0;
+    private static double _totalTemp;
+    private static int _tempSampleCount;
 
     public static bool IsBatteryMonitoringSupported()
     {
@@ -83,6 +85,7 @@ public static class Battery
 
         double minDischargeRate;
         double maxDischargeRate;
+        double? avgTemp;
         lock (_batteryDataLock)
         {
             try
@@ -91,6 +94,11 @@ public static class Battery
                 if (lenovoBatteryInformation.HasValue)
                 {
                     temperatureC = DecodeTemperatureC(lenovoBatteryInformation.Value.Temperature);
+                    if (temperatureC.HasValue)
+                    {
+                        _totalTemp += temperatureC.Value;
+                        _tempSampleCount++;
+                    }
 
                     manufactureDate = DecodeDateTime(lenovoBatteryInformation.Value.ManufactureDate);
                     firstUseDate = DecodeDateTime(lenovoBatteryInformation.Value.FirstUseDate);
@@ -102,6 +110,7 @@ public static class Battery
                     Log.Instance.Trace($"Failed to get temperature of battery.", ex);
             }
 
+            avgTemp = _tempSampleCount > 0 ? _totalTemp / _tempSampleCount : null;
             minDischargeRate = (status.Rate == 0) ? 0 : _minDischargeRate;
             maxDischargeRate = _maxDischargeRate;
         }
@@ -122,7 +131,7 @@ public static class Battery
             temperatureC,
             manufactureDate,
             firstUseDate,
-            modelName);
+            modelName).WithAvgTemp(avgTemp);
     }
 
     private static string? GetBatteryDeviceName(uint batteryTag)

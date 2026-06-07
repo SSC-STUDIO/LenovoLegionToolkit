@@ -49,6 +49,29 @@ public readonly struct BatteryInformation(
     public DateTime? ManufactureDate { get; } = manufactureDate;
     public DateTime? FirstUseDate { get; } = firstUseDate;
     public string? ModelName { get; } = modelName;
+    public double? AvgTemperatureC { get; private init; }
+
+    public BatteryInformation WithAvgTemp(double? avgTemperatureC) =>
+        new(
+            IsCharging,
+            BatteryPercentage,
+            BatteryLifeRemaining,
+            FullBatteryLifeRemaining,
+            DischargeRate,
+            MinDischargeRate,
+            MaxDischargeRate,
+            EstimateChargeRemaining,
+            DesignCapacity,
+            FullChargeCapacity,
+            CycleCount,
+            IsLowBattery,
+            BatteryTemperatureC,
+            ManufactureDate,
+            FirstUseDate,
+            ModelName)
+        {
+            AvgTemperatureC = avgTemperatureC
+        };
 
     public double BatteryHealth =>
         DesignCapacity > 0

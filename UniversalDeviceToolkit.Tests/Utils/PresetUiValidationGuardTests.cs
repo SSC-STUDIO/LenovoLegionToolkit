@@ -60,6 +60,17 @@ public sealed class PresetUiValidationGuardTests
             }
         }
 
+        var fallback = new DirectoryInfo(AppContext.BaseDirectory);
+        while (fallback is not null)
+        {
+            var nestedSolution = Directory.EnumerateFiles(fallback.FullName, "UniversalDeviceToolkit.sln", SearchOption.AllDirectories)
+                .FirstOrDefault();
+            if (nestedSolution is not null)
+                return Path.GetDirectoryName(nestedSolution)!;
+
+            fallback = fallback.Parent;
+        }
+
         throw new DirectoryNotFoundException("Could not find repository root.");
     }
 }

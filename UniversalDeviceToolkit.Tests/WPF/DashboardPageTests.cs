@@ -29,6 +29,19 @@ public class DashboardPageTests
             .And.Contain("IsHitTestVisible=\"False\"");
     }
 
+    [Theory]
+    [InlineData(500, 1)]
+    [InlineData(1000, 1)]
+    [InlineData(1001, 2)]
+    [InlineData(1300, 2)]
+    [InlineData(1500, 2)]
+    [InlineData(1501, 3)]
+    [InlineData(2400, 3)]
+    public void GetColumnCountForWidth_ShouldScaleColumnsWithWidth(double width, int expectedColumns)
+    {
+        DashboardPage.GetColumnCountForWidth(width).Should().Be(expectedColumns);
+    }
+
     private static string ReadDashboardPageXaml()
     {
         var root = FindRepositoryRoot();

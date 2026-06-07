@@ -18,7 +18,7 @@ We take security seriously. If you believe you have found a security vulnerabili
 
 1. **Do NOT** open a public GitHub issue
 2. **Do NOT** disclose the vulnerability publicly
-3. **Do** send a detailed report to: security@lenovolegiontoolkit.dev
+3. **Do** send a detailed report to: 3992237161@qq.com
 
 ### What to Include
 

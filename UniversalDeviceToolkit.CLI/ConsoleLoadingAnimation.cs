@@ -7,7 +7,7 @@ namespace UniversalDeviceToolkit.CLI;
 
 internal sealed class ConsoleLoadingAnimation : IDisposable
 {
-    private const int IntervalMilliseconds = 90;
+    private const int IntervalMilliseconds = 250;
     private static readonly string[] Frames = ["|", "/", "-", "\\"];
 
     private readonly CancellationTokenSource _cts = new();

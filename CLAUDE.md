@@ -1,7 +1,7 @@
-# Lenovo Legion Toolkit
+# Universal Device Toolkit
 
 ## Project Overview
-Open-source Lenovo Legion laptop management toolkit. Large C# .NET solution with CLI, WPF UI, and multiple library projects.
+Open-source Universal Device Toolkit for Windows device management. Large C# .NET solution with CLI, WPF UI, and multiple library projects.
 
 ## Tech Stack
 - Language: C# (.NET)

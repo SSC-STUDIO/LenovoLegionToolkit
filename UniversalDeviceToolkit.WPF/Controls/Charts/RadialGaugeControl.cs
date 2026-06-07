@@ -1,0 +1,289 @@
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+
+namespace UniversalDeviceToolkit.WPF.Controls.Charts;
+
+/// <summary>
+/// A lightweight, self-drawn radial (ring) gauge. Renders a background track and a
+/// foreground arc proportional to <see cref="Value"/> / <see cref="Maximum"/>, with a
+/// large centered value and an optional caption underneath. No external chart library
+/// is used; everything is drawn with <see cref="Path"/> + <see cref="ArcSegment"/>.
+/// </summary>
+public class RadialGaugeControl : Control
+{
+    private const double StartAngle = 135.0;   // sweep starts at lower-left
+    private const double SweepAngle = 270.0;    // open-bottom ring (gap at bottom)
+    private const double AnimationMs = 350.0;
+
+    private Path? _trackPath;
+    private Path? _valuePath;
+    private TextBlock? _valueText;
+    private TextBlock? _captionText;
+    private double _renderedValue;
+
+    static RadialGaugeControl()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(RadialGaugeControl),
+            new FrameworkPropertyMetadata(typeof(RadialGaugeControl)));
+    }
+
+    public RadialGaugeControl()
+    {
+        Loaded += (_, _) => RedrawAll();
+        SizeChanged += (_, _) => RedrawAll();
+    }
+
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+        nameof(Value), typeof(double), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(0.0, OnValueChanged));
+
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
+    public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
+        nameof(Maximum), typeof(double), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(100.0, OnVisualChanged));
+
+    public double Maximum
+    {
+        get => (double)GetValue(MaximumProperty);
+        set => SetValue(MaximumProperty, value);
+    }
+
+    public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
+        nameof(Minimum), typeof(double), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(0.0, OnVisualChanged));
+
+    public double Minimum
+    {
+        get => (double)GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
+    }
+
+    public static readonly DependencyProperty ValueTextProperty = DependencyProperty.Register(
+        nameof(ValueText), typeof(string), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(string.Empty, OnTextChanged));
+
+    /// <summary>Optional explicit center text. When empty, the numeric value is shown.</summary>
+    public string ValueText
+    {
+        get => (string)GetValue(ValueTextProperty);
+        set => SetValue(ValueTextProperty, value);
+    }
+
+    public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(
+        nameof(Caption), typeof(string), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(string.Empty, OnTextChanged));
+
+    public string Caption
+    {
+        get => (string)GetValue(CaptionProperty);
+        set => SetValue(CaptionProperty, value);
+    }
+
+    public static readonly DependencyProperty RingBrushProperty = DependencyProperty.Register(
+        nameof(RingBrush), typeof(Brush), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(Brushes.DodgerBlue, OnVisualChanged));
+
+    public Brush RingBrush
+    {
+        get => (Brush)GetValue(RingBrushProperty);
+        set => SetValue(RingBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty TrackBrushProperty = DependencyProperty.Register(
+        nameof(TrackBrush), typeof(Brush), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(OnVisualChanged));
+
+    public Brush? TrackBrush
+    {
+        get => (Brush?)GetValue(TrackBrushProperty);
+        set => SetValue(TrackBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty RingThicknessProperty = DependencyProperty.Register(
+        nameof(RingThickness), typeof(double), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(8.0, OnVisualChanged));
+
+    public double RingThickness
+    {
+        get => (double)GetValue(RingThicknessProperty);
+        set => SetValue(RingThicknessProperty, value);
+    }
+
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+        _trackPath = GetTemplateChild("PART_Track") as Path;
+        _valuePath = GetTemplateChild("PART_Value") as Path;
+        _valueText = GetTemplateChild("PART_ValueText") as TextBlock;
+        _captionText = GetTemplateChild("PART_CaptionText") as TextBlock;
+        _renderedValue = NormalizedValue();
+        RedrawAll();
+        UpdateText();
+    }
+
+    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var gauge = (RadialGaugeControl)d;
+        gauge.AnimateToValue();
+        gauge.UpdateText();
+    }
+
+    private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var gauge = (RadialGaugeControl)d;
+        gauge.RedrawAll();
+    }
+
+    private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        => ((RadialGaugeControl)d).UpdateText();
+
+    private double NormalizedValue()
+    {
+        var range = Maximum - Minimum;
+        if (range <= 0 || double.IsNaN(Value))
+            return 0;
+
+        var ratio = (Value - Minimum) / range;
+        return Math.Clamp(ratio, 0.0, 1.0);
+    }
+
+    private void AnimateToValue()
+    {
+        var target = NormalizedValue();
+        BeginAnimationManually(_renderedValue, target);
+    }
+
+    private void BeginAnimationManually(double from, double to)
+    {
+        var start = DateTime.UtcNow;
+        var duration = TimeSpan.FromMilliseconds(AnimationMs);
+
+        void OnRendering(object? sender, EventArgs e)
+        {
+            var elapsed = DateTime.UtcNow - start;
+            var t = Math.Clamp(elapsed.TotalMilliseconds / duration.TotalMilliseconds, 0.0, 1.0);
+            // Cubic ease-out
+            var eased = 1 - Math.Pow(1 - t, 3);
+            _renderedValue = from + (to - from) * eased;
+            DrawValueArc();
+
+            if (t >= 1.0)
+                CompositionTarget.Rendering -= OnRendering;
+        }
+
+        CompositionTarget.Rendering -= OnRendering;
+        CompositionTarget.Rendering += OnRendering;
+    }
+
+    private void RedrawAll()
+    {
+        DrawTrackArc();
+        DrawValueArc();
+    }
+
+    private (Point center, double radius) GetGeometry()
+    {
+        var size = Math.Min(ActualWidth, ActualHeight);
+        var radius = Math.Max(0, (size - RingThickness) / 2.0 - 1);
+        var center = new Point(ActualWidth / 2.0, ActualHeight / 2.0);
+        return (center, radius);
+    }
+
+    private void DrawTrackArc()
+    {
+        if (_trackPath is null)
+            return;
+
+        var (center, radius) = GetGeometry();
+        if (radius <= 0)
+        {
+            _trackPath.Data = null;
+            return;
+        }
+
+        _trackPath.Data = BuildArc(center, radius, StartAngle, SweepAngle);
+        _trackPath.StrokeThickness = RingThickness;
+        _trackPath.Stroke = TrackBrush ?? (TryFindResource("ChartTrackBrush") as Brush) ?? Brushes.Gray;
+        _trackPath.StrokeStartLineCap = PenLineCap.Round;
+        _trackPath.StrokeEndLineCap = PenLineCap.Round;
+    }
+
+    private void DrawValueArc()
+    {
+        if (_valuePath is null)
+            return;
+
+        var (center, radius) = GetGeometry();
+        if (radius <= 0)
+        {
+            _valuePath.Data = null;
+            return;
+        }
+
+        var sweep = SweepAngle * Math.Clamp(_renderedValue, 0.0, 1.0);
+        _valuePath.StrokeThickness = RingThickness;
+        _valuePath.Stroke = RingBrush;
+        _valuePath.StrokeStartLineCap = PenLineCap.Round;
+        _valuePath.StrokeEndLineCap = PenLineCap.Round;
+
+        // Avoid a zero-length arc (renders nothing / a dot) when value is ~0.
+        _valuePath.Data = sweep < 0.5 ? null : BuildArc(center, radius, StartAngle, sweep);
+    }
+
+    private static Geometry BuildArc(Point center, double radius, double startAngleDeg, double sweepDeg)
+    {
+        var start = PointOnCircle(center, radius, startAngleDeg);
+        var end = PointOnCircle(center, radius, startAngleDeg + sweepDeg);
+        var isLargeArc = sweepDeg > 180.0;
+
+        var figure = new PathFigure { StartPoint = start, IsClosed = false, IsFilled = false };
+        figure.Segments.Add(new ArcSegment
+        {
+            Point = end,
+            Size = new Size(radius, radius),
+            SweepDirection = SweepDirection.Clockwise,
+            IsLargeArc = isLargeArc
+        });
+
+        var geometry = new PathGeometry();
+        geometry.Figures.Add(figure);
+        geometry.Freeze();
+        return geometry;
+    }
+
+    private static Point PointOnCircle(Point center, double radius, double angleDeg)
+    {
+        var angleRad = angleDeg * Math.PI / 180.0;
+        return new Point(
+            center.X + radius * Math.Cos(angleRad),
+            center.Y + radius * Math.Sin(angleRad));
+    }
+
+    private void UpdateText()
+    {
+        if (_valueText is not null)
+        {
+            _valueText.Text = string.IsNullOrEmpty(ValueText)
+                ? Value.ToString("0", CultureInfo.CurrentCulture)
+                : ValueText;
+        }
+
+        if (_captionText is not null)
+        {
+            _captionText.Text = Caption;
+            _captionText.Visibility = string.IsNullOrEmpty(Caption)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+    }
+}

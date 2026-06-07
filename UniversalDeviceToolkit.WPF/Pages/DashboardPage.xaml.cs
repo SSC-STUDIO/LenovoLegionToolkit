@@ -25,6 +25,8 @@ public partial class DashboardPage
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
 
     private readonly List<DashboardGroupControl> _dashboardGroupControls = [];
+    private HyperlinkButton? _editDashboardHyperlink;
+    private int _currentColumnCount = 1;
 
     public DashboardPage()
     {
@@ -78,19 +80,12 @@ public partial class DashboardPage
                 Log.Instance.Trace($" - {group}");
         }
 
-        _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-        _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-
         foreach (var group in groups)
         {
-            _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
-
             var control = new DashboardGroupControl(group);
             _content.Children.Add(control);
             _dashboardGroupControls.Add(control);
         }
-
-        _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
 
         var editDashboardHyperlink = new HyperlinkButton
         {
@@ -106,10 +101,7 @@ public partial class DashboardPage
             window.ShowDialog();
         };
 
-        Grid.SetRow(editDashboardHyperlink, groups.Length);
-        Grid.SetColumn(editDashboardHyperlink, 0);
-        Grid.SetColumnSpan(editDashboardHyperlink, 2);
-
+        _editDashboardHyperlink = editDashboardHyperlink;
         _content.Children.Add(editDashboardHyperlink);
 
         LayoutGroups(ActualWidth);
@@ -178,25 +170,39 @@ public partial class DashboardPage
         if (!e.WidthChanged)
             return;
 
+        // Only relayout when the responsive column count actually changes.
+        if (GetColumnCountForWidth(e.NewSize.Width) == _currentColumnCount && _content.ColumnDefinitions.Count > 0)
+        {
+            LayoutSkeletonGroups(_currentColumnCount);
+            return;
+        }
+
         LayoutGroups(e.NewSize.Width);
     }
 
     private void LayoutGroups(double width)
     {
-        LayoutSkeletonGroups(width);
-
-        if (width > 1000)
-            Expand();
-        else
-            Collapse();
+        var columns = GetColumnCountForWidth(width);
+        LayoutSkeletonGroups(columns);
+        LayoutColumns(columns);
     }
 
-    private void LayoutSkeletonGroups(double width)
+    internal static int GetColumnCountForWidth(double width)
+    {
+        if (width > 1500)
+            return 3;
+        if (width > 1000)
+            return 2;
+        return 1;
+    }
+
+    private void LayoutSkeletonGroups(int columns)
     {
         if (_skeletonGroupsGrid is null || _skeletonGroup0 is null || _skeletonGroup1 is null)
             return;
 
-        if (width > 1000)
+        // The skeleton placeholder only models two columns; collapse to one when narrow.
+        if (columns >= 2)
         {
             _skeletonGroupsGrid.ColumnDefinitions[1].Width = new(1, GridUnitType.Star);
             Grid.SetRow(_skeletonGroup0, 0);
@@ -213,32 +219,44 @@ public partial class DashboardPage
         Grid.SetColumn(_skeletonGroup1, 0);
     }
 
-    private void Expand()
+    private void LayoutColumns(int columns)
     {
-        var lastColumn = _content.ColumnDefinitions.LastOrDefault();
-        if (lastColumn is not null)
-            lastColumn.Width = new(1, GridUnitType.Star);
+        columns = Math.Max(1, columns);
+
+        // Rebuild column definitions to match the target column count.
+        if (_content.ColumnDefinitions.Count != columns)
+        {
+            _content.ColumnDefinitions.Clear();
+            for (var i = 0; i < columns; i++)
+                _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+        }
+
+        // Ensure enough rows: one per "row" of group controls plus a trailing row for the link.
+        var groupRows = (int)Math.Ceiling(_dashboardGroupControls.Count / (double)columns);
+        var rowsNeeded = groupRows + 1;
+        if (_content.RowDefinitions.Count != rowsNeeded)
+        {
+            _content.RowDefinitions.Clear();
+            for (var i = 0; i < rowsNeeded; i++)
+                _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
+        }
 
         for (var index = 0; index < _dashboardGroupControls.Count; index++)
         {
             var control = _dashboardGroupControls[index];
-            Grid.SetRow(control, index - (index % 2));
-            Grid.SetColumn(control, index % 2);
+            Grid.SetRow(control, index / columns);
+            Grid.SetColumn(control, index % columns);
+            Grid.SetColumnSpan(control, 1);
         }
-    }
 
-    private void Collapse()
-    {
-        var lastColumn = _content.ColumnDefinitions.LastOrDefault();
-        if (lastColumn is not null)
-            lastColumn.Width = new(0, GridUnitType.Pixel);
-
-        for (var index = 0; index < _dashboardGroupControls.Count; index++)
+        if (_editDashboardHyperlink is not null)
         {
-            var control = _dashboardGroupControls[index];
-            Grid.SetRow(control, index);
-            Grid.SetColumn(control, 0);
+            Grid.SetRow(_editDashboardHyperlink, groupRows);
+            Grid.SetColumn(_editDashboardHyperlink, 0);
+            Grid.SetColumnSpan(_editDashboardHyperlink, columns);
         }
+
+        _currentColumnCount = columns;
     }
 }
 }
