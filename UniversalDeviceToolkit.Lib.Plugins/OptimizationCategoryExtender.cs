@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Utils;
@@ -13,6 +15,13 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// </summary>
 public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 {
+    private static readonly JsonSerializerOptions ManifestJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    private static readonly string[] ManifestFileNames = ["plugin.manifest.json", "plugin.json", "Plugin.json"];
+
     private readonly IPluginManager _pluginManager;
 
     public OptimizationCategoryExtender(IPluginManager pluginManager)
@@ -26,11 +35,17 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 
         try
         {
+            var installedPluginIds = GetInstalledPluginIdsSnapshot();
             var installedPlugins = _pluginManager.GetRegisteredPlugins()
-                .Where(p => _pluginManager.IsInstalled(p.Id));
+                .Select(plugin => TryCreateInstalledPluginContext(plugin, installedPluginIds))
+                .Where(context => context is not null)
+                .Cast<InstalledPluginContext>()
+                .ToArray();
 
-            foreach (var plugin in installedPlugins)
+            foreach (var context in installedPlugins)
             {
+                var plugin = context.Plugin;
+
                 try
                 {
                     WindowsOptimizationCategoryDefinition? category = null;
@@ -50,9 +65,9 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 
                     if (category != null)
                     {
-                        if (string.IsNullOrEmpty(category.PluginId))
+                        if (!string.Equals(category.PluginId, context.InstalledPluginId, StringComparison.OrdinalIgnoreCase))
                         {
-                            category = category with { PluginId = plugin.Id };
+                            category = category with { PluginId = context.InstalledPluginId };
                         }
 
                         if (category.ResourceAnchorType is null)
@@ -71,7 +86,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
 
                         list.Add(category);
                     }
-                    else if (TryCreateManifestCategory(plugin) is { } manifestCategory)
+                    else if (TryCreateManifestCategory(context) is { } manifestCategory)
                     {
                         list.Add(manifestCategory);
                     }
@@ -83,8 +98,10 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                 }
             }
 
-            var registeredPluginIds = installedPlugins.Select(plugin => plugin.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            foreach (var pluginId in _pluginManager.GetInstalledPluginIds().Where(id => !registeredPluginIds.Contains(id)))
+            var registeredPluginIds = installedPlugins
+                .SelectMany(context => context.KnownPluginIds)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var pluginId in installedPluginIds.Where(id => !registeredPluginIds.Contains(id)))
             {
                 try
                 {
@@ -107,19 +124,142 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
         return list;
     }
 
+    private HashSet<string> GetInstalledPluginIdsSnapshot()
+    {
+        try
+        {
+            return (_pluginManager.GetInstalledPluginIds() ?? Enumerable.Empty<string>())
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .Select(id => id.Trim())
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read installed plugin IDs: {ex.Message}", ex);
+
+            return [];
+        }
+    }
+
+    private InstalledPluginContext? TryCreateInstalledPluginContext(IPlugin plugin, HashSet<string> installedPluginIds)
+    {
+        var metadata = TryGetPluginMetadata(plugin.Id);
+        var manifest = plugin is PluginManifestAdapter adapter
+            ? adapter.Manifest
+            : TryReadManifestNearPlugin(metadata);
+
+        var knownPluginIds = GetKnownPluginIds(plugin, metadata, manifest).ToArray();
+        var installedPluginId = knownPluginIds.FirstOrDefault(id => IsPluginIdInstalled(id, installedPluginIds));
+
+        return installedPluginId is null
+            ? null
+            : new InstalledPluginContext(plugin, installedPluginId, manifest, knownPluginIds);
+    }
+
+    private bool IsPluginIdInstalled(string pluginId, HashSet<string> installedPluginIds) =>
+        installedPluginIds.Contains(pluginId) || _pluginManager.IsInstalled(pluginId);
+
+    private PluginMetadata? TryGetPluginMetadata(string pluginId)
+    {
+        try
+        {
+            return _pluginManager.GetPluginMetadata(pluginId);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read plugin metadata for {pluginId}: {ex.Message}", ex);
+
+            return null;
+        }
+    }
+
+    private static IEnumerable<string> GetKnownPluginIds(
+        IPlugin plugin,
+        PluginMetadata? metadata,
+        PluginManifest? manifest)
+    {
+        var candidates = new List<string?>
+        {
+            plugin.Id,
+            metadata?.Id,
+            manifest?.Id
+        };
+
+        if (!string.IsNullOrWhiteSpace(metadata?.FilePath))
+        {
+            var pluginDirectory = Path.GetDirectoryName(metadata.FilePath);
+            var directoryName = string.IsNullOrWhiteSpace(pluginDirectory)
+                ? null
+                : Path.GetFileName(pluginDirectory);
+
+            candidates.Add(directoryName);
+            candidates.Add(TrimLegacyAssemblyPrefix(directoryName));
+
+            var parentDirectoryName = string.IsNullOrWhiteSpace(pluginDirectory)
+                ? null
+                : Path.GetFileName(Path.GetDirectoryName(pluginDirectory));
+            if (string.Equals(parentDirectoryName, "local", StringComparison.OrdinalIgnoreCase))
+                candidates.Add(directoryName);
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in candidates)
+        {
+            var value = FirstNonEmpty(candidate);
+            if (!string.IsNullOrEmpty(value) && seen.Add(value))
+                yield return value;
+        }
+    }
+
+    private static string? TrimLegacyAssemblyPrefix(string? value)
+    {
+        const string prefix = "LenovoLegionToolkit.Plugins.";
+        return !string.IsNullOrWhiteSpace(value) && value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+            ? value[prefix.Length..]
+            : null;
+    }
+
+    private static PluginManifest? TryReadManifestNearPlugin(PluginMetadata? metadata)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(metadata?.FilePath))
+                return null;
+
+            var pluginDirectory = Path.GetDirectoryName(metadata.FilePath);
+            if (string.IsNullOrWhiteSpace(pluginDirectory))
+                return null;
+
+            foreach (var manifestFileName in ManifestFileNames)
+            {
+                var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
+                if (!File.Exists(manifestPath))
+                    continue;
+
+                return JsonSerializer.Deserialize<PluginManifest>(
+                    File.ReadAllText(manifestPath),
+                    ManifestJsonOptions);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read plugin manifest near {metadata?.FilePath}: {ex.Message}", ex);
+        }
+
+        return null;
+    }
+
+    private static WindowsOptimizationCategoryDefinition? TryCreateManifestCategory(InstalledPluginContext context) =>
+        TryCreateManifestCategory(context.InstalledPluginId, context.Manifest) ??
+        TryCreateManifestCategory(context.InstalledPluginId);
+
     private static WindowsOptimizationCategoryDefinition? TryCreateManifestCategory(string pluginId)
     {
         var manifest = PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
         return TryCreateManifestCategory(pluginId, manifest);
-    }
-
-    private static WindowsOptimizationCategoryDefinition? TryCreateManifestCategory(IPlugin plugin)
-    {
-        var manifest = plugin is PluginManifestAdapter adapter
-            ? adapter.Manifest
-            : PluginUiCapabilityResolver.ReadInstalledManifest(plugin.Id);
-
-        return TryCreateManifestCategory(plugin.Id, manifest);
     }
 
     private static WindowsOptimizationCategoryDefinition? TryCreateManifestCategory(string pluginId, PluginManifest? manifest)
@@ -185,7 +325,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             title,
             FirstNonEmpty(action.Description, title),
             _ => Task.CompletedTask,
-            Recommended: false);
+            Recommended: action.Recommended ?? false);
     }
 
     private static string FirstNonEmpty(params string?[] values)
@@ -208,4 +348,10 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
         var chars = value.Select(ch => char.IsLetterOrDigit(ch) || ch is '.' or '-' or '_' ? ch : '-').ToArray();
         return new string(chars).Trim('-', '.', '_').ToLowerInvariant();
     }
+
+    private sealed record InstalledPluginContext(
+        IPlugin Plugin,
+        string InstalledPluginId,
+        PluginManifest? Manifest,
+        IReadOnlyList<string> KnownPluginIds);
 }

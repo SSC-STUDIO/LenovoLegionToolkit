@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Settings;
 using Xunit;
 
@@ -186,6 +188,42 @@ public class GPUOverclockSettingsTests : IDisposable
         // Assert
         profile.Name.Should().Be(GPUOverclockSettings.DefaultProfileName);
         profile.Info.Should().Be(GPUOverclockInfo.Zero);
+    }
+
+    [Fact]
+    public void GetUniqueProfileName_WhenNameAlreadyExists_ShouldAppendIncrementingSuffix()
+    {
+        var existingId = Guid.NewGuid();
+        var profiles = new Dictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile>
+        {
+            [existingId] = new() { Name = "Gaming" },
+            [Guid.NewGuid()] = new() { Name = "Gaming (2)" }
+        };
+
+        var name = GPUOverclockController.GetUniqueProfileName("Gaming", profiles);
+
+        name.Should().Be("Gaming (3)");
+    }
+
+    [Fact]
+    public void GetUniqueProfileName_WhenRenamingSameProfile_ShouldKeepName()
+    {
+        var activeProfileId = Guid.NewGuid();
+        var profiles = new Dictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile>
+        {
+            [activeProfileId] = new() { Name = "Gaming" },
+            [Guid.NewGuid()] = new() { Name = "Balanced" }
+        };
+
+        var name = GPUOverclockController.GetUniqueProfileName("Gaming", profiles, activeProfileId);
+
+        name.Should().Be("Gaming");
+    }
+
+    [Fact]
+    public void NormalizeProfileName_WhenNameIsBlank_ShouldUseDefaultProfileName()
+    {
+        GPUOverclockController.NormalizeProfileName("   ").Should().Be(GPUOverclockSettings.DefaultProfileName);
     }
 
     #endregion

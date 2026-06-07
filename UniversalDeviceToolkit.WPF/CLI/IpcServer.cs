@@ -154,8 +154,12 @@ public class IpcServer(
 
     private static string GetPipeName()
     {
+#if UDT_TEST_HOOKS
         var isolationPath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         return UniversalDeviceToolkit.CLI.Lib.Constants.GetPipeName(isolationPath);
+#else
+        return UniversalDeviceToolkit.CLI.Lib.Constants.DEFAULT_PIPE_NAME;
+#endif
     }
 
     private async Task<IpcResponse> HandleRequest(IpcRequest req)

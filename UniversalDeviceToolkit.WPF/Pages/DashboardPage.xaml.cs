@@ -64,7 +64,16 @@ public partial class DashboardPage
 
         _scrollViewer.ScrollToTop();
 
-        _sensors.Visibility = _dashboardSettings.Store.ShowSensors ? Visibility.Visible : Visibility.Collapsed;
+        Task? sensorsReadyTask = null;
+        if (_dashboardSettings.Store.ShowSensors)
+        {
+            sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();
+            _sensors.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            _sensors.Visibility = Visibility.Collapsed;
+        }
 
         _dashboardGroupControls.Clear();
         _content.ColumnDefinitions.Clear();
@@ -106,7 +115,7 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await WaitForDashboardDataAsync();
+        await WaitForDashboardShellAsync(sensorsReadyTask);
         SetDashboardContentReady(true);
         _loader.IsLoading = false;
         await Task.Delay(TimeSpan.FromMilliseconds(250));
@@ -119,17 +128,13 @@ public partial class DashboardPage
         _dashboardContentRoot.IsHitTestVisible = ready;
     }
 
-    private async Task WaitForDashboardDataAsync()
+    private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)
     {
         var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
         if (groupInitializationTasks.Length > 0)
             await Task.WhenAll(groupInitializationTasks);
 
         var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
-
-        Task? sensorsReadyTask = null;
-        if (_dashboardSettings.Store.ShowSensors && _sensors.Visibility == Visibility.Visible)
-            sensorsReadyTask = _sensors.FirstSensorDataReadyTask;
 
         if (contentReadyTasks.Length > 0)
         {
@@ -144,26 +149,34 @@ public partial class DashboardPage
         }
 
         if (sensorsReadyTask is not null)
-        {
-            try
-            {
-                await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout());
-                return;
-            }
-            catch (TimeoutException)
-            {
-                // Sensor backends can be unavailable or slow on some hardware. Keep a finite escape hatch.
-            }
-        }
+            await WaitForDashboardSensorDataAsync(sensorsReadyTask);
 
         await Task.Delay(GetDashboardFallbackLoadingDelay());
+    }
+
+    private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask)
+    {
+        try
+        {
+            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout()).ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard sensor data was not ready before the bounded loading timeout.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard sensor data readiness failed.", ex);
+        }
     }
 
     internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
 
     internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
 
-    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(350);
+    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
 
     private void DashboardPage_SizeChanged(object sender, SizeChangedEventArgs e)
     {

@@ -43,6 +43,10 @@ public class SensorsGroupController : IDisposable
         "Tctl/Tdie",
         "Tctl",
         "Tdie",
+        "CPU Die",
+        "CPU CCD",
+        "CCD",
+        "Tjunction",
         "Core Max",
         "Core Average",
         "Average",
@@ -58,6 +62,19 @@ public class SensorsGroupController : IDisposable
         "VCore",
         "Core VID",
         "CPU VID",
+        "VDDCR CPU",
+        "CPU VDD",
+        "VDD CPU",
+        "VCC Core",
+        "IA Voltage",
+        "IA VR Voltage",
+        "Core VIDs",
+        "CPU Core VID",
+        "CPU Input Voltage",
+        "VCCIN",
+        "VDDCR_VDD",
+        "SVI2 TFN CPU",
+        "SVI3 TFN CPU",
         "SVI2 TFN",
         "SVI3 TFN",
         "VID",
@@ -71,14 +88,31 @@ public class SensorsGroupController : IDisposable
         "Total",
         "CPU Usage",
         "CPU Utilization",
+        "CPU Utility",
         "Package",
     ];
     private static readonly string[] CPU_PACKAGE_POWER_SENSOR_PREFERENCES =
     [
+        "Core+SoC Power",
+        "Core + SoC Power",
+        "Core and SoC Power",
+        "CPU Core+SoC",
+        "CPU Core + SoC",
+        "APU STAPM",
+        "STAPM",
+        "APU PPT",
+        "APU sPPT",
+        "APU Package",
+        "APU Power",
+        "CPU sPPT",
+        "CPU Socket Power",
+        "Socket Power",
         "CPU Package",
         "CPU Package Power",
         "Package Power",
+        "CPU PPT Power",
         "CPU PPT",
+        "sPPT",
         "PPT Limit",
         "Processor Package Power",
         "PPT",
@@ -96,6 +130,10 @@ public class SensorsGroupController : IDisposable
         "IA Cores",
         "IA Power",
         "IA Limit",
+        "VDDCR CPU Power",
+        "CPU VDD Power",
+        "VDD CPU Power",
+        "CPU Core Power",
         "Core Power Draw",
         "CPU Cores",
         "CPU Core",
@@ -115,6 +153,9 @@ public class SensorsGroupController : IDisposable
         "CPU Graphics",
         "GT Cores",
         "GT Power",
+        "VDDCR SOC Power",
+        "VDDCR SoC Power",
+        "VDDCR_SOC Power",
         "CPU SoC",
         "SoC",
         "SOC",
@@ -128,10 +169,31 @@ public class SensorsGroupController : IDisposable
         "EDC",
         "TDC",
     ];
+    private static readonly string[] CPU_P_CORE_CLOCK_SENSOR_PREFERENCES =
+    [
+        "CPU P-Core",
+        "P-Core",
+        "P Core",
+        "Performance Core",
+        "Performance-Core",
+        "CPU Performance",
+    ];
+    private static readonly string[] CPU_E_CORE_CLOCK_SENSOR_PREFERENCES =
+    [
+        "CPU E-Core",
+        "E-Core",
+        "E Core",
+        "Efficient Core",
+        "Efficiency Core",
+        "Efficient-Core",
+        "CPU Efficient",
+        "CPU Efficiency",
+    ];
     private static readonly string[] GPU_VRAM_TEMPERATURE_SENSOR_PREFERENCES =
     [
         "GPU Memory Junction",
         "Memory Junction",
+        "VRAM Junction",
         "VRAM Temperature",
         "Memory Temperature",
         "VRAM",
@@ -145,17 +207,96 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] MEMORY_TEMPERATURE_SENSOR_PREFERENCES =
     [
+        "DIMM Temperature",
+        "DIMM Thermal Sensor",
+        "DIMM Thermal",
+        "Memory Temperature",
+        "Memory Module Temperature",
+        "Module Temperature",
+        "RAM Temperature",
+        "DRAM Temperature",
+        "DIMM Module",
+        "DIMM #",
+        "Memory Slot",
+        "DDR Module",
+        "DDR5 SPD Hub",
+        "DDR4 TSOD",
+        "SPD Hub Temperature",
+        "SPD Hub",
+        "TSOD Temperature",
+        "PMIC Temperature",
+        "Thermal Sensor on DIMM",
         "DIMM",
         "DRAM",
         "DDR",
         "SPD",
+        "TSOD",
+        "PMIC",
         "Memory",
         "RAM",
+    ];
+    private static readonly string[] MOTHERBOARD_TEMPERATURE_SENSOR_PREFERENCES =
+    [
+        "PCH Temperature",
+        "PCH",
+        "Chipset Temperature",
+        "Chipset",
+        "Platform Controller Hub Temperature",
+        "Platform Controller Hub",
+        "Motherboard Temperature",
+        "Motherboard",
+        "Mainboard Temperature",
+        "Mainboard",
+        "Board Temperature",
+        "Board",
+        "VRM MOS Temperature",
+        "VRM Temperature",
+        "VRM MOS",
+        "VRM",
+        "MOSFET",
+        "MOS Temperature",
+        "MOS",
+        "Super I/O",
+        "Super IO",
+        "System Temperature",
+        "Sys Temp",
+        "System",
+        "T_Sensor",
+        "TSensor",
+        "SYSTIN",
+        "AUXTIN",
+        "TMPIN",
+        "Temp1",
+        "Temp 1",
+        "Temperature #1",
+        "Temp2",
+        "Temp 2",
+        "Temperature #2",
+        "ACPI Thermal Zone",
+        "Thermal Zone",
+        "TZ00",
+        "TZ01",
+        "TZS0",
+        "TZS1",
+        "EC Temp",
+        "EC",
+        "Embedded Controller",
+    ];
+    private static readonly string[] BOARD_SENSOR_HARDWARE_NAME_EXCLUSIONS =
+    [
+        "Battery",
+        "Network",
+        "Ethernet",
+        "Wi-Fi",
+        "WiFi",
+        "Wireless",
     ];
     private static readonly string[] GPU_VRAM_USED_SENSOR_PREFERENCES =
     [
         "GPU Memory Used",
+        "GPU Dedicated Memory Used",
         "Dedicated Memory Used",
+        "Dedicated Video Memory Used",
         "D3D Dedicated Memory Used",
         "D3D Shared Memory Used",
         "Shared Memory Used",
@@ -166,7 +307,9 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Memory Total",
         "D3D Shared Memory Total",
+        "GPU Dedicated Memory Total",
         "Dedicated Memory Total",
+        "Dedicated Video Memory Total",
         "Shared Memory Total",
         "VRAM Total",
         "Memory Total",
@@ -175,7 +318,9 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_VRAM_FREE_SENSOR_PREFERENCES =
     [
         "GPU Memory Free",
+        "GPU Dedicated Memory Free",
         "Dedicated Memory Free",
+        "Dedicated Video Memory Free",
         "D3D Dedicated Memory Free",
         "D3D Shared Memory Free",
         "Shared Memory Free",
@@ -185,29 +330,53 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_PCIE_RX_THROUGHPUT_SENSOR_PREFERENCES =
     [
         "GPU PCIe Rx",
+        "GPU PCIe Read",
+        "PCIe Read",
         "PCIe Rx",
+        "PCIe RX",
+        "Bus Read",
         "Bus Rx",
     ];
     private static readonly string[] GPU_PCIE_TX_THROUGHPUT_SENSOR_PREFERENCES =
     [
         "GPU PCIe Tx",
+        "GPU PCIe Write",
+        "PCIe Write",
         "PCIe Tx",
+        "PCIe TX",
+        "Bus Write",
         "Bus Tx",
     ];
     private static readonly string[] GPU_POWER_SENSOR_PREFERENCES =
     [
         "GPU Package",
+        "GPU PPT",
         "GPU Power",
+        "GPU Power Draw",
+        "GPU Power Consumption",
+        "GPU Instantaneous Power",
         "Board Power Draw",
+        "Board Power",
         "GPU Board Power",
+        "GPU Total Board Power",
         "Total Board Power",
+        "GPU Total Power",
         "Total Graphics Power",
+        "Average GPU Power",
+        "Current GPU Power",
         "Graphics Power",
+        "GPU Graphics Power",
+        "GPU Core Power",
         "GPU ASIC Power",
         "ASIC Power",
         "GPU Chip Power",
         "Chip Power",
+        "Core Power",
+        "Power Consumption",
+        "Instantaneous Power",
         "TGP",
+        "PPT",
+        "Power Draw",
         "Package Power",
         "Power",
     ];
@@ -215,10 +384,12 @@ public class SensorsGroupController : IDisposable
     [
         "GPU Core Voltage",
         "GPU VDDC",
+        "GPU VDD",
         "GPU VCore",
         "Core Voltage",
         "VDDC",
         "VDDCI",
+        "VDD",
         "MVDD",
         "NVVDD",
         "GPU Core",
@@ -279,8 +450,30 @@ public class SensorsGroupController : IDisposable
     ];
     private static readonly string[] STORAGE_TEMPERATURE_SENSOR_PREFERENCES =
     [
+        "NVMe Composite Temperature",
+        "Composite Temperature",
+        "Drive Composite Temperature",
         "Composite",
+        "NVMe Composite",
+        "Drive Temperature 1",
+        "Drive Temperature 2",
         "Drive Temperature",
+        "SSD Temperature",
+        "Disk Temperature",
+        "HDD Temperature",
+        "Controller Temperature",
+        "ASIC Controller Temperature",
+        "ASIC Controller",
+        "ASIC Temperature",
+        "NAND Temperature 1",
+        "NAND Temperature 2",
+        "NAND Temperature",
+        "NAND 1",
+        "NAND 2",
+        "Temperature 1",
+        "Temperature 2",
+        "Temperature #1",
+        "Temperature #2",
         "Temperature",
     ];
     private static readonly string[] GPU_USAGE_SENSOR_PREFERENCES =
@@ -369,6 +562,7 @@ public class SensorsGroupController : IDisposable
     private ISensor? _memoryAvailableSensor;
     private float _cachedMemoryTotal = INVALID_VALUE_FLOAT;
     private readonly List<ISensor> _memoryTempSensors = [];
+    private readonly List<ISensor> _motherboardTempSensors = [];
     private readonly List<ISensor> _storageTempSensors = [];
 
     private volatile bool _isResetting;
@@ -472,6 +666,7 @@ public class SensorsGroupController : IDisposable
     private float _snapshotMemUsed = INVALID_VALUE_FLOAT;
     private float _snapshotMemTotal = INVALID_VALUE_FLOAT;
     private double _snapshotMemMaxTemp = INVALID_VALUE_DOUBLE;
+    private double _snapshotMotherboardMaxTemp = INVALID_VALUE_DOUBLE;
     private (float, float) _snapshotSsdTemps = (INVALID_VALUE_FLOAT, INVALID_VALUE_FLOAT);
 
     public async Task<LibreHardwareMonitorInitialState> IsSupportedAsync()
@@ -572,6 +767,7 @@ public class SensorsGroupController : IDisposable
         _cpuCoreClockSensors.Clear();
         _cpuComponentPowerSensors.Clear();
         _memoryTempSensors.Clear();
+        _motherboardTempSensors.Clear();
         _storageTempSensors.Clear();
 
         _cpuPackagePowerSensor = null;
@@ -606,11 +802,13 @@ public class SensorsGroupController : IDisposable
                     case SensorType.Voltage when IsLikelyCpuVoltageSensorName(s.Name):
                         _cpuCoreVoltageSensor ??= s;
                         break;
-                    case SensorType.Clock when s.Name.Contains("P-Core"):
+                    case SensorType.Clock when IsLikelyCpuPCoreClockSensorName(s.Name):
                         _pCoreClockSensors.Add(s);
+                        _cpuCoreClockSensors.Add(s);
                         break;
-                    case SensorType.Clock when s.Name.Contains("E-Core"):
+                    case SensorType.Clock when IsLikelyCpuECoreClockSensorName(s.Name):
                         _eCoreClockSensors.Add(s);
+                        _cpuCoreClockSensors.Add(s);
                         break;
                     case SensorType.Clock when s.Name.Contains("Core", StringComparison.OrdinalIgnoreCase) && !s.Name.Contains("Average") && !s.Name.Contains("Effective"):
                         _cpuCoreClockSensors.Add(s);
@@ -623,7 +821,7 @@ public class SensorsGroupController : IDisposable
                         break;
                 }
             }
-            IsHybrid = _pCoreClockSensors.Count > 0;
+            IsHybrid = _pCoreClockSensors.Count > 0 || _eCoreClockSensors.Count > 0;
             _cpuTempSensor ??= SelectCpuTemperatureSensor(_cpuHardware.Sensors);
             _cpuUsageSensor ??= SelectCpuUsageSensor(_cpuHardware.Sensors);
             _cpuCoreVoltageSensor ??= SelectCpuVoltageSensor(_cpuHardware.Sensors);
@@ -757,10 +955,11 @@ public class SensorsGroupController : IDisposable
             _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: false));
         }
 
-        foreach (var hw in _hardware.Where(h => h.HardwareType == HardwareType.Motherboard))
+        foreach (var hw in _hardware.Where(IsBoardTemperatureHardware))
         {
             if (hw.Sensors == null) continue;
             _memoryTempSensors.AddRange(SelectMemoryTemperatureSensors(hw.Sensors, requireMemoryKeywords: true));
+            _motherboardTempSensors.AddRange(SelectMotherboardTemperatureSensors(hw.Sensors));
         }
 
         foreach (var storage in _hardware.Where(h => h.HardwareType == HardwareType.Storage))
@@ -985,18 +1184,7 @@ public class SensorsGroupController : IDisposable
 
     internal static string? SelectCpuPackagePowerSensorName(IEnumerable<string> sensorNames) =>
         SelectPreferredSensorName(
-            sensorNames.Where(name =>
-                !string.IsNullOrWhiteSpace(name) &&
-                !name.Contains("GPU", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Core", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Cores", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("SoC", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("SOC", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Memory", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("DRAM", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Platform", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Uncore", StringComparison.OrdinalIgnoreCase) &&
-                !name.Contains("Ring", StringComparison.OrdinalIgnoreCase)),
+            sensorNames.Where(IsLikelyCpuPackagePowerCandidateName),
             CPU_PACKAGE_POWER_SENSOR_PREFERENCES);
 
     private static ISensor? SelectGpuVramTemperatureSensor(IEnumerable<ISensor> sensors)
@@ -1095,9 +1283,71 @@ public class SensorsGroupController : IDisposable
         return temperatureSensors;
     }
 
-    private static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
+    internal static bool IsLikelyMemoryTemperatureSensorName(string sensorName) =>
         MEMORY_TEMPERATURE_SENSOR_PREFERENCES.Any(keyword =>
             sensorName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+    internal static bool IsBoardTemperatureHardware(IHardware hardware)
+    {
+        if (hardware.HardwareType == HardwareType.Motherboard)
+            return true;
+
+        if (IsDedicatedMetricHardwareType(hardware.HardwareType.ToString()))
+            return false;
+
+        if (BOARD_SENSOR_HARDWARE_NAME_EXCLUSIONS.Any(keyword =>
+            hardware.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+            return false;
+
+        var sensors = hardware.Sensors;
+        return sensors is not null && sensors.Any(sensor =>
+            sensor.SensorType == SensorType.Temperature &&
+            (IsLikelyMemoryTemperatureSensorName(sensor.Name) ||
+             SelectMotherboardTemperatureSensorName([sensor.Name]) is not null));
+    }
+
+    private static bool IsDedicatedMetricHardwareType(string hardwareTypeName) =>
+        hardwareTypeName.Contains("Cpu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Gpu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Memory", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Storage", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Network", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Battery", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Psu", StringComparison.OrdinalIgnoreCase) ||
+        hardwareTypeName.Contains("Cooler", StringComparison.OrdinalIgnoreCase);
+
+    private static IEnumerable<ISensor> SelectMotherboardTemperatureSensors(IEnumerable<ISensor> sensors)
+    {
+        var temperatureSensors = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Temperature)
+            .ToArray();
+
+        if (temperatureSensors.Length == 0)
+            return [];
+
+        var preferredName = SelectMotherboardTemperatureSensorName(temperatureSensors.Select(sensor => sensor.Name));
+        if (preferredName is not null)
+            return temperatureSensors
+                .Where(sensor => string.Equals(sensor.Name, preferredName, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+
+        return temperatureSensors
+            .Where(sensor => !IsLikelyMemoryTemperatureSensorName(sensor.Name))
+            .Where(sensor => !sensor.Name.Contains("CPU", StringComparison.OrdinalIgnoreCase))
+            .Where(sensor => !sensor.Name.Contains("GPU", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(sensor => sensor.Name, StringComparer.OrdinalIgnoreCase)
+            .Take(1)
+            .ToArray();
+    }
+
+    internal static string? SelectMotherboardTemperatureSensorName(IEnumerable<string> sensorNames) =>
+        SelectPreferredSensorName(
+            sensorNames.Where(name =>
+                !string.IsNullOrWhiteSpace(name) &&
+                !IsLikelyMemoryTemperatureSensorName(name) &&
+                !name.Contains("CPU", StringComparison.OrdinalIgnoreCase) &&
+                !name.Contains("GPU", StringComparison.OrdinalIgnoreCase)),
+            MOTHERBOARD_TEMPERATURE_SENSOR_PREFERENCES);
 
     private static ISensor? SelectGpuVramUsedSensor(IEnumerable<ISensor> sensors)
     {
@@ -1420,6 +1670,26 @@ public class SensorsGroupController : IDisposable
     private static bool IsLikelyGpuCoreClockSensorName(string sensorName) =>
         SelectGpuCoreClockSensorName([sensorName]) is not null;
 
+    internal static bool IsLikelyCpuPCoreClockSensorName(string sensorName) =>
+        IsLikelyCpuCoreClockSensorName(sensorName, CPU_P_CORE_CLOCK_SENSOR_PREFERENCES);
+
+    internal static bool IsLikelyCpuECoreClockSensorName(string sensorName) =>
+        IsLikelyCpuCoreClockSensorName(sensorName, CPU_E_CORE_CLOCK_SENSOR_PREFERENCES);
+
+    private static bool IsLikelyCpuCoreClockSensorName(string? sensorName, IEnumerable<string> preferences)
+    {
+        if (string.IsNullOrWhiteSpace(sensorName))
+            return false;
+
+        if (sensorName.Contains("Average", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Effective", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return SelectPreferredSensorName([sensorName], preferences) is not null;
+    }
+
     private static bool IsLikelyGpuMemoryClockSensorName(string sensorName) =>
         SelectGpuMemoryClockSensorName([sensorName]) is not null;
 
@@ -1428,6 +1698,40 @@ public class SensorsGroupController : IDisposable
 
     internal static bool IsLikelyCpuPackagePowerSensorName(string sensorName) =>
         SelectCpuPackagePowerSensorName([sensorName]) is not null;
+
+    private static bool IsLikelyCpuPackagePowerCandidateName(string? sensorName)
+    {
+        if (string.IsNullOrWhiteSpace(sensorName))
+            return false;
+
+        if (sensorName.Contains("GPU", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Memory", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("DRAM", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Platform", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Uncore", StringComparison.OrdinalIgnoreCase) ||
+            sensorName.Contains("Ring", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var hasCore = sensorName.Contains("Core", StringComparison.OrdinalIgnoreCase) ||
+                      sensorName.Contains("Cores", StringComparison.OrdinalIgnoreCase);
+        var hasSoc = Regex.IsMatch(sensorName, @"\bSoC\b", RegexOptions.IgnoreCase);
+
+        if (hasCore && hasSoc)
+            return true;
+
+        if (hasCore)
+        {
+            return sensorName.Contains("Package", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("PPT", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("STAPM", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("APU", StringComparison.OrdinalIgnoreCase) ||
+                   sensorName.Contains("Socket", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return !hasSoc;
+    }
 
     internal static bool IsLikelyCpuComponentPowerSensorName(string sensorName) =>
         IsLikelyCpuCorePowerSensorName(sensorName)
@@ -1719,6 +2023,11 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotMemMaxTemp);
     }
 
+    public Task<double> GetHighestMotherboardTemperatureAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotMotherboardMaxTemp);
+    }
+
     private async Task<LibreHardwareMonitorInitialState> InitializeAsync()
     {
         if (_initialized)
@@ -1945,6 +2254,7 @@ public class SensorsGroupController : IDisposable
                         }
 
                         _snapshotMemMaxTemp = _memoryTempSensors.Count > 0 ? (double)(_memoryTempSensors.Max(s => s.Value) ?? 0) : INVALID_VALUE_DOUBLE;
+                        _snapshotMotherboardMaxTemp = _motherboardTempSensors.Count > 0 ? (double)(_motherboardTempSensors.Max(s => s.Value) ?? 0) : INVALID_VALUE_DOUBLE;
 
                         float t1 = _storageTempSensors.Count > 0 ? _storageTempSensors[0].Value ?? INVALID_VALUE_FLOAT : INVALID_VALUE_FLOAT;
                         float t2 = _storageTempSensors.Count > 1 ? _storageTempSensors[1].Value ?? INVALID_VALUE_FLOAT : INVALID_VALUE_FLOAT;

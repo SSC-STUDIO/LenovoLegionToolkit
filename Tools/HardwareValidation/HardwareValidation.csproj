@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>HardwareValidation</RootNamespace>
+    <EnableUdtTestHooks>true</EnableUdtTestHooks>
   </PropertyGroup>
 
   <ItemGroup>

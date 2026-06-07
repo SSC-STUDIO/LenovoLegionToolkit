@@ -12,6 +12,10 @@ on:
           - custom
           - shell-local
           - combo-local
+          - driver-download
+          - system-optimization
+          - dashboard
+          - power-mode
       plugin_ids:
         description: Comma-separated plugin ids
         required: false
@@ -60,6 +64,11 @@ on:
         type: boolean
         required: false
         default: true
+      power_mode_hardware_verify:
+        description: For the power-mode scenario, perform real hardware write/readback verification and restore the original mode
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: main-app-ui-smoke
@@ -91,7 +100,7 @@ jobs:
 
       - name: Build main app
         shell: pwsh
-        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
       - name: Build UI smoke tool
         shell: pwsh
@@ -104,6 +113,14 @@ jobs:
           PLUGIN_SOURCES: ${{ inputs.plugin_sources }}
           SCENARIO: ${{ inputs.scenario }}
         run: |
+          $pluginInstallScenarios = [System.Collections.Generic.HashSet[string]]::new(
+            [string[]]@('custom', 'shell-local', 'combo-local'),
+            [System.StringComparer]::OrdinalIgnoreCase)
+          if (-not $pluginInstallScenarios.Contains($env:SCENARIO)) {
+            Write-Host "Scenario '$env:SCENARIO' does not install plugins; skipping local package validation."
+            exit 0
+          }
+
           function ConvertTo-PluginDirectoryName([string]$pluginId) {
             $segments = $pluginId.Split('-', [System.StringSplitOptions]::RemoveEmptyEntries)
             if ($segments.Count -eq 0) {
@@ -207,6 +224,7 @@ jobs:
           SUCCESS_HOLD_MS: ${{ inputs.success_hold_ms }}
           FAILURE_HOLD_MS: ${{ inputs.failure_hold_ms }}
           KEEP_ARTIFACTS: ${{ inputs.keep_artifacts }}
+          POWER_MODE_HARDWARE_VERIFY: ${{ inputs.power_mode_hardware_verify }}
         run: |
           $artifactRoot = Join-Path $env:RUNNER_TEMP ("llt-main-app-ui-smoke-{0}-{1}" -f $env:GITHUB_RUN_ID, $env:GITHUB_RUN_ATTEMPT)
           $scriptPath = Join-Path $PWD 'Tools\MainAppPluginUi.Smoke\Run-MainAppPluginUi.Smoke.ps1'
@@ -223,6 +241,7 @@ jobs:
             SuccessHoldMs = [int]$env:SUCCESS_HOLD_MS
             FailureHoldMs = [int]$env:FAILURE_HOLD_MS
             KeepArtifacts = [System.Convert]::ToBoolean($env:KEEP_ARTIFACTS)
+            PowerModeHardwareVerify = [System.Convert]::ToBoolean($env:POWER_MODE_HARDWARE_VERIFY)
           }
 
           & $scriptPath @arguments
@@ -235,6 +254,7 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Theme: ``$env:THEME``"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Screenshot mode: ``$env:SCREENSHOT_MODE``"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Watch mode: ``$env:WATCH_MODE``"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Power-mode hardware verify: ``$env:POWER_MODE_HARDWARE_VERIFY``"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Step delay: ``$env:STEP_DELAY_MS`` ms"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Artifact root: ``$artifactRoot``"
 

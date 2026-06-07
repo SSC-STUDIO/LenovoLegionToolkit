@@ -60,6 +60,55 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenRuntimePluginIdDiffersFromInstalledManifestId_ShouldIncludeProviderCategory()
+    {
+        var installedPluginId = "shell-integration";
+        var runtimePluginId = "LenovoLegionToolkit.Plugins.ShellIntegration";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(installedPluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var pluginFilePath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.ShellIntegration.dll");
+        File.WriteAllText(pluginFilePath, string.Empty);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "shell-integration",
+              "name": "Shell Integration",
+              "contributes": {
+                "optimizationActions": []
+              }
+            }
+            """);
+
+        var category = new WindowsOptimizationCategoryDefinition(
+            "shell.category",
+            "Shell category",
+            "Shell category description",
+            Array.Empty<WindowsOptimizationActionDefinition>(),
+            runtimePluginId);
+        var provider = new TestOptimizationProvider(runtimePluginId, category);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin> { provider });
+        pluginManager.Setup(m => m.GetPluginMetadata(runtimePluginId)).Returns(new PluginMetadata
+        {
+            Id = runtimePluginId,
+            FilePath = pluginFilePath
+        });
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { installedPluginId });
+        pluginManager.Setup(m => m.IsInstalled(runtimePluginId)).Returns(false);
+        pluginManager.Setup(m => m.IsInstalled(installedPluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var result = categories.Should().ContainSingle().Subject;
+        result.Key.Should().Be("shell.category");
+        result.PluginId.Should().Be(installedPluginId);
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenPluginUsesPublicConventionMethod_ShouldIncludeCategory()
     {
         var plugin = new ConventionOptimizationPlugin("convention-plugin");
@@ -131,6 +180,58 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         var categories = extender.GetPluginCategories();
 
         AssertManifestCategory(categories, pluginId, "Manifest Plugin", "Manifest description", "manifest.action", "Manifest action");
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenRuntimePluginIdDiffersAndManifestHasActions_ShouldIncludeManifestCategory()
+    {
+        var installedPluginId = "optimization-pack";
+        var runtimePluginId = "Vendor.OptimizationPack.Runtime";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(installedPluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var pluginFilePath = Path.Combine(pluginDirectory, "Vendor.OptimizationPack.Runtime.dll");
+        File.WriteAllText(pluginFilePath, string.Empty);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "optimization-pack",
+              "name": "Optimization Pack",
+              "description": "Runtime id mismatch manifest",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "optimization-pack.action",
+                    "title": "Optimization action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var plugin = new BasicPlugin(runtimePluginId);
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin> { plugin });
+        pluginManager.Setup(m => m.GetPluginMetadata(runtimePluginId)).Returns(new PluginMetadata
+        {
+            Id = runtimePluginId,
+            FilePath = pluginFilePath
+        });
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { installedPluginId });
+        pluginManager.Setup(m => m.IsInstalled(runtimePluginId)).Returns(false);
+        pluginManager.Setup(m => m.IsInstalled(installedPluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        AssertManifestCategory(
+            categories,
+            installedPluginId,
+            "Optimization Pack",
+            "Runtime id mismatch manifest",
+            "optimization-pack.action",
+            "Optimization action");
     }
 
     [Fact]
@@ -206,6 +307,42 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void GetPluginCategories_WhenInstalledIdMatchesManifestButDirectoryNameDiffers_ShouldIncludeManifestCategory()
+    {
+        var pluginId = "shell-integration";
+        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", "LenovoLegionToolkit.Plugins.ShellIntegration");
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "shell-integration",
+              "name": "Shell Integration",
+              "description": "Shell manifest optimization contribution",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "shell-integration.action",
+                    "title": "Shell integration action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+        pluginManager.Setup(m => m.IsInstalled(pluginId)).Returns(true);
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        AssertManifestCategory(categories, pluginId, "Shell Integration", "Shell manifest optimization contribution", "shell-integration.action", "Shell integration action");
+    }
+
+    [Fact]
     public void GetPluginCategories_WhenInstalledManifestUsesActionKeyOnly_ShouldIncludeManifestCategory()
     {
         var pluginId = "manifest-key-plugin";
@@ -239,8 +376,52 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
         var categories = extender.GetPluginCategories();
 
-        var category = AssertManifestCategory(categories, pluginId, "Manifest Key Plugin", "Manifest-level description", "manifest-key.action", "Manifest key action");
+        var category = AssertManifestCategory(
+            categories,
+            pluginId,
+            "Manifest Key Plugin",
+            "Manifest-level description",
+            "manifest-key.action",
+            "Manifest key action",
+            recommended: true);
         category.Actions[0].DescriptionResourceKey.Should().Be("Action-level description");
+        category.Actions[0].Recommended.Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetPluginCategories_WhenInstalledManifestOmitsRecommended_ShouldDefaultManifestActionToNotRecommended()
+    {
+        var pluginId = "manifest-default-recommended-plugin";
+        var pluginDirectory = PluginPaths.GetPluginDirectory(pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "manifest-default-recommended-plugin",
+              "name": "Manifest Default Recommended Plugin",
+              "description": "Manifest-level description",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "manifest-default.action",
+                    "title": "Manifest default action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var pluginManager = new Mock<IPluginManager>();
+        pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
+        pluginManager.Setup(m => m.GetInstalledPluginIds()).Returns(new[] { pluginId });
+
+        var extender = new OptimizationCategoryExtender(pluginManager.Object);
+
+        var categories = extender.GetPluginCategories();
+
+        var category = AssertManifestCategory(categories, pluginId, "Manifest Default Recommended Plugin", "Manifest-level description", "manifest-default.action", "Manifest default action");
+        category.Actions[0].Recommended.Should().BeFalse();
     }
 
     [Fact]
@@ -335,7 +516,8 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         string title,
         string description,
         string actionKey,
-        string actionTitle)
+        string actionTitle,
+        bool recommended = false)
     {
         var category = categories.Should().ContainSingle().Subject;
         category.Key.Should().Be($"plugin.{pluginId}");
@@ -345,7 +527,7 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         category.Actions.Should().ContainSingle();
         category.Actions[0].Key.Should().Be(actionKey);
         category.Actions[0].TitleResourceKey.Should().Be(actionTitle);
-        category.Actions[0].Recommended.Should().BeFalse();
+        category.Actions[0].Recommended.Should().Be(recommended);
         return category;
     }
 
@@ -359,6 +541,21 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
         public string[]? Dependencies => null;
 
         public WindowsOptimizationCategoryDefinition? GetOptimizationCategory() => category;
+
+        public void OnInstalled() { }
+        public void OnUninstalled() { }
+        public void OnShutdown() { }
+        public void Stop() { }
+    }
+
+    private sealed class BasicPlugin(string id) : IPlugin
+    {
+        public string Id => id;
+        public string Name => id;
+        public string Description => "test";
+        public string Icon => "PlugConnected24";
+        public bool IsSystemPlugin => false;
+        public string[]? Dependencies => null;
 
         public void OnInstalled() { }
         public void OnUninstalled() { }

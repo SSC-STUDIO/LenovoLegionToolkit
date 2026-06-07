@@ -23,6 +23,8 @@
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <RestoreConfigFile Condition="'$(RestoreConfigFile)' == '' and Exists('$(MSBuildThisFileDirectory)NuGet.Config')">$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
     <DefaultItemExcludes>$(DefaultItemExcludes);**/obj-*/**</DefaultItemExcludes>
+    <EnableUdtTestHooks Condition="'$(EnableUdtTestHooks)' == ''">false</EnableUdtTestHooks>
+    <DefineConstants Condition="'$(EnableUdtTestHooks)' == 'true'">$(DefineConstants);UDT_TEST_HOOKS</DefineConstants>
   </PropertyGroup>
 
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">

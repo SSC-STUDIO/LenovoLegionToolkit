@@ -2,11 +2,11 @@ param(
     [string]$PresetUiValidationExePath,
     [string]$ResultPath,
     [string]$LogPath,
-    [int]$TimeoutSeconds = 180
+    [int]$TimeoutSeconds = 180,
+    [string]$RepoRoot
 )
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = 'D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit'
 
 function Resolve-AbsolutePath {
     param([string]$Path)
@@ -16,6 +16,37 @@ function Resolve-AbsolutePath {
     }
 
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
+function Resolve-RepositoryRoot {
+    param([string]$Path)
+
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($Path)) {
+        $candidates += $Path
+    }
+
+    $candidates += (Join-Path $PSScriptRoot '..\..')
+    $candidates += (Get-Location).Path
+
+    foreach ($candidate in $candidates) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) {
+            continue
+        }
+
+        try {
+            $resolved = Resolve-AbsolutePath $candidate
+        }
+        catch {
+            continue
+        }
+
+        if (Test-Path -LiteralPath (Join-Path $resolved 'UniversalDeviceToolkit.sln')) {
+            return $resolved
+        }
+    }
+
+    throw 'Could not resolve repository root. Pass -RepoRoot pointing at UniversalDeviceToolkit.sln.'
 }
 
 function Write-Result {
@@ -77,6 +108,7 @@ function Quote-NativeArgument {
     return '"' + ($Value -replace '(\\*)"', '$1$1\"' -replace '(\\+)$', '$1$1') + '"'
 }
 
+$repoRoot = Resolve-RepositoryRoot -Path $RepoRoot
 $presetUiValidationPath = Resolve-AbsolutePath $PresetUiValidationExePath
 if (-not $presetUiValidationPath -or -not (Test-Path -LiteralPath $presetUiValidationPath)) {
     $presetUiValidationPath = Join-Path $repoRoot 'Tools\PresetUiValidation\bin\Release\net10.0-windows10.0.26100.0\PresetUiValidation.dll'
@@ -92,6 +124,7 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     $arguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $PSCommandPath,
+        '-RepoRoot', $repoRoot,
         '-PresetUiValidationExePath', $presetUiValidationPath,
         '-ResultPath', $resultPath,
         '-LogPath', $logPath,
@@ -113,6 +146,7 @@ foreach ($path in @($resultPath, $logPath, $validatorResultPath)) {
 }
 
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
+Write-Result 'RepositoryRoot' $repoRoot
 Write-Result 'IsAdmin' 'True'
 Write-Result 'PresetUiValidationExePath' $presetUiValidationPath
 Write-Result 'TimeoutSeconds' $TimeoutSeconds
@@ -166,14 +200,17 @@ try {
             'CreateCountVerificationPassed',
             'CreateActiveVerificationPassed',
             'CreateNameVerificationPassed',
+            'CreateUiRefreshVerificationPassed',
             'CreatePersistedVerificationPassed',
             'RenameCountVerificationPassed',
             'RenameActiveVerificationPassed',
             'RenameNameVerificationPassed',
+            'RenameUiRefreshVerificationPassed',
             'RenamePersistedVerificationPassed',
             'DeleteMissingVerificationPassed',
             'DeleteCountVerificationPassed',
             'DeleteActiveVerificationPassed',
+            'DeleteUiRefreshVerificationPassed',
             'PersistedDeleteVerificationPassed',
             'PresetUiCrudVerificationPassed',
             'RestorePresetStateVerificationPassed'
@@ -188,6 +225,9 @@ try {
     $overallPassed =
         (-not $timedOut -and $process.ExitCode -eq 0) -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'PresetUiCrudVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'CreateUiRefreshVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'RenameUiRefreshVerificationPassed') -eq 'True' -and
+        (Get-ResultValue -FilePath $validatorResultPath -Key 'DeleteUiRefreshVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'CreatePersistedVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'RenamePersistedVerificationPassed') -eq 'True' -and
         (Get-ResultValue -FilePath $validatorResultPath -Key 'RestorePresetStateVerificationPassed') -eq 'True'

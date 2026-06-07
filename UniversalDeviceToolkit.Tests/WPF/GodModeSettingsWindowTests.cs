@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.WPF.Controls.Automation;
+using UniversalDeviceToolkit.WPF.Controls.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Xunit;
 
@@ -166,9 +169,180 @@ public class GodModeSettingsWindowTests
         updatedState.Presets.Should().ContainSingle();
     }
 
+    [Fact]
+    public void GetPresetName_WhenPresetWasRenamed_ShouldReturnLatestNameFromCurrentState()
+    {
+        var presetId = Guid.NewGuid();
+        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
+            new Dictionary<Guid, GodModePreset>
+            {
+                [presetId] = new() { Name = "Renamed performance" },
+                [Guid.NewGuid()] = new() { Name = "Quiet" }
+            });
+
+        var name = AutomationPipelineControl.GetPresetName(presetId, presets);
+
+        name.Should().Be("Renamed performance");
+    }
+
+    [Fact]
+    public void GetPresetName_WhenPresetIsMissing_ShouldReturnPlaceholder()
+    {
+        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
+            new Dictionary<Guid, GodModePreset>
+            {
+                [Guid.NewGuid()] = new() { Name = "Quiet" }
+            });
+
+        var name = AutomationPipelineControl.GetPresetName(Guid.NewGuid(), presets);
+
+        name.Should().Be("-");
+    }
+
+    [Fact]
+    public void ResolveSelectedPreset_WhenRequestedPresetExists_ShouldKeepRequestedPreset()
+    {
+        var activePresetId = Guid.NewGuid();
+        var requestedPresetId = Guid.NewGuid();
+        var state = CreateState(activePresetId, new Dictionary<Guid, GodModePreset>
+        {
+            [activePresetId] = new() { Name = "Balance" },
+            [requestedPresetId] = new() { Name = "Performance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, requestedPresetId);
+
+        selectedPreset.Key.Should().Be(requestedPresetId);
+        selectedPreset.Value.Name.Should().Be("Performance");
+    }
+
+    [Fact]
+    public void ResolveSelectedPreset_WhenRequestedPresetWasDeleted_ShouldUseActivePreset()
+    {
+        var activePresetId = Guid.NewGuid();
+        var state = CreateState(activePresetId, new Dictionary<Guid, GodModePreset>
+        {
+            [activePresetId] = new() { Name = "Balance" },
+            [Guid.NewGuid()] = new() { Name = "Performance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, Guid.NewGuid());
+
+        selectedPreset.Key.Should().Be(activePresetId);
+        selectedPreset.Value.Name.Should().Be("Balance");
+    }
+
+    [Fact]
+    public void ResolveSelectedPreset_WhenActivePresetIsMissing_ShouldUseFirstPresetByName()
+    {
+        var quietPresetId = Guid.NewGuid();
+        var balancePresetId = Guid.NewGuid();
+        var state = CreateState(Guid.NewGuid(), new Dictionary<Guid, GodModePreset>
+        {
+            [quietPresetId] = new() { Name = "Quiet" },
+            [balancePresetId] = new() { Name = "Balance" }
+        });
+
+        var selectedPreset = GodModePresetAutomationStepControl.ResolveSelectedPreset(state, Guid.NewGuid());
+
+        selectedPreset.Key.Should().Be(balancePresetId);
+        selectedPreset.Value.Name.Should().Be("Balance");
+    }
+
+    [Fact]
+    public void PresetCrudHandlers_ShouldRefreshComboBoxFromPersistedState()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml.cs");
+        var refreshMethod = ExtractMethod(source, "private async Task PersistAndRefreshPresetListAsync()");
+        var addHandler = ExtractMethod(source, "private async void AddPresetsButton_Click");
+        var renameHandler = ExtractMethod(source, "private async void EditPresetsButton_Click");
+        var deleteHandler = ExtractMethod(source, "private async void DeletePresetsButton_Click");
+
+        refreshMethod.Should().Contain("await PersistStateAsync();");
+        refreshMethod.Should().Contain("await SetStateAsync(_state.Value);");
+        addHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+        renameHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+        deleteHandler.Should().Contain("await PersistAndRefreshPresetListAsync();");
+    }
+
+    [Fact]
+    public void GodModePresetAutomationStepControlRefresh_ShouldUseCurrentStateAndAvoidEmptyPresetId()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Controls", "Automation", "Steps", "GodModePresetAutomationStepControl.cs");
+        var refreshMethod = ExtractMethod(source, "protected override async Task RefreshAsync()");
+        var createMethod = ExtractMethod(source, "public override IAutomationStep CreateAutomationStep()");
+
+        refreshMethod.Should().Contain(".OrderBy(kv => kv.Value.Name)");
+        refreshMethod.Should().Contain("ResolveSelectedPreset(state, AutomationStep.PresetId)");
+        createMethod.Should().Contain("return new GodModePresetAutomationStep(AutomationStep.PresetId);");
+        createMethod.Should().NotContain("Guid.Empty");
+    }
+
     private static GodModeState CreateState(Guid activePresetId, Dictionary<Guid, GodModePreset> presets) => new()
     {
         ActivePresetId = activePresetId,
         Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
     };
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
+    private static string ReadRepositoryFile(params string[] pathParts)
+    {
+        var expectedRelativePath = Path.Combine(pathParts);
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
+    }
+
+    private static IEnumerable<string> GetRepositoryRootCandidates()
+    {
+        var roots = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(static root => !string.IsNullOrWhiteSpace(root)))
+        {
+            var directory = new DirectoryInfo(root!);
+            while (directory != null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+                    yield return directory.FullName;
+
+                directory = directory.Parent;
+            }
+        }
+    }
 }

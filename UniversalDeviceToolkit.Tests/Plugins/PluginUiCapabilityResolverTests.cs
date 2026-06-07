@@ -113,4 +113,31 @@ public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
         capabilities.SupportsSettingsPage.Should().BeTrue();
         capabilities.SupportsOptimizationCategory.Should().BeFalse();
     }
+
+    [Fact]
+    public void ResolveFromInstalledManifest_WhenLocalDirectoryNameDiffersFromManifestId_ShouldReadCapabilities()
+    {
+        var pluginId = "shell-integration";
+        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", "LenovoLegionToolkit.Plugins.ShellIntegration");
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, "plugin.manifest.json"),
+            """
+            {
+              "id": "shell-integration",
+              "contributes": {
+                "optimizationActions": [
+                  {
+                    "id": "shell.action",
+                    "title": "Shell action"
+                  }
+                ]
+              }
+            }
+            """);
+
+        var capabilities = PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId);
+
+        capabilities.SupportsOptimizationCategory.Should().BeTrue();
+    }
 }

@@ -24,6 +24,38 @@ public class PluginViewModelTests
     }
 
     [Fact]
+    public void SupportsOpenAction_WhenExecutableEntryPointIsAvailable_ShouldBeTrueWithoutHostedPages()
+    {
+        var plugin = MockFactory.CreateMockPlugin(id: "user-feedback");
+        var viewModel = new PluginViewModel(plugin, isInstalled: true)
+        {
+            SupportsFeaturePage = false,
+            SupportsOptimizationCategory = false,
+            SupportsConfiguration = false,
+            SupportsExecutableEntryPoint = true
+        };
+
+        viewModel.SupportsOpenAction.Should().BeTrue();
+        viewModel.ShouldShowInstalledActions.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SupportsOpenAction_WhenConfigurationIsAvailable_ShouldBeTrueWithoutHostedPages()
+    {
+        var plugin = MockFactory.CreateMockPlugin(id: "user-feedback");
+        var viewModel = new PluginViewModel(plugin, isInstalled: true)
+        {
+            SupportsFeaturePage = false,
+            SupportsOptimizationCategory = false,
+            SupportsExecutableEntryPoint = false,
+            SupportsConfiguration = true
+        };
+
+        viewModel.SupportsOpenAction.Should().BeTrue();
+        viewModel.ShouldShowInstalledActions.Should().BeTrue();
+    }
+
+    [Fact]
     public void ShouldNavigateToOptimizationAfterInstall_WhenOnlyOptimizationCategoryIsAvailable_ShouldReturnTrue()
     {
         var capabilities = new PluginUiCapabilities
@@ -79,7 +111,7 @@ public class PluginViewModelTests
     }
 
     [Fact]
-    public void ResolveInstalledPluginCapabilities_WhenOnlyInstalledManifestHasSettingsPage_ShouldNotExposeConfiguration()
+    public void ResolveInstalledPluginCapabilities_WhenInstalledManifestHasSettingsPage_ShouldExposeConfiguration()
     {
         var installedManifestCapabilities = new PluginUiCapabilities
         {
@@ -92,12 +124,12 @@ public class PluginViewModelTests
             manifestCapabilities: default,
             installedManifestCapabilities);
 
-        capabilities.SupportsSettingsPage.Should().BeFalse();
+        capabilities.SupportsSettingsPage.Should().BeTrue();
         capabilities.SupportsFeaturePage.Should().BeFalse();
         capabilities.SupportsOptimizationCategory.Should().BeTrue();
         PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
             .Should()
-            .BeTrue();
+            .BeFalse();
     }
 
     [Fact]
@@ -144,6 +176,88 @@ public class PluginViewModelTests
         PluginExtensionsPage.ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable: false)
             .Should()
             .BeFalse();
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeEntryPointExists_ShouldReportEntryAvailable()
+    {
+        var runtimeCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(runtimeCapabilities, default, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenExecutableEntryPointExists_ShouldReportEntryAvailable()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: true, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingButManifestOnlyHasOptimizationCategory_ShouldReportEntryAvailable()
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingAndManifestNeedsRuntimeUi_ShouldReportRuntimeNotLoaded(
+        bool supportsFeaturePage,
+        bool supportsSettingsPage)
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true,
+            SupportsFeaturePage = supportsFeaturePage,
+            SupportsSettingsPage = supportsSettingsPage
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.RuntimeNotLoaded);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeLoadedAndManifestHasEntryPoint_ShouldReportEntryAvailable()
+    {
+        var manifestCapabilities = new PluginUiCapabilities
+        {
+            SupportsOptimizationCategory = true
+        };
+
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, manifestCapabilities, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.EntryAvailable);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeMissingAndNoEntryPoint_ShouldReportRuntimeNotLoaded()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: false, runtimeMissing: true)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.RuntimeNotLoaded);
+    }
+
+    [Fact]
+    public void ResolveInstalledPluginFeedback_WhenRuntimeLoadedButNoEntryPoint_ShouldReportNoUserFacingEntry()
+    {
+        PluginExtensionsPage.ResolveInstalledPluginFeedback(default, default, hasExecutable: false, runtimeMissing: false)
+            .Should()
+            .Be(PluginExtensionsPage.InstalledPluginFeedback.NoUserFacingEntry);
     }
 
     private sealed class OptimizationOnlyRuntimePlugin : IPlugin, IOptimizationCategoryProvider

@@ -7,11 +7,11 @@ param(
     [string]$ResultPath,
     [string]$LogPath,
     [int]$TimeoutSeconds = 180,
-    [switch]$SkipElevationCheck
+    [switch]$SkipElevationCheck,
+    [string]$RepoRoot
 )
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = 'D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit'
 
 function Resolve-AbsolutePath {
     param([string]$Path)
@@ -21,6 +21,37 @@ function Resolve-AbsolutePath {
     }
 
     return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
+function Resolve-RepositoryRoot {
+    param([string]$Path)
+
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($Path)) {
+        $candidates += $Path
+    }
+
+    $candidates += (Join-Path $PSScriptRoot '..\..')
+    $candidates += (Get-Location).Path
+
+    foreach ($candidate in $candidates) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) {
+            continue
+        }
+
+        try {
+            $resolved = Resolve-AbsolutePath $candidate
+        }
+        catch {
+            continue
+        }
+
+        if (Test-Path -LiteralPath (Join-Path $resolved 'UniversalDeviceToolkit.sln')) {
+            return $resolved
+        }
+    }
+
+    throw 'Could not resolve repository root. Pass -RepoRoot pointing at UniversalDeviceToolkit.sln.'
 }
 
 function Write-Result {
@@ -98,6 +129,8 @@ function Get-VerificationLine {
     return $null
 }
 
+$repoRoot = Resolve-RepositoryRoot -Path $RepoRoot
+
 if ($CommandArguments.Count -eq 1 -and -not [string]::IsNullOrWhiteSpace($CommandArguments[0]) -and $CommandArguments[0].Contains(',')) {
     $CommandArguments = @($CommandArguments[0].Split(',', [System.StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object { $_.Trim() })
 }
@@ -131,6 +164,26 @@ if (-not $hardwareValidationDll -or
     $hardwareValidationDll = Join-Path $repoRoot 'Tools\HardwareValidation\bin\Release\net10.0-windows10.0.26100.0\HardwareValidation.dll'
 }
 
+if (-not (Test-Path -LiteralPath $hardwareValidationDll)) {
+    $hardwareValidationProject = Join-Path $repoRoot 'Tools\HardwareValidation\HardwareValidation.csproj'
+    dotnet build $hardwareValidationProject -c Release /m:1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "HardwareValidation build failed for '$hardwareValidationProject'."
+    }
+
+    $hardwareValidationDll = Get-ChildItem `
+        -LiteralPath (Join-Path $repoRoot 'Tools\HardwareValidation\bin\Release') `
+        -Filter 'HardwareValidation.dll' `
+        -Recurse `
+        -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1 -ExpandProperty FullName
+}
+
+if (-not $hardwareValidationDll -or -not (Test-Path -LiteralPath $hardwareValidationDll)) {
+    throw "HardwareValidation.dll was not found after build."
+}
+
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $resultPath = if ($ResultPath) { Resolve-AbsolutePath $ResultPath } else { Join-Path $repoRoot ("Tools\HardwareValidation\HardwareValidation-{0}.result.txt" -f $timestamp) }
 $logPath = if ($LogPath) { Resolve-AbsolutePath $LogPath } else { Join-Path $repoRoot ("Tools\HardwareValidation\HardwareValidation-{0}.log.txt" -f $timestamp) }
@@ -144,6 +197,7 @@ if (-not $SkipElevationCheck -and -not $principal.IsInRole([Security.Principal.W
     $arguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-File', $PSCommandPath,
+        '-RepoRoot', $repoRoot,
         '-HardwareValidationDllPath', $hardwareValidationDll,
         '-Scenario', $Scenario,
         '-Command', $Command,
@@ -167,6 +221,7 @@ foreach ($path in @($resultPath, $logPath, $stdoutLogPath, $stderrLogPath)) {
 }
 
 Write-Result 'StartedAtUtc' ([DateTimeOffset]::UtcNow.ToString('O'))
+Write-Result 'RepositoryRoot' $repoRoot
 Write-Result 'IsAdmin' ([string]$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Write-Result 'SkipElevationCheck' ([string]$SkipElevationCheck.IsPresent)
 Write-Result 'HardwareValidationDllPath' $hardwareValidationDll

@@ -184,6 +184,42 @@ public class DashboardSettingsTests
         normalized.ShowSensors.Should().BeFalse();
         normalized.Groups.Should().BeEquivalentTo(store.Groups);
     }
+    
+    [Fact]
+    public void Normalize_WhenGroupItemsAreNull_ShouldRepairItemsAndAvoidException()
+    {
+        // Create a store with groups that have null Items arrays - this reproduces the bug
+        var store = new DashboardSettings.DashboardSettingsStore
+        {
+            SchemaVersion = 4,
+            ShowSensors = true,
+            SensorsRefreshIntervalSeconds = 1,
+            Groups =
+            [
+                // Use reflection or manual construction to simulate deserialization with null items
+                CreateDashboardGroupWithNullItems(DashboardGroupType.Power, null),
+                new DashboardGroup(DashboardGroupType.Graphics, null, DashboardItem.HybridMode)
+            ]
+        };
+
+        // This should not throw!
+        var normalized = Normalize(store);
+
+        normalized.SchemaVersion.Should().Be(4);
+        normalized.Groups.Should().NotBeNull();
+        normalized.Groups!.SelectMany(group => group.Items).Should().Contain(DashboardItem.PowerMode);
+        normalized.Groups.SelectMany(group => group.Items).Should().Contain(DashboardItem.ItsMode);
+        normalized.Groups.Should().NotContain(group => group.Items == null);
+    }
+
+    private static DashboardGroup CreateDashboardGroupWithNullItems(DashboardGroupType type, string? customName)
+    {
+        // Create a DashboardGroup instance with null Items by using reflection
+        var constructor = typeof(DashboardGroup).GetConstructors().First();
+        
+        // Create a new instance, passing null as items
+        return (DashboardGroup)constructor.Invoke([type, customName, null!]);
+    }
 
     private static DashboardSettings.DashboardSettingsStore Normalize(DashboardSettings.DashboardSettingsStore store)
     {

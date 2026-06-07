@@ -113,6 +113,10 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("Valve Corporation", "Steam Deck"), "valve-handheld-basic" },
         { MachineInformationTestData.Create("GPD", "GPD Win Mini"), "gpd-handheld-basic" },
         { MachineInformationTestData.Create("AYANEO", "AYANEO Air Plus"), "ayaneo-handheld-basic" },
+        { MachineInformationTestData.Create("Ayn Technologies", "AYN Odin2 Mini"), "ayaneo-handheld-basic" },
+        { MachineInformationTestData.Create("ANBERNIC", "Win600"), "anbernic-handheld-basic" },
+        { MachineInformationTestData.Create("RETROID", "Retroid Pocket 5"), "retroid-handheld-basic" },
+        { MachineInformationTestData.Create("Shenzhen Xunlong Software", "Orange Pi Neo"), "orange-pi-handheld-basic" },
         { MachineInformationTestData.Create("ONEXPLAYER", "OneXPlayer Mini Pro"), "one-netbook-handheld-basic" },
         { MachineInformationTestData.Create("MINISFORUM", "UM890 Pro"), "minisforum-basic" },
         { MachineInformationTestData.Create("AZW", "Beelink GTR7"), "beelink-basic" },
@@ -141,7 +145,11 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("MORE FINE", "M600 Mini PC"), "morefine-basic" },
         { MachineInformationTestData.Create("ACEMAGICIAN", "Tank03"), "acemagic-basic" },
         { MachineInformationTestData.Create("AOOSTAR", "GEM12 Pro"), "aoostar-basic" },
-        { MachineInformationTestData.Create("TRIGKEY", "Mini PC S7"), "regional-mini-pc-basic" }
+        { MachineInformationTestData.Create("TRIGKEY", "Mini PC S7"), "regional-mini-pc-basic" },
+        { MachineInformationTestData.Create("Topdon", "TC001 Mini PC"), "regional-mini-pc-basic" },
+        { MachineInformationTestData.Create("KTC", "KTC Mini PC"), "regional-mini-pc-basic" },
+        { MachineInformationTestData.Create("Mele", "Quieter4C"), "mele-basic" },
+        { MachineInformationTestData.Create("N-ONE", "N-one Nbook Fly"), "bmax-ninkear-basic" }
     };
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
@@ -227,6 +235,22 @@ public sealed class DeviceSupportModelSimulationTests
                 "Valve Corporation",
                 "Steam Deck"),
             "valve-handheld-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "Moorechip Technologies",
+                "Retroid Pocket 5"),
+            "retroid-handheld-basic"
+        },
+        {
+            MachineInformationTestData.WithComputerSystem(
+                "",
+                "",
+                "Shenzhen MeLE Digital Technology",
+                "Quieter4C"),
+            "mele-basic"
         },
         {
             MachineInformationTestData.WithComputerSystem(

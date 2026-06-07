@@ -47,8 +47,6 @@ public partial class WindowsOptimizationPage : Page
         DataContext = ViewModel;
 
         InitializeComponent();
-
-        ViewModel.Initialize();
         
         Loaded += WindowsOptimizationPage_Loaded;
         Unloaded += WindowsOptimizationPage_Unloaded;
@@ -73,6 +71,7 @@ public partial class WindowsOptimizationPage : Page
     {
         _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+        ViewModel.Initialize();
         SyncNavButtonToCurrentMode();
         TryApplyPendingPluginFocusRequest();
     }

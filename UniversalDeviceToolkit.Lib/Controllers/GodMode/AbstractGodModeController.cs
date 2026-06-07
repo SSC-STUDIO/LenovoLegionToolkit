@@ -59,7 +59,8 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
 
         var state = await LoadStateFromStoreAsync(store, defaultState).ConfigureAwait(false);
         var migratedState = await EnsureBasePresetsAsync(state, defaultState).ConfigureAwait(false);
-        if (migratedState.Presets.Count != state.Presets.Count)
+        migratedState = NormalizeGeneratedDefaultPreset(migratedState);
+        if (HasStateChanged(state, migratedState))
             SaveState(migratedState);
 
         return migratedState;
@@ -186,11 +187,13 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
 
     private async Task<GodModeState> EnsureBasePresetsForSaveAsync(GodModeState state)
     {
-        if (HasAllBasePresets(state.Presets.Values) && state.Presets.ContainsKey(state.ActivePresetId))
-            return state;
+        var normalizedInputState = NormalizeGeneratedDefaultPreset(state);
+        if (HasAllBasePresets(normalizedInputState.Presets.Values) && normalizedInputState.Presets.ContainsKey(normalizedInputState.ActivePresetId))
+            return normalizedInputState;
 
         var defaultState = await GetDefaultStateAsync().ConfigureAwait(false);
-        var normalizedState = await EnsureBasePresetsAsync(state, defaultState).ConfigureAwait(false);
+        var normalizedState = await EnsureBasePresetsAsync(normalizedInputState, defaultState).ConfigureAwait(false);
+        normalizedState = NormalizeGeneratedDefaultPreset(normalizedState);
         if (normalizedState.Presets.ContainsKey(normalizedState.ActivePresetId))
             return normalizedState;
 
@@ -198,6 +201,75 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
         var activePresetId = GetPreferredActivePresetId(presets)
                              ?? throw new InvalidOperationException("No God Mode preset is available.");
         return normalizedState with { ActivePresetId = activePresetId };
+    }
+
+    private static GodModeState NormalizeGeneratedDefaultPreset(GodModeState state)
+    {
+        if (state.Presets is null || state.Presets.Count == 0)
+            return state;
+
+        var presets = new Dictionary<Guid, GodModePreset>(state.Presets);
+        if (!HasAllBasePresets(presets.Values))
+            return state;
+
+        var generatedDefaultPresetIds = presets
+            .Where(kv => IsGeneratedDefaultPreset(kv.Value))
+            .Select(kv => kv.Key)
+            .ToArray();
+
+        if (generatedDefaultPresetIds.Length == 0)
+            return state;
+
+        var customPresetCount = presets.Count(kv => !kv.Value.SourcePowerMode.HasValue && !IsGeneratedDefaultPreset(kv.Value));
+        var shouldRemoveGeneratedDefault = presets.ContainsKey(state.ActivePresetId) &&
+                                           IsGeneratedDefaultPreset(presets[state.ActivePresetId]) &&
+                                           customPresetCount == 0;
+
+        if (!shouldRemoveGeneratedDefault)
+            return state;
+
+        foreach (var presetId in generatedDefaultPresetIds)
+            presets.Remove(presetId);
+
+        if (presets.Count == 0)
+            return state;
+
+        var activePresetId = presets.ContainsKey(state.ActivePresetId)
+            ? state.ActivePresetId
+            : GetPreferredActivePresetId(presets) ?? presets.OrderBy(kv => kv.Value.Name).Select(kv => kv.Key).First();
+
+        return new GodModeState
+        {
+            ActivePresetId = activePresetId,
+            Presets = presets.AsReadOnlyDictionary()
+        };
+    }
+
+    private static bool IsGeneratedDefaultPreset(GodModePreset preset) =>
+        !preset.SourcePowerMode.HasValue &&
+        !preset.PowerPlanGuid.HasValue &&
+        !preset.PowerMode.HasValue &&
+        IsGeneratedDefaultPresetName(preset.Name);
+
+    private static bool IsGeneratedDefaultPresetName(string? name)
+    {
+        var normalizedName = name?.Trim();
+        return string.IsNullOrWhiteSpace(normalizedName) ||
+               string.Equals(normalizedName, "Default", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(normalizedName, "Default V1", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(normalizedName, "Default V2", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasStateChanged(GodModeState previous, GodModeState current)
+    {
+        if (previous.ActivePresetId != current.ActivePresetId)
+            return true;
+
+        if (previous.Presets is null || current.Presets is null)
+            return previous.Presets != current.Presets;
+
+        return previous.Presets.Count != current.Presets.Count ||
+               !previous.Presets.Keys.OrderBy(id => id).SequenceEqual(current.Presets.Keys.OrderBy(id => id));
     }
 
     private static Guid? GetPreferredActivePresetId(Dictionary<Guid, GodModePreset> presets)

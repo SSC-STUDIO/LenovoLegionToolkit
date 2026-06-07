@@ -463,41 +463,32 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
     }
 
-    private async Task<int> GetCpuWattageAsync()
+    protected virtual async Task<int> GetCpuWattageAsync()
     {
         await Task.Yield();
 
         // Try method 1: Performance counter (if available)
-        if (_cpuPowerCounter != null)
+        var performanceCounterWattage = GetCpuWattageFromPerformanceCounter();
+        if (performanceCounterWattage > 0)
         {
-            try
-            {
-                var powerValue = _cpuPowerCounter.NextValue();
-                var wattage = SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
-                if (wattage > 0)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"CPU power from performance counter: {wattage}W (raw: {powerValue})");
-                    return wattage;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get CPU power from performance counter: {ex.Message}");
-            }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CPU power from performance counter: {performanceCounterWattage}W");
+            return performanceCounterWattage;
         }
 
         // Try method 2: WMI query for power meter (if available)
         try
         {
-            var wattage = await SensorReadingHelper.GetCpuWattageFromWmiAsync().ConfigureAwait(false);
-            if (wattage >= 0)
+            var wattage = await GetCpuWattageFromWmiAsync().ConfigureAwait(false);
+            if (wattage > 0)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"CPU power from WMI: {wattage}W");
                 return wattage;
             }
+
+            if (wattage == 0 && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("CPU power from WMI was 0W; continuing to LibreHardwareMonitor fallback.");
         }
         catch (Exception ex)
         {
@@ -506,6 +497,41 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
 
         // Try method 3: reuse LibreHardwareMonitor package power if that path is already available
+        var libreHardwareMonitorWattage = await GetCpuWattageFromLibreHardwareMonitorAsync().ConfigureAwait(false);
+        if (libreHardwareMonitorWattage > 0)
+            return libreHardwareMonitorWattage;
+
+        // Method not available, return -1
+        return -1;
+    }
+
+    protected virtual int GetCpuWattageFromPerformanceCounter()
+    {
+        if (_cpuPowerCounter == null)
+            return -1;
+
+        try
+        {
+            var powerValue = _cpuPowerCounter.NextValue();
+            var wattage = SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
+            if (wattage > 0 && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CPU power performance counter raw value: {powerValue}");
+
+            return wattage;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get CPU power from performance counter: {ex.Message}");
+            return -1;
+        }
+    }
+
+    protected virtual Task<int> GetCpuWattageFromWmiAsync() =>
+        SensorReadingHelper.GetCpuWattageFromWmiAsync();
+
+    protected virtual async Task<int> GetCpuWattageFromLibreHardwareMonitorAsync()
+    {
         try
         {
             if (IoCContainer.TryResolve<SensorsGroupController>() is { } sensorsGroupController)
@@ -534,7 +560,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 Log.Instance.Trace($"Failed to get CPU power from LibreHardwareMonitor: {ex.Message}");
         }
 
-        // Method not available, return -1
         return -1;
     }
 

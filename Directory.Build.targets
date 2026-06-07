@@ -1,0 +1,7 @@
+<Project>
+  <Target Name="RejectShippingAppPublishWithTestHooks" BeforeTargets="BeforeBuild;SetGenerateManifests;PrepareForPublish">
+    <Error
+      Condition="'$(_IsPublishing)' == 'true' and '$(IsUdtShippingApp)' == 'true' and '$(EnableUdtTestHooks)' == 'true' and '$(AllowUdtTestHookPublish)' != 'true'"
+      Text="Shipping app publish cannot use EnableUdtTestHooks=true. Build the standalone test tools instead, or set AllowUdtTestHookPublish=true only for isolated non-shipping artifacts." />
+  </Target>
+</Project>

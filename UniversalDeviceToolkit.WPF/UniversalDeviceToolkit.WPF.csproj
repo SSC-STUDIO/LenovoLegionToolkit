@@ -11,6 +11,7 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
+		<IsUdtShippingApp>true</IsUdtShippingApp>
 		<SelfContained>false</SelfContained>
 		<PublishSingleFile>false</PublishSingleFile>
 		<PublishReadyToRun>false</PublishReadyToRun>

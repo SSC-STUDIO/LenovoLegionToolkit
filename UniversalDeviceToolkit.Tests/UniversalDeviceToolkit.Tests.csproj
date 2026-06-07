@@ -9,6 +9,7 @@
     <IsTestProject>true</IsTestProject>
     <UseWPF>false</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
+    <EnableUdtTestHooks>true</EnableUdtTestHooks>
   </PropertyGroup>
 
   <ItemGroup>

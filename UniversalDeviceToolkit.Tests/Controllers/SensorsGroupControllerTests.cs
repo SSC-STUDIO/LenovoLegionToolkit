@@ -76,6 +76,30 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuTemperatureSensorName_ShouldRecognizeCpuZAndHwInfoDieAliases()
+    {
+        var dieResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "CPU Die"
+        ]);
+        var ccdResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "CPU CCD1"
+        ]);
+        var junctionResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        [
+            "Core #0",
+            "Tjunction"
+        ]);
+
+        dieResult.Should().Be("CPU Die");
+        ccdResult.Should().Be("CPU CCD1");
+        junctionResult.Should().Be("Tjunction");
+    }
+
+    [Fact]
     public void SelectCpuVoltageSensorName_ShouldPreferCoreVoltageAliases()
     {
         var result = SensorsGroupController.SelectCpuVoltageSensorName(
@@ -120,6 +144,85 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectCpuVoltageSensorName_ShouldRecognizeVddAndVccCoreAliases()
+    {
+        var vddResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "System Agent Voltage",
+            "CPU VDD"
+        ]);
+        var vddcrResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "Cache Voltage",
+            "VDDCR CPU"
+        ]);
+        var vccResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "SA Voltage",
+            "VCC Core"
+        ]);
+
+        vddResult.Should().Be("CPU VDD");
+        vddcrResult.Should().Be("VDDCR CPU");
+        vccResult.Should().Be("VCC Core");
+    }
+
+    [Fact]
+    public void SelectCpuVoltageSensorName_ShouldRecognizeInputAndEffectiveVidAliases()
+    {
+        var inputResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "SA Voltage",
+            "VCCIN"
+        ]);
+        var vidResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "System Agent Voltage",
+            "CPU Core VID Effective"
+        ]);
+        var iaResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        [
+            "Cache Voltage",
+            "IA Voltage"
+        ]);
+
+        inputResult.Should().Be("VCCIN");
+        vidResult.Should().Be("CPU Core VID Effective");
+        iaResult.Should().Be("IA Voltage");
+    }
+
+    [Fact]
+    public void IsLikelyCpuHybridCoreClockSensorName_ShouldRecognizeCommonAliases()
+    {
+        string[] pCoreNames =
+        [
+            "CPU P-Core #0",
+            "CPU P Core 1",
+            "Performance Core #2 Clock",
+            "CPU Performance Core 3"
+        ];
+        string[] eCoreNames =
+        [
+            "CPU E-Core #8",
+            "CPU E Core 9",
+            "Efficient Core #10 Clock",
+            "Efficiency Core 11"
+        ];
+
+        pCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuPCoreClockSensorName(name));
+        eCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuECoreClockSensorName(name));
+    }
+
+    [Fact]
+    public void IsLikelyCpuHybridCoreClockSensorName_ShouldIgnoreAverageAndEffectiveClocks()
+    {
+        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Average").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Effective Clock").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Average").Should().BeFalse();
+        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Effective Clock").Should().BeFalse();
+    }
+
+    [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdPptAlias()
     {
         var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
@@ -143,6 +246,51 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Processor Package Power");
+    }
+
+    [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdApuPowerAliases()
+    {
+        var stapmResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU SoC",
+            "APU STAPM"
+        ]);
+        var coreSocResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU SoC",
+            "Core+SoC Power"
+        ]);
+        var socketResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU Socket Power"
+        ]);
+
+        stapmResult.Should().Be("APU STAPM");
+        coreSocResult.Should().Be("Core+SoC Power");
+        socketResult.Should().Be("CPU Socket Power");
+    }
+
+    [Fact]
+    public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdMobileSpptAliases()
+    {
+        var apuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core Power (SVI3 TFN)",
+            "CPU SoC Power (SVI3 TFN)",
+            "APU sPPT"
+        ]);
+        var cpuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        [
+            "CPU Core",
+            "CPU sPPT"
+        ]);
+
+        apuResult.Should().Be("APU sPPT");
+        cpuResult.Should().Be("CPU sPPT");
     }
 
     [Fact]
@@ -193,6 +341,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("VRAM Temperature");
+    }
+
+    [Fact]
+    public void SelectGpuVramTemperatureSensorName_ShouldRecognizeJunctionAliases()
+    {
+        var result = SensorsGroupController.SelectGpuVramTemperatureSensorName(
+        [
+            "GPU Temperature",
+            "VRAM Junction"
+        ]);
+
+        result.Should().Be("VRAM Junction");
     }
 
     [Fact]
@@ -293,6 +453,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuPcieRxThroughputSensorName_ShouldRecognizePcieReadAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPcieRxThroughputSensorName(
+        [
+            "GPU Memory",
+            "PCIe Read"
+        ]);
+
+        result.Should().Be("PCIe Read");
+    }
+
+    [Fact]
     public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizeGpuPcieTxAlias()
     {
         var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
@@ -302,6 +474,18 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("GPU PCIe Tx");
+    }
+
+    [Fact]
+    public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizePcieWriteAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
+        [
+            "GPU Core",
+            "PCIe Write"
+        ]);
+
+        result.Should().Be("PCIe Write");
     }
 
     [Fact]
@@ -388,6 +572,49 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Total Graphics Power");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeBoardPowerAlias()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "Board Power"
+        ]);
+
+        result.Should().Be("Board Power");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldRecognizeAmdPowerDrawAliases()
+    {
+        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU PPT",
+            "Average GPU Power"
+        ]);
+
+        result.Should().Be("GPU PPT");
+    }
+
+    [Fact]
+    public void SelectGpuPowerSensorName_ShouldPreferSpecificPowerConsumptionBeforeGenericPower()
+    {
+        var consumptionResult = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU Power Consumption"
+        ]);
+        var coreResult = SensorsGroupController.SelectGpuPowerSensorName(
+        [
+            "Power",
+            "GPU Core Power"
+        ]);
+
+        consumptionResult.Should().Be("GPU Power Consumption");
+        coreResult.Should().Be("GPU Core Power");
     }
 
     [Fact]
@@ -525,6 +752,18 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void SelectGpuVoltageSensorName_ShouldRecognizeGpuVddAlias()
+    {
+        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        [
+            "Voltage",
+            "GPU VDD"
+        ]);
+
+        result.Should().Be("GPU VDD");
+    }
+
+    [Fact]
     public void SelectMemoryUsedSensorName_ShouldRecognizeUsedMemoryAlias()
     {
         var result = SensorsGroupController.SelectMemoryUsedSensorName(
@@ -573,6 +812,24 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void IsLikelyMemoryTemperatureSensorName_ShouldRecognizeDimmSpdAndTsodAliases()
+    {
+        string[] names =
+        [
+            "DIMM Thermal Sensor",
+            "DDR5 SPD Hub Temperature",
+            "TSOD Temperature",
+            "PMIC Temperature",
+            "Memory Module Temperature",
+            "DIMM #1",
+            "Memory Slot A1",
+            "DDR Module Temperature"
+        ];
+
+        names.Should().OnlyContain(name => SensorsGroupController.IsLikelyMemoryTemperatureSensorName(name));
+    }
+
+    [Fact]
     public void SelectStorageTemperatureSensorName_ShouldPreferCompositeTemperature()
     {
         var result = SensorsGroupController.SelectStorageTemperatureSensorName(
@@ -594,6 +851,190 @@ public class SensorsGroupControllerTests
         ]);
 
         result.Should().Be("Drive Temperature");
+    }
+
+    [Fact]
+    public void SelectStorageTemperatureSensorName_ShouldRecognizeNvmeAndControllerAliases()
+    {
+        var nvmeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "NVMe Composite"
+        ]);
+        var controllerResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Controller Temperature"
+        ]);
+
+        nvmeResult.Should().Be("NVMe Composite");
+        controllerResult.Should().Be("Controller Temperature");
+    }
+
+    [Fact]
+    public void SelectStorageTemperatureSensorName_ShouldRecognizeDriveCompositeAndControllerAliases()
+    {
+        var compositeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Drive Composite Temperature"
+        ]);
+        var asicResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "ASIC Controller Temperature"
+        ]);
+        var temperature1Result = SensorsGroupController.SelectStorageTemperatureSensorName(
+        [
+            "Temperature",
+            "Temperature 1"
+        ]);
+
+        compositeResult.Should().Be("Drive Composite Temperature");
+        asicResult.Should().Be("ASIC Controller Temperature");
+        temperature1Result.Should().Be("Temperature 1");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldPreferPchAndChipsetAliases()
+    {
+        var pchResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "CPU Package",
+            "GPU Core",
+            "PCH Temperature"
+        ]);
+        var chipsetResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "Memory",
+            "Chipset"
+        ]);
+
+        pchResult.Should().Be("PCH Temperature");
+        chipsetResult.Should().Be("Chipset");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeBoardControllerAliases()
+    {
+        var vrmResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "Memory",
+            "VRM"
+        ]);
+        var tmpinResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "AUXTIN0",
+            "CPU Package"
+        ]);
+
+        vrmResult.Should().Be("VRM");
+        tmpinResult.Should().Be("AUXTIN0");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeSuperIoAndExternalSensorAliases()
+    {
+        var superIoResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "Super I/O"
+        ]);
+        var tSensorResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "T_Sensor"
+        ]);
+
+        superIoResult.Should().Be("Super I/O");
+        tSensorResult.Should().Be("T_Sensor");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeEmbeddedControllerAndGenericBoardAliases()
+    {
+        var ecResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "EC Temp"
+        ]);
+        var temp1Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "Temperature #1"
+        ]);
+        var systemResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "System Temperature"
+        ]);
+
+        ecResult.Should().Be("EC Temp");
+        temp1Result.Should().Be("Temperature #1");
+        systemResult.Should().Be("System Temperature");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldRecognizeAcpiThermalZoneAliases()
+    {
+        var acpiResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "CPU Package",
+            "ACPI Thermal Zone"
+        ]);
+        var zoneResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "GPU Core",
+            "TZ00"
+        ]);
+        var temp2Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM Temperature",
+            "Temperature #2"
+        ]);
+
+        acpiResult.Should().Be("ACPI Thermal Zone");
+        zoneResult.Should().Be("TZ00");
+        temp2Result.Should().Be("Temperature #2");
+    }
+
+    [Fact]
+    public void SelectMotherboardTemperatureSensorName_ShouldIgnoreMemoryCpuAndGpuSensors()
+    {
+        var result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        [
+            "DIMM",
+            "CPU Package",
+            "GPU Core"
+        ]);
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void IsBoardTemperatureHardware_ShouldIncludeSuperIoControllersWithBoardTemperatureSensors()
+    {
+        var sensor = CreateSensor("SYSTIN", SensorType.Temperature);
+        var superIo = CreateHardwareWithSensors(
+            "Nuvoton NCT6798D",
+            Enum.Parse<HardwareType>("SuperIO"),
+            sensor.Object);
+
+        var result = SensorsGroupController.IsBoardTemperatureHardware(superIo.Object);
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsBoardTemperatureHardware_ShouldExcludeDedicatedMetricHardware()
+    {
+        var sensor = CreateSensor("PCH Temperature", SensorType.Temperature);
+        var cpu = CreateHardwareWithSensors("Intel Core", HardwareType.Cpu, sensor.Object);
+        var storage = CreateHardwareWithSensors("NVMe SSD", HardwareType.Storage, sensor.Object);
+
+        SensorsGroupController.IsBoardTemperatureHardware(cpu.Object).Should().BeFalse();
+        SensorsGroupController.IsBoardTemperatureHardware(storage.Object).Should().BeFalse();
     }
 
     [Fact]
@@ -646,6 +1087,7 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("IA Cores").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR CPU Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
@@ -654,6 +1096,7 @@ public class SensorsGroupControllerTests
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("SoC Power").Should().BeTrue();
+        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR SoC Power").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
         SensorsGroupController.IsLikelyCpuComponentPowerSensorName("Uncore Power").Should().BeTrue();
@@ -706,6 +1149,20 @@ public class SensorsGroupControllerTests
         result.cores.Should().Be(24f);
         result.memory.Should().Be(3f);
         result.platform.Should().Be(6f);
+    }
+
+    [Fact]
+    public void ResolveCpuComponentPowers_ShouldMapAmdSviPowerAliases()
+    {
+        var result = SensorsGroupController.ResolveCpuComponentPowers(
+        [
+            ("VDDCR CPU Power", 22f),
+            ("CPU Core Power (SVI3 TFN)", 4f),
+            ("VDDCR SoC Power", 5f)
+        ]);
+
+        result.cores.Should().Be(26f);
+        result.platform.Should().Be(5f);
     }
 
     [Fact]
@@ -774,5 +1231,23 @@ public class SensorsGroupControllerTests
         hardware.SetupGet(h => h.SubHardware).Returns(subHardware);
         hardware.SetupGet(h => h.Sensors).Returns([]);
         return hardware;
+    }
+
+    private static Mock<IHardware> CreateHardwareWithSensors(string name, HardwareType hardwareType, params ISensor[] sensors)
+    {
+        var hardware = new Mock<IHardware>();
+        hardware.SetupGet(h => h.Name).Returns(name);
+        hardware.SetupGet(h => h.HardwareType).Returns(hardwareType);
+        hardware.SetupGet(h => h.SubHardware).Returns([]);
+        hardware.SetupGet(h => h.Sensors).Returns(sensors);
+        return hardware;
+    }
+
+    private static Mock<ISensor> CreateSensor(string name, SensorType sensorType)
+    {
+        var sensor = new Mock<ISensor>();
+        sensor.SetupGet(s => s.Name).Returns(name);
+        sensor.SetupGet(s => s.SensorType).Returns(sensorType);
+        return sensor;
     }
 }

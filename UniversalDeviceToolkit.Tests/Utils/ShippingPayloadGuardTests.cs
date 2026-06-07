@@ -21,6 +21,39 @@ public sealed class ShippingPayloadGuardTests
         script.Should().Contain("'*.Tests.*'");
         script.Should().Contain("'*.Smoke.*'");
         script.Should().Contain("'*Validation*'");
+        script.Should().Contain("'UDT_APPDATA_OVERRIDE'");
+        script.Should().Contain("Test-ContainsBinaryMarker");
+        script.Should().Contain("[System.Text.Encoding]::UTF8.GetBytes($Marker)");
+        script.Should().Contain("[System.Text.Encoding]::Unicode.GetBytes($Marker)");
+        script.Should().Contain("[System.Text.Encoding]::BigEndianUnicode.GetBytes($Marker)");
+        script.Should().Contain("[System.IO.File]::ReadAllBytes($Path)");
+        script.Should().NotContain("Select-String -LiteralPath $file.FullName -SimpleMatch $marker -Quiet");
+    }
+
+    [Fact]
+    public void ShippingPayloadGuard_ShouldRejectUtf16BinaryTestHookMarkers()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var payloadRoot = NewTempDirectory("UDT-shipping-marker-payload");
+
+        try
+        {
+            var markerPath = Path.Combine(payloadRoot, "Universal Device Toolkit.dll");
+            File.WriteAllBytes(markerPath, System.Text.Encoding.Unicode.GetBytes("prefix UDT_APPDATA_OVERRIDE suffix"));
+
+            var output = RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Assert-ShippingPayload.ps1"),
+                ["-PayloadPath", payloadRoot],
+                repositoryRoot,
+                expectSuccess: false);
+
+            output.Should().Contain("Shipping payload contains test or validation tool artifacts:");
+            output.Should().Contain(markerPath);
+        }
+        finally
+        {
+            Directory.Delete(payloadRoot, recursive: true);
+        }
     }
 
     [Fact]
@@ -31,6 +64,7 @@ public sealed class ShippingPayloadGuardTests
         var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
         var makeScript = ReadRepositoryFile("Make.bat");
+        var mainAppSmokeWorkflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
 
         workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
         workflow.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
@@ -50,18 +84,25 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("FinalizeOnly = $true");
         workflow.Should().Contain("Repository = '${{ github.repository }}'");
         workflow.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
+        workflow.Should().NotContain("/p:EnableUdtTestHooks=true");
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");
+        releaseNotesScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version -Names $AssetNames");
+        releaseNotesScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
 
         crossPlatformScript.Should().Contain("[string]$AssetVersion");
         crossPlatformScript.Should().Contain("$resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }");
         crossPlatformScript.Should().Contain("${AssetPrefix}_v${resolvedAssetVersion}_CLI_cross-platform.zip");
+        crossPlatformScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -BuildVersion $Version -PublishedVersion $resolvedAssetVersion");
+        crossPlatformScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
         crossPlatformScript.Should().Contain("$shippingPayloadGuard = Resolve-RepoPath 'Scripts\\Assert-ShippingPayload.ps1'");
         crossPlatformScript.Should().Contain("& $shippingPayloadGuard -PayloadPath $publishOutputPath");
 
         languageAssetsScript.Should().Contain("Get-CrossPlatformCliAssetName");
         languageAssetsScript.Should().Contain("[switch]$IncludeCrossPlatformCli");
+        languageAssetsScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version");
+        languageAssetsScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli)");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli -and (Test-Path -LiteralPath (Join-Path $ReleaseOutputPath $crossPlatformCliName)))");
         languageAssetsScript.Should().Contain("$hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)");
@@ -77,6 +118,28 @@ public sealed class ShippingPayloadGuardTests
         makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
             .Should()
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
+
+        mainAppSmokeWorkflow.Should().Contain("/p:EnableUdtTestHooks=true");
+        mainAppSmokeWorkflow.Should().Contain("dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
+        mainAppSmokeWorkflow.Should().NotContain("dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
+    }
+
+    [Fact]
+    public void ShippingAppProjects_ShouldRejectPublishWithTestHooks()
+    {
+        var directoryTargets = ReadRepositoryFile("Directory.Build.targets");
+        directoryTargets.Should().Contain("RejectShippingAppPublishWithTestHooks");
+        directoryTargets.Should().Contain("BeforeTargets=\"BeforeBuild;SetGenerateManifests;PrepareForPublish\"");
+        directoryTargets.Should().Contain("'$(_IsPublishing)' == 'true'");
+        directoryTargets.Should().Contain("'$(IsUdtShippingApp)' == 'true'");
+        directoryTargets.Should().Contain("'$(EnableUdtTestHooks)' == 'true'");
+        directoryTargets.Should().Contain("'$(AllowUdtTestHookPublish)' != 'true'");
+
+        var wpfProject = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj");
+        var cliProject = ReadRepositoryFile("UniversalDeviceToolkit.CLI", "UniversalDeviceToolkit.CLI.csproj");
+
+        wpfProject.Should().Contain("<IsUdtShippingApp>true</IsUdtShippingApp>");
+        cliProject.Should().Contain("<IsUdtShippingApp>true</IsUdtShippingApp>");
     }
 
     [Fact]
@@ -97,6 +160,25 @@ public sealed class ShippingPayloadGuardTests
             reference.Contains(".Smoke", StringComparison.OrdinalIgnoreCase) ||
             reference.Contains("Validation", StringComparison.OrdinalIgnoreCase),
             "shipping app project references must stay limited to production libraries");
+    }
+
+    [Fact]
+    public void Repository_ShouldNotContainMainAppDebugPatchScripts()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var files = Directory
+            .EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)
+            .Where(path => !IsIgnoredRepositoryPath(repositoryRoot, path))
+            .ToArray();
+
+        files.Should().NotContain(
+            path => Path.GetFileName(path).Contains("_patch_app_debug", StringComparison.OrdinalIgnoreCase),
+            "temporary debug patch scripts must not be checked in");
+
+        files.Should().NotContain(
+            path => Path.GetFileName(path).EndsWith(".ps1", StringComparison.OrdinalIgnoreCase) &&
+                    File.ReadAllText(path).Contains("AgentDebugLog.Write", StringComparison.Ordinal),
+            "scripts must not inject debug logging into the shipping WPF app");
     }
 
     [Fact]
@@ -134,7 +216,49 @@ public sealed class ShippingPayloadGuardTests
         notesWithCli.Should().Contain("Cross-platform diagnostics CLI: Windows, macOS, and Linux with .NET 10 runtime");
     }
 
-    private static string RunReleaseNotesScript(string version, string[] assetNames)
+    [Fact]
+    public void ReleaseScripts_ShouldRejectCrossPlatformCliAssetsBeforeFive()
+    {
+        var releaseNotesFailure = RunReleaseNotesScript(
+            "4.2.0",
+            [
+                "UniversalDeviceToolkit_v4.2.0_CLI_cross-platform.zip",
+            ],
+            expectSuccess: false);
+
+        releaseNotesFailure.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
+
+        var repositoryRoot = FindRepositoryRoot();
+        RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Build-LanguageAssets.ps1"),
+                [
+                    "-FinalizeOnly",
+                    "-ReleaseOutput", NewTempDirectory("UDT-release-output"),
+                    "-PagesOutput", NewTempDirectory("UDT-pages-output"),
+                    "-Version", "4.2.0",
+                    "-FullInstallerPath", NewTempFile("UDT-full", ".exe"),
+                    "-OnlineInstallerPath", NewTempFile("UDT-online", ".exe"),
+                    "-IncludeCrossPlatformCli",
+                ],
+                repositoryRoot,
+                expectSuccess: false)
+            .Should()
+            .Contain("Cross-platform CLI assets are not published before 5.x.x.");
+
+        RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Build-CrossPlatformCliAsset.ps1"),
+                [
+                    "-Version", "4.2.0",
+                    "-ReleaseOutput", NewTempDirectory("UDT-cli-output"),
+                    "-SkipHashUpdate",
+                ],
+                repositoryRoot,
+                expectSuccess: false)
+            .Should()
+            .Contain("Cross-platform CLI assets are not published before 5.x.x.");
+    }
+
+    private static string RunReleaseNotesScript(string version, string[] assetNames, bool expectSuccess = true)
     {
         var repositoryRoot = FindRepositoryRoot();
         var tempDirectory = Path.Combine(Path.GetTempPath(), $"UDT-release-notes-{Guid.NewGuid():N}");
@@ -193,9 +317,16 @@ public sealed class ShippingPayloadGuardTests
             var error = process.StandardError.ReadToEnd();
 
             process.WaitForExit(30_000).Should().BeTrue("release notes generation should finish quickly");
-            process.ExitCode.Should().Be(0, error);
+            if (expectSuccess)
+            {
+                process.ExitCode.Should().Be(0, error);
+            }
+            else
+            {
+                process.ExitCode.Should().NotBe(0, output);
+            }
 
-            return output;
+            return output + error;
         }
         finally
         {
@@ -203,7 +334,70 @@ public sealed class ShippingPayloadGuardTests
         }
     }
 
+    private static string RunPowerShellScript(string scriptPath, string[] arguments, string workingDirectory, bool expectSuccess = true)
+    {
+        var startInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "powershell.exe",
+            WorkingDirectory = workingDirectory,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+        };
+
+        startInfo.ArgumentList.Add("-NoProfile");
+        startInfo.ArgumentList.Add("-ExecutionPolicy");
+        startInfo.ArgumentList.Add("Bypass");
+        startInfo.ArgumentList.Add("-File");
+        startInfo.ArgumentList.Add(scriptPath);
+        foreach (var argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = System.Diagnostics.Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start PowerShell.");
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+
+        process.WaitForExit(30_000).Should().BeTrue($"{Path.GetFileName(scriptPath)} should finish quickly");
+        if (expectSuccess)
+        {
+            process.ExitCode.Should().Be(0, error);
+        }
+        else
+        {
+            process.ExitCode.Should().NotBe(0, output);
+        }
+
+        return output + error;
+    }
+
+    private static string NewTempDirectory(string prefix)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{prefix}-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    private static string NewTempFile(string prefix, string extension)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{prefix}-{Guid.NewGuid():N}{extension}");
+        File.WriteAllBytes(path, []);
+        return path;
+    }
+
     private static string EscapePowerShellSingleQuotedString(string value) => value.Replace("'", "''", StringComparison.Ordinal);
+
+    private static bool IsIgnoredRepositoryPath(string repositoryRoot, string path)
+    {
+        var relativePath = Path.GetRelativePath(repositoryRoot, path);
+        var segments = relativePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        return segments.Any(static segment =>
+            segment.Equals(".git", StringComparison.OrdinalIgnoreCase) ||
+            segment.Equals("bin", StringComparison.OrdinalIgnoreCase) ||
+            segment.Equals("obj", StringComparison.OrdinalIgnoreCase));
+    }
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {

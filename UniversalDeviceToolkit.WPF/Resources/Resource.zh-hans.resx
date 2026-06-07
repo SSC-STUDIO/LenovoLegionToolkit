@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>此设备将以基础模式启动。兼容的设备包可用之前，硬件专属控制项会被隐藏。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>设备包：基础模式</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit 检测到匹配的设备包。现在确认后，应用即可准备硬件专属功能。</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>设备包：{0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>正在准备设备设置...</value>
+  </data>
+</root>

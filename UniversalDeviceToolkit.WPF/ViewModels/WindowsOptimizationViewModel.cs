@@ -32,6 +32,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveCulture);
 
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
+    private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);
     private bool _isRefreshingStates;
 
     public WindowsOptimizationViewModel(
@@ -287,6 +288,11 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public void Initialize()
     {
+        RunOnDispatcher(InitializeCore);
+    }
+
+    private void InitializeCore()
+    {
         // Restore last mode (ignore removed Beautification tab and invalid stored values)
         var lastMode = (PageMode)_applicationSettings.Store.LastWindowsOptimizationPageMode;
         if (!Enum.IsDefined(typeof(PageMode), lastMode))
@@ -373,7 +379,25 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ActiveCategories));
         UpdateSelectedActions();
 
-        _ = ScanOptimizationStatesAsync();
+        StartOptimizationStateScan();
+    }
+
+    private void StartOptimizationStateScan()
+    {
+        _ = ObserveOptimizationStateScanAsync();
+    }
+
+    private async Task ObserveOptimizationStateScanAsync()
+    {
+        try
+        {
+            await ScanOptimizationStatesAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to scan Windows optimization states.", ex);
+        }
     }
 
     private static string ResolveOptimizationText(Type? resourceAnchorType, ResourceManager? categoryResourceManager, string key)
@@ -458,7 +482,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         _isRefreshingStates = true;
         try
         {
-            foreach (var category in ActiveCategories)
+            foreach (var category in SnapshotActiveCategories())
                 category.SelectRecommended();
             
             UpdateSelectedActions();
@@ -480,7 +504,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         _isRefreshingStates = true;
         try
         {
-            foreach (var category in ActiveCategories)
+            foreach (var category in SnapshotActiveCategories())
                 category.ClearSelection();
             
             UpdateSelectedActions();
@@ -507,7 +531,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
         const string cleanupPrefix = "cleanup.";
 
-        foreach (var category in Categories)
+        foreach (var category in SnapshotCategories())
         {
             if (category?.Actions == null) continue;
 
@@ -826,29 +850,24 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public async Task ScanOptimizationStatesAsync()
     {
+        await _optimizationStateScanLock.WaitAsync().ConfigureAwait(false);
         _isRefreshingStates = true;
         try
         {
-            foreach (var category in OptimizationCategories)
+            var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);
+            foreach (var action in actions)
             {
-                if (category?.Actions == null) continue;
+                // Scan to detect actual system state
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
                 
-                foreach (var action in category.Actions)
+                // Ensure UI updates happen on UI thread
+                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
                 {
-                    if (action == null) continue;
-                    
-                    // Scan to detect actual system state
-                    var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
-                    
-                    // Ensure UI updates happen on UI thread
-                    if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-                    {
-                        await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
-                    }
-                    else
-                    {
-                        action.IsSelected = isApplied;
-                    }
+                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
+                }
+                else
+                {
+                    action.IsSelected = isApplied;
                 }
             }
             
@@ -872,7 +891,42 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         finally
         {
             _isRefreshingStates = false;
+            _optimizationStateScanLock.Release();
         }
+    }
+
+    private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && !dispatcher.CheckAccess())
+            return await dispatcher.InvokeAsync(SnapshotOptimizationActions).Task.ConfigureAwait(false);
+
+        return SnapshotOptimizationActions();
+    }
+
+    private List<OptimizationActionViewModel> SnapshotOptimizationActions()
+    {
+        return OptimizationCategories
+            .ToList()
+            .Where(category => category?.Actions != null)
+            .SelectMany(category => category.Actions.ToList())
+            .Where(action => action != null)
+            .ToList();
+    }
+
+    private List<OptimizationCategoryViewModel> SnapshotCategories() =>
+        Categories.ToList();
+
+    private List<OptimizationCategoryViewModel> SnapshotActiveCategories() =>
+        ActiveCategories.ToList();
+
+    private void RunOnDispatcher(Action action)
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && !dispatcher.CheckAccess())
+            dispatcher.Invoke(action);
+        else
+            action();
     }
 
     public void NotifyDriverSelectionChanged()

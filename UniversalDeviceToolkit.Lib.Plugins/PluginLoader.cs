@@ -56,6 +56,18 @@ public class PluginLoader : IPluginLoader
     /// </summary>
     public async Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator)
     {
+        if (string.IsNullOrWhiteSpace(dllPath))
+        {
+            Log.Instance.Warning("LoadFromFileAsync: DLL path is empty");
+            return null;
+        }
+
+        if (!File.Exists(dllPath))
+        {
+            Log.Instance.Warning($"LoadFromFileAsync: DLL file not found: {dllPath}");
+            return null;
+        }
+
         RegisteredPluginDependencyResolutionContext? registeredDependencyContext = null;
         var keepDependencyContext = false;
 
@@ -69,8 +81,6 @@ public class PluginLoader : IPluginLoader
 
             // Register AssemblyResolve handler early to handle dependencies that may be loaded
             // during signature validation or assembly loading.
-            // Note: X509Certificate.CreateFromSignedFile uses native APIs and typically doesn't
-            // trigger managed assembly resolution, but we register early for defense in depth.
             if (!string.IsNullOrWhiteSpace(pluginDirectory))
             {
                 registeredDependencyContext = RegisterPluginDependencyResolutionContext(normalizedDllPath, pluginDirectory, signatureValidator);
@@ -81,26 +91,24 @@ public class PluginLoader : IPluginLoader
             if (!signatureResult.IsValid)
             {
                 Log.Instance.Warning($"Plugin signature validation failed for {dllPath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
-
                 return null;
             }
 
             // Load the main assembly from bytes to avoid file locking, but resolve plugin-local
-            // dependencies through a dedicated AssemblyLoadContext so online plugins can keep
-            // their own UI/runtime dependency graph isolated from the host.
+            // dependencies through a dedicated AssemblyLoadContext.
             Assembly? assembly = null;
             PluginAssemblyLoadContext? pluginLoadContext = null;
             try
             {
-                var assemblyBytes = File.ReadAllBytes(normalizedDllPath);
+                var assemblyBytes = await File.ReadAllBytesAsync(normalizedDllPath);
                 pluginLoadContext = new PluginAssemblyLoadContext(normalizedDllPath, pluginDirectory ?? string.Empty, signatureValidator);
                 assembly = pluginLoadContext.LoadFromStream(new MemoryStream(assemblyBytes));
                 registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to load assembly from {dllPath}: {ex.Message}", ex);
+                Log.Instance.Error($"Failed to load assembly from {dllPath}", ex);
+                pluginLoadContext?.Unload();
                 return null;
             }
 
@@ -112,19 +120,22 @@ public class PluginLoader : IPluginLoader
             }
             catch (ReflectionTypeLoadException ex)
             {
-                if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Warning($"Failed to get types from assembly {dllPath}. Loader exceptions:");
+                if (ex.LoaderExceptions != null)
                 {
-                    Log.Instance.Trace($"Failed to get types from assembly {dllPath}. Loader exceptions:", ex);
-                    if (ex.LoaderExceptions != null)
+                    foreach (var loaderEx in ex.LoaderExceptions)
                     {
-                        foreach (var loaderEx in ex.LoaderExceptions)
-                        {
-                            Log.Instance.Trace($"  Loader exception: {loaderEx?.Message}", loaderEx);
-                        }
+                        Log.Instance.Warning($"  - {loaderEx?.Message}", loaderEx);
                     }
                 }
                 // Try to continue with successfully loaded types
                 pluginTypes = ex.Types.Where(t => t != null).OfType<Type>().ToArray();
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error getting types from assembly {dllPath}", ex);
+                pluginLoadContext?.Unload();
+                return null;
             }
 
             var validPluginTypes = pluginTypes
@@ -134,6 +145,13 @@ public class PluginLoader : IPluginLoader
                     && !t.IsAbstract
                     && t.GetConstructor(Type.EmptyTypes) != null)
                 .ToList();
+
+            if (validPluginTypes.Count == 0)
+            {
+                Log.Instance.Warning($"No valid plugin types found in {dllPath}");
+                pluginLoadContext?.Unload();
+                return null;
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Found {validPluginTypes.Count} plugin type(s) in {dllPath}");
@@ -146,18 +164,25 @@ public class PluginLoader : IPluginLoader
                     var plugin = CreatePluginInstance(pluginType, dllPath);
                     if (plugin != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(plugin.Id) && pluginLoadContext is not null)
+                        if (string.IsNullOrWhiteSpace(plugin.Id))
+                        {
+                            Log.Instance.Warning($"Plugin from {dllPath} has empty ID, skipping");
+                            continue;
+                        }
+
+                        if (pluginLoadContext is not null)
                             PluginLoadContexts[plugin.Id] = pluginLoadContext;
-                        if (!string.IsNullOrWhiteSpace(plugin.Id) && registeredDependencyContext is not null)
+                        if (registeredDependencyContext is not null)
                             PluginDependencyContexts[plugin.Id] = registeredDependencyContext.Context;
                         keepDependencyContext = true;
+                        
+                        Log.Instance.Info($"Successfully created plugin instance: {plugin.Id} ({plugin.Name}) from {dllPath}");
                         return plugin;
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to create instance of plugin type {pluginType.Name}: {ex.Message}", ex);
+                    Log.Instance.Error($"Failed to create instance of plugin type {pluginType.Name} from {dllPath}", ex);
                 }
             }
 
@@ -166,8 +191,7 @@ public class PluginLoader : IPluginLoader
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to load plugin assembly from {dllPath}: {ex.Message}", ex);
+            Log.Instance.Error($"Failed to load plugin assembly from {dllPath}", ex);
             return null;
         }
         finally

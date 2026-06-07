@@ -6,12 +6,12 @@ using System.Windows;
 using System.Windows.Controls;
 using Humanizer;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Extensions;
@@ -30,7 +30,8 @@ public class AutomationPipelineControl : UserControl
     private readonly TaskCompletionSource _initializedTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
-    private readonly GodModeSettings _godModeSettings = IoCContainer.Resolve<GodModeSettings>();
+    private readonly GodModeController _godModeController = IoCContainer.Resolve<GodModeController>();
+    private IReadOnlyDictionary<Guid, GodModePreset> _godModePresets = new Dictionary<Guid, GodModePreset>();
 
     private readonly CardExpander _cardExpander = new()
     {
@@ -139,6 +140,7 @@ public class AutomationPipelineControl : UserControl
         try
         {
             _cardExpander.Header = _cardHeaderControl;
+            _godModePresets = await LoadGodModePresetsAsync();
 
             foreach (var step in AutomationPipeline.Steps)
             {
@@ -263,10 +265,7 @@ public class AutomationPipelineControl : UserControl
 
         if (AutomationPipeline.Trigger is IGodModePresetChangedAutomationPipelineTrigger gpt)
         {
-            var name = _godModeSettings.Store.Presets.Where(kv => kv.Key == gpt.PresetId)
-                .Select(kv => kv.Value.Name)
-                .DefaultIfEmpty("-")
-                .First();
+            var name = GetPresetName(gpt.PresetId, _godModePresets);
             result += $" | {Resource.AutomationPipelineControl_SubtitlePart_Preset}: {name}";
         }
 
@@ -309,6 +308,25 @@ public class AutomationPipelineControl : UserControl
         return result;
     }
 
+    internal static string GetPresetName(Guid presetId, IReadOnlyDictionary<Guid, GodModePreset> presets) =>
+        presets.TryGetValue(presetId, out var preset) && !string.IsNullOrWhiteSpace(preset.Name)
+            ? preset.Name
+            : "-";
+
+    private async Task<IReadOnlyDictionary<Guid, GodModePreset>> LoadGodModePresetsAsync()
+    {
+        try
+        {
+            return (await _godModeController.GetStateAsync()).Presets;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to load God Mode presets for automation subtitle.", ex);
+            return new Dictionary<Guid, GodModePreset>();
+        }
+    }
+
     private Button? GenerateAccessory()
     {
         var triggers = AutomationPipeline.AllTriggers
@@ -323,12 +341,15 @@ public class AutomationPipelineControl : UserControl
             Margin = new(16, 0, 16, 0),
             MinWidth = 120,
         };
-        button.Click += (_, _) =>
+        button.Click += async (_, _) =>
         {
+            _godModePresets = await LoadGodModePresetsAsync();
+
             var window = new AutomationPipelineTriggerConfigurationWindow(triggers) { Owner = Window.GetWindow(this) };
-            window.OnSave += (_, e) =>
+            window.OnSave += async (_, e) =>
             {
                 AutomationPipeline.Trigger = e;
+                _godModePresets = await LoadGodModePresetsAsync();
                 _cardHeaderControl.Subtitle = GenerateSubtitle();
                 _cardHeaderControl.Accessory = GenerateAccessory();
                 _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
@@ -464,4 +485,3 @@ public class AutomationPipelineControl : UserControl
         OnChanged?.Invoke(this, EventArgs.Empty);
     }
 }
-

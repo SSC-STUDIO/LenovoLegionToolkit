@@ -155,6 +155,41 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task ValidateAsync_WhenTrustedPackageMovesDirectory_ShouldAllowSameUnsignedFileHash()
+    {
+        // Arrange
+        var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+
+        var originalPluginDirectory = CreateTempDirectory();
+        var movedPluginDirectory = CreateTempDirectory();
+        var originalPluginPath = Path.Combine(originalPluginDirectory, "trusted-plugin.dll");
+        var movedPluginPath = Path.Combine(movedPluginDirectory, "trusted-plugin.dll");
+        File.WriteAllText(originalPluginPath, "trusted package content");
+        File.Copy(originalPluginPath, movedPluginPath);
+
+        try
+        {
+            TrustedPluginPackageStore.TrustPluginDirectory("trusted-plugin", originalPluginDirectory);
+
+            var validator = new PluginSignatureValidator(PluginSignatureSettings.Production);
+
+            // Act
+            var result = await validator.ValidateAsync(movedPluginPath);
+
+            // Assert
+            result.Status.Should().Be(PluginSignatureStatus.NotSigned);
+            result.IsAllowedByPolicy.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
+            TrustedPluginPackageStore.IsTrustedFile(movedPluginPath).Should().BeTrue();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, originalAppDataOverride);
+        }
+    }
+
+    [Fact]
     public async Task ValidateAsync_WhenTrustedOnlinePackageFileChanges_ShouldRejectUnsignedFile()
     {
         // Arrange

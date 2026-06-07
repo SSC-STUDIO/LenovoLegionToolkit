@@ -175,6 +175,16 @@ public partial class GodModeSettingsWindow
             Log.Instance.Trace($"God Mode state reloaded after persistence. [activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
     }
 
+    private async Task PersistAndRefreshPresetListAsync()
+    {
+        await PersistStateAsync();
+
+        if (!_state.HasValue)
+            return;
+
+        await SetStateAsync(_state.Value);
+    }
+
     internal static string GetUniquePresetName(
         string requestedName,
         IReadOnlyDictionary<Guid, GodModePreset> presets,
@@ -530,7 +540,7 @@ public partial class GodModeSettingsWindow
 
         try
         {
-            await PersistStateAsync();
+            await PersistAndRefreshPresetListAsync();
         }
         catch (Exception ex)
         {
@@ -541,7 +551,6 @@ public partial class GodModeSettingsWindow
             return;
         }
 
-        await SetStateAsync(_state.Value);
     }
 
     private async void DeletePresetsButton_Click(object sender, RoutedEventArgs e)
@@ -560,7 +569,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={_state.Value.Presets.Count}, newActivePresetId={_state.Value.ActivePresetId}]");
 
-            await PersistStateAsync();
+            await PersistAndRefreshPresetListAsync();
 
             if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
                 await _godModeController.ApplyStateAsync();
@@ -574,7 +583,6 @@ public partial class GodModeSettingsWindow
             return;
         }
 
-        await SetStateAsync(_state.Value);
     }
 
     private async void AddPresetsButton_Click(object sender, RoutedEventArgs e)
@@ -600,7 +608,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={_state.Value.Presets.Count}]");
 
-            await PersistStateAsync();
+            await PersistAndRefreshPresetListAsync();
         }
         catch (Exception ex)
         {
@@ -611,7 +619,6 @@ public partial class GodModeSettingsWindow
             return;
         }
 
-        await SetStateAsync(_state.Value);
     }
 
     private async void DefaultFanCurve_Click(object sender, RoutedEventArgs e)

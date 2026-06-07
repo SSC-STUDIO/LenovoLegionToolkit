@@ -71,11 +71,31 @@ internal static class TrustedPluginPackageStore
             lock (Lock)
             {
                 var store = ReadStore();
-                return store.Plugins.Values
-                    .SelectMany(plugin => plugin.Files)
-                    .Any(file =>
-                        string.Equals(Path.GetFullPath(file.Path), normalizedPath, StringComparison.OrdinalIgnoreCase) &&
-                        string.Equals(file.Sha256, sha256, StringComparison.OrdinalIgnoreCase));
+                foreach (var plugin in store.Plugins.Values)
+                {
+                    foreach (var file in plugin.Files)
+                    {
+                        if (!string.Equals(file.Sha256, sha256, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        var storedPath = TryNormalizePath(file.Path);
+                        if (string.Equals(storedPath, normalizedPath, StringComparison.OrdinalIgnoreCase))
+                            return true;
+
+                        if (!string.Equals(Path.GetFileName(file.Path), Path.GetFileName(normalizedPath), StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        file.Path = normalizedPath;
+                        var directory = Path.GetDirectoryName(normalizedPath);
+                        if (!string.IsNullOrWhiteSpace(directory))
+                            plugin.PluginDirectory = directory;
+
+                        WriteStore(store);
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
         catch (Exception ex)
@@ -83,6 +103,21 @@ internal static class TrustedPluginPackageStore
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to verify trusted plugin file {filePath}: {ex.Message}", ex);
             return false;
+        }
+    }
+
+    private static string? TryNormalizePath(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return null;
+
+        try
+        {
+            return Path.GetFullPath(path);
+        }
+        catch
+        {
+            return path;
         }
     }
 

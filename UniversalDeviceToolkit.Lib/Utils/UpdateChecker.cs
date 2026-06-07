@@ -413,7 +413,7 @@ public class UpdateChecker
     {
         UpdateCheckFrequency.PerHour => TimeSpan.FromHours(1),
         UpdateCheckFrequency.PerThreeHours => TimeSpan.FromHours(3),
-        UpdateCheckFrequency.PerTwelveHours => TimeSpan.FromHours(13),
+        UpdateCheckFrequency.PerTwelveHours => TimeSpan.FromHours(12),
         UpdateCheckFrequency.PerDay => TimeSpan.FromDays(1),
         UpdateCheckFrequency.PerWeek => TimeSpan.FromDays(7),
         UpdateCheckFrequency.PerMonth => TimeSpan.FromDays(30),

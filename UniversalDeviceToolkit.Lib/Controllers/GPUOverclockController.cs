@@ -134,7 +134,10 @@ public class GPUOverclockController
         EnsureProfiles();
 
         var store = _settings.Store;
-        var profile = store.Profiles[profileId];
+        if (!store.Profiles.TryGetValue(profileId, out var profile))
+            profileId = store.ActiveProfileId;
+
+        profile = store.Profiles[profileId];
         store.Profiles[profileId] = new()
         {
             Name = profile.Name,
@@ -152,7 +155,7 @@ public class GPUOverclockController
         var profileId = Guid.NewGuid();
         _settings.Store.Profiles[profileId] = new()
         {
-            Name = name,
+            Name = GetUniqueProfileName(name, _settings.Store.Profiles),
             Info = info
         };
         _settings.Store.ActiveProfileId = profileId;
@@ -166,10 +169,12 @@ public class GPUOverclockController
     {
         EnsureProfiles();
 
-        var profile = _settings.Store.Profiles[profileId];
+        if (!_settings.Store.Profiles.TryGetValue(profileId, out var profile))
+            return;
+
         _settings.Store.Profiles[profileId] = new()
         {
-            Name = name,
+            Name = GetUniqueProfileName(name, _settings.Store.Profiles, profileId),
             Info = profile.Info
         };
         _settings.SynchronizeStore();
@@ -353,6 +358,7 @@ private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, Na
     private void EnsureProfiles()
     {
         var store = _settings.Store;
+        var changed = false;
 
         if (store.Profiles.Count == 0)
         {
@@ -366,12 +372,51 @@ private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, Na
                     Info = store.Info
                 }
             };
+            _settings.SynchronizeStore();
             return;
         }
 
         if (!store.Profiles.ContainsKey(store.ActiveProfileId))
+        {
             store.ActiveProfileId = store.Profiles.OrderBy(kv => kv.Value.Name).First().Key;
+            changed = true;
+        }
 
         store.Info = store.Profiles[store.ActiveProfileId].Info;
+        if (changed)
+            _settings.SynchronizeStore();
+    }
+
+    internal static string NormalizeProfileName(string? name)
+    {
+        var normalized = name?.Trim();
+        return string.IsNullOrWhiteSpace(normalized)
+            ? GPUOverclockSettings.DefaultProfileName
+            : normalized;
+    }
+
+    internal static string GetUniqueProfileName(
+        string? requestedName,
+        IReadOnlyDictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile> profiles,
+        Guid? excludeProfileId = null)
+    {
+        var normalizedRequestedName = NormalizeProfileName(requestedName);
+        var existingNames = profiles
+            .Where(kv => !excludeProfileId.HasValue || kv.Key != excludeProfileId.Value)
+            .Select(kv => NormalizeProfileName(kv.Value.Name))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!existingNames.Contains(normalizedRequestedName))
+            return normalizedRequestedName;
+
+        var suffix = 2;
+        while (true)
+        {
+            var candidate = $"{normalizedRequestedName} ({suffix})";
+            if (!existingNames.Contains(candidate))
+                return candidate;
+
+            suffix++;
+        }
     }
 }

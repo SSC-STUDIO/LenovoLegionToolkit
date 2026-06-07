@@ -27,6 +27,8 @@ public partial class AutomationPage
 
     private IAutomationStep[] _supportedAutomationSteps = [];
 
+    internal static TimeSpan GetAutomationFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
+
     public AutomationPage()
     {
         Initialized += AutomationPage_Initialized;
@@ -111,7 +113,7 @@ public partial class AutomationPage
         _loaderAutomatic.IsLoading = true;
         _loaderManual.IsLoading = true;
 
-        var initializedTasks = new List<Task> { Task.Delay(TimeSpan.FromSeconds(1)) };
+        var initializedTasks = new List<Task> { Task.Delay(GetAutomationFallbackLoadingDelay()) };
 
         _enableAutomaticPipelinesToggle.IsChecked = _automationProcessor.IsEnabled;
 

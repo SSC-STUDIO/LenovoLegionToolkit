@@ -21,6 +21,33 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Get-MajorVersion {
+    param(
+        [Parameter(Mandatory = $true)][string]$Value,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    if ($Value -notmatch '^(?<major>\d+)\.') {
+        throw "$Name '$Value' must start with a semantic major version."
+    }
+
+    return [int]$Matches.major
+}
+
+function Assert-CrossPlatformCliReleaseAllowed {
+    param(
+        [Parameter(Mandatory = $true)][string]$BuildVersion,
+        [Parameter(Mandatory = $true)][string]$PublishedVersion
+    )
+
+    $buildMajor = Get-MajorVersion -Value $BuildVersion -Name 'Version'
+    $publishedMajor = Get-MajorVersion -Value $PublishedVersion -Name 'AssetVersion'
+
+    if ($buildMajor -lt 5 -or $publishedMajor -lt 5) {
+        throw "Cross-platform CLI assets are not published before 5.x.x. Version '$BuildVersion' and asset version '$PublishedVersion' were requested."
+    }
+}
+
 function Resolve-RepoPath {
     param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -139,6 +166,7 @@ $project = Resolve-RepoPath $ProjectPath
 $publishOutputPath = Resolve-RepoPath $PublishOutput
 $releaseOutputPath = Resolve-RepoPath $ReleaseOutput
 $resolvedAssetVersion = if ([string]::IsNullOrWhiteSpace($AssetVersion)) { $Version } else { $AssetVersion }
+Assert-CrossPlatformCliReleaseAllowed -BuildVersion $Version -PublishedVersion $resolvedAssetVersion
 $assetName = "${AssetPrefix}_v${resolvedAssetVersion}_CLI_cross-platform.zip"
 $assetPath = Join-Path $releaseOutputPath $assetName
 $resolvedHashFileName = if ([string]::IsNullOrWhiteSpace($HashFileName)) { "${AssetPrefix}_v${resolvedAssetVersion}_SHA256.txt" } else { $HashFileName }

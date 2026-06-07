@@ -47,6 +47,9 @@ public sealed class DeviceSupportStatusTests
 
     [Theory]
     [InlineData("TIMI", "Redmi G Pro 2024", "xiaomi-basic")]
+    [InlineData("LENOVO", "IdeaPad Gaming 3 15ACH6", "lenovo-ideapad-yoga-basic")]
+    [InlineData("LENOVO", "Yoga Pro 7 14AHP9", "lenovo-ideapad-yoga-basic")]
+    [InlineData("LENOVO", "小新 Pro 16 2024", "lenovo-xiaoxin-basic")]
     [InlineData("realme", "realme Book Prime", "realme-basic")]
     [InlineData("Infinix Mobility Limited", "INBook X2", "infinix-basic")]
     [InlineData("Motorola Mobility LLC", "Moto Book 60 14IRH10R", "motorola-basic")]
@@ -88,6 +91,8 @@ public sealed class DeviceSupportStatusTests
     [InlineData("AVITA", "LIBER V14", "nexstgo-avita-basic")]
     [InlineData("Positivo Tecnologia", "Motion C4500", "positivo-basic")]
     [InlineData("Wortmann AG", "TERRA MOBILE 1517", "wortmann-terra-basic")]
+    [InlineData("Huawei Technologies", "Qingyun L540", "huawei-basic")]
+    [InlineData("Dynabook Incorporated", "Portégé X40-K", "dynabook-basic")]
     [InlineData("GMKtec", "NucBox K8 Plus", "gmktec-basic")]
     [InlineData("MORE FINE", "M600 Mini PC", "morefine-basic")]
     [InlineData("ACEMAGICIAN", "Tank03", "acemagic-basic")]

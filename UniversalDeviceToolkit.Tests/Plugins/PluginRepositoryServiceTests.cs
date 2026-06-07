@@ -75,7 +75,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
@@ -105,7 +105,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle();
@@ -135,7 +135,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync();
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
@@ -271,8 +271,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         // Assert
         installed.Should().BeFalse();
         scanCalls.Should().ContainSingle().Which.Should().BeTrue();
-        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
-        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Once);
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Never);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
     [Fact]
@@ -298,8 +298,39 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         installed.Should().BeTrue();
-        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WhenRuntimeLoads_ShouldRefreshBeforeMarkingPluginInstalled()
+    {
+        const string pluginId = "ordered-runtime";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+        var sequence = new MockSequence();
+
+        _pluginManager.InSequence(sequence)
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(true))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out plugin))
+            .Returns(true);
+        _pluginManager.InSequence(sequence)
+            .Setup(manager => manager.InstallPlugin(pluginId));
+        _pluginManager.InSequence(sequence)
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(true))
+            .Returns(Task.CompletedTask);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
     }
 
     [Fact]
@@ -324,7 +355,43 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         installed.Should().BeTrue();
-        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+        _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithManifestSettingsPageOnly_ShouldKeepManifestPluginInstalled()
+    {
+        // Arrange
+        const string pluginId = "user-feedback";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.Contributes = new PluginManifestContributions
+        {
+            SettingsPage = new PluginManifestPageContribution
+            {
+                Class = "UserFeedback.Settings",
+                Title = "Feedback"
+            }
+        };
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        // Assert
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
@@ -350,7 +417,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         installed.Should().BeTrue();
-        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Once);
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
@@ -376,6 +444,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.ScanAndLoadPluginsAsync(true), Times.Exactly(2));
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 

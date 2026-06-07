@@ -3088,6 +3088,21 @@
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
     <value>选择语言</value>
   </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>此设备将以基础模式启动。兼容的设备包可用之前，硬件专属控制项会被隐藏。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>设备包：基础模式</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit 检测到匹配的设备包。现在确认后，应用即可准备硬件专属功能。</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>设备包：{0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>正在准备设备设置...</value>
+  </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>未连接</value>
@@ -3829,5 +3844,20 @@
   </data>
   <data name="SensorItem_PchTemperature" xml:space="preserve">
     <value>南桥温度</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>插件 {0} 已安装。可使用“打开”启动可用入口。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，并已在系统优化中打开。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>已安装，但没有可用入口</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，但运行时界面无法加载。请重启应用或重新安装插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>插件 {0} 已安装，但没有提供用户可见入口。它可能只提供后台服务或清单数据。</value>
   </data>
 </root>

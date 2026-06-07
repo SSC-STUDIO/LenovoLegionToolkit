@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -45,6 +46,9 @@ public static class PluginUiCapabilityResolver
                     return ReadCapabilitiesFromJson(manifestPath);
                 }
             }
+
+            if (FindInstalledManifestPathByManifestId(pluginId) is { } matchingManifestPath)
+                return ReadCapabilitiesFromJson(matchingManifestPath);
         }
         catch (Exception ex)
         {
@@ -106,7 +110,7 @@ public static class PluginUiCapabilityResolver
         };
     }
 
-    internal static PluginManifest? ReadInstalledManifest(string pluginId)
+    public static PluginManifest? ReadInstalledManifest(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return null;
@@ -124,6 +128,8 @@ public static class PluginUiCapabilityResolver
                     return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
                 }
             }
+
+            return FindInstalledManifestByManifestId(pluginId);
         }
         catch (Exception ex)
         {
@@ -132,6 +138,53 @@ public static class PluginUiCapabilityResolver
         }
 
         return null;
+    }
+
+    private static PluginManifest? FindInstalledManifestByManifestId(string pluginId)
+    {
+        var manifestPath = FindInstalledManifestPathByManifestId(pluginId);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+            return null;
+
+        try
+        {
+            return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read installed plugin manifest {manifestPath}: {ex.Message}", ex);
+        }
+
+        return null;
+    }
+
+    private static string? FindInstalledManifestPathByManifestId(string pluginId)
+    {
+        foreach (var manifestPath in EnumerateInstalledManifestPaths())
+        {
+            try
+            {
+                var manifestId = ReadManifestIdFromJson(manifestPath);
+                if (string.Equals(manifestId, pluginId, StringComparison.OrdinalIgnoreCase))
+                    return manifestPath;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to inspect installed plugin manifest {manifestPath}: {ex.Message}", ex);
+            }
+        }
+
+        return null;
+    }
+
+    private static string? ReadManifestIdFromJson(string manifestPath)
+    {
+        using var stream = File.OpenRead(manifestPath);
+        using var document = JsonDocument.Parse(stream);
+
+        return ReadNonEmptyString(document.RootElement, "id");
     }
 
     private static bool HasContribution(PluginManifestPageContribution? contribution) =>
@@ -236,17 +289,75 @@ public static class PluginUiCapabilityResolver
     private static string[] GetInstalledPluginDirectories(string pluginId)
     {
         var pluginsDirectory = PluginPaths.GetPluginsDirectory();
+        var assemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{pluginId}";
+        var compactAssemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}";
+        var pascalAssemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{ToPascalCasePluginId(pluginId)}";
         var directories = new[]
         {
-            PluginPaths.GetPluginDirectory(pluginId),
             Path.Combine(pluginsDirectory, "local", pluginId),
-            Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"),
-            Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}")
+            Path.Combine(pluginsDirectory, "local", assemblyDirectoryName),
+            Path.Combine(pluginsDirectory, "local", compactAssemblyDirectoryName),
+            Path.Combine(pluginsDirectory, "local", pascalAssemblyDirectoryName),
+            PluginPaths.GetPluginDirectory(pluginId),
+            Path.Combine(pluginsDirectory, assemblyDirectoryName),
+            Path.Combine(pluginsDirectory, compactAssemblyDirectoryName),
+            Path.Combine(pluginsDirectory, pascalAssemblyDirectoryName)
         };
 
         return directories
             .Where(Directory.Exists)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    private static string ToPascalCasePluginId(string pluginId)
+    {
+        var parts = pluginId.Split(['-', '_', '.', ' '], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return string.Concat(parts.Select(static part =>
+            part.Length == 0
+                ? string.Empty
+                : char.ToUpperInvariant(part[0]) + (part.Length > 1 ? part[1..] : string.Empty)));
+    }
+
+    private static IEnumerable<string> EnumerateInstalledManifestPaths()
+    {
+        var pluginsDirectory = PluginPaths.GetPluginsDirectory();
+        if (!Directory.Exists(pluginsDirectory))
+            yield break;
+
+        var localDirectory = Path.Combine(pluginsDirectory, "local");
+        if (Directory.Exists(localDirectory))
+        {
+            foreach (var localPluginDirectory in Directory.EnumerateDirectories(localDirectory))
+            {
+                foreach (var manifestFileName in ManifestFileNames)
+                {
+                    var manifestPath = Path.Combine(localPluginDirectory, manifestFileName);
+                    if (File.Exists(manifestPath))
+                        yield return manifestPath;
+                }
+            }
+        }
+
+        foreach (var pluginDirectory in EnumerateInstalledPluginDirectories(pluginsDirectory))
+        {
+            foreach (var manifestFileName in ManifestFileNames)
+            {
+                var manifestPath = Path.Combine(pluginDirectory, manifestFileName);
+                if (File.Exists(manifestPath))
+                    yield return manifestPath;
+            }
+        }
+    }
+
+    private static IEnumerable<string> EnumerateInstalledPluginDirectories(string pluginsDirectory)
+    {
+        foreach (var directory in Directory.EnumerateDirectories(pluginsDirectory))
+        {
+            if (string.Equals(Path.GetFileName(directory), "local", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            yield return directory;
+        }
     }
 }

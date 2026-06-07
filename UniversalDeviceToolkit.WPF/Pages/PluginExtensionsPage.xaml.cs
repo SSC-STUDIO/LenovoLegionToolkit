@@ -51,6 +51,7 @@ private string _currentSearchText = string.Empty;
     private bool _onlineMetadataLoadFailed = false;
     private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pluginIdsReloadedForUi = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isPluginInstallCoordinatorSubscribed;
 
     public PluginExtensionsPage()
     {
@@ -58,7 +59,7 @@ private string _currentSearchText = string.Empty;
         Loaded += PluginExtensionsPage_Loaded;
         IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
         Unloaded += PluginExtensionsPage_Unloaded;
-        _pluginInstallCoordinator.Changed += PluginInstallCoordinator_Changed;
+        AttachPluginInstallCoordinator();
 
         // Subscribe to plugin state changes
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
@@ -439,6 +440,7 @@ private string _currentSearchText = string.Empty;
                 var manifestMetadata = updatePlugin ?? onlinePlugin ?? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath);
                 var resolvedPlugin = EnsureRegisteredPluginForUi(plugin.Id, isInstalled) ?? plugin;
                 var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled, plugin.Id, manifestMetadata);
+                var supportsExecutableEntryPoint = isInstalled && TryResolvePluginExecutable(plugin.Id, out _, out _);
                 var localizedName = GetPluginLocalizedName(plugin, manifestMetadata);
                 var localizedDescription = GetPluginLocalizedDescription(plugin, manifestMetadata);
                 var detailedDescription = GetPluginDetailedDescription(manifestMetadata);
@@ -482,12 +484,13 @@ private string _currentSearchText = string.Empty;
                     if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
                         LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
                     existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     existingViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     existingViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    existingViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
                 }
                 else
                 {
@@ -507,12 +510,13 @@ private string _currentSearchText = string.Empty;
                     if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
                         LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
                     pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
                     pluginViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     pluginViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    pluginViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
 
                     _pluginViewModels.Add(pluginViewModel);
                 }
@@ -572,6 +576,7 @@ private string _currentSearchText = string.Empty;
 
     private async void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
+        AttachPluginInstallCoordinator();
         LocalizationHelper.SetPluginResourceCultures();
 
         if (_hasStartedInitialFetch)
@@ -604,6 +609,7 @@ private string _currentSearchText = string.Empty;
     {
         if ((bool)e.NewValue)
         {
+            AttachPluginInstallCoordinator();
             EnsurePluginExtensionsNavigationState();
 
             // Use Dispatcher to ensure UI updates happen after plugin scanning
@@ -618,7 +624,25 @@ private string _currentSearchText = string.Empty;
 
     private void PluginExtensionsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        DetachPluginInstallCoordinator();
+    }
+
+    private void AttachPluginInstallCoordinator()
+    {
+        if (_isPluginInstallCoordinatorSubscribed)
+            return;
+
+        _pluginInstallCoordinator.Changed += PluginInstallCoordinator_Changed;
+        _isPluginInstallCoordinatorSubscribed = true;
+    }
+
+    private void DetachPluginInstallCoordinator()
+    {
+        if (!_isPluginInstallCoordinatorSubscribed)
+            return;
+
         _pluginInstallCoordinator.Changed -= PluginInstallCoordinator_Changed;
+        _isPluginInstallCoordinatorSubscribed = false;
     }
 
     private void PluginInstallCoordinator_Changed(object? sender, EventArgs e)
@@ -962,7 +986,7 @@ private string _currentSearchText = string.Empty;
 
             return PluginUiCapabilityResolver
                 .ResolveFromInstalledManifest(pluginId)
-                .SupportsOptimizationCategory;
+                .HasAny;
         }
         catch (Exception ex)
         {
@@ -1088,12 +1112,7 @@ private string _currentSearchText = string.Empty;
         PluginUiCapabilities manifestCapabilities,
         PluginUiCapabilities installedManifestCapabilities)
     {
-        var capabilities = new PluginUiCapabilities
-        {
-            SupportsOptimizationCategory =
-                manifestCapabilities.SupportsOptimizationCategory ||
-                installedManifestCapabilities.SupportsOptimizationCategory
-        };
+        var capabilities = manifestCapabilities.Merge(installedManifestCapabilities);
 
         if (plugin is not null and not PluginManifestAdapter)
             capabilities = capabilities.Merge(ResolveRuntimePluginCapabilities(plugin));
@@ -1216,12 +1235,14 @@ private string _currentSearchText = string.Empty;
                     viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(pluginId);
                     viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
+                    viewModel.SupportsExecutableEntryPoint = TryResolvePluginExecutable(pluginId, out _, out _);
                 }
                 else
                 {
                     viewModel.SupportsConfiguration = false;
                     viewModel.SupportsFeaturePage = false;
                     viewModel.SupportsOptimizationCategory = false;
+                    viewModel.SupportsExecutableEntryPoint = false;
                 }
 
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -1414,14 +1435,9 @@ private string _currentSearchText = string.Empty;
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
             }
 
-            // Immediately update specific plugin's UI state
-            UpdateSpecificPluginUI(pluginId);
+            await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
+            await ShowInstalledPluginFeedbackAsync(pluginId);
 
-            // Show success message
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, Resource.PluginExtensionsPage_InstallSuccessMessage, SnackbarType.Success);
-            }
         }
         catch (Exception ex)
         {
@@ -1463,21 +1479,15 @@ private string _currentSearchText = string.Empty;
 
             if (success)
             {
-                _pluginIdsReloadedForUi.Remove(manifest.Id);
-                await _pluginManager.ScanAndLoadPluginsAsync();
                 _recentInstalledVersions[manifest.Id] = manifest.Version;
                 RemoveAvailableUpdate(manifest.Id);
                 ReconcileAvailableUpdatesWithInstalledVersions();
-                LocalizationHelper.SetPluginResourceCultures();
-                UpdateAllPluginsUI();
-
-                if (Application.Current.MainWindow is MainWindow mainWindow)
-                    mainWindow.UpdateInstalledPluginsNavigationItems();
+                await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);
 
                 if (navigateToOptimizationCategoryOnSuccess)
-                    await OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(manifest);
-
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
+                    await ShowInstalledPluginFeedbackAsync(manifest.Id, manifest);
+                else
+                    SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
             else
             {
@@ -1507,19 +1517,57 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private async Task OpenOptimizationCategoryIfOnlyInstalledEntryPointAsync(PluginManifest manifest)
+    private async Task ShowInstalledPluginFeedbackAsync(string pluginId, PluginManifest? fallbackManifest = null)
     {
-        var plugin = await GetRegisteredPluginForUiAsync(manifest.Id, forceRefresh: true);
-        var manifestMetadata = ResolvePluginManifestMetadata(manifest.Id) ?? manifest;
-        var capabilities = ResolvePluginCapabilities(plugin, true, manifest.Id, manifestMetadata);
+        var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+        var manifestMetadata = ResolvePluginManifestMetadata(pluginId) ?? fallbackManifest;
+        var runtimeCapabilities = plugin is null ? default : ResolveRuntimePluginCapabilities(plugin);
+        var manifestCapabilities = PluginUiCapabilityResolver
+            .ResolveFromManifest(manifestMetadata)
+            .Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId));
+        var capabilities = ResolvePluginCapabilities(plugin, true, pluginId, manifestMetadata);
+        var hasExecutable = TryResolvePluginExecutable(pluginId, out _, out _);
+        var feedback = ResolveInstalledPluginFeedback(runtimeCapabilities, manifestCapabilities, hasExecutable, plugin is null);
 
-        var hasExecutable = TryResolvePluginExecutable(manifest.Id, out _, out _);
-        if (!ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
+        if (feedback == InstalledPluginFeedback.EntryAvailable &&
+            ShouldNavigateToOptimizationAfterInstall(capabilities, hasExecutable))
         {
+            if (NavigateToPluginOptimizationCategory(pluginId))
+            {
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_InstallSuccess,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_InstallSuccessOptimizationMessage", "Plugin {0} was installed and opened in System Optimization."),
+                        GetInstalledPluginFeedbackName(plugin, pluginId, manifestMetadata)),
+                    SnackbarType.Success);
+                return;
+            }
+        }
+
+        var pluginName = GetInstalledPluginFeedbackName(plugin, pluginId, manifestMetadata);
+
+        if (feedback == InstalledPluginFeedback.EntryAvailable)
+        {
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_InstallSuccess,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_InstallSuccessWithEntryMessage", "Plugin {0} was installed. Use Open to launch its available entry point."),
+                    pluginName),
+                SnackbarType.Success);
             return;
         }
 
-        NavigateToPluginOptimizationCategory(manifest.Id);
+        SnackbarHelper.Show(
+            T("PluginExtensionsPage_InstalledButNoEntryTitle", "Installed, but no entry point"),
+            string.Format(
+                Resource.Culture ?? CultureInfo.CurrentUICulture,
+                feedback == InstalledPluginFeedback.RuntimeNotLoaded
+                    ? T("PluginExtensionsPage_InstalledButRuntimeUnavailableMessage", "Plugin {0} was installed, but its runtime UI could not be loaded. Restart the app or reinstall the plugin.")
+                    : T("PluginExtensionsPage_InstalledButNoEntryMessage", "Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data."),
+                pluginName),
+            feedback == InstalledPluginFeedback.RuntimeNotLoaded ? SnackbarType.Warning : SnackbarType.Info);
     }
 
     internal static bool ShouldNavigateToOptimizationAfterInstall(PluginUiCapabilities capabilities, bool hasExecutable) =>
@@ -1527,6 +1575,62 @@ private string _currentSearchText = string.Empty;
         !capabilities.SupportsFeaturePage &&
         !capabilities.SupportsSettingsPage &&
         !hasExecutable;
+
+    internal enum InstalledPluginFeedback
+    {
+        EntryAvailable,
+        RuntimeNotLoaded,
+        NoUserFacingEntry
+    }
+
+    internal static InstalledPluginFeedback ResolveInstalledPluginFeedback(
+        PluginUiCapabilities runtimeCapabilities,
+        PluginUiCapabilities manifestCapabilities,
+        bool hasExecutable,
+        bool runtimeMissing)
+    {
+        if (runtimeCapabilities.HasAny || hasExecutable)
+            return InstalledPluginFeedback.EntryAvailable;
+
+        if (manifestCapabilities.SupportsOptimizationCategory &&
+            !manifestCapabilities.SupportsFeaturePage &&
+            !manifestCapabilities.SupportsSettingsPage)
+        {
+            return InstalledPluginFeedback.EntryAvailable;
+        }
+
+        if (runtimeMissing && manifestCapabilities.HasAny)
+            return InstalledPluginFeedback.RuntimeNotLoaded;
+
+        if (!runtimeMissing && manifestCapabilities.HasAny)
+            return InstalledPluginFeedback.EntryAvailable;
+
+        return runtimeMissing
+            ? InstalledPluginFeedback.RuntimeNotLoaded
+            : InstalledPluginFeedback.NoUserFacingEntry;
+    }
+
+    private string GetInstalledPluginFeedbackName(IPlugin? plugin, string pluginId, PluginManifest? manifest)
+    {
+        if (plugin is not null)
+            return GetPluginLocalizedName(plugin, manifest);
+
+        var manifestName = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
+        return !string.IsNullOrWhiteSpace(manifestName)
+            ? RemovePluginSuffix(manifestName)
+            : pluginId;
+    }
+
+    private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
+    {
+        _pluginIdsReloadedForUi.Remove(pluginId);
+        await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime).ConfigureAwait(true);
+        LocalizationHelper.SetPluginResourceCultures();
+        UpdateAllPluginsUI();
+
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+            mainWindow.UpdateInstalledPluginsNavigationItems();
+    }
 
     private async void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
     {
@@ -1854,7 +1958,8 @@ private string _currentSearchText = string.Empty;
             return onlinePlugin;
 
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
-        return TryReadInstalledPluginManifest(pluginId, metadata?.FilePath);
+        return TryReadInstalledPluginManifest(pluginId, metadata?.FilePath) ??
+               PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
     }
 
     private IPlugin? GetRegisteredPluginForUi(string pluginId, bool reloadIfMissing)

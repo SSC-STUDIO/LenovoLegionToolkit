@@ -216,6 +216,58 @@ public class GodModeControllerTests : UnitTestBase
     }
 
     [Fact]
+    public async Task GetStateAsync_WhenStoreHasGeneratedDefaultPreset_ShouldMigrateToBasePowerModePresets()
+    {
+        var generatedDefaultPresetId = Guid.NewGuid();
+        _controllerV1.SetStore(generatedDefaultPresetId, new Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset>
+        {
+            [generatedDefaultPresetId] = new()
+            {
+                Name = "Default",
+                CPULongTermPowerLimit = new StepperValue(2, 1, 10, 1, [], 2),
+                FanFullSpeed = false,
+                MinValueOffset = 0,
+                MaxValueOffset = 0
+            }
+        });
+
+        var state = await _controller.GetStateAsync();
+
+        state.Presets.Should().HaveCount(3);
+        state.Presets.Should().NotContainKey(generatedDefaultPresetId);
+        state.Presets[state.ActivePresetId].SourcePowerMode.Should().Be(PowerModeState.Performance);
+        state.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenStoreHasUserCustomPresetNamedDefault_ShouldPreserveCustomPreset()
+    {
+        var customPresetId = Guid.NewGuid();
+        _controllerV1.SetStore(customPresetId, new Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset>
+        {
+            [customPresetId] = new()
+            {
+                Name = "Default",
+                PowerMode = WindowsPowerMode.BestPerformance,
+                CPULongTermPowerLimit = new StepperValue(2, 1, 10, 1, [], 2)
+            }
+        });
+
+        var state = await _controller.GetStateAsync();
+
+        state.ActivePresetId.Should().Be(customPresetId);
+        state.Presets.Should().ContainKey(customPresetId);
+        state.Presets[customPresetId].Name.Should().Be("Default");
+        state.Presets[customPresetId].PowerMode.Should().Be(WindowsPowerMode.BestPerformance);
+        state.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        state.Presets.Should().HaveCount(4);
+    }
+
+    [Fact]
     public async Task SetStateAsync_WhenBasePresetWasDeleted_ShouldRestoreMissingBasePowerModePreset()
     {
         var state = await _controller.GetStateAsync();
@@ -295,6 +347,109 @@ public class GodModeControllerTests : UnitTestBase
         restoredState.Presets[customPresetId].SourcePowerMode.Should().BeNull();
         restoredState.Presets.Should().HaveCount(4);
         restoredState.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenCustomPresetIsAddedRenamedAndDeleted_ShouldPersistEachPresetListChange()
+    {
+        var originalState = await _controller.GetStateAsync();
+        var sourcePreset = originalState.Presets.Single(kv => kv.Value.SourcePowerMode == PowerModeState.Performance);
+        var customPresetId = Guid.NewGuid();
+        var addedPresets = originalState.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        addedPresets[customPresetId] = sourcePreset.Value with
+        {
+            Name = "Custom Performance",
+            SourcePowerMode = null
+        };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = customPresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(addedPresets)
+        });
+
+        var persistedAfterAdd = await _controller.GetStateAsync();
+        persistedAfterAdd.ActivePresetId.Should().Be(customPresetId);
+        persistedAfterAdd.Presets.Should().ContainKey(customPresetId);
+        persistedAfterAdd.Presets[customPresetId].Name.Should().Be("Custom Performance");
+
+        var renamedPresets = persistedAfterAdd.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        renamedPresets[customPresetId] = renamedPresets[customPresetId] with { Name = "Renamed Performance" };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = customPresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(renamedPresets)
+        });
+
+        var persistedAfterRename = await _controller.GetStateAsync();
+        persistedAfterRename.ActivePresetId.Should().Be(customPresetId);
+        persistedAfterRename.Presets[customPresetId].Name.Should().Be("Renamed Performance");
+
+        var remainingPresets = persistedAfterRename.Presets
+            .Where(kv => kv.Key != customPresetId)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
+        var nextActivePresetId = remainingPresets
+            .OrderBy(kv => kv.Value.Name)
+            .Select(kv => kv.Key)
+            .First();
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = nextActivePresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(remainingPresets)
+        });
+
+        var persistedAfterDelete = await _controller.GetStateAsync();
+        persistedAfterDelete.ActivePresetId.Should().Be(nextActivePresetId);
+        persistedAfterDelete.Presets.Should().NotContainKey(customPresetId);
+        persistedAfterDelete.Presets.Values.Select(p => p.SourcePowerMode)
+            .Should()
+            .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_AfterGeneratedDefaultMigration_ShouldPersistNewCustomPresetAndKeepItVisible()
+    {
+        var generatedDefaultPresetId = Guid.NewGuid();
+        _controllerV1.SetStore(generatedDefaultPresetId, new Dictionary<Guid, GodModeSettings.GodModeSettingsStore.Preset>
+        {
+            [generatedDefaultPresetId] = new()
+            {
+                Name = "Default",
+                CPULongTermPowerLimit = new StepperValue(2, 1, 10, 1, [], 2),
+                FanFullSpeed = false,
+                MinValueOffset = 0,
+                MaxValueOffset = 0
+            }
+        });
+
+        var migratedState = await _controller.GetStateAsync();
+        var performancePreset = migratedState.Presets.Single(kv => kv.Value.SourcePowerMode == PowerModeState.Performance);
+        var customPresetId = Guid.NewGuid();
+        var presets = migratedState.Presets.ToDictionary(kv => kv.Key, kv => kv.Value);
+        presets[customPresetId] = performancePreset.Value with
+        {
+            Name = "Added Performance Mode",
+            SourcePowerMode = null
+        };
+
+        await _controller.SetStateAsync(new GodModeState
+        {
+            ActivePresetId = customPresetId,
+            Presets = new ReadOnlyDictionary<Guid, GodModePreset>(presets)
+        });
+
+        var persistedState = await _controller.GetStateAsync();
+
+        persistedState.ActivePresetId.Should().Be(customPresetId);
+        persistedState.Presets.Should().ContainKey(customPresetId);
+        persistedState.Presets[customPresetId].Name.Should().Be("Added Performance Mode");
+        persistedState.Presets.Should().NotContainKey(generatedDefaultPresetId);
+        persistedState.Presets.Should().HaveCount(4);
+        persistedState.Presets.Values.Select(p => p.SourcePowerMode)
             .Should()
             .Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
     }
