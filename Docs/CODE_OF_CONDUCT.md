@@ -51,7 +51,6 @@ Examples of representing our community include:
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at:
 
-- **Discord**: Contact moderators in the Legion Series Discord
 - **GitHub**: Use the report feature on issues or pull requests
 
 All complaints will be reviewed and investigated promptly and fairly.
@@ -141,7 +140,6 @@ For answers to common questions about this code of conduct, see the FAQ at https
 |---------|---------|----------|
 | GitHub Issues | Bug reports, feature requests | English |
 | GitHub Discussions | Ideas, Q&A, Show and Tell | English |
-| Discord Server | Real-time chat, support | English, 中文 |
 | Crowdin | UI/resource translation (`.resx`) | Multiple |
 
 ---
