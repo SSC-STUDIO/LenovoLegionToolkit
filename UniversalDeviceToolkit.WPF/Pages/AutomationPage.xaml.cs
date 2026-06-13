@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,11 +23,27 @@ using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
-public partial class AutomationPage
+public partial class AutomationPage : INotifyPropertyChanged
 {
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
 
     private IAutomationStep[] _supportedAutomationSteps = [];
+    private bool _isAutomaticPipelinesEnabled;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsAutomaticPipelinesEnabled
+    {
+        get => _isAutomaticPipelinesEnabled;
+        set
+        {
+            if (_isAutomaticPipelinesEnabled == value)
+                return;
+
+            _isAutomaticPipelinesEnabled = value;
+            OnPropertyChanged();
+        }
+    }
 
     internal static TimeSpan GetAutomationFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
 
@@ -34,6 +52,7 @@ public partial class AutomationPage
         Initialized += AutomationPage_Initialized;
 
         InitializeComponent();
+        DataContext = this;
     }
 
     private async void AutomationPage_Initialized(object? sender, EventArgs e)
@@ -45,7 +64,10 @@ public partial class AutomationPage
     {
         var isChecked = _enableAutomaticPipelinesToggle.IsChecked;
         if (isChecked.HasValue)
+        {
             await _automationProcessor.SetEnabledAsync(isChecked.Value);
+            IsAutomaticPipelinesEnabled = isChecked.Value;
+        }
     }
 
     private void NewAutomaticPipelineButton_Click(object sender, RoutedEventArgs e)
@@ -115,7 +137,7 @@ public partial class AutomationPage
 
         var initializedTasks = new List<Task> { Task.Delay(GetAutomationFallbackLoadingDelay()) };
 
-        _enableAutomaticPipelinesToggle.IsChecked = _automationProcessor.IsEnabled;
+        IsAutomaticPipelinesEnabled = _automationProcessor.IsEnabled;
 
         _automaticPipelinesStackPanel.Children.Clear();
         _manualPipelinesStackPanel.Children.Clear();
@@ -358,5 +380,8 @@ public partial class AutomationPage
 
         PipelinesChanged();
     }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 }

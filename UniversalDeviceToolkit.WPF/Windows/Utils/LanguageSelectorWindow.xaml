@@ -61,7 +61,10 @@
                     Text="{x:Static resources:Resource.LanguageSelectorWindow_SelectLanguage}"
                     TextWrapping="Wrap" />
 
-                <ComboBox x:Name="_languageComboBox" MaxDropDownHeight="Auto" />
+                <ComboBox
+                    x:Name="_languageComboBox"
+                    AutomationProperties.Name="{x:Static resources:Resource.LanguageSelectorWindow_SelectLanguage}"
+                    MaxDropDownHeight="Auto" />
 
                 <TextBlock
                     x:Name="_statusText"
@@ -109,6 +112,7 @@
                     Grid.Column="0"
                     MinWidth="120"
                     Appearance="Primary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Continue}"
                     Click="OK_Click"
                     Content="{x:Static resources:Resource.Continue}" />
             </Grid>

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -11,13 +12,33 @@ using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
-public partial class UpdateWindow : IProgress<float>
+public partial class UpdateWindow : IProgress<float>, INotifyPropertyChanged
 {
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
 
     private CancellationTokenSource? _downloadCancellationTokenSource;
+    private bool _isDownloadAvailable;
+    private bool _isDownloading;
 
-    public UpdateWindow() => InitializeComponent();
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsDownloadAvailable
+    {
+        get => _isDownloadAvailable;
+        private set => SetField(ref _isDownloadAvailable, value);
+    }
+
+    public bool IsDownloading
+    {
+        get => _isDownloading;
+        private set => SetField(ref _isDownloading, value);
+    }
+
+    public UpdateWindow()
+    {
+        InitializeComponent();
+        DataContext = this;
+    }
 
     private async void UpdateWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -34,7 +55,7 @@ public partial class UpdateWindow : IProgress<float>
 
         _markdownViewer.Markdown = stringBuilder.ToString();
 
-        _downloadButton.IsEnabled = true;
+        IsDownloadAvailable = true;
     }
 
     private void UpdateWindow_Closing(object? sender, CancelEventArgs e) => _downloadCancellationTokenSource?.Cancel();
@@ -79,10 +100,10 @@ public partial class UpdateWindow : IProgress<float>
             _downloadProgressBar.Visibility = Visibility.Visible;
 
             _downloadButton.Visibility = Visibility.Collapsed;
-            _downloadButton.IsEnabled = false;
+            IsDownloadAvailable = false;
 
             _cancelDownloadButton.Visibility = Visibility.Visible;
-            _cancelDownloadButton.IsEnabled = true;
+            IsDownloading = true;
         }
         else
         {
@@ -91,10 +112,10 @@ public partial class UpdateWindow : IProgress<float>
             _downloadProgressBar.Visibility = Visibility.Hidden;
 
             _downloadButton.Visibility = Visibility.Visible;
-            _downloadButton.IsEnabled = true;
+            IsDownloadAvailable = true;
 
             _cancelDownloadButton.Visibility = Visibility.Collapsed;
-            _cancelDownloadButton.IsEnabled = false;
+            IsDownloading = false;
         }
     }
 
@@ -103,5 +124,15 @@ public partial class UpdateWindow : IProgress<float>
         _downloadProgressBar.IsIndeterminate = !(value > 0);
         _downloadProgressBar.Value = value;
     });
+
+    private bool SetField(ref bool field, bool value, [CallerMemberName] string? propertyName = null)
+    {
+        if (field == value)
+            return false;
+
+        field = value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        return true;
+    }
 }
 }

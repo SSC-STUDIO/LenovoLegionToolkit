@@ -10893,5 +10893,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string SensorsControl_GPU_Power { get { return ResourceManager.GetString("SensorsControl_GPU_Power", resourceCulture); } }
         public static string SensorsControl_Memory_Title { get { return ResourceManager.GetString("SensorsControl_Memory_Title", resourceCulture); } }
         public static string SensorItem_PchTemperature { get { return ResourceManager.GetString("SensorItem_PchTemperature", resourceCulture); } }
+        public static string LargeFilesWindow_Title { get { return ResourceManager.GetString("LargeFilesWindow_Title", resourceCulture); } }
+        public static string LargeFilesWindow_Description { get { return ResourceManager.GetString("LargeFilesWindow_Description", resourceCulture); } }
+        public static string LargeFilesWindow_FilterLabel { get { return ResourceManager.GetString("LargeFilesWindow_FilterLabel", resourceCulture); } }
+        public static string LargeFilesWindow_CustomSize { get { return ResourceManager.GetString("LargeFilesWindow_CustomSize", resourceCulture); } }
+        public static string LargeFilesWindow_SelectColumn { get { return ResourceManager.GetString("LargeFilesWindow_SelectColumn", resourceCulture); } }
+        public static string LargeFilesWindow_FileNameColumn { get { return ResourceManager.GetString("LargeFilesWindow_FileNameColumn", resourceCulture); } }
+        public static string LargeFilesWindow_SizeColumn { get { return ResourceManager.GetString("LargeFilesWindow_SizeColumn", resourceCulture); } }
+        public static string LargeFilesWindow_PathColumn { get { return ResourceManager.GetString("LargeFilesWindow_PathColumn", resourceCulture); } }
+        public static string LargeFilesWindow_ConfirmSelection { get { return ResourceManager.GetString("LargeFilesWindow_ConfirmSelection", resourceCulture); } }
+        public static string LargeFilesWindow_SelectedSummary { get { return ResourceManager.GetString("LargeFilesWindow_SelectedSummary", resourceCulture); } }
     }
 }

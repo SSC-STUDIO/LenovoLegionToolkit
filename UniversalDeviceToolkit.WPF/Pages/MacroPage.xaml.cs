@@ -18,12 +18,12 @@ public partial class MacroPage
         Initialized += MacroPage_Initialized;
 
         InitializeComponent();
+        DataContext = _viewModel;
     }
 
     private void MacroPage_Initialized(object? sender, EventArgs e)
     {
         _viewModel.LoadState();
-        _enableMacroToggle.IsChecked = _viewModel.IsEnabled;
 
         var zeroNumberButton = _numberPad.Children.OfType<Button>().Last();
         Reload(zeroNumberButton);

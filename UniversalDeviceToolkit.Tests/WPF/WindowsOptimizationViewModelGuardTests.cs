@@ -30,21 +30,21 @@ public sealed class WindowsOptimizationViewModelGuardTests
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
         var scanMethod = ExtractMethod(source, "public async Task ScanOptimizationStatesAsync()");
-        var snapshotMethod = ExtractMethod(source, "private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()");
-        var snapshotBuilder = ExtractMethod(source, "private List<OptimizationActionViewModel> SnapshotOptimizationActions()");
 
+        // The scan must acquire the semaphore to prevent concurrent runs.
         source.Should().Contain("private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);");
         scanMethod.Should().Contain("await _optimizationStateScanLock.WaitAsync().ConfigureAwait(false);");
-        scanMethod.Should().Contain("var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);");
-        scanMethod.Should().Contain("foreach (var action in actions)");
-        scanMethod.Should().NotContain("foreach (var category in OptimizationCategories)");
         scanMethod.Should().Contain("_optimizationStateScanLock.Release();");
 
-        snapshotMethod.Should().Contain("dispatcher.InvokeAsync(SnapshotOptimizationActions)");
-        snapshotBuilder.Should().Contain("OptimizationCategories");
-        snapshotBuilder.Should().Contain(".ToList()");
-        snapshotBuilder.Should().Contain(".SelectMany(category => category.Actions.ToList())");
-        snapshotBuilder.Should().Contain(".ToList();");
+        // GH #28: the scan must NOT overwrite user preferences with system state.
+        // It should no longer call GetOptimizationActionSnapshotAsync, iterate
+        // over actions to set IsSelected, or call SaveOptimizationSelection.
+        scanMethod.Should().NotContain("GetOptimizationActionSnapshotAsync");
+        scanMethod.Should().NotContain("SaveOptimizationSelection");
+        scanMethod.Should().NotContain("action.IsSelected = isApplied");
+
+        // It should still refresh the summary panel.
+        scanMethod.Should().Contain("UpdateSelectedActions()");
     }
 
     private static string ExtractMethod(string source, string signature)

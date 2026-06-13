@@ -27,4 +27,34 @@
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在准备设备设置...</value>
   </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>大文件分析</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>选择要删除的文件。仅显示符合筛选条件的文件。</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>筛选大于以下大小的文件：</value>
+  </data>
+  <data name="LargeFilesWindow_CustomSize" xml:space="preserve">
+    <value>自定义...</value>
+  </data>
+  <data name="LargeFilesWindow_SelectColumn" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="LargeFilesWindow_FileNameColumn" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="LargeFilesWindow_SizeColumn" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="LargeFilesWindow_PathColumn" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="LargeFilesWindow_ConfirmSelection" xml:space="preserve">
+    <value>确认选择</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedSummary" xml:space="preserve">
+    <value>已选择：{0} 个文件（{1}）</value>
+  </data>
 </root>

@@ -3844,4 +3844,34 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data.</value>
   </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Large Files Analysis</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Select files you want to remove. Only files matching the filter are shown.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Filter files larger than:</value>
+  </data>
+  <data name="LargeFilesWindow_CustomSize" xml:space="preserve">
+    <value>Custom...</value>
+  </data>
+  <data name="LargeFilesWindow_SelectColumn" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="LargeFilesWindow_FileNameColumn" xml:space="preserve">
+    <value>File Name</value>
+  </data>
+  <data name="LargeFilesWindow_SizeColumn" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="LargeFilesWindow_PathColumn" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="LargeFilesWindow_ConfirmSelection" xml:space="preserve">
+    <value>Confirm Selection</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedSummary" xml:space="preserve">
+    <value>Selected: {0} files ({1})</value>
+  </data>
 </root>

@@ -54,6 +54,13 @@ public abstract class AbstractSettings<T> where T : class, new()
     {
         lock (_lock)
         {
+            if (_cachedStore is null && File.Exists(_settingsStorePath))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Skipping SynchronizeStore for {_fileName}: store was not loaded successfully, refusing to overwrite existing file with defaults.");
+                return;
+            }
+
             var settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
             File.WriteAllText(_settingsStorePath, settingsSerialized);
             _lastLoadTime = DateTime.UtcNow;
@@ -65,6 +72,13 @@ public abstract class AbstractSettings<T> where T : class, new()
         string settingsSerialized;
         lock (_lock)
         {
+            if (_cachedStore is null && File.Exists(_settingsStorePath))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Skipping SynchronizeStoreAsync for {_fileName}: store was not loaded successfully, refusing to overwrite existing file with defaults.");
+                return;
+            }
+
             settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
             _lastLoadTime = DateTime.UtcNow;
         }

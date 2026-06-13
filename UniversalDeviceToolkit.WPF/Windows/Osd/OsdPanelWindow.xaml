@@ -32,7 +32,7 @@
 
                 <StackPanel.Resources>
                     <Style x:Key="SensorLabelStyle" TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="GreenYellow" />
+                        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Property="FontSize" Value="13" />
                         <Setter Property="FontWeight" Value="Black" />
                         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -42,7 +42,7 @@
                                     BlurRadius="4"
                                     Opacity="1"
                                     ShadowDepth="0"
-                                    Color="Black" />
+                                    Color="{DynamicResource TextFillColorPrimary}" />
                             </Setter.Value>
                         </Setter>
                         <Setter Property="Margin" Value="0,3" />
@@ -60,7 +60,7 @@
                                     BlurRadius="4"
                                     Opacity="1"
                                     ShadowDepth="0"
-                                    Color="Black" />
+                                    Color="{DynamicResource TextFillColorPrimary}" />
                             </Setter.Value>
                         </Setter>
                     </Style>
@@ -251,7 +251,7 @@
                     </Grid>
                 </StackPanel>
 
-                <Separator Margin="0,8" Background="#3A3A3A" />
+                <Separator Margin="0,8" Background="{DynamicResource TextFillColorSecondaryBrush}" />
 
                 <StackPanel x:Name="_gpuGroup">
                     <TextBlock
@@ -375,7 +375,7 @@
                     </Grid>
                 </StackPanel>
 
-                <Separator Margin="0,8" Background="#3A3A3A" />
+                <Separator Margin="0,8" Background="{DynamicResource TextFillColorSecondaryBrush}" />
 
                 <StackPanel x:Name="_memoryGroup">
                     <TextBlock
@@ -419,7 +419,7 @@
                     </Grid>
                 </StackPanel>
 
-                <Separator Margin="0,8" Background="#3A3A3A" />
+                <Separator Margin="0,8" Background="{DynamicResource TextFillColorSecondaryBrush}" />
 
                 <StackPanel x:Name="_pchGroup">
                     <TextBlock

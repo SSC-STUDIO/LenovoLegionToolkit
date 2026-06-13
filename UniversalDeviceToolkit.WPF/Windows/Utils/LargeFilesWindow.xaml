@@ -6,7 +6,7 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Large Files Analysis"
+    Title="{x:Static resources:Resource.LargeFilesWindow_Title}"
     Width="800"
     Height="600"
     MinWidth="600"
@@ -22,7 +22,7 @@
 
         <wpfui:TitleBar
             Grid.Row="0"
-            Title="Large Files Analysis"
+            Title="{x:Static resources:Resource.LargeFilesWindow_Title}"
             CanMaximize="True" />
 
         <Grid Grid.Row="1" Margin="16">
@@ -37,19 +37,29 @@
                 Grid.Row="0"
                 Margin="0,0,0,16"
                 FontSize="14"
-                Text="Select files you want to remove. Only files matching the filter are shown."
+                Text="{x:Static resources:Resource.LargeFilesWindow_Description}"
                 TextWrapping="Wrap" />
 
             <StackPanel Grid.Row="1" Margin="0,0,0,16" Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Text="Filter files larger than:" />
-                <ComboBox x:Name="_sizeFilterComboBox" Width="150" SelectionChanged="SizeFilterComboBox_SelectionChanged">
+                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" Text="{x:Static resources:Resource.LargeFilesWindow_FilterLabel}" />
+                <ComboBox
+                    x:Name="_sizeFilterComboBox"
+                    Width="150"
+                    AutomationProperties.Name="{x:Static resources:Resource.LargeFilesWindow_FilterLabel}"
+                    SelectionChanged="SizeFilterComboBox_SelectionChanged">
                     <ComboBoxItem Content="1 GB" Tag="1073741824" IsSelected="True" />
                     <ComboBoxItem Content="10 GB" Tag="10737418240" />
                     <ComboBoxItem Content="100 GB" Tag="107374182400" />
                     <ComboBoxItem Content="1 TB" Tag="1099511627776" />
-                    <ComboBoxItem Content="Custom..." Tag="custom" />
+                    <ComboBoxItem Content="{x:Static resources:Resource.LargeFilesWindow_CustomSize}" Tag="custom" />
                 </ComboBox>
-                <TextBox x:Name="_customSizeTextBox" Width="100" Margin="8,0,0,0" Visibility="Collapsed" TextChanged="CustomSizeTextBox_TextChanged" />
+                <TextBox
+                    x:Name="_customSizeTextBox"
+                    Width="100"
+                    Margin="8,0,0,0"
+                    AutomationProperties.Name="{x:Static resources:Resource.LargeFilesWindow_CustomSize}"
+                    TextChanged="CustomSizeTextBox_TextChanged"
+                    Visibility="Collapsed" />
                 <TextBlock x:Name="_customSizeUnit" VerticalAlignment="Center" Margin="4,0,0,0" Text="GB" Visibility="Collapsed" />
             </StackPanel>
 
@@ -60,10 +70,10 @@
                 CanUserAddRows="False"
                 VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Header="Select" Width="Auto" />
-                    <DataGridTextColumn Binding="{Binding Name}" Header="File Name" Width="*" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding SizeDisplay}" Header="Size" Width="100" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding Directory}" Header="Path" Width="2*" IsReadOnly="True" />
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Header="{x:Static resources:Resource.LargeFilesWindow_SelectColumn}" Width="Auto" />
+                    <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static resources:Resource.LargeFilesWindow_FileNameColumn}" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding SizeDisplay}" Header="{x:Static resources:Resource.LargeFilesWindow_SizeColumn}" Width="100" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Directory}" Header="{x:Static resources:Resource.LargeFilesWindow_PathColumn}" Width="2*" IsReadOnly="True" />
                 </DataGrid.Columns>
             </wpfui:DataGrid>
 
@@ -76,13 +86,15 @@
                 <wpfui:Button
                     Margin="0,0,8,0"
                     Appearance="Secondary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
                     Click="CancelButton_Click"
                     Content="{x:Static resources:Resource.Cancel}" />
                 <wpfui:Button
                     x:Name="_confirmButton"
                     Appearance="Primary"
+                    AutomationProperties.Name="{x:Static resources:Resource.LargeFilesWindow_ConfirmSelection}"
                     Click="ConfirmButton_Click"
-                    Content="Confirm Selection" />
+                    Content="{x:Static resources:Resource.LargeFilesWindow_ConfirmSelection}" />
             </StackPanel>
         </Grid>
     </Grid>

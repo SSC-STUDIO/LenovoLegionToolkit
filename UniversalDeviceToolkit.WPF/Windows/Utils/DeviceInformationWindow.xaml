@@ -180,6 +180,7 @@
                         <wpfui:Button
                             x:Name="_refreshWarrantyButton"
                             Grid.Column="1"
+                            AutomationProperties.Name="{x:Static resources:Resource.DeviceInformationWindow_Refresh}"
                             Click="RefreshWarrantyButton_OnClick"
                             Icon="ArrowClockwise32"
                             ToolTip="{x:Static resources:Resource.DeviceInformationWindow_Refresh}" />
@@ -213,7 +214,7 @@
                         Content="{x:Static resources:Resource.DeviceInformationWindow_LenovoSupport}"
                         Icon="Open24"
                         IsChevronVisible="False"
-                        IsEnabled="False" />
+                        IsEnabled="{Binding IsWarrantyLinkAvailable}" />
                 </StackPanel>
 
             </StackPanel>

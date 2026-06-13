@@ -738,44 +738,68 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         IsBusy = true;
         try
         {
-            // Execute the action immediately when clicked
-            await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
-
-            // Re-scan state to verify it was applied
-            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
-
-            // Ensure UI updates happen on UI thread
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+            if (actionVm.IsSelected)
             {
-                await Application.Current.Dispatcher.BeginInvoke(() =>
+                // User checked the item: apply the optimization
+                _userUncheckedActions.Remove(actionVm.Key);
+
+                await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+
+                // Re-scan state to verify it was applied
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+
+                // Ensure UI updates happen on UI thread
+                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+                {
+                    await Application.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        _isRefreshingStates = true;
+                        try
+                        {
+                            actionVm.IsSelected = isApplied;
+                            UpdateSelectedActions();
+                            SaveOptimizationSelection();
+                        }
+                        finally
+                        {
+                            _isRefreshingStates = false;
+                        }
+                    });
+                }
+                else
                 {
                     _isRefreshingStates = true;
                     try
                     {
                         actionVm.IsSelected = isApplied;
                         UpdateSelectedActions();
-                        // Save selection state after applying
                         SaveOptimizationSelection();
                     }
                     finally
                     {
                         _isRefreshingStates = false;
                     }
-                });
+                }
             }
             else
             {
-                _isRefreshingStates = true;
-                try
+                // User unchecked the item: record the preference but do not attempt
+                // to revert (no revert mechanism exists yet). The scan will skip
+                // items in _userUncheckedActions so the checkbox stays unchecked.
+                _userUncheckedActions.Add(actionVm.Key);
+
+                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
                 {
-                    actionVm.IsSelected = isApplied;
-                    UpdateSelectedActions();
-                    // Save selection state after applying
-                    SaveOptimizationSelection();
+                    await Application.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        UpdateSelectedActions();
+                        SaveOptimizationSelection();
+                    });
                 }
-                finally
+                else
                 {
-                    _isRefreshingStates = false;
+                    UpdateSelectedActions();
+                    SaveOptimizationSelection();
                 }
             }
         }
@@ -794,44 +818,20 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     SnackbarType.Error));
             }
 
-            // Re-scan on error to ensure UI reflects actual state
-            var isApplied = actionVm is not null ? await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false) : false;
-            
-            // Ensure UI updates happen on UI thread
+            // On error, keep the user's intended state — do not force-override
+            // IsSelected with the system state.
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
                 await Application.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    _isRefreshingStates = true;
-                    try
-                    {
-                        if (actionVm is not null)
-                            actionVm.IsSelected = isApplied;
-                        UpdateSelectedActions();
-                        // Save selection state even on error (reflects actual state)
-                        SaveOptimizationSelection();
-                    }
-                    finally
-                    {
-                        _isRefreshingStates = false;
-                    }
+                    UpdateSelectedActions();
+                    SaveOptimizationSelection();
                 });
             }
             else
             {
-                _isRefreshingStates = true;
-                try
-                {
-                    if (actionVm is not null)
-                        actionVm.IsSelected = isApplied;
-                    UpdateSelectedActions();
-                    // Save selection state even on error (reflects actual state)
-                    SaveOptimizationSelection();
-                }
-                finally
-                {
-                    _isRefreshingStates = false;
-                }
+                UpdateSelectedActions();
+                SaveOptimizationSelection();
             }
         }
         finally
@@ -854,38 +854,22 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         _isRefreshingStates = true;
         try
         {
-            var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);
-            foreach (var action in actions)
-            {
-                // Scan to detect actual system state
-                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
-                
-                // Ensure UI updates happen on UI thread
-                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-                {
-                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
-                }
-                else
-                {
-                    action.IsSelected = isApplied;
-                }
-            }
-            
-            // Ensure UI updates happen on UI thread
+            // Scan is now a no-op for UI state: we preserve the user's saved
+            // preferences (restored in InitializeCore) instead of overwriting
+            // them with live system state.  This fixes the bug where switching
+            // pages would reset all optimization checkboxes (GH #28).
+            //
+            // A future improvement could display a "system state differs from
+            // your preference" indicator, but the checkbox itself must always
+            // reflect the user's intent, not the current registry value.
+
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
-                await Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    UpdateSelectedActions();
-                    // Save the scanned state (actual system state) to settings
-                    SaveOptimizationSelection();
-                });
+                await Application.Current.Dispatcher.BeginInvoke(() => UpdateSelectedActions());
             }
             else
             {
                 UpdateSelectedActions();
-                // Save the scanned state (actual system state) to settings
-                SaveOptimizationSelection();
             }
         }
         finally

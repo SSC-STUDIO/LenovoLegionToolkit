@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,15 +13,31 @@ using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
-public partial class UnsupportedWindow : FluentWindow
+public partial class UnsupportedWindow : FluentWindow, INotifyPropertyChanged
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
+    private bool _isContinueEnabled;
 
     public Task<bool> ShouldContinue => _taskCompletionSource.Task;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsContinueEnabled
+    {
+        get => _isContinueEnabled;
+        private set
+        {
+            if (_isContinueEnabled == value)
+                return;
+
+            _isContinueEnabled = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsContinueEnabled)));
+        }
+    }
 
     public UnsupportedWindow(MachineInformation mi)
     {
         InitializeComponent();
+        DataContext = this;
 
         _vendorText.Text = mi.Vendor;
         _modelText.Text = mi.Model;
@@ -73,7 +90,7 @@ public partial class UnsupportedWindow : FluentWindow
         }
 
         continueButton.Content = continueText;
-        continueButton.IsEnabled = true;
+        IsContinueEnabled = true;
     }
 
     private Wpf.Ui.Controls.Button? GetContinueButton()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,14 +14,31 @@ using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
-public partial class DeviceInformationWindow
+public partial class DeviceInformationWindow : INotifyPropertyChanged
 {
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
     private readonly Snackbar _snackBar;
+    private bool _isWarrantyLinkAvailable;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsWarrantyLinkAvailable
+    {
+        get => _isWarrantyLinkAvailable;
+        private set
+        {
+            if (_isWarrantyLinkAvailable == value)
+                return;
+
+            _isWarrantyLinkAvailable = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsWarrantyLinkAvailable)));
+        }
+    }
 
     public DeviceInformationWindow()
     {
         InitializeComponent();
+        DataContext = this;
         _snackBar = new Snackbar(_snackBarPresenter)
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -83,7 +101,7 @@ public partial class DeviceInformationWindow
             _warrantyStartLabel.Text = "-";
             _warrantyEndLabel.Text = "-";
             _warrantyLinkCardAction.Tag = null;
-            _warrantyLinkCardAction.IsEnabled = false;
+            IsWarrantyLinkAvailable = false;
 
             var warrantyInfo = await _warrantyChecker.GetWarrantyInfo(mi, forceRefresh);
 
@@ -93,7 +111,7 @@ public partial class DeviceInformationWindow
             _warrantyStartLabel.Text = warrantyInfo.Value.Start is not null ? warrantyInfo.Value.Start?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyEndLabel.Text = warrantyInfo.Value.End is not null ? warrantyInfo.Value.End?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyLinkCardAction.Tag = warrantyInfo.Value.Link;
-            _warrantyLinkCardAction.IsEnabled = true;
+            IsWarrantyLinkAvailable = true;
             _warrantyInfo.Visibility = Visibility.Visible;
         }
         catch (Exception ex)

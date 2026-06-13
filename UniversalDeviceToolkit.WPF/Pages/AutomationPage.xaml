@@ -132,6 +132,7 @@
                                 x:Name="_enableAutomaticPipelinesToggle"
                                 Margin="0,0,0,8"
                                 AutomationProperties.Name="{x:Static resources:Resource.AutomationPage_ActionsEnabled_Title}"
+                                IsChecked="{Binding IsAutomaticPipelinesEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Click="EnableAutomaticPipelinesToggle_Click" />
                         </custom:CardControl>
 

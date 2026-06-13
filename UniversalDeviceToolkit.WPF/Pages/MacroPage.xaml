@@ -34,6 +34,7 @@
                 x:Name="_enableMacroToggle"
                 Margin="0,0,0,8"
                 AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Enable_Title}"
+                IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Click="EnableMacroToggle_Click" />
         </custom:CardControl>
 
@@ -195,5 +196,4 @@
         </StackPanel>
     </wpfui:DynamicScrollViewer>
 </Page>
-
 
