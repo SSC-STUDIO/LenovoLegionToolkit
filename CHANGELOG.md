@@ -10,7 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No unreleased changes yet.
+### Fixed / 修复
+
+- 修复更新与插件安装链路中的完整性校验、官方来源限制、插件 EXE 签名校验、插件更新检测、Lenovo 驱动目录容错解析，以及系统优化和自动化/宏开关状态保持问题 / Fixed integrity checks, official-source restrictions, plugin EXE signature validation, plugin update detection, Lenovo driver catalog parsing, and state persistence for System Optimization plus Automation/Macro toggles.
+- 统一插件目录覆盖环境变量并补齐多个窗口的无障碍名称、主题资源颜色和按钮状态绑定 / Unified plugin directory override environment variables and completed accessibility names, theme resource colors, and button-state bindings across multiple windows.
+- 修复 BIOS 规则异常、驱动包 SHA256 sidecar 兼容性和设备包替换失败时旧安装被删除的问题 / Fixed BIOS rule crashes, driver package SHA256 sidecar compatibility, and installed device packs being removed when replacement fails.
 
 ## [4.2.1] - 2026-06-07
 
