@@ -116,10 +116,11 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         var version = document.SelectSingleNode("/Package/@version")!.InnerText;
         var fileName = document.SelectSingleNode("/Package/Files/Installer/File/Name")!.InnerText;
         var fileCrc = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
-        var fileSizeBytes = int.Parse(document.SelectSingleNode("/Package/Files/Installer/File/Size")!.InnerText);
-        var fileSize = $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB";
-        var releaseDateString = document.SelectSingleNode("/Package/ReleaseDate")!.InnerText;
-        var releaseDate = DateTime.Parse(releaseDateString);
+        var fileSizeText = document.SelectSingleNode("/Package/Files/Installer/File/Size")?.InnerText;
+        var fileSizeBytes = int.TryParse(fileSizeText, out var parsedSize) ? parsedSize : 0;
+        var fileSize = fileSizeBytes > 0 ? $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB" : "Unknown";
+        var releaseDateString = document.SelectSingleNode("/Package/ReleaseDate")?.InnerText;
+        var releaseDate = DateTime.TryParse(releaseDateString, out var parsedDate) ? parsedDate : DateTime.MinValue;
         var readmeName = document.SelectSingleNode("/Package/Files/Readme/File/Name")?.InnerText;
         var readme = $"{baseLocation}/{readmeName}";
         var fileLocation = $"{baseLocation}/{fileName}";

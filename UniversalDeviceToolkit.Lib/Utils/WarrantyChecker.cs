@@ -42,12 +42,18 @@ public class WarrantyChecker(ApplicationSettings settings, HttpClientFactory htt
         var startDate = baseWarranties.Concat(upgradeWarranties)
             .Select(n => n?["startDate"])
             .Where(n => n is not null)
-            .Select(n => DateTime.Parse(n!.ToString()))
+            .Select(n => DateTime.TryParse(n!.ToString(), out var date) ? date : (DateTime?)null)
+            .Where(n => n.HasValue)
+            .Select(n => n!.Value)
+            .DefaultIfEmpty(DateTime.MinValue)
             .Min();
         var endDate = baseWarranties.Concat(upgradeWarranties)
             .Select(n => n?["endDate"])
             .Where(n => n is not null)
-            .Select(n => DateTime.Parse(n!.ToString()))
+            .Select(n => DateTime.TryParse(n!.ToString(), out var date) ? date : (DateTime?)null)
+            .Where(n => n.HasValue)
+            .Select(n => n!.Value)
+            .DefaultIfEmpty(DateTime.MinValue)
             .Max();
 
         var productString = await httpClient.GetStringAsync($"https://pcsupport.lenovo.com/dk/en/api/v4/mse/getproducts?productId={machineInformation.SerialNumber}", token).ConfigureAwait(false);
