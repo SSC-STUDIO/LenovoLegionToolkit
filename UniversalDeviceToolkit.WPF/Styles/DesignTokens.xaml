@@ -57,6 +57,15 @@
     <SolidColorBrush x:Key="ChartCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
     <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
 
+    <!-- GPU Status Indicator Colors -->
+    <Color x:Key="GpuStatusActiveColor">#FF8BC34A</Color>
+    <Color x:Key="GpuStatusInactiveColor">#FFF2A541</Color>
+    <Color x:Key="GpuStatusPoweredOffColor">#FFBF360C</Color>
+
+    <SolidColorBrush x:Key="GpuStatusActiveBrush" Color="{StaticResource GpuStatusActiveColor}" />
+    <SolidColorBrush x:Key="GpuStatusInactiveBrush" Color="{StaticResource GpuStatusInactiveColor}" />
+    <SolidColorBrush x:Key="GpuStatusPoweredOffBrush" Color="{StaticResource GpuStatusPoweredOffColor}" />
+
     <!-- Gauge Size Tokens -->
     <sys:Double x:Key="GaugeSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">88</sys:Double>
     <sys:Double x:Key="GaugeSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">110</sys:Double>

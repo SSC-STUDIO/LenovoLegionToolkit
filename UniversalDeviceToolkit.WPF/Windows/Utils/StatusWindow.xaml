@@ -197,7 +197,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#FF8BC34A" />
+                    Fill="{StaticResource GpuStatusActiveBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -218,7 +218,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#F2A541" />
+                    Fill="{StaticResource GpuStatusInactiveBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -239,7 +239,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#BF360C" />
+                    Fill="{StaticResource GpuStatusPoweredOffBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"

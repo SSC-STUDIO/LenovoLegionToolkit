@@ -44,8 +44,15 @@ internal readonly partial struct BiosPackageRule : IPackageRule
 
         var result = Levels.Any((global::System.Func<string, bool>)(level =>
         {
-            var levelPrefix = PrefixRegex().Match(level).Value;
-            var levelVersion = int.Parse(VersionRegex().Match(level).Value);
+            var levelPrefixMatch = PrefixRegex().Match(level);
+            var levelVersionMatch = VersionRegex().Match(level);
+            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
+                return false;
+
+            var levelPrefix = levelPrefixMatch.Value;
+            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
+                return false;
+
             return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion == currentBios.Value.Version;
         }));
 
@@ -59,8 +66,15 @@ internal readonly partial struct BiosPackageRule : IPackageRule
 
         var result = Levels.All((global::System.Func<string, bool>)(level =>
         {
-            var levelPrefix = PrefixRegex().Match(level).Value;
-            var levelVersion = int.Parse(VersionRegex().Match(level).Value);
+            var levelPrefixMatch = PrefixRegex().Match(level);
+            var levelVersionMatch = VersionRegex().Match(level);
+            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
+                return false;
+
+            var levelPrefix = levelPrefixMatch.Value;
+            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
+                return false;
+
             return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion > currentBios.Value.Version;
         }));
 

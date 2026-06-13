@@ -54,7 +54,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
         try
         {
-            var externalSha256 = await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false);
+            var externalSha256 = (await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false)).Trim();
             if (fileSha256.Equals(externalSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)

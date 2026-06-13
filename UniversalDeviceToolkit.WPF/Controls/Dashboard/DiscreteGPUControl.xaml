@@ -26,21 +26,21 @@
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="#FF8BC34A"
+                    Fill="{StaticResource GpuStatusActiveBrush}"
                     Visibility="Collapsed" />
                 <Ellipse
                     x:Name="_discreteGPUStatusInactiveIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="#F2A541"
+                    Fill="{StaticResource GpuStatusInactiveBrush}"
                     Visibility="Collapsed" />
                 <Ellipse
                     x:Name="_discreteGPUStatusPoweredOffIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="#BF360C"
+                    Fill="{StaticResource GpuStatusPoweredOffBrush}"
                     Visibility="Collapsed" />
                 <TextBlock
                     x:Name="_discreteGPUStatusDescription"
