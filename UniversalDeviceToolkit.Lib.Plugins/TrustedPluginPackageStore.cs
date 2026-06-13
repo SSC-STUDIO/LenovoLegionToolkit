@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -14,6 +15,7 @@ internal static class TrustedPluginPackageStore
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     private static string StorePath => Path.Combine(Folders.AppData, "trusted-plugin-packages.json");
+    private static string KeyPath => Path.Combine(Folders.AppData, "trusted-plugin-packages.key");
 
     public static void TrustPluginDirectory(string pluginId, string pluginDirectory)
     {
@@ -152,7 +154,16 @@ internal static class TrustedPluginPackageStore
                 return new TrustedPluginPackageStoreModel();
 
             var json = File.ReadAllText(StorePath);
-            return NormalizeStore(JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json));
+            var store = NormalizeStore(JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json));
+            if (!IsStoreSignatureValid(store))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Ignoring trusted plugin package store with missing or invalid integrity signature: {StorePath}");
+
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            return store;
         }
         catch
         {
@@ -178,7 +189,66 @@ internal static class TrustedPluginPackageStore
         if (!string.IsNullOrWhiteSpace(directory))
             Directory.CreateDirectory(directory);
 
+        store.Signature = string.Empty;
+        store.Signature = ComputeStoreSignature(store);
+
         File.WriteAllText(StorePath, JsonSerializer.Serialize(store, JsonOptions));
+    }
+
+    private static bool IsStoreSignatureValid(TrustedPluginPackageStoreModel store)
+    {
+        if (string.IsNullOrWhiteSpace(store.Signature))
+            return false;
+
+        var expectedSignature = ComputeStoreSignature(store);
+        return FixedTimeHexEquals(store.Signature, expectedSignature);
+    }
+
+    private static bool FixedTimeHexEquals(string left, string right)
+    {
+        try
+        {
+            return CryptographicOperations.FixedTimeEquals(
+                Convert.FromHexString(left),
+                Convert.FromHexString(right));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string ComputeStoreSignature(TrustedPluginPackageStoreModel store)
+    {
+        var signature = store.Signature;
+        store.Signature = string.Empty;
+        try
+        {
+            var payload = JsonSerializer.Serialize(store, JsonOptions);
+            using var hmac = new HMACSHA256(GetOrCreateStoreKey());
+            return Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes(payload))).ToLowerInvariant();
+        }
+        finally
+        {
+            store.Signature = signature;
+        }
+    }
+
+    private static byte[] GetOrCreateStoreKey()
+    {
+        if (File.Exists(KeyPath))
+        {
+            var protectedKey = File.ReadAllBytes(KeyPath);
+            return ProtectedData.Unprotect(protectedKey, null, DataProtectionScope.CurrentUser);
+        }
+
+        var key = RandomNumberGenerator.GetBytes(32);
+        var directory = Path.GetDirectoryName(KeyPath);
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
+
+        File.WriteAllBytes(KeyPath, ProtectedData.Protect(key, null, DataProtectionScope.CurrentUser));
+        return key;
     }
 
     private static string ComputeSha256(string filePath)
@@ -190,6 +260,7 @@ internal static class TrustedPluginPackageStore
 
     private sealed class TrustedPluginPackageStoreModel
     {
+        public string Signature { get; set; } = string.Empty;
         public Dictionary<string, TrustedPluginPackage> Plugins { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     }
 

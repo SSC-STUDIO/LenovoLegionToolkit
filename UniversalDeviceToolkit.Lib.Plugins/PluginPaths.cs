@@ -11,6 +11,9 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 public static class PluginPaths
 {
     private static readonly string AppDataBaseDir = AppContext.BaseDirectory;
+    public const string PluginsDirectoryOverrideEnvironmentVariable = "UDT_PLUGINS_DIR";
+    public const string LegacyPluginsDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
+    public const string LegacyPluginConfigRootEnvironmentVariable = "LLT_PLUGIN_CONFIG_ROOT";
     
     /// <summary>
     /// 插件目录名称
@@ -28,7 +31,26 @@ public static class PluginPaths
     /// <returns>插件根目录路径</returns>
     public static string GetPluginsDirectory()
     {
+        var overrideDirectory = GetPluginsDirectoryOverride();
+        if (!string.IsNullOrWhiteSpace(overrideDirectory))
+        {
+            Directory.CreateDirectory(overrideDirectory);
+            return overrideDirectory;
+        }
+
         return Folders.GetAppDataSubdirectory(PluginsDirectoryName);
+    }
+
+    private static string? GetPluginsDirectoryOverride()
+    {
+        var overrideValue = Environment.GetEnvironmentVariable(PluginsDirectoryOverrideEnvironmentVariable);
+        overrideValue ??= Environment.GetEnvironmentVariable(LegacyPluginsDirectoryOverrideEnvironmentVariable);
+        overrideValue ??= Environment.GetEnvironmentVariable(LegacyPluginConfigRootEnvironmentVariable);
+
+        if (string.IsNullOrWhiteSpace(overrideValue))
+            return null;
+
+        return Path.GetFullPath(Environment.ExpandEnvironmentVariables(overrideValue));
     }
 
     /// <summary>

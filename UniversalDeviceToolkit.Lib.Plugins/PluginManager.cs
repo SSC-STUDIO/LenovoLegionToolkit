@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
@@ -15,6 +17,14 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// </summary>
 public class PluginManager : IPluginManager
 {
+    private static readonly string[] OfficialPluginStoreUrls =
+    [
+        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/store.json",
+        "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/master/store.json",
+        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json",
+        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json"
+    ];
+
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginSignatureValidator _signatureValidator;
     private readonly IPluginLoader _loader;
@@ -1139,21 +1149,28 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("Checking for plugin updates...");
             
-            // Get all registered plugins
-            var plugins = _registry.GetAll();
-            
-            // For each plugin, check if there's an update (placeholder implementation)
-            // In a real app, you would connect to a plugin repository API
-            foreach (var plugin in plugins)
+            var installedVersions = _registry.GetAll()
+                .Select(plugin => new
+                {
+                    plugin.Id,
+                    Version = _registry.GetMetadata(plugin.Id)?.Version ?? "0.0.0"
+                })
+                .DistinctBy(plugin => plugin.Id, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(plugin => plugin.Id, plugin => plugin.Version, StringComparer.OrdinalIgnoreCase);
+
+            if (installedVersions.Count == 0)
+                return updates;
+
+            var availablePlugins = await FetchOfficialPluginStoreManifestsAsync().ConfigureAwait(false);
+            var versionChecker = new VersionChecker();
+
+            foreach (var availablePlugin in availablePlugins)
             {
-                var metadata = _registry.GetMetadata(plugin.Id);
-                if (metadata == null)
+                if (!installedVersions.TryGetValue(availablePlugin.Id, out var installedVersion))
                     continue;
-                
-                // This is a placeholder - actual implementation would query a repository
-                // For now, we'll just log that we're checking
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Checking updates for {plugin.Id} (v{metadata.Version})");
+
+                if (versionChecker.IsUpdateAvailable(installedVersion, availablePlugin.Version))
+                    updates[availablePlugin.Id] = availablePlugin.Version;
             }
             
             Log.Instance.Info($"Update check complete. Found {updates.Count} available updates.");
@@ -1164,6 +1181,37 @@ public class PluginManager : IPluginManager
         }
         
         return updates;
+    }
+
+    private static async Task<List<PluginManifest>> FetchOfficialPluginStoreManifestsAsync()
+    {
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"{AppIdentity.CompactName}-PluginUpdateChecker");
+
+        Exception? lastException = null;
+        foreach (var url in OfficialPluginStoreUrls)
+        {
+            try
+            {
+                var json = await httpClient.GetStringAsync(url).ConfigureAwait(false);
+                var store = JsonSerializer.Deserialize<PluginStoreResponse>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (store?.Plugins is { Count: > 0 })
+                    return store.Plugins;
+            }
+            catch (Exception ex)
+            {
+                lastException = ex;
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to fetch plugin store metadata from {url}: {ex.Message}", ex);
+            }
+        }
+
+        throw new HttpRequestException("Failed to fetch plugin store metadata from all known URLs.", lastException);
     }
     
     /// <summary>

@@ -1,7 +1,11 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
+using LenovoLegionToolkit.Lib.Plugins;
+using Moq;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -182,10 +186,36 @@ public class PluginExecutableResolverTests : IDisposable
 
         method.Should().NotBeNull();
 
-        object?[] parameters = [pluginId, metadataFilePath, pluginsDirectory, null, null];
+        var signatureValidator = CreateSignatureValidator(pluginId);
+        object?[] parameters = [pluginId, metadataFilePath, pluginsDirectory, signatureValidator, null, null];
         var result = method!.Invoke(null, parameters);
 
         result.Should().BeOfType<bool>();
-        return ((bool)result!, parameters[3] as string, parameters[4] as string);
+        return ((bool)result!, parameters[4] as string, parameters[5] as string);
+    }
+
+    private static IPluginSignatureValidator CreateSignatureValidator(string pluginId)
+    {
+        var normalizedPluginId = pluginId.Replace("-", string.Empty);
+        var trustedExecutableNames = new[]
+        {
+            $"{pluginId}.exe",
+            $"LenovoLegionToolkit.Plugins.{pluginId}.exe",
+            $"LenovoLegionToolkit.Plugins.{normalizedPluginId}.exe"
+        };
+
+        var mock = new Mock<IPluginSignatureValidator>();
+        mock.Setup(validator => validator.ValidateAsync(It.IsAny<string>()))
+            .Returns((string executablePath) =>
+            {
+                var fileName = Path.GetFileName(executablePath);
+                var isTrusted = trustedExecutableNames.Any(name =>
+                    name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+
+                return Task.FromResult(new PluginSignatureResult(
+                    isTrusted ? PluginSignatureStatus.Valid : PluginSignatureStatus.Invalid));
+            });
+
+        return mock.Object;
     }
 }

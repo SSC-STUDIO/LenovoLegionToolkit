@@ -18,6 +18,11 @@ namespace LenovoLegionToolkit.Lib.Utils;
 
 public class UpdateChecker
 {
+    private static readonly (string Owner, string Name)[] AllowedUpdateRepositories =
+    [
+        (AppIdentity.RepositoryOwner, AppIdentity.RepositoryName)
+    ];
+
     private readonly HttpClientFactory _httpClientFactory;
     private readonly UpdateCheckSettings _updateCheckSettings = IoCContainer.Resolve<UpdateCheckSettings>();
     private readonly AsyncLock _updateSemaphore = new();
@@ -79,13 +84,25 @@ public class UpdateChecker
                 var connection = new Connection(productInformation, adapter);
                 var githubClient = new GitHubClient(connection);
                 
-                // Get update repository from settings, fallback to default if not configured
-                var repositoryOwner = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) 
-                    ? _updateCheckSettings.Store.UpdateRepositoryOwner 
-                    : AppIdentity.RepositoryOwner;
-                var repositoryName = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryName) 
-                    ? _updateCheckSettings.Store.UpdateRepositoryName 
-                    : AppIdentity.RepositoryName;
+                var repositoryOwner = AppIdentity.RepositoryOwner;
+                var repositoryName = AppIdentity.RepositoryName;
+
+                if (!string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) ||
+                    !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryName))
+                {
+                    var requestedOwner = _updateCheckSettings.Store.UpdateRepositoryOwner ?? AppIdentity.RepositoryOwner;
+                    var requestedName = _updateCheckSettings.Store.UpdateRepositoryName ?? AppIdentity.RepositoryName;
+
+                    if (!IsAllowedUpdateRepository(requestedOwner, requestedName))
+                    {
+                        Log.Instance.Warning($"Ignoring untrusted update repository override: {requestedOwner}/{requestedName}");
+                    }
+                    else
+                    {
+                        repositoryOwner = requestedOwner;
+                        repositoryName = requestedName;
+                    }
+                }
                 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking updates from repository: {repositoryOwner}/{repositoryName}");
@@ -221,15 +238,10 @@ public class UpdateChecker
 
         var expectedHash = await ResolveExpectedHashAsync(update, httpClient, cancellationToken).ConfigureAwait(false);
 
-        // If no expected hash is available, skip validation (backward compatibility)
         if (string.IsNullOrEmpty(expectedHash))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"No SHA256 hash available for validation. Skipping integrity check.");
-
-            // Log warning but don't block the update
-            Log.Instance.Warning($"Update package integrity verification skipped: no SHA256 hash available for update {update.Version}");
-            return;
+            TryDeleteFile(filePath);
+            throw new InvalidDataException($"Update package integrity check failed: no SHA256 hash is available for update {update.Version}.");
         }
 
         // Compare hashes
@@ -240,12 +252,7 @@ public class UpdateChecker
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace(errorMessage);
 
-            // Delete the corrupted file
-            try
-            {
-                File.Delete(filePath);
-            }
-            catch { /* Ignore deletion errors */ }
+            TryDeleteFile(filePath);
 
             throw new InvalidDataException(errorMessage);
         }
@@ -384,6 +391,23 @@ public class UpdateChecker
 
         return Uri.TryCreate(value, UriKind.Absolute, out var uri) &&
                (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+    }
+
+    private static bool IsAllowedUpdateRepository(string owner, string name) =>
+        AllowedUpdateRepositories.Any(repository =>
+            repository.Owner.Equals(owner, StringComparison.OrdinalIgnoreCase) &&
+            repository.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+    private static void TryDeleteFile(string filePath)
+    {
+        try
+        {
+            File.Delete(filePath);
+        }
+        catch
+        {
+            // Best-effort cleanup after a failed integrity check.
+        }
     }
 
     private static string[] GetPackageFileNameCandidates(string? packageUrl)

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -11,6 +13,7 @@ internal static class PluginExecutableResolver
         string pluginId,
         string? metadataFilePath,
         string pluginsDirectory,
+        IPluginSignatureValidator signatureValidator,
         out string? exeFile,
         out string? workingDirectory)
     {
@@ -19,6 +22,7 @@ internal static class PluginExecutableResolver
 
         ArgumentException.ThrowIfNullOrWhiteSpace(pluginId);
         ArgumentException.ThrowIfNullOrWhiteSpace(pluginsDirectory);
+        ArgumentNullException.ThrowIfNull(signatureValidator);
 
         var candidateDirectories = new List<string>();
 
@@ -46,6 +50,9 @@ internal static class PluginExecutableResolver
                 if (!File.Exists(preferredCandidate))
                     continue;
 
+                if (!IsTrustedExecutable(preferredCandidate, signatureValidator))
+                    continue;
+
                 exeFile = preferredCandidate;
                 workingDirectory = candidateDirectory;
                 return true;
@@ -60,5 +67,17 @@ internal static class PluginExecutableResolver
         yield return Path.Combine(candidateDirectory, $"{pluginId}.exe");
         yield return Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.exe");
         yield return Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.exe");
+    }
+
+    private static bool IsTrustedExecutable(string executablePath, IPluginSignatureValidator signatureValidator)
+    {
+        var signatureResult = signatureValidator.ValidateAsync(executablePath).GetAwaiter().GetResult();
+        if (signatureResult.IsValid)
+            return true;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Rejected plugin executable due to invalid signature. [path={executablePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
+
+        return false;
     }
 }

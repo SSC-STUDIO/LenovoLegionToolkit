@@ -458,6 +458,9 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
     private string CreatePluginPackage(string pluginId, bool includeOptimizationAction)
     {
+        var appPluginsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+        Directory.CreateDirectory(appPluginsDirectory);
+
         var packageDirectory = CreateTempDirectory();
         var pluginDirectory = Path.Combine(packageDirectory, pluginId);
         Directory.CreateDirectory(pluginDirectory);
@@ -467,7 +470,10 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             Path.Combine(pluginDirectory, "plugin.json"),
             CreateManifestJson(pluginId, includeOptimizationAction));
 
-        var packagePath = Path.Combine(packageDirectory, $"{pluginId}.zip");
+        var packagePath = Path.Combine(appPluginsDirectory, $"{pluginId}.zip");
+        if (File.Exists(packagePath))
+            File.Delete(packagePath);
+
         ZipFile.CreateFromDirectory(pluginDirectory, packagePath);
         TempFiles.Add(packagePath);
         return packagePath;

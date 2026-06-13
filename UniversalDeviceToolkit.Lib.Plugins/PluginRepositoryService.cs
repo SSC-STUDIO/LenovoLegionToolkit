@@ -314,6 +314,14 @@ public class PluginRepositoryService : IDisposable
 
         foreach (var candidateUrl in candidateUrls)
         {
+            if (!IsAllowedPluginDownloadUrl(candidateUrl, manifest.Id))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected untrusted download URL for plugin {manifest.Id}: {candidateUrl}");
+
+                continue;
+            }
+
             var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
             if (downloaded)
                 return new PluginDownloadResult(
@@ -354,6 +362,14 @@ public class PluginRepositoryService : IDisposable
 
             if (candidateUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
             {
+                if (!IsLocalDevelopmentDownloadAllowed(candidateUrl))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Rejected local plugin package URL outside app plugins directory: {candidateUrl}");
+
+                    return false;
+                }
+
                 var filePath = new Uri(candidateUrl).LocalPath;
                 if (!File.Exists(filePath))
                 {
@@ -1168,7 +1184,6 @@ public class PluginRepositoryService : IDisposable
         var localPluginPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", $"{manifest.Id}.zip");
         if (File.Exists(localPluginPath))
         {
-            // For local development, we need to use a file:// URL
             var uri = new Uri(localPluginPath);
             return uri.AbsoluteUri;
         }
@@ -1357,6 +1372,43 @@ public class PluginRepositoryService : IDisposable
             return IsTrustedGitHubReleaseAssetApiPath(segments);
 
         return false;
+    }
+
+    private static bool IsAllowedPluginDownloadUrl(string candidateUrl, string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(candidateUrl))
+            return false;
+
+        if (!Uri.TryCreate(candidateUrl, UriKind.Absolute, out var uri))
+            return false;
+
+        if (uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            return ShouldTrustDownloadedPluginPackage(candidateUrl, pluginId);
+
+        if (uri.Scheme.Equals(Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+            return IsLocalDevelopmentDownloadAllowed(candidateUrl);
+
+        return false;
+    }
+
+    private static bool IsLocalDevelopmentDownloadAllowed(string candidateUrl)
+    {
+        if (!Uri.TryCreate(candidateUrl, UriKind.Absolute, out var uri) ||
+            !uri.Scheme.Equals(Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        try
+        {
+            var filePath = Path.GetFullPath(uri.LocalPath);
+            var appPluginsDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins"));
+            return PathSecurity.IsPathWithinAllowedDirectory(filePath, appPluginsDirectory);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool IsTrustedGitHubBrowserDownloadPath(IReadOnlyList<string> segments, string pluginId)

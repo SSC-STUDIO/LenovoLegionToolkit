@@ -34,6 +34,7 @@ public partial class PluginExtensionsPage
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
+    private readonly IPluginSignatureValidator _pluginSignatureValidator = IoCContainer.Resolve<IPluginSignatureValidator>();
     private readonly PluginRepositoryService _pluginRepositoryService = IoCContainer.Resolve<PluginRepositoryService>();
     private readonly PluginInstallCoordinator _pluginInstallCoordinator = IoCContainer.Resolve<PluginInstallCoordinator>();
 
@@ -2355,7 +2356,7 @@ private string _currentSearchText = string.Empty;
     private bool TryResolvePluginExecutable(string pluginId, out string? exeFile, out string? workingDirectory)
     {
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
-        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory);
+        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), _pluginSignatureValidator, out exeFile, out workingDirectory);
     }
 
     private string GetPluginLocalizedName(IPlugin plugin, PluginManifest? manifest)

@@ -191,7 +191,7 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task ValidateUpdatePackageAsync_WhenNoHashIsAvailable_ShouldSkipValidation()
+    public async Task ValidateUpdatePackageAsync_WhenNoHashIsAvailable_ShouldDeleteFileAndThrow()
     {
         // Arrange
         const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
@@ -205,10 +205,11 @@ public class UpdateCheckerTests : TemporaryFileTestBase
         using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
 
         // Act
-        await InvokeValidateUpdatePackageAsync(tempFile, update, httpClient);
+        var action = () => InvokeValidateUpdatePackageAsync(tempFile, update, httpClient);
 
         // Assert
-        File.Exists(tempFile).Should().BeTrue();
+        await action.Should().ThrowAsync<InvalidDataException>();
+        File.Exists(tempFile).Should().BeFalse();
     }
 
     private static async Task InvokeValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient)

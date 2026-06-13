@@ -12,16 +12,29 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 public class PluginPathsTests : TemporaryFileTestBase
 {
     private readonly string? _previousAppDataOverride;
+    private readonly string? _previousPluginsDirectoryOverride;
+    private readonly string? _previousLegacyPluginsDirectoryOverride;
+    private readonly string? _previousLegacyPluginConfigRoot;
 
     public PluginPathsTests()
     {
         _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        _previousPluginsDirectoryOverride = Environment.GetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable);
+        _previousLegacyPluginsDirectoryOverride = Environment.GetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable);
+        _previousLegacyPluginConfigRoot = Environment.GetEnvironmentVariable(PluginPaths.LegacyPluginConfigRootEnvironmentVariable);
+
+        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, null);
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, null);
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginConfigRootEnvironmentVariable, null);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
     }
 
     public override void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
+        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, _previousPluginsDirectoryOverride);
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, _previousLegacyPluginsDirectoryOverride);
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginConfigRootEnvironmentVariable, _previousLegacyPluginConfigRoot);
         base.Dispose();
     }
 
@@ -45,6 +58,38 @@ public class PluginPathsTests : TemporaryFileTestBase
         var pluginDir = PluginPaths.GetPluginDirectory("custom-mouse");
 
         pluginDir.Should().Be(Path.Combine(pluginsRoot, "custom-mouse"));
+    }
+
+    [Fact]
+    public void GetPluginsDirectory_WhenCanonicalOverrideSet_ShouldReturnOverride()
+    {
+        var overrideDirectory = Path.Combine(CreateTempDirectory(), "custom-plugins");
+        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDirectory);
+
+        var result = PluginPaths.GetPluginsDirectory();
+
+        result.Should().Be(Path.GetFullPath(overrideDirectory));
+        Directory.Exists(result).Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetPluginsDirectory_WhenLegacyOverrideSet_ShouldReturnLegacyOverride()
+    {
+        var overrideDirectory = Path.Combine(CreateTempDirectory(), "legacy-plugins");
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, overrideDirectory);
+
+        PluginPaths.GetPluginsDirectory().Should().Be(Path.GetFullPath(overrideDirectory));
+    }
+
+    [Fact]
+    public void GetPluginsDirectory_WhenMultipleOverridesSet_ShouldPreferCanonicalOverride()
+    {
+        var canonicalDirectory = Path.Combine(CreateTempDirectory(), "canonical-plugins");
+        var legacyDirectory = Path.Combine(CreateTempDirectory(), "legacy-plugins");
+        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, canonicalDirectory);
+        Environment.SetEnvironmentVariable(PluginPaths.LegacyPluginsDirectoryOverrideEnvironmentVariable, legacyDirectory);
+
+        PluginPaths.GetPluginsDirectory().Should().Be(Path.GetFullPath(canonicalDirectory));
     }
 
     [Fact]

@@ -677,7 +677,12 @@ public class PluginLoader : IPluginLoader
             if (assemblySimpleName.StartsWith("Wpf.Ui", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            return assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
+            var isHostAssembly = assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) ||
+                                 assemblySimpleName.StartsWith("UniversalDeviceToolkit", StringComparison.OrdinalIgnoreCase) ||
+                                 assemblySimpleName.Equals("Universal Device Toolkit", StringComparison.OrdinalIgnoreCase) ||
+                                 assemblySimpleName.Equals("Lenovo Legion Toolkit", StringComparison.OrdinalIgnoreCase);
+
+            return isHostAssembly &&
                    !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase) &&
                    !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase);
         }
