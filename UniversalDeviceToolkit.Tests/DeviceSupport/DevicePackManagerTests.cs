@@ -108,6 +108,26 @@ public sealed class DevicePackManagerTests : IDisposable
             pack.MachineTypes.Contains("83DE"));
     }
 
+    [Fact]
+    public void ReplaceInstalledPackDirectory_WhenFinalMoveFails_ShouldRestoreExistingPack()
+    {
+        // Arrange
+        var root = Path.Combine(_appDataOverride, "replace-rollback");
+        var destination = Path.Combine(root, "pack");
+        var pendingDestination = Path.Combine(root, "pack.pending");
+        var backupDestination = Path.Combine(root, "pack.backup");
+        Directory.CreateDirectory(destination);
+        File.WriteAllText(Path.Combine(destination, "device-pack.json"), "old");
+
+        // Act
+        var action = () => DevicePackManager.ReplaceInstalledPackDirectory(pendingDestination, destination, backupDestination);
+
+        // Assert
+        action.Should().Throw<DirectoryNotFoundException>();
+        File.ReadAllText(Path.Combine(destination, "device-pack.json")).Should().Be("old");
+        Directory.Exists(pendingDestination).Should().BeFalse();
+    }
+
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);

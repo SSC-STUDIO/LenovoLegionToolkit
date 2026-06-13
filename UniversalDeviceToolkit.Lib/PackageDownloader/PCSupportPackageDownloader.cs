@@ -54,29 +54,46 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
 
     private static Package? ParsePackage(JsonNode downloadNode)
     {
-        var id = downloadNode["ID"]!.ToJsonString();
-        var category = downloadNode["Category"]!["Name"]!.ToString();
-        var title = downloadNode["Title"]!.ToString();
-        var description = downloadNode["Summary"]!.ToString();
-        var version = downloadNode["SummaryInfo"]!["Version"]!.ToString();
+        var id = downloadNode["ID"]?.ToJsonString();
+        var category = downloadNode["Category"]?["Name"]?.ToString();
+        var title = downloadNode["Title"]?.ToString();
+        var description = downloadNode["Summary"]?.ToString() ?? string.Empty;
+        var version = downloadNode["SummaryInfo"]?["Version"]?.ToString();
 
-        var filesNode = downloadNode["Files"]!.AsArray();
-        var mainFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("exe", StringComparison.InvariantCultureIgnoreCase))
-                           ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("zip", StringComparison.InvariantCultureIgnoreCase))
+        var filesNode = downloadNode["Files"]?.AsArray();
+        if (string.IsNullOrWhiteSpace(id) ||
+            string.IsNullOrWhiteSpace(category) ||
+            string.IsNullOrWhiteSpace(title) ||
+            string.IsNullOrWhiteSpace(version) ||
+            filesNode is null)
+        {
+            return null;
+        }
+
+        var mainFileNode = filesNode.FirstOrDefault(n => GetFileType(n).Equals("exe", StringComparison.InvariantCultureIgnoreCase))
+                           ?? filesNode.FirstOrDefault(n => GetFileType(n).Equals("zip", StringComparison.InvariantCultureIgnoreCase))
                            ?? filesNode.FirstOrDefault();
 
         if (mainFileNode is null)
             return null;
 
-        var fileLocation = mainFileNode["URL"]!.ToString();
+        var fileLocation = mainFileNode["URL"]?.ToString();
+        if (string.IsNullOrWhiteSpace(fileLocation) || !Uri.TryCreate(fileLocation, UriKind.Absolute, out var fileUri))
+            return null;
+
         var fileName = new Uri(fileLocation).Segments.LastOrDefault("file");
-        var fileSize = mainFileNode["Size"]!.ToString();
+        var fileSize = mainFileNode["Size"]?.ToString();
         var fileCrc = mainFileNode["SHA256"]?.ToString();
-        var releaseDateUnix = long.Parse(mainFileNode["Date"]!["Unix"]!.ToString());
+        if (string.IsNullOrWhiteSpace(fileSize) ||
+            !long.TryParse(mainFileNode["Date"]?["Unix"]?.ToString(), out var releaseDateUnix))
+        {
+            return null;
+        }
+
         var releaseDate = DateTimeOffset.FromUnixTimeMilliseconds(releaseDateUnix).DateTime;
 
-        var readmeFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("txt readme", StringComparison.InvariantCultureIgnoreCase))
-                              ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("html", StringComparison.InvariantCultureIgnoreCase));
+        var readmeFileNode = filesNode.FirstOrDefault(n => GetFileType(n).Equals("txt readme", StringComparison.InvariantCultureIgnoreCase))
+                              ?? filesNode.FirstOrDefault(n => GetFileType(n).Equals("html", StringComparison.InvariantCultureIgnoreCase));
 
         var readme = readmeFileNode?["URL"]?.ToString();
 
@@ -95,6 +112,8 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
             FileLocation = fileLocation,
         };
     }
+
+    private static string GetFileType(JsonNode? fileNode) => fileNode?["TypeString"]?.ToString() ?? string.Empty;
 
     private static bool IsCompatible(JsonNode? downloadNode, string osString)
     {

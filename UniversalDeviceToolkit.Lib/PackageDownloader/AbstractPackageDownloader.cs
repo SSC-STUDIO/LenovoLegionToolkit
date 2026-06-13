@@ -54,7 +54,8 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
         try
         {
-            var externalSha256 = (await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false)).Trim();
+            var externalSha256Content = await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false);
+            var externalSha256 = TryExtractExpectedSha256(externalSha256Content, GetPackageFileNameCandidates(package));
             if (fileSha256.Equals(externalSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -80,4 +81,108 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         var invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
         return Regex.Replace(name, invalidRegStr, "_");
     }
+
+    internal static string? TryExtractExpectedSha256(string? hashContent, IReadOnlyCollection<string> packageFileNames)
+    {
+        if (string.IsNullOrWhiteSpace(hashContent))
+            return null;
+
+        var lines = hashContent
+            .Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if (packageFileNames.Count != 0)
+        {
+            foreach (var line in lines)
+            {
+                if (!packageFileNames.Any(fileName => LineReferencesFileName(line, fileName)))
+                    continue;
+
+                var lineHash = TryExtractFirstSha256Hash(line);
+                if (lineHash is not null)
+                    return lineHash;
+            }
+        }
+
+        foreach (var line in lines)
+        {
+            var lineHash = TryExtractFirstSha256Hash(line);
+            if (lineHash is not null &&
+                (line.Contains("sha256", StringComparison.OrdinalIgnoreCase) || lines.Length == 1))
+                return lineHash;
+        }
+
+        var allHashes = ExtractAllSha256Hashes(hashContent);
+        return allHashes.Count == 1 ? allHashes[0] : null;
+    }
+
+    private static string? TryExtractFirstSha256Hash(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var match = Regex.Match(text, @"(?<![a-fA-F0-9])([a-fA-F0-9]{64})(?![a-fA-F0-9])", RegexOptions.IgnoreCase);
+        return match.Success
+            ? match.Groups[1].Value.ToLowerInvariant()
+            : null;
+    }
+
+    private static List<string> ExtractAllSha256Hashes(string text)
+    {
+        var hashes = new List<string>();
+
+        foreach (Match match in Regex.Matches(text, @"(?<![a-fA-F0-9])([a-fA-F0-9]{64})(?![a-fA-F0-9])", RegexOptions.IgnoreCase))
+        {
+            var hash = match.Groups[1].Value.ToLowerInvariant();
+            if (!hashes.Contains(hash, StringComparer.OrdinalIgnoreCase))
+                hashes.Add(hash);
+        }
+
+        return hashes;
+    }
+
+    private static string[] GetPackageFileNameCandidates(Package package)
+    {
+        var candidates = new List<string>();
+
+        AddFileNameCandidate(candidates, package.FileName);
+
+        if (Uri.TryCreate(package.FileLocation, UriKind.Absolute, out var uri))
+            AddFileNameCandidate(candidates, Uri.UnescapeDataString(uri.AbsolutePath));
+        else
+            AddFileNameCandidate(candidates, package.FileLocation);
+
+        return candidates
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static void AddFileNameCandidate(List<string> candidates, string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        var fileName = Path.GetFileName(path);
+        if (!string.IsNullOrWhiteSpace(fileName))
+            candidates.Add(fileName);
+    }
+
+    private static bool LineReferencesFileName(string line, string fileName)
+    {
+        var index = 0;
+        while ((index = line.IndexOf(fileName, index, StringComparison.OrdinalIgnoreCase)) >= 0)
+        {
+            var beforeOk = index == 0 || !IsFileNamePartChar(line[index - 1]);
+            var afterIndex = index + fileName.Length;
+            var afterOk = afterIndex >= line.Length || !IsFileNamePartChar(line[afterIndex]);
+            if (beforeOk && afterOk)
+                return true;
+
+            index += fileName.Length;
+        }
+
+        return false;
+    }
+
+    private static bool IsFileNamePartChar(char value) =>
+        char.IsLetterOrDigit(value) || value is '.' or '-' or '_';
 }

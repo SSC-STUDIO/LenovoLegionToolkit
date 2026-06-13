@@ -43,18 +43,10 @@ internal readonly partial struct BiosPackageRule : IPackageRule
         var currentBios = mi.BiosVersion;
 
         var result = Levels.Any((global::System.Func<string, bool>)(level =>
-        {
-            var levelPrefixMatch = PrefixRegex().Match(level);
-            var levelVersionMatch = VersionRegex().Match(level);
-            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
-                return false;
-
-            var levelPrefix = levelPrefixMatch.Value;
-            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
-                return false;
-
-            return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion == currentBios.Value.Version;
-        }));
+            TryParseLevel(level, out var levelPrefix, out var levelVersion) &&
+            currentBios.HasValue &&
+            levelPrefix == currentBios.Value.Prefix &&
+            levelVersion == currentBios.Value.Version));
 
         return result;
     }
@@ -64,20 +56,38 @@ internal readonly partial struct BiosPackageRule : IPackageRule
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var currentBios = mi.BiosVersion;
 
-        var result = Levels.All((global::System.Func<string, bool>)(level =>
-        {
-            var levelPrefixMatch = PrefixRegex().Match(level);
-            var levelVersionMatch = VersionRegex().Match(level);
-            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
-                return false;
+        var parsedLevels = Levels
+            .Select(level => TryParseLevel(level, out var prefix, out var version)
+                ? (IsValid: true, Prefix: prefix, Version: version)
+                : (IsValid: false, Prefix: string.Empty, Version: 0))
+            .Where(level => level.IsValid)
+            .ToArray();
 
-            var levelPrefix = levelPrefixMatch.Value;
-            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
-                return false;
-
-            return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion > currentBios.Value.Version;
-        }));
+        var result = parsedLevels.Length != 0 && parsedLevels.All((global::System.Func<(bool IsValid, string Prefix, int Version), bool>)(level =>
+            currentBios.HasValue &&
+            level.Prefix == currentBios.Value.Prefix &&
+            level.Version > currentBios.Value.Version));
 
         return result;
+    }
+
+    internal static bool TryParseLevel(string? level, out string prefix, out int version)
+    {
+        prefix = string.Empty;
+        version = 0;
+
+        if (string.IsNullOrWhiteSpace(level))
+            return false;
+
+        var prefixMatch = PrefixRegex().Match(level);
+        var versionMatch = VersionRegex().Match(level);
+        if (!prefixMatch.Success || !versionMatch.Success)
+            return false;
+
+        if (!int.TryParse(versionMatch.Value, out version))
+            return false;
+
+        prefix = prefixMatch.Value;
+        return true;
     }
 }

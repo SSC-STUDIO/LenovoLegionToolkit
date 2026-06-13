@@ -93,13 +93,14 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
 
             var destination = GetInstalledPackDirectory(pack.Id);
             var pendingDestination = $"{destination}.pending";
+            var backupDestination = $"{destination}.backup";
 
             TryDeleteDirectory(pendingDestination);
+            TryDeleteDirectory(backupDestination);
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             CopyDirectory(extractPath, pendingDestination);
 
-            TryDeleteDirectory(destination);
-            Directory.Move(pendingDestination, destination);
+            ReplaceInstalledPackDirectory(pendingDestination, destination, backupDestination);
 
             return pack;
         }
@@ -189,6 +190,27 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
         path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar)
             ? path
             : path + Path.DirectorySeparatorChar;
+
+    internal static void ReplaceInstalledPackDirectory(string pendingDestination, string destination, string backupDestination)
+    {
+        try
+        {
+            if (Directory.Exists(destination))
+                Directory.Move(destination, backupDestination);
+
+            Directory.Move(pendingDestination, destination);
+
+            TryDeleteDirectory(backupDestination);
+        }
+        catch
+        {
+            if (!Directory.Exists(destination) && Directory.Exists(backupDestination))
+                Directory.Move(backupDestination, destination);
+
+            TryDeleteDirectory(pendingDestination);
+            throw;
+        }
+    }
 
     private static void CopyDirectory(string sourceDirectory, string destinationDirectory)
     {
