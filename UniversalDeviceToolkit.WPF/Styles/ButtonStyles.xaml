@@ -3,6 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
+    <!-- Apply the canonical keyboard focus ring to all WPF-UI buttons. -->
+    <Style BasedOn="{StaticResource {x:Type wpfui:Button}}" TargetType="wpfui:Button">
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+    </Style>
+
     <!-- Compact Button Style -->
     <Style x:Key="AppButtonCompact" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthCompact}" />

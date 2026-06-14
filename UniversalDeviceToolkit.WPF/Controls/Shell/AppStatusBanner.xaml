@@ -10,7 +10,7 @@
         x:Name="RootBorder"
         Margin="12,0,12,6"
         Padding="10,8"
-        Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+        Background="{DynamicResource StatusWarningBackgroundBrush}"
         CornerRadius="{StaticResource CornerRadiusMD}"
         SnapsToDevicePixels="True">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -18,7 +18,7 @@
                 x:Name="Icon"
                 Margin="0,0,8,0"
                 VerticalAlignment="Center"
-                Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                Foreground="{DynamicResource StatusWarningBrush}"
                 Symbol="Warning24" />
             <TextBlock
                 x:Name="MessageText"

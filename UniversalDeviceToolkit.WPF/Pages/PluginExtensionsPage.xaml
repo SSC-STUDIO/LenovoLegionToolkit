@@ -124,9 +124,9 @@
 
         <Style x:Key="DetailDangerActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
             <Setter Property="Appearance" Value="Transparent" />
-            <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCriticalBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+            <Setter Property="Background" Value="{DynamicResource StatusCriticalBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusCriticalBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
         </Style>
     </Page.Resources>
 

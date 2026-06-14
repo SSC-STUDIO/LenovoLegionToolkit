@@ -68,6 +68,8 @@ public class BaseWindow : FluentWindow
 
     private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        DpiAwareTypography.Apply(this);
+
         // Ensure backdrop type is correct when window loads
         var settings = IoCContainer.Resolve<ApplicationSettings>();
         var backdropType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
@@ -97,5 +99,9 @@ public class BaseWindow : FluentWindow
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, PresentationSource.FromVisual(this) as HwndSource, settings);
     }
 
-    private void BaseWindow_DpiChanged(object sender, DpiChangedEventArgs e) => VisualTreeHelper.SetRootDpi(this, e.NewDpi);
+    private void BaseWindow_DpiChanged(object sender, DpiChangedEventArgs e)
+    {
+        VisualTreeHelper.SetRootDpi(this, e.NewDpi);
+        DpiAwareTypography.Apply(Resources, e.NewDpi.DpiScaleX);
+    }
 }

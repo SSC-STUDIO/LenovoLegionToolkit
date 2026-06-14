@@ -54,7 +54,7 @@
                 <wpfui:SymbolIcon
                     FontSize="64"
                     Symbol="Warning24"
-                    Foreground="{DynamicResource SystemFillColorCautionBrush}" />
+                    Foreground="{DynamicResource StatusWarningBrush}" />
             </StackPanel>
 
             <!-- Main Message -->

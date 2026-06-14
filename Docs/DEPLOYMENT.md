@@ -185,6 +185,24 @@ Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
 
 Located in `.github/workflows/`:
 
+**PR gate (required):**
+
+| Workflow | Purpose |
+|----------|---------|
+| `Ci-tests.yml` | Restore, Release build, unit fail-fast, full Windows tests, coverage upload, NuGet vulnerability gate, CLI smoke |
+| `CrossPlatformCli.yml` | Cross-platform diagnostics tests on Windows, Ubuntu, and macOS |
+
+**Supplementary (non-blocking on PR):**
+
+| Workflow | Purpose |
+|----------|---------|
+| `Build.yml` | Full installer build via `Make.bat` on `master` push or manual dispatch |
+| `windows.yml` | Weekly/manual Debug+Release parity check |
+| `Release.yml` | Tag-driven release packaging |
+| `CodeQL.yml` | Security analysis |
+
+Configure branch protection on `master` to require **`CI Tests`** and **`Cross-Platform CLI`** status checks before merge.
+
 #### Build Pipeline (`Build.yml`)
 
 ```yaml

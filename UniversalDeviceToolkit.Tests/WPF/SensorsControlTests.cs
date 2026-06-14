@@ -43,7 +43,7 @@ public class SensorsControlTests
     }
 
     [Fact]
-    public void HasInitialSummarySensorData_WhenCpuAndGpuHaveOnlyOneSummaryMetricEach_ShouldReturnFalse()
+    public void HasInitialSummarySensorData_WhenCpuAndGpuHaveOnlyOneSummaryMetricEach_ShouldReturnTrue()
     {
         var data = new SensorsData(
             new SensorData(
@@ -73,7 +73,7 @@ public class SensorsControlTests
                 fanSpeed: -1,
                 maxFanSpeed: -1));
 
-        SensorsControl.HasInitialSummarySensorData(data).Should().BeFalse();
+        SensorsControl.HasInitialSummarySensorData(data).Should().BeTrue();
         SensorsControl.HasAnySummarySensorData(data).Should().BeTrue();
     }
 
@@ -153,7 +153,7 @@ public class SensorsControlTests
     }
 
     [Fact]
-    public void SensorsControlMarkup_ShouldShowAverageBatteryTemperatureInDetails()
+    public void SensorsControlMarkup_ShouldNotShowAverageBatteryTemperatureInDetails()
     {
         var xaml = ReadSensorsControlXaml();
         var batteryDetailsStart = xaml.IndexOf("x:Name=\"_batteryDetailsPanel\"", StringComparison.Ordinal);
@@ -163,8 +163,154 @@ public class SensorsControlTests
         batteryDetailsEnd.Should().BeGreaterThan(batteryDetailsStart);
 
         var batteryDetailsXaml = xaml[batteryDetailsStart..batteryDetailsEnd].ToLowerInvariant();
-        batteryDetailsXaml.Should().Contain("_batteryaveragetemperaturetitle");
-        batteryDetailsXaml.Should().Contain("_batteryaveragetemperature");
+        batteryDetailsXaml.Should().NotContain("_batteryaveragetemperaturetitle");
+        batteryDetailsXaml.Should().NotContain("_batteryaveragetemperature");
+        batteryDetailsXaml.Should().NotContain("averagetemperature");
+    }
+
+    [Theory]
+    [InlineData(759, 3)]
+    [InlineData(1049, 3)]
+    [InlineData(1050, 3)]
+    [InlineData(1499, 3)]
+    [InlineData(1500, 3)]
+    [InlineData(1800, 3)]
+    public void GetSensorColumnCountForWidth_ShouldKeepAllHardwareSectionsOnOneRow(double width, int expectedColumns)
+    {
+        SensorsControl.GetSensorColumnCountForWidth(width).Should().Be(expectedColumns);
+    }
+
+    [Theory]
+    [InlineData(1049, "Compact")]
+    [InlineData(1050, "Standard")]
+    [InlineData(1499, "Standard")]
+    [InlineData(1500, "Wide")]
+    public void GetSensorSummaryLayoutMode_ShouldAdaptCardDensityWithoutChangingColumns(
+        double width,
+        string expectedMode)
+    {
+        SensorsControl.GetSensorSummaryLayoutMode(width).ToString().Should().Be(expectedMode);
+    }
+
+    [Theory]
+    [InlineData(1049, false)]
+    [InlineData(1050, false)]
+    [InlineData(1499, false)]
+    [InlineData(1500, true)]
+    public void CanShowSensorDetailsForWidth_ShouldOnlyAllowDetailsOnWideLayouts(double width, bool expected)
+    {
+        SensorsControl.CanShowSensorDetailsForWidth(width).Should().Be(expected);
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_ShouldAvoidHardSectionMinimumWidthForSmallWindows()
+    {
+        ReadSensorsControlXaml()
+            .Should()
+            .Contain("<Setter Property=\"MinWidth\" Value=\"0\" />")
+            .And.Contain("<Setter Property=\"MinWidth\" Value=\"24\" />");
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_ShouldIncludeBatteryTrendChart()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var batterySection = ExtractXamlRange(xaml, "x:Name=\"_batterySectionColumn\"", "x:Name=\"_gpuSection\"");
+
+        batterySection.Should().Contain("x:Name=\"_batteryTrendChart\"");
+        batterySection.Should().Contain("Resource.SensorsControl_Charge");
+        batterySection.Should().Contain("Resource.SensorsControl_Health");
+        batterySection.Should().Contain("Resource.SensorsControl_Temperature_Title");
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_ShouldKeepSummaryGaugeCaptionsAndAvoidDuplicateProgressRows()
+    {
+        var xaml = ReadSensorsControlXaml();
+
+        ExtractSelfClosingElement(xaml, "x:Name=\"_cpuGauge\"")
+            .Should().Contain("Caption=\"{x:Static resources:Resource.SensorsControl_Utilization_Title}\"");
+        ExtractSelfClosingElement(xaml, "x:Name=\"_batteryGauge\"")
+            .Should().Contain("Caption=\"{x:Static resources:Resource.SensorsControl_Charge}\"");
+        ExtractSelfClosingElement(xaml, "x:Name=\"_gpuGauge\"")
+            .Should().Contain("Caption=\"{x:Static resources:Resource.SensorsControl_Utilization_Title}\"");
+
+        var cpuSummary = ExtractXamlRange(xaml, "x:Name=\"_cpuGauge\"", "x:Name=\"_cpuTrendChart\"");
+        var batterySummary = ExtractXamlRange(xaml, "x:Name=\"_batteryGauge\"", "x:Name=\"_batteryTrendChart\"");
+        var gpuSummary = ExtractXamlRange(xaml, "x:Name=\"_gpuGauge\"", "x:Name=\"_gpuTrendChart\"");
+
+        cpuSummary.Should().NotContain("_cpuUtilizationBar").And.NotContain("_cpuUtilizationLabel");
+        batterySummary.Should().NotContain("_batteryPercentageBar").And.NotContain("_batteryPercentageLabel");
+        gpuSummary.Should().NotContain("_gpuUtilizationBar").And.NotContain("_gpuUtilizationLabel");
+
+        CountOccurrences(cpuSummary, "<ProgressBar ").Should().Be(3);
+        CountOccurrences(batterySummary, "<ProgressBar ").Should().Be(3);
+        CountOccurrences(gpuSummary, "<ProgressBar ").Should().Be(3);
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_ShouldWrapDetailRowsSoUnavailableValuesCanBeHidden()
+    {
+        var xaml = ReadSensorsControlXaml();
+
+        foreach (var detailName in new[]
+        {
+            "_cpuWattageDetail",
+            "_cpuVoltageDetail",
+            "_cpuMemoryUsageDetail",
+            "_batteryRateRangeDetail",
+            "_batteryTemperatureDetail",
+            "_gpuWattageDetail",
+            "_gpuVoltageDetail",
+            "_gpuVramTemperatureDetail",
+            "_gpuTempRangeDetail"
+        })
+        {
+            xaml.Should().Contain($"x:Name=\"{detailName}\"");
+        }
+    }
+
+    [Fact]
+    public void SensorsControlCode_ShouldNotAttachDetailsTooltipToWholeCard()
+    {
+        ReadSensorsControlCode()
+            .Should()
+            .NotContain("ToolTip = T(\"SensorsControl_DetailsToggleToolTip\"");
+    }
+
+    [Fact]
+    public void SensorsControlCode_ShouldRestartTrendChartsWhenDashboardReopens()
+    {
+        var source = ReadSensorsControlCode();
+        var restartMethod = ExtractMethod(source, "public void RestartTrendCharts()");
+        var cacheWarmupMethod = ExtractMethod(source, "private void InitializeTrendChartsFromSessionCache()");
+
+        restartMethod.Should().Contain("ClearTrendCharts();");
+        restartMethod.Should().Contain("InitializeTrendChartsFromSessionCache();");
+        cacheWarmupMethod.Should().Contain("TryGetSessionSensorDataForDisplay()");
+        cacheWarmupMethod.Should().Contain("PushTrendSamples(_cpuTrendChart, data.CPU);");
+        cacheWarmupMethod.Should().Contain("PushTrendSamples(_gpuTrendChart, data.GPU);");
+    }
+
+    [Fact]
+    public void SensorsControlCode_ShouldOpenDetailsWindowWhenInlineDetailsAreUnavailable()
+    {
+        var source = ReadSensorsControlCode();
+        var toggleMethod = ExtractMethod(source, "private void ToggleDetails()");
+        var detailsWindowMethod = ExtractMethod(source, "private void ShowDetailsWindow()");
+
+        toggleMethod.Should().Contain("ShowDetailsWindow();");
+        detailsWindowMethod.Should().Contain("new SensorDetailsWindow");
+        detailsWindowMethod.Should().Contain("Owner = Window.GetWindow(this)");
+    }
+
+    [Fact]
+    public void SensorDetailsWindowMarkup_ShouldHostSensorsControl()
+    {
+        var xaml = ReadSensorDetailsWindowXaml();
+
+        xaml.Should().Contain("AutomationProperties.AutomationId>SensorDetailsWindow");
+        xaml.Should().Contain("<dashboard:SensorsControl x:Name=\"_sensors\" />");
     }
 
     [Fact]
@@ -481,10 +627,87 @@ public class SensorsControlTests
     private static string T(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
+    private static string ExtractXamlRange(string xaml, string startMarker, string endMarker)
+    {
+        var start = xaml.IndexOf(startMarker, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var end = xaml.IndexOf(endMarker, start, StringComparison.Ordinal);
+        end.Should().BeGreaterThan(start);
+
+        return xaml[start..end];
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+            {
+                depth++;
+            }
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
+    private static string ExtractSelfClosingElement(string xaml, string marker)
+    {
+        var markerIndex = xaml.IndexOf(marker, StringComparison.Ordinal);
+        markerIndex.Should().BeGreaterThanOrEqualTo(0);
+
+        var start = xaml.LastIndexOf('<', markerIndex);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var end = xaml.IndexOf("/>", markerIndex, StringComparison.Ordinal);
+        end.Should().BeGreaterThan(markerIndex);
+
+        return xaml[start..(end + 2)];
+    }
+
+    private static int CountOccurrences(string text, string value)
+    {
+        var count = 0;
+        var index = 0;
+
+        while ((index = text.IndexOf(value, index, StringComparison.Ordinal)) >= 0)
+        {
+            count++;
+            index += value.Length;
+        }
+
+        return count;
+    }
+
     private static string ReadSensorsControlXaml()
     {
         var root = FindRepositoryRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml"));
+    }
+
+    private static string ReadSensorsControlCode()
+    {
+        var root = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml.cs"));
+    }
+
+    private static string ReadSensorDetailsWindowXaml()
+    {
+        var root = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "SensorDetailsWindow.xaml"));
     }
 
     private static string FindRepositoryRoot()

@@ -54,8 +54,9 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
         try
         {
-            var externalSha256 = (await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false)).Trim();
-            if (fileSha256.Equals(externalSha256, StringComparison.InvariantCultureIgnoreCase))
+            var externalSha256Content = await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false);
+            var externalSha256 = TryExtractFirstSha256Hash(externalSha256Content);
+            if (externalSha256 is not null && fileSha256.Equals(externalSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"External file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
@@ -72,6 +73,15 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
             Log.Instance.Trace($"File checksum mismatch. [fileName={package.FileName}, fileLocation={package.FileLocation}]");
 
         throw new InvalidDataException("File checksum mismatch");
+    }
+
+    private static string? TryExtractFirstSha256Hash(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var match = Regex.Match(text, @"(?<![a-fA-F0-9])([a-fA-F0-9]{64})(?![a-fA-F0-9])", RegexOptions.IgnoreCase);
+        return match.Success ? match.Groups[1].Value : null;
     }
 
     private static string SanitizeFileName(string name)

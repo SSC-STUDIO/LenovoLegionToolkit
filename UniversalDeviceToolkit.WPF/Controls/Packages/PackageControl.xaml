@@ -84,8 +84,8 @@
                         Grid.Column="1"
                         Margin="10,0,0,0"
                         Appearance="Secondary"
-                        Background="{DynamicResource SystemFillColorSuccessBrush}"
-                        BorderBrush="{DynamicResource SystemFillColorSuccessBrush}"
+                        Background="{DynamicResource StatusSuccessBrush}"
+                        BorderBrush="{DynamicResource StatusSuccessBrush}"
                         Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                         Visibility="Collapsed">
                         <wpfui:Badge.Content>
@@ -179,12 +179,12 @@
                                 Margin="0,0,4,0"
                                 FontSize="15"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SystemFillColorSuccessBrush}"
+                                Foreground="{DynamicResource StatusSuccessBrush}"
                                 Symbol="ArrowSync24" />
                             <TextBlock
                                 FontSize="12"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SystemFillColorSuccessBrush}"
+                                Foreground="{DynamicResource StatusSuccessBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_IsUpdateInfo}"
                                 TextTrimming="CharacterEllipsis" />
                         </StackPanel>
@@ -198,13 +198,13 @@
                                 Margin="0,0,4,0"
                                 FontSize="15"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                Foreground="{DynamicResource StatusWarningBrush}"
                                 Symbol="Warning24" />
                             <TextBlock
                                 x:Name="_rebootTextBlock"
                                 FontSize="12"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                Foreground="{DynamicResource StatusWarningBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_RebootRecommended}"
                                 TextTrimming="CharacterEllipsis" />
                         </StackPanel>
@@ -218,7 +218,7 @@
                     Margin="0,8,16,0"
                     FontSize="12"
                     FontWeight="Medium"
-                    Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                    Foreground="{DynamicResource StatusWarningBrush}"
                     Text="{x:Static resources:Resource.PackageControl_OldPackageWarning}"
                     TextTrimming="CharacterEllipsis"
                     Visibility="Collapsed" />

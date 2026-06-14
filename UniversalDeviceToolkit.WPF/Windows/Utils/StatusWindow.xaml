@@ -197,7 +197,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="{StaticResource GpuStatusActiveBrush}" />
+                    Fill="#FF8BC34A" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -218,7 +218,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="{StaticResource GpuStatusInactiveBrush}" />
+                    Fill="#F2A541" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -239,7 +239,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="{StaticResource GpuStatusPoweredOffBrush}" />
+                    Fill="#BF360C" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -428,7 +428,7 @@
         <Border
             x:Name="_updateIndicator"
             Padding="8,4,8,4"
-            Background="{DynamicResource SystemFillColorSuccessBrush}"
+            Background="{DynamicResource StatusSuccessBrush}"
             CornerRadius="0,0,8,8"
             Visibility="Collapsed">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">

@@ -20,10 +20,14 @@
 
     <!-- Font Size Tokens (for Button and other controls that need FontSize property) -->
     <!-- Note: Typography.xaml defines TextBlock styles with same font sizes for text content -->
+    <sys:Double x:Key="FontSizeSmallBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">11</sys:Double>
     <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
     <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
+    <sys:Double x:Key="FontSizePageDescription" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
     <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
     <sys:Double x:Key="FontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
+    <sys:Double x:Key="FontSizeDisplaySection" xmlns:sys="clr-namespace:System;assembly=mscorlib">24</sys:Double>
+    <sys:Double x:Key="FontSizePageTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">28</sys:Double>
 
     <!-- Icon Size Tokens -->
     <sys:Double x:Key="IconSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
@@ -57,18 +61,59 @@
     <SolidColorBrush x:Key="ChartCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
     <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
 
-    <!-- GPU Status Indicator Colors -->
-    <Color x:Key="GpuStatusActiveColor">#FF8BC34A</Color>
-    <Color x:Key="GpuStatusInactiveColor">#FFF2A541</Color>
-    <Color x:Key="GpuStatusPoweredOffColor">#FFBF360C</Color>
-
-    <SolidColorBrush x:Key="GpuStatusActiveBrush" Color="{StaticResource GpuStatusActiveColor}" />
-    <SolidColorBrush x:Key="GpuStatusInactiveBrush" Color="{StaticResource GpuStatusInactiveColor}" />
-    <SolidColorBrush x:Key="GpuStatusPoweredOffBrush" Color="{StaticResource GpuStatusPoweredOffColor}" />
-
     <!-- Gauge Size Tokens -->
     <sys:Double x:Key="GaugeSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">88</sys:Double>
     <sys:Double x:Key="GaugeSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">110</sys:Double>
     <sys:Double x:Key="GaugeSizeLG" xmlns:sys="clr-namespace:System;assembly=mscorlib">132</sys:Double>
+
+    <!-- ===== Semantic Status Color Tokens ===== -->
+    <!-- One status vocabulary aliased to the shared visualization palette so charts,
+         badges, info bars and controls stay in sync. Intentionally theme-stable: a
+         "danger" tone must read the same in light and dark. -->
+    <SolidColorBrush x:Key="StatusSuccessBrush" Color="{StaticResource ChartCoreClockColor}" />
+    <SolidColorBrush x:Key="StatusWarningBrush" Color="{StaticResource ChartCautionColor}" />
+    <SolidColorBrush x:Key="StatusInfoBrush" Color="{StaticResource ChartUtilizationColor}" />
+    <SolidColorBrush x:Key="StatusCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
+
+    <!-- Subtle status surfaces (~20% alpha) derived from the same chart palette. -->
+    <Color x:Key="StatusSuccessBackgroundColor">#336FBF73</Color>
+    <Color x:Key="StatusWarningBackgroundColor">#33E0A92E</Color>
+    <Color x:Key="StatusCriticalBackgroundColor">#33E05656</Color>
+    <Color x:Key="StatusInfoBackgroundColor">#334F9DF7</Color>
+    <Color x:Key="StatusNeutralBackgroundColor">#14FFFFFF</Color>
+    <SolidColorBrush x:Key="StatusSuccessBackgroundBrush" Color="{StaticResource StatusSuccessBackgroundColor}" />
+    <SolidColorBrush x:Key="StatusWarningBackgroundBrush" Color="{StaticResource StatusWarningBackgroundColor}" />
+    <SolidColorBrush x:Key="StatusCriticalBackgroundBrush" Color="{StaticResource StatusCriticalBackgroundColor}" />
+    <SolidColorBrush x:Key="StatusInfoBackgroundBrush" Color="{StaticResource StatusInfoBackgroundColor}" />
+    <SolidColorBrush x:Key="StatusNeutralBackgroundBrush" Color="{StaticResource StatusNeutralBackgroundColor}" />
+
+    <!-- Lifted critical tone reserved for SMALL TEXT. Raises contrast to >=4.5:1 on the
+         dark app surface; keep StatusCriticalBrush for fills, borders and large icons. -->
+    <Color x:Key="StatusCriticalTextColor">#FFEB6B6B</Color>
+    <SolidColorBrush x:Key="StatusCriticalTextBrush" Color="{StaticResource StatusCriticalTextColor}" />
+
+    <!-- ===== Focus / Accessibility Tokens ===== -->
+    <sys:Double x:Key="FocusStrokeThickness" xmlns:sys="clr-namespace:System;assembly=mscorlib">2</sys:Double>
+    <sys:Double x:Key="FocusVisualCornerRadius" xmlns:sys="clr-namespace:System;assembly=mscorlib">6</sys:Double>
+    <Thickness x:Key="FocusVisualMargin">-2</Thickness>
+
+    <!-- Canonical keyboard focus ring. Referenced across the app (NavigationStore,
+         CardControl usages) but never previously defined, so keyboard focus was
+         invisible. Defining it here makes those existing references render. -->
+    <Style x:Key="DefaultControlFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle
+                        Margin="{StaticResource FocusVisualMargin}"
+                        RadiusX="{StaticResource FocusVisualCornerRadius}"
+                        RadiusY="{StaticResource FocusVisualCornerRadius}"
+                        SnapsToDevicePixels="True"
+                        Stroke="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                        StrokeThickness="{StaticResource FocusStrokeThickness}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

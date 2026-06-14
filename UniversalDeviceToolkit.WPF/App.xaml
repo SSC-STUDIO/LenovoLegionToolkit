@@ -12,7 +12,7 @@
             <Color x:Key="SnackbarShadowColor">#40000000</Color>
             <SolidColorBrush x:Key="AppSurfaceBackgroundBrush" Color="#202020" />
             <SolidColorBrush x:Key="AppSurfaceCardBrush" Color="#303030" />
-            <SolidColorBrush x:Key="AppNavigationBackgroundBrush" Color="#1A1A1A" />
+            <SolidColorBrush x:Key="AppNavigationBackgroundBrush" Color="#202020" />
             <ResourceDictionary.MergedDictionaries>
                 <wpfui:ControlsDictionary />
                 <wpfui:ThemesDictionary Theme="Dark" />

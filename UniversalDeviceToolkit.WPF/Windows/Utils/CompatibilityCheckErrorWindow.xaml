@@ -55,7 +55,7 @@
                 <wpfui:SymbolIcon 
                     FontSize="64" 
                     Symbol="ErrorCircle24"
-                    Foreground="{DynamicResource SystemFillColorCriticalBrush}" />
+                    Foreground="{DynamicResource StatusCriticalBrush}" />
             </StackPanel>
 
             <!-- Main Error Message -->

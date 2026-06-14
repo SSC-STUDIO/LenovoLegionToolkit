@@ -1,6 +1,6 @@
 # Universal Device Toolkit
 
-[![Build](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml)
+[![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
@@ -18,6 +18,9 @@ Plugin extensions are a first-class part of this project. You can install, updat
 
 UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. The full desktop hardware-control app remains Windows-first; macOS and Linux work before 5.x is limited to diagnostics groundwork, safe basic-mode discovery, and local development of the `UniversalDeviceToolkit.CrossPlatform` CLI.
 
+> [!NOTE]
+> **What "Universal" means**
+> UDT is a Windows utility platform: **full hardware control** targets supported Lenovo Legion, LOQ, and IdeaPad Gaming machines; **basic mode** on other Lenovo models and non-Lenovo PCs still provides plugins, system optimization, themes, updates, and logs while hiding unsupported hardware toggles. The name reflects extensibility and basic-mode coverage, not a promise of Vantage-class control on every PC brand.
 
 <img src="Assets/Screenshot_main.png" width="700" />
 
@@ -51,14 +54,25 @@ Please be patient and read through this readme carefully - it contains important
 
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
 
-- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. v4.1.0 is the first stable Universal Device Toolkit release with legacy Lenovo Legion Toolkit upgrade compatibility.
+- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
 - **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
-Some local paths, CLI names, and automation environment variables still use `LenovoLegionToolkit`, `llt.exe`, or `LLT_*` for compatibility during the rename.
+#### Naming and upgrade compatibility
 
-Repository project folders use `UniversalDeviceToolkit.*`; core and plugin assemblies/namespaces remain `LenovoLegionToolkit.*` for plugin ABI compatibility.
+During the rename from Lenovo Legion Toolkit, several identifiers intentionally stay on the legacy names so existing installs upgrade in place:
+
+| What you see | Legacy identifier | Why it remains |
+|---|---|---|
+| Product name in UI / Releases | Universal Device Toolkit (UDT) | Current public branding |
+| winget / Scoop package ID | `SSC-STUDIO.LenovoLegionToolkit`, `lenovolegiontoolkit` | In-place upgrade from old installs |
+| CLI executable | `llt.exe` | Scripts and automation compatibility |
+| Data directory | `%LOCALAPPDATA%\LenovoLegionToolkit` | Settings/plugins migrate automatically |
+| Action env vars | `LLT_*` | Existing user scripts |
+| Plugin/core assemblies | `LenovoLegionToolkit.*` | Plugin ABI stability |
+
+Repository folders use `UniversalDeviceToolkit.*`. New users install UDT from Releases; legacy names above are compatibility aliases, not a separate product.
 
 #### Next steps
 
@@ -118,7 +132,13 @@ If UDT starts in basic mode, it is doing that intentionally to avoid showing uns
 
 ### macOS and Linux
 
-The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. Multi-platform release assets are planned for 5.x and later. Until then, the repository includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point intended for local macOS/Linux and Windows diagnostics:
+> [!NOTE]
+> End users on Windows should install the WPF app from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). The cross-platform CLI below is **developer/diagnostics groundwork** for 5.x; formal macOS/Linux release assets are planned for 5.x and later.
+
+The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. Until 5.x, the repository includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point for local macOS/Linux and Windows diagnostics (see [DEPLOYMENT.md](Docs/DEPLOYMENT.md) for build details):
+
+<details>
+<summary>Cross-platform CLI commands (developers)</summary>
 
 ```powershell
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- status
@@ -134,7 +154,9 @@ dotnet run --project UniversalDeviceToolkit.CrossPlatform -- support
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- doctor
 ```
 
-On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/frequency/temperature/fan telemetry from Linux procfs/sysfs or macOS `sysctl`, reads battery and external power state from Linux `power_supply` or macOS `pmset`, inspects platform power profiles through Linux `powerprofilesctl` or macOS `pmset`, scans plugin manifests without loading WPF/Windows assemblies, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- controls` lists the current cross-platform control surface, including writable standard OS controls and hidden vendor-specific controls. `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- set power-profile balanced` can set a supported platform profile where the OS exposes one (`power-saver`/`balanced`/`performance` on Linux, `automatic`/`low-power` on macOS). On Linux, `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- set cpu-governor performance` can set all readable cpufreq policies to a supported governor, `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- set battery-charge-limit 80` can set the first readable battery charge end threshold to 80 percent, and `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- set display-brightness 60` can set the first readable `/sys/class/backlight` device to 60 percent when permissions allow it. On Windows, `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- elevate set cpu-governor performance` restarts the requested CLI command through a UAC prompt; on Linux/macOS, use `sudo` or the platform polkit helper for OS-protected hardware writes. `dotnet run --project UniversalDeviceToolkit.CrossPlatform -- plugins /path/to/plugins` inspects a specific plugin root and reports runtime/optimization contributions that are candidates for future cross-platform loading. The `doctor` command aggregates those checks into a pass/warn/fail readiness report. The `Cross-Platform CLI` workflow builds, tests, and smoke-runs this entry point on Windows, Ubuntu, and macOS runners. Vendor-specific control backends and cross-platform plugin loading are future expansion points behind this non-Windows entry point.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/frequency/temperature/fan telemetry from Linux procfs/sysfs or macOS `sysctl`, reads battery and external power state from Linux `power_supply` or macOS `pmset`, inspects platform power profiles through Linux `powerprofilesctl` or macOS `pmset`, scans plugin manifests without loading WPF/Windows assemblies, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. The `doctor` command aggregates readiness checks into a pass/warn/fail report. Vendor-specific control backends and cross-platform plugin loading are future 5.x expansion points.
+
+</details>
 
 ### Lenovo's software
 
@@ -145,7 +167,10 @@ Overall the recommendation is to disable or uninstall Vantage, Hotkeys and Legio
 
 ### Other remarks
 
-UDT currently does not support installation for multiple users, so if you need to have multiple users on you laptop you might encounter issues. Same goes for accounts without Administrator rights - UDT needs an account with Administrator rights. If you install UDT on an account without such rights, UDT will not work properly.
+UDT currently does not support installation for multiple users, so if you need to have multiple users on you laptop you might encounter issues. Same goes for accounts without Administrator rights - UDT needs an account with Administrator rights. If you install UDT on an account without such rights, UDT will not work properly. Multi-user support is on the long-term roadmap.
+
+> [!NOTE]
+> **Warranty lookup (China region)**: Warranty status for Chinese Legion models was removed in recent versions due to unreliable upstream APIs. Existing cached data may still display until refreshed or cleared.
 
 ## Features
 
@@ -653,7 +678,9 @@ Pull Requests are also welcome, but make sure to check out [CONTRIBUTING.md](CON
 #### Compatibility
 
 > [!IMPORTANT]
-> If your laptop is not part of Legion, IdeaPad Gaming or LOQ series, this software is not for you. Do not open compatibility requests for other devices.
+> **Hardware-control requests** are limited to Lenovo Legion, IdeaPad Gaming, and LOQ series — please do not open issues asking for full Vantage-style control on other brands or unsupported Lenovo lines.
+>
+> **Basic-mode contributions are welcome**: Non-Lenovo and unsupported Lenovo PCs run in basic mode (plugins, system tools, language/theme/update/log workflows). Device-pack data, logs, and testing feedback for broader basic-mode coverage are appreciated.
 
 It would be great to expand the list of compatible devices, but to do it your help is needed!
 

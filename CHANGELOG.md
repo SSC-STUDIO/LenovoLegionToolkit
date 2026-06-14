@@ -10,7 +10,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No unreleased changes yet.
+### Fixed / 修复
+
+- Main window minimum width is wider so the dashboard console no longer compresses sensor cards as tightly at the smallest size / 主窗口最小宽度已加宽，避免控制台在最小尺寸下过度压缩传感器卡片
+- Dashboard sensor cards keep CPU, battery, and GPU on one row at every window size, using a compact small-window mode and a wider chart layout on large screens / 控制台传感器卡片在所有窗口尺寸下都保持 CPU、电池、GPU 同一行显示，并在小窗口使用紧凑模式、大屏使用更宽的图表布局
+- Battery sensor cards now include a live trend chart, and CPU/GPU/battery summary metrics stay on the gauges instead of being duplicated as progress rows / 电池传感器卡片现在包含实时趋势图，CPU/GPU/电池摘要指标保留在环形仪表上，不再重复为进度条行
+- Sensor details no longer slow down compact dashboard loading, and unavailable detail rows are hidden instead of filling the console with repeated unavailable values / 传感器详情不再拖慢紧凑控制台加载，不可用的详情行会被隐藏，避免重复显示大量不可用值
+- App typography now adjusts with the active display DPI so dashboard text stays compact on high-scaling screens / 应用字体现在会根据当前显示器 DPI 调整，在高缩放屏幕上保持控制台文字更紧凑
+- Small dashboard windows now open sensor details in a separate dialog on double-click instead of suppressing details / 小尺寸控制台现在双击会用独立窗口显示传感器详情，而不是直接禁用详情
+- Dashboard trend charts are reset and redrawn each time the dashboard sensors open / 控制台传感器趋势图现在每次打开都会重置并重新绘制
+- Dashboard sensor detail hints no longer pop up every time the console is opened / 控制台传感器详情提示不再每次打开控制台时弹出
+- Malformed BIOS package level values are skipped instead of crashing package rules / 格式错误的 BIOS Level 值会被跳过，不再导致包规则崩溃
+- Driver package SHA256 sidecar files in GNU `hash  filename` format are accepted / 驱动包校验支持 GNU 风格的 `hash  filename` SHA256  sidecar 格式
+- Device pack reinstall no longer deletes the existing pack before the replacement move succeeds / 设备包重装时仅在替换移动成功后才移除旧包，避免安装中断导致已安装包丢失
+- One malformed Lenovo Vantage catalog entry no longer prevents listing all packages / 单个格式错误的 Lenovo Vantage 包元数据不再导致整份目录列表失败
+- CLI IPC connection retries with backoff while the app is still starting / CLI 在应用启动期间会以退避重试 IPC 连接
+
+### Improved / 改进
+
+- CI PR gate consolidated to `Ci-tests.yml`; coverage artifacts uploaded; High/Critical NuGet vulnerabilities block merges / CI 合并至 `Ci-tests.yml` 门禁，上传覆盖率产物，High/Critical NuGet 漏洞将阻断合并
+- Main navigation background now matches the outer window surface for a more unified shell / 主导航背景现在与窗口外围底色一致，使应用外壳视觉更统一
+
+- Aligned English and Chinese README product positioning, compatibility scope, version references (v4.2.1), legacy-identifier table, and contribution policy so "Universal" vs Lenovo-only hardware control is explicit / 统一中英文 README 的产品定位、兼容范围、版本引用（v4.2.1）、遗留标识说明与贡献政策，明确「Universal」与联想专用硬件控制的边界
+- Updated winget locale descriptions and draft template to reflect full-control vs basic-mode positioning; removed misleading `vantage` tag / 更新 winget 描述与草稿模板以反映完整控制与基础模式定位，移除易误导的 vantage 标签
+- Marked `Docs/RELEASE_NOTES_4.1.0_DRAFT.md` as historical; current notes live in CHANGELOG / 将 4.1.0 发布说明草稿标记为历史文档，当前说明以 CHANGELOG 为准
 
 ## [4.2.1] - 2026-06-07
 

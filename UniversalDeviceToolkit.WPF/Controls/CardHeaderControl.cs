@@ -180,7 +180,7 @@ public class CardHeaderControl : UserControl
         {
             _titleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
             _subtitleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorSecondaryBrush");
-            _warningTextBlock.SetResourceReference(ForegroundProperty, "SystemFillColorCautionBrush");
+            _warningTextBlock.SetResourceReference(ForegroundProperty, "StatusWarningBrush");
         }
         else
         {

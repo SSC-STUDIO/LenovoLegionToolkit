@@ -106,13 +106,13 @@
                 TextWrapping="Wrap">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorErrorBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
                         <Style.Triggers>
                             <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetCustomSuccess}">
-                                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
                             </Trigger>
                             <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetDefaultSuccess}">
-                                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>

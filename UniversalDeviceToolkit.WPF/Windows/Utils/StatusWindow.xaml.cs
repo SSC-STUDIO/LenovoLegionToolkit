@@ -380,7 +380,7 @@ public partial class StatusWindow
             symbol = batteryState == BatteryState.Conservation ? SymbolRegular.BatterySaver24 : SymbolRegular.BatteryCharge24;
 
         if (batteryInformation.Value.IsLowBattery)
-            _batteryValueLabel.SetResourceReference(ForegroundProperty, "SystemFillColorCautionBrush");
+            _batteryValueLabel.SetResourceReference(ForegroundProperty, "StatusWarningBrush");
 
         _batteryIcon.Symbol = symbol;
         _batteryValueLabel.Content = $"{batteryInformation.Value.BatteryPercentage:N0}%";

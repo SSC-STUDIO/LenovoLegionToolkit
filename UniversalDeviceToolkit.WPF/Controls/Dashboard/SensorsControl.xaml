@@ -14,27 +14,54 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource AppSectionTitleTextBlockStyle}">
-            <Setter Property="Margin" Value="0,0,0,16" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="SensorSectionStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+        <Style x:Key="SensorHeaderModelStyle" TargetType="TextBlock" BasedOn="{StaticResource AppCaptionTextBlockStyle}">
+            <Setter Property="Margin" Value="8,1,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Visibility" Value="Collapsed" />
         </Style>
         <Style x:Key="StatLabelStyle" TargetType="Label">
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="0,2" />
+            <Setter Property="MinWidth" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
         <Style x:Key="StatValueStyle" TargetType="Label">
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="0,2" />
+            <Setter Property="MinWidth" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+        <Style x:Key="MetricProgressBarStyle" TargetType="ProgressBar">
+            <Setter Property="Height" Value="5" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
+            <Setter Property="Margin" Value="6,0,6,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Maximum" Value="100" />
         </Style>
         <Style x:Key="LegendTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppSmallBodyTextBlockStyle}">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="4,0,12,0" />
+            <Setter Property="Margin" Value="4,0,14,0" />
         </Style>
         <Style x:Key="LegendDotStyle" TargetType="Ellipse">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
             <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="TrendPanelStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,14,0,0" />
+            <Setter Property="Height" Value="76" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="ClipToBounds" Value="True" />
         </Style>
     </UserControl.Resources>
 
@@ -45,13 +72,17 @@
         Focusable="False"
         PreviewMouseLeftButtonDown="CardControl_PreviewMouseLeftButtonDown">
         <wpfui:CardControl.Header>
-            <UniformGrid x:Name="_sensorsGrid" Margin="8,8" Columns="3">
+            <UniformGrid x:Name="_sensorsGrid" Margin="8,10" Columns="3">
                 <!-- PLACEHOLDER_CPU -->
-                <StackPanel x:Name="_cpuSection" Margin="8,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <StackPanel x:Name="_cpuSection" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                        <TextBlock x:Name="_cpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="180" />
-                    </StackPanel>
+                        <TextBlock x:Name="_cpuModelName" Grid.Column="1" Text="" Style="{StaticResource SensorHeaderModelStyle}" />
+                    </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -62,7 +93,7 @@
                         <charts:RadialGaugeControl
                             x:Name="_cpuGauge"
                             Grid.Column="0"
-                            Margin="0,0,16,0"
+                            Margin="0,0,12,0"
                             VerticalAlignment="Center"
                             RingBrush="{DynamicResource ChartUtilizationBrush}"
                             Caption="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
@@ -71,52 +102,45 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="64" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuUtilizationBar" Grid.Row="0" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuUtilizationLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_cpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="1" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuCoreClockLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_cpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="2" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuTemperatureLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="3" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <Label x:Name="_cpuFanSpeedLabel" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_cpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
-                    <Border Margin="0,12,0,0" Height="72" CornerRadius="{StaticResource CornerRadiusMD}" Background="{DynamicResource ControlFillColorDefaultBrush}" ClipToBounds="True">
+                    <Border x:Name="_cpuTrendPanel" Style="{StaticResource TrendPanelStyle}">
                         <charts:TrendChartControl x:Name="_cpuTrendChart" Margin="2" />
                     </Border>
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Left">
+                    <WrapPanel x:Name="_cpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
-                    </StackPanel>
+                    </WrapPanel>
 
                     <!-- PLACEHOLDER_CPU_DETAILS -->
                     <StackPanel x:Name="_cpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsCpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
@@ -126,43 +150,65 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuWattage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuWattageDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuWattage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuVoltageDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_cpuPCoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuPCoreClock" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuPCoreClockDetail">
+                                    <TextBlock x:Name="_cpuPCoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuPCoreClock" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_cpuECoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuECoreClock" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuECoreClockDetail">
+                                    <TextBlock x:Name="_cpuECoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuECoreClock" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_cpuMemoryUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuMemoryUsage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuMemoryUsageDetail">
+                                    <TextBlock x:Name="_cpuMemoryUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuMemoryUsage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuTempRange" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuTempRangeDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuTempRange" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuVoltageRangeDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_cpuMemoryTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuMemoryTemperature" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuMemoryTemperatureDetail">
+                                    <TextBlock x:Name="_cpuMemoryTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuMemoryTemperature" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_cpuSsdTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_cpuSsdTemperature" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_cpuSsdTemperatureDetail">
+                                    <TextBlock x:Name="_cpuSsdTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_cpuSsdTemperature" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
                 <!-- PLACEHOLDER_BATTERY -->
-                <StackPanel x:Name="_batterySectionColumn" Margin="8,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <StackPanel x:Name="_batterySectionColumn" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                        <TextBlock x:Name="_batteryModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="180" />
-                    </StackPanel>
+                        <TextBlock x:Name="_batteryModelName" Grid.Column="1" Text="" Style="{StaticResource SensorHeaderModelStyle}" />
+                    </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -173,7 +219,7 @@
                         <charts:RadialGaugeControl
                             x:Name="_batteryGauge"
                             Grid.Column="0"
-                            Margin="0,0,16,0"
+                            Margin="0,0,12,0"
                             VerticalAlignment="Center"
                             RingBrush="{DynamicResource ChartBatteryBrush}"
                             Caption="{x:Static resources:Resource.SensorsControl_Charge}" />
@@ -182,46 +228,51 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="64" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Charge}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryPercentageBar" Grid.Row="0" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Health}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_batteryHealthBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryPercentageLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_batteryHealthText" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Health}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryHealthBar" Grid.Row="1" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_batteryTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryHealthText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_batteryTempText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryTemperatureBar" Grid.Row="2" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_batteryRateBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryTempText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryRateBar" Grid.Row="3" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <Label x:Name="_batteryRateText" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_batteryRateText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
+                    <Border x:Name="_batteryTrendPanel" Style="{StaticResource TrendPanelStyle}">
+                        <charts:TrendChartControl x:Name="_batteryTrendChart" Margin="2" />
+                    </Border>
+                    <WrapPanel x:Name="_batteryLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
+                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartBatteryBrush}" />
+                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Charge}" />
+                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
+                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Health}" />
+                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
+                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                    </WrapPanel>
+
                     <StackPanel Margin="0,12,0,0">
                         <TextBlock x:Name="_batteryStatusLabel" Text="" Style="{StaticResource AppCaptionTextBlockStyle}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" />
-                        <TextBlock x:Name="_lowBatteryWarning" Text="{x:Static resources:Resource.BatteryPage_LowLevel}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                        <TextBlock x:Name="_lowWattageWarning" Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                        <wpfui:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="24" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="Collapsed" />
+                        <TextBlock x:Name="_lowBatteryWarning" Text="{x:Static resources:Resource.BatteryPage_LowLevel}" Foreground="{DynamicResource StatusWarningBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                        <TextBlock x:Name="_lowWattageWarning" Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}" Foreground="{DynamicResource StatusWarningBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                        <wpfui:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="{DynamicResource FontSizeDisplaySection}" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="Collapsed" />
                     </StackPanel>
 
                     <!-- PLACEHOLDER_BATTERY_DETAILS -->
@@ -265,28 +316,38 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                <TextBlock x:Name="_batteryRateRange" Text="-" />
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0" />
-                                <TextBlock x:Name="_batteryCycles" Text="-" />
+                                <StackPanel x:Name="_batteryRateRangeDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
+                                    <TextBlock x:Name="_batteryRateRange" Text="-" />
+                                </StackPanel>
+                                <StackPanel x:Name="_batteryCyclesDetail" Margin="0,4,0,0">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
+                                    <TextBlock x:Name="_batteryCycles" Text="-" />
+                                </StackPanel>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                <TextBlock x:Name="_batteryDate" Text="-" />
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0" />
-                                <TextBlock x:Name="_batteryTemperature" Text="-" />
-                                <TextBlock x:Name="_batteryAverageTemperatureTitle" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0" />
-                                <TextBlock x:Name="_batteryAverageTemperature" Text="-" />
+                                <StackPanel x:Name="_batteryDateDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
+                                    <TextBlock x:Name="_batteryDate" Text="-" />
+                                </StackPanel>
+                                <StackPanel x:Name="_batteryTemperatureDetail" Margin="0,4,0,0">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
+                                    <TextBlock x:Name="_batteryTemperature" Text="-" />
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
                 <!-- PLACEHOLDER_GPU -->
-                <StackPanel x:Name="_gpuSection" Margin="8,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <StackPanel x:Name="_gpuSection" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0" />
-                        <TextBlock x:Name="_gpuModelName" Text="" Margin="8,0,0,0" VerticalAlignment="Bottom" Visibility="Collapsed" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="180" />
-                    </StackPanel>
+                        <TextBlock x:Name="_gpuModelName" Grid.Column="1" Text="" Style="{StaticResource SensorHeaderModelStyle}" />
+                    </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -297,7 +358,7 @@
                         <charts:RadialGaugeControl
                             x:Name="_gpuGauge"
                             Grid.Column="0"
-                            Margin="0,0,16,0"
+                            Margin="0,0,12,0"
                             VerticalAlignment="Center"
                             RingBrush="{DynamicResource ChartUtilizationBrush}"
                             Caption="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
@@ -306,52 +367,45 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="64" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuUtilizationBar" Grid.Row="0" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuUtilizationLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_gpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="1" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuCoreClockLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_gpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="2" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
+                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
+                            <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuTemperatureLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="3" Grid.Column="1" Margin="8,0,8,0" MaxWidth="220" Maximum="100" Height="6">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <Label x:Name="_gpuFanSpeedLabel" Grid.Row="3" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <Label x:Name="_gpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
-                    <Border Margin="0,12,0,0" Height="72" CornerRadius="{StaticResource CornerRadiusMD}" Background="{DynamicResource ControlFillColorDefaultBrush}" ClipToBounds="True">
+                    <Border x:Name="_gpuTrendPanel" Style="{StaticResource TrendPanelStyle}">
                         <charts:TrendChartControl x:Name="_gpuTrendChart" Margin="2" />
                     </Border>
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Left">
+                    <WrapPanel x:Name="_gpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
                         <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
                         <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
-                    </StackPanel>
+                    </WrapPanel>
 
                     <!-- PLACEHOLDER_GPU_DETAILS -->
                     <StackPanel x:Name="_gpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsGpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
@@ -373,30 +427,46 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock x:Name="_gpuVramUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuVramUsage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuVramUsageDetail">
+                                    <TextBlock x:Name="_gpuVramUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVramUsage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuWattage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuWattageDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuWattage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuVoltage" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuVoltageDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVoltage" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_gpuPcieThroughputTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuPcieThroughput" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuPcieThroughputDetail">
+                                    <TextBlock x:Name="_gpuPcieThroughputTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuPcieThroughput" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock x:Name="_gpuVramTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuVramTemperature" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuVramTemperatureDetail">
+                                    <TextBlock x:Name="_gpuVramTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVramTemperature" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock x:Name="_gpuHotSpotTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuHotSpotTemperatureDetail">
+                                    <TextBlock x:Name="_gpuHotSpotTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuTempRange" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuTempRangeDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuTempRange" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
 
-                                <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                <TextBlock x:Name="_gpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                <StackPanel x:Name="_gpuVoltageRangeDetail">
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
+                                    <TextBlock x:Name="_gpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </StackPanel>

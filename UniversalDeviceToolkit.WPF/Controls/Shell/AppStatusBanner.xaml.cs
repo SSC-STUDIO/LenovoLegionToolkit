@@ -53,14 +53,14 @@ public partial class AppStatusBanner : UserControl
     {
         if (Severity == AppStatusBannerSeverity.Success)
         {
-            RootBorder.SetResourceReference(Border.BackgroundProperty, "SystemFillColorSuccessBrush");
+            RootBorder.SetResourceReference(Border.BackgroundProperty, "StatusSuccessBackgroundBrush");
             Icon.Symbol = SymbolRegular.ArrowSync24;
-            Icon.SetResourceReference(Control.ForegroundProperty, "TextFillColorPrimaryBrush");
+            Icon.SetResourceReference(Control.ForegroundProperty, "StatusSuccessBrush");
             return;
         }
 
-        RootBorder.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");
+        RootBorder.SetResourceReference(Border.BackgroundProperty, "StatusWarningBackgroundBrush");
         Icon.Symbol = SymbolRegular.Warning24;
-        Icon.SetResourceReference(Control.ForegroundProperty, "SystemFillColorCautionBrush");
+        Icon.SetResourceReference(Control.ForegroundProperty, "StatusWarningBrush");
     }
 }

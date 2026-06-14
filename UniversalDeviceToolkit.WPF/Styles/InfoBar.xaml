@@ -107,28 +107,24 @@
                         </Trigger>
 
                         <Trigger Property="Severity" Value="Informational">
-                            <Setter TargetName="SymbolIcon" Property="Foreground">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
-                                </Setter.Value>
-                            </Setter>
+                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource StatusInfoBrush}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="Info24" />
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource SystemFillColorNeutralBackgroundBrush}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource StatusNeutralBackgroundBrush}" />
                         </Trigger>
                         <Trigger Property="Severity" Value="Success">
-                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="CheckmarkCircle24" />
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource StatusSuccessBackgroundBrush}" />
                         </Trigger>
                         <Trigger Property="Severity" Value="Warning">
-                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource StatusWarningBrush}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="ErrorCircle24" />
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource StatusWarningBackgroundBrush}" />
                         </Trigger>
                         <Trigger Property="Severity" Value="Error">
-                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+                            <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource StatusCriticalBrush}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="DismissCircle24" />
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource StatusCriticalBackgroundBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

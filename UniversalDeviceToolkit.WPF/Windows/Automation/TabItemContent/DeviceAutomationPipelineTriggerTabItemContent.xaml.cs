@@ -234,7 +234,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         {
             if (_device.IsDisconnected)
             {
-                _notConnected.SetResourceReference(ForegroundProperty, "SystemFillColorCautionBrush");
+                _notConnected.SetResourceReference(ForegroundProperty, "StatusWarningBrush");
                 _stackPanel.Children.Add(_notConnected);
             }
 

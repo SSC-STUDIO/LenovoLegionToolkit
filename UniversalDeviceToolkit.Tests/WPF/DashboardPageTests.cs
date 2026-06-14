@@ -46,10 +46,13 @@ public class DashboardPageTests
     public void DashboardPage_ShouldRestartSensorInitialLoadForEachRefresh()
     {
         var source = ReadDashboardPageSource();
+        var restartTrendIndex = source.IndexOf("_sensors.RestartTrendCharts();", StringComparison.Ordinal);
         var restartIndex = source.IndexOf("sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();", StringComparison.Ordinal);
         var visibleIndex = source.IndexOf("_sensors.Visibility = Visibility.Visible;", StringComparison.Ordinal);
 
+        restartTrendIndex.Should().BeGreaterThanOrEqualTo(0);
         restartIndex.Should().BeGreaterThanOrEqualTo(0);
+        restartIndex.Should().BeGreaterThan(restartTrendIndex);
         visibleIndex.Should().BeGreaterThan(restartIndex);
         source.Should().NotContain("_sensors.FirstSensorDataReadyTask");
     }

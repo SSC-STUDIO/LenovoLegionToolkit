@@ -13,6 +13,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
+using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Wpf.Ui.Controls;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
@@ -34,8 +35,10 @@ public partial class SensorsControl
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
     private readonly SensorsGroupController? _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
     private bool _sensorRuntimeAvailable = true;
+    private bool _forceShowSensorDetails;
     private volatile bool _forceDetailedRefresh;
     private bool _detailsExpanded;
+    private Window? _detailsWindow;
     private DateTime _lastDetailsToggleClick = DateTime.MinValue;
 
     private CancellationTokenSource? _cts;
@@ -52,14 +55,15 @@ public partial class SensorsControl
 
     private string _cpuName = string.Empty;
     private string _gpuName = string.Empty;
+    private SensorSummaryLayoutMode _sensorSummaryLayoutMode = SensorSummaryLayoutMode.Standard;
 
     public SensorsControl()
     {
         InitializeComponent();
         InitializeContextMenu();
         InitializeTrendCharts();
-        ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
         SetInitialSensorPlaceholders();
+        CollapseDetailPanels();
         InitializeFromSessionCache();
         _ = FetchHardwareNamesAsync();
 
@@ -67,9 +71,19 @@ public partial class SensorsControl
         SizeChanged += SensorsControl_SizeChanged;
     }
 
+    internal enum SensorSummaryLayoutMode
+    {
+        Compact,
+        Standard,
+        Wide
+    }
+
     private const string TrendUtilizationKey = "util";
     private const string TrendCoreClockKey = "clock";
     private const string TrendTemperatureKey = "temp";
+    private const string TrendBatteryChargeKey = "battery-charge";
+    private const string TrendBatteryHealthKey = "battery-health";
+    private const string TrendBatteryTemperatureKey = "battery-temp";
 
     private void InitializeTrendCharts()
     {
@@ -82,6 +96,13 @@ public partial class SensorsControl
             chart.DefineSeries(TrendCoreClockKey, GetChartColor("ChartCoreClockColor", System.Windows.Media.Colors.MediumSeaGreen));
             chart.DefineSeries(TrendTemperatureKey, GetChartColor("ChartTemperatureColor", System.Windows.Media.Colors.Goldenrod), 110);
         }
+
+        if (_batteryTrendChart is not null)
+        {
+            _batteryTrendChart.DefineSeries(TrendBatteryChargeKey, GetChartColor("ChartBatteryColor", System.Windows.Media.Colors.MediumSeaGreen), 100);
+            _batteryTrendChart.DefineSeries(TrendBatteryHealthKey, GetChartColor("ChartCoreClockColor", System.Windows.Media.Colors.SeaGreen), 100);
+            _batteryTrendChart.DefineSeries(TrendBatteryTemperatureKey, GetChartColor("ChartTemperatureColor", System.Windows.Media.Colors.Goldenrod), 60);
+        }
     }
 
     private System.Windows.Media.Color GetChartColor(string resourceKey, System.Windows.Media.Color fallback) =>
@@ -89,14 +110,106 @@ public partial class SensorsControl
 
     private void SensorsControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (!e.WidthChanged || _sensorsGrid is null)
+        if (!e.WidthChanged)
             return;
 
-        // Stack the three sensor sections vertically on narrow widths, side-by-side when wide.
-        var columns = e.NewSize.Width >= 900 ? 3 : e.NewSize.Width >= 560 ? 2 : 1;
-        if (_sensorsGrid.Columns != columns)
-            _sensorsGrid.Columns = columns;
+        ApplySensorSummaryLayout(e.NewSize.Width);
     }
+
+    internal static int GetSensorColumnCountForWidth(double width)
+    {
+        _ = width;
+        return 3;
+    }
+
+    internal static SensorSummaryLayoutMode GetSensorSummaryLayoutMode(double width)
+    {
+        if (width >= 1500)
+            return SensorSummaryLayoutMode.Wide;
+
+        if (width >= 1050)
+            return SensorSummaryLayoutMode.Standard;
+
+        return SensorSummaryLayoutMode.Compact;
+    }
+
+    internal static bool CanShowSensorDetailsForWidth(double width) =>
+        GetSensorSummaryLayoutMode(width) == SensorSummaryLayoutMode.Wide;
+
+    private void ApplySensorSummaryLayout(double width)
+    {
+        if (_sensorsGrid is not null && _sensorsGrid.Columns != 3)
+            _sensorsGrid.Columns = 3;
+
+        var mode = GetSensorSummaryLayoutMode(width);
+        if (mode == _sensorSummaryLayoutMode)
+            return;
+
+        _sensorSummaryLayoutMode = mode;
+        var isCompact = mode == SensorSummaryLayoutMode.Compact;
+        var isWide = mode == SensorSummaryLayoutMode.Wide;
+
+        SetVisibility("_cpuModelName", !isCompact);
+        SetVisibility("_batteryModelName", !isCompact);
+        SetVisibility("_gpuModelName", !isCompact);
+
+        SetVisibility("_cpuLegend", !isCompact);
+        SetVisibility("_batteryLegend", !isCompact);
+        SetVisibility("_gpuLegend", !isCompact);
+
+        SetVisibility("_cpuTrendPanel", !isCompact);
+        SetVisibility("_batteryTrendPanel", !isCompact);
+        SetVisibility("_gpuTrendPanel", !isCompact);
+
+        ApplySummaryGaugeSize(_cpuGauge, isCompact);
+        ApplySummaryGaugeSize(_batteryGauge, isCompact);
+        ApplySummaryGaugeSize(_gpuGauge, isCompact);
+
+        ApplyTrendPanelHeight(_cpuTrendPanel, isWide);
+        ApplyTrendPanelHeight(_batteryTrendPanel, isWide);
+        ApplyTrendPanelHeight(_gpuTrendPanel, isWide);
+
+        ApplyProgressBarMaxWidth(_cpuCoreClockBar, isWide);
+        ApplyProgressBarMaxWidth(_cpuTemperatureBar, isWide);
+        ApplyProgressBarMaxWidth(_cpuFanSpeedBar, isWide);
+        ApplyProgressBarMaxWidth(_batteryHealthBar, isWide);
+        ApplyProgressBarMaxWidth(_batteryTemperatureBar, isWide);
+        ApplyProgressBarMaxWidth(_batteryRateBar, isWide);
+        ApplyProgressBarMaxWidth(_gpuCoreClockBar, isWide);
+        ApplyProgressBarMaxWidth(_gpuTemperatureBar, isWide);
+        ApplyProgressBarMaxWidth(_gpuFanSpeedBar, isWide);
+
+        if (!CanShowSensorDetails)
+            CollapseDetailPanels();
+    }
+
+    private static void ApplySummaryGaugeSize(FrameworkElement? gauge, bool isCompact)
+    {
+        if (gauge is null)
+            return;
+
+        var size = isCompact ? 88 : 110;
+        gauge.Width = size;
+        gauge.Height = size;
+    }
+
+    private static void ApplyTrendPanelHeight(FrameworkElement? trendPanel, bool isWide)
+    {
+        if (trendPanel is null)
+            return;
+
+        trendPanel.Height = isWide ? 96 : 76;
+    }
+
+    private static void ApplyProgressBarMaxWidth(FrameworkElement? progressBar, bool isWide)
+    {
+        if (progressBar is null)
+            return;
+
+        progressBar.MaxWidth = isWide ? 320 : 260;
+    }
+
+    private bool CanShowSensorDetails => _forceShowSensorDetails || _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Wide;
 
     public Task FirstSensorDataReadyTask
     {
@@ -124,6 +237,28 @@ public partial class SensorsControl
 
             return _firstSensorDataTaskCompletionSource.Task;
         }
+    }
+
+    public void RestartTrendCharts()
+    {
+        ClearTrendCharts();
+        InitializeTrendChartsFromSessionCache();
+    }
+
+    public void UseDetailsWindowLayout()
+    {
+        _forceShowSensorDetails = true;
+        ApplySensorSummaryLayout(ActualWidth > 0 ? ActualWidth : 1200);
+        SetVisibility("_cpuModelName", true);
+        SetVisibility("_batteryModelName", true);
+        SetVisibility("_gpuModelName", true);
+        SetVisibility("_cpuLegend", true);
+        SetVisibility("_batteryLegend", true);
+        SetVisibility("_gpuLegend", true);
+        SetVisibility("_cpuTrendPanel", true);
+        SetVisibility("_batteryTrendPanel", true);
+        SetVisibility("_gpuTrendPanel", true);
+        ShowDetailPanels();
     }
 
     internal static bool HasInitialSummarySensorData(SensorsData data) =>
@@ -250,11 +385,6 @@ public partial class SensorsControl
 
     private void SetBattery(BatteryInformation batteryInfo, PowerAdapterStatus powerAdapterStatus, DateTime? onBatterySince)
     {
-        if (FindName("_batteryPercentageBar") is not System.Windows.Controls.Primitives.RangeBase bar) return;
-
-        bar.BeginAnimation(System.Windows.Controls.Primitives.RangeBase.ValueProperty, null);
-        bar.Value = batteryInfo.BatteryPercentage;
-
         if (_batteryGauge is not null)
         {
             _batteryGauge.Maximum = 100;
@@ -264,14 +394,6 @@ public partial class SensorsControl
                 ? TryFindResource("ChartCautionBrush")
                 : TryFindResource("ChartBatteryBrush")) as System.Windows.Media.Brush
                 ?? _batteryGauge.RingBrush;
-        }
-        
-        if (FindName("_batteryPercentageLabel") is ContentControl label)
-        {
-            label.Content = $"{batteryInfo.BatteryPercentage:N0}%";
-            label.Foreground = batteryInfo.IsLowBattery 
-                ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 196, 0)) 
-                : FindResource("TextFillColorPrimaryBrush") as System.Windows.Media.Brush;
         }
 
         if (FindName("_batteryStatusLabel") is ContentControl statusLabel)
@@ -296,6 +418,7 @@ public partial class SensorsControl
 
         // Details
         UpdateBatteryDetails(batteryInfo, onBatterySince);
+        PushBatteryTrendSamples(batteryInfo);
     }
 
     private void UpdateBatteryDetails(BatteryInformation info, DateTime? onBatterySince)
@@ -323,6 +446,9 @@ public partial class SensorsControl
 
         UpdateModelNameText("_batteryModelName", info.ModelName ?? T("SensorsControl_UnknownBattery", "Unknown battery"));
 
+        if (!CanShowSensorDetails)
+            return;
+
         // Advanced Details
         UpdateDetailText("_batteryRateRange", $"{info.MinDischargeRate / 1000.0:+0.0;-0.0;0.0} W ~ {info.MaxDischargeRate / 1000.0:+0.0;-0.0;0.0} W");
         
@@ -341,17 +467,52 @@ public partial class SensorsControl
         UpdateDetailText("_batteryCycles", $"{info.CycleCount:N0}");
         UpdateDetailText("_batteryDate", info.ManufactureDate?.ToString(LocalizationHelper.ShortDateFormat) ?? string.Empty);
         UpdateDetailText("_batteryTemperature", FormatNullableTemperature(info.BatteryTemperatureC, _applicationSettings.Store.TemperatureUnit));
-        UpdateDetailText("_batteryAverageTemperature", FormatNullableTemperature(info.AvgTemperatureC, _applicationSettings.Store.TemperatureUnit));
 
     }
 
     private void UpdateDetailText(string name, string text)
     {
+        var displayText = text == "-" || !IsUsefulDetailValue(text) ? string.Empty : text;
+
         if (FindName(name) is TextBlock tb) 
         {
-            tb.Text = text == "-" ? string.Empty : text;
+            tb.Text = displayText;
         }
-        else if (FindName(name) is Label lbl) lbl.Content = text == "-" ? string.Empty : text;
+        else if (FindName(name) is Label lbl) lbl.Content = displayText;
+
+        UpdateDetailContainerVisibility(name, displayText);
+    }
+
+    private void UpdateDetailContainerVisibility(string valueElementName, string displayText)
+    {
+        var detailElementName = valueElementName switch
+        {
+            "_cpuWattage" => "_cpuWattageDetail",
+            "_cpuVoltage" => "_cpuVoltageDetail",
+            "_cpuPCoreClock" => "_cpuPCoreClockDetail",
+            "_cpuECoreClock" => "_cpuECoreClockDetail",
+            "_cpuMemoryUsage" => "_cpuMemoryUsageDetail",
+            "_cpuTempRange" => "_cpuTempRangeDetail",
+            "_cpuVoltageRange" => "_cpuVoltageRangeDetail",
+            "_cpuMemoryTemperature" => "_cpuMemoryTemperatureDetail",
+            "_cpuSsdTemperature" => "_cpuSsdTemperatureDetail",
+            "_batteryRateRange" => "_batteryRateRangeDetail",
+            "_batteryCycles" => "_batteryCyclesDetail",
+            "_batteryDate" => "_batteryDateDetail",
+            "_batteryTemperature" => "_batteryTemperatureDetail",
+            "_gpuVramUsage" => "_gpuVramUsageDetail",
+            "_gpuWattage" => "_gpuWattageDetail",
+            "_gpuVoltage" => "_gpuVoltageDetail",
+            "_gpuPcieThroughput" => "_gpuPcieThroughputDetail",
+            "_gpuVramTemperature" => "_gpuVramTemperatureDetail",
+            "_gpuHotSpotTemperature" => "_gpuHotSpotTemperatureDetail",
+            "_gpuTempRange" => "_gpuTempRangeDetail",
+            "_gpuVoltageRange" => "_gpuVoltageRangeDetail",
+            _ => null
+        };
+
+        if (detailElementName is not null && FindName(detailElementName) is FrameworkElement detailElement)
+            detailElement.Visibility = string.IsNullOrWhiteSpace(displayText) ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void SetVisibility(string name, bool visible)
@@ -433,7 +594,7 @@ public partial class SensorsControl
             {
                 try
                 {
-                    var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible) || _forceDetailedRefresh;
+                    var detailed = Dispatcher.Invoke(() => CanShowSensorDetails && _cpuDetailsPanel.Visibility == Visibility.Visible) || (CanShowSensorDetails && _forceDetailedRefresh);
                     var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
                     if (detailed)
                         _forceDetailedRefresh = false;
@@ -466,8 +627,6 @@ public partial class SensorsControl
         if (!_hasRenderedSensorData && shouldCompleteInitialLoad)
             CompleteInitialSensorDataLoad();
 
-        UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
-            $"{data.CPU.Utilization}%");
         UpdateValue(_cpuCoreClockBar, _cpuCoreClockLabel, data.CPU.MaxCoreClock, data.CPU.CoreClock,
             $"{data.CPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.CPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
         UpdateValue(_cpuTemperatureBar, _cpuTemperatureLabel, data.CPU.MaxTemperature, data.CPU.Temperature,
@@ -501,9 +660,6 @@ public partial class SensorsControl
                  cpuVoltageRange.Text = NotAvailableText();
         }
 
-        UpdateValue(_gpuUtilizationBar, _gpuUtilizationLabel, data.GPU.MaxUtilization, data.GPU.Utilization,
-            $"{data.GPU.Utilization} %");
-        
         // GPU Core Clock (Main view)
         UpdateValue(_gpuCoreClockBar, _gpuCoreClockLabel, data.GPU.MaxCoreClock, data.GPU.CoreClock,
             $"{data.GPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.GPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
@@ -600,10 +756,43 @@ public partial class SensorsControl
             chart.AddSample(TrendTemperatureKey, data.Temperature);
     }
 
+    private void PushBatteryTrendSamples(BatteryInformation info)
+    {
+        if (_batteryTrendChart is null)
+            return;
+
+        if (info.BatteryPercentage >= 0)
+            _batteryTrendChart.AddSample(TrendBatteryChargeKey, info.BatteryPercentage);
+
+        if (info.BatteryHealth >= 0)
+            _batteryTrendChart.AddSample(TrendBatteryHealthKey, info.BatteryHealth);
+
+        if (info.BatteryTemperatureC is { } temperature)
+            _batteryTrendChart.AddSample(TrendBatteryTemperatureKey, temperature);
+    }
+
+    private void ClearTrendCharts()
+    {
+        _cpuTrendChart?.ClearAll();
+        _batteryTrendChart?.ClearAll();
+        _gpuTrendChart?.ClearAll();
+    }
+
+    private void InitializeTrendChartsFromSessionCache()
+    {
+        var cached = TryGetSessionSensorDataForDisplay();
+        if (cached is { } data)
+        {
+            PushTrendSamples(_cpuTrendChart, data.CPU);
+            PushTrendSamples(_gpuTrendChart, data.GPU);
+        }
+    }
+
     private void ResetSensorValues()
     {
         _lastRenderedSensorData = null;
         ClearSessionSensorData();
+        ClearTrendCharts();
         UpdateValues(SensorsData.Empty);
     }
 
@@ -702,7 +891,7 @@ public partial class SensorsControl
 
     private void QueueExtendedDetailValuesRefresh()
     {
-        if (!_detailsExpanded || !_sensorRuntimeAvailable || _sensorsGroupController is null)
+        if (!CanShowSensorDetails || !_detailsExpanded || !_sensorRuntimeAvailable || _sensorsGroupController is null)
             return;
 
         if (_extendedDetailsRefreshTask is { IsCompleted: false })
@@ -727,37 +916,75 @@ public partial class SensorsControl
 
     private void ToggleDetails()
     {
+        if (_forceShowSensorDetails)
+            return;
+
+        if (!CanShowSensorDetails)
+        {
+            ShowDetailsWindow();
+            return;
+        }
+
         _detailsExpanded = !AreDetailsVisible();
-        var newState = _detailsExpanded ? Visibility.Visible : Visibility.Collapsed;
+
+        if (_detailsExpanded)
+            ShowDetailPanels();
+        else
+            CollapseDetailPanels();
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Sensor details toggled: {(_detailsExpanded ? Visibility.Visible : Visibility.Collapsed)}.");
+    }
+
+    private void ShowDetailsWindow()
+    {
+        if (_detailsWindow is { IsVisible: true })
+        {
+            _detailsWindow.Activate();
+            return;
+        }
+
+        var window = new SensorDetailsWindow
+        {
+            Owner = Window.GetWindow(this)
+        };
+        window.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(_detailsWindow, window))
+                _detailsWindow = null;
+        };
+
+        _detailsWindow = window;
+        window.Show();
+    }
+
+    private void ShowDetailPanels()
+    {
+        _detailsExpanded = true;
 
         if (_sensorRuntimeAvailable)
         {
-            SetVisibility("_cpuDetailsPanel", newState == Visibility.Visible);
-            SetVisibility("_gpuDetailsPanel", newState == Visibility.Visible);
+            SetVisibility("_cpuDetailsPanel", true);
+            SetVisibility("_gpuDetailsPanel", true);
         }
 
-        SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
+        SetVisibility("_batteryDetailsPanel", true);
 
-        if (newState == Visibility.Visible)
-        {
-            _forceDetailedRefresh = true;
-            _ = RefreshDetailedValuesAsync();
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Sensor details toggled: {newState}.");
+        _forceDetailedRefresh = true;
+        _ = RefreshDetailedValuesAsync();
     }
 
     private bool AreDetailsVisible() =>
-        IsElementVisible("_batteryDetailsPanel") ||
-        (_sensorRuntimeAvailable && (IsElementVisible("_cpuDetailsPanel") || IsElementVisible("_gpuDetailsPanel")));
+        CanShowSensorDetails
+        && (IsElementVisible("_batteryDetailsPanel")
+            || (_sensorRuntimeAvailable && (IsElementVisible("_cpuDetailsPanel") || IsElementVisible("_gpuDetailsPanel"))));
 
     private bool IsElementVisible(string name) =>
         FindName(name) is FrameworkElement element && element.Visibility == Visibility.Visible;
 
     private async Task RefreshDetailedValuesAsync()
     {
-        if (!_sensorRuntimeAvailable)
+        if (!CanShowSensorDetails || !_sensorRuntimeAvailable)
             return;
 
         try
@@ -809,9 +1036,7 @@ public partial class SensorsControl
 
         if (!visible)
         {
-            _detailsExpanded = false;
-            SetVisibility("_cpuDetailsPanel", false);
-            SetVisibility("_gpuDetailsPanel", false);
+            CollapseDetailPanels();
         }
 
         if (FindName("_batterySectionColumn") is FrameworkElement batterySection)
@@ -824,6 +1049,15 @@ public partial class SensorsControl
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     private static string NotAvailableText() => T("SensorsControl_NotAvailable", "N/A");
+
+    private void CollapseDetailPanels()
+    {
+        _detailsExpanded = false;
+        _forceDetailedRefresh = false;
+        SetVisibility("_cpuDetailsPanel", false);
+        SetVisibility("_batteryDetailsPanel", false);
+        SetVisibility("_gpuDetailsPanel", false);
+    }
 
     private static TaskCompletionSource CreateInitialSensorDataTaskCompletionSource() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -839,8 +1073,9 @@ public partial class SensorsControl
 
     private static bool HasInitialSummarySensorData(SensorData data) =>
         HasRenderableProgressMetric(data.Utilization, data.MaxUtilization)
-        && HasRenderableProgressMetric(data.CoreClock, data.MaxCoreClock)
-        && HasRenderableProgressMetric(data.Temperature, data.MaxTemperature);
+        || HasRenderableProgressMetric(data.CoreClock, data.MaxCoreClock)
+        || HasRenderableProgressMetric(data.Temperature, data.MaxTemperature)
+        || HasRenderableProgressMetric(data.FanSpeed, data.MaxFanSpeed);
 
     private static bool HasAnySummarySensorData(SensorData data) =>
         data.Utilization >= 0
@@ -875,8 +1110,6 @@ public partial class SensorsControl
         UpdateDetailText("_cpuMemoryTemperature", NotAvailableText());
         UpdateDetailText("_cpuSsdTemperatureTitle", T("SensorsControl_SsdTemperature_Title", "SSD Temperature"));
         UpdateDetailText("_cpuSsdTemperature", NotAvailableText());
-        UpdateDetailText("_batteryAverageTemperatureTitle", T("SensorsControl_AverageTemperature_Title", "Average Temperature"));
-        UpdateDetailText("_batteryAverageTemperature", NotAvailableText());
         UpdateDetailText("_gpuWattage", NotAvailableText());
         UpdateDetailText("_gpuVoltage", NotAvailableText());
         UpdateDetailText("_gpuTempRange", NotAvailableText());
@@ -902,7 +1135,7 @@ public partial class SensorsControl
 
         try
         {
-            if (!_detailsExpanded || !_sensorRuntimeAvailable)
+            if (!CanShowSensorDetails || !_detailsExpanded || !_sensorRuntimeAvailable)
                 return;
 
             var refreshVersion = Interlocked.Increment(ref _extendedDetailsRefreshVersion);
@@ -1183,7 +1416,9 @@ public partial class SensorsControl
 
         var normalizedModelName = NormalizeModelName(modelName);
         textBlock.Text = normalizedModelName ?? string.Empty;
-        textBlock.Visibility = normalizedModelName is null ? Visibility.Collapsed : Visibility.Visible;
+        textBlock.Visibility = normalizedModelName is null || _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Compact
+            ? Visibility.Collapsed
+            : Visibility.Visible;
     }
 }
 }

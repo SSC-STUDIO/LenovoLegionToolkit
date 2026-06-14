@@ -67,6 +67,7 @@ public partial class DashboardPage
         Task? sensorsReadyTask = null;
         if (_dashboardSettings.Store.ShowSensors)
         {
+            _sensors.RestartTrendCharts();
             sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();
             _sensors.Visibility = Visibility.Visible;
         }

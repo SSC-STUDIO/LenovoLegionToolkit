@@ -42,19 +42,13 @@ internal readonly partial struct BiosPackageRule : IPackageRule
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var currentBios = mi.BiosVersion;
 
-        var result = Levels.Any((global::System.Func<string, bool>)(level =>
+        var result = Levels.Any(level =>
         {
-            var levelPrefixMatch = PrefixRegex().Match(level);
-            var levelVersionMatch = VersionRegex().Match(level);
-            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
-                return false;
-
-            var levelPrefix = levelPrefixMatch.Value;
-            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
+            if (!TryParseLevel(level, out var levelPrefix, out var levelVersion))
                 return false;
 
             return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion == currentBios.Value.Version;
-        }));
+        });
 
         return result;
     }
@@ -64,20 +58,28 @@ internal readonly partial struct BiosPackageRule : IPackageRule
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var currentBios = mi.BiosVersion;
 
-        var result = Levels.All((global::System.Func<string, bool>)(level =>
+        var result = Levels.All(level =>
         {
-            var levelPrefixMatch = PrefixRegex().Match(level);
-            var levelVersionMatch = VersionRegex().Match(level);
-            if (!levelPrefixMatch.Success || !levelVersionMatch.Success)
-                return false;
-
-            var levelPrefix = levelPrefixMatch.Value;
-            if (!int.TryParse(levelVersionMatch.Value, out var levelVersion))
+            if (!TryParseLevel(level, out var levelPrefix, out var levelVersion))
                 return false;
 
             return currentBios.HasValue && levelPrefix == currentBios.Value.Prefix && levelVersion > currentBios.Value.Version;
-        }));
+        });
 
         return result;
+    }
+
+    private static bool TryParseLevel(string level, out string prefix, out int version)
+    {
+        prefix = PrefixRegex().Match(level).Value;
+        var versionText = VersionRegex().Match(level).Value;
+
+        if (string.IsNullOrEmpty(prefix) || !int.TryParse(versionText, out version))
+        {
+            version = 0;
+            return false;
+        }
+
+        return true;
     }
 }

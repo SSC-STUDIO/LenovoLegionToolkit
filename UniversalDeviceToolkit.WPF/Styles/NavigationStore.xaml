@@ -392,7 +392,7 @@
     </Style>
 
     <Style TargetType="{x:Type custom:NavigationStore}">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource AppNavigationBackgroundBrush}" />
         <Setter Property="MinWidth" Value="{StaticResource NavigationWidthCollapsed}" />
         <Setter Property="MaxWidth" Value="{StaticResource NavigationWidthCollapsed}" />
         <Setter Property="Focusable" Value="False" />

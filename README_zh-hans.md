@@ -7,13 +7,15 @@
 
 ---
 
-Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩托罗拉游戏设备打造的轻量化 Lenovo Vantage 替代方案，也为 ASUS、机械革命、戴尔、惠普、宏碁、小米、华为等常见 PC 提供基础模式，可提供更直接、更可控的硬件调校与插件扩展体验。
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的联想游戏本上提供完整硬件控制，在其他联想机型及非联想 PC 上则以**基础模式**运行（隐藏不支持的硬件项，仍可使用插件、系统优化、主题、更新与日志等功能）。插件扩展是一等公民能力，可在「插件扩展」页面安装、更新、配置与卸载。
 
-插件扩展是本项目的核心能力之一。你可以在“插件扩展”页面直接安装、更新、配置、打开和卸载插件，按需扩展工具与工作流，而不必让主程序持续膨胀。
+> [!NOTE]
+> **「Universal」的含义**
+> UDT 是 Windows 工具平台：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型；**基础模式**面向其他联想型号及华硕、戴尔、惠普、宏碁、小米、华为等非联想 PC，提供插件与通用系统工具，而非全品牌 Vantage 级硬件控制。名称强调可扩展性与基础模式覆盖范围。
 
-本仓库是一个在 GPL-3.0 许可下持续开发的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展、驱动下载和后续 Windows 兼容维护。
+本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户可直接升级；设置、插件与包管理器标识在更名期间保持兼容。
 
-本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
+本软件不运行后台服务，内存与 CPU 占用低，不收集用户信息，仅适用于 Windows。
 
 
 <img src="Assets/Screenshot_zh-hans.png" width="700" />
@@ -46,75 +48,89 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是为联想和摩�
 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。v4.1.0 是首个稳定版 Universal Device Toolkit，并保留旧 Lenovo Legion Toolkit 的升级兼容。
-- **winget**：可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。winget `PackageIdentifier` 暂时保留 `SSC-STUDIO.LenovoLegionToolkit`，用于保证旧 Lenovo Legion Toolkit 安装可原地升级。
-- **Scoop**：先执行 `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`，再执行 `scoop install ssc-studio/lenovolegiontoolkit`。Scoop manifest 名称也暂时保留 `lenovolegiontoolkit`。
-- **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。**当前稳定版：v4.2.1**（v4.1.0 为更名后首个稳定版）。请始终安装最新版本；4.x 保留旧 Lenovo Legion Toolkit 原地升级兼容。
+- **winget**：`winget install SSC-STUDIO.LenovoLegionToolkit`。`PackageIdentifier` 暂时保留 `SSC-STUDIO.LenovoLegionToolkit`，保证旧版可原地升级。
+- **Scoop**：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`。manifest 名称暂时保留 `lenovolegiontoolkit`。
+- **校验文件**：每个 Release 附带 `SHA256.txt`，建议下载前校验。
+
+#### 命名与升级兼容
+
+更名期间，以下标识**故意保留旧名**以便原地升级：
+
+| 用户可见 | 遗留标识 | 保留原因 |
+|---|---|---|
+| UI / Releases 产品名 | Universal Device Toolkit (UDT) | 当前对外品牌 |
+| winget / Scoop 包 ID | `SSC-STUDIO.LenovoLegionToolkit`、`lenovolegiontoolkit` | 旧版原地升级 |
+| CLI 可执行文件 | `llt.exe` | 脚本与自动化兼容 |
+| 数据目录 | `%LOCALAPPDATA%\LenovoLegionToolkit` | 设置/插件自动迁移 |
+| 自动化环境变量 | `LLT_*` | 用户脚本兼容 |
+| 插件/核心程序集 | `LenovoLegionToolkit.*` | 插件 ABI 稳定 |
+
+仓库目录使用 `UniversalDeviceToolkit.*`。新用户从 Releases 安装 UDT；上表遗留名为兼容别名，并非另一款产品。
 
 #### 接下来的步骤
 
-LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_关闭时最小化_。接下载就是在设置中禁用 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys，或者你也可以直接卸载他们。之后，LLT 将会在开机后自启并在后台一直保持运行，并接管 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys 的功能。
+UDT 在后台运行时效果最好，请在设置中启用**开机启动**和**关闭时最小化**。接着在设置中禁用 Lenovo Vantage、Legion Zone 与 Lenovo Hotkeys，或直接卸载。之后 UDT 会在开机后自启并接管上述软件的功能。
 
 > [!WARNING]
-> 如果你完全关闭 LLT，一些功能例如同步不同的性能模式（Fn + Q）与电源计划，键盘宏以及自动化功能将无法正常工作。这是因为 LLT **不运行任何后台服务**，也就意味着其无法在被完全关闭时响应指令或执行设置同步。
+> 如果你完全关闭 UDT，性能模式（Fn + Q）与电源计划同步、键盘宏及自动化等功能将无法正常工作。这是因为 UDT **不运行任何后台服务**，完全退出后无法响应变更。
 
-另外，请查看下方的 [兼容性](#兼容性) 部分。
+另外，请查看下方 [兼容性](#兼容性) 部分。
 
 #### 驱动依赖
 
-如果你是在一个纯净的 Windows 系统上安装 LLT，请确保你已经安装了必要的驱动，否则一些选项将不可用。请特别注意以下两个驱动已经被安装在你的系统上了：
+在纯净 Windows 上安装 UDT 且需要联想硬件控制时，请确保已安装必要驱动，否则部分选项不可用。联想受支持系统上尤其需要：
 
 1. Lenovo Energy Management
 2. Lenovo Vantage Gaming Feature Driver
 
 #### 在安装 .NET 依赖时出现问题？
 
-如果 LLT 安装程序没有正确安装 .NET 依赖，则请按照以下步骤手动安装：
+若安装程序未正确安装 .NET，请手动安装：
 
 1. 打开 https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0
-2. 找到 “.NET 桌面运行时” 一栏；
-3. 点击安装程序下的“X64”一栏下载安装程序；
-4. 运行安装程序并按照指引进行安装。
+2. 找到「.NET 桌面运行时」
+3. 下载 x64 安装程序并运行
 
-在完成这些步骤后，你可以打开终端并输入： `dotnet --info`。在输出中寻找 "已安装的 .NET 运行时 "部分，你应该能看到类似 `Microsoft.NETCore.App 10.x.x` 和 `Microsoft.WindowsDesktop.App 10.x.x` 的条目，位于 `C:\Program Files\dotnet\shared` 路径下。
-
-确切的版本号可能不同，但只要是 `10.x.x` 就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么问题很可能出在你的机器或系统配置上，而不是 LLT 本身。
+完成后在终端执行 `dotnet --info`，在「已安装的 .NET 运行时」中应看到 `Microsoft.NETCore.App 10.x.x` 与 `Microsoft.WindowsDesktop.App 10.x.x`（位于 `C:\Program Files\dotnet\shared`）。
 
 ## 兼容性
 
-UDT 按 `UniversalDeviceToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性逻辑识别设备，目标适配 Lenovo/Motorola 的相关游戏设备。
+UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本获得完整硬件控制；不匹配的联想型号及非联想 PC 进入**基础模式**——隐藏不支持的硬件项，插件、系统优化、语言、主题、更新、日志与安全流程仍可用。
 
-主要支持系列包括：
+**完整硬件控制系列**：
 - Legion 5、Legion Slim 5、Legion Pro 5
 - Legion 7、Legion Pro 7、Legion 9
 - Legion Go
 - LOQ
-- IdeaPad Gaming（含 R7000/R9000/Y7000/Y9000 等国行命名）
+- IdeaPad Gaming、ThinkBook、YOGA 及选定联想游戏系列
+- 国行命名如 R7000/R7000P/R9000/Y7000/Y7000P/Y9000（含 Y7000P 2020H）
 
-兼容性检查的基本条件：
-- 设备厂商为 `LENOVO` 或 `MOTOROLA`
-- 机型匹配支持的前缀或关键字（如 `16IRX`、`16IAX`、`15ACH`、`14IRP`、`17ACH`、`18IAX`、`ThinkBook`、`LOQ`、`IdeaPad Gaming`）
+**基础模式系列**（插件与通用工具，无完整硬件控制）：
+- 联想 ThinkPad、ThinkCentre、ThinkStation、IdeaCentre、拯救者台式、小新、V 系列等未匹配联想型号
+- 摩托罗拉、华硕、戴尔、惠普、宏碁、微星、Surface、技嘉/AORUS、雷蛇、三星 Galaxy Book、苹果 Mac、华为 MateBook、小米/RedmiBook、realme、Infinix、荣耀 MagicBook、LG gram、Framework 及更多常见 PC 品牌
 
-目前重点支持 6 代（MY2021）到 9 代（MY2024）及更新机型；部分 5 代（MY2020）机型的部分功能也可使用。支持型号的实时代码清单见 [Compatibility.cs](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/UniversalDeviceToolkit.Lib/Utils/Compatibility.cs)。
+匹配逻辑见 `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` 与在线 device pack。硬件控制主要面向 6 代（MY2021）至 9 代（MY2024）及更新；部分 5 代（MY2020）机型部分功能可用。
 
-如果你在启动时看到不兼容弹窗，你可以查看底部的*贡献*部分，查看你能否帮助我适配你的机型。谨记我没有那么多的笔记本型号，所以一些功能我无法适配。
-
-**拯救者系列与 Ideapad Gaming 系列之外的笔记本暂不考虑适配**
+若 UDT 以基础模式启动，属于有意隐藏不支持的硬件控制。你仍可使用插件与通用工具，欢迎提交日志或 device-pack 数据以扩大基础模式覆盖。
 
 ### 联想软件兼容
 
-总的来说，建议在使用 LLT 时禁用或卸载 Lenovo Vantage、Hotkeys 和 Legion Zone。当 LLT 与其他联想应用程序一起工作时，可能会导致部分功能冲突或可能无法正常工作。
+建议在使用 UDT 时禁用或卸载 Lenovo Vantage、Hotkeys 和 Legion Zone。与联想官方软件同时运行时可能出现功能冲突。
 
 > [!TIP]
 > 一般来说最简单的解决方法就是使用 LLT 内的禁用选项。
 
 ### 备注
 
-LLT 目前不支持多用户安装，所以如果你的笔记本电脑上有多个用户，你可能会遇到兼容性问题，即使是没有管理员权限的账户。LLT 需要一个有管理员权限的账户，LLT 无法在普通账户上正常运行。
+UDT 目前不支持多用户安装；多账户或无管理员权限的账户可能遇到问题。UDT 需要管理员账户才能正常工作。多用户支持在长期路线图中。
+
+> [!NOTE]
+> **保修查询（国行）**：因上游 API 不稳定，近期版本已移除国行拯救者保修查询；已缓存数据在刷新或清除前可能仍显示。
 
 ## 功能介绍
 
-LLT 可以做到：
+UDT 可以做到：
 
 - 改变诸如性能模式、充电模式等只有通过 Lenovo Vantage、联想电脑管家才能更改的设置。
 - 使用并修改自定义模式，包括 2022 款及更新的机型的调节风扇曲线功能。
@@ -646,9 +662,11 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 #### 适配
 
 > [!IMPORTANT]
-> LLT 只目标适配联想拯救者（海内及海外版）、IdeaPad Gaming 和 LOQ 系列。请不要为除上述系列以外的设备提出兼容请求。
+> **完整硬件控制适配请求**仅面向联想拯救者、IdeaPad Gaming 与 LOQ 系列——请勿为其他品牌或不支持的联想产品线提交 Vantage 级硬件控制需求。
+>
+> **基础模式贡献欢迎**：非联想及不匹配的联想 PC 以基础模式运行（插件、系统工具、语言/主题/更新/日志）。欢迎提交 device-pack 数据、日志与测试反馈以扩大基础模式覆盖。
 
-如果能适配更多设备就更好了！但要做到这点，我真的很需要你的帮助！
+若能适配更多设备当然更好，但这需要你的帮助！
 
 如果你愿意在未适配的机型上试试这个软件，请在启动时点击弹窗的继续按钮，LLT 会自动打开日志记录，这样你就可以在提交 Issue 时提交了！
 

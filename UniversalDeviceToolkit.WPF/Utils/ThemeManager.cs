@@ -175,14 +175,22 @@ public class ThemeManager
     private void ApplySurfaceResources()
     {
         var isDark = IsDarkMode();
+        var navigationBackground = TryGetBrushColor("ApplicationBackgroundBrush") ??
+                                   (isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246));
+
         SetBrush("AppSurfaceBackgroundBrush", isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246));
         SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
-        SetBrush("AppNavigationBackgroundBrush", isDark ? Color.FromRgb(26, 26, 26) : Color.FromRgb(238, 238, 238));
+        SetBrush("AppNavigationBackgroundBrush", navigationBackground);
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)
     {
         Application.Current.Resources[key] = CreateBrush(color, opacity);
+    }
+
+    private static Color? TryGetBrushColor(string key)
+    {
+        return Application.Current.Resources[key] is SolidColorBrush brush ? brush.Color : null;
     }
 
     private static SolidColorBrush CreateBrush(Color color, double opacity = 1.0)

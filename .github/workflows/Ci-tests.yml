@@ -42,12 +42,95 @@ jobs:
       - name: Test stable paths (full suite + coverage)
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
+      - name: Upload code coverage
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: code-coverage
+          path: '**/coverage.cobertura.xml'
+          if-no-files-found: warn
+
       - name: Check for vulnerable packages
         shell: pwsh
         run: |
-          dotnet list package --vulnerable --include-transitive
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::warning::Vulnerable packages found. Please review and update packages."
+          $reportJson = dotnet list package --vulnerable --include-transitive --format json | Out-String
+          $scanExitCode = $LASTEXITCODE
+          Write-Host $reportJson
+
+          try {
+            $report = $reportJson | ConvertFrom-Json -ErrorAction Stop
+          }
+          catch {
+            if ($scanExitCode -ne 0) {
+              throw "NuGet vulnerability scan failed before a JSON report could be parsed."
+            }
+
+            throw
+          }
+
+          function Get-Vulnerabilities {
+            param([object]$Node)
+
+            if ($null -eq $Node) {
+              return
+            }
+
+            if ($Node -is [array]) {
+              foreach ($item in $Node) {
+                Get-Vulnerabilities -Node $item
+              }
+
+              return
+            }
+
+            if ($Node -isnot [pscustomobject]) {
+              return
+            }
+
+            $vulnerabilitiesProperty = $Node.PSObject.Properties['vulnerabilities']
+            if ($null -ne $vulnerabilitiesProperty -and $null -ne $vulnerabilitiesProperty.Value) {
+              foreach ($vulnerability in @($vulnerabilitiesProperty.Value)) {
+                [pscustomobject]@{
+                  Package = [string]$Node.id
+                  Version = [string]$Node.resolvedVersion
+                  Severity = [string]$vulnerability.severity
+                  AdvisoryUrl = [string]$vulnerability.advisoryUrl
+                }
+              }
+            }
+
+            foreach ($property in $Node.PSObject.Properties) {
+              if ($property.Name -ne 'vulnerabilities') {
+                Get-Vulnerabilities -Node $property.Value
+              }
+            }
+          }
+
+          function Test-BlockingSeverity {
+            param([string]$Severity)
+
+            return $Severity -match '^(High|Critical|2|3)$'
+          }
+
+          $vulnerabilities = @(Get-Vulnerabilities -Node $report)
+          $blockingVulnerabilities = @($vulnerabilities | Where-Object { Test-BlockingSeverity -Severity $_.Severity })
+
+          foreach ($vulnerability in $vulnerabilities) {
+            $message = "$($vulnerability.Package) $($vulnerability.Version) has $($vulnerability.Severity) vulnerability $($vulnerability.AdvisoryUrl)"
+            if (Test-BlockingSeverity -Severity $vulnerability.Severity) {
+              Write-Host "::error title=Blocking NuGet vulnerability::$message"
+            }
+            else {
+              Write-Host "::warning title=NuGet vulnerability::$message"
+            }
+          }
+
+          if ($blockingVulnerabilities.Count -gt 0) {
+            throw "Blocking NuGet vulnerabilities found: $($blockingVulnerabilities.Count) High/Critical advisory or advisories."
+          }
+
+          if ($scanExitCode -ne 0 -and $vulnerabilities.Count -eq 0) {
+            throw "NuGet vulnerability scan failed with exit code $scanExitCode."
           }
 
       - name: Publish test results

@@ -1,6 +1,8 @@
 # Universal Device Toolkit v4.1.0 Draft Release Notes
 
-This is a maintainer draft for the `4.1.0` release. The GitHub Release body is generated from `CHANGELOG.md` by the release workflow; this file keeps the pre-release verification notes in one place.
+> **Historical maintainer draft.** v4.1.0 has shipped. For current release notes see [CHANGELOG.md](../CHANGELOG.md) and [GitHub Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases).
+
+This file kept pre-release verification notes for the `4.1.0` release. The GitHub Release body is generated from `CHANGELOG.md` by the release workflow.
 
 ## Highlights
 

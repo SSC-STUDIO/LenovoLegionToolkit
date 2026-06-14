@@ -48,8 +48,17 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         var packages = new List<Package>();
         foreach (var packageDefinition in packageDefinitions)
         {
-            var package = await GetPackage(httpClient, updateDetector, packageDefinition, token).ConfigureAwait(false);
-            packages.Add(package);
+            try
+            {
+                var package = await GetPackage(httpClient, updateDetector, packageDefinition, token).ConfigureAwait(false);
+                if (package.HasValue)
+                    packages.Add(package.Value);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Couldn't load package from {packageDefinition.Location}.", ex);
+            }
 
             count++;
 
@@ -99,7 +108,7 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         return packageDefinitions;
     }
 
-    private static async Task<Package> GetPackage(HttpClient httpClient, VantagePackageUpdateDetector updateDetector, PackageDefinition packageDefinition, CancellationToken token)
+    private static async Task<Package?> GetPackage(HttpClient httpClient, VantagePackageUpdateDetector updateDetector, PackageDefinition packageDefinition, CancellationToken token)
     {
         var location = packageDefinition.Location;
         var baseLocation = location.Remove(location.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase));
@@ -111,20 +120,31 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         document.XmlResolver = null;
         document.LoadXml(packageString);
 
-        var id = document.SelectSingleNode("/Package/@id")!.InnerText;
-        var title = document.SelectSingleNode("/Package/Title/Desc")!.InnerText;
-        var version = document.SelectSingleNode("/Package/@version")!.InnerText;
-        var fileName = document.SelectSingleNode("/Package/Files/Installer/File/Name")!.InnerText;
-        var fileCrc = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
-        var fileSizeText = document.SelectSingleNode("/Package/Files/Installer/File/Size")?.InnerText;
-        var fileSizeBytes = int.TryParse(fileSizeText, out var parsedSize) ? parsedSize : 0;
-        var fileSize = fileSizeBytes > 0 ? $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB" : "Unknown";
+        var id = document.SelectSingleNode("/Package/@id")?.InnerText;
+        var title = document.SelectSingleNode("/Package/Title/Desc")?.InnerText;
+        var version = document.SelectSingleNode("/Package/@version")?.InnerText;
+        var fileName = document.SelectSingleNode("/Package/Files/Installer/File/Name")?.InnerText;
+        var fileSizeNode = document.SelectSingleNode("/Package/Files/Installer/File/Size")?.InnerText;
         var releaseDateString = document.SelectSingleNode("/Package/ReleaseDate")?.InnerText;
-        var releaseDate = DateTime.TryParse(releaseDateString, out var parsedDate) ? parsedDate : DateTime.MinValue;
+
+        if (string.IsNullOrWhiteSpace(id) ||
+            string.IsNullOrWhiteSpace(title) ||
+            string.IsNullOrWhiteSpace(version) ||
+            string.IsNullOrWhiteSpace(fileName) ||
+            string.IsNullOrWhiteSpace(fileSizeNode) ||
+            string.IsNullOrWhiteSpace(releaseDateString) ||
+            !int.TryParse(fileSizeNode, out var fileSizeBytes) ||
+            !DateTime.TryParse(releaseDateString, out var releaseDate))
+        {
+            return null;
+        }
+
+        var fileCrc = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
+        var fileSize = $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB";
         var readmeName = document.SelectSingleNode("/Package/Files/Readme/File/Name")?.InnerText;
-        var readme = $"{baseLocation}/{readmeName}";
+        var readme = string.IsNullOrWhiteSpace(readmeName) ? string.Empty : $"{baseLocation}/{readmeName}";
         var fileLocation = $"{baseLocation}/{fileName}";
-        var rebootString = document.SelectSingleNode("/Package/Reboot/@type")!.InnerText;
+        var rebootString = document.SelectSingleNode("/Package/Reboot/@type")?.InnerText ?? string.Empty;
         var reboot = int.TryParse(rebootString, out var rebootInt) ? (RebootType)rebootInt : RebootType.NotRequired;
 
         var isUpdate = false;

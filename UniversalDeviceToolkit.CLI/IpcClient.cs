@@ -270,11 +270,11 @@ public static class IpcClient
     private static string FormatTarget(string? value)
         => string.IsNullOrWhiteSpace(value) ? string.Empty : $" '{value}'";
 
+    private const int ConnectMaxAttempts = 20;
+
     private static async Task ConnectAsync(NamedPipeClientStream pipe)
     {
-        var retries = 3;
-
-        while (retries >= 0)
+        for (var attempt = 0; attempt < ConnectMaxAttempts; attempt++)
         {
             try
             {
@@ -284,10 +284,12 @@ public static class IpcClient
             }
             catch (TimeoutException)
             {
-                // Expected when connection times out, will retry
+                if (attempt < ConnectMaxAttempts - 1)
+                {
+                    var delayMs = Math.Min(250 * (attempt + 1), 2000);
+                    await Task.Delay(delayMs, CancellationToken.None).ConfigureAwait(false);
+                }
             }
-
-            retries--;
         }
 
         throw new IpcConnectException();
