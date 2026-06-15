@@ -32,8 +32,11 @@ jobs:
       - name: Restore solution
         run: dotnet restore UniversalDeviceToolkit.sln
 
+      - name: Clean stale WPF intermediates
+        run: dotnet clean UniversalDeviceToolkit.sln --configuration Release
+
       - name: Build solution
-        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1
 
       # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
       - name: Test (Unit category — fail fast)
