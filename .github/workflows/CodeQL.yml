@@ -45,8 +45,11 @@ jobs:
       - name: Restore solution
         run: dotnet restore UniversalDeviceToolkit.sln
 
+      - name: Clean stale WPF intermediates
+        run: dotnet clean UniversalDeviceToolkit.sln --configuration Release
+
       - name: Build solution
-        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

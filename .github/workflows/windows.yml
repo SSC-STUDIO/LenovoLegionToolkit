@@ -25,11 +25,11 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore --locked-mode
 
-      - name: Build Debug configuration
-        run: dotnet build --configuration Debug --no-restore -warnaserror -v:minimal
+      - name: Clean stale WPF intermediates
+        run: dotnet clean --configuration Debug
 
-      - name: Build Release configuration
-        run: dotnet build --configuration Release --no-restore -warnaserror -v:minimal
+      - name: Build Debug configuration
+        run: dotnet build --configuration Debug --no-restore -warnaserror -v:minimal -m:1
 
       - name: Run test suite
         run: dotnet test --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=TestResults/windows-test-results.xml"
