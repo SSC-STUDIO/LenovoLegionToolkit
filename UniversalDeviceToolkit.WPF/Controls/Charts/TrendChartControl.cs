@@ -134,13 +134,30 @@ public class TrendChartControl : FrameworkElement
         if (width <= 1 || height <= 1)
             return;
 
-        // Subtle baseline so an empty chart still reads as a chart surface.
-        var baseline = new Pen(new SolidColorBrush(Color.FromArgb(28, 255, 255, 255)), 1);
-        baseline.Freeze();
-        dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
+        DrawGridlines(dc, width, height);
 
         foreach (var series in _orderedSeries)
             DrawSeries(dc, series, width, height);
+    }
+
+    /// <summary>
+    /// Faint horizontal guide lines (25/50/75%) plus a slightly stronger baseline so an empty
+    /// chart still reads as a chart surface and filled series stay easy to gauge by eye.
+    /// </summary>
+    private static void DrawGridlines(DrawingContext dc, double width, double height)
+    {
+        var grid = new Pen(new SolidColorBrush(Color.FromArgb(16, 255, 255, 255)), 1);
+        grid.Freeze();
+
+        for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
+        {
+            var y = Math.Round(height * fraction) + 0.5;
+            dc.DrawLine(grid, new Point(0, y), new Point(width, y));
+        }
+
+        var baseline = new Pen(new SolidColorBrush(Color.FromArgb(34, 255, 255, 255)), 1);
+        baseline.Freeze();
+        dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
     }
 
     private static void DrawSeries(DrawingContext dc, TrendSeries series, double width, double height)
@@ -158,63 +175,38 @@ public class TrendChartControl : FrameworkElement
         var stepX = width / (capacity - 1);
         var startIndex = capacity - series.Count;
 
+        // Materialize the sample points once; both the smooth line and the area reuse them.
+        var points = new List<Point>(series.Count);
+        var i = 0;
+        foreach (var sample in series.EnumerateOrdered())
+        {
+            var x = (startIndex + i) * stepX;
+            var ratio = Math.Clamp(sample / max, 0.0, 1.0);
+            var y = height - ratio * (height - 2) - 1;
+            points.Add(new Point(x, y));
+            i++;
+        }
+
         var lineGeometry = new StreamGeometry();
         var areaGeometry = new StreamGeometry();
 
         using (var lineCtx = lineGeometry.Open())
         using (var areaCtx = areaGeometry.Open())
         {
-            var i = 0;
-            Point first = default;
-            Point last = default;
-            foreach (var sample in series.EnumerateOrdered())
+            lineCtx.BeginFigure(points[0], false, false);
+            areaCtx.BeginFigure(new Point(points[0].X, height), true, true);
+            areaCtx.LineTo(points[0], true, false);
+
+            // Catmull-Rom -> cubic Bezier smoothing for a polished, non-jagged trend line.
+            for (var p = 0; p < points.Count - 1; p++)
             {
-                var x = (startIndex + i) * stepX;
-                var ratio = Math.Clamp(sample / max, 0.0, 1.0);
-                var y = height - ratio * (height - 2) - 1;
-                var point = new Point(x, y);
+                var p0 = points[Math.Max(0, p - 1)];
+                var p1 = points[p];
+                var p2 = points[p + 1];
+                var p3 = points[Math.Min(points.Count - 1, p + 2)];
 
-                if (i == 0)
-                {
-                    first = point;
-                    lineCtx.BeginFigure(point, false, false);
-                    areaCtx.BeginFigure(new Point(x, height), true, true);
-                    areaCtx.LineTo(point, true, false);
-                }
-                else
-                {
-                    lineCtx.LineTo(point, true, true);
-                    areaCtx.LineTo(point, true, true);
-                }
+                var c1 = new Point(p1.X + (p2.X - p0.X) / 6.0, p1.Y + (p2.Y - p0.Y) / 6.0);
+                var c2 = new Point(p2.X - (p3.X - p1.X) / 6.0, p2.Y - (p3.Y - p1.Y) / 6.0);
 
-                last = point;
-                i++;
-            }
-
-            // Close the area polygon back down to the baseline.
-            areaCtx.LineTo(new Point(last.X, height), true, false);
-            areaCtx.LineTo(new Point(first.X, height), true, false);
-        }
-
-        lineGeometry.Freeze();
-        areaGeometry.Freeze();
-
-        var fill = new LinearGradientBrush
-        {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(0, 1)
-        };
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, series.Color.R, series.Color.G, series.Color.B), 0));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(8, series.Color.R, series.Color.G, series.Color.B), 1));
-        fill.Freeze();
-
-        var stroke = new Pen(new SolidColorBrush(series.Color), 1.6)
-        {
-            LineJoin = PenLineJoin.Round
-        };
-        stroke.Freeze();
-
-        dc.DrawGeometry(fill, null, areaGeometry);
-        dc.DrawGeometry(null, stroke, lineGeometry);
-    }
-}
+                lineCtx.BezierTo(c1, c2, p2, true, false);
+   

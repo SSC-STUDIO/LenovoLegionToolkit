@@ -21,6 +21,8 @@ public class RadialGaugeControl : Control
 
     private Path? _trackPath;
     private Path? _valuePath;
+    private Path? _glowPath;
+    private Ellipse? _tip;
     private TextBlock? _valueText;
     private TextBlock? _captionText;
     private double _renderedValue;
@@ -124,6 +126,8 @@ public class RadialGaugeControl : Control
         base.OnApplyTemplate();
         _trackPath = GetTemplateChild("PART_Track") as Path;
         _valuePath = GetTemplateChild("PART_Value") as Path;
+        _glowPath = GetTemplateChild("PART_Glow") as Path;
+        _tip = GetTemplateChild("PART_Tip") as Ellipse;
         _valueText = GetTemplateChild("PART_ValueText") as TextBlock;
         _captionText = GetTemplateChild("PART_CaptionText") as TextBlock;
         _renderedValue = NormalizedValue();
@@ -189,6 +193,24 @@ public class RadialGaugeControl : Control
     {
         DrawTrackArc();
         DrawValueArc();
+        ScaleText();
+    }
+
+    /// <summary>
+    /// Scales the centered value/caption typography with the gauge diameter so a large
+    /// big-screen gauge fills its ring instead of leaving a tiny number adrift in the middle.
+    /// </summary>
+    private void ScaleText()
+    {
+        var size = Math.Min(ActualWidth, ActualHeight);
+        if (size <= 0)
+            return;
+
+        if (_valueText is not null)
+            _valueText.FontSize = Math.Clamp(size * 0.2, 14.0, 40.0);
+
+        if (_captionText is not null)
+            _captionText.FontSize = Math.Clamp(size * 0.1, 10.0, 18.0);
     }
 
     private (Point center, double radius) GetGeometry()
@@ -227,63 +249,37 @@ public class RadialGaugeControl : Control
         if (radius <= 0)
         {
             _valuePath.Data = null;
+            if (_glowPath is not null)
+                _glowPath.Data = null;
+            if (_tip is not null)
+                _tip.Visibility = Visibility.Collapsed;
             return;
         }
 
         var sweep = SweepAngle * Math.Clamp(_renderedValue, 0.0, 1.0);
+
         _valuePath.StrokeThickness = RingThickness;
-        _valuePath.Stroke = RingBrush;
+        _valuePath.Stroke = BuildArcStroke();
         _valuePath.StrokeStartLineCap = PenLineCap.Round;
         _valuePath.StrokeEndLineCap = PenLineCap.Round;
 
         // Avoid a zero-length arc (renders nothing / a dot) when value is ~0.
-        _valuePath.Data = sweep < 0.5 ? null : BuildArc(center, radius, StartAngle, sweep);
-    }
+        var arc = sweep < 0.5 ? null : BuildArc(center, radius, StartAngle, sweep);
+        _valuePath.Data = arc;
 
-    private static Geometry BuildArc(Point center, double radius, double startAngleDeg, double sweepDeg)
-    {
-        var start = PointOnCircle(center, radius, startAngleDeg);
-        var end = PointOnCircle(center, radius, startAngleDeg + sweepDeg);
-        var isLargeArc = sweepDeg > 180.0;
-
-        var figure = new PathFigure { StartPoint = start, IsClosed = false, IsFilled = false };
-        figure.Segments.Add(new ArcSegment
+        // Soft glow underlay traces the same arc with a thicker, translucent, blurred stroke.
+        if (_glowPath is not null)
         {
-            Point = end,
-            Size = new Size(radius, radius),
-            SweepDirection = SweepDirection.Clockwise,
-            IsLargeArc = isLargeArc
-        });
-
-        var geometry = new PathGeometry();
-        geometry.Figures.Add(figure);
-        geometry.Freeze();
-        return geometry;
-    }
-
-    private static Point PointOnCircle(Point center, double radius, double angleDeg)
-    {
-        var angleRad = angleDeg * Math.PI / 180.0;
-        return new Point(
-            center.X + radius * Math.Cos(angleRad),
-            center.Y + radius * Math.Sin(angleRad));
-    }
-
-    private void UpdateText()
-    {
-        if (_valueText is not null)
-        {
-            _valueText.Text = string.IsNullOrEmpty(ValueText)
-                ? Value.ToString("0", CultureInfo.CurrentCulture)
-                : ValueText;
+            _glowPath.Data = arc;
+            _glowPath.StrokeThickness = RingThickness + 6;
+            _glowPath.Stroke = ExtractRingColorBrush(96);
+            _glowPath.StrokeStartLineCap = PenLineCap.Round;
+            _glowPath.StrokeEndLineCap = PenLineCap.Round;
         }
 
-        if (_captionText is not null)
+        // Bright dot riding the leading edge of the value arc.
+        if (_tip is not null)
         {
-            _captionText.Text = Caption;
-            _captionText.Visibility = string.IsNullOrEmpty(Caption)
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-        }
-    }
-}
+            if (arc is null)
+            {
+        

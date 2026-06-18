@@ -16,7 +16,19 @@
                 <ControlTemplate TargetType="{x:Type charts:RadialGaugeControl}">
                     <Grid>
                         <Path x:Name="PART_Track" />
+                        <!-- Blurred underlay that gives the value arc a soft glow. -->
+                        <Path x:Name="PART_Glow" Opacity="0.55">
+                            <Path.Effect>
+                                <BlurEffect Radius="7" KernelType="Gaussian" />
+                            </Path.Effect>
+                        </Path>
                         <Path x:Name="PART_Value" />
+                        <!-- Bright dot riding the leading edge of the value arc. -->
+                        <Ellipse
+                            x:Name="PART_Tip"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Visibility="Collapsed" />
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
@@ -24,19 +36,4 @@
                                 x:Name="PART_ValueText"
                                 HorizontalAlignment="Center"
                                 FontSize="18"
-                                FontWeight="SemiBold"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <TextBlock
-                                x:Name="PART_CaptionText"
-                                HorizontalAlignment="Center"
-                                FontSize="11"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                TextTrimming="CharacterEllipsis" />
-                        </StackPanel>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-</ResourceDictionary>
+                
