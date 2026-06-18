@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed / 变更
+
+- Polished the dashboard console chart visuals: trend charts now render smooth curves with faint guide lines and a glowing live-edge marker, and radial gauges gained a gradient value arc with a soft glow and a leading-edge dot whose center text scales with the gauge size / 打磨控制台图表视觉：趋势图改用带浅参考线的平滑曲线并在最新数据点显示发光标记，环形仪表盘新增渐变数值圆弧、柔光与前缘亮点，且中心文字随仪表盘尺寸自适应缩放
+
 ### Fixed / 修复
 
 - Main window minimum width is wider so the dashboard console no longer compresses sensor cards as tightly at the smallest size / 主窗口最小宽度已加宽，避免控制台在最小尺寸下过度压缩传感器卡片
