@@ -282,4 +282,105 @@ public class RadialGaugeControl : Control
         {
             if (arc is null)
             {
-        
+                _tip.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                var tipCenter = PointOnCircle(center, radius, StartAngle + sweep);
+                var tipDiameter = Math.Max(4.0, RingThickness + 2.0);
+
+                _tip.Width = tipDiameter;
+                _tip.Height = tipDiameter;
+                _tip.Fill = ExtractRingColorBrush(255);
+                _tip.Margin = new Thickness(
+                    tipCenter.X - tipDiameter / 2.0,
+                    tipCenter.Y - tipDiameter / 2.0,
+                    0,
+                    0);
+                _tip.Visibility = Visibility.Visible;
+            }
+        }
+    }
+    private void UpdateText()
+    {
+        if (_valueText is not null)
+        {
+            _valueText.Text = string.IsNullOrEmpty(ValueText)
+                ? Value.ToString("0", CultureInfo.CurrentCulture)
+                : ValueText;
+        }
+
+        if (_captionText is not null)
+        {
+            _captionText.Text = Caption;
+            _captionText.Visibility = string.IsNullOrEmpty(Caption)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+    }
+
+    private static Geometry BuildArc(Point center, double radius, double startAngle, double sweepAngle)
+    {
+        var start = PointOnCircle(center, radius, startAngle);
+        var end = PointOnCircle(center, radius, startAngle + sweepAngle);
+        var isLargeArc = sweepAngle > 180.0;
+
+        var figure = new PathFigure { StartPoint = start, IsClosed = false, IsFilled = false };
+        figure.Segments.Add(new ArcSegment(
+            end,
+            new Size(radius, radius),
+            0.0,
+            isLargeArc,
+            SweepDirection.Clockwise,
+            true));
+
+        var geometry = new PathGeometry();
+        geometry.Figures.Add(figure);
+        geometry.Freeze();
+        return geometry;
+    }
+
+    private static Point PointOnCircle(Point center, double radius, double angleDegrees)
+    {
+        var radians = angleDegrees * Math.PI / 180.0;
+        return new Point(
+            center.X + radius * Math.Cos(radians),
+            center.Y + radius * Math.Sin(radians));
+    }
+    private Brush BuildArcStroke()
+    {
+        var baseColor = ExtractRingColor();
+        var brush = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1)
+        };
+        brush.GradientStops.Add(new GradientStop(Lighten(baseColor, 0.35), 0.0));
+        brush.GradientStops.Add(new GradientStop(baseColor, 1.0));
+        brush.Freeze();
+        return brush;
+    }
+
+    private SolidColorBrush ExtractRingColorBrush(byte alpha)
+    {
+        var color = ExtractRingColor();
+        var brush = new SolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
+        brush.Freeze();
+        return brush;
+    }
+
+    private Color ExtractRingColor()
+    {
+        return RingBrush is SolidColorBrush solid ? solid.Color : Colors.DodgerBlue;
+    }
+
+    private static Color Lighten(Color color, double amount)
+    {
+        amount = Math.Clamp(amount, 0.0, 1.0);
+        return Color.FromArgb(
+            color.A,
+            (byte)(color.R + (255 - color.R) * amount),
+            (byte)(color.G + (255 - color.G) * amount),
+            (byte)(color.B + (255 - color.B) * amount));
+    }
+}

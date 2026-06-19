@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,8 +29,19 @@ public partial class SensorsControl
     private const string MegahertzUnit = "MHz";
     private const string RpmUnit = "RPM";
     private static readonly TimeSpan DoubleClickThreshold = TimeSpan.FromMilliseconds(500);
+    private const int TrendHistoryCapacity = 60;
     private static readonly object SessionSensorDataLock = new();
     private static SensorsData? _sessionSensorData;
+
+    // Session-persistent trend history: survives page navigation so charts
+    // do NOT restart from scratch when the user navigates away and back.
+    // Keyed "scope:seriesKey", capped at DefaultCapacity (60) per series.
+    private static readonly object TrendHistoryLock = new();
+    private static readonly Dictionary<string, List<double>> _sessionTrendHistory = new(StringComparer.Ordinal);
+
+    private const string CpuScope = "cpu";
+    private const string GpuScope = "gpu";
+    private const string BatteryScope = "battery";
 
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
@@ -366,7 +379,7 @@ public partial class SensorsControl
                     var batteryInfo = Battery.GetBatteryInformation();
                     var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
                     var onBatterySince = Battery.GetOnBatterySince();
-                    Dispatcher.Invoke(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince));
+                    Dispatcher.Invoke(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
 
                     await Task.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
                 }
@@ -383,7 +396,8 @@ public partial class SensorsControl
         }, token);
     }
 
-    private void SetBattery(BatteryInformation batteryInfo, PowerAdapterStatus powerAdapterStatus, DateTime? onBatterySince)
+    private void SetBattery(BatteryInformation batteryInfo, PowerAdapterStatus powerAdapterStatus, DateTime? onBatterySince,
+        bool recordTrendHistory = false)
     {
         if (_batteryGauge is not null)
         {
@@ -411,14 +425,14 @@ public partial class SensorsControl
         // Icon
         if (FindName("_batteryIcon") is Wpf.Ui.Controls.SymbolIcon icon)
         {
-            icon.Symbol = batteryInfo.IsCharging 
-                ? SymbolRegular.BatteryCharge24 
+            icon.Symbol = batteryInfo.IsCharging
+                ? SymbolRegular.BatteryCharge24
                 : GetBatteryIconSymbol(batteryInfo.BatteryPercentage);
         }
 
         // Details
         UpdateBatteryDetails(batteryInfo, onBatterySince);
-        PushBatteryTrendSamples(batteryInfo);
+        PushBatteryTrendSamples(batteryInfo, recordTrendHistory);
     }
 
     private void UpdateBatteryDetails(BatteryInformation info, DateTime? onBatterySince)
@@ -598,7 +612,7 @@ public partial class SensorsControl
                     var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
                     if (detailed)
                         _forceDetailedRefresh = false;
-                    Dispatcher.Invoke(() => UpdateValues(data, completesInitialLoad: true));
+                    Dispatcher.Invoke(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
                     await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
@@ -617,7 +631,7 @@ public partial class SensorsControl
         }, token);
     }
 
-    private void UpdateValues(SensorsData data, bool completesInitialLoad = false)
+    private void UpdateValues(SensorsData data, bool completesInitialLoad = false, bool recordTrendHistory = false)
     {
         data = MergeSensorDataForDisplay(data, _lastRenderedSensorData);
         var shouldCompleteInitialLoad = completesInitialLoad && HasInitialSummarySensorData(data);
@@ -712,12 +726,12 @@ public partial class SensorsControl
                  gpuVoltageRange.Text = NotAvailableText();
         }
 
-        UpdateGaugesAndTrends(data);
+        UpdateGaugesAndTrends(data, recordTrendHistory);
 
         QueueExtendedDetailValuesRefresh();
     }
 
-    private void UpdateGaugesAndTrends(SensorsData data)
+    private void UpdateGaugesAndTrends(SensorsData data, bool recordTrendHistory = false)
     {
         // CPU / GPU utilization gauges (center ring of each section).
         if (_cpuGauge is not null)
@@ -737,38 +751,86 @@ public partial class SensorsControl
         }
 
         // Trend charts: push the latest summary samples (utilization %, core clock GHz, temperature).
-        PushTrendSamples(_cpuTrendChart, data.CPU);
-        PushTrendSamples(_gpuTrendChart, data.GPU);
+        PushTrendSamples(_cpuTrendChart, data.CPU, CpuScope, recordTrendHistory);
+        PushTrendSamples(_gpuTrendChart, data.GPU, GpuScope, recordTrendHistory);
     }
 
-    private static void PushTrendSamples(Charts.TrendChartControl? chart, SensorData data)
+    private static void PushTrendSamples(Charts.TrendChartControl? chart, SensorData data,
+        string? scope = null, bool recordTrendHistory = false)
     {
         if (chart is null)
             return;
 
         if (data.Utilization >= 0)
+        {
             chart.AddSample(TrendUtilizationKey, data.Utilization);
+            if (recordTrendHistory && scope is not null)
+                RecordTrendSample(scope, TrendUtilizationKey, data.Utilization);
+        }
 
         if (data.CoreClock >= 0)
+        {
             chart.AddSample(TrendCoreClockKey, data.CoreClock / 1000.0);
+            if (recordTrendHistory && scope is not null)
+                RecordTrendSample(scope, TrendCoreClockKey, data.CoreClock / 1000.0);
+        }
 
         if (data.Temperature >= 0)
+        {
             chart.AddSample(TrendTemperatureKey, data.Temperature);
+            if (recordTrendHistory && scope is not null)
+                RecordTrendSample(scope, TrendTemperatureKey, data.Temperature);
+        }
     }
 
-    private void PushBatteryTrendSamples(BatteryInformation info)
+    private void PushBatteryTrendSamples(BatteryInformation info, bool recordTrendHistory = false)
     {
         if (_batteryTrendChart is null)
             return;
 
         if (info.BatteryPercentage >= 0)
+        {
             _batteryTrendChart.AddSample(TrendBatteryChargeKey, info.BatteryPercentage);
+            if (recordTrendHistory)
+                RecordTrendSample(BatteryScope, TrendBatteryChargeKey, info.BatteryPercentage);
+        }
 
         if (info.BatteryHealth >= 0)
+        {
             _batteryTrendChart.AddSample(TrendBatteryHealthKey, info.BatteryHealth);
+            if (recordTrendHistory)
+                RecordTrendSample(BatteryScope, TrendBatteryHealthKey, info.BatteryHealth);
+        }
 
         if (info.BatteryTemperatureC is { } temperature)
+        {
             _batteryTrendChart.AddSample(TrendBatteryTemperatureKey, temperature);
+            if (recordTrendHistory)
+                RecordTrendSample(BatteryScope, TrendBatteryTemperatureKey, temperature);
+        }
+    }
+
+    /// <summary>
+    /// Records a single historical sample into the session-static trend history store,
+    /// keyed by "scope:seriesKey". Caps each series at DefaultCapacity (60).
+    /// </summary>
+    private static void RecordTrendSample(string scope, string seriesKey, double value)
+    {
+        var key = $"{scope}:{seriesKey}";
+        lock (TrendHistoryLock)
+        {
+            if (!_sessionTrendHistory.TryGetValue(key, out var list))
+            {
+                list = new List<double>(TrendHistoryCapacity);
+                _sessionTrendHistory[key] = list;
+            }
+
+            list.Add(value);
+
+            // Trim excess — keep only the last TrendHistoryCapacity samples.
+            if (list.Count > TrendHistoryCapacity)
+                list.RemoveRange(0, list.Count - TrendHistoryCapacity);
+        }
     }
 
     private void ClearTrendCharts()
@@ -780,11 +842,37 @@ public partial class SensorsControl
 
     private void InitializeTrendChartsFromSessionCache()
     {
-        var cached = TryGetSessionSensorDataForDisplay();
-        if (cached is { } data)
+        // Replay the full recorded history per series into each chart so the
+        // trend lines are restored intact (not just a single latest point).
+        if (_cpuTrendChart is not null)
+            ReplayHistoryIntoChart(_cpuTrendChart, CpuScope);
+        if (_gpuTrendChart is not null)
+            ReplayHistoryIntoChart(_gpuTrendChart, GpuScope);
+        if (_batteryTrendChart is not null)
+            ReplayHistoryIntoChart(_batteryTrendChart, BatteryScope);
+    }
+
+    /// <summary>
+    /// Replays all recorded samples for the given scope into the chart.
+    /// DrawSeries requires at least 2 points or the line is invisible.
+    /// </summary>
+    private static void ReplayHistoryIntoChart(Charts.TrendChartControl chart, string scope)
+    {
+        List<KeyValuePair<string, List<double>>> captured;
+        lock (TrendHistoryLock)
         {
-            PushTrendSamples(_cpuTrendChart, data.CPU);
-            PushTrendSamples(_gpuTrendChart, data.GPU);
+            captured = _sessionTrendHistory
+                .Where(kvp => kvp.Key.StartsWith(scope + ":", StringComparison.Ordinal))
+                .Select(kvp => kvp)
+                .ToList();
+        }
+
+        foreach (var entry in captured)
+        {
+            // entry.Key = "scope:seriesKey"  → extract seriesKey
+            var seriesKey = entry.Key[(scope.Length + 1)..];
+            foreach (var value in entry.Value)
+                chart.AddSample(seriesKey, value);
         }
     }
 
@@ -792,6 +880,7 @@ public partial class SensorsControl
     {
         _lastRenderedSensorData = null;
         ClearSessionSensorData();
+        ClearTrendHistory();
         ClearTrendCharts();
         UpdateValues(SensorsData.Empty);
     }
@@ -875,6 +964,12 @@ public partial class SensorsControl
 
         lock (SessionSensorDataLock)
             _sessionSensorData = data;
+    }
+
+    private static void ClearTrendHistory()
+    {
+        lock (TrendHistoryLock)
+            _sessionTrendHistory.Clear();
     }
 
     internal static SensorsData? TryGetSessionSensorDataForDisplay()
@@ -990,7 +1085,7 @@ public partial class SensorsControl
         try
         {
             var data = await _controller.GetDataAsync(true).ConfigureAwait(false);
-            await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true));
+            await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
         }
         catch (Exception ex)
         {

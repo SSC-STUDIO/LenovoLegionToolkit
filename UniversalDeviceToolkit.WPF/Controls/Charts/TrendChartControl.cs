@@ -209,4 +209,31 @@ public class TrendChartControl : FrameworkElement
                 var c2 = new Point(p2.X - (p3.X - p1.X) / 6.0, p2.Y - (p3.Y - p1.Y) / 6.0);
 
                 lineCtx.BezierTo(c1, c2, p2, true, false);
-   
+                areaCtx.BezierTo(c1, c2, p2, true, false);
+            }
+
+            // Close the area back down to the baseline so the fill is watertight.
+            areaCtx.LineTo(new Point(points[^1].X, height), true, false);
+        }
+
+        lineGeometry.Freeze();
+        areaGeometry.Freeze();
+
+        // Soft vertical fade beneath the line: series color at the top, transparent at the baseline.
+        var fill = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(0, 1) };
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, series.Color.R, series.Color.G, series.Color.B), 0.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(0, series.Color.R, series.Color.G, series.Color.B), 1.0));
+        fill.Freeze();
+
+        var linePen = new Pen(new SolidColorBrush(series.Color), 2.0)
+        {
+            LineJoin = PenLineJoin.Round,
+            StartLineCap = PenLineCap.Round,
+            EndLineCap = PenLineCap.Round,
+        };
+        linePen.Freeze();
+
+        dc.DrawGeometry(fill, null, areaGeometry);
+        dc.DrawGeometry(null, linePen, lineGeometry);
+    }
+}

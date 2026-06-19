@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 
+- Dashboard trend charts no longer restart from scratch when navigating away and back; accumulated history is now restored across page navigation / 控制台趋势图切换页面后不再重新从头显示，累积的历史趋势数据在页面导航中得以保留
+
 - Main window minimum width is wider so the dashboard console no longer compresses sensor cards as tightly at the smallest size / 主窗口最小宽度已加宽，避免控制台在最小尺寸下过度压缩传感器卡片
 - Dashboard sensor cards keep CPU, battery, and GPU on one row at every window size, using a compact small-window mode and a wider chart layout on large screens / 控制台传感器卡片在所有窗口尺寸下都保持 CPU、电池、GPU 同一行显示，并在小窗口使用紧凑模式、大屏使用更宽的图表布局
 - Battery sensor cards now include a live trend chart, and CPU/GPU/battery summary metrics stay on the gauges instead of being duplicated as progress rows / 电池传感器卡片现在包含实时趋势图，CPU/GPU/电池摘要指标保留在环形仪表上，不再重复为进度条行

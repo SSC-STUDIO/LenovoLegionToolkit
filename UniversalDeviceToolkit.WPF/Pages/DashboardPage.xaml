@@ -168,10 +168,10 @@
                 Opacity="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <dashboard:SensorsControl x:Name="_sensors" Grid.Row="0" Margin="0,16,16,0" />
-                <Grid x:Name="_content" Grid.Row="1" />
+                <Grid x:Name="_content" Grid.Row="1" VerticalAlignment="Stretch" />
             </Grid>
         </controls:LoadableControl>
     </wpfui:DynamicScrollViewer>
