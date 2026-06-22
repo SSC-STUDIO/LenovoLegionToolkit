@@ -471,7 +471,11 @@ public class GPUController : IDisposable
                     {
                         foreach (var process in _processes)
                         {
-                            try { process.Dispose(); } catch { /* Ignore */ }
+                            try { process.Dispose(); } catch
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace("Failed to dispose process");
+                            }
                         }
                         _processes.Clear();
                     }

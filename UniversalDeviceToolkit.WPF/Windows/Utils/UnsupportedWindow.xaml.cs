@@ -115,15 +115,23 @@ public partial class UnsupportedWindow : FluentWindow
 
     private void ContributionLink_Click(object sender, RoutedEventArgs e)
     {
+        if (!Uri.TryCreate(Constants.ContributionUrl, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            return;
+
         try
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = Constants.ContributionUrl,
+                FileName = uri.AbsoluteUri,
                 UseShellExecute = true
             });
         }
-        catch { }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to open URL");
+        }
     }
 }
 }

@@ -115,15 +115,6 @@ if (Log.Instance.IsTraceEnabled)
         {
             if (disposing)
             {
-                try
-                {
-                    // AsyncLock doesn't need explicit disposal
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error during SmartFnLockController disposal", ex);
-                }
             }
             _disposed = true;
         }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.SoftwareDisabler;
 
@@ -42,7 +43,11 @@ public class FnKeysDisabler : AbstractSoftwareDisabler
                     result.Add(process.ProcessName);
             }
         }
-        catch {  /* Ignored. */ }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to get FnKeys processes");
+        }
 
         return result;
     }
@@ -66,7 +71,11 @@ public class FnKeysDisabler : AbstractSoftwareDisabler
                 await process.WaitForExitAsync().ConfigureAwait(false);
             }
         }
-        catch {  /* Ignored. */ }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to kill FnKeys processes");
+        }
     }
 
     private static void SetUwpStartup(string appPattern, string subKeyName, bool enabled)

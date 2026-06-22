@@ -124,13 +124,15 @@ public partial class CreateAutomationPipelineWindow
             Margin = new(0, 8, 0, 0),
         };
 
-        control.Click += async (_, _) =>
-        {
-            _multiSelect = true;
-            await RefreshAsync();
-        };
+        control.Click += MultipleSelectCardControl_Click;
 
         return control;
+    }
+
+    private async void MultipleSelectCardControl_Click(object? sender, RoutedEventArgs e)
+    {
+        _multiSelect = true;
+        await RefreshAsync();
     }
 
     private CardControl CreateCardControl(IAutomationPipelineTrigger trigger)

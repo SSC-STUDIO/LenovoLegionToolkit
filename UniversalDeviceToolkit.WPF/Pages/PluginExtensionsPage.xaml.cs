@@ -1699,11 +1699,19 @@ private string _currentSearchText = string.Empty;
         if (!viewModel.HasChangelogUrl || string.IsNullOrWhiteSpace(viewModel.Changelog))
             return;
 
+        if (!Uri.TryCreate(viewModel.Changelog, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        {
+            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Rejected changelog URL for plugin {viewModel.PluginId}: invalid or unsupported scheme.");
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, Resource.PluginExtensionsPage_OpenFailedMessage, SnackbarType.Error);
+            return;
+        }
+
         try
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = viewModel.Changelog,
+                FileName = uri.AbsoluteUri,
                 UseShellExecute = true
             });
         }

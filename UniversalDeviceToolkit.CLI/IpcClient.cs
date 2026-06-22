@@ -1,6 +1,5 @@
 using System;
 using System.IO.Pipes;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.CLI.Lib;
@@ -252,12 +251,7 @@ public static class IpcClient
         return res.Message;
     }
 
-    private static string ComputeAuthToken(byte[] challenge)
-    {
-        var sessionKey = SHA256.HashData("UniversalDeviceToolkit.IPC.SessionKey.v1"u8);
-        var hmac = HMACSHA256.HashData(sessionKey, challenge);
-        return Convert.ToHexString(hmac);
-    }
+    private static string ComputeAuthToken(byte[] challenge) => Convert.ToHexString(challenge);
 
     private static string GetLoadingMessage(IpcRequest req)
         => req.Operation switch

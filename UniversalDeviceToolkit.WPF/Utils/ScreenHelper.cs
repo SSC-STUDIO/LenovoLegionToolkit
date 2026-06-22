@@ -11,14 +11,26 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 
 public static class ScreenHelper
 {
+    private static readonly object _screenLock = new();
+
     public static List<ScreenInfo> Screens { get; } = [];
 
-    public static ScreenInfo? PrimaryScreen => Screens.FirstOrDefault(s => s.IsPrimary);
+    public static ScreenInfo? PrimaryScreen
+    {
+        get
+        {
+            lock (_screenLock)
+                return Screens.FirstOrDefault(s => s.IsPrimary);
+        }
+    }
 
     public static void UpdateScreenInfos()
     {
-        Screens.Clear();
-        EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProc, IntPtr.Zero);
+        lock (_screenLock)
+        {
+            Screens.Clear();
+            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProc, IntPtr.Zero);
+        }
     }
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
@@ -42,11 +54,12 @@ public static class ScreenHelper
         var multiplierX = 96d / dpiX;
         var multiplierY = 96d / dpiY;
 
-        Screens.Add(new ScreenInfo(
+        lock (_screenLock)
+            Screens.Add(new ScreenInfo(
             new Rect(workArea.X, workArea.Y, workArea.Width * multiplierX, workArea.Height * multiplierY),
             dpiX, dpiY,
             (monitorInfo.dwFlags & PInvoke.MONITORINFOF_PRIMARY) != 0
-        ));
+            ));
 
         return true;
     }

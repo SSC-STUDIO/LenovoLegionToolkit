@@ -102,12 +102,12 @@ public partial class WindowsOptimizationPage
         var path = GetDriverDownloadLocation();
         if (Directory.Exists(path))
         {
-            Process.Start(new ProcessStartInfo
+            var startInfo = new ProcessStartInfo("explorer.exe")
             {
-                FileName = path,
-                UseShellExecute = true,
-                Verb = "open"
-            });
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(path);
+            Process.Start(startInfo);
         }
     }
 

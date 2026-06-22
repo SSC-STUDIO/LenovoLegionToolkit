@@ -67,6 +67,10 @@ public class LightingChangeListener(
                     }
             }
         }
-        catch { /* Ignored. */ }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to handle lighting change event");
+        }
     }
 }

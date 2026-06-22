@@ -32,6 +32,7 @@ public partial class AutomationPage
     public AutomationPage()
     {
         Initialized += AutomationPage_Initialized;
+        Unloaded += AutomationPage_Unloaded;
 
         InitializeComponent();
     }
@@ -217,18 +218,46 @@ public partial class AutomationPage
         }
 
         var control = new AutomationPipelineControl(pipeline, supportedSteps);
-        control.MouseRightButtonUp += (_, e) =>
-        {
-            ShowPipelineContextMenu(control, stackPanel);
-            e.Handled = true;
-        };
-        control.OnChanged += (_, _) => PipelinesChanged();
-        control.OnDelete += (s, _) =>
-        {
-            if (s is AutomationPipelineControl c)
-                DeletePipeline(c, stackPanel);
-        };
+        control.MouseRightButtonUp += PipelineControl_MouseRightButtonUp;
+        control.OnChanged += PipelineControl_OnChanged;
+        control.OnDelete += PipelineControl_OnDelete;
         return control;
+    }
+
+    private void PipelineControl_MouseRightButtonUp(object? sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is AutomationPipelineControl control)
+        {
+            var stackPanel = _automaticPipelinesStackPanel.Children.Contains(control)
+                ? _automaticPipelinesStackPanel
+                : _manualPipelinesStackPanel.Children.Contains(control)
+                    ? _manualPipelinesStackPanel
+                    : null;
+
+            if (stackPanel is not null)
+                ShowPipelineContextMenu(control, stackPanel);
+            e.Handled = true;
+        }
+    }
+
+    private void PipelineControl_OnChanged(object? sender, EventArgs e)
+    {
+        PipelinesChanged();
+    }
+
+    private void PipelineControl_OnDelete(object? sender, EventArgs e)
+    {
+        if (sender is AutomationPipelineControl c)
+        {
+            var stackPanel = _automaticPipelinesStackPanel.Children.Contains(c)
+                ? _automaticPipelinesStackPanel
+                : _manualPipelinesStackPanel.Children.Contains(c)
+                    ? _manualPipelinesStackPanel
+                    : null;
+
+            if (stackPanel is not null)
+                DeletePipeline(c, stackPanel);
+        }
     }
 
     private void PipelinesChanged()
@@ -357,6 +386,12 @@ public partial class AutomationPage
             : Visibility.Collapsed;
 
         PipelinesChanged();
+    }
+
+    private void AutomationPage_Unloaded(object? sender, RoutedEventArgs e)
+    {
+        Initialized -= AutomationPage_Initialized;
+        Unloaded -= AutomationPage_Unloaded;
     }
 }
 }

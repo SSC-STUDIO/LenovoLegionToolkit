@@ -123,7 +123,11 @@ public abstract class AbstractSoftwareDisabler
                     if (!name.StartsWith(processName, StringComparison.OrdinalIgnoreCase))
                         continue;
                 }
-                catch {  /* Ignored. */ }
+                catch
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to get process name");
+                }
 
                 if (!string.IsNullOrEmpty(name))
                     yield return name;

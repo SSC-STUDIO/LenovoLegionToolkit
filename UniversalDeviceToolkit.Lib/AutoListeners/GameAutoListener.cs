@@ -228,7 +228,12 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
             var staleProcesses = _processCache.RemoveWhere(p =>
             {
                 try { return p.HasExited; }
-                catch { return true; }
+                catch
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to check process exit status");
+                    return false;
+                }
             });
 
             if (staleProcesses > 1)

@@ -270,8 +270,8 @@ public class Log : IDisposable
         .AppendLine("=== Exception ===")
         .AppendLine(ex.ToString())
         .AppendLine()
-        .AppendLine("=== Exception demystified ===")
-        .AppendLine(ex.ToStringDemystified())
+        .AppendLine("=== Exception ===")
+        .AppendLine(ex.ToString())
         .ToString();
 
     public void Dispose()

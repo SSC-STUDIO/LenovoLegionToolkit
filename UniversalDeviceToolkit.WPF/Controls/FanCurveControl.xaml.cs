@@ -29,11 +29,23 @@ public partial class FanCurveControl : UserControl
         InitializeComponent();
 
         MouseLeave += FanCurveControl_MouseLeave;
+
+        Unloaded += FanCurveControl_Unloaded;
     }
 
     private void FanCurveControl_MouseLeave(object sender, MouseEventArgs e)
     {
         _customToolTip.IsOpen = false;
+    }
+
+    private void FanCurveControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        MouseLeave -= FanCurveControl_MouseLeave;
+        foreach (var slider in _sliders)
+        {
+            slider.MouseMove -= Slider_MouseMove;
+            slider.ValueChanged -= Slider_OnValueChanged;
+        }
     }
 
     protected override Size ArrangeOverride(Size arrangeBounds)

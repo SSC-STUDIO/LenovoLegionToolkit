@@ -70,9 +70,20 @@ public partial class SensorsControl
     private string _gpuName = string.Empty;
     private SensorSummaryLayoutMode _sensorSummaryLayoutMode = SensorSummaryLayoutMode.Standard;
 
+    private TextBlock? _cpuWattageText;
+    private TextBlock? _cpuTempRangeText;
+    private TextBlock? _cpuVoltageText;
+    private TextBlock? _cpuVoltageRangeText;
+    private TextBlock? _gpuWattageText;
+    private TextBlock? _gpuTempRangeText;
+    private TextBlock? _gpuVoltageText;
+    private TextBlock? _gpuVoltageRangeText;
+    private bool _textBlockReferencesCached;
+
     public SensorsControl()
     {
         InitializeComponent();
+        CacheTextBlockReferences();
         InitializeContextMenu();
         InitializeTrendCharts();
         SetInitialSensorPlaceholders();
@@ -303,7 +314,7 @@ public partial class SensorsControl
             _gpuName = T("SensorsControl_UnknownGpu", "Unknown GPU");
         }
 
-        Dispatcher.Invoke(() =>
+        await Dispatcher.InvokeAsync(() =>
         {
             UpdateModelNameText("_cpuModelName", _cpuName);
             UpdateModelNameText("_gpuModelName", _gpuName);
@@ -379,7 +390,7 @@ public partial class SensorsControl
                     var batteryInfo = Battery.GetBatteryInformation();
                     var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
                     var onBatterySince = Battery.GetOnBatterySince();
-                    Dispatcher.Invoke(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
+                    await Dispatcher.InvokeAsync(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
 
                     await Task.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
                 }
@@ -586,7 +597,7 @@ public partial class SensorsControl
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Sensors not supported.");
 
-                Dispatcher.Invoke(() =>
+                await Dispatcher.InvokeAsync(() =>
                 {
                     _sensorRuntimeAvailable = false;
                     SetSensorSectionsVisible(true);
@@ -596,7 +607,7 @@ public partial class SensorsControl
                 return;
             }
 
-            Dispatcher.Invoke(() =>
+            await Dispatcher.InvokeAsync(() =>
             {
                 _sensorRuntimeAvailable = true;
                 SetSensorSectionsVisible(true);
@@ -608,11 +619,11 @@ public partial class SensorsControl
             {
                 try
                 {
-                    var detailed = Dispatcher.Invoke(() => CanShowSensorDetails && _cpuDetailsPanel.Visibility == Visibility.Visible) || (CanShowSensorDetails && _forceDetailedRefresh);
+                    var detailed = await Dispatcher.InvokeAsync(() => CanShowSensorDetails && _cpuDetailsPanel.Visibility == Visibility.Visible) || (CanShowSensorDetails && _forceDetailedRefresh);
                     var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
                     if (detailed)
                         _forceDetailedRefresh = false;
-                    Dispatcher.Invoke(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
+                    await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
                     await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
@@ -627,7 +638,7 @@ public partial class SensorsControl
                     var cached = TryGetSessionSensorDataForDisplay();
                     if (cached.HasValue)
                     {
-                        Dispatcher.Invoke(() => UpdateValues(cached.Value));
+                        await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value));
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace("Using cached session data as fallback after sensor read failure.");
                     }
@@ -637,6 +648,22 @@ public partial class SensorsControl
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Sensors refresh stopped.");
         }, token);
+    }
+
+    private void CacheTextBlockReferences()
+    {
+        if (_textBlockReferencesCached)
+            return;
+
+        _cpuWattageText = FindName("_cpuWattage") as TextBlock;
+        _cpuTempRangeText = FindName("_cpuTempRange") as TextBlock;
+        _cpuVoltageText = FindName("_cpuVoltage") as TextBlock;
+        _cpuVoltageRangeText = FindName("_cpuVoltageRange") as TextBlock;
+        _gpuWattageText = FindName("_gpuWattage") as TextBlock;
+        _gpuTempRangeText = FindName("_gpuTempRange") as TextBlock;
+        _gpuVoltageText = FindName("_gpuVoltage") as TextBlock;
+        _gpuVoltageRangeText = FindName("_gpuVoltageRange") as TextBlock;
+        _textBlockReferencesCached = true;
     }
 
     private void UpdateValues(SensorsData data, bool completesInitialLoad = false, bool recordTrendHistory = false)
@@ -656,30 +683,30 @@ public partial class SensorsControl
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
             $"{data.CPU.FanSpeed} {RpmUnit}", $"{data.CPU.MaxFanSpeed} {RpmUnit}");
 
-        if (FindName("_cpuWattage") is TextBlock cpuWattage)
+        if (_cpuWattageText is not null)
         {
-            cpuWattage.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText();
+            _cpuWattageText.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText();
         }
 
-        if (FindName("_cpuTempRange") is TextBlock cpuTempRange)
+        if (_cpuTempRangeText is not null)
         {
              if (IsTemperatureRangeAvailable(data.CPU.MinTemperature, data.CPU.MaxTemperatureRecord))
-                 cpuTempRange.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
+                 _cpuTempRangeText.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
-                 cpuTempRange.Text = NotAvailableText();
+                 _cpuTempRangeText.Text = NotAvailableText();
         }
 
-        if (FindName("_cpuVoltage") is TextBlock cpuVoltage)
+        if (_cpuVoltageText is not null)
         {
-            cpuVoltage.Text = data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : NotAvailableText();
+            _cpuVoltageText.Text = data.CPU.Voltage > 0 ? $"{data.CPU.Voltage:0.000} V" : NotAvailableText();
         }
 
-        if (FindName("_cpuVoltageRange") is TextBlock cpuVoltageRange)
+        if (_cpuVoltageRangeText is not null)
         {
              if (IsVoltageRangeAvailable(data.CPU.MinVoltage, data.CPU.MaxVoltage))
-                 cpuVoltageRange.Text = $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V";
+                 _cpuVoltageRangeText.Text = $"{data.CPU.MinVoltage:0.000} V ~ {data.CPU.MaxVoltage:0.000} V";
              else
-                 cpuVoltageRange.Text = NotAvailableText();
+                 _cpuVoltageRangeText.Text = NotAvailableText();
         }
 
         // GPU Core Clock (Main view)
@@ -687,19 +714,18 @@ public partial class SensorsControl
             $"{data.GPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.GPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
 
         // GPU Memory Clock (Details view)
-        if (FindName("_gpuMemoryClockBar") is System.Windows.Controls.Primitives.RangeBase memBar &&
-            FindName("_gpuMemoryClockText") is TextBlock memText)
+        if (_gpuMemoryClockBar is not null && _gpuMemoryClockText is not null)
         {
             if (data.GPU.MaxMemoryClock < 0 || data.GPU.MemoryClock < 0)
             {
-                memBar.Value = 0;
-                memText.Text = "-";
+                _gpuMemoryClockBar.Value = 0;
+                _gpuMemoryClockText.Text = "-";
             }
             else
             {
-                memBar.Maximum = data.GPU.MaxMemoryClock;
-                memBar.Value = data.GPU.MemoryClock;
-                memText.Text = $"{data.GPU.MemoryClock} {MegahertzUnit}";
+                _gpuMemoryClockBar.Maximum = data.GPU.MaxMemoryClock;
+                _gpuMemoryClockBar.Value = data.GPU.MemoryClock;
+                _gpuMemoryClockText.Text = $"{data.GPU.MemoryClock} {MegahertzUnit}";
             }
         }
 
@@ -708,30 +734,30 @@ public partial class SensorsControl
         UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
             $"{data.GPU.FanSpeed} {RpmUnit}", $"{data.GPU.MaxFanSpeed} {RpmUnit}");
 
-        if (FindName("_gpuWattage") is TextBlock gpuWattage)
+        if (_gpuWattageText is not null)
         {
-            gpuWattage.Text = FormatPower(data.GPU.Wattage);
+            _gpuWattageText.Text = FormatPower(data.GPU.Wattage);
         }
         
-        if (FindName("_gpuTempRange") is TextBlock gpuTempRange)
+        if (_gpuTempRangeText is not null)
         {
              if (IsTemperatureRangeAvailable(data.GPU.MinTemperature, data.GPU.MaxTemperatureRecord))
-                 gpuTempRange.Text = $"{data.GPU.MinTemperature}{CelsiusUnit} ~ {data.GPU.MaxTemperatureRecord}{CelsiusUnit}";
+                 _gpuTempRangeText.Text = $"{data.GPU.MinTemperature}{CelsiusUnit} ~ {data.GPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
-                 gpuTempRange.Text = NotAvailableText();
+                 _gpuTempRangeText.Text = NotAvailableText();
         }
 
-        if (FindName("_gpuVoltage") is TextBlock gpuVoltage)
+        if (_gpuVoltageText is not null)
         {
-            gpuVoltage.Text = data.GPU.Voltage > 0 ? $"{data.GPU.Voltage:0.000} V" : NotAvailableText();
+            _gpuVoltageText.Text = data.GPU.Voltage > 0 ? $"{data.GPU.Voltage:0.000} V" : NotAvailableText();
         }
         
-        if (FindName("_gpuVoltageRange") is TextBlock gpuVoltageRange)
+        if (_gpuVoltageRangeText is not null)
         {
              if (IsVoltageRangeAvailable(data.GPU.MinVoltage, data.GPU.MaxVoltage))
-                 gpuVoltageRange.Text = $"{data.GPU.MinVoltage:0.000} V ~ {data.GPU.MaxVoltage:0.000} V";
+                 _gpuVoltageRangeText.Text = $"{data.GPU.MinVoltage:0.000} V ~ {data.GPU.MaxVoltage:0.000} V";
              else
-                 gpuVoltageRange.Text = NotAvailableText();
+                 _gpuVoltageRangeText.Text = NotAvailableText();
         }
 
         UpdateGaugesAndTrends(data, recordTrendHistory);
@@ -1051,14 +1077,16 @@ public partial class SensorsControl
         {
             Owner = Window.GetWindow(this)
         };
-        window.Closed += (_, _) =>
-        {
-            if (ReferenceEquals(_detailsWindow, window))
-                _detailsWindow = null;
-        };
+        window.Closed += SensorDetailsWindow_Closed;
 
         _detailsWindow = window;
         window.Show();
+    }
+
+    private void SensorDetailsWindow_Closed(object? sender, EventArgs e)
+    {
+        if (sender is Window window && ReferenceEquals(_detailsWindow, window))
+            _detailsWindow = null;
     }
 
     private void ShowDetailPanels()
@@ -1296,44 +1324,64 @@ public partial class SensorsControl
                 ssdTemperaturesTask,
                 cpuComponentPowersTask).ConfigureAwait(false);
 
+            var gpuIsIntegrated = await gpuIsIntegratedTask.ConfigureAwait(false);
+            var gpuVramUsed = await gpuVramUsedTask.ConfigureAwait(false);
+            var gpuVramTotal = await gpuVramTotalTask.ConfigureAwait(false);
+            var gpuVramUtilization = await gpuVramUtilizationTask.ConfigureAwait(false);
+            var gpuVramTemperature = await gpuVramTemperatureTask.ConfigureAwait(false);
+            var gpuHotSpotTemperature = await gpuHotSpotTemperatureTask.ConfigureAwait(false);
+            var gpuPcieRxThroughput = await gpuPcieRxThroughputTask.ConfigureAwait(false);
+            var gpuPcieTxThroughput = await gpuPcieTxThroughputTask.ConfigureAwait(false);
+            var gpuPower = await gpuPowerTask.ConfigureAwait(false);
+            var gpuVoltage = await gpuVoltageTask.ConfigureAwait(false);
+            var cpuPower = await cpuPowerTask.ConfigureAwait(false);
+            var cpuVoltage = await cpuVoltageTask.ConfigureAwait(false);
+            var cpuPCoreClock = await cpuPCoreClockTask.ConfigureAwait(false);
+            var cpuECoreClock = await cpuECoreClockTask.ConfigureAwait(false);
+            var memoryUsage = await memoryUsageTask.ConfigureAwait(false);
+            var memoryUsed = await memoryUsedTask.ConfigureAwait(false);
+            var memoryTotal = await memoryTotalTask.ConfigureAwait(false);
+            var memoryTemperature = await memoryTemperatureTask.ConfigureAwait(false);
+            var ssdTemperatures = await ssdTemperaturesTask.ConfigureAwait(false);
+            var cpuComponentPowers = await cpuComponentPowersTask.ConfigureAwait(false);
+            var gpuMemoryClock = await gpuMemoryClockTask.ConfigureAwait(false);
+
             await Dispatcher.InvokeAsync(() =>
             {
                 if (refreshVersion != _extendedDetailsRefreshVersion)
                     return;
 
-                UpdateDetailText("_gpuVramUsageTitle", GetGpuMemoryUsageTitle(gpuIsIntegratedTask.Result));
-                UpdateDetailText("_gpuVramUsage", FormatUsageInGigabytes(gpuVramUsedTask.Result, gpuVramTotalTask.Result, gpuVramUtilizationTask.Result));
-                UpdateDetailText("_gpuVramTemperature", GetTemperatureText(gpuVramTemperatureTask.Result >= 0 ? (double?)gpuVramTemperatureTask.Result : null));
-                UpdateDetailText("_gpuHotSpotTemperature", GetTemperatureText(gpuHotSpotTemperatureTask.Result >= 0 ? (double?)gpuHotSpotTemperatureTask.Result : null));
-                UpdateDetailText("_gpuPcieThroughput", FormatThroughputPair(gpuPcieRxThroughputTask.Result, gpuPcieTxThroughputTask.Result));
-                UpdateDetailText("_gpuWattage", FormatPowerKeepingPrevious(gpuPowerTask.Result, _gpuWattage.Text));
-                UpdateDetailText("_cpuWattage", FormatCpuPowerBreakdown(cpuPowerTask.Result, cpuComponentPowersTask.Result));
-                UpdateDetailText("_cpuVoltage", FormatVoltage(cpuVoltageTask.Result));
-                UpdateDetailText("_cpuPCoreClock", FormatFrequency(cpuPCoreClockTask.Result));
-                UpdateDetailText("_cpuECoreClock", FormatFrequency(cpuECoreClockTask.Result));
-                UpdateDetailText("_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsedTask.Result, memoryTotalTask.Result, memoryUsageTask.Result));
-                UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperatureTask.Result > 0 ? memoryTemperatureTask.Result : null));
-                UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperaturesTask.Result, _applicationSettings.Store.TemperatureUnit));
-                UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltageTask.Result));
+                UpdateDetailText("_gpuVramUsageTitle", GetGpuMemoryUsageTitle(gpuIsIntegrated));
+                UpdateDetailText("_gpuVramUsage", FormatUsageInGigabytes(gpuVramUsed, gpuVramTotal, gpuVramUtilization));
+                UpdateDetailText("_gpuVramTemperature", GetTemperatureText(gpuVramTemperature >= 0 ? (double?)gpuVramTemperature : null));
+                UpdateDetailText("_gpuHotSpotTemperature", GetTemperatureText(gpuHotSpotTemperature >= 0 ? (double?)gpuHotSpotTemperature : null));
+                UpdateDetailText("_gpuPcieThroughput", FormatThroughputPair(gpuPcieRxThroughput, gpuPcieTxThroughput));
+                UpdateDetailText("_gpuWattage", FormatPowerKeepingPrevious(gpuPower, _gpuWattage.Text));
+                UpdateDetailText("_cpuWattage", FormatCpuPowerBreakdown(cpuPower, cpuComponentPowers));
+                UpdateDetailText("_cpuVoltage", FormatVoltage(cpuVoltage));
+                UpdateDetailText("_cpuPCoreClock", FormatFrequency(cpuPCoreClock));
+                UpdateDetailText("_cpuECoreClock", FormatFrequency(cpuECoreClock));
+                UpdateDetailText("_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsed, memoryTotal, memoryUsage));
+                UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperature > 0 ? memoryTemperature : null));
+                UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperatures, _applicationSettings.Store.TemperatureUnit));
+                UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltage));
                 UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
                 UpdateDetailText("_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
                 UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
                 UpdateDetailText("_gpuVoltageRange", FormatFallbackRangeText(_gpuVoltage.Text, _gpuVoltageRange.Text));
 
-                if (FindName("_gpuMemoryClockBar") is RangeBase gpuMemoryClockBar
-                    && FindName("_gpuMemoryClockText") is TextBlock gpuMemoryClockText)
+                if (_gpuMemoryClockBar is not null && _gpuMemoryClockText is not null)
                 {
-                    var memoryClock = gpuMemoryClockTask.Result;
-                    if (memoryClock > 0)
+                    if (gpuMemoryClock > 0)
                     {
-                        gpuMemoryClockBar.Maximum = Math.Max(memoryClock, gpuMemoryClockBar.Maximum);
-                        gpuMemoryClockBar.Value = memoryClock;
-                        gpuMemoryClockText.Text = $"{memoryClock:0} {MegahertzUnit}";
+                        _gpuMemoryClockBar.Maximum = Math.Max(gpuMemoryClock, _gpuMemoryClockBar.Maximum);
+                        _gpuMemoryClockBar.Value = gpuMemoryClock;
+                        _gpuMemoryClockText.Text = $"{gpuMemoryClock:0} {MegahertzUnit}";
                     }
                     else
                     {
-                        gpuMemoryClockBar.Value = 0;
-                        gpuMemoryClockText.Text = NotAvailableText();
+                        _gpuMemoryClockBar.Value = 0;
+                        _gpuMemoryClockText.Text = NotAvailableText();
                     }
                 }
             });

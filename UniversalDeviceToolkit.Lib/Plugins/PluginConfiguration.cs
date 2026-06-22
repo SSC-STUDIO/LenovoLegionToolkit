@@ -75,18 +75,19 @@ public class PluginConfiguration : IPluginConfiguration
 
     public async Task SaveAsync()
     {
+        string? json;
         lock (_lock)
         {
             if (!_isDirty)
                 return;
+
+            json = JsonSerializer.Serialize(_configuration, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
         }
 
-        var json = JsonSerializer.Serialize(_configuration, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-
-        await File.WriteAllTextAsync(_configFilePath, json).ConfigureAwait(false);
+        await File.WriteAllTextAsync(_configFilePath, json!).ConfigureAwait(false);
 
         lock (_lock)
             _isDirty = false;

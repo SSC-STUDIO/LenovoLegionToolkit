@@ -137,8 +137,8 @@ public static class CMD
             {
                 await Task.WhenAll(standardOutputTask!, standardErrorTask!).ConfigureAwait(false);
 
-                output = standardOutputTask!.Result;
-                var error = standardErrorTask!.Result;
+                output = await standardOutputTask!.ConfigureAwait(false);
+                var error = await standardErrorTask!.ConfigureAwait(false);
                 if (!string.IsNullOrWhiteSpace(error))
                     output = string.IsNullOrWhiteSpace(output) ? error : $"{output}{Environment.NewLine}{error}";
             }

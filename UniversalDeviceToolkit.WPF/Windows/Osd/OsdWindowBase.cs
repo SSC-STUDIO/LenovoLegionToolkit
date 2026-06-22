@@ -99,13 +99,21 @@ public abstract class OsdWindowBase : Window
 
     private async void InitializeComponentSpecifics()
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
-        if (mi.Properties.IsAmdDevice)
+        try
         {
-            OnAmdDeviceDetected();
-        }
+            var mi = await Compatibility.GetMachineInformationAsync();
+            if (mi.Properties.IsAmdDevice)
+            {
+                OnAmdDeviceDetected();
+            }
 
-        _hasLenovoController = await _controller.IsSupportedAsync();
+            _hasLenovoController = await _controller.IsSupportedAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error initializing OSD component specifics: {ex.Message}");
+        }
     }
 
     protected abstract void OnAmdDeviceDetected();
@@ -521,18 +529,26 @@ public abstract class OsdWindowBase : Window
 
     private async void CheckAndUpdateFpsMonitoring()
     {
-        bool shouldMonitor = IsVisible && ShouldMonitorFps();
-
-        switch (shouldMonitor)
+        try
         {
-            case true when !_fpsMonitoringStarted:
-                _fpsMonitoringStarted = true;
-                await StartFpsMonitoringAsync();
-                break;
-            case false when _fpsMonitoringStarted:
-                _fpsMonitoringStarted = false;
-                StopFpsMonitoring();
-                break;
+            bool shouldMonitor = IsVisible && ShouldMonitorFps();
+
+            switch (shouldMonitor)
+            {
+                case true when !_fpsMonitoringStarted:
+                    _fpsMonitoringStarted = true;
+                    await StartFpsMonitoringAsync();
+                    break;
+                case false when _fpsMonitoringStarted:
+                    _fpsMonitoringStarted = false;
+                    StopFpsMonitoring();
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error checking/updating FPS monitoring: {ex.Message}");
         }
     }
 

@@ -86,8 +86,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to detect compatibility mode for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to detect compatibility mode for StatusWindow.", ex);
         }
 
         try
@@ -102,8 +101,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get power mode state for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to get power mode state for StatusWindow.", ex);
         }
 
         try
@@ -129,8 +127,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get sensor data for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to get sensor data for StatusWindow.", ex);
         }
 
         try
@@ -141,8 +138,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to refresh GPU status for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to refresh GPU status for StatusWindow.", ex);
         }
 
         try
@@ -151,8 +147,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get battery information for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to get battery information for StatusWindow.", ex);
         }
 
         try
@@ -163,8 +158,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get battery state for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to get battery state for StatusWindow.", ex);
         }
 
         try
@@ -173,8 +167,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get battery usage time for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to get battery usage time for StatusWindow.", ex);
         }
 
         try
@@ -183,8 +176,7 @@ public partial class StatusWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to check for updates for StatusWindow.", ex);
+            Log.Instance.Warning($"Failed to check for updates for StatusWindow.", ex);
         }
 
         return new(state, godModePresetName, cpuSensors, memorySensors, ssdTemperatures, gpuStatus, gpuSensors, batteryInformation, batteryState, onBatterySince, hasUpdate, isCompatibilityMode);

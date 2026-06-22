@@ -198,11 +198,7 @@ public partial class MainWindow
 
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
 
-        _specialKeyListener.Changed += (_, args) =>
-        {
-            if (args.SpecialKey == SpecialKey.FnN)
-                Dispatcher.Invoke(BringToForeground);
-        };
+        _specialKeyListener.Changed += SpecialKeyListener_Changed;
 
         _contentGrid.Visibility = Visibility.Visible;
         ShellChromeHelper.ApplyContentSurfaceEffects(_contentSurfaceBorder, _applicationSettings);
@@ -353,6 +349,14 @@ public partial class MainWindow
         if (_pluginManager is not null)
             _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
 
+        // Unsubscribe from disablers
+        _vantageDisabler.OnRefreshed -= VantageDisabler_OnRefreshed;
+        _legionZoneDisabler.OnRefreshed -= LegionZoneDisabler_OnRefreshed;
+        _fnKeysDisabler.OnRefreshed -= FnKeysDisabler_OnRefreshed;
+
+        // Unsubscribe from special key listener
+        _specialKeyListener.Changed -= SpecialKeyListener_Changed;
+
         _trayHelper?.Dispose();
         _trayHelper = null;
     }
@@ -452,20 +456,9 @@ public partial class MainWindow
 
     private void UpdateIndicators()
     {
-        _vantageDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
-        {
-            _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
-        });
-
-        _legionZoneDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
-        {
-            _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
-        });
-
-        _fnKeysDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
-        {
-            _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
-        });
+        _vantageDisabler.OnRefreshed += VantageDisabler_OnRefreshed;
+        _legionZoneDisabler.OnRefreshed += LegionZoneDisabler_OnRefreshed;
+        _fnKeysDisabler.OnRefreshed += FnKeysDisabler_OnRefreshed;
 
         Task.Run(async () =>
         {
@@ -473,6 +466,27 @@ public partial class MainWindow
             _ = await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false);
             _ = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
         });
+    }
+
+    private void SpecialKeyListener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e)
+    {
+        if (e.SpecialKey == SpecialKey.FnN)
+            Dispatcher.Invoke(BringToForeground);
+    }
+
+    private void VantageDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
+    {
+        Dispatcher.Invoke(() => _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+    }
+
+    private void LegionZoneDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
+    {
+        Dispatcher.Invoke(() => _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+    }
+
+    private void FnKeysDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
+    {
+        Dispatcher.Invoke(() => _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
     }
 
     public async Task CheckForUpdates(bool manualCheck = false)

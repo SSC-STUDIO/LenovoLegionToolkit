@@ -736,8 +736,9 @@ public class WindowsOptimizationService
 
             await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
 
+            var output = await outputTask.ConfigureAwait(false);
             return process.ExitCode == 0
-                   && outputTask.Result.Contains(HighPerformancePowerSchemeGuid, StringComparison.OrdinalIgnoreCase);
+                   && output.Contains(HighPerformancePowerSchemeGuid, StringComparison.OrdinalIgnoreCase);
         }
         catch (OperationCanceledException)
         {

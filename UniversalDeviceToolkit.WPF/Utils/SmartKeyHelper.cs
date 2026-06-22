@@ -28,9 +28,9 @@ internal class SmartKeyHelper
 
     public Action? BringToForeground { get; set; }
 
-    private static SmartKeyHelper? _instance;
+    private static readonly Lazy<SmartKeyHelper> _instance = new(() => new SmartKeyHelper(), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    public static SmartKeyHelper Instance => _instance ??= new SmartKeyHelper();
+    public static SmartKeyHelper Instance => _instance.Value;
 
     private SmartKeyHelper()
     {
@@ -123,8 +123,7 @@ internal class SmartKeyHelper
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Running action {currentGuid} after {(isDoublePress ? "double" : "single")} Fn+F9 press failed.", ex);
+            Log.Instance.Warning($"Running action {currentGuid} after {(isDoublePress ? "double" : "single")} Fn+F9 press failed.", ex);
         }
 
         if (isDoublePress)

@@ -98,7 +98,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         _percentProcessorPerformanceCounter.Reset();
         _percentProcessorUtilityCounter.Reset();
         
-        try { NVAPI.Initialize(); } catch { /* Ignored */ }
+        try { NVAPI.Initialize(); } catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to initialize NVAPI");
+        }
 
         return Task.CompletedTask;
     }
@@ -112,7 +116,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         _percentProcessorUtilityCounter.Dispose();
         _cpuPowerCounter?.Dispose();
 
-        try { NVAPI.Unload(); } catch { /* Ignored */ }
+        try { NVAPI.Unload(); } catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to unload NVAPI");
+        }
 
         GC.SuppressFinalize(this);
     }
@@ -142,8 +150,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         try
         {
             // Apply a 2-second timeout to prevent slow sensors from blocking the UI.
+            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(SENSOR_READ_TIMEOUT_SECONDS));
             var snapshotTask = GetSensorSnapshotAsync(detailed);
-            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(SENSOR_READ_TIMEOUT_SECONDS));
+            var timeoutTask = Task.Delay(Timeout.InfiniteTimeSpan, timeoutCts.Token);
 
             if (await Task.WhenAny(snapshotTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
             {
@@ -603,7 +612,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     {
         try
         {
-            var executablePath = ResolveNvidiaSmiPath();
+            var executablePath = FindNvidiaSmiPath();
+            if (executablePath is null)
+                return (-1, 0);
 
             var startInfo = new ProcessStartInfo
             {
@@ -685,10 +696,15 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
     }
 
-    private static string ResolveNvidiaSmiPath()
+    protected internal static string? FindNvidiaSmiPath()
     {
-        const string defaultPath = @"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe";
-        return File.Exists(defaultPath) ? defaultPath : "nvidia-smi";
+        var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        var candidates = new[]
+        {
+            Path.Combine(programFiles, "NVIDIA Corporation", "NVSMI", "nvidia-smi.exe"),
+            Path.Combine(Environment.GetEnvironmentVariable("ProgramW6432") ?? programFiles, "NVIDIA Corporation", "NVSMI", "nvidia-smi.exe"),
+        };
+        return candidates.FirstOrDefault(File.Exists);
     }
 
     protected virtual async Task<GPUInfo> GetGPUInfoAsync()

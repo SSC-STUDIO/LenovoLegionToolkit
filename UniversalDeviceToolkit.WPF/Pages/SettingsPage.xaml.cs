@@ -46,33 +46,41 @@ public partial class SettingsPage
 
     private async void InitializeNavigationItems()
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync();
-        var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
-        _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
-
-        var navigationItems = new List<NavigationItem>
+        try
         {
-            new() { Key = "Appearance", Title = T("SettingsPage_Navigation_Appearance", "Appearance"), Icon = SymbolRegular.PaintBrush24 },
-            new() { Key = "Application", Title = T("SettingsPage_Navigation_Application", "Application"), Icon = SymbolRegular.Apps24 }
-        };
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
+            _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
 
-        if (_supportsLenovoHardwareControls)
-        {
-            navigationItems.Add(new() { Key = "SmartKeys", Title = T("SettingsPage_Navigation_SmartKeys", "Smart Keys"), Icon = SymbolRegular.Keyboard24 });
-            navigationItems.Add(new() { Key = "Display", Title = T("SettingsPage_Navigation_Display", "Display"), Icon = SymbolRegular.Desktop24 });
+            var navigationItems = new List<NavigationItem>
+            {
+                new() { Key = "Appearance", Title = T("SettingsPage_Navigation_Appearance", "Appearance"), Icon = SymbolRegular.PaintBrush24 },
+                new() { Key = "Application", Title = T("SettingsPage_Navigation_Application", "Application"), Icon = SymbolRegular.Apps24 }
+            };
+
+            if (_supportsLenovoHardwareControls)
+            {
+                navigationItems.Add(new() { Key = "SmartKeys", Title = T("SettingsPage_Navigation_SmartKeys", "Smart Keys"), Icon = SymbolRegular.Keyboard24 });
+                navigationItems.Add(new() { Key = "Display", Title = T("SettingsPage_Navigation_Display", "Display"), Icon = SymbolRegular.Desktop24 });
+            }
+
+            navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
+
+            if (_supportsLenovoHardwareControls)
+            {
+                navigationItems.Add(new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 });
+            }
+
+            navigationItems.Add(new() { Key = "Integrations", Title = Resource.SettingsPage_Integrations_Title, Icon = SymbolRegular.PlugConnected24 });
+
+            _navigationListBox.ItemsSource = navigationItems;
+            _navigationListBox.SelectedIndex = 0;
         }
-
-        navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
-
-        if (_supportsLenovoHardwareControls)
+        catch (Exception ex)
         {
-            navigationItems.Add(new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 });
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error initializing navigation items: {ex.Message}");
         }
-
-        navigationItems.Add(new() { Key = "Integrations", Title = Resource.SettingsPage_Integrations_Title, Icon = SymbolRegular.PlugConnected24 });
-
-        _navigationListBox.ItemsSource = navigationItems;
-        _navigationListBox.SelectedIndex = 0;
     }
 
     private async void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

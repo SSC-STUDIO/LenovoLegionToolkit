@@ -196,6 +196,9 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
                 !AllowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
                 throw ExceptionHelper.DevicePackUnsupportedFileType(entry.FullName);
 
+            if ((entry.ExternalAttributes & 0xA0000000) == 0xA0000000)
+                throw ExceptionHelper.DevicePackUnsafePath(entry.FullName);
+
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
             entry.ExtractToFile(destinationPath, true);
         }

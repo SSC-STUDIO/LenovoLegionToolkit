@@ -292,10 +292,10 @@ public class LampArrayController : IDisposable
                 }
             }
             catch (OperationCanceledException) { }
-            catch (Exception ex)
-            {
-                Log.Instance.Trace($"Screen capture failed: {ex.Message}");
-            }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error adding LampArray device: {ex.Message}");
+        }
         }, token);
     }
 
@@ -560,7 +560,7 @@ public class LampArrayController : IDisposable
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace($"Failed to add LampArray device: {ex.Message}");
+            Log.Instance.Error($"Error adding LampArray device: {ex.Message}");
         }
     }
 
@@ -685,7 +685,12 @@ public class LampArrayController : IDisposable
         {
             if (!p.TryGetValue(key, out var val)) return fallback;
             try { return (T)Convert.ChangeType(val, typeof(T)); }
-            catch { return fallback; }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to convert param '{key}' to {typeof(T).Name}");
+                return fallback;
+            }
         }
 
         var ps = config.Parameters;

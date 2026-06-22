@@ -14,7 +14,7 @@ internal readonly struct WindowsBuildVersionPackageRule : IPackageRule
 
     public static bool TryCreate(XmlNode? node, out WindowsBuildVersionPackageRule value)
     {
-        var versionString = node?.SelectSingleNode("AddressWidth")?.InnerText;
+        var versionString = node?.SelectSingleNode("BuildVersion")?.InnerText;
 
         if (versionString is null || !int.TryParse(RemoveNonVersionCharacters(versionString), out var version))
         {

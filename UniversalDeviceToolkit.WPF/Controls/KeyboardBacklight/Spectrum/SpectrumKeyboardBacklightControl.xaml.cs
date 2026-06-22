@@ -35,6 +35,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
     private readonly SpecialKeyListener _listener = IoCContainer.Resolve<SpecialKeyListener>();
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly SpectrumKeyboardSettings _settings = IoCContainer.Resolve<SpectrumKeyboardSettings>();
+    private bool _subscribedToMessagingCenter;
 
     private CancellationTokenSource? _refreshStateCancellationTokenSource;
     private Task? _refreshStateTask;
@@ -60,7 +61,14 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
         _listener.Changed += Listener_Changed;
 
-        MessagingCenter.Subscribe<SpectrumBacklightChangedMessage>(this, () => Dispatcher.InvokeTask(async () =>
+        MessagingCenter.Subscribe<SpectrumBacklightChangedMessage>(this, OnSpectrumBacklightChanged);
+
+        Unloaded += SpectrumKeyboardBacklightControl_Unloaded;
+    }
+
+    private void OnSpectrumBacklightChanged()
+    {
+        Dispatcher.InvokeTask(async () =>
         {
             if (!IsVisible)
                 return;
@@ -68,7 +76,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             await RefreshBrightnessAsync();
             await RefreshProfileAsync();
             await RefreshProfileDescriptionAsync();
-        }));
+        }, "spectrum backlight changed");
     }
 
     private async void SpectrumKeyboardBacklightControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -90,6 +98,14 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
         scaleTransform.ScaleX = scale;
         scaleTransform.ScaleY = scale;
+    }
+
+    private void SpectrumKeyboardBacklightControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        MessagingCenter.Unsubscribe<SpectrumBacklightChangedMessage>(this);
+        _listener.Changed -= Listener_Changed;
+        IsVisibleChanged -= SpectrumKeyboardBacklightControl_IsVisibleChanged;
+        SizeChanged -= SpectrumKeyboardBacklightControl_SizeChanged;
     }
 
     private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>

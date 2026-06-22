@@ -17,7 +17,7 @@ public static class RetryHelper
         [CallerMemberName] string? tag = null)
     {
         maximumRetries ??= 3;
-        timeout ??= TimeSpan.Zero;
+        timeout ??= TimeSpan.FromMilliseconds(500);
         matchingException ??= (ex) => ex is not OperationCanceledException;
 
         var retries = 0;
@@ -47,10 +47,11 @@ public static class RetryHelper
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Retrying {retries}/{maximumRetries}... [tag={tag}]");
 
+                var delay = TimeSpan.FromMilliseconds(timeout.Value.TotalMilliseconds * (1 << (retries - 1)));
                 if (delayProvider is not null)
-                    await delayProvider.Delay(timeout.Value, CancellationToken.None).ConfigureAwait(false);
+                    await delayProvider.Delay(delay, CancellationToken.None).ConfigureAwait(false);
                 else
-                    await Task.Delay(timeout.Value).ConfigureAwait(false);
+                    await Task.Delay(delay).ConfigureAwait(false);
             }
         }
     }

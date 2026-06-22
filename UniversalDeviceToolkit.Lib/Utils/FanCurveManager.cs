@@ -93,7 +93,7 @@ public class FanCurveManager : IDisposable
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace($"Error handling PowerMode change: {ex}");
+            Log.Instance.Error($"Error handling PowerMode change: {ex}");
         }
     }
 

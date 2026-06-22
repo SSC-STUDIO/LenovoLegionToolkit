@@ -111,10 +111,10 @@ public partial class EditDashboardWindow
     private EditDashboardGroupControl CreateGroupControl(DashboardGroup dashboardGroup)
     {
         var control = new EditDashboardGroupControl(dashboardGroup, GetAllItems);
-        control.MoveUp += (_, _) => MoveGroupUp(control);
-        control.MoveDown += (_, _) => MoveGroupDown(control);
-        control.Delete += (_, _) => DeleteGroup(control);
-        control.Changed += (_, _) => GroupsChanged();
+        control.MoveUp += EditDashboardGroupControl_MoveUp;
+        control.MoveDown += EditDashboardGroupControl_MoveDown;
+        control.Delete += EditDashboardGroupControl_Delete;
+        control.Changed += EditDashboardGroupControl_Changed;
         return control;
     }
 
@@ -150,6 +150,29 @@ public partial class EditDashboardWindow
     private void DeleteGroup(UIElement control)
     {
         _groupsStackPanel.Children.Remove(control);
+    }
+
+    private void EditDashboardGroupControl_MoveUp(object? sender, EventArgs e)
+    {
+        if (sender is EditDashboardGroupControl control)
+            MoveGroupUp(control);
+    }
+
+    private void EditDashboardGroupControl_MoveDown(object? sender, EventArgs e)
+    {
+        if (sender is EditDashboardGroupControl control)
+            MoveGroupDown(control);
+    }
+
+    private void EditDashboardGroupControl_Delete(object? sender, EventArgs e)
+    {
+        if (sender is EditDashboardGroupControl control)
+            DeleteGroup(control);
+    }
+
+    private void EditDashboardGroupControl_Changed(object? sender, EventArgs e)
+    {
+        GroupsChanged();
     }
 }
 }

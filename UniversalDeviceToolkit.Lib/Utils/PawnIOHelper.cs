@@ -25,7 +25,22 @@ public static class PawnIOHelper
     private const string REG_VAL_INSTALL_DIR = "Install_Dir";
     private const string FOLDER_PAWN_IO = "PawnIO";
 
-    public static Func<Task<bool>>? RequestShowDialogAsync;
+    private static readonly object _delegateLock = new();
+    private static Func<Task<bool>>? _requestShowDialogAsync;
+
+    public static Func<Task<bool>>? RequestShowDialogAsync
+    {
+        get
+        {
+            lock (_delegateLock)
+                return _requestShowDialogAsync;
+        }
+        set
+        {
+            lock (_delegateLock)
+                _requestShowDialogAsync = value;
+        }
+    }
 
     public static void OpenPawnIODownloadPage()
     {

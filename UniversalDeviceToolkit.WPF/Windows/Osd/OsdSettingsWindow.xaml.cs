@@ -35,6 +35,7 @@ public partial class OsdSettingsWindow
     {
         InitializeComponent();
         this.Loaded += OsdSettingsWindow_Loaded;
+        Closed += OsdSettingsWindow_Closed;
     }
 
     public static void ShowInstance()
@@ -42,7 +43,7 @@ public partial class OsdSettingsWindow
         if (_instance == null)
         {
             _instance = new OsdSettingsWindow();
-            _instance.Closed += (s, e) => _instance = null;
+            _instance.Closed += OsdSettingsWindow_StaticClosed;
             _instance.Show();
         }
         else
@@ -51,6 +52,16 @@ public partial class OsdSettingsWindow
                 _instance.WindowState = WindowState.Normal;
             _instance.Activate();
         }
+    }
+
+    private void OsdSettingsWindow_Closed(object? sender, EventArgs e)
+    {
+        Loaded -= OsdSettingsWindow_Loaded;
+    }
+
+    private static void OsdSettingsWindow_StaticClosed(object? sender, EventArgs e)
+    {
+        _instance = null;
     }
 
     private void OsdSettingsWindow_Loaded(object sender, RoutedEventArgs e)

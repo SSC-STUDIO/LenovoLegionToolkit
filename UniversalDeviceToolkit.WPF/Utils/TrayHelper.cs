@@ -156,7 +156,11 @@ public class TrayHelper : IDisposable
                     }
                 }
             }
-            catch { /* Ignored */ }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to get power mode status for tray");
+            }
 
             // GPU Status
             try
@@ -191,7 +195,11 @@ public class TrayHelper : IDisposable
                     }
                 }
             }
-            catch { /* Ignored */ }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to get GPU status for tray");
+            }
 
             // Battery Information
             try
@@ -241,7 +249,11 @@ public class TrayHelper : IDisposable
                 };
                 statusItems.Add(maxDischargeItem);
             }
-            catch { /* Ignored */ }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to get battery information for tray");
+            }
 
             // Update Available
             try
@@ -258,7 +270,11 @@ public class TrayHelper : IDisposable
                     statusItems.Add(updateItem);
                 }
             }
-            catch { /* Ignored */ }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to check for updates for tray");
+            }
 
             // Insert status items at the beginning
             if (statusItems.Count > 0)
@@ -278,7 +294,11 @@ public class TrayHelper : IDisposable
                 }
             }
         }
-        catch { /* Ignored */ }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to refresh tray context menu");
+        }
     }
 
     private async Task SetAutomationItemsAsync(List<AutomationPipeline> pipelines)
@@ -337,7 +357,11 @@ public class TrayHelper : IDisposable
                 {
                     await _automationProcessor.RunNowAsync(pipeline);
                 }
-                catch {  /* Ignored. */ }
+                catch
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to run automation pipeline from tray");
+                }
             };
 
             // Find where to insert (after status items, status separator, and automation separator if any)

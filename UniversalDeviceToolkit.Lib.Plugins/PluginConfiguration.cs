@@ -87,25 +87,25 @@ public class PluginConfiguration : IPluginConfiguration
 
     public async Task SaveAsync()
     {
+        string? json;
         lock (_lock)
         {
             if (!_isDirty) return;
+            json = JsonSerializer.Serialize(_configuration, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
         }
 
         try
         {
-            var json = JsonSerializer.Serialize(_configuration, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-            
-            await File.WriteAllTextAsync(_configFilePath, json).ConfigureAwait(false);
-            
+            await File.WriteAllTextAsync(_configFilePath, json!).ConfigureAwait(false);
+
             lock (_lock)
             {
                 _isDirty = false;
             }
-            
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin configuration saved: {_pluginId}");
         }

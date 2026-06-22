@@ -2117,8 +2117,9 @@ public class SensorsGroupController : IDisposable
 
                         if (_cpuCoreClockSensors.Count > 0)
                         {
-                            _snapshotCpuMaxClock = _cpuCoreClockSensors.Max(s => s.Value) ?? INVALID_VALUE_FLOAT;
-                            _snapshotCpuAvgClock = _cpuCoreClockSensors.Average(s => s.Value) ?? INVALID_VALUE_FLOAT;
+                            var (max, avg) = ComputeMaxAndAverage(_cpuCoreClockSensors);
+                            _snapshotCpuMaxClock = max;
+                            _snapshotCpuAvgClock = avg;
                         }
                         else
                         {
@@ -2128,13 +2129,15 @@ public class SensorsGroupController : IDisposable
 
                         if (IsHybrid)
                         {
-                            float pMax = _pCoreClockSensors.Count > 0 ? (_pCoreClockSensors.Max(s => s.Value) ?? INVALID_VALUE_FLOAT) : INVALID_VALUE_FLOAT;
-                            float eMax = _eCoreClockSensors.Count > 0 ? (_eCoreClockSensors.Max(s => s.Value) ?? INVALID_VALUE_FLOAT) : INVALID_VALUE_FLOAT;
+                            var (pMax, pAvg) = _pCoreClockSensors.Count > 0
+                                ? ComputeMaxAndAverage(_pCoreClockSensors)
+                                : (INVALID_VALUE_FLOAT, INVALID_VALUE_FLOAT);
+                            var (eMax, eAvg) = _eCoreClockSensors.Count > 0
+                                ? ComputeMaxAndAverage(_eCoreClockSensors)
+                                : (INVALID_VALUE_FLOAT, INVALID_VALUE_FLOAT);
+
                             _snapshotCpuPClock = pMax > 0 ? (float)Math.Round(pMax) : pMax;
                             _snapshotCpuEClock = eMax > 0 ? (float)Math.Round(eMax) : eMax;
-
-                            float pAvg = _pCoreClockSensors.Count > 0 ? (_pCoreClockSensors.Average(s => s.Value) ?? INVALID_VALUE_FLOAT) : INVALID_VALUE_FLOAT;
-                            float eAvg = _eCoreClockSensors.Count > 0 ? (_eCoreClockSensors.Average(s => s.Value) ?? INVALID_VALUE_FLOAT) : INVALID_VALUE_FLOAT;
                             _snapshotCpuPAvgClock = pAvg > 0 ? (float)Math.Round(pAvg) : pAvg;
                             _snapshotCpuEAvgClock = eAvg > 0 ? (float)Math.Round(eAvg) : eAvg;
                         }
@@ -2378,6 +2381,19 @@ public class SensorsGroupController : IDisposable
                 await Task.Delay(1000, token).ConfigureAwait(false);
             }
         }
+    }
+
+    private static (float max, float avg) ComputeMaxAndAverage(List<ISensor> sensors)
+    {
+        if (sensors.Count == 0) return (0, 0);
+        float max = float.MinValue, sum = 0;
+        foreach (var s in sensors)
+        {
+            var val = s.Value ?? INVALID_VALUE_FLOAT;
+            if (val > max) max = val;
+            sum += val;
+        }
+        return (max, sum / sensors.Count);
     }
 
     public void Dispose()

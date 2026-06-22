@@ -15,8 +15,6 @@ namespace LenovoLegionToolkit.Lib.Controllers;
 
 public class WindowsPowerPlanController(ApplicationSettings settings, VantageDisabler vantageDisabler)
 {
-    private static readonly Guid DefaultPowerPlan = Guid.Parse("381b4222-f694-41f0-9685-ff5bb260df2e");
-
     public IEnumerable<WindowsPowerPlan> GetPowerPlans()
     {
         var activePowerPlanGuid = GetActivePowerPlanGuid();
@@ -47,7 +45,7 @@ public class WindowsPowerPlanController(ApplicationSettings settings, VantageDis
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Power plan for power mode {powerModeState} was not found in settings");
 
-            powerPlanId = DefaultPowerPlan;
+            powerPlanId = PowerConstants.DefaultPowerPlan;
             isDefault = true;
         }
 

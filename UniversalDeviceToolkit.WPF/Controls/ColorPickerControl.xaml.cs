@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using LenovoLegionToolkit.Lib.Utils;
 using Color = System.Windows.Media.Color;
 
 namespace UniversalDeviceToolkit.WPF.Controls
@@ -128,7 +129,11 @@ public partial class ColorPickerControl
                 ColorChangedDelayed?.Invoke(this, EventArgs.Empty);
             }
         }
-        catch {  /* Ignored. */ }
+        catch
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to update color picker");
+        }
 
         _isEditing = false;
     }

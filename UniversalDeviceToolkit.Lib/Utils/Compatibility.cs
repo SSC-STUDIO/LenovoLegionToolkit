@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.DeviceSupport;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -67,7 +68,7 @@ public static partial class Compatibility
         ("Legion", LegionSeries.Legion_Legacy)
     ];
 
-    private static MachineInformation? _machineInformation;
+    private static readonly Lazy<Task<MachineInformation>> _machineInformationLazy = new(GetMachineInformationInternalAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     private static bool? _isCompatible;
 
     public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
@@ -101,11 +102,10 @@ public static partial class Compatibility
 
     public static bool IsCompatible => _isCompatible ?? false;
 
-    public static async Task<MachineInformation> GetMachineInformationAsync()
-    {
-        if (_machineInformation.HasValue)
-            return _machineInformation.Value;
+    public static Task<MachineInformation> GetMachineInformationAsync() => _machineInformationLazy.Value;
 
+    private static async Task<MachineInformation> GetMachineInformationInternalAsync()
+    {
         var (vendor, machineType, model, serialNumber) = await GetModelDataAsync().ConfigureAwait(false);
         var hardware = await HardwareInventoryProvider.ReadAsync().ConfigureAwait(false);
         var generation = GetMachineGeneration(model);
@@ -193,7 +193,7 @@ public static partial class Compatibility
             Log.Instance.Trace($"     * IsChineseModel: '{machineInformation.Properties.IsChineseModel}'");
         }
 
-        return (_machineInformation = machineInformation).Value;
+        return machineInformation;
     }
 
     private static MachineInformation.PropertyData ApplyGodModeFallback(
@@ -748,9 +748,12 @@ public static partial class Compatibility
 
     public static bool GetIsOverdriverSupported()
     {
-        var generation = _machineInformation?.Generation;
-        var series = _machineInformation?.LegionSeries;
+        if (_machineInformationLazy.IsValueCreated && _machineInformationLazy.Value.IsCompletedSuccessfully)
+        {
+            var mi = _machineInformationLazy.Value.Result;
+            return mi.LegionSeries is not (LegionSeries.Legion_7 or LegionSeries.Legion_Pro_7) || mi.Generation < 10;
+        }
 
-        return series is not (LegionSeries.Legion_7 or LegionSeries.Legion_Pro_7) || generation < 10;
+        return false;
     }
 }

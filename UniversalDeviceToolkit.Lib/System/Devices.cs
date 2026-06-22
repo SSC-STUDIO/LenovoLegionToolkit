@@ -345,6 +345,7 @@ public static class Devices
             finally
             {
                 PInvoke.HidD_FreePreparsedData(preParsedData);
+                fileHandle.Dispose();
             }
         }
 

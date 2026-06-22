@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Devices.Display;
@@ -53,6 +54,9 @@ public static class DisplayExtensions
         if (pathDisplayTarget is null || pathDisplayAdapter is null)
             return default;
 
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            throw new NotSupportedException("Advanced color info requires Windows 10 2004 or later.");
+
         var getAdvancedColorInfo = new DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO();
         getAdvancedColorInfo.header.type = DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_GET_ADVANCED_COLOR_INFO;
         getAdvancedColorInfo.header.size = (uint)Marshal.SizeOf(typeof(DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO));
@@ -76,6 +80,9 @@ public static class DisplayExtensions
 
         if (pathDisplayTarget is null || pathDisplayAdapter is null)
             return;
+
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            throw new NotSupportedException("Advanced color info requires Windows 10 2004 or later.");
 
         var setAdvancedColorState = new DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE();
         setAdvancedColorState.header.type = DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_SET_ADVANCED_COLOR_STATE;

@@ -26,7 +26,7 @@ public static partial class WMI
         var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         try
         {
-            var mos = new ManagementObjectSearcher(scope, queryFormatted);
+            using var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsync().ConfigureAwait(false);
             return managementObjects.Any();
         }
@@ -92,12 +92,12 @@ public static partial class WMI
 
     internal static async Task<IEnumerable<T>> ReadAsync<T>(string scope, FormattableString query, Func<PropertyDataCollection, T> converter)
     {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         try
         {
-            var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
-            var mos = new ManagementObjectSearcher(scope, queryFormatted);
+            using var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-            var result = managementObjects.Select(mo => mo.Properties).Select(converter);
+            var result = managementObjects.Select(mo => mo.Properties).Select(converter).ToArray();
             return result;
         }
         catch (ManagementException ex)
@@ -139,9 +139,9 @@ public static partial class WMI
         {
             try
             {
-                var mos = new ManagementObjectSearcher(scope, queryFormatted);
-                var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-                var managementObject = managementObjects.FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
+            using var mos = new ManagementObjectSearcher(scope, queryFormatted);
+            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+            var managementObject = managementObjects.FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
 
                 var mo = (ManagementObject)managementObject;
                 var methodParamsObject = mo.GetMethodParameters(methodName);

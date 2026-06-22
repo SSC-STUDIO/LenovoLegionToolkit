@@ -125,14 +125,22 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
 
     private void TimerCallback(object? state)
     {
-        lock (_lock)
+        try
         {
-            _tickCount++;
+            lock (_lock)
+            {
+                _tickCount++;
 
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"User is not active [time={_timerResolution * _tickCount}]");
+
+                RaiseChanged(new ChangedEventArgs(_timerResolution, _tickCount));
+            }
+        }
+        catch (Exception ex)
+        {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"User is not active [time={_timerResolution * _tickCount}]");
-
-            RaiseChanged(new ChangedEventArgs(_timerResolution, _tickCount));
+                Log.Instance.Trace($"TimerCallback failed", ex);
         }
     }
 }

@@ -327,6 +327,7 @@ public class PluginLoader : IPluginLoader
             // We use GetAwaiter().GetResult() here because the event signature requires a synchronous return.
             // This is a known limitation of AppDomain.AssemblyResolve - the alternative would be
             // to skip signature validation for dependencies, which is a security risk.
+            // AssemblyResolve requires synchronous return
             var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
             if (!IsValidPluginDependencySignature(signatureResult, requestedAssemblyName, candidatePath))
             {
@@ -665,7 +666,19 @@ public class PluginLoader : IPluginLoader
             if (!IsPathWithinDirectory(normalizedCandidatePath, _pluginDirectory))
                 return null;
 
-            var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
+            // AssemblyLoadContext.Load requires synchronous return
+            PluginSignatureResult? signatureResult;
+            try
+            {
+                signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to validate plugin dependency signature. [path={normalizedCandidatePath}]", ex);
+                return null;
+            }
+
             if (!IsValidPluginDependencySignature(signatureResult, assemblyName, normalizedCandidatePath))
                 return null;
 

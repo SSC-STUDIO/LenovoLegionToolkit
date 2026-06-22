@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -7,6 +10,7 @@ using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.Hybrid;
@@ -19,6 +23,10 @@ using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Macro;
+using LenovoLegionToolkit.Lib.Controllers.Sensors;
+using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -29,11 +37,6 @@ using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
 
 namespace UniversalDeviceToolkit.WPF.Startup
 {
-    /// <summary>
-    /// Orchestrates the application startup flow in a structured, testable manner.
-    /// Extracted from <see cref="App.Application_Startup"/> to eliminate the <c>async void</c>
-    /// pattern and enable testing of individual startup phases.
-    /// </summary>
     public class StartupOrchestrator
     {
         [Serializable]
@@ -51,21 +54,58 @@ namespace UniversalDeviceToolkit.WPF.Startup
         private readonly Flags _flags;
         private ApplicationSettings? _settings;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StartupOrchestrator"/> class.
-        /// </summary>
-        /// <param name="flags">The command-line flags parsed at startup.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="flags"/> is null.</exception>
         public StartupOrchestrator(Flags flags)
         {
             _flags = flags ?? throw new ArgumentNullException(nameof(flags));
         }
 
-        /// <summary>
-        /// Runs the full application startup sequence.
-        /// </summary>
-        /// <param name="e">The startup event arguments containing command-line arguments.</param>
-        /// <returns>0 on success; non-zero on abort or failure.</returns>
+        public (Func<Task>[] initializationSteps, Func<Task>[] serviceStartSteps) GetBackgroundInitializationSteps()
+        {
+            var vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
+            var legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
+            var fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
+            var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+            var sensorsGroupController = IoCContainer.Resolve<SensorsGroupController>();
+            var lampArrayController = IoCContainer.Resolve<LampArrayController>();
+            var lampArraySettings = IoCContainer.Resolve<LampArraySettings>();
+            var powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
+            var itsModeFeature = IoCContainer.Resolve<ITSModeFeature>();
+            var batteryFeature = IoCContainer.Resolve<BatteryFeature>();
+            var rgbKeyboardController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
+            var spectrumKeyboardController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
+            var gpuOverclockController = IoCContainer.Resolve<GPUOverclockController>();
+            var hybridModeFeature = IoCContainer.Resolve<HybridModeFeature>();
+            var fanCurveManager = IoCContainer.Resolve<FanCurveManager>();
+            var fanCurveSettings = IoCContainer.Resolve<FanCurveSettings>();
+            var amdOverclockingController = IoCContainer.Resolve<AmdOverclockingController>();
+            var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
+
+            Func<Task>[] bgSteps =
+            [
+                () => LogSoftwareStatusAsync(vantageDisabler, legionZoneDisabler, fnKeysDisabler),
+                () => InitControllerAsync(lampArrayController, lampArraySettings),
+                () => InitSensorsGroupControllerFeatureAsync(applicationSettings, sensorsGroupController),
+                () => InitPowerModeFeatureAsync(powerModeFeature),
+                () => InitItsModeFeatureAsync(itsModeFeature),
+                () => InitBatteryFeatureAsync(batteryFeature),
+                () => InitRgbKeyboardControllerAsync(rgbKeyboardController),
+                () => InitSpectrumKeyboardControllerAsync(spectrumKeyboardController),
+                () => InitGpuOverclockControllerAsync(gpuOverclockController),
+                () => InitHybridModeAsync(hybridModeFeature),
+                () => InitFanManagerAsync(fanCurveManager, powerModeFeature, fanCurveSettings),
+                () => InitAmdOverclockingAsync(amdOverclockingController),
+                () => InitAutomationProcessorAsync(automationProcessor)
+            ];
+            Func<Task>[] postSteps =
+            [
+                () => IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
+                () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
+                () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
+                () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync(),
+            ];
+            return (bgSteps, postSteps);
+        }
+
         public async Task<int> RunAsync(StartupEventArgs e)
         {
             try
@@ -97,11 +137,6 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
-        /// <summary>
-        /// Ensures only one instance of the application is running.
-        /// If another instance is detected, signals it and exits silently.
-        /// </summary>
-        /// <returns>True if this instance should continue; false if a duplicate was found.</returns>
         private async Task<bool> EnsureSingleInstanceAsync()
         {
             if (!App.Current.EnsureSingleInstance())
@@ -114,13 +149,6 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return true;
         }
 
-        /// <summary>
-        /// Configures device compatibility settings during startup.
-        /// Checks system compatibility, shows unsupported hardware warning if needed,
-        /// and handles startup device setup.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        /// <exception cref="StartupAbortException">Thrown when the system is incompatible and the user chose not to continue.</exception>
         private async Task ConfigureCompatibilityAsync()
         {
             await LocalizationHelper.SetLanguageAsync(true, App.CreateStartupLanguagePackManager(_flags));
@@ -207,10 +235,6 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
-        /// <summary>
-        /// Sets up the IoC container and configures all application services.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private Task SetupIoCAsync()
         {
             WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
@@ -244,20 +268,12 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Initializes the plugin system.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private async Task InitializePluginsAsync()
         {
             await App.InitializePluginsAsync();
             LocalizationHelper.SetPluginResourceCultures();
         }
 
-        /// <summary>
-        /// Creates the main application window and applies theme settings.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private Task CreateMainWindowAsync()
         {
             var mainWindow = new MainWindow(IoCContainer.Resolve<ApplicationSettings>(),
@@ -281,20 +297,12 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Starts background services that run after the main window is created.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private Task StartBackgroundServicesAsync()
         {
             App.Current.StartBackgroundInitialization();
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Shows the main window and checks for pending crash reports from previous sessions.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private Task ShowMainWindowAsync()
         {
             if (_flags.Minimized)
@@ -322,14 +330,266 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Initializes the on-screen display (OSD) system.
-        /// </summary>
-        /// <returns>A task representing the asynchronous operation.</returns>
         private Task InitializeOsdAsync()
         {
             App.Current.InitOsd();
             return Task.CompletedTask;
+        }
+
+        private static Task RunWithErrorHandlingAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
+        {
+            return App.RunInitStepAsync(action, operationName, logOnSuccess);
+        }
+
+        private static async Task LogSoftwareStatusAsync(VantageDisabler vantageDisabler, LegionZoneDisabler legionZoneDisabler, FnKeysDisabler fnKeysDisabler)
+        {
+            if (!Log.Instance.IsTraceEnabled)
+                return;
+
+            var statuses = await Task.WhenAll(
+                vantageDisabler.GetStatusAsync(),
+                legionZoneDisabler.GetStatusAsync(),
+                fnKeysDisabler.GetStatusAsync()
+            );
+
+            Log.Instance.Trace($"Vantage status: {statuses[0]}");
+            Log.Instance.Trace($"LegionZone status: {statuses[1]}");
+            Log.Instance.Trace($"FnKeys status: {statuses[2]}");
+        }
+
+        private static async Task InitControllerAsync(LampArrayController controller, LampArraySettings settings)
+        {
+            await RunWithErrorHandlingAsync(
+                () => controller.InitializeAsync(settings),
+                "lamp array controller",
+                false
+            );
+        }
+
+        private static async Task InitSensorsGroupControllerFeatureAsync(ApplicationSettings settings, SensorsGroupController controller)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (!settings.Store.EnableHardwareSensors)
+                        return;
+
+                    _ = await controller.IsSupportedAsync().ConfigureAwait(false);
+                },
+                "sensors group controller",
+                false
+            );
+        }
+
+        private static async Task InitPowerModeFeatureAsync(PowerModeFeature feature)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await feature.IsSupportedAsync())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Ensuring god mode state is applied...");
+
+                        await feature.EnsureGodModeStateIsAppliedAsync();
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Ensuring correct power plan is set...");
+
+                        await feature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
+                    }
+                },
+                "power mode feature",
+                false
+            );
+        }
+
+        private static async Task InitItsModeFeatureAsync(ITSModeFeature feature)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await feature.IsSupportedAsync().ConfigureAwait(false))
+                        await feature.SetStateAsync(await feature.GetStateAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                },
+                "ITS mode feature",
+                false
+            );
+        }
+
+        private static async Task InitBatteryFeatureAsync(BatteryFeature feature)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await feature.IsSupportedAsync())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Ensuring correct battery mode is set...");
+
+                        await feature.EnsureCorrectBatteryModeIsSetAsync();
+                    }
+                },
+                "battery feature",
+                false
+            );
+        }
+
+        private static async Task InitRgbKeyboardControllerAsync(RGBKeyboardBacklightController controller)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await controller.IsSupportedAsync())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Setting light control owner and restoring preset...");
+
+                        await controller.SetLightControlOwnerAsync(true, true);
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"RGB keyboard is not supported.");
+                    }
+                },
+                "RGB keyboard controller",
+                false
+            );
+        }
+
+        private static async Task InitSpectrumKeyboardControllerAsync(SpectrumKeyboardBacklightController controller)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await controller.IsSupportedAsync())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Starting Aurora if needed...");
+
+                        var result = await controller.StartAuroraIfNeededAsync();
+                        if (result)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Aurora started.");
+                        }
+                        else
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Aurora not needed.");
+                        }
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Spectrum keyboard is not supported.");
+                    }
+                },
+                "Spectrum keyboard controller",
+                false
+            );
+        }
+
+        private static async Task InitGpuOverclockControllerAsync(GPUOverclockController controller)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (await controller.IsSupportedAsync())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Ensuring GPU overclock is applied...");
+
+                        var result = await controller.EnsureOverclockIsAppliedAsync();
+                        if (result)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"GPU overclock applied.");
+                        }
+                        else
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"GPU overclock not needed.");
+                        }
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"GPU overclock is not supported.");
+                    }
+                },
+                "GPU overclock controller",
+                false
+            );
+        }
+
+        private static async Task InitHybridModeAsync(HybridModeFeature feature)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    await feature.EnsureDGPUEjectedIfNeededAsync();
+                },
+                "hybrid mode"
+            );
+        }
+
+        private static async Task InitFanManagerAsync(FanCurveManager fanManager, PowerModeFeature powerMode, FanCurveSettings fanSettings)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (!await fanManager.IsSupportedAsync().ConfigureAwait(false))
+                        return;
+
+                    await fanManager.InitializeAsync().ConfigureAwait(false);
+
+                    var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                    if (mi.LegionSeries <= LegionSeries.Legion_Legacy)
+                    {
+                        if (await powerMode.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
+                            return;
+                    }
+
+                    if (fanSettings.Store.Entries.Count == 0)
+                        await fanSettings.SynchronizeStoreAsync().ConfigureAwait(false);
+
+                    await fanManager.LoadAndApply(fanSettings.Store.Entries).ConfigureAwait(false);
+                },
+                "fan manager",
+                false
+            );
+        }
+
+        private static async Task InitAmdOverclockingAsync(AmdOverclockingController controller)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    if (!controller.IsActive())
+                        return;
+
+                    await controller.InitializeAsync().ConfigureAwait(false);
+
+                    if (!controller.DoNotApply)
+                        await controller.ApplyInternalProfileAsync().ConfigureAwait(false);
+                },
+                "AMD overclocking",
+                false
+            );
+        }
+
+        private static async Task InitAutomationProcessorAsync(AutomationProcessor automationProcessor)
+        {
+            await RunWithErrorHandlingAsync(
+                async () =>
+                {
+                    await automationProcessor.InitializeAsync();
+                    automationProcessor.RunOnStartup();
+                },
+                "automation processor"
+            );
         }
     }
 }

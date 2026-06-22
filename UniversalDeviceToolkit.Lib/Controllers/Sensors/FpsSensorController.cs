@@ -100,7 +100,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                     }
                     catch (Exception ex)
                     {
-                        Log.Instance.Trace($"Monitoring loop error: {ex.Message}");
+                        Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
                         await Task.Delay(1000, _cancellationTokenSource.Token).ConfigureAwait(false);
                     }
                 }

@@ -18,7 +18,6 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
     private const string ACTIVE_OVERLAY_AC_POWER_SCHEME_KEY = "ActiveOverlayAcPowerScheme";
     private const string ACTIVE_OVERLAY_DC_POWER_SCHEME_KEY = "ActiveOverlayDcPowerScheme";
 
-    private static readonly Guid DefaultPowerPlan = Guid.Parse("381b4222-f694-41f0-9685-ff5bb260df2e");
     private static readonly Guid BestPowerEfficiency = Guid.Parse("961cc777-2547-4f9d-8174-7d86181b8a7a");
     private static readonly Guid BestPerformance = Guid.Parse("ded574b5-45a0-4f42-8737-46345c09c238");
 
@@ -122,10 +121,10 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
         if (PInvoke.PowerGetActiveScheme(null, out var guid) != WIN32_ERROR.ERROR_SUCCESS)
             PInvokeExtensions.ThrowIfWin32Error("PowerGetActiveScheme");
 
-        if (DefaultPowerPlan == *guid)
+        if (PowerConstants.DefaultPowerPlan == *guid)
             return;
 
-        if (PInvoke.PowerSetActiveScheme(null, DefaultPowerPlan) != WIN32_ERROR.ERROR_SUCCESS)
+        if (PInvoke.PowerSetActiveScheme(null, PowerConstants.DefaultPowerPlan) != WIN32_ERROR.ERROR_SUCCESS)
             PInvokeExtensions.ThrowIfWin32Error("PowerSetActiveScheme");
 
         if (Log.Instance.IsTraceEnabled)

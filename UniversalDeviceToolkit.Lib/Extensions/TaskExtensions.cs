@@ -37,8 +37,7 @@ public static class TaskExtensions
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Background task failed: {operationName}.", ex);
+            Log.Instance.Error($"Background task failed: {operationName}.", ex);
         }
     }
 }

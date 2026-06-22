@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using LenovoLegionToolkit.Lib.Utils;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -54,18 +54,18 @@ public class HttpClientFactory
 
         if (errors != SslPolicyErrors.RemoteCertificateChainErrors || chain is null)
         {
-            Debug.WriteLine($"SSL certificate validation error: {errors}");
+            Log.Instance.Warning($"SSL certificate validation error: {errors}");
             return false;
         }
 
         var chainStatus = chain.ChainStatus;
         if (IsOnlyRevocationAvailabilityFailure(chainStatus))
         {
-            Debug.WriteLine($"SSL certificate revocation status unavailable for {message.RequestUri}; continuing with otherwise valid certificate chain.");
+            Log.Instance.Warning($"SSL certificate revocation status unavailable for {message.RequestUri}; continuing with otherwise valid certificate chain.");
             return true;
         }
 
-        Debug.WriteLine($"SSL certificate chain validation failed for {message.RequestUri}: {string.Join(", ", chainStatus.Select(status => status.Status))}");
+        Log.Instance.Warning($"SSL certificate chain validation failed for {message.RequestUri}: {string.Join(", ", chainStatus.Select(status => status.Status))}");
         return false;
     }
 

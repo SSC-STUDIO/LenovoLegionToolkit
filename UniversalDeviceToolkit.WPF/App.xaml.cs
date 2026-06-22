@@ -82,6 +82,23 @@ public partial class App
     private bool _shutdownInvoked;
     private bool _inExitHandler;
     private bool _exceptionHandlerExecuting;
+    private StartupOrchestrator? _orchestrator;
+
+    internal static async Task RunInitStepAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled && logOnSuccess)
+                Log.Instance.Trace($"Initializing {operationName}...");
+
+            await action();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't initialize {operationName}.", ex);
+        }
+    }
 
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
@@ -119,6 +136,7 @@ public partial class App
             Log.Instance.Trace($"Flags: {flags}");
 
         var orchestrator = new StartupOrchestrator(flags);
+        _orchestrator = orchestrator;
         var exitCode = await orchestrator.RunAsync(e);
 
         if (exitCode != 0)
@@ -232,39 +250,14 @@ public partial class App
         _backgroundInitializationCancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
 
-        var initializationSteps = new Func<Task>[]
-        {
-            LogSoftwareStatusAsync,
-            InitLampArrayControllerAsync,
-            InitSensorsGroupControllerFeatureAsync,
-            InitPowerModeFeatureAsync,
-            InitItsModeFeatureAsync,
-            InitBatteryFeatureAsync,
-            InitRgbKeyboardControllerAsync,
-            InitSpectrumKeyboardControllerAsync,
-            InitGpuOverclockControllerAsync,
-            InitHybridModeAsync,
-            InitFanManagerAsync,
-            InitAmdOverclockingAsync,
-            InitAutomationProcessorAsync
-        };
-
-        var serviceStartSteps = new Func<Task>[]
-        {
-            () => IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
-            () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
-            () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
-            () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync(),
-        };
+        var (initializationSteps, serviceStartSteps) = _orchestrator?.GetBackgroundInitializationSteps() ?? ([], []);
 
         _backgroundInitializationTask = Task.Run(async () =>
         {
             try
             {
-                // Check for cancellation before starting initialization steps
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Run initialization steps in parallel where possible to improve startup performance
                 var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -275,8 +268,6 @@ public partial class App
                 cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
 
-                // Run service start steps in parallel to improve startup performance
-                // Skip service starts if cancellation was requested to avoid race conditions during shutdown
                 var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -435,6 +426,7 @@ public partial class App
 
         PluginHostContext.Reset();
 
+        // Application.Exit requires synchronous handler
         try { ShutdownAsync(true).GetAwaiter().GetResult(); }
         catch { /* Shutdown failed - continue with exit anyway */ }
 
@@ -719,9 +711,10 @@ public partial class App
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Shutdown completed in {totalStopwatch.ElapsedMilliseconds}ms.");
         }
-        catch (Exception ex) when (Log.Instance.IsTraceEnabled)
+        catch (Exception ex)
         {
-            Log.Instance.Trace($"Shutdown error: {ex.Message}");
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutdown error: {ex.Message}");
         }
     }
 
@@ -747,7 +740,7 @@ public partial class App
             await Task.Delay(200).ConfigureAwait(false);
 
             if (pluginManager is PluginManager manager)
-                manager.PerformPendingDeletions();
+                await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
         }
         catch { /* Plugin shutdown process failed - continue with app shutdown */ }
     }
@@ -780,7 +773,7 @@ public partial class App
             // Try to show message box, but don't let it cause infinite recursion
             try
             {
-                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? T("App_UnhandledException_Unknown", "Unknown exception.")),
+                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToString() ?? T("App_UnhandledException_Unknown", "Unknown exception.")),
                     T("App_UnhandledException_AppDomain_Title", "Application Domain Error"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
@@ -850,7 +843,7 @@ public partial class App
             // Try to show message box, but don't let it cause infinite recursion
             try
             {
-                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
+                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToString()),
                     T("App_UnhandledException_Dispatcher_Title", "Application Error"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
@@ -1162,295 +1155,6 @@ public partial class App
     private static void ApplyStartupOverrides(Flags flags)
     {
         _ = flags;
-    }
-
-    private static async Task LogSoftwareStatusAsync()
-    {
-        if (!Log.Instance.IsTraceEnabled)
-            return;
-
-        // Gather software statuses in parallel to improve efficiency
-        var statuses = await Task.WhenAll(
-            IoCContainer.Resolve<VantageDisabler>().GetStatusAsync(),
-            IoCContainer.Resolve<LegionZoneDisabler>().GetStatusAsync(),
-            IoCContainer.Resolve<FnKeysDisabler>().GetStatusAsync()
-        );
-
-        Log.Instance.Trace($"Vantage status: {statuses[0]}");
-        Log.Instance.Trace($"LegionZone status: {statuses[1]}");
-        Log.Instance.Trace($"FnKeys status: {statuses[2]}");
-    }
-
-    // Generic async helper with error handling to reduce repetition
-    private static async Task RunWithErrorHandlingAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
-    {
-        try
-        {
-            if (Log.Instance.IsTraceEnabled && logOnSuccess)
-                Log.Instance.Trace($"Initializing {operationName}...");
-
-            await action();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't initialize {operationName}.", ex);
-        }
-    }
-
-    private static async Task InitHybridModeAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var feature = IoCContainer.Resolve<HybridModeFeature>();
-                await feature.EnsureDGPUEjectedIfNeededAsync();
-            },
-            "hybrid mode"
-        );
-    }
-
-    private static async Task InitAutomationProcessorAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
-                await automationProcessor.InitializeAsync();
-                automationProcessor.RunOnStartup();
-            },
-            "automation processor"
-        );
-    }
-
-    private static async Task InitPowerModeFeatureAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var feature = IoCContainer.Resolve<PowerModeFeature>();
-                if (await feature.IsSupportedAsync())
-                {
-                    // Optimization: cache the support status to avoid multiple IsSupportedAsync calls
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Ensuring god mode state is applied...");
-
-                    await feature.EnsureGodModeStateIsAppliedAsync();
-
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Ensuring correct power plan is set...");
-
-                    await feature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
-                }
-            },
-            "power mode feature",
-            false // Skip success logging because detailed logs exist inside the helper methods
-        );
-    }
-
-    private static async Task InitItsModeFeatureAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var feature = IoCContainer.Resolve<ITSModeFeature>();
-                if (await feature.IsSupportedAsync().ConfigureAwait(false))
-                    await feature.SetStateAsync(await feature.GetStateAsync().ConfigureAwait(false)).ConfigureAwait(false);
-            },
-            "ITS mode feature",
-            false
-        );
-    }
-
-    private static async Task InitBatteryFeatureAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var feature = IoCContainer.Resolve<BatteryFeature>();
-                if (await feature.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Ensuring correct battery mode is set...");
-
-                    await feature.EnsureCorrectBatteryModeIsSetAsync();
-                }
-            },
-            "battery feature",
-            false
-        );
-    }
-
-    private static async Task InitRgbKeyboardControllerAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var controller = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-                if (await controller.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Setting light control owner and restoring preset...");
-
-                    await controller.SetLightControlOwnerAsync(true, true);
-                }
-                else
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"RGB keyboard is not supported.");
-                }
-            },
-            "RGB keyboard controller",
-            false
-        );
-    }
-
-    // Optimized initialization routine for the Spectrum keyboard controller
-    private static async Task InitSpectrumKeyboardControllerAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-                if (await controller.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Starting Aurora if needed...");
-
-                    var result = await controller.StartAuroraIfNeededAsync();
-                    if (result)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Aurora started.");
-                    }
-                    else
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Aurora not needed.");
-                    }
-                }
-                else
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Spectrum keyboard is not supported.");
-                }
-            },
-            "Spectrum keyboard controller",
-            false
-        );
-    }
-
-    private static async Task InitSensorsGroupControllerFeatureAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var settings = IoCContainer.Resolve<ApplicationSettings>();
-                if (!settings.Store.EnableHardwareSensors)
-                    return;
-
-                _ = await IoCContainer.Resolve<SensorsGroupController>().IsSupportedAsync().ConfigureAwait(false);
-            },
-            "sensors group controller",
-            false
-        );
-    }
-
-    private static async Task InitLampArrayControllerAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var controller = IoCContainer.Resolve<LampArrayController>();
-                var settings = IoCContainer.Resolve<LampArraySettings>();
-                await controller.InitializeAsync(settings).ConfigureAwait(false);
-            },
-            "lamp array controller",
-            false
-        );
-    }
-
-    private static async Task InitGpuOverclockControllerAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var controller = IoCContainer.Resolve<GPUOverclockController>();
-                if (await controller.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Ensuring GPU overclock is applied...");
-
-                    var result = await controller.EnsureOverclockIsAppliedAsync();
-                    if (result)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"GPU overclock applied.");
-                    }
-                    else
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"GPU overclock not needed.");
-                    }
-                }
-                else
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"GPU overclock is not supported.");
-                }
-            },
-            "GPU overclock controller",
-            false
-        );
-    }
-
-    private static async Task InitFanManagerAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var fanManager = IoCContainer.Resolve<FanCurveManager>();
-                if (!await fanManager.IsSupportedAsync().ConfigureAwait(false))
-                    return;
-
-                await fanManager.InitializeAsync().ConfigureAwait(false);
-
-                var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-                if (mi.LegionSeries <= LegionSeries.Legion_Legacy)
-                {
-                    var powerMode = IoCContainer.Resolve<PowerModeFeature>();
-                    if (await powerMode.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
-                        return;
-                }
-
-                var fanSettings = IoCContainer.Resolve<FanCurveSettings>();
-                if (fanSettings.Store.Entries.Count == 0)
-                    await fanSettings.SynchronizeStoreAsync().ConfigureAwait(false);
-
-                await fanManager.LoadAndApply(fanSettings.Store.Entries).ConfigureAwait(false);
-            },
-            "fan manager",
-            false
-        );
-    }
-
-    private static async Task InitAmdOverclockingAsync()
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                var controller = IoCContainer.Resolve<AmdOverclockingController>();
-                if (!controller.IsActive())
-                    return;
-
-                await controller.InitializeAsync().ConfigureAwait(false);
-
-                if (!controller.DoNotApply)
-                    await controller.ApplyInternalProfileAsync().ConfigureAwait(false);
-            },
-            "AMD overclocking",
-            false
-        );
     }
 
     private static async Task FinalizeRuntimeProfilesAsync()

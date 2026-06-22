@@ -23,10 +23,10 @@ public class NotifyIcon : NativeWindow, IDisposable
 
     private static readonly uint TaskbarCreatedMessage = PInvoke.RegisterWindowMessage("TaskbarCreated");
 
-    private static uint _nextId;
+    private static int _nextId;
 
     private readonly object _lock = new();
-    private readonly uint _id = ++_nextId;
+    private readonly uint _id = (uint)Interlocked.Increment(ref _nextId);
 
     private bool _added;
     private CancellationTokenSource? _showToolTipCancellationTokenSource;

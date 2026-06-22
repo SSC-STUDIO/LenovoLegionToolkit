@@ -37,7 +37,7 @@ public class IpcServer(
     UpdateCheckSettings updateCheckSettings
     )
 {
-    private static readonly byte[] SessionKey = SHA256.HashData("UniversalDeviceToolkit.IPC.SessionKey.v1"u8);
+
 
     private static readonly SemaphoreSlim SupportedFeaturesCacheSemaphore = new(1, 1);
     private static string? _supportedFeaturesCache;
@@ -94,7 +94,8 @@ public class IpcServer(
                     pipe.ReadMode = PipeTransmissionMode.Message;
 
                     var challenge = RandomNumberGenerator.GetBytes(32);
-                    var challengeResponse = new IpcResponse { Success = true, Message = Convert.ToHexString(challenge) };
+                    var encryptedChallenge = ProtectedData.Protect(challenge, null, DataProtectionScope.CurrentUser);
+                    var challengeResponse = new IpcResponse { Success = true, Message = Convert.ToHexString(encryptedChallenge) };
                     await pipe.WriteObjectAsync(challengeResponse, token).ConfigureAwait(false);
 
                     var req = await pipe.ReadObjectAsync<IpcRequest>(token).ConfigureAwait(false);
@@ -102,10 +103,20 @@ public class IpcServer(
                     if (req?.Operation is null)
                         throw new IpcException("Failed to deserialize request");
 
-                    var expectedHmac = HMACSHA256.HashData(SessionKey, challenge);
-                    var expectedToken = Convert.ToHexString(expectedHmac);
-                    if (!string.Equals(req.AuthToken, expectedToken, StringComparison.OrdinalIgnoreCase))
+                    if (string.IsNullOrWhiteSpace(req.AuthToken))
                         throw new IpcException("Unauthorized");
+
+                    try
+                    {
+                        var clientResponse = Convert.FromHexString(req.AuthToken);
+                        var decryptedChallenge = ProtectedData.Unprotect(clientResponse, null, DataProtectionScope.CurrentUser);
+                        if (!challenge.AsSpan().SequenceEqual(decryptedChallenge))
+                            throw new IpcException("Unauthorized");
+                    }
+                    catch (Exception ex) when (ex is FormatException or CryptographicException)
+                    {
+                        throw new IpcException("Unauthorized");
+                    }
 
                     var res = await HandleRequest(req).ConfigureAwait(false);
                     await pipe.WriteObjectAsync(res, token).ConfigureAwait(false);

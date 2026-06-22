@@ -74,7 +74,7 @@ public class PluginManager : IPluginManager
             {
                 try
                 {
-                    await LoadPluginFromFileAsync(pluginFile);
+                    await LoadPluginFromFileAsync(pluginFile).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -211,13 +211,13 @@ public class PluginManager : IPluginManager
         var appBaseDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
         var appBaseDllPath = Path.Combine(appBaseDirectory, $"{assemblyName}.dll");
         if (File.Exists(appBaseDllPath))
-            return Assembly.LoadFrom(Path.GetFullPath(appBaseDllPath));
+            return TryLoadTrustedPluginAssembly(appBaseDllPath, appBaseDirectory, $"app-base dependency {assemblyName}");
 
         // Check SDK directory relative to plugins directory
         var sdkDirectory = Path.GetFullPath(Path.Combine(pluginsDirectory, "..", "SDK"));
         var sdkPath = Path.GetFullPath(Path.Combine(sdkDirectory, $"{assemblyName}.dll"));
-        if (IsPathWithinDirectory(sdkPath, sdkDirectory) && File.Exists(sdkPath))
-            return Assembly.LoadFrom(sdkPath);
+        if (File.Exists(sdkPath))
+            return TryLoadTrustedPluginAssembly(sdkPath, sdkDirectory, $"SDK assembly {assemblyName}");
 
         // For SDK assembly, try to resolve from already loaded assemblies
         // The SDK types forward to LenovoLegionToolkit.Lib which is already loaded
@@ -243,6 +243,7 @@ public class PluginManager : IPluginManager
                 return null;
             }
 
+            // AssemblyResolve requires synchronous return
             var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
             if (!signatureResult.IsValid)
             {
@@ -329,7 +330,7 @@ public class PluginManager : IPluginManager
             }
 
             // Validate plugin signature before loading (security check)
-            var signatureResult = await _signatureValidator.ValidateAsync(pluginFilePath);
+            var signatureResult = await _signatureValidator.ValidateAsync(pluginFilePath).ConfigureAwait(false);
             if (!signatureResult.IsValid)
             {
                 Log.Instance.Warning($"Plugin signature validation failed for {pluginFilePath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
@@ -340,7 +341,7 @@ public class PluginManager : IPluginManager
             IPlugin? plugin;
             try
             {
-                plugin = await _loader.LoadFromFileAsync(pluginFilePath, _signatureValidator);
+                plugin = await _loader.LoadFromFileAsync(pluginFilePath, _signatureValidator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -835,12 +836,12 @@ public class PluginManager : IPluginManager
 
     public async Task InstallPluginAsync(string pluginId)
     {
-        await Task.Run(() => InstallPlugin(pluginId));
+        await Task.Run(() => InstallPlugin(pluginId)).ConfigureAwait(false);
     }
 
     public async Task<bool> UninstallPluginAsync(string pluginId)
     {
-        return await Task.Run(() => UninstallPlugin(pluginId));
+        return await Task.Run(() => UninstallPlugin(pluginId)).ConfigureAwait(false);
     }
 
     public async Task<bool> PermanentlyDeletePluginAsync(string pluginId)
@@ -995,7 +996,7 @@ public class PluginManager : IPluginManager
                     if (!string.IsNullOrEmpty(pluginBaseName) &&
                         allFiles.All(f => Path.GetFileName(f).StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase)))
                     {
-                        await _fileSystemManager.DeleteDirectoryWithRetryAsync(dir);
+                        await _fileSystemManager.DeleteDirectoryWithRetryAsync(dir).ConfigureAwait(false);
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Deleted plugin directory: {dir}");
                         // Remove files from foundFiles list since directory is deleted
@@ -1013,7 +1014,7 @@ public class PluginManager : IPluginManager
             var deletedAny = false;
             foreach (var filePath in foundFiles)
             {
-                var deleted = await _fileSystemManager.DeleteFileWithRetryAsync(filePath);
+                var deleted = await _fileSystemManager.DeleteFileWithRetryAsync(filePath).ConfigureAwait(false);
                 if (deleted)
                 {
                     if (Log.Instance.IsTraceEnabled)
@@ -1031,7 +1032,7 @@ public class PluginManager : IPluginManager
                             var relatedFile = basePath + ext;
                             if (File.Exists(relatedFile))
                             {
-                                await _fileSystemManager.DeleteFileWithRetryAsync(relatedFile);
+                                await _fileSystemManager.DeleteFileWithRetryAsync(relatedFile).ConfigureAwait(false);
                                 if (Log.Instance.IsTraceEnabled)
                                     Log.Instance.Trace($"Deleted related file: {relatedFile}");
                             }
@@ -1051,7 +1052,7 @@ public class PluginManager : IPluginManager
                                     var satelliteFileName = Path.GetFileNameWithoutExtension(satelliteFile);
                                     if (satelliteFileName.StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase))
                                     {
-                                        await _fileSystemManager.DeleteFileWithRetryAsync(satelliteFile);
+                                        await _fileSystemManager.DeleteFileWithRetryAsync(satelliteFile).ConfigureAwait(false);
                                         if (Log.Instance.IsTraceEnabled)
                                             Log.Instance.Trace($"Deleted satellite assembly: {satelliteFile}");
                                     }
@@ -1202,7 +1203,7 @@ public class PluginManager : IPluginManager
             
         try
         {
-            var updates = await CheckForUpdatesAsync();
+            var updates = await CheckForUpdatesAsync().ConfigureAwait(false);
             return updates.ContainsKey(pluginId);
         }
         catch (Exception ex)
@@ -1243,7 +1244,7 @@ public class PluginManager : IPluginManager
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Deleting plugin files for: {pluginId}");
 
-                await PermanentlyDeletePluginAsync(pluginId);
+                await PermanentlyDeletePluginAsync(pluginId).ConfigureAwait(false);
 
                 // Remove from pending deletions list
                 _applicationSettings.Store.PendingDeletionExtensions.Remove(pluginId);
@@ -1267,6 +1268,7 @@ public class PluginManager : IPluginManager
     /// </summary>
     public void PerformPendingDeletions()
     {
+        // Synchronous convenience wrapper; callers that can be async should use PerformPendingDeletionsAsync() instead
         PerformPendingDeletionsAsync().GetAwaiter().GetResult();
     }
 

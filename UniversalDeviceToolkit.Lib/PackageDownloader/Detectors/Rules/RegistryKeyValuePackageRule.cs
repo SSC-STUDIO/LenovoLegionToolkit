@@ -72,7 +72,7 @@ internal readonly struct RegistryKeyValuePackageRule : IPackageRule
         var versionString = Registry.GetValue(hive, path, KeyName, string.Empty);
 
         if (versionString.Any(char.IsWhiteSpace))
-            versionString = versionString.Split(null).FirstOrDefault(versionString);
+            versionString = versionString.Split(default(char[]), StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()!;
 
         if (!Version.TryParse(versionString, out var version))
             return Task.FromResult(false);

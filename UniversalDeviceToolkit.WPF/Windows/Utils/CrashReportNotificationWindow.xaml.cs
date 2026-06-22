@@ -113,14 +113,13 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
         {
             try
             {
-                if (File.Exists(_crashReportPath))
+                if (File.Exists(_crashReportPath) && IsSafeFilePath(_crashReportPath))
                 {
-                    var processStartInfo = new ProcessStartInfo
+                    Process.Start(new ProcessStartInfo
                     {
                         FileName = _crashReportPath,
                         UseShellExecute = true
-                    };
-                    Process.Start(processStartInfo);
+                    });
                 }
                 else
                 {
@@ -162,6 +161,19 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private static bool IsSafeFilePath(string path)
+        {
+            try
+            {
+                var fullPath = Path.GetFullPath(path);
+                return fullPath.IndexOfAny(Path.GetInvalidPathChars()) == -1;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

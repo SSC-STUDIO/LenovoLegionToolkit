@@ -25,28 +25,44 @@ public static class SnackbarHelper
     }
 
     private static readonly PriorityQueue<SnackbarMessage, int> _queue = new();
+    private static readonly object _queueLock = new();
     private static bool _isShowing;
 
     public static async Task ShowAsync(string title, string? message = null, SnackbarType type = SnackbarType.Success)
     {
         var msg = new SnackbarMessage { Title = title, Message = message, Type = type };
-        _queue.Enqueue(msg, 2 - msg.Priority); // 0 is highest priority in PriorityQueue
 
-        if (_isShowing)
+        bool shouldProcess;
+        lock (_queueLock)
+        {
+            _queue.Enqueue(msg, 2 - msg.Priority);
+            if (_isShowing)
+                return;
+            _isShowing = true;
+            shouldProcess = true;
+        }
+
+        if (!shouldProcess)
             return;
 
-        _isShowing = true;
         try
         {
-            while (_queue.Count > 0)
+            while (true)
             {
-                var nextMsg = _queue.Dequeue();
+                SnackbarMessage nextMsg;
+                lock (_queueLock)
+                {
+                    if (_queue.Count == 0)
+                        break;
+                    nextMsg = _queue.Dequeue();
+                }
                 await ProcessSnackbar(nextMsg);
             }
         }
         finally
         {
-            _isShowing = false;
+            lock (_queueLock)
+                _isShowing = false;
         }
     }
 

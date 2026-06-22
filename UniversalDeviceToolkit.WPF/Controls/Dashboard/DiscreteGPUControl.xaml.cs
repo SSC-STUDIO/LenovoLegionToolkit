@@ -7,6 +7,7 @@ using System.Windows.Controls.Primitives;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
@@ -138,7 +139,11 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
                 foreach (var p in e.Processes.OrderBy(p => p.ProcessName))
                 {
                     try { processesStringBuilder.AppendLine().Append("  \u2022 ").Append(p.ProcessName); }
-                    catch {  /* Ignored. */ }
+                    catch
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Failed to append GPU process name");
+                    }
                 }
             }
             else

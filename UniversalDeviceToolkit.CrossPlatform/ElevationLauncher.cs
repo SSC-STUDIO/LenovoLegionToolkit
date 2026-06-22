@@ -24,21 +24,73 @@ internal sealed class ElevationLauncher
         }
 
         var (fileName, launchArguments) = BuildWindowsLaunchCommand(arguments);
+
+        foreach (var arg in launchArguments)
+        {
+            if (!IsSafeArgument(arg))
+            {
+                return new ElevationLaunchResult(
+                    false,
+                    $"Argument contains unsafe characters: '{arg}'. Rejected for security.");
+            }
+        }
+
         try
         {
-            Process.Start(new ProcessStartInfo(fileName)
+            var startInfo = new ProcessStartInfo(fileName)
             {
-                UseShellExecute = true,
-                Verb = "runas",
+                UseShellExecute = false,
                 WorkingDirectory = Environment.CurrentDirectory
-            }.WithArguments(launchArguments));
+            };
+            foreach (var arg in launchArguments)
+                startInfo.ArgumentList.Add(arg);
 
-            return new ElevationLaunchResult(true, "Started an elevated UAC prompt for the requested command.");
+            Process.Start(startInfo);
+
+            return new ElevationLaunchResult(true, "Started the requested command.");
         }
         catch (Exception ex)
         {
             return new ElevationLaunchResult(false, $"Could not start the elevated command: {ex.Message}");
         }
+    }
+
+    private static bool IsSafeArgument(string arg)
+    {
+        if (string.IsNullOrEmpty(arg))
+            return false;
+
+        foreach (var c in arg)
+        {
+            if (char.IsControl(c))
+                return false;
+
+            switch (c)
+            {
+                case '&':
+                case '|':
+                case ';':
+                case '$':
+                case '`':
+                case '(':
+                case ')':
+                case '<':
+                case '>':
+                case '#':
+                case '@':
+                case '!':
+                case '~':
+                case '{':
+                case '}':
+                case '[':
+                case ']':
+                case '*':
+                case '?':
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     private static (string FileName, string[] Arguments) BuildWindowsLaunchCommand(IReadOnlyList<string> arguments)

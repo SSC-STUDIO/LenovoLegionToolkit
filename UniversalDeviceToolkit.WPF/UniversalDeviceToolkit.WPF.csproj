@@ -43,11 +43,11 @@
 		<PackageReference Include="Autofac" />
 		<PackageReference Include="CommunityToolkit.Mvvm" />
 		<PackageReference Include="Humanizer" />
-		<PackageReference Include="Markdig" />
-		<PackageReference Include="Markdig.Wpf" />
 		<PackageReference Include="PixiEditor.ColorPicker" />
 		<PackageReference Include="WPF-UI" />
 		<PackageReference Include="WpfScreenHelper" />
+		<PackageReference Include="Markdig" />
+		<PackageReference Include="Markdig.Wpf" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />

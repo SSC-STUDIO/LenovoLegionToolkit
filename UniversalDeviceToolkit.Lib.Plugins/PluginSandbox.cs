@@ -179,14 +179,18 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     /// <inheritdoc />
     public SandboxOperationResult ExecuteInSandbox(string pluginId, Func<object?> operation)
     {
-        if (!_sandboxes.TryGetValue(pluginId, out var context))
+        SandboxContext? context;
+        lock (_lock)
         {
-            return new SandboxOperationResult
+            if (!_sandboxes.TryGetValue(pluginId, out context))
             {
-                Success = false,
-                ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
-                WasBlocked = false
-            };
+                return new SandboxOperationResult
+                {
+                    Success = false,
+                    ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
+                    WasBlocked = false
+                };
+            }
         }
 
         var stopwatch = Stopwatch.StartNew();
@@ -246,14 +250,18 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     /// <inheritdoc />
     public async Task<SandboxOperationResult> ExecuteInSandboxAsync(string pluginId, Func<Task<object?>> operation)
     {
-        if (!_sandboxes.TryGetValue(pluginId, out var context))
+        SandboxContext? context;
+        lock (_lock)
         {
-            return new SandboxOperationResult
+            if (!_sandboxes.TryGetValue(pluginId, out context))
             {
-                Success = false,
-                ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
-                WasBlocked = false
-            };
+                return new SandboxOperationResult
+                {
+                    Success = false,
+                    ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
+                    WasBlocked = false
+                };
+            }
         }
 
         var stopwatch = Stopwatch.StartNew();
@@ -322,8 +330,12 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     /// <inheritdoc />
     public bool HasPermission(string pluginId, SandboxPermission permission)
     {
-        if (!_sandboxes.TryGetValue(pluginId, out var context))
-            return false;
+        SandboxContext? context;
+        lock (_lock)
+        {
+            if (!_sandboxes.TryGetValue(pluginId, out context))
+                return false;
+        }
 
         return (context.Configuration.Permissions & permission) == permission;
     }
@@ -331,8 +343,12 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     /// <inheritdoc />
     public SandboxedPluginInfo? GetPluginInfo(string pluginId)
     {
-        if (!_sandboxes.TryGetValue(pluginId, out var context))
-            return null;
+        SandboxContext? context;
+        lock (_lock)
+        {
+            if (!_sandboxes.TryGetValue(pluginId, out context))
+                return null;
+        }
 
         lock (context)
         {
@@ -378,8 +394,12 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     /// <inheritdoc />
     public SandboxResourceUsage GetResourceUsage(string pluginId)
     {
-        if (!_sandboxes.TryGetValue(pluginId, out var context))
-            return new SandboxResourceUsage();
+        SandboxContext? context;
+        lock (_lock)
+        {
+            if (!_sandboxes.TryGetValue(pluginId, out context))
+                return new SandboxResourceUsage();
+        }
 
         lock (context)
         {
@@ -567,6 +587,21 @@ public class PluginSandbox : IPluginSandbox, IDisposable
         return version?.ToString() ?? "1.0.0";
     }
 
+    private static bool IsPathWithinDirectory(string path, string directoryPath)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var fullDirectory = EnsureTrailingSeparator(Path.GetFullPath(directoryPath));
+        return fullPath.StartsWith(fullDirectory, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string EnsureTrailingSeparator(string path)
+    {
+        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+            return path;
+
+        return path + Path.DirectorySeparatorChar;
+    }
+
     #endregion
 
     #region Nested Classes
@@ -592,7 +627,8 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 PluginId = pluginId,
                 Configuration = configuration
             };
-            LoadContext = new PluginLoadContext(assemblyPath);
+            var pluginDirectory = Path.GetDirectoryName(assemblyPath) ?? string.Empty;
+            LoadContext = new PluginLoadContext(assemblyPath, pluginDirectory);
             ResourceStats = new ResourceStats();
         }
 
@@ -620,9 +656,11 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     private class PluginLoadContext : AssemblyLoadContext
     {
         private readonly AssemblyDependencyResolver _resolver;
+        private readonly string _pluginDirectory;
 
-        public PluginLoadContext(string pluginPath) : base(isCollectible: true)
+        public PluginLoadContext(string pluginPath, string pluginDirectory) : base(isCollectible: true)
         {
+            _pluginDirectory = pluginDirectory;
             _resolver = new AssemblyDependencyResolver(pluginPath);
         }
 
@@ -673,7 +711,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
         {
             var libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
-            if (libraryPath != null)
+            if (libraryPath != null && IsPathWithinDirectory(libraryPath, _pluginDirectory))
             {
                 return LoadUnmanagedDllFromPath(libraryPath);
             }

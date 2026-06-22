@@ -198,8 +198,7 @@ public partial class SettingsApplicationBehaviorControl
                     }
                     catch (System.Exception ex)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Couldn't set light control owner or current preset.", ex);
+                    Log.Instance.Warning($"Couldn't set light control owner or current preset.", ex);
                     }
 
                     try
@@ -225,8 +224,7 @@ public partial class SettingsApplicationBehaviorControl
                     }
                     catch (System.Exception ex)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Couldn't start Aurora if needed.", ex);
+                    Log.Instance.Warning($"Couldn't start Aurora if needed.", ex);
                     }
                 }
                 else
@@ -243,8 +241,7 @@ public partial class SettingsApplicationBehaviorControl
                     }
                     catch (System.Exception ex)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Couldn't set light control owner.", ex);
+                    Log.Instance.Warning($"Couldn't set light control owner.", ex);
                     }
 
                     try
@@ -260,8 +257,7 @@ public partial class SettingsApplicationBehaviorControl
                     }
                     catch (System.Exception ex)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Couldn't stop Aurora.", ex);
+                    Log.Instance.Warning($"Couldn't stop Aurora.", ex);
                     }
 
                     try
@@ -277,8 +273,7 @@ public partial class SettingsApplicationBehaviorControl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unexpected failure while toggling Vantage state.", ex);
+                    Log.Instance.Warning($"Unexpected failure while toggling Vantage state.", ex);
         }
     }
 
@@ -313,8 +308,7 @@ public partial class SettingsApplicationBehaviorControl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unexpected failure while toggling Legion Zone state.", ex);
+                    Log.Instance.Warning($"Unexpected failure while toggling Legion Zone state.", ex);
         }
     }
 
@@ -354,8 +348,7 @@ public partial class SettingsApplicationBehaviorControl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unexpected failure while toggling FnKeys state.", ex);
+                    Log.Instance.Warning($"Unexpected failure while toggling FnKeys state.", ex);
         }
     }
 
@@ -407,8 +400,7 @@ public partial class SettingsApplicationBehaviorControl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unexpected failure while toggling hardware sensors state.", ex);
+                    Log.Instance.Warning($"Unexpected failure while toggling hardware sensors state.", ex);
         }
     }
 
@@ -437,8 +429,7 @@ public partial class SettingsApplicationBehaviorControl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"OsdToggle_Click error: {ex.Message}", ex);
+            Log.Instance.Warning($"OsdToggle_Click error: {ex.Message}", ex);
 
             _osdToggle.IsChecked = false;
             _osdSettings.Store.ShowOsd = false;

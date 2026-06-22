@@ -27,16 +27,15 @@
   <ItemGroup>
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="Humanizer" Version="3.0.10" />
-    <PackageVersion Include="Markdig" Version="1.2.0" />
-    <PackageVersion Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageVersion Include="PixiEditor.ColorPicker" Version="3.4.2.3" />
     <PackageVersion Include="WPF-UI" Version="4.3.0" />
     <PackageVersion Include="WpfScreenHelper" Version="2.1.1" />
+    <PackageVersion Include="Markdig" Version="1.2.0" />
+    <PackageVersion Include="Markdig.Wpf" Version="0.5.0.1" />
   </ItemGroup>
 
   <!-- ==================== Lib Project Dependencies ==================== -->
   <ItemGroup>
-    <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="ManagedNativeWifi" Version="3.0.2" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.275" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />

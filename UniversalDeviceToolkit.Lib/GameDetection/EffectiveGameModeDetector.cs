@@ -22,6 +22,13 @@ internal unsafe class EffectiveGameModeDetector
 
     public Task StartAsync()
     {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("EFFECTIVE_POWER_MODE_V2 not supported on this Windows version.");
+            return Task.CompletedTask;
+        }
+
         var result = PInvoke.PowerRegisterForEffectivePowerModeNotifications(PInvoke.EFFECTIVE_POWER_MODE_V2, _callbackPointer, null, out var handle);
         if (result == 0)
             _handle = new IntPtr(handle);
@@ -30,8 +37,11 @@ internal unsafe class EffectiveGameModeDetector
 
     public Task StopAsync()
     {
-        PInvoke.PowerUnregisterFromEffectivePowerModeNotifications(_handle.ToPointer());
-        _handle = IntPtr.Zero;
+        if (_handle != IntPtr.Zero)
+        {
+            PInvoke.PowerUnregisterFromEffectivePowerModeNotifications(_handle.ToPointer());
+            _handle = IntPtr.Zero;
+        }
         return Task.CompletedTask;
     }
 

@@ -111,15 +111,13 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
     {
         try
         {
-            if (File.Exists(_logFilePath))
+            if (File.Exists(_logFilePath) && IsSafeFilePath(_logFilePath))
             {
-                // Open log file with default text editor
-                var processStartInfo = new ProcessStartInfo
+                Process.Start(new ProcessStartInfo
                 {
                     FileName = _logFilePath,
                     UseShellExecute = true
-                };
-                Process.Start(processStartInfo);
+                });
             }
             else
             {
@@ -160,6 +158,19 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private static bool IsSafeFilePath(string path)
+    {
+        try
+        {
+            var fullPath = Path.GetFullPath(path);
+            return fullPath.IndexOfAny(Path.GetInvalidPathChars()) == -1;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 }

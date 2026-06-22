@@ -49,7 +49,11 @@ public class GPUOverclockController
         }
         finally
         {
-            try { NVAPI.Unload(); } catch { /* Ignored */ }
+            try { NVAPI.Unload(); } catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to unload NVAPI in GetMaxMemoryDeltaMhz");
+            }
         }
     }
 
@@ -73,7 +77,11 @@ public class GPUOverclockController
         }
         finally
         {
-            try { NVAPI.Unload(); } catch { /* Ignored */ }
+            try { NVAPI.Unload(); } catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to unload NVAPI in IsSupportedAsync");
+            }
         }
 
         Log.Instance.Info($"NVAPI status: {isSupported}.");
@@ -280,7 +288,11 @@ public class GPUOverclockController
         {
             Changed?.Invoke(this, EventArgs.Empty);
 
-            try { NVAPI.Unload(); } catch { /* Ignored */ }
+            try { NVAPI.Unload(); } catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to unload NVAPI in ApplyStateAsync");
+            }
         }
     }
 

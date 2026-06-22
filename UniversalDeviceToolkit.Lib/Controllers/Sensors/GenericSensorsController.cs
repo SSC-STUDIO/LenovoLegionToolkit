@@ -115,9 +115,13 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
     {
         try
         {
+            var nvidiaSmiPath = FindNvidiaSmiPath();
+            if (nvidiaSmiPath is null)
+                return GPUInfo.Empty;
+
             var startInfo = new ProcessStartInfo
             {
-                FileName = ResolveNvidiaSmiPath(),
+                FileName = nvidiaSmiPath,
                 Arguments = "--query-gpu=utilization.gpu,clocks.current.graphics,clocks.max.graphics,clocks.current.memory,clocks.max.memory,temperature.gpu,power.draw,voltage.graphics --format=csv,noheader,nounits",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -162,12 +166,6 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
 
             return GPUInfo.Empty;
         }
-    }
-
-    private static string ResolveNvidiaSmiPath()
-    {
-        const string defaultPath = @"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe";
-        return global::System.IO.File.Exists(defaultPath) ? defaultPath : "nvidia-smi";
     }
 
     private static int ParseInt(string value)

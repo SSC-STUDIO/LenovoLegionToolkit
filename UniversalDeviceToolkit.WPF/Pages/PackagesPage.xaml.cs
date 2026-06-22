@@ -45,6 +45,19 @@ public partial class PackagesPage : IProgress<float>
         Initialized += PackagesPage_Initialized;
 
         InitializeComponent();
+
+        Unloaded += PackagesPage_Unloaded;
+    }
+
+    private void PackagesPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        Initialized -= PackagesPage_Initialized;
+        _getPackagesTokenSource?.Cancel();
+        _getPackagesTokenSource?.Dispose();
+        _getPackagesTokenSource = null;
+        _filterDebounceCancellationTokenSource?.Cancel();
+        _filterDebounceCancellationTokenSource?.Dispose();
+        _filterDebounceCancellationTokenSource = null;
     }
 
     private async void PackagesPage_Initialized(object? sender, EventArgs e)
