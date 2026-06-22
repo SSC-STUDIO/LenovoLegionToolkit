@@ -105,7 +105,8 @@ protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
             {
                 try
                 {
-                    // AsyncLock doesn't require explicit disposal
+                    _ = StopAsync();
+                    Changed = null;
                 }
                 catch (Exception ex)
                 {

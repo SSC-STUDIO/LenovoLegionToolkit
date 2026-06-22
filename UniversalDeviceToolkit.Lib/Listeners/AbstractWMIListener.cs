@@ -129,6 +129,7 @@ private async Task HandlerAsync(TRawValue properties)
         if (disposing)
         {
             _ = StopAsync();
+            Changed = null;
         }
 
         _disposed = true;

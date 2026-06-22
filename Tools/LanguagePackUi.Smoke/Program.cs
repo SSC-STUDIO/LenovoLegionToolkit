@@ -1240,19 +1240,19 @@ static void MouseClick(AutomationElement element)
     mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
 }
 
-[DllImport("user32.dll")]
+[DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
 static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-[DllImport("user32.dll")]
+[DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
 static extern bool SetForegroundWindow(IntPtr hWnd);
 
-[DllImport("user32.dll")]
+[DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
 static extern bool SetCursorPos(int x, int y);
 
-[DllImport("user32.dll")]
+[DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
 static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
 
-[DllImport("user32.dll")]
+[DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
 static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
 static void PressCtrlDigit(byte virtualKey)

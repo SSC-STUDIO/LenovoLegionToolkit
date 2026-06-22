@@ -180,6 +180,6 @@ public class NativeLayeredWindow : NativeWindow, IDisposable
         }
     }
 
-    [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
     private static extern nint SelectObject(nint hDc, nint hObject);
 }

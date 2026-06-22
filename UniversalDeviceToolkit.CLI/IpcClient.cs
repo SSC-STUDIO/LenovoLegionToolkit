@@ -1,5 +1,6 @@
 using System;
 using System.IO.Pipes;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.CLI.Lib;
@@ -235,6 +236,13 @@ public static class IpcClient
 
         await ConnectAsync(pipe).ConfigureAwait(false);
 
+        var challengeResponse = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
+        if (challengeResponse is null || !challengeResponse.Success || challengeResponse.Message is null)
+            throw new IpcException("Failed to receive authentication challenge");
+
+        var challenge = Convert.FromHexString(challengeResponse.Message);
+        req.AuthToken = ComputeAuthToken(challenge);
+
         await pipe.WriteObjectAsync(req).ConfigureAwait(false);
         var res = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
 
@@ -242,6 +250,13 @@ public static class IpcClient
             throw new IpcException(res?.Message ?? "Unknown failure");
 
         return res.Message;
+    }
+
+    private static string ComputeAuthToken(byte[] challenge)
+    {
+        var sessionKey = SHA256.HashData("UniversalDeviceToolkit.IPC.SessionKey.v1"u8);
+        var hmac = HMACSHA256.HashData(sessionKey, challenge);
+        return Convert.ToHexString(hmac);
     }
 
     private static string GetLoadingMessage(IpcRequest req)

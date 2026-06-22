@@ -47,7 +47,8 @@ public class WindowsOptimizationCategoryProvider
                     "WindowsOptimization_Action_ExplorerStartMenu_Description",
                     _service.ExecuteStartMenuDisableAsync,
                     Recommended: false,
-                    IsAppliedAsync: ct => Task.FromResult(_service.AreStartMenuTweaksApplied())),
+                    IsAppliedAsync: ct => Task.FromResult(_service.AreStartMenuTweaksApplied()),
+                    RollbackAsync: _service.RevertStartMenuDisableAsync),
                 _service.CreateRegistryAction(
                     "explorer.responsiveness",
                     "WindowsOptimization_Action_ExplorerResponsiveness_Title",

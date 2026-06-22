@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security / 安全
 
+- IPC named pipe now requires per-message HMAC-SHA256 authentication via challenge-response handshake, preventing unauthorized same-user processes from sending commands / IPC 命名管道现在要求通过质询-响应握手进行每消息 HMAC-SHA256 身份验证，防止未经授权的同用户进程发送命令
 - Plugin EXE entry points now require Authenticode signature validation before launch (debug builds allow unsigned override) / 插件 EXE 入口点现在需要经过 Authenticode 签名验证后才能启动（调试版本允许未签名覆盖）
 - Added trusted repository owner allowlist to UpdateChecker; custom repo owners from settings are ignored in release builds / UpdateChecker 添加了受信任仓库所有者白名单；发布版本忽略设置中的自定义仓库
 - SHA256 integrity check is now enforced for update packages; validation is no longer skipped when hash is missing / 更新包现在强制进行 SHA256 完整性校验，哈希缺失时不再跳过验证

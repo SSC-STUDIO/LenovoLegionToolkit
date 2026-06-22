@@ -245,7 +245,7 @@ public abstract class OsdWindowBase : Window
 
     private const int MONITOR_DEFAULTTONULL = 0;
 
-    [DllImport("user32.dll")]
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
     private static extern IntPtr MonitorFromPoint(POINT pt, int dwFlags);
 
     [StructLayout(LayoutKind.Sequential)]

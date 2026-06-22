@@ -11,8 +11,10 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Settings;
+using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using ToolkitRegistry = LenovoLegionToolkit.Lib.System.Registry;
 
 namespace LenovoLegionToolkit.Lib.Optimization;
 
@@ -23,7 +25,8 @@ public record WindowsOptimizationActionDefinition(
     Func<CancellationToken, Task> ExecuteAsync,
     bool Recommended = true,
     Func<CancellationToken, Task<bool>>? IsAppliedAsync = null,
-    Type? ResourceAnchorType = null)
+    Type? ResourceAnchorType = null,
+    Func<CancellationToken, Task>? RollbackAsync = null)
 {
     public WindowsOptimizationActionDefinition(
         string key,
@@ -165,31 +168,51 @@ public class WindowsOptimizationService
             return;
 
         var actionsByKey = GetActionsByKey();
-        foreach (var key in actionKeys.Where(k => !string.IsNullOrWhiteSpace(k)).Distinct(StringComparer.OrdinalIgnoreCase))
+        var appliedActions = new List<(string key, WindowsOptimizationActionDefinition action)>();
+
+        try
         {
-            // Validate each action key
-            if (!IsValidActionKey(key))
+            foreach (var key in actionKeys.Where(k => !string.IsNullOrWhiteSpace(k)).Distinct(StringComparer.OrdinalIgnoreCase))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Skipping invalid action key: {key}");
-                continue;
-            }
+                // Validate each action key
+                if (!IsValidActionKey(key))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping invalid action key: {key}");
+                    continue;
+                }
 
-            cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
-            if (!actionsByKey.TryGetValue(key, out var action))
-                continue;
+                if (!actionsByKey.TryGetValue(key, out var action))
+                    continue;
 
-            try
-            {
                 await action.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+                appliedActions.Add((key, action));
             }
-            catch (Exception ex)
+        }
+        catch (Exception)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Action execution failed, rolling back {appliedActions.Count} applied action(s).");
+
+            // Rollback in reverse order
+            for (int i = appliedActions.Count - 1; i >= 0; i--)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Action execution failed. [key={key}]", ex);
-                throw;
+                var (actionKey, actionDef) = appliedActions[i];
+                try
+                {
+                    if (actionDef.RollbackAsync is not null)
+                        await actionDef.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
+                }
+                catch (Exception rollbackEx)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Rollback failed for action. [key={actionKey}]", rollbackEx);
+                }
             }
+
+            throw;
         }
     }
 
@@ -256,28 +279,81 @@ public class WindowsOptimizationService
         string titleResourceKey,
         string descriptionResourceKey,
         IReadOnlyList<RegistryValueDefinition> tweaks,
-        bool recommended = true) =>
-        new(
+        bool recommended = true)
+    {
+        var originals = new List<(RegistryValueDefinition tweak, object? originalValue)>();
+
+        return new(
             key,
             titleResourceKey,
             descriptionResourceKey,
-            ct => ApplyRegistryTweaksAsync(ct, tweaks),
+            async ct =>
+            {
+                originals.Clear();
+                foreach (var tweak in tweaks)
+                {
+                    var original = ToolkitRegistry.GetValue<object?>(tweak.Hive, tweak.SubKey, tweak.ValueName, null);
+                    originals.Add((tweak, original));
+                }
+                await ApplyRegistryTweaksAsync(ct, tweaks);
+            },
             recommended,
-            ct => Task.FromResult(WindowsOptimizationHelper.AreRegistryTweaksApplied(tweaks)));
+            ct => Task.FromResult(WindowsOptimizationHelper.AreRegistryTweaksApplied(tweaks)),
+            RollbackAsync: ct =>
+            {
+                foreach (var (tweak, originalValue) in originals)
+                {
+                    if (originalValue is not null)
+                    {
+                        ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, originalValue, true, tweak.Kind);
+                    }
+                }
+                return Task.CompletedTask;
+            });
+    }
 
     internal WindowsOptimizationActionDefinition CreateServiceAction(
         string key,
         string titleResourceKey,
         string descriptionResourceKey,
         IReadOnlyList<string> services,
-        bool recommended = true) =>
-        new(
+        bool recommended = true)
+    {
+        var originals = new List<(string serviceName, int originalStart)>();
+
+        return new(
             key,
             titleResourceKey,
             descriptionResourceKey,
-            ct => DisableServicesAsync(ct, services),
+            async ct =>
+            {
+                originals.Clear();
+                foreach (var service in services.Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    var start = ToolkitRegistry.GetValue<int>(
+                        "HKEY_LOCAL_MACHINE",
+                        $@"SYSTEM\CurrentControlSet\Services\{service}", "Start", -1);
+                    originals.Add((service, start));
+                }
+                await DisableServicesAsync(ct, services);
+            },
             recommended,
-            ct => Task.FromResult(WindowsOptimizationHelper.AreServicesDisabled(services)));
+            ct => Task.FromResult(WindowsOptimizationHelper.AreServicesDisabled(services)),
+            RollbackAsync: ct =>
+            {
+                foreach (var (serviceName, originalStart) in originals)
+                {
+                    if (originalStart >= 0)
+                    {
+                        ToolkitRegistry.SetValue(
+                            "HKEY_LOCAL_MACHINE",
+                            $@"SYSTEM\CurrentControlSet\Services\{serviceName}",
+                            "Start", originalStart, true, RegistryValueKind.DWord);
+                    }
+                }
+                return Task.CompletedTask;
+            });
+    }
 
     /// <summary>
     /// Creates a command action with strict validation.
@@ -304,7 +380,8 @@ public class WindowsOptimizationService
             descriptionResourceKey,
             ct => ExecuteCommandsSequentiallyAsync(ct, commands.ToArray()),
             recommended,
-            isAppliedAsync);
+            isAppliedAsync,
+            RollbackAsync: static ct => Task.CompletedTask);
     }
 
     private Task ApplyRegistryTweaksAsync(CancellationToken cancellationToken, IEnumerable<RegistryValueDefinition> tweaks)
@@ -714,6 +791,18 @@ public class WindowsOptimizationService
     internal bool AreStartMenuTweaksApplied()
     {
         return WindowsOptimizationHelper.AreRegistryTweaksApplied(WindowsOptimizationDefinitions.StartMenuDisableTweaks);
+    }
+
+    internal Task RevertStartMenuDisableAsync(CancellationToken cancellationToken)
+    {
+        foreach (var tweak in WindowsOptimizationDefinitions.StartMenuDisableTweaks)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var revert = new RegistryValueDefinition(tweak.Hive, tweak.SubKey, tweak.ValueName, 0, tweak.Kind);
+            WindowsOptimizationHelper.ApplyRegistryTweak(revert);
+        }
+
+        return Task.CompletedTask;
     }
 
     private static unsafe void NotifyExplorerSettingsChanged()

@@ -6,6 +6,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,6 +37,8 @@ public class IpcServer(
     UpdateCheckSettings updateCheckSettings
     )
 {
+    private static readonly byte[] SessionKey = SHA256.HashData("UniversalDeviceToolkit.IPC.SessionKey.v1"u8);
+
     private static readonly SemaphoreSlim SupportedFeaturesCacheSemaphore = new(1, 1);
     private static string? _supportedFeaturesCache;
 
@@ -88,10 +91,21 @@ public class IpcServer(
 
                 try
                 {
+                    pipe.ReadMode = PipeTransmissionMode.Message;
+
+                    var challenge = RandomNumberGenerator.GetBytes(32);
+                    var challengeResponse = new IpcResponse { Success = true, Message = Convert.ToHexString(challenge) };
+                    await pipe.WriteObjectAsync(challengeResponse, token).ConfigureAwait(false);
+
                     var req = await pipe.ReadObjectAsync<IpcRequest>(token).ConfigureAwait(false);
 
                     if (req?.Operation is null)
                         throw new IpcException("Failed to deserialize request");
+
+                    var expectedHmac = HMACSHA256.HashData(SessionKey, challenge);
+                    var expectedToken = Convert.ToHexString(expectedHmac);
+                    if (!string.Equals(req.AuthToken, expectedToken, StringComparison.OrdinalIgnoreCase))
+                        throw new IpcException("Unauthorized");
 
                     var res = await HandleRequest(req).ConfigureAwait(false);
                     await pipe.WriteObjectAsync(res, token).ConfigureAwait(false);

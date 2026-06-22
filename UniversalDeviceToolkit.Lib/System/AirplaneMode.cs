@@ -8,11 +8,9 @@ public static class AirplaneMode
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = "cmd",
-            Arguments = "/c \"start ms-settings:network-airplanemode\"",
+            FileName = "ms-settings:network-airplanemode",
             UseShellExecute = true,
-            CreateNoWindow = true,
-            WindowStyle = ProcessWindowStyle.Hidden,
+            Verb = "open",
         });
     }
 }
