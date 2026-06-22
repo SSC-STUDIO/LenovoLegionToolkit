@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SHA256 integrity check is now enforced for update packages; validation is no longer skipped when hash is missing / 更新包现在强制进行 SHA256 完整性校验，哈希缺失时不再跳过验证
 - Plugin store cache (`plugin-store-cache.json`) now uses HMAC-SHA256 integrity verification to prevent tampering / 插件商店缓存现在使用 HMAC-SHA256 完整性验证防止篡改
 - Trusted plugin package store (`trusted-plugin-packages.json`) now uses DPAPI encryption + HMAC integrity / 受信任插件包存储现在使用 DPAPI 加密 + HMAC 完整性保护
+- TrustedPluginPackageStore HMAC key derivation strengthened: uses Windows SID binary (not MachineName string) with 16-byte random salt and PBKDF2 (100k iterations) / TrustedPluginPackageStore HMAC 密钥派生增强：使用 Windows SID 二进制（而非 MachineName 字符串）、16 字节随机盐和 PBKDF2（10 万次迭代）
 - Download URL allowlist restricts plugin downloads to known trusted hosts (github.com, jsdelivr.net); file:// URLs rejected in production / 下载 URL 白名单仅允许受信任主机；生产环境拒绝 file:// URL
 - UpdateChecker enforces SHA256 validation; missing hashes now throw in release builds / UpdateChecker 强制 SHA256 校验，缺失哈希时在发布版本中抛出异常
 

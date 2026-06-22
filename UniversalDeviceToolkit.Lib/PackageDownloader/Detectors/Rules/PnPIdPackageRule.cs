@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -41,8 +41,8 @@ internal readonly struct PnPIdPackageRule : IPackageRule
     {
         return driverInfoCache.Any(di =>
         {
-            var result = di.DeviceId.StartsWith(hardwareId, StringComparison.InvariantCultureIgnoreCase);
-            result |= di.HardwareId.StartsWith(hardwareId, StringComparison.InvariantCultureIgnoreCase);
+            var result = di.DeviceId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
+            result |= di.HardwareId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
             return result;
         });
     }

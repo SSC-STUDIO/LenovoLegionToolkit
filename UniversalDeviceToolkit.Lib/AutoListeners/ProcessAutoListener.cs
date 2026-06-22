@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -77,7 +77,7 @@ public class ProcessAutoListener(
             if (string.IsNullOrWhiteSpace(e.ProcessName))
                 return;
 
-            if (IgnoredNames.Contains(e.ProcessName, StringComparer.InvariantCultureIgnoreCase))
+            if (IgnoredNames.Contains(e.ProcessName, StringComparer.OrdinalIgnoreCase))
                 return;
 
             string? processPath = null;
@@ -95,7 +95,7 @@ public class ProcessAutoListener(
                 Log.Instance.Warning($"Can't get process {e.ProcessName} details. [processId={e.ProcessId}]", ex);
             }
 
-            if (!string.IsNullOrEmpty(processPath) && IgnoredPaths.Any(p => processPath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
+            if (!string.IsNullOrEmpty(processPath) && IgnoredPaths.Any(p => processPath.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
                 return;
 
             var processInfo = new ProcessInfo(e.ProcessName, processPath);
@@ -119,7 +119,7 @@ public class ProcessAutoListener(
             if (string.IsNullOrWhiteSpace(e.ProcessName))
                 return;
 
-            if (IgnoredNames.Contains(e.ProcessName, StringComparer.InvariantCultureIgnoreCase))
+            if (IgnoredNames.Contains(e.ProcessName, StringComparer.OrdinalIgnoreCase))
                 return;
 
             if (!_processCache.Remove(e.ProcessId, out var processInfo))

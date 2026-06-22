@@ -702,7 +702,12 @@ public partial class App
                 StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller")
             );
 
-            stopServicesTask.Wait(TimeSpan.FromSeconds(2));
+            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
+            if (completedTask != stopServicesTask)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Service stop timed out after 2 seconds.");
+            }
 
             await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
 

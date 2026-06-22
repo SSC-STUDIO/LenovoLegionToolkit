@@ -219,15 +219,18 @@ public sealed class SingleInstanceMutexTests
         using var signal = new EventWaitHandle(false, EventResetMode.AutoReset, signalName);
         using var ack = new EventWaitHandle(false, EventResetMode.AutoReset, ackName);
 
+        using var listenerReady = new ManualResetEventSlim(false);
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         var listenerTask = Task.Run(() =>
         {
             using var listenerSignal = new EventWaitHandle(false, EventResetMode.AutoReset, signalName);
             using var listenerAck = new EventWaitHandle(false, EventResetMode.AutoReset, ackName);
+            listenerReady.Set();
             listenerSignal.WaitOne();
             listenerAck.Set();
         }, cts.Token);
 
+        listenerReady.Wait(TimeSpan.FromSeconds(3));
         signal.Set();
         var ackReceived = ack.WaitOne(TimeSpan.FromSeconds(3));
         ackReceived.Should().BeTrue();
@@ -256,14 +259,16 @@ public sealed class SingleInstanceMutexTests
         using var event1 = new EventWaitHandle(false, EventResetMode.AutoReset, event1Name);
         using var event2 = new EventWaitHandle(false, EventResetMode.AutoReset, event2Name);
 
+        using var backgroundReady = new ManualResetEventSlim(false);
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         _ = Task.Run(() =>
         {
             using var sig = new EventWaitHandle(false, EventResetMode.AutoReset, event2Name);
-            Thread.Sleep(100);
+            backgroundReady.Set();
             sig.Set();
         }, cts.Token);
 
+        backgroundReady.Wait(TimeSpan.FromSeconds(3));
         var signaledIndex = WaitHandle.WaitAny([event1, event2], TimeSpan.FromSeconds(3));
         signaledIndex.Should().NotBe(WaitHandle.WaitTimeout);
         signaledIndex.Should().Be(1);

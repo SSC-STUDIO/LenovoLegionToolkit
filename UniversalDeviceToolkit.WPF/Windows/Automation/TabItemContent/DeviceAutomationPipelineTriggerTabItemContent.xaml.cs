@@ -148,7 +148,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         result = result.OrderBy(d => d.Name);
 
         if (!string.IsNullOrWhiteSpace(_filterTextBox.Text))
-            result = result.Where(p => p.Index.Contains(_filterTextBox.Text, StringComparison.InvariantCultureIgnoreCase));
+            result = result.Where(p => p.Index.Contains(_filterTextBox.Text, StringComparison.OrdinalIgnoreCase));
 
         return result.ToList();
     }

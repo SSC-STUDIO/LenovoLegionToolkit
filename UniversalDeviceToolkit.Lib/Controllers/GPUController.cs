@@ -78,11 +78,11 @@ public class GPUController : IDisposable
         _hardwareManager = hardwareManager;
     }
 
-    public bool IsSupported()
+    public async Task<bool> IsSupportedAsync()
     {
         try
         {
-            var mi = Compatibility.GetMachineInformationAsync().GetAwaiter().GetResult();
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;

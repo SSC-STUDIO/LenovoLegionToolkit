@@ -85,7 +85,7 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
 
         if (disposing)
         {
-            StopAsync().GetAwaiter().GetResult();
+            _ = StopAsync();
         }
 
         _disposed = true;

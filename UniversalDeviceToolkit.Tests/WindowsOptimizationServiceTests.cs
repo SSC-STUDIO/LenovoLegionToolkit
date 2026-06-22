@@ -113,7 +113,7 @@ public class WindowsOptimizationServiceTests
     }
 
     [Fact]
-    public async Task ApplyPerformanceOptimizationsAsync_ShouldNotThrow()
+    public async Task ApplyPerformanceOptimizationsAsync_WhenCancelled_ShouldThrowOperationCanceledException()
     {
         // Arrange
         var service = new WindowsOptimizationService(new WindowsCleanupService(new TestApplicationSettings()));
@@ -125,7 +125,7 @@ public class WindowsOptimizationServiceTests
     }
 
     [Fact]
-    public async Task RunCleanupAsync_ShouldNotThrow()
+    public async Task RunCleanupAsync_WhenCancelled_ShouldThrowOperationCanceledException()
     {
         // Arrange
         var service = new WindowsOptimizationService(new WindowsCleanupService(new TestApplicationSettings()));

@@ -362,6 +362,14 @@ public class PluginManager : IPluginManager
                 return;
             }
 
+            // SECURITY: Validate plugin ID format to prevent path traversal
+            if (!PathSecurity.IsValidPluginId(plugin.Id))
+            {
+                Log.Instance.Warning($"SECURITY: Plugin from {pluginFilePath} has invalid or unsafe plugin ID: {plugin.Id}");
+                _loader.Unload(plugin.Id);
+                return;
+            }
+
             // Check if this plugin has the GetFeatureExtension method (SDK plugin)
             var pluginType = plugin.GetType();
             var hasGetFeatureExtension = pluginType.GetMethod("GetFeatureExtension",

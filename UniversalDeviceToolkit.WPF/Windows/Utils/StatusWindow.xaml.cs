@@ -135,7 +135,7 @@ public partial class StatusWindow
 
         try
         {
-            if (gpuController.IsSupported())
+            if (await gpuController.IsSupportedAsync())
                 gpuStatus = await gpuController.RefreshNowAsync();
 
         }

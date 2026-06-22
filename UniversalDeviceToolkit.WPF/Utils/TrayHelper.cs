@@ -161,7 +161,7 @@ public class TrayHelper : IDisposable
             // GPU Status
             try
             {
-                if (gpuController.IsSupported())
+                if (await gpuController.IsSupportedAsync())
                 {
                     var gpuStatus = await gpuController.RefreshNowAsync();
                     var gpuStateText = gpuStatus.State switch

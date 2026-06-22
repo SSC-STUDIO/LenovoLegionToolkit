@@ -18,7 +18,7 @@ public static class NVAPIExtensions
     public static List<Process> GetActiveProcesses(PhysicalGPU gpu)
     {
         var processes = new List<Process>();
-        var apps = GPUApi.QueryActiveApps(gpu.Handle).Where(app => !Exclusions.Contains(app.ProcessName, StringComparer.InvariantCultureIgnoreCase));
+        var apps = GPUApi.QueryActiveApps(gpu.Handle).Where(app => !Exclusions.Contains(app.ProcessName, StringComparer.OrdinalIgnoreCase));
 
         foreach (var app in apps)
         {

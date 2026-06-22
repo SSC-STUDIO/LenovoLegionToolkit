@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using LenovoLegionToolkit.Lib.Utils;
@@ -11,18 +12,10 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 
 internal static class TrustedPluginPackageStore
 {
-    private const string AppSeed = "UDT_TrustedPluginStore_v1";
     private const string HmacFieldName = "_hmac";
 
     private static readonly object Lock = new();
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
-    private static readonly byte[] HmacKey;
-
-    static TrustedPluginPackageStore()
-    {
-        using var derive = new HMACSHA256(Encoding.UTF8.GetBytes(AppSeed));
-        HmacKey = derive.ComputeHash(Encoding.UTF8.GetBytes(Environment.MachineName));
-    }
 
     private static string StorePath => Path.Combine(Folders.AppData, "trusted-plugin-packages.json");
 
@@ -178,13 +171,30 @@ internal static class TrustedPluginPackageStore
             }
 
             var envelope = JsonSerializer.Deserialize<StoreEnvelope>(decryptedBytes);
-            if (envelope is null || string.IsNullOrWhiteSpace(envelope.Data) || string.IsNullOrWhiteSpace(envelope.Hmac))
+            if (envelope is null || string.IsNullOrWhiteSpace(envelope.Data) || string.IsNullOrWhiteSpace(envelope.Hmac) || string.IsNullOrWhiteSpace(envelope.Salt))
             {
                 ResetStore();
                 return new TrustedPluginPackageStoreModel();
             }
 
-            var computedHmac = ComputeHmac(envelope.Data);
+            byte[] salt;
+            try
+            {
+                salt = Convert.FromBase64String(envelope.Salt);
+            }
+            catch
+            {
+                ResetStore();
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            if (salt.Length != 16)
+            {
+                ResetStore();
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            var computedHmac = ComputeHmac(envelope.Data, salt);
             if (!string.Equals(envelope.Hmac, computedHmac, StringComparison.OrdinalIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -223,12 +233,14 @@ internal static class TrustedPluginPackageStore
 
         var json = JsonSerializer.Serialize(store, JsonOptions);
         var dataBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
-        var hmac = ComputeHmac(dataBase64);
+        var salt = RandomNumberGenerator.GetBytes(16);
+        var hmac = ComputeHmac(dataBase64, salt);
 
         var envelope = new StoreEnvelope
         {
             Data = dataBase64,
             Hmac = hmac,
+            Salt = Convert.ToBase64String(salt),
         };
 
         var envelopeJson = JsonSerializer.SerializeToUtf8Bytes(envelope, JsonOptions);
@@ -248,9 +260,29 @@ internal static class TrustedPluginPackageStore
         }
     }
 
-    private static string ComputeHmac(string data)
+    private static byte[] DeriveHmacKey(byte[] salt)
     {
-        using var hmac = new HMACSHA256(HmacKey);
+        byte[] secret;
+        using (var identity = WindowsIdentity.GetCurrent())
+        {
+            if (identity.User is not null)
+            {
+                var sidBinary = new byte[identity.User.BinaryLength];
+                identity.User.GetBinaryForm(sidBinary, 0);
+                secret = sidBinary;
+            }
+            else
+            {
+                secret = Encoding.UTF8.GetBytes(Environment.MachineName);
+            }
+        }
+        return Rfc2898DeriveBytes.Pbkdf2(secret, salt, 100_000, HashAlgorithmName.SHA256, 32);
+    }
+
+    private static string ComputeHmac(string data, byte[] salt)
+    {
+        var key = DeriveHmacKey(salt);
+        using var hmac = new HMACSHA256(key);
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
@@ -266,6 +298,7 @@ internal static class TrustedPluginPackageStore
     {
         public string Data { get; set; } = string.Empty;
         public string Hmac { get; set; } = string.Empty;
+        public string Salt { get; set; } = string.Empty;
     }
 
     private sealed class TrustedPluginPackageStoreModel

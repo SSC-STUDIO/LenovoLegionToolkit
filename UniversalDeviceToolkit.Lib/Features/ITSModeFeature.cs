@@ -86,7 +86,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
     {
         try
         {
-            return await Task.Run(GetItsModeInternal).ConfigureAwait(false);
+            return await GetItsModeInternalAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -102,7 +102,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
         try
         {
-            await Task.Run(() => SetItsModeInternal(state)).ConfigureAwait(false);
+            await SetItsModeInternalAsync(state).ConfigureAwait(false);
             LastItsMode = state;
 
             Log.Instance.Trace($"ITS mode set successfully to: {state}");
@@ -154,12 +154,12 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         }
     }
 
-    private ITSMode GetItsModeInternal()
+    private async Task<ITSMode> GetItsModeInternalAsync()
     {
         try
         {
             CIntelligentCooling instance = default;
-            var machineInfo = Compatibility.GetMachineInformationAsync().Result;
+            var machineInfo = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             var isThinkBook = machineInfo.LegionSeries == LegionSeries.ThinkBook;
 
             return HasDispatcherDeviceNode(ref instance) != 0 ? GetDispatcherModeInternal(ref instance, isThinkBook) : GetStandardModeInternal(ref instance);
@@ -193,10 +193,10 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         return mode;
     }
 
-    private void SetItsModeInternal(ITSMode state)
+    private async Task SetItsModeInternalAsync(ITSMode state)
     {
         CIntelligentCooling instance = default;
-        var machineInfo = Compatibility.GetMachineInformationAsync().Result;
+        var machineInfo = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var isThinkBook = machineInfo.LegionSeries == LegionSeries.ThinkBook;
         var dispatcherVersion = GetDispatcherVersion(ref instance);
 

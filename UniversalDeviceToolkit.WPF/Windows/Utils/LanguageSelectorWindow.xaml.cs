@@ -35,7 +35,7 @@ public partial class LanguageSelectorWindow
 
         InitializeComponent();
 
-        _languageComboBox.SetItems(languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase),
+        _languageComboBox.SetItems(languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.OrdinalIgnoreCase),
             defaultLanguage,
             LocalizationHelper.LanguageDisplayName);
     }

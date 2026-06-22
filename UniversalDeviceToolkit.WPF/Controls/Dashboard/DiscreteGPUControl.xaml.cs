@@ -75,7 +75,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
     protected override async Task OnRefreshAsync()
     {
-        if (!_gpuController.IsSupported())
+        if (!await _gpuController.IsSupportedAsync())
         {
             Visibility = Visibility.Collapsed;
             IsGpuContentReady = false;

@@ -88,7 +88,7 @@ public readonly struct BiosVersion(string prefix, int? version)
 
     public bool IsHigherOrEqualThan(BiosVersion other)
     {
-        if (!Prefix.Equals(other.Prefix, StringComparison.InvariantCultureIgnoreCase))
+        if (!Prefix.Equals(other.Prefix, StringComparison.OrdinalIgnoreCase))
             return false;
 
         if (Version is null || other.Version is null)
@@ -99,7 +99,7 @@ public readonly struct BiosVersion(string prefix, int? version)
 
     public bool IsLowerThan(BiosVersion other)
     {
-        if (!Prefix.Equals(other.Prefix, StringComparison.InvariantCultureIgnoreCase))
+        if (!Prefix.Equals(other.Prefix, StringComparison.OrdinalIgnoreCase))
             return false;
 
         if (Version is null || other.Version is null)
@@ -424,10 +424,10 @@ public readonly struct HardwareId(string vendor, string device)
         if (obj is not HardwareId other)
             return false;
 
-        if (!Vendor.Equals(other.Vendor, StringComparison.InvariantCultureIgnoreCase))
+        if (!Vendor.Equals(other.Vendor, StringComparison.OrdinalIgnoreCase))
             return false;
 
-        if (!Device.Equals(other.Device, StringComparison.InvariantCultureIgnoreCase))
+        if (!Device.Equals(other.Device, StringComparison.OrdinalIgnoreCase))
             return false;
 
         return true;
@@ -590,8 +590,8 @@ public readonly struct ProcessInfo(string name, string? executablePath) : ICompa
     public int CompareTo(object? obj)
     {
         var other = obj is null ? default : (ProcessInfo)obj;
-        var result = string.Compare(Name, other.Name, StringComparison.InvariantCultureIgnoreCase);
-        return result != 0 ? result : string.Compare(ExecutablePath, other.ExecutablePath, StringComparison.InvariantCultureIgnoreCase);
+        var result = string.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+        return result != 0 ? result : string.Compare(ExecutablePath, other.ExecutablePath, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object? obj) => obj is ProcessInfo info && Name == info.Name && ExecutablePath == info.ExecutablePath;
@@ -999,26 +999,26 @@ public readonly struct Update(Release release)
         .FirstOrDefault();
 
     private static bool IsSetupAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) ||
-        releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) ||
-        (releaseAsset.Name.EndsWith("setup.exe", StringComparison.InvariantCultureIgnoreCase) &&
-         !releaseAsset.Name.Contains("_lang_", StringComparison.InvariantCultureIgnoreCase));
+        releaseAsset.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
+        releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
+        (releaseAsset.Name.EndsWith("setup.exe", StringComparison.OrdinalIgnoreCase) &&
+         !releaseAsset.Name.Contains("_lang_", StringComparison.OrdinalIgnoreCase));
 
     private static bool IsEnglishOnlyAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.Contains("_English_", StringComparison.InvariantCultureIgnoreCase) ||
-        releaseAsset.Name.Contains("-English", StringComparison.InvariantCultureIgnoreCase);
+        releaseAsset.Name.Contains("_English_", StringComparison.OrdinalIgnoreCase) ||
+        releaseAsset.Name.Contains("-English", StringComparison.OrdinalIgnoreCase);
 
     private static bool IsOnlineOnlyAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.Contains("_Online_", StringComparison.InvariantCultureIgnoreCase) ||
-        releaseAsset.Name.Contains("-Online", StringComparison.InvariantCultureIgnoreCase);
+        releaseAsset.Name.Contains("_Online_", StringComparison.OrdinalIgnoreCase) ||
+        releaseAsset.Name.Contains("-Online", StringComparison.OrdinalIgnoreCase);
 
     private static bool IsUniversalFullAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.Contains("UniversalDeviceToolkit", StringComparison.InvariantCultureIgnoreCase) &&
-        releaseAsset.Name.Contains("_Full_", StringComparison.InvariantCultureIgnoreCase);
+        releaseAsset.Name.Contains("UniversalDeviceToolkit", StringComparison.OrdinalIgnoreCase) &&
+        releaseAsset.Name.Contains("_Full_", StringComparison.OrdinalIgnoreCase);
 
     private static bool IsLegacyBridgeAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.Contains("LenovoLegionToolkit", StringComparison.InvariantCultureIgnoreCase) &&
-        releaseAsset.Name.EndsWith("_Setup.exe", StringComparison.InvariantCultureIgnoreCase) &&
+        releaseAsset.Name.Contains("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
+        releaseAsset.Name.EndsWith("_Setup.exe", StringComparison.OrdinalIgnoreCase) &&
         !IsEnglishOnlyAsset(releaseAsset) &&
         !IsOnlineOnlyAsset(releaseAsset);
 
@@ -1037,8 +1037,8 @@ public readonly struct Update(Release release)
     }
 
     private static bool IsSha256Asset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.EndsWith(".sha256", StringComparison.InvariantCultureIgnoreCase) ||
-        releaseAsset.Name.EndsWith("_SHA256.txt", StringComparison.InvariantCultureIgnoreCase);
+        releaseAsset.Name.EndsWith(".sha256", StringComparison.OrdinalIgnoreCase) ||
+        releaseAsset.Name.EndsWith("_SHA256.txt", StringComparison.OrdinalIgnoreCase);
 
     private static string? ExtractSha256Hash(Release release)
     {

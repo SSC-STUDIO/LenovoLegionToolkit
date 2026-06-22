@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -61,8 +61,8 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
         var version = downloadNode["SummaryInfo"]!["Version"]!.ToString();
 
         var filesNode = downloadNode["Files"]!.AsArray();
-        var mainFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("exe", StringComparison.InvariantCultureIgnoreCase))
-                           ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("zip", StringComparison.InvariantCultureIgnoreCase))
+        var mainFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("exe", StringComparison.OrdinalIgnoreCase))
+                           ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("zip", StringComparison.OrdinalIgnoreCase))
                            ?? filesNode.FirstOrDefault();
 
         if (mainFileNode is null)
@@ -75,8 +75,8 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
         var releaseDateUnix = long.Parse(mainFileNode["Date"]!["Unix"]!.ToString());
         var releaseDate = DateTimeOffset.FromUnixTimeMilliseconds(releaseDateUnix).DateTime;
 
-        var readmeFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("txt readme", StringComparison.InvariantCultureIgnoreCase))
-                              ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("html", StringComparison.InvariantCultureIgnoreCase));
+        var readmeFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("txt readme", StringComparison.OrdinalIgnoreCase))
+                              ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("html", StringComparison.OrdinalIgnoreCase));
 
         var readme = readmeFileNode?["URL"]?.ToString();
 

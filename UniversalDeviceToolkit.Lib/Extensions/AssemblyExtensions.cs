@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -15,7 +15,7 @@ public static class AssemblyExtensions
             return null;
 
         var value = attribute.InformationalVersion;
-        var index = value.IndexOf(buildVersionMetadataPrefix, StringComparison.InvariantCultureIgnoreCase);
+        var index = value.IndexOf(buildVersionMetadataPrefix, StringComparison.OrdinalIgnoreCase);
         if (index <= 0)
             return null;
 

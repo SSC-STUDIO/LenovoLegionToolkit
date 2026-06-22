@@ -903,8 +903,27 @@ public class PluginRepositoryService : IDisposable
             }
             Directory.CreateDirectory(extractPath);
 
-            // Extract zip
-            ZipFile.ExtractToDirectory(zipPath, extractPath, overwriteFiles: true);
+            // Extract zip with path traversal protection
+            var extractRoot = Path.GetFullPath(extractPath);
+            if (!extractRoot.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                extractRoot += Path.DirectorySeparatorChar;
+
+            using var archive = ZipFile.OpenRead(zipPath);
+            foreach (var entry in archive.Entries)
+            {
+                var destinationPath = Path.GetFullPath(Path.Combine(extractRoot, entry.FullName));
+                if (!destinationPath.StartsWith(extractRoot, StringComparison.OrdinalIgnoreCase))
+                    throw new UnauthorizedAccessException($"Zip entry '{entry.FullName}' attempts path traversal.");
+
+                if (string.IsNullOrEmpty(entry.Name))
+                {
+                    Directory.CreateDirectory(destinationPath);
+                    continue;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                entry.ExtractToFile(destinationPath, overwrite: true);
+            }
 
             var installationService = new PluginInstallationService(_pluginManager);
             var resolvedPluginId = await installationService.AnalyzeAndFixPluginStructureAsync(extractPath).ConfigureAwait(false);

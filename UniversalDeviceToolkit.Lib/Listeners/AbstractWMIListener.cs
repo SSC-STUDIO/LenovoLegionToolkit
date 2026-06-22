@@ -128,7 +128,7 @@ private async Task HandlerAsync(TRawValue properties)
 
         if (disposing)
         {
-            StopAsync().GetAwaiter().GetResult();
+            _ = StopAsync();
         }
 
         _disposed = true;

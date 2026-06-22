@@ -96,7 +96,7 @@ public static class LocalizationHelper
     {
         var name = culture.NativeName.Transform(culture, To.TitleCase);
 
-        if (culture.IetfLanguageTag.Equals("uz-latn-uz", StringComparison.InvariantCultureIgnoreCase))
+        if (culture.IetfLanguageTag.Equals("uz-latn-uz", StringComparison.OrdinalIgnoreCase))
         {
             name = "Karakalpak";
         }

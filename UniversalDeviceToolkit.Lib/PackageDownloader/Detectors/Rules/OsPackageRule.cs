@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -42,10 +42,10 @@ internal readonly struct OsPackageRule : IPackageRule
         {
             switch (currentOs)
             {
-                case OS.Windows11 when os.StartsWith("win11", StringComparison.InvariantCultureIgnoreCase):
-                case OS.Windows10 when os.StartsWith("win10", StringComparison.InvariantCultureIgnoreCase):
-                case OS.Windows8 when os.StartsWith("win8", StringComparison.InvariantCultureIgnoreCase):
-                case OS.Windows7 when os.StartsWith("win7", StringComparison.InvariantCultureIgnoreCase):
+                case OS.Windows11 when os.StartsWith("win11", StringComparison.OrdinalIgnoreCase):
+                case OS.Windows10 when os.StartsWith("win10", StringComparison.OrdinalIgnoreCase):
+                case OS.Windows8 when os.StartsWith("win8", StringComparison.OrdinalIgnoreCase):
+                case OS.Windows7 when os.StartsWith("win7", StringComparison.OrdinalIgnoreCase):
                     return true;
                 default:
                     return false;

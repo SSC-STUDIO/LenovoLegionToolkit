@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -120,7 +120,7 @@ public abstract class AbstractSoftwareDisabler
                 try
                 {
                     name = process.ProcessName;
-                    if (!name.StartsWith(processName, StringComparison.InvariantCultureIgnoreCase))
+                    if (!name.StartsWith(processName, StringComparison.OrdinalIgnoreCase))
                         continue;
                 }
                 catch {  /* Ignored. */ }
@@ -267,7 +267,7 @@ public abstract class AbstractSoftwareDisabler
             {
                 try
                 {
-                    if (process.ProcessName.StartsWith(processName, StringComparison.InvariantCultureIgnoreCase))
+                    if (process.ProcessName.StartsWith(processName, StringComparison.OrdinalIgnoreCase))
                     {
                         process.Kill(true);
                         await process.WaitForExitAsync().ConfigureAwait(false);

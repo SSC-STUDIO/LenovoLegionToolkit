@@ -2731,6 +2731,9 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
     {
         if (sender is System.Windows.Controls.MenuItem menuItem && menuItem.Tag is string pluginId)
         {
+            if (!PathSecurity.IsValidPluginId(pluginId))
+                return;
+
             try
             {
                 var pluginsDir = GetPluginsDirectory();

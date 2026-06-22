@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -111,7 +111,7 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
     private static async Task<Package?> GetPackage(HttpClient httpClient, VantagePackageUpdateDetector updateDetector, PackageDefinition packageDefinition, CancellationToken token)
     {
         var location = packageDefinition.Location;
-        var baseLocation = location.Remove(location.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase));
+        var baseLocation = location.Remove(location.LastIndexOf("/", StringComparison.OrdinalIgnoreCase));
 
         var packageString = await httpClient.GetStringAsync(location, token).ConfigureAwait(false);
 

@@ -82,7 +82,7 @@ public class AssemblyExtensionsTests
         if (string.IsNullOrEmpty(informationalVersion))
             return null;
 
-        var index = informationalVersion.IndexOf(buildVersionMetadataPrefix, StringComparison.InvariantCultureIgnoreCase);
+        var index = informationalVersion.IndexOf(buildVersionMetadataPrefix, StringComparison.OrdinalIgnoreCase);
         if (index <= 0)
             return null;
 

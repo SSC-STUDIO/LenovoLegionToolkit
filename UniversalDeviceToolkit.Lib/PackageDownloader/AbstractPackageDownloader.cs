@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,7 +46,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         var fileSha256Bytes = await managedSha256.ComputeHashAsync(fileStream, token).ConfigureAwait(false);
         var fileSha256 = fileSha256Bytes.Aggregate(string.Empty, (current, b) => current + b.ToString("X2"));
 
-        if (!string.IsNullOrEmpty(package.FileCrc) && fileSha256.Equals(package.FileCrc, StringComparison.InvariantCultureIgnoreCase))
+        if (!string.IsNullOrEmpty(package.FileCrc) && fileSha256.Equals(package.FileCrc, StringComparison.OrdinalIgnoreCase))
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Package file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
@@ -57,7 +57,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         {
             var externalSha256Content = await httpClient.GetStringAsync($"{package.FileLocation}.sha256", token).ConfigureAwait(false);
             var externalSha256 = TryExtractFirstSha256Hash(externalSha256Content);
-            if (externalSha256 is not null && fileSha256.Equals(externalSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (externalSha256 is not null && fileSha256.Equals(externalSha256, StringComparison.OrdinalIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"External file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");

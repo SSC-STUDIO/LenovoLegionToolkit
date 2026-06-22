@@ -46,7 +46,7 @@ public partial class SettingsAppearanceControl
     {
         _isRefreshing = true;
 
-        var languages = LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray();
+        var languages = LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.OrdinalIgnoreCase).ToArray();
         var languageTask = LocalizationHelper.GetLanguageAsync();
 
         _temperatureComboBox.SetItems(Enum.GetValues<TemperatureUnit>(), _settings.Store.TemperatureUnit, t => t switch
@@ -376,7 +376,7 @@ public partial class SettingsAppearanceControl
 
         _isRefreshing = true;
         _langComboBox.SetItems(
-            LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray(),
+            LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.OrdinalIgnoreCase).ToArray(),
             _currentLanguage,
             LocalizationHelper.LanguageDisplayName);
         _isRefreshing = false;

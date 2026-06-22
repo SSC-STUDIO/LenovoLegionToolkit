@@ -95,7 +95,7 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
 
         if (disposing)
         {
-            StopAsync().GetAwaiter().GetResult();
+            _ = StopAsync();
             _recipientHandle.Dispose();
         }
 

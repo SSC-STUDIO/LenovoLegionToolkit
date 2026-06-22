@@ -418,7 +418,7 @@ public partial class PackagesPage : IProgress<float>
             result = result.Where(p => p.IsUpdate);
 
         if (!string.IsNullOrWhiteSpace(_filterTextBox.Text))
-            result = result.Where(p => p.Index.Contains(_filterTextBox.Text, StringComparison.InvariantCultureIgnoreCase));
+            result = result.Where(p => p.Index.Contains(_filterTextBox.Text, StringComparison.OrdinalIgnoreCase));
 
         return result.ToList();
     }

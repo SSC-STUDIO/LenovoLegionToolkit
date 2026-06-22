@@ -38,6 +38,9 @@ public sealed class BiosPackageRuleTests
 
         var satisfied = await rule.CheckDependenciesSatisfiedAsync([], null!, CancellationToken.None);
 
+        // Note: BeFalse here could mean either "malformed level was skipped"
+        // or "no BIOS version is available on this machine". The test cannot
+        // distinguish between the two without mocking BiosVersion.
         satisfied.Should().BeFalse();
     }
 }

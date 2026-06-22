@@ -2073,7 +2073,11 @@ public class SensorsGroupController : IDisposable
             {
                 NVAPI.Initialize();
             }
-            catch { }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to initialize NVAPI");
+            }
 
             _needRefreshGpuHardware = true;
         }

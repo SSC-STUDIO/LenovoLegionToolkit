@@ -87,7 +87,7 @@ public class PluginLoader : IPluginLoader
             }
 
             // Validate plugin signature before loading (security check)
-            var signatureResult = await signatureValidator.ValidateAsync(dllPath);
+            var signatureResult = await signatureValidator.ValidateAsync(dllPath).ConfigureAwait(false);
             if (!signatureResult.IsValid)
             {
                 Log.Instance.Warning($"Plugin signature validation failed for {dllPath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
@@ -100,7 +100,7 @@ public class PluginLoader : IPluginLoader
             PluginAssemblyLoadContext? pluginLoadContext = null;
             try
             {
-                var assemblyBytes = await File.ReadAllBytesAsync(normalizedDllPath);
+                var assemblyBytes = await File.ReadAllBytesAsync(normalizedDllPath).ConfigureAwait(false);
                 pluginLoadContext = new PluginAssemblyLoadContext(normalizedDllPath, pluginDirectory ?? string.Empty, signatureValidator);
                 assembly = pluginLoadContext.LoadFromStream(new MemoryStream(assemblyBytes));
                 registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);

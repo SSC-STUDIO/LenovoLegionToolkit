@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -38,7 +38,7 @@ public class FnKeysDisabler : AbstractSoftwareDisabler
                 if (description is null)
                     continue;
 
-                if (description.Equals("Lenovo Hotkeys", StringComparison.InvariantCultureIgnoreCase))
+                if (description.Equals("Lenovo Hotkeys", StringComparison.OrdinalIgnoreCase))
                     result.Add(process.ProcessName);
             }
         }
@@ -59,7 +59,7 @@ public class FnKeysDisabler : AbstractSoftwareDisabler
                 if (description is null)
                     continue;
 
-                if (!description.Equals("Lenovo Hotkeys", StringComparison.InvariantCultureIgnoreCase))
+                if (!description.Equals("Lenovo Hotkeys", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 process.Kill();

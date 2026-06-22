@@ -14,11 +14,11 @@ public class DeactivateGPUAutomationStep(DeactivateGPUAutomationStepState state)
 
     public Task<DeactivateGPUAutomationStepState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<DeactivateGPUAutomationStepState>());
 
-    public Task<bool> IsSupportedAsync() => Task.FromResult(_controller.IsSupported());
+    public async Task<bool> IsSupportedAsync() => await _controller.IsSupportedAsync().ConfigureAwait(false);
 
     public async Task RunAsync(AutomationContext context, AutomationEnvironment environment, CancellationToken token)
     {
-        if (!_controller.IsSupported())
+        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             return;
 
         var status = await _controller.RefreshNowAsync().ConfigureAwait(false);

@@ -22,7 +22,12 @@ public class GPUProcessManager : IGPUProcessManager
         {
             var processId = 0;
             var processName = "";
-            try { processId = process.Id; processName = process.ProcessName; } catch { }
+            try { processId = process.Id; processName = process.ProcessName; }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to access process properties");
+            }
 
             try
             {

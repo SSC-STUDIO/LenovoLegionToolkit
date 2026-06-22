@@ -503,7 +503,7 @@ public partial class WindowsOptimizationPage
 
         var filterText = _driverFilterTextBox?.Text ?? string.Empty;
         if (!string.IsNullOrWhiteSpace(filterText))
-            result = result.Where(p => p.Index.Contains(filterText, StringComparison.InvariantCultureIgnoreCase));
+            result = result.Where(p => p.Index.Contains(filterText, StringComparison.OrdinalIgnoreCase));
 
         return result.ToList();
     }

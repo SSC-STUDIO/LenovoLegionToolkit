@@ -131,13 +131,15 @@ public static class Registry
     public static string[] GetSubKeys(string hive, string subKey)
     {
         using var baseKey = GetBaseKey(hive);
-        return baseKey.OpenSubKey(subKey)?.GetSubKeyNames().Select(s => Path.Combine(subKey, s)).ToArray() ?? [];
+        using var subKeyObj = baseKey.OpenSubKey(subKey);
+        return subKeyObj?.GetSubKeyNames().Select(s => Path.Combine(subKey, s)).ToArray() ?? [];
     }
 
     public static T GetValue<T>(string hive, string subKey, string valueName, T defaultValue, bool doNotExpand = false)
     {
         using var baseKey = GetBaseKey(hive);
-        var value = baseKey.OpenSubKey(subKey)?.GetValue(valueName, defaultValue, doNotExpand ? RegistryValueOptions.DoNotExpandEnvironmentNames : RegistryValueOptions.None);
+        using var subKeyObj = baseKey.OpenSubKey(subKey);
+        var value = subKeyObj?.GetValue(valueName, defaultValue, doNotExpand ? RegistryValueOptions.DoNotExpandEnvironmentNames : RegistryValueOptions.None);
 
         if (value is not T t)
             return defaultValue;
