@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -154,7 +155,7 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
         if (presets.TryGetValue(activePresetId, out var activePreset))
             return (activePresetId, activePreset);
 
-        throw new InvalidOperationException($"Preset with ID {activePresetId} not found");
+        throw ExceptionHelper.GodModePresetNotFound(activePresetId);
     }
 
     protected async Task<bool> IsValidFanTableAsync(FanTable fanTable)
@@ -176,7 +177,7 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
         }
 
         var activePresetId = GetPreferredActivePresetId(presets)
-            ?? throw new InvalidOperationException("No God Mode preset could be created.");
+            ?? throw ExceptionHelper.NoGodModePresetCreated();
 
         return new GodModeState
         {
@@ -199,7 +200,7 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
 
         var presets = new Dictionary<Guid, GodModePreset>(normalizedState.Presets);
         var activePresetId = GetPreferredActivePresetId(presets)
-                             ?? throw new InvalidOperationException("No God Mode preset is available.");
+                             ?? throw ExceptionHelper.NoGodModePresetAvailable();
         return normalizedState with { ActivePresetId = activePresetId };
     }
 

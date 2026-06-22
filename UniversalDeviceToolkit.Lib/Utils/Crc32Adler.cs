@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
@@ -64,7 +65,7 @@ public static class Crc32Adler
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count));
         if (offset + count > data.Length)
-            throw new ArgumentException("Offset and count exceed array bounds");
+            throw ExceptionHelper.OffsetCountExceedArray();
         
         return Calculate(data.AsSpan(offset, count));
     }

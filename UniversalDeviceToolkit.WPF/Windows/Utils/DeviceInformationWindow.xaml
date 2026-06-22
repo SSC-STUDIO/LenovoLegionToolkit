@@ -19,6 +19,9 @@
     WindowStartupLocation="CenterOwner">
 
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -94,7 +97,7 @@
                     <TextBlock x:Name="_biosLabel" Focusable="True" />
                 </custom:CardControl>
 
-                <StackPanel x:Name="_hardwareInfo" Visibility="Collapsed">
+                <StackPanel x:Name="_hardwareInfo" Visibility="{Binding HasHardwareInfo, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
                     <TextBlock
                         Margin="0,16,0,24"
                         Focusable="True"
@@ -164,7 +167,7 @@
                     </custom:CardControl>
                 </StackPanel>
 
-                <StackPanel x:Name="_warrantyInfo" Visibility="Collapsed">
+                <StackPanel x:Name="_warrantyInfo" Visibility="{Binding HasWarrantyInfo, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
                     <Grid Margin="0,16,0,24">
 
                         <Grid.ColumnDefinitions>
@@ -180,6 +183,7 @@
                         <wpfui:Button
                             x:Name="_refreshWarrantyButton"
                             Grid.Column="1"
+                            AutomationProperties.Name="{x:Static resources:Resource.DeviceInformationWindow_Refresh}"
                             Click="RefreshWarrantyButton_OnClick"
                             Icon="ArrowClockwise32"
                             ToolTip="{x:Static resources:Resource.DeviceInformationWindow_Refresh}" />
@@ -213,7 +217,7 @@
                         Content="{x:Static resources:Resource.DeviceInformationWindow_LenovoSupport}"
                         Icon="Open24"
                         IsChevronVisible="False"
-                        IsEnabled="False" />
+                        IsEnabled="{Binding HasWarrantyInfo, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
                 </StackPanel>
 
             </StackPanel>

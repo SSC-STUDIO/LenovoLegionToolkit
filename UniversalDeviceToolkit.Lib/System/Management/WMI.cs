@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.System.Management;
@@ -69,7 +70,7 @@ public static partial class WMI
         catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
         {
             watcher.Dispose();
-            throw new ManagementException($"WMI class or namespace not available [scope={scope}, query={queryFormatted}]", ex);
+            throw ExceptionHelper.WmiClassNotAvailable(scope, queryFormatted, ex);
         }
 
         return new LambdaDisposable(() =>
@@ -101,7 +102,7 @@ public static partial class WMI
         }
         catch (ManagementException ex)
         {
-            throw new ManagementException($"Read failed: {ex.Message} [scope={scope}, query={query}]", ex);
+            throw ExceptionHelper.WmiReadFailed(ex.Message, scope, query, ex);
         }
     }
 
@@ -113,7 +114,7 @@ public static partial class WMI
         }
         catch (ManagementException ex)
         {
-            throw new ManagementException($"Call failed: {ex.Message} [scope={scope}, query={query}, methodName={methodName}]", ex);
+            throw ExceptionHelper.WmiCallFailed(ex.Message, scope, query, methodName, ex);
         }
     }
 
@@ -127,7 +128,7 @@ public static partial class WMI
         }
         catch (ManagementException ex)
         {
-            throw new ManagementException($"Call failed: {ex.Message}. [scope={scope}, query={query}, methodName={methodName}]", ex);
+            throw ExceptionHelper.WmiCallFailedDot(ex.Message, scope, query, methodName, ex);
         }
     }
 
@@ -140,7 +141,7 @@ public static partial class WMI
             {
                 var mos = new ManagementObjectSearcher(scope, queryFormatted);
                 var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-                var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
+                var managementObject = managementObjects.FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
 
                 var mo = (ManagementObject)managementObject;
                 var methodParamsObject = mo.GetMethodParameters(methodName);
@@ -159,9 +160,7 @@ public static partial class WMI
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"WMI call unavailable (invalid object). [scope={scope}, query={queryFormatted}, methodName={methodName}]", ex);
 
-                throw new ManagementException(
-                    $"Call failed: {ex.Message} [scope={scope}, query={queryFormatted}, methodName={methodName}]",
-                    ex);
+                throw ExceptionHelper.WmiCallFailedFormatted(ex.Message, scope, queryFormatted, methodName, ex);
             }
         }
     }
@@ -177,7 +176,7 @@ public static partial class WMI
             if (formatType == typeof(ICustomFormatter))
                 return this;
 
-            throw new InvalidOperationException("Invalid type of formatted");
+            throw ExceptionHelper.InvalidTypeOfFormatted();
         }
 
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)

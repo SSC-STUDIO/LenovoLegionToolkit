@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
@@ -68,6 +69,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private SensorsData? _cachedSensorsData;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 100;
+    private const int SENSOR_READ_TIMEOUT_SECONDS = 2;
 
     private bool _disposed;
 
@@ -137,24 +139,58 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             }
         }
 
-        var (cpu, gpu) = await GetSensorSnapshotAsync(detailed).ConfigureAwait(false);
-
-        var result = new SensorsData(cpu, gpu);
-
-        // Update cache only for the fast summary path.
-        if (!detailed)
+        try
         {
+            // Apply a 2-second timeout to prevent slow sensors from blocking the UI.
+            var snapshotTask = GetSensorSnapshotAsync(detailed);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(SENSOR_READ_TIMEOUT_SECONDS));
+
+            if (await Task.WhenAny(snapshotTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Sensor read timed out after {SENSOR_READ_TIMEOUT_SECONDS}s, falling back to cache. [type={GetType().Name}]");
+
+                lock (_cacheLock)
+                {
+                    if (_cachedSensorsData.HasValue)
+                        return _cachedSensorsData.Value;
+                }
+
+                return new SensorsData(new SensorData(), new SensorData());
+            }
+
+            var (cpu, gpu) = await snapshotTask.ConfigureAwait(false);
+
+            var result = new SensorsData(cpu, gpu);
+
+            // Update cache only for the fast summary path.
+            if (!detailed)
+            {
+                lock (_cacheLock)
+                {
+                    _cachedSensorsData = result;
+                    _lastCacheUpdateTime = now;
+                }
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Sensor read failed. [type={GetType().Name}]", ex);
+
             lock (_cacheLock)
             {
-                _cachedSensorsData = result;
-                _lastCacheUpdateTime = now;
+                if (_cachedSensorsData.HasValue)
+                    return _cachedSensorsData.Value;
             }
+
+            return new SensorsData(new SensorData(), new SensorData());
         }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
-
-        return result;
     }
 
     private async Task<(SensorData cpu, SensorData gpu)> GetSensorSnapshotAsync(bool detailed)

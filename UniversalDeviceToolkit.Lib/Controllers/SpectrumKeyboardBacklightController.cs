@@ -142,7 +142,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var input = new LENOVO_SPECTRUM_GET_BRIGHTNESS_REQUEST();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_BRIGHTNESS_REQUEST, LENOVO_SPECTRUM_GET_BRIGHTNESS_RESPONSE>(handle, input).ConfigureAwait(false);
@@ -157,10 +157,10 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         if (brightness is < 0 or > 9)
-            throw new InvalidOperationException("Brightness must be between 0 and 9");
+            throw ExceptionHelper.BrightnessRange();
 
         var input = new LENOVO_SPECTRUM_SET_BRIGHTNESS_REQUEST((byte)brightness);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
@@ -175,7 +175,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var input = new LENOVO_SPECTRUM_GET_LOGO_STATUS();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_LOGO_STATUS, LENOVO_SPECTRUM_GET_LOGO_STATUS_RESPONSE>(handle, input).ConfigureAwait(false);
@@ -190,7 +190,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var input = new LENOVO_SPECTRUM_SET_LOGO_STATUS_REQUEST(isOn);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
@@ -205,7 +205,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var input = new LENOVO_SPECTRUM_GET_PROFILE_REQUEST();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_PROFILE_REQUEST, LENOVO_SPECTRUM_GET_PROFILE_RESPONSE>(handle, input).ConfigureAwait(false);
@@ -220,12 +220,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         await StopAuroraIfNeededAsync().ConfigureAwait(false);
 
         if (profile is < 0 or > 6)
-            throw new InvalidOperationException("Profile must be between 0 and 6");
+            throw ExceptionHelper.ProfileRange();
 
         var input = new LENOVO_SPECTRUM_SET_PROFILE_REQUEST((byte)profile);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
@@ -244,7 +244,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var input = new LENOVO_SPECTRUM_SET_PROFILE_DEFAULT_REQUEST((byte)profile);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
@@ -259,7 +259,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         effects = Compress(effects);
         var bytes = Convert(profile, effects).ToBytes();
@@ -292,7 +292,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
     {
         var json = await File.ReadAllTextAsync(jsonPath).ConfigureAwait(false);
         var effects = JsonSerializer.Deserialize<SpectrumKeyboardBacklightEffect[]>(json, SpectrumProfileJsonOptions)
-                      ?? throw new InvalidOperationException("Couldn't deserialize effects");
+                      ?? throw ExceptionHelper.CouldNotDeserializeEffects();
 
         await SetProfileDescriptionAsync(profile, effects).ConfigureAwait(false);
     }
@@ -375,7 +375,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
         var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
         if (handle is null)
-            throw new InvalidOperationException(nameof(handle));
+            throw ExceptionHelper.DeviceHandleNotAvailable();
 
         var state = await GetFeatureAsync<LENOVO_SPECTRUM_STATE_RESPONSE>(handle).ConfigureAwait(false);
 
@@ -394,7 +394,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
     {
         var vantageStatus = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
         if (vantageStatus == SoftwareStatus.Enabled)
-            throw new InvalidOperationException("Can't manage Spectrum keyboard with Vantage enabled");
+            throw ExceptionHelper.CantManageWithVantage();
     }
 
     private async Task<(int Width, int Height, HashSet<ushort> Keys)> ReadAllKeyCodesAsync()
@@ -464,7 +464,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
             var handle = await GetDeviceHandleAsync().ConfigureAwait(false);
             if (handle is null)
-                throw new InvalidOperationException(nameof(handle));
+                throw ExceptionHelper.DeviceHandleNotAvailable();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Aurora refresh starting...");

@@ -6,6 +6,7 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="_unsupportedWindow"
     Title="{x:Static resources:Resource.UnsupportedWindow_Title}"
     MinWidth="650"
     MinHeight="420"
@@ -22,6 +23,9 @@
     WindowBackdropType="Mica">
 
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -134,9 +138,11 @@
                 </Grid.ColumnDefinitions>
 
                 <wpfui:Button
+                    x:Name="_exitButton"
                     Grid.Column="0"
                     MinWidth="120"
                     Appearance="Primary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Exit}"
                     Click="Exit_Click"
                     Content="{x:Static resources:Resource.Exit}" />
                 <wpfui:Button
@@ -144,9 +150,10 @@
                     Grid.Column="2"
                     MinWidth="120"
                     Appearance="Secondary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Continue}"
                     Click="Continue_Click"
                     Content="{x:Static resources:Resource.Continue}"
-                    IsEnabled="False" />
+                    IsEnabled="{Binding IsCountdownComplete, Mode=OneWay, ElementName=_unsupportedWindow}" />
             </Grid>
         </Grid>
     </Grid>

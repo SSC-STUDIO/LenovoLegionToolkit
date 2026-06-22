@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -1127,6 +1128,8 @@ public class PluginManager : IPluginManager
         return PluginHealthStatus.Healthy;
     }
     
+    private PluginRepositoryService? _pluginRepositoryService;
+
     /// <summary>
     /// Check for plugin updates (returns a dictionary of pluginId -> availableVersion)
     /// </summary>
@@ -1142,18 +1145,33 @@ public class PluginManager : IPluginManager
             // Get all registered plugins
             var plugins = _registry.GetAll();
             
-            // For each plugin, check if there's an update (placeholder implementation)
-            // In a real app, you would connect to a plugin repository API
+            // Build installed plugin manifests for update check
+            var installedManifests = new List<PluginManifest>();
             foreach (var plugin in plugins)
             {
                 var metadata = _registry.GetMetadata(plugin.Id);
-                if (metadata == null)
-                    continue;
-                
-                // This is a placeholder - actual implementation would query a repository
-                // For now, we'll just log that we're checking
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Checking updates for {plugin.Id} (v{metadata.Version})");
+                installedManifests.Add(new PluginManifest
+                {
+                    Id = plugin.Id,
+                    Name = plugin.Name,
+                    Description = plugin.Description,
+                    Version = metadata?.Version ?? "0.0.0",
+                    Icon = plugin.Icon,
+                    IsSystemPlugin = plugin.IsSystemPlugin
+                });
+            }
+            
+            // Delegate to PluginRepositoryService for actual update checking
+            _pluginRepositoryService ??= IoCContainer.Resolve<PluginRepositoryService>();
+            var availableUpdates = await _pluginRepositoryService
+                .CheckForUpdatesAsync(installedManifests)
+                .ConfigureAwait(false);
+            
+            // Map List<PluginManifest> to Dictionary<string, string> (pluginId -> version)
+            foreach (var manifest in availableUpdates)
+            {
+                if (!string.IsNullOrWhiteSpace(manifest.Id) && !string.IsNullOrWhiteSpace(manifest.Version))
+                    updates[manifest.Id] = manifest.Version;
             }
             
             Log.Instance.Info($"Update check complete. Found {updates.Count} available updates.");

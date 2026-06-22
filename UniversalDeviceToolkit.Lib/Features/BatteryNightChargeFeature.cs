@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
@@ -15,7 +17,7 @@ public class BatteryNightChargeFeature() : AbstractDriverFeature<BatteryNightCha
         {
             BatteryNightChargeState.On => [0x80000012u],
             BatteryNightChargeState.Off => [0x12u],
-            _ => throw new InvalidOperationException("Invalid state")
+            _ => throw ExceptionHelper.InvalidState()
         };
         return Task.FromResult(result);
     }
@@ -25,6 +27,6 @@ public class BatteryNightChargeFeature() : AbstractDriverFeature<BatteryNightCha
         if (state.GetNthBit(0))
             return Task.FromResult(state.GetNthBit(4) ? BatteryNightChargeState.On : BatteryNightChargeState.Off);
 
-        throw new InvalidOperationException($"Unknown battery night charge state: {state} [bits={Convert.ToString(state, 2)}]");
+        throw ExceptionHelper.UnknownBatteryState(state, Convert.ToString(state, 2));
     }
 }

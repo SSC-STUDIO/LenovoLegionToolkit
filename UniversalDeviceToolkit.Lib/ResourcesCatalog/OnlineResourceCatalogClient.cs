@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -24,7 +25,7 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
         using var httpClient = httpClientFactory.Create();
         var json = await httpClient.GetStringAsync(catalogUrl, token).ConfigureAwait(false);
         return JsonSerializer.Deserialize<OnlineResourceCatalog>(json, JsonOptions)
-               ?? throw new InvalidDataException("Resource catalog is empty.");
+               ?? throw ExceptionHelper.ResourceCatalogEmpty();
     }
 
     public async Task DownloadAndVerifyAsync(string url, string expectedSha256, string destinationPath, IProgress<float>? progress = null, CancellationToken token = default)
@@ -60,7 +61,7 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
             try { File.Delete(path); }
             catch { /* ignore cleanup failure */ }
 
-            throw new InvalidDataException($"Downloaded resource failed SHA256 validation. Expected {expectedSha256}, got {actualSha256}.");
+            throw ExceptionHelper.SHA256ValidationFailed(expectedSha256, actualSha256);
         }
     }
 

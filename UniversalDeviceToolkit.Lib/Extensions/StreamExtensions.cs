@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Extensions;
 
@@ -12,9 +13,9 @@ public static class StreamExtensions
     public static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<long>? progress = null, CancellationToken cancellationToken = default)
     {
         if (!source.CanRead)
-            throw new ArgumentException("Has to be readable", nameof(source));
+            throw new ArgumentException(Resource.Exception_HasToBeReadable, nameof(source));
         if (!destination.CanWrite)
-            throw new ArgumentException("Has to be writable", nameof(destination));
+            throw new ArgumentException(Resource.Exception_HasToBeWritable, nameof(destination));
 
         var buffer = new byte[bufferSize];
         long totalBytesRead = 0;

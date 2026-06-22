@@ -42,6 +42,7 @@ using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
 using UniversalDeviceToolkit.WPF.Windows.Osd;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
+using UniversalDeviceToolkit.WPF.Startup;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using WinFormsApp = System.Windows.Forms.Application;
@@ -109,7 +110,6 @@ public partial class App
 
         ApplyStartupOverrides(flags);
 
-        // Ensure native shell logger writes to the same log file
         Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
 
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
@@ -118,192 +118,14 @@ public partial class App
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Flags: {flags}");
 
-        if (!EnsureSingleInstance())
-        {
-            ExitDuplicateInstance();
-            return;
-        }
+        var orchestrator = new StartupOrchestrator(flags);
+        var exitCode = await orchestrator.RunAsync(e);
 
-        await LocalizationHelper.SetLanguageAsync(true, CreateStartupLanguagePackManager(flags));
-
-        // Note: ApplicationSettings is created here before IoC initialization for compatibility check.
-        // This is safe because ApplicationSettings uses a shared storage mechanism, so changes will
-        // be reflected in the IoC-resolved instance later. However, we should use the IoC instance
-        // after initialization for consistency.
-        var applicationSettings = new ApplicationSettings();
-
-        try
-        {
-                var machineInformation = await Compatibility.GetMachineInformationAsync();
-                await RunStartupDeviceSetupIfNeededAsync(machineInformation, flags);
-
-                // Check compatibility - IsCompatibleAsync already includes basic compatibility check
-                var (isCompatible, mi) = await MachineCompatibility.IsCompatibleAsync();
-
-                // If check fails, show the unsupported window only once
-                if (!isCompatible)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Incompatible system detected. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
-
-                    // Use the local instance for reading settings before IoC initialization
-                    var suppressWarning = applicationSettings.Store.DisableUnsupportedHardwareWarning;
-                    var shouldContinue = false;
-
-                    if (suppressWarning)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Compatibility warning suppressed via application settings.");
-
-                        shouldContinue = true;
-                    }
-                    else
-                    {
-                        var unsupportedWindow = new UnsupportedWindow(mi);
-                        unsupportedWindow.Show();
-
-                        shouldContinue = await unsupportedWindow.ShouldContinue;
-                    }
-
-                    if (shouldContinue)
-                    {
-                        Log.Instance.IsTraceEnabled = true;
-
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Compatibility check OVERRIDE. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString() ?? string.Empty}]");
-                    }
-                    else
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Shutting down... [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}]");
-
-                        // Perform safe shutdown for incompatible systems to prevent process residue
-                        await PerformSafeShutdownForIncompatibleSystemAsync(202).ConfigureAwait(false);
-                        return;
-                    }
-                }
-        }
-        catch (Exception ex)
-        {
-                // Always log error details, regardless of trace flag
-                // Use Error level to ensure it's always written to log file
-                Log.Instance.Error($"Failed to check device compatibility: {ex.Message}", ex);
-                
-                // Log additional trace details if trace is enabled
-                if (Log.Instance.IsTraceEnabled)
-                {
-                    Log.Instance.Trace($"Compatibility check exception details:", ex);
-                    if (ex.InnerException != null)
-                        Log.Instance.Trace($"Inner exception: {ex.InnerException.Message}", ex.InnerException);
-                    
-                    // Log stack trace for detailed debugging
-                    Log.Instance.Trace($"Stack trace: {ex.StackTrace}");
-                }
-                
-                // Force flush log entries to file immediately before showing error dialog
-                // This ensures error is written even if program exits soon after
-                try
-                {
-                    Log.Instance.Flush();
-                }
-                catch
-                {
-                    // Ignore flush errors - we still want to show the error dialog
-                }
-
-                // Show modern error window with detailed information
-                var errorWindow = new Windows.Utils.CompatibilityCheckErrorWindow(ex);
-                errorWindow.ShowDialog();
-                
-                // Perform safe shutdown for compatibility check errors to prevent process residue
-                await PerformSafeShutdownForIncompatibleSystemAsync(200).ConfigureAwait(false);
-                return;
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting... [version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString()}, os={Environment.OSVersion}, dotnet={Environment.Version}]");
-
-        WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
-        RenderOptions.ProcessRenderMode = RenderingCompatibilityHelper.GetPreferredRenderMode(applicationSettings);
-
-        IoCContainer.Initialize(
-            new LenovoLegionToolkit.Lib.IoCModule(),
-            new LenovoLegionToolkit.Lib.Plugins.IoCModule(),
-            new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
-            new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
-            new IoCModule()
-        );
-
-        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => Application.Current?.MainWindow));
-
-        IoCContainer.Resolve<HttpClientFactory>().SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
-        IoCContainer.Resolve<LanguagePackManager>().ProcessPendingUninstall();
-
-        IoCContainer.Resolve<PowerModeFeature>().AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
-        IoCContainer.Resolve<RGBKeyboardBacklightController>().ForceDisable = flags.ForceDisableRgbKeyboardSupport;
-        IoCContainer.Resolve<SpectrumKeyboardBacklightController>().ForceDisable = flags.ForceDisableSpectrumKeyboardSupport;
-        IoCContainer.Resolve<WhiteKeyboardLenovoLightingBacklightFeature>().ForceDisable = flags.ForceDisableLenovoLighting;
-        IoCContainer.Resolve<PanelLogoLenovoLightingBacklightFeature>().ForceDisable = flags.ForceDisableLenovoLighting;
-        IoCContainer.Resolve<PortsBacklightFeature>().ForceDisable = flags.ForceDisableLenovoLighting;
-        IoCContainer.Resolve<IGPUModeFeature>().ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
-        IoCContainer.Resolve<DGPUNotify>().ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
-        var updateChecker = IoCContainer.Resolve<UpdateChecker>();
-        updateChecker.Disable = flags.DisableUpdateChecker;
-        updateChecker.DisableReason = flags.DisableUpdateChecker ? Flags.DisableUpdateCheckerSwitch : null;
-
-        // Initialize plugins
-        await InitializePluginsAsync();
-        
-        // Apply plugin-specific language settings after plugins are loaded
-        LocalizationHelper.SetPluginResourceCultures();
-
-        StartBackgroundInitialization();
-
-        var mainWindow = new MainWindow(IoCContainer.Resolve<ApplicationSettings>(),
-            IoCContainer.Resolve<IPluginManager>(),
-            IoCContainer.Resolve<SpecialKeyListener>(),
-            IoCContainer.Resolve<VantageDisabler>(),
-            IoCContainer.Resolve<LegionZoneDisabler>(),
-            IoCContainer.Resolve<FnKeysDisabler>(),
-            IoCContainer.Resolve<UpdateChecker>())
-        {
-            WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            TrayTooltipEnabled = !flags.DisableTrayTooltip
-        };
-        MainWindow = mainWindow;
-        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => MainWindow as Window));
-
-        var persistedSettings = IoCContainer.Resolve<ApplicationSettings>();
-        IoCContainer.Resolve<ThemeManager>().Apply();
-        AnimationHelper.UpdateAnimationParameters(persistedSettings);
-
-        if (flags.Minimized)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Sending MainWindow to tray...");
-
-            mainWindow.WindowState = WindowState.Minimized;
-            mainWindow.Show();
-            mainWindow.SendToTray();
-        }
-        else
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Showing MainWindow...");
-
-            mainWindow.Show();
-        }
-
-        // Surface reports from a previous session without blocking the main UI.
-        _ = Dispatcher.BeginInvoke(CheckPendingCrashReports, DispatcherPriority.Background);
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Start up complete");
-
-        InitOsd();
+        if (exitCode != 0)
+            Environment.Exit(exitCode);
     }
 
-    private static async Task InitializePluginsAsync()
+    internal static async Task InitializePluginsAsync()
     {
         try
         {
@@ -327,7 +149,7 @@ public partial class App
         }
     }
 
-    private static async Task RunStartupDeviceSetupIfNeededAsync(MachineInformation machineInformation, Flags flags)
+    internal static async Task RunStartupDeviceSetupIfNeededAsync(MachineInformation machineInformation, Flags flags)
     {
         try
         {
@@ -340,17 +162,17 @@ public partial class App
         }
     }
 
-    private static LanguagePackManager CreateStartupLanguagePackManager(Flags flags) =>
+    internal static LanguagePackManager CreateStartupLanguagePackManager(Flags flags) =>
         new(new OnlineResourceCatalogClient(CreateStartupHttpClientFactory(flags)));
 
-    private static HttpClientFactory CreateStartupHttpClientFactory(Flags flags)
+    internal static HttpClientFactory CreateStartupHttpClientFactory(Flags flags)
     {
         var httpClientFactory = new HttpClientFactory();
         httpClientFactory.SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
         return httpClientFactory;
     }
 
-    private static void CheckPendingCrashReports()
+    internal static void CheckPendingCrashReports()
     {
         try
         {
@@ -405,7 +227,7 @@ public partial class App
         catch { /* Ignore crash report checking errors */ }
     }
 
-    private void StartBackgroundInitialization()
+    internal void StartBackgroundInitialization()
     {
         _backgroundInitializationCancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
@@ -515,7 +337,7 @@ public partial class App
     /// Performs safe shutdown for incompatible systems to prevent process residue
     /// This method ensures all resources are properly cleaned up before exit
     /// </summary>
-    private async Task PerformSafeShutdownForIncompatibleSystemAsync(int? exitCode = null)
+    internal async Task PerformSafeShutdownForIncompatibleSystemAsync(int? exitCode = null)
     {
         try
         {
@@ -1093,7 +915,7 @@ public partial class App
     }
 
 
-    private bool EnsureSingleInstance()
+    internal bool EnsureSingleInstance()
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Checking for other instances...");
@@ -1164,7 +986,7 @@ public partial class App
         return true;
     }
 
-    private static void ExitDuplicateInstance()
+    internal static void ExitDuplicateInstance()
     {
         try { Log.Instance.Shutdown(); }
         catch { /* Logging shutdown failed; duplicate instance must still exit. */ }

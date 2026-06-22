@@ -94,7 +94,7 @@ public static class Devices
             return string.Empty;
 
         if (propertyType != DEVPROPTYPE.DEVPROP_TYPE_STRING)
-            throw new InvalidOperationException("Device property is not a string");
+            throw ExceptionHelper.DevicePropertyNotString();
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);
@@ -112,7 +112,7 @@ public static class Devices
             return 0;
 
         if (propertyType != DEVPROPTYPE.DEVPROP_TYPE_UINT32)
-            throw new InvalidOperationException("Device property is not a string");
+            throw ExceptionHelper.DevicePropertyNotString();
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);
@@ -130,7 +130,7 @@ public static class Devices
             return Guid.Empty;
 
         if (propertyType != DEVPROPTYPE.DEVPROP_TYPE_GUID)
-            throw new InvalidOperationException("Device property is not a GUID");
+            throw ExceptionHelper.DevicePropertyNotGUID();
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);

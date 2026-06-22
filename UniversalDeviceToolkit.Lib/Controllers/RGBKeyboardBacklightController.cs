@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using NeoSmart.AsyncLock;
@@ -52,7 +53,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
                 try
                 {
 #if !MOCK_RGB
-                    _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+                    _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
                     await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -89,15 +90,15 @@ namespace LenovoLegionToolkit.Lib.Controllers
         }
 
         private static bool IsExpectedOwnershipFailure(Exception ex) =>
-            ex.Message.Contains("RGB Keyboard unsupported", StringComparison.OrdinalIgnoreCase) ||
-            ex.Message.Contains("Can't manage RGB keyboard with Vantage enabled", StringComparison.OrdinalIgnoreCase);
+            ex.Message.Contains(Resource.Exception_RGBKeyboardUnsupported, StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains(Resource.Exception_CantManageWithVantage, StringComparison.OrdinalIgnoreCase);
 
         public async Task<RGBKeyboardBacklightState> GetStateAsync()
         {
             using (await IoLock.LockAsync().ConfigureAwait(false))
             {
 #if !MOCK_RGB
-                _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+                _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
                 await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -111,7 +112,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
             using (await IoLock.LockAsync().ConfigureAwait(false))
             {
 #if !MOCK_RGB
-                _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+                _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
                 await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -144,7 +145,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
             using (await IoLock.LockAsync().ConfigureAwait(false))
             {
 #if !MOCK_RGB
-                _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+                _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
                 await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -178,7 +179,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
             using (await IoLock.LockAsync().ConfigureAwait(false))
             {
 #if !MOCK_RGB
-                _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+                _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
                 await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -214,7 +215,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
         private async Task SetCurrentPresetAsync()
         {
 #if !MOCK_RGB
-            _ = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+            _ = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 #endif
 
             await ThrowIfVantageEnabled().ConfigureAwait(false);
@@ -239,13 +240,13 @@ namespace LenovoLegionToolkit.Lib.Controllers
         {
             var vantageStatus = await vantageDisabler.GetStatusAsync().ConfigureAwait(false);
             if (vantageStatus == SoftwareStatus.Enabled)
-                throw new InvalidOperationException("Can't manage RGB keyboard with Vantage enabled");
+                throw ExceptionHelper.CantManageWithVantage();
         }
 
         private unsafe Task SendToDevice(LENOVO_RGB_KEYBOARD_STATE str) => Task.Run(() =>
         {
 #if !MOCK_RGB
-            var handle = DeviceHandle ?? throw new InvalidOperationException("RGB Keyboard unsupported");
+            var handle = DeviceHandle ?? throw ExceptionHelper.RGBKeyboardUnsupported();
 
             var ptr = IntPtr.Zero;
             try

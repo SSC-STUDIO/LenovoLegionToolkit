@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -33,7 +35,7 @@ public abstract class AbstractSettings<T> where T : class, new()
     protected AbstractSettings(string filename)
     {
         if (!PathSecurity.IsValidFileName(filename))
-            throw new ArgumentException($"Invalid settings filename: {filename}", nameof(filename));
+            throw ExceptionHelper.InvalidSettingsFilename(filename, nameof(filename));
 
         JsonSerializerOptions = LltJson.CreateSettingsOptions();
         ConfigureJsonSerializerOptions(JsonSerializerOptions);
@@ -42,7 +44,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         _settingsStorePath = Path.Combine(Folders.AppData, _fileName);
 
         if (!PathSecurity.IsPathWithinAllowedDirectory(_settingsStorePath, Folders.AppData))
-            throw new InvalidOperationException($"Settings path escapes allowed directory: {_settingsStorePath}");
+            throw ExceptionHelper.SettingsPathEscapesAllowedDir(_settingsStorePath);
     }
 
     /// <summary>

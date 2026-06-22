@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using Windows.Win32;
 
@@ -41,7 +42,7 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
             {
                 Log.Instance.Warning($"Cannot set UEFI privileges [feature={GetType().Name}]");
 
-                throw new InvalidOperationException("Cannot set privileges UEFI");
+                throw ExceptionHelper.CannotSetUEFIPrivileges();
             }
 
             var ptrSize = (uint)Marshal.SizeOf<TS>();
@@ -61,7 +62,7 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
                 {
                     Log.Instance.Warning($"Cannot read variable {scopeName} from UEFI [feature={GetType().Name}]");
 
-                    throw new InvalidOperationException($"Cannot read variable {scopeName} from UEFI");
+                    throw ExceptionHelper.CannotReadUEFIVariable(scopeName);
                 }
             }
         }
@@ -82,7 +83,7 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
             {
                 Log.Instance.Warning($"Cannot set UEFI privileges [feature={GetType().Name}]");
 
-                throw new InvalidOperationException("Cannot set UEFI privileges");
+                throw ExceptionHelper.CannotSetUEFIPrivileges();
             }
 
             Marshal.StructureToPtr(structure, ptr, false);
@@ -94,7 +95,7 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
                 {
                     Log.Instance.Warning($"Cannot write variable {scopeName} to UEFI [feature={GetType().Name}]");
 
-                    throw new InvalidOperationException($"Cannot write variable {scopeName} to UEFI");
+                    throw ExceptionHelper.CannotWriteUEFIVariable(scopeName);
                 }
                 else
                 {

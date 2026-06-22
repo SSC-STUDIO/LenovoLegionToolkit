@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 using System.Text.Json.Serialization;
 using Octokit;
 
@@ -220,7 +222,7 @@ public readonly struct FanTable
     {
         if (fanTable.Length != 10)
             // ReSharper disable once LocalizableElement
-            throw new ArgumentException("Fan table length must be 10", nameof(fanTable));
+            throw ExceptionHelper.FanTableLength(nameof(fanTable));
 
         FSTM = 1;
         FSID = 0;
@@ -1078,7 +1080,7 @@ public readonly struct Update(Release release)
     private static Version ParseVersion(string tagName)
     {
         if (string.IsNullOrWhiteSpace(tagName))
-            throw new ArgumentException("Tag name cannot be null or empty", nameof(tagName));
+            throw ExceptionHelper.TagNameNullOrEmpty(nameof(tagName));
 
         // Strip 'v' prefix if present
         if (tagName.StartsWith("v", StringComparison.OrdinalIgnoreCase))
@@ -1104,7 +1106,7 @@ public readonly struct Update(Release release)
             return new Version(major2, minor);
 
         // If all else fails, throw a more descriptive error
-        throw new FormatException($"Unable to parse version from tag name: '{tagName}'. Expected format: '3.0.1'");
+        throw ExceptionHelper.UnparseableVersionFormat(tagName);
     }
 
     #region Equality

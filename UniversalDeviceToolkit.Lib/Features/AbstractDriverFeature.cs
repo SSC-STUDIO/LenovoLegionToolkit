@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 
@@ -84,7 +85,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
         Log.Instance.Warning($"DeviceIoControl returned 0, last error: {error} [feature={GetType().Name}]");
 
-        throw new InvalidOperationException($"DeviceIoControl returned 0, last error: {error}");
+        throw new InvalidOperationException(string.Format(Resource.Exception_DeviceIoControlError, error));
     });
 
     private async Task VerifyStateSetAsync(T state)
@@ -108,6 +109,6 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
         Log.Instance.Warning($"Verify state {state} set failed. [feature={GetType().Name}]");
 
-        throw new InvalidOperationException($"Failed to verify {GetType().Name} state was set to {state}.");
+        throw new InvalidOperationException(string.Format(Resource.Exception_FailedVerifyState, GetType().Name, state));
     }
 }

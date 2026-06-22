@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
@@ -132,6 +133,6 @@ public class GodModeController(GodModeControllerV1 controllerV1, GodModeControll
         if (mi.Properties.SupportsGodModeV2 || mi.Properties.SupportsGodModeV3 || mi.Properties.SupportsGodModeV4)
             return controllerV2;
 
-        throw new InvalidOperationException("No supported version found");
+        throw ExceptionHelper.NoSupportedVersionFound();
     }
 }

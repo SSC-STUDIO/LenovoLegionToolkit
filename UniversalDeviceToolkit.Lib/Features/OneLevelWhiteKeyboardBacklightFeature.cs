@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
@@ -28,7 +30,7 @@ public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<One
         {
             OneLevelWhiteKeyboardBacklightState.Off => new uint[] { 0x9 },
             OneLevelWhiteKeyboardBacklightState.On => [0x8],
-            _ => throw new InvalidOperationException("Invalid state"),
+            _ => throw ExceptionHelper.InvalidState(),
         };
         return Task.FromResult(result);
     }

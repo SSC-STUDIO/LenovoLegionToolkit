@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
@@ -16,7 +18,7 @@ public class AlwaysOnUSBFeature() : AbstractDriverFeature<AlwaysOnUSBState>(Driv
             AlwaysOnUSBState.Off => new uint[] { 0xB, 0x12 },
             AlwaysOnUSBState.OnWhenSleeping => [0xA, 0x12],
             AlwaysOnUSBState.OnAlways => [0xA, 0x13],
-            _ => throw new InvalidOperationException("Invalid state"),
+            _ => throw ExceptionHelper.InvalidState(),
         };
         return Task.FromResult(result);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -10,8 +11,18 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 
 internal static class TrustedPluginPackageStore
 {
+    private const string AppSeed = "UDT_TrustedPluginStore_v1";
+    private const string HmacFieldName = "_hmac";
+
     private static readonly object Lock = new();
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+    private static readonly byte[] HmacKey;
+
+    static TrustedPluginPackageStore()
+    {
+        using var derive = new HMACSHA256(Encoding.UTF8.GetBytes(AppSeed));
+        HmacKey = derive.ComputeHash(Encoding.UTF8.GetBytes(Environment.MachineName));
+    }
 
     private static string StorePath => Path.Combine(Folders.AppData, "trusted-plugin-packages.json");
 
@@ -151,7 +162,39 @@ internal static class TrustedPluginPackageStore
             if (!File.Exists(StorePath))
                 return new TrustedPluginPackageStoreModel();
 
-            var json = File.ReadAllText(StorePath);
+            var encryptedBytes = File.ReadAllBytes(StorePath);
+            if (encryptedBytes.Length == 0)
+                return new TrustedPluginPackageStoreModel();
+
+            byte[] decryptedBytes;
+            try
+            {
+                decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
+            }
+            catch
+            {
+                ResetStore();
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            var envelope = JsonSerializer.Deserialize<StoreEnvelope>(decryptedBytes);
+            if (envelope is null || string.IsNullOrWhiteSpace(envelope.Data) || string.IsNullOrWhiteSpace(envelope.Hmac))
+            {
+                ResetStore();
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            var computedHmac = ComputeHmac(envelope.Data);
+            if (!string.Equals(envelope.Hmac, computedHmac, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("HMAC mismatch in trusted plugin package store; resetting to empty store.");
+
+                ResetStore();
+                return new TrustedPluginPackageStoreModel();
+            }
+
+            var json = Encoding.UTF8.GetString(Convert.FromBase64String(envelope.Data));
             return NormalizeStore(JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json));
         }
         catch
@@ -178,7 +221,38 @@ internal static class TrustedPluginPackageStore
         if (!string.IsNullOrWhiteSpace(directory))
             Directory.CreateDirectory(directory);
 
-        File.WriteAllText(StorePath, JsonSerializer.Serialize(store, JsonOptions));
+        var json = JsonSerializer.Serialize(store, JsonOptions);
+        var dataBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+        var hmac = ComputeHmac(dataBase64);
+
+        var envelope = new StoreEnvelope
+        {
+            Data = dataBase64,
+            Hmac = hmac,
+        };
+
+        var envelopeJson = JsonSerializer.SerializeToUtf8Bytes(envelope, JsonOptions);
+        var encrypted = ProtectedData.Protect(envelopeJson, null, DataProtectionScope.CurrentUser);
+        File.WriteAllBytes(StorePath, encrypted);
+    }
+
+    private static void ResetStore()
+    {
+        try
+        {
+            if (File.Exists(StorePath))
+                File.Delete(StorePath);
+        }
+        catch
+        {
+        }
+    }
+
+    private static string ComputeHmac(string data)
+    {
+        using var hmac = new HMACSHA256(HmacKey);
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
+        return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
     private static string ComputeSha256(string filePath)
@@ -186,6 +260,12 @@ internal static class TrustedPluginPackageStore
         using var sha256 = SHA256.Create();
         using var stream = File.OpenRead(filePath);
         return Convert.ToHexString(sha256.ComputeHash(stream)).ToLowerInvariant();
+    }
+
+    private sealed class StoreEnvelope
+    {
+        public string Data { get; set; } = string.Empty;
+        public string Hmac { get; set; } = string.Empty;
     }
 
     private sealed class TrustedPluginPackageStoreModel

@@ -6,6 +6,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using TaskService = Microsoft.Win32.TaskScheduler.TaskService;
 
@@ -179,7 +180,7 @@ public abstract class AbstractSoftwareDisabler
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to register changes on task {task.Name} in {task.Path}.", ex);
 
-                throw new SoftwareDisablerException($"Failed to register changes on task {task.Name} in {task.Path} [type={GetType().Name}]", ex);
+                throw ExceptionHelper.FailedToRegisterTask(task.Name, task.Path, GetType().Name, ex);
             }
         }
     }

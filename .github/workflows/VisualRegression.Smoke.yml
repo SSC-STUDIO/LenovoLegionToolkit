@@ -1,0 +1,83 @@
+name: Visual Regression Smoke
+
+on:
+  schedule:
+    - cron: '0 2 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      osd_only:
+        description: Run OSD overlay visual acceptance only
+        type: boolean
+        required: false
+        default: false
+      keep_app:
+        description: Leave the app running after smoke for inspection
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  visual-regression-smoke:
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
+
+      - name: Restore solution
+        run: dotnet restore UniversalDeviceToolkit.sln
+
+      - name: Build main app
+        run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
+
+      - name: Build visual regression smoke tool
+        run: dotnet build Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release --no-restore
+
+      - name: Run visual regression smoke
+        shell: pwsh
+        env:
+          OSD_ONLY: ${{ inputs.osd_only || 'false' }}
+          KEEP_APP: ${{ inputs.keep_app || 'false' }}
+        run: |
+          $arguments = @(
+            '--repo-root', $PWD,
+            '--output-directory', (Join-Path $env:RUNNER_TEMP "visual-regression-smoke-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"),
+            '--configuration', 'Release'
+          )
+
+          if ($env:OSD_ONLY -eq 'true') {
+            $arguments += '--osd-only'
+          }
+          if ($env:KEEP_APP -eq 'true') {
+            $arguments += '--keep-app'
+          }
+
+          $exitCode = 0
+          $output = & dotnet run --project Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release --no-build -- @arguments 2>&1
+          $exitCode = $LASTEXITCODE
+
+          $output | ForEach-Object { Write-Host $_ }
+
+          if ($exitCode -ne 0) {
+            throw "Visual regression smoke failed with exit code $exitCode."
+          }
+
+      - name: Upload visual regression artifacts
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: visual-regression-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/visual-regression-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn

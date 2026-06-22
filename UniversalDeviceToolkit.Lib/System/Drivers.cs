@@ -1,4 +1,5 @@
 ﻿using System;
+using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Storage.FileSystem;
@@ -38,7 +39,7 @@ public static class Drivers
                 null);
 
             if (handle.IsInvalid)
-                throw new InvalidOperationException("handle is invalid");
+                throw ExceptionHelper.HandleInvalid();
 
             _energy = handle;
         }

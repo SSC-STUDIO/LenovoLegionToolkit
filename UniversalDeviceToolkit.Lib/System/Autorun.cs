@@ -79,9 +79,9 @@ public static class Autorun
 
     private static void Enable(bool delayed)
     {
-        var mainModule = Process.GetCurrentProcess().MainModule ?? throw new InvalidOperationException("Main Module cannot be null");
-        var filename = mainModule.FileName ?? throw new InvalidOperationException("Current process file name cannot be null");
-        var fileVersion = mainModule.FileVersionInfo.FileVersion ?? throw new InvalidOperationException("Current process file version cannot be null");
+        var mainModule = Process.GetCurrentProcess().MainModule ?? throw ExceptionHelper.MainModuleNull();
+        var filename = mainModule.FileName ?? throw ExceptionHelper.CurrentProcessFileNameNull();
+        var fileVersion = mainModule.FileVersionInfo.FileVersion ?? throw ExceptionHelper.CurrentProcessFileVersionNull();
         var currentUser = WindowsIdentity.GetCurrent().Name;
 
         var ts = TaskService.Instance;

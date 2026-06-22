@@ -1202,5 +1202,887 @@ namespace LenovoLegionToolkit.Lib.Resources {
                 return ResourceManager.GetString("WindowBackdropStyle_macOS", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid state.
+        /// </summary>
+        public static string Exception_InvalidState {
+            get {
+                return ResourceManager.GetString("Exception_InvalidState", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid file name.
+        /// </summary>
+        public static string Exception_InvalidFileName {
+            get {
+                return ResourceManager.GetString("Exception_InvalidFileName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Arguments contain dangerous characters.
+        /// </summary>
+        public static string Exception_DangerousArguments {
+            get {
+                return ResourceManager.GetString("Exception_DangerousArguments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Interactive shell executables require arguments when waiting for exit.
+        /// </summary>
+        public static string Exception_InteractiveShellRequiresArgs {
+            get {
+                return ResourceManager.GetString("Exception_InteractiveShellRequiresArgs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to PowerShell arguments contain dangerous patterns.
+        /// </summary>
+        public static string Exception_PowerShellDangerousArgs {
+            get {
+                return ResourceManager.GetString("Exception_PowerShellDangerousArgs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown hive..
+        /// </summary>
+        public static string Exception_UnknownHive {
+            get {
+                return ResourceManager.GetString("Exception_UnknownHive", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No updates available.
+        /// </summary>
+        public static string Exception_NoUpdatesAvailable {
+            get {
+                return ResourceManager.GetString("Exception_NoUpdatesAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Setup file URL could not be found.
+        /// </summary>
+        public static string Exception_SetupFileUrlNotFound {
+            get {
+                return ResourceManager.GetString("Exception_SetupFileUrlNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to RGB Keyboard unsupported.
+        /// </summary>
+        public static string Exception_RGBKeyboardUnsupported {
+            get {
+                return ResourceManager.GetString("Exception_RGBKeyboardUnsupported", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Can't manage RGB keyboard with Vantage enabled.
+        /// </summary>
+        public static string Exception_CantManageWithVantage {
+            get {
+                return ResourceManager.GetString("Exception_CantManageWithVantage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Power mode switching is not supported on this device..
+        /// </summary>
+        public static string Exception_PowerModeNotSupported {
+            get {
+                return ResourceManager.GetString("Exception_PowerModeNotSupported", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot set UEFI privileges.
+        /// </summary>
+        public static string Exception_CannotSetUEFIPrivileges {
+            get {
+                return ResourceManager.GetString("Exception_CannotSetUEFIPrivileges", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start Explorer..
+        /// </summary>
+        public static string Exception_FailedToStartExplorer {
+            get {
+                return ResourceManager.GetString("Exception_FailedToStartExplorer", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Explorer did not restart in time..
+        /// </summary>
+        public static string Exception_ExplorerDidNotRestart {
+            get {
+                return ResourceManager.GetString("Exception_ExplorerDidNotRestart", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Explorer did not exit in time..
+        /// </summary>
+        public static string Exception_ExplorerDidNotExit {
+            get {
+                return ResourceManager.GetString("Exception_ExplorerDidNotExit", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid action key.
+        /// </summary>
+        public static string Exception_InvalidActionKey {
+            get {
+                return ResourceManager.GetString("Exception_InvalidActionKey", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Command cannot be null or empty..
+        /// </summary>
+        public static string Exception_CommandCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("Exception_CommandCannotBeEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deletion of system paths is not allowed.
+        /// </summary>
+        public static string Exception_DeletionSystemPathsNotAllowed {
+            get {
+                return ResourceManager.GetString("Exception_DeletionSystemPathsNotAllowed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Wildcard deletion is restricted.
+        /// </summary>
+        public static string Exception_WildcardDeletionRestricted {
+            get {
+                return ResourceManager.GetString("Exception_WildcardDeletionRestricted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deletion of critical registry keys is not allowed.
+        /// </summary>
+        public static string Exception_DeletionCriticalRegistryNotAllowed {
+            get {
+                return ResourceManager.GetString("Exception_DeletionCriticalRegistryNotAllowed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Current user value is null.
+        /// </summary>
+        public static string Exception_CurrentUserValueNull {
+            get {
+                return ResourceManager.GetString("Exception_CurrentUserValueNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to handle is invalid.
+        /// </summary>
+        public static string Exception_HandleInvalid {
+            get {
+                return ResourceManager.GetString("Exception_HandleInvalid", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to deserialize JSON.
+        /// </summary>
+        public static string Exception_FailedToDeserializeJSON {
+            get {
+                return ResourceManager.GetString("Exception_FailedToDeserializeJSON", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid environment variable: {0}.
+        /// </summary>
+        public static string Exception_InvalidEnvVariable {
+            get {
+                return ResourceManager.GetString("Exception_InvalidEnvVariable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid environment variable value: {0}.
+        /// </summary>
+        public static string Exception_InvalidEnvVariableValue {
+            get {
+                return ResourceManager.GetString("Exception_InvalidEnvVariableValue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No supported feature found.
+        /// </summary>
+        public static string Exception_NoSupportedFeature {
+            get {
+                return ResourceManager.GetString("Exception_NoSupportedFeature", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Built in display not found.
+        /// </summary>
+        public static string Exception_BuiltInDisplayNotFound {
+            get {
+                return ResourceManager.GetString("Exception_BuiltInDisplayNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to deserialize profile..
+        /// </summary>
+        public static string Exception_FailedToDeserializeProfile {
+            get {
+                return ResourceManager.GetString("Exception_FailedToDeserializeProfile", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Brightness must be between 0 and 9.
+        /// </summary>
+        public static string Exception_BrightnessRange {
+            get {
+                return ResourceManager.GetString("Exception_BrightnessRange", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile must be between 0 and 6.
+        /// </summary>
+        public static string Exception_ProfileRange {
+            get {
+                return ResourceManager.GetString("Exception_ProfileRange", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Table data cannot be empty.
+        /// </summary>
+        public static string Exception_TableDataCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("Exception_TableDataCannotBeEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature array must have exactly 10 elements.
+        /// </summary>
+        public static string Exception_TempArrayMustBe10 {
+            get {
+                return ResourceManager.GetString("Exception_TempArrayMustBe10", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File checksum mismatch.
+        /// </summary>
+        public static string Exception_FileChecksumMismatch {
+            get {
+                return ResourceManager.GetString("Exception_FileChecksumMismatch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device property is not a GUID.
+        /// </summary>
+        public static string Exception_DevicePropertyNotGUID {
+            get {
+                return ResourceManager.GetString("Exception_DevicePropertyNotGUID", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device property is not a string.
+        /// </summary>
+        public static string Exception_DevicePropertyNotString {
+            get {
+                return ResourceManager.GetString("Exception_DevicePropertyNotString", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Offset and count exceed array bounds.
+        /// </summary>
+        public static string Exception_OffsetCountExceedArray {
+            get {
+                return ResourceManager.GetString("Exception_OffsetCountExceedArray", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile file not found..
+        /// </summary>
+        public static string Exception_ProfileFileNotFound {
+            get {
+                return ResourceManager.GetString("Exception_ProfileFileNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open Service Error.
+        /// </summary>
+        public static string Exception_OpenServiceError {
+            get {
+                return ResourceManager.GetString("Exception_OpenServiceError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open Service Manager Error.
+        /// </summary>
+        public static string Exception_OpenServiceManagerError {
+            get {
+                return ResourceManager.GetString("Exception_OpenServiceManagerError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Resource catalog is empty..
+        /// </summary>
+        public static string Exception_ResourceCatalogEmpty {
+            get {
+                return ResourceManager.GetString("Exception_ResourceCatalogEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn't deserialize effects.
+        /// </summary>
+        public static string Exception_CouldNotDeserializeEffects {
+            get {
+                return ResourceManager.GetString("Exception_CouldNotDeserializeEffects", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot read variable {0} from UEFI.
+        /// </summary>
+        public static string Exception_CannotReadVariableUEFI {
+            get {
+                return ResourceManager.GetString("Exception_CannotReadVariableUEFI", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot write variable {0} to UEFI.
+        /// </summary>
+        public static string Exception_CannotWriteVariableUEFI {
+            get {
+                return ResourceManager.GetString("Exception_CannotWriteVariableUEFI", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WMI feature value is unavailable for {0}..
+        /// </summary>
+        public static string Exception_WmiFeatureUnavailable {
+            get {
+                return ResourceManager.GetString("Exception_WmiFeatureUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Undefined value received: {0}.
+        /// </summary>
+        public static string Exception_UndefinedValueReceived {
+            get {
+                return ResourceManager.GetString("Exception_UndefinedValueReceived", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported power mode {0}.
+        /// </summary>
+        public static string Exception_UnsupportedPowerMode {
+            get {
+                return ResourceManager.GetString("Exception_UnsupportedPowerMode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Power mode '{0}' is unavailable without AC adapter..
+        /// </summary>
+        public static string Exception_PowerModeUnavailableWithoutAC {
+            get {
+                return ResourceManager.GetString("Exception_PowerModeUnavailableWithoutAC", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Command failed security validation: {0}.
+        /// </summary>
+        public static string Exception_CommandFailedSecurity {
+            get {
+                return ResourceManager.GetString("Exception_CommandFailedSecurity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Executable not in allowlist: {0}.
+        /// </summary>
+        public static string Exception_NotInAllowlist {
+            get {
+                return ResourceManager.GetString("Exception_NotInAllowlist", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dangerous pattern detected in arguments for {0}.
+        /// </summary>
+        public static string Exception_DangerousPatternInArgs {
+            get {
+                return ResourceManager.GetString("Exception_DangerousPatternInArgs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack contains unsupported file type: {0}.
+        /// </summary>
+        public static string Exception_DevicePackUnsupportedFileType {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackUnsupportedFileType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack contains an unsafe path: {0}.
+        /// </summary>
+        public static string Exception_DevicePackUnsafePath {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackUnsafePath", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack contains a Windows-style path separator: {0}.
+        /// </summary>
+        public static string Exception_DevicePackWindowsPathSep {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackWindowsPathSep", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack '{0}' is not available in the online resource catalog..
+        /// </summary>
+        public static string Exception_DevicePackNotAvailable {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackNotAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack '{0}' does not contain {1}..
+        /// </summary>
+        public static string Exception_DevicePackNoManifest {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackNoManifest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack '{0}' manifest is empty..
+        /// </summary>
+        public static string Exception_DevicePackManifestEmpty {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackManifestEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack id mismatch. Expected '{0}', got '{1}'..
+        /// </summary>
+        public static string Exception_DevicePackIdMismatch {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackIdMismatch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack vendor mismatch. Expected '{0}', got '{1}'..
+        /// </summary>
+        public static string Exception_DevicePackVendorMismatch {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackVendorMismatch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack '{0}' has an empty download URL..
+        /// </summary>
+        public static string Exception_DevicePackUrlEmpty {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackUrlEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device pack '{0}' is missing SHA256 metadata..
+        /// </summary>
+        public static string Exception_DevicePackSha256Missing {
+            get {
+                return ResourceManager.GetString("Exception_DevicePackSha256Missing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown battery state: {0}.
+        /// </summary>
+        public static string Exception_UnknownBatteryState {
+            get {
+                return ResourceManager.GetString("Exception_UnknownBatteryState", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to verify {0} state was set to {1}..
+        /// </summary>
+        public static string Exception_FailedVerifyState {
+            get {
+                return ResourceManager.GetString("Exception_FailedVerifyState", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DeviceIoControl returned 0, last error: {0}.
+        /// </summary>
+        public static string Exception_DeviceIoControlError {
+            get {
+                return ResourceManager.GetString("Exception_DeviceIoControlError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Key {0} could not be opened.
+        /// </summary>
+        public static string Exception_KeyCouldNotBeOpened {
+            get {
+                return ResourceManager.GetString("Exception_KeyCouldNotBeOpened", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Has to be readable.
+        /// </summary>
+        public static string Exception_HasToBeReadable {
+            get {
+                return ResourceManager.GetString("Exception_HasToBeReadable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Has to be writable.
+        /// </summary>
+        public static string Exception_HasToBeWritable {
+            get {
+                return ResourceManager.GetString("Exception_HasToBeWritable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Device handle is not available.
+        /// </summary>
+        public static string Exception_DeviceHandleNotAvailable {
+            get {
+                return ResourceManager.GetString("Exception_DeviceHandleNotAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Main Module cannot be null.
+        /// </summary>
+        public static string Exception_MainModuleNull {
+            get {
+                return ResourceManager.GetString("Exception_MainModuleNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Current process file name cannot be null.
+        /// </summary>
+        public static string Exception_CurrentProcessFileNameNull {
+            get {
+                return ResourceManager.GetString("Exception_CurrentProcessFileNameNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Current process file version cannot be null.
+        /// </summary>
+        public static string Exception_CurrentProcessFileVersionNull {
+            get {
+                return ResourceManager.GetString("Exception_CurrentProcessFileVersionNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloaded resource failed SHA256 validation. Expected {0}, got {1}..
+        /// </summary>
+        public static string Exception_SHA256ValidationFailed {
+            get {
+                return ResourceManager.GetString("Exception_SHA256ValidationFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to IoCContainer already initialized.
+        /// </summary>
+        public static string Exception_IoCAlreadyInitialized {
+            get {
+                return ResourceManager.GetString("Exception_IoCAlreadyInitialized", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to IoCContainer must be initialized first [type={0}].
+        /// </summary>
+        public static string Exception_IoCMustBeInitialized {
+            get {
+                return ResourceManager.GetString("Exception_IoCMustBeInitialized", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Fan table length must be 10.
+        /// </summary>
+        public static string Exception_FanTableLength {
+            get {
+                return ResourceManager.GetString("Exception_FanTableLength", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Tag name cannot be null or empty.
+        /// </summary>
+        public static string Exception_TagNameNullOrEmpty {
+            get {
+                return ResourceManager.GetString("Exception_TagNameNullOrEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to parse version from tag name: &apos;{0}&apos;. Expected format: &apos;3.0.1&apos;.
+        /// </summary>
+        public static string Exception_UnparseableVersionFormat {
+            get {
+                return ResourceManager.GetString("Exception_UnparseableVersionFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Preset with ID {0} not found.
+        /// </summary>
+        public static string Exception_GodModePresetNotFound {
+            get {
+                return ResourceManager.GetString("Exception_GodModePresetNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No God Mode preset could be created..
+        /// </summary>
+        public static string Exception_NoGodModePresetCreated {
+            get {
+                return ResourceManager.GetString("Exception_NoGodModePresetCreated", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No God Mode preset is available..
+        /// </summary>
+        public static string Exception_NoGodModePresetAvailable {
+            get {
+                return ResourceManager.GetString("Exception_NoGodModePresetAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No supported version found.
+        /// </summary>
+        public static string Exception_NoSupportedVersionFound {
+            get {
+                return ResourceManager.GetString("Exception_NoSupportedVersionFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No supported controller found.
+        /// </summary>
+        public static string Exception_NoSupportedControllerFound {
+            get {
+                return ResourceManager.GetString("Exception_NoSupportedControllerFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid settings filename: {0}.
+        /// </summary>
+        public static string Exception_InvalidSettingsFilename {
+            get {
+                return ResourceManager.GetString("Exception_InvalidSettingsFilename", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings path escapes allowed directory: {0}.
+        /// </summary>
+        public static string Exception_SettingsPathEscapesAllowedDir {
+            get {
+                return ResourceManager.GetString("Exception_SettingsPathEscapesAllowedDir", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to register changes on task {0} in {1} [type={2}].
+        /// </summary>
+        public static string Exception_FailedToRegisterTask {
+            get {
+                return ResourceManager.GetString("Exception_FailedToRegisterTask", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read the {0} setting.
+        /// </summary>
+        public static string Exception_CouldNotReadRegistrySetting {
+            get {
+                return ResourceManager.GetString("Exception_CouldNotReadRegistrySetting", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get color &quot;{0}&quot;.
+        /// </summary>
+        public static string Exception_CouldNotGetColor {
+            get {
+                return ResourceManager.GetString("Exception_CouldNotGetColor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get handle for driver: {0}.
+        /// </summary>
+        public static string Exception_DriverHandleFailed {
+            get {
+                return ResourceManager.GetString("Exception_DriverHandleFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Error getting driver handle: {0}.
+        /// </summary>
+        public static string Exception_DriverHandleError {
+            get {
+                return ResourceManager.GetString("Exception_DriverHandleError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DeviceIoControl failed with error: {0}.
+        /// </summary>
+        public static string Exception_DeviceIoControlErrorWithCode {
+            get {
+                return ResourceManager.GetString("Exception_DeviceIoControlErrorWithCode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Error sending driver command: controlCode={0}.
+        /// </summary>
+        public static string Exception_DriverCommandError {
+            get {
+                return ResourceManager.GetString("Exception_DriverCommandError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WMI class or namespace not available [scope={0}, query={1}].
+        /// </summary>
+        public static string Exception_WmiClassNotAvailable {
+            get {
+                return ResourceManager.GetString("Exception_WmiClassNotAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Read failed: {0} [scope={1}, query={2}].
+        /// </summary>
+        public static string Exception_WmiReadFailed {
+            get {
+                return ResourceManager.GetString("Exception_WmiReadFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Call failed: {0} [scope={1}, query={2}, methodName={3}].
+        /// </summary>
+        public static string Exception_WmiCallFailed {
+            get {
+                return ResourceManager.GetString("Exception_WmiCallFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Call failed: {0}. [scope={1}, query={2}, methodName={3}].
+        /// </summary>
+        public static string Exception_WmiCallFailedDot {
+            get {
+                return ResourceManager.GetString("Exception_WmiCallFailedDot", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No results in query.
+        /// </summary>
+        public static string Exception_WmiNoResults {
+            get {
+                return ResourceManager.GetString("Exception_WmiNoResults", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid type of formatted.
+        /// </summary>
+        public static string Exception_InvalidTypeOfFormatted {
+            get {
+                return ResourceManager.GetString("Exception_InvalidTypeOfFormatted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update package integrity check failed: no SHA256 hash available for update {0}. Integrity check is required for security..
+        /// </summary>
+        public static string Exception_UpdateNoSHA256Hash {
+            get {
+                return ResourceManager.GetString("Exception_UpdateNoSHA256Hash", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update package integrity check failed. Expected SHA256: {0}, Computed: {1}.
+        /// </summary>
+        public static string Exception_UpdateSHA256Mismatch {
+            get {
+                return ResourceManager.GetString("Exception_UpdateSHA256Mismatch", resourceCulture);
+            }
+        }
     }
 }

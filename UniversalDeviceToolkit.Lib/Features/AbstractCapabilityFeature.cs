@@ -2,6 +2,7 @@ using System;
 using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
@@ -40,12 +41,12 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         }
         catch (ManagementException ex)
         {
-            throw new InvalidOperationException($"WMI feature value is unavailable for {capabilityID}.", ex);
+            throw ExceptionHelper.WmiFeatureUnavailable(capabilityID, ex);
         }
 
         var result = (T)Enum.ToObject(typeof(T), value);
         if (!Enum.IsDefined(result))
-            throw new InvalidOperationException($"Undefined value received: {result} [type={typeof(T)}, feature={GetType().Name}]");
+            throw ExceptionHelper.UndefinedValueReceived(result);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State is {result} [feature={GetType().Name}]");

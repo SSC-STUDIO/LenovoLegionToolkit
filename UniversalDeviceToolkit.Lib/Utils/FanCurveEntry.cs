@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;
 using UniversalFanControl.Lib.Generic.Api;
 
@@ -88,13 +90,13 @@ public class FanCurveEntry : INotifyPropertyChanged
     public FanTable ToFanTable(FanTableData[] tableData)
     {
         if (tableData.Length == 0)
-            throw new ArgumentException("Table data cannot be empty", nameof(tableData));
+            throw ExceptionHelper.TableDataCannotBeEmpty(nameof(tableData));
 
         var temps = tableData[0].Temps;
         var fanSpeeds = tableData[0].FanSpeeds;
 
         if (temps.Length != 10)
-            throw new ArgumentException("Temperature array must have exactly 10 elements", nameof(tableData));
+            throw ExceptionHelper.TempArrayMustBe10(nameof(tableData));
 
         var result = new ushort[10];
         var sortedNodes = CurveNodes.OrderBy(n => n.Temperature).ToList();
@@ -168,7 +170,7 @@ public class FanCurveEntry : INotifyPropertyChanged
     {
         dynamic? data = JsonConvert.DeserializeObject(json);
         if (data == null)
-            throw new InvalidOperationException("Failed to deserialize JSON");
+            throw ExceptionHelper.FailedToDeserializeJSON();
 
         var entry = new FanCurveEntry();
         

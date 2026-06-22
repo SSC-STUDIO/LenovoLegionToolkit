@@ -2,6 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Storage.FileSystem;
@@ -31,13 +33,13 @@ public class DriverWrapper : IDriverWrapper
                 null);
 
             if (handle.IsInvalid)
-                throw new InvalidOperationException($"Failed to get handle for driver: {driverPath}");
+                throw ExceptionHelper.DriverHandleFailed(driverPath);
 
             return handle;
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error getting driver handle: {driverPath}", ex);
+            throw ExceptionHelper.DriverHandleError(driverPath, ex);
         }
     }
 
@@ -56,11 +58,11 @@ public class DriverWrapper : IDriverWrapper
             }
 
             var error = Marshal.GetLastWin32Error();
-            throw new InvalidOperationException($"DeviceIoControl failed with error: {error}");
+            throw ExceptionHelper.DeviceIoControlErrorWithCode(error);
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error sending driver command: controlCode={controlCode}", ex);
+            throw ExceptionHelper.DriverCommandError(controlCode, ex);
         }
     }
 
@@ -77,11 +79,11 @@ public class DriverWrapper : IDriverWrapper
             }
 
             var error = Marshal.GetLastWin32Error();
-            throw new InvalidOperationException($"DeviceIoControl failed with error: {error}");
+            throw ExceptionHelper.DeviceIoControlErrorWithCode(error);
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error sending driver command: controlCode={controlCode}", ex);
+            throw ExceptionHelper.DriverCommandError(controlCode, ex);
         }
     }
 

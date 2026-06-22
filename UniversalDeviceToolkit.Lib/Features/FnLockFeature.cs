@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
@@ -15,7 +17,7 @@ public class FnLockFeature() : AbstractDriverFeature<FnLockState>(Drivers.GetEne
         {
             FnLockState.On => true,
             FnLockState.Off => false,
-            _ => throw new InvalidOperationException("Invalid state"),
+            _ => throw ExceptionHelper.InvalidState(),
         };
 
         var value = lockOn ? new uint[] { 0xE } : [0xF];

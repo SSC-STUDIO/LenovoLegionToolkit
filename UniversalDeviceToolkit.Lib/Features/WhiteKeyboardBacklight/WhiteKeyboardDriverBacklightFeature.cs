@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 
@@ -30,7 +32,7 @@ public class WhiteKeyboardDriverBacklightFeature()
             WhiteKeyboardBacklightState.Off => new uint[] { 0x00023 },
             WhiteKeyboardBacklightState.Low => [0x10023],
             WhiteKeyboardBacklightState.High => [0x20023],
-            _ => throw new InvalidOperationException("Invalid state"),
+            _ => throw ExceptionHelper.InvalidState(),
         };
         return Task.FromResult(result);
     }
@@ -42,7 +44,7 @@ public class WhiteKeyboardDriverBacklightFeature()
             0x1 => WhiteKeyboardBacklightState.Off,
             0x3 => WhiteKeyboardBacklightState.Low,
             0x5 => WhiteKeyboardBacklightState.High,
-            _ => throw new InvalidOperationException("Invalid state"),
+            _ => throw ExceptionHelper.InvalidState(),
         };
         return Task.FromResult(result);
     }

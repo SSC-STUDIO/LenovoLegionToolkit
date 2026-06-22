@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
@@ -23,7 +25,7 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
             BatteryState.Conservation => LastState == BatteryState.RapidCharge ? new uint[] { 0x8, 0x3 } : [0x3],
             BatteryState.Normal => LastState == BatteryState.Conservation ? [0x5] : [0x8],
             BatteryState.RapidCharge => LastState == BatteryState.Conservation ? [0x5, 0x7] : [0x7],
-            _ => throw new InvalidOperationException("Invalid state")
+            _ => throw ExceptionHelper.InvalidState()
         };
         return Task.FromResult(result);
     }
@@ -38,7 +40,7 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
         if (state.GetNthBit(29))
             return Task.FromResult(BatteryState.Conservation);
 
-        throw new InvalidOperationException($"Unknown battery state: {state} [bits={Convert.ToString(state, 2)}]");
+        throw ExceptionHelper.UnknownBatteryState(state, Convert.ToString(state, 2));
     }
 
     public override async Task SetStateAsync(BatteryState state)

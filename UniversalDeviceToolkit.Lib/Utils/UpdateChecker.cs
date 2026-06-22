@@ -9,7 +9,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 using Octokit;
 using Octokit.Internal;
@@ -25,6 +27,12 @@ public class UpdateChecker
     private Version? _cachedLatestVersion;
     private DateTime _cachedLatestVersionTime = DateTime.MinValue;
     private const int VersionCacheDurationMinutes = 5;
+
+    private static readonly HashSet<string> TrustedRepositoryOwners = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SSC-STUDIO",
+        "LenovoLegionToolkit"
+    };
 
     private DateTime _lastUpdate;
     private TimeSpan _minimumTimeSpanForRefresh;
@@ -80,13 +88,30 @@ public class UpdateChecker
                 var githubClient = new GitHubClient(connection);
                 
                 // Get update repository from settings, fallback to default if not configured
+#if DEBUG
                 var repositoryOwner = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) 
                     ? _updateCheckSettings.Store.UpdateRepositoryOwner 
                     : AppIdentity.RepositoryOwner;
                 var repositoryName = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryName) 
                     ? _updateCheckSettings.Store.UpdateRepositoryName 
                     : AppIdentity.RepositoryName;
-                
+#else
+                // Release builds: always use hardcoded trusted repository to prevent supply-chain attacks
+                var repositoryOwner = AppIdentity.RepositoryOwner;
+                var repositoryName = AppIdentity.RepositoryName;
+#endif
+
+                // Validate repository owner against trusted allowlist
+                if (!TrustedRepositoryOwners.Contains(repositoryOwner))
+                {
+                    var warning = $"Untrusted repository owner: {repositoryOwner}/{repositoryName}. Allowed: {string.Join(", ", TrustedRepositoryOwners)}";
+                    Log.Instance.Warning(warning);
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace(warning);
+                    Status = UpdateCheckStatus.Error;
+                    return null;
+                }
+
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking updates from repository: {repositoryOwner}/{repositoryName}");
                 
@@ -186,10 +211,10 @@ public class UpdateChecker
             var latestUpdate = _updates.OrderByDescending(u => u.Version).FirstOrDefault();
 
             if (latestUpdate.Equals(default))
-                throw new InvalidOperationException("No updates available");
+                throw ExceptionHelper.NoUpdatesAvailable();
 
             if (latestUpdate.Url is null)
-                throw new InvalidOperationException("Setup file URL could not be found");
+                throw ExceptionHelper.SetupFileUrlNotFound();
 
             await using var fileStream = File.OpenWrite(tempPath);
             using var httpClient = _httpClientFactory.Create();
@@ -205,7 +230,7 @@ public class UpdateChecker
     /// <summary>
     /// Validate the integrity of the downloaded update package using SHA256 hash
     /// </summary>
-    private static async Task ValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient, CancellationToken cancellationToken)
+    private static async Task ValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient, CancellationToken cancellationToken, bool isIntegrityCheckRequired = true)
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Validating update package integrity for {filePath}");
@@ -221,13 +246,29 @@ public class UpdateChecker
 
         var expectedHash = await ResolveExpectedHashAsync(update, httpClient, cancellationToken).ConfigureAwait(false);
 
-        // If no expected hash is available, skip validation (backward compatibility)
+        // If no expected hash is available, enforce integrity check unless explicitly waived
         if (string.IsNullOrEmpty(expectedHash))
         {
+            if (isIntegrityCheckRequired)
+            {
+#if !DEBUG
+                var missingHashError = $"Update package integrity check failed: no SHA256 hash available for update {update.Version}. Integrity check is required for security.";
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace(missingHashError);
+
+                // Delete the unverifiable file
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch { /* Ignore deletion errors */ }
+
+                throw ExceptionHelper.UpdateNoSHA256Hash(update.Version.ToString());
+#endif
+            }
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"No SHA256 hash available for validation. Skipping integrity check.");
-
-            // Log warning but don't block the update
             Log.Instance.Warning($"Update package integrity verification skipped: no SHA256 hash available for update {update.Version}");
             return;
         }
@@ -235,10 +276,8 @@ public class UpdateChecker
         // Compare hashes
         if (!computedHash.Equals(expectedHash, StringComparison.OrdinalIgnoreCase))
         {
-            var errorMessage = $"Update package integrity check failed. Expected SHA256: {expectedHash}, Computed: {computedHash}";
-
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace(errorMessage);
+                Log.Instance.Trace($"Update package integrity check failed. Expected SHA256: {expectedHash}, Computed: {computedHash}");
 
             // Delete the corrupted file
             try
@@ -247,7 +286,7 @@ public class UpdateChecker
             }
             catch { /* Ignore deletion errors */ }
 
-            throw new InvalidDataException(errorMessage);
+            throw ExceptionHelper.UpdateSHA256Mismatch(expectedHash, computedHash);
         }
 
         if (Log.Instance.IsTraceEnabled)

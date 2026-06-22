@@ -18,6 +18,15 @@ public partial class UnsupportedWindow : FluentWindow
 
     public Task<bool> ShouldContinue => _taskCompletionSource.Task;
 
+    public static readonly DependencyProperty IsCountdownCompleteProperty =
+        DependencyProperty.Register(nameof(IsCountdownComplete), typeof(bool), typeof(UnsupportedWindow), new PropertyMetadata(false));
+
+    public bool IsCountdownComplete
+    {
+        get => (bool)GetValue(IsCountdownCompleteProperty);
+        set => SetValue(IsCountdownCompleteProperty, value);
+    }
+
     public UnsupportedWindow(MachineInformation mi)
     {
         InitializeComponent();
@@ -73,7 +82,7 @@ public partial class UnsupportedWindow : FluentWindow
         }
 
         continueButton.Content = continueText;
-        continueButton.IsEnabled = true;
+        IsCountdownComplete = true;
     }
 
     private Wpf.Ui.Controls.Button? GetContinueButton()

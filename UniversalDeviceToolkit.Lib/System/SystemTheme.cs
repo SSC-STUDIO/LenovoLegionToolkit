@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.System;
 
@@ -18,7 +20,7 @@ public static partial class SystemTheme
     {
         var registryValue = Registry.GetValue(REGISTRY_HIVE, PERSONALIZE_REGISTRY_PATH, APPS_USE_LIGHT_THEME_REGISTRY_KEY, -1);
         if (registryValue == -1)
-            throw new InvalidOperationException($"Couldn't read the {APPS_USE_LIGHT_THEME_REGISTRY_KEY} setting");
+            throw ExceptionHelper.CouldNotReadRegistrySetting(APPS_USE_LIGHT_THEME_REGISTRY_KEY);
 
         return registryValue == 0;
     }
@@ -27,7 +29,7 @@ public static partial class SystemTheme
     {
         var registryValue = Registry.GetValue(REGISTRY_HIVE, DWM_REGISTRY_PATH, DWM_COLORIZATION_COLOR_REGISTRY_KEY, -1);
         if (registryValue == -1)
-            throw new InvalidOperationException($"Couldn't read the {DWM_COLORIZATION_COLOR_REGISTRY_KEY} setting");
+            throw ExceptionHelper.CouldNotReadRegistrySetting(DWM_COLORIZATION_COLOR_REGISTRY_KEY);
 
         var bytes = BitConverter.GetBytes(registryValue);
         return new(bytes[2], bytes[1], bytes[0]);
@@ -44,7 +46,7 @@ public static partial class SystemTheme
         var colorType = GetImmersiveColorTypeFromName("Immersive" + name);
 
         if (colorType == 0xFFFFFFFF)
-            throw new Win32Exception($"Couldn't get color \"{name}\"");
+            throw ExceptionHelper.CouldNotGetColor(name);
 
         var activeColorSet = GetImmersiveUserColorSetPreference(false, false);
         var nativeColor = GetImmersiveColorFromColorSetEx(activeColorSet, colorType, false, 0);

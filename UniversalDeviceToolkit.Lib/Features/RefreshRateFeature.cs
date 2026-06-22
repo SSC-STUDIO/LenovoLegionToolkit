@@ -79,7 +79,7 @@ public class RefreshRateFeature : IFeature<RefreshRate>
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Built in display not found");
-            throw new InvalidOperationException("Built in display not found");
+            throw ExceptionHelper.BuiltInDisplayNotFound();
         }
 
         var currentSettings = display.CurrentSetting;

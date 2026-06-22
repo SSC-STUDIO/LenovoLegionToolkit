@@ -32,6 +32,15 @@ public class PluginRepositoryService : IDisposable
         WriteIndented = true
     };
 
+    private const string StoreCacheAppSeed = "UDT_PluginStoreCache_v1";
+    private static readonly byte[] StoreCacheHmacKey;
+
+    static PluginRepositoryService()
+    {
+        using var derive = new HMACSHA256(Encoding.UTF8.GetBytes(StoreCacheAppSeed));
+        StoreCacheHmacKey = derive.ComputeHash(Encoding.UTF8.GetBytes(Environment.MachineName));
+    }
+
     private static readonly string[] InstalledManifestFileNames =
     [
         "plugin.manifest.json",
@@ -66,6 +75,19 @@ public class PluginRepositoryService : IDisposable
     private static readonly TimeSpan AvailablePluginsMemoryCacheDuration = TimeSpan.FromMinutes(15);
     private static readonly TimeSpan StoreDiskCacheDuration = TimeSpan.FromHours(6);
 
+    private static bool IsProductionMode
+    {
+        get
+        {
+#if DEBUG
+            return false;
+#else
+            return true;
+#endif
+        }
+    }
+
+    private bool _forceAllowFileUrls;
     private readonly object _availablePluginsCacheLock = new();
     private List<PluginManifest>? _availablePluginsMemoryCache;
     private DateTimeOffset _availablePluginsMemoryCacheUpdatedAt;
@@ -75,9 +97,15 @@ public class PluginRepositoryService : IDisposable
     public event EventHandler<string>? DownloadFailed;
 
     public PluginRepositoryService(IPluginManager pluginManager, HttpClientFactory httpClientFactory)
+        : this(pluginManager, httpClientFactory, false)
+    {
+    }
+
+    public PluginRepositoryService(IPluginManager pluginManager, HttpClientFactory httpClientFactory, bool forceAllowFileUrls)
     {
         _pluginManager = pluginManager;
         _httpClient = httpClientFactory.Create();
+        _forceAllowFileUrls = forceAllowFileUrls;
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "UniversalDeviceToolkit-PluginManager");
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 
@@ -354,6 +382,13 @@ public class PluginRepositoryService : IDisposable
 
             if (candidateUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
             {
+                if (IsProductionMode && !_forceAllowFileUrls)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Blocked file:// URL in production mode for plugin {manifest.Id}: {candidateUrl}");
+                    return false;
+                }
+
                 var filePath = new Uri(candidateUrl).LocalPath;
                 if (!File.Exists(filePath))
                 {
@@ -469,6 +504,14 @@ public class PluginRepositoryService : IDisposable
         }
     }
 
+    private static readonly HashSet<string> AllowedDownloadHosts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "github.com",
+        "raw.githubusercontent.com",
+        "jsdelivr.net",
+        "cdn.jsdelivr.net",
+    };
+
     private List<string> GetDownloadUrlCandidates(PluginManifest manifest)
     {
         var candidates = new List<string>();
@@ -512,7 +555,22 @@ public class PluginRepositoryService : IDisposable
         return candidates
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(IsUrlAllowed)
             .ToList();
+    }
+
+    private static bool IsUrlAllowed(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return false;
+
+        if (uri.Scheme.Equals(Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return AllowedDownloadHosts.Contains(uri.Host);
     }
 
     private async Task<bool> TryDownloadPluginWithNativeCurlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
@@ -880,7 +938,12 @@ public class PluginRepositoryService : IDisposable
             var hash = await sha256.ComputeHashAsync(stream).ConfigureAwait(false);
             var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
 
-            if (!string.IsNullOrEmpty(manifest.FileHash) && !hashString.Equals(manifest.FileHash, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(manifest.FileHash))
+            {
+                if (IsProductionMode)
+                    Log.Instance.Warning($"Plugin {manifest.Id} has no fileHash in store manifest; skipping integrity verification.");
+            }
+            else if (!hashString.Equals(manifest.FileHash, StringComparison.OrdinalIgnoreCase))
             {
                 Log.Instance.Warning($"Hash mismatch for {manifest.Id}. Expected: {manifest.FileHash}, Got: {hashString}");
                 return false;
@@ -1506,7 +1569,17 @@ public class PluginRepositoryService : IDisposable
             if (!string.IsNullOrWhiteSpace(directory))
                 Directory.CreateDirectory(directory);
 
-            File.WriteAllText(_storeCachePath, storeJson, Encoding.UTF8);
+            var dataBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(storeJson));
+            var hmac = ComputeHmac(dataBase64);
+
+            var envelope = new StoreCacheEnvelope
+            {
+                Data = dataBase64,
+                Hmac = hmac,
+            };
+
+            var envelopeJson = JsonSerializer.Serialize(envelope);
+            File.WriteAllText(_storeCachePath, envelopeJson, Encoding.UTF8);
         }
         catch (Exception ex)
         {
@@ -1522,7 +1595,8 @@ public class PluginRepositoryService : IDisposable
             if (!File.Exists(_storeCachePath))
                 return null;
 
-            return File.ReadAllText(_storeCachePath, Encoding.UTF8);
+            var envelopeJson = File.ReadAllText(_storeCachePath, Encoding.UTF8);
+            return TryDecodeStoreCacheEnvelope(envelopeJson);
         }
         catch (Exception ex)
         {
@@ -1543,7 +1617,8 @@ public class PluginRepositoryService : IDisposable
             if (cacheAge > StoreDiskCacheDuration)
                 return null;
 
-            return File.ReadAllText(_storeCachePath, Encoding.UTF8);
+            var envelopeJson = File.ReadAllText(_storeCachePath, Encoding.UTF8);
+            return TryDecodeStoreCacheEnvelope(envelopeJson);
         }
         catch (Exception ex)
         {
@@ -1551,6 +1626,44 @@ public class PluginRepositoryService : IDisposable
                 Log.Instance.Trace($"Failed to read fresh plugin store cache at {_storeCachePath}: {ex.Message}", ex);
             return null;
         }
+    }
+
+    private static string? TryDecodeStoreCacheEnvelope(string envelopeJson)
+    {
+        try
+        {
+            var envelope = JsonSerializer.Deserialize<StoreCacheEnvelope>(envelopeJson);
+            if (envelope is null || string.IsNullOrWhiteSpace(envelope.Data) || string.IsNullOrWhiteSpace(envelope.Hmac))
+                return null;
+
+            var computedHmac = ComputeHmac(envelope.Data);
+            if (!string.Equals(envelope.Hmac, computedHmac, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("HMAC mismatch in plugin store cache; discarding cache.");
+
+                return null;
+            }
+
+            return Encoding.UTF8.GetString(Convert.FromBase64String(envelope.Data));
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string ComputeHmac(string data)
+    {
+        using var hmac = new HMACSHA256(StoreCacheHmacKey);
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    private sealed class StoreCacheEnvelope
+    {
+        public string Data { get; set; } = string.Empty;
+        public string Hmac { get; set; } = string.Empty;
     }
 
     private static void DeletePartialDownload(string destinationPath)

@@ -1,5 +1,6 @@
-﻿﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.ServiceProcess;
+using LenovoLegionToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.System.Services;
 
@@ -11,11 +12,11 @@ internal static class ServiceControllerExtension
     {
         using var scManagerHandle = PInvoke.OpenSCManager(null as string, null, PInvoke.SC_MANAGER_ALL_ACCESS);
         if (scManagerHandle.IsInvalid)
-            throw new ExternalException("Open Service Manager Error");
+            throw ExceptionHelper.OpenServiceManagerError();
 
         using var serviceHandle = PInvoke.OpenService(scManagerHandle, svc.ServiceName, PInvoke.SERVICE_CHANGE_CONFIG);
         if (serviceHandle.IsInvalid)
-            throw new ExternalException("Open Service Error");
+            throw ExceptionHelper.OpenServiceError();
 
         var result = PInvoke.ChangeServiceConfig(serviceHandle,
             (ENUM_SERVICE_TYPE)PInvoke.SERVICE_NO_CHANGE,

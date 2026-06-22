@@ -16,6 +16,51 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private readonly GPUController _gpuController = IoCContainer.Resolve<GPUController>();
     private readonly NativeWindowsMessageListener _nativeWindowsMessageListener = IoCContainer.Resolve<NativeWindowsMessageListener>();
 
+    public static readonly DependencyProperty IsGpuActiveProperty =
+        DependencyProperty.Register(nameof(IsGpuActive), typeof(bool), typeof(DiscreteGPUControl), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty IsGpuInactiveProperty =
+        DependencyProperty.Register(nameof(IsGpuInactive), typeof(bool), typeof(DiscreteGPUControl), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty IsGpuPoweredOffProperty =
+        DependencyProperty.Register(nameof(IsGpuPoweredOff), typeof(bool), typeof(DiscreteGPUControl), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty CanDeactivateGpuProperty =
+        DependencyProperty.Register(nameof(CanDeactivateGpu), typeof(bool), typeof(DiscreteGPUControl), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty IsGpuContentReadyProperty =
+        DependencyProperty.Register(nameof(IsGpuContentReady), typeof(bool), typeof(DiscreteGPUControl), new PropertyMetadata(false));
+
+    public bool IsGpuActive
+    {
+        get => (bool)GetValue(IsGpuActiveProperty);
+        set => SetValue(IsGpuActiveProperty, value);
+    }
+
+    public bool IsGpuInactive
+    {
+        get => (bool)GetValue(IsGpuInactiveProperty);
+        set => SetValue(IsGpuInactiveProperty, value);
+    }
+
+    public bool IsGpuPoweredOff
+    {
+        get => (bool)GetValue(IsGpuPoweredOffProperty);
+        set => SetValue(IsGpuPoweredOffProperty, value);
+    }
+
+    public bool CanDeactivateGpu
+    {
+        get => (bool)GetValue(CanDeactivateGpuProperty);
+        set => SetValue(CanDeactivateGpuProperty, value);
+    }
+
+    public bool IsGpuContentReady
+    {
+        get => (bool)GetValue(IsGpuContentReadyProperty);
+        set => SetValue(IsGpuContentReadyProperty, value);
+    }
+
     public DiscreteGPUControl()
     {
         InitializeComponent();
@@ -33,13 +78,13 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         if (!_gpuController.IsSupported())
         {
             Visibility = Visibility.Collapsed;
-            _content.Visibility = Visibility.Hidden;
+            IsGpuContentReady = false;
             await _gpuController.StopAsync();
             return;
         }
 
         Visibility = Visibility.Visible;
-        _content.Visibility = Visibility.Visible;
+        IsGpuContentReady = true;
 
         await _gpuController.StartAsync();
     }
@@ -58,7 +103,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         if (IsVisible)
             return;
 
-        _content.Visibility = Visibility.Hidden;
+        IsGpuContentReady = false;
 
         await _gpuController.StopAsync();
     }
@@ -70,8 +115,9 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         if (e.State is GPUState.Unknown or GPUState.NvidiaGpuNotFound)
         {
-            _discreteGPUStatusActiveIndicator.Visibility = Visibility.Collapsed;
-            _discreteGPUStatusInactiveIndicator.Visibility = Visibility.Collapsed;
+            IsGpuActive = false;
+            IsGpuInactive = false;
+            IsGpuPoweredOff = false;
             _discreteGPUStatusDescription.Text = "-";
             _gpuInfoButton.ToolTip = null;
             _gpuInfoButton.IsEnabled = false;
@@ -100,33 +146,33 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
                 processesStringBuilder.Append(Resource.DiscreteGPUControl_NoProcesses);
             }
 
-            _discreteGPUStatusActiveIndicator.Visibility = Visibility.Visible;
-            _discreteGPUStatusInactiveIndicator.Visibility = Visibility.Collapsed;
-            _discreteGPUStatusPoweredOffIndicator.Visibility = Visibility.Collapsed;
+            IsGpuActive = true;
+            IsGpuInactive = false;
+            IsGpuPoweredOff = false;
             _discreteGPUStatusDescription.Text = Resource.Active;
             _gpuInfoButton.ToolTip = tooltipStringBuilder.AppendLine().AppendLine().Append(processesStringBuilder).ToString();
             _gpuInfoButton.IsEnabled = true;
         }
         else if (e.State is GPUState.PoweredOff)
         {
-            _discreteGPUStatusActiveIndicator.Visibility = Visibility.Collapsed;
-            _discreteGPUStatusInactiveIndicator.Visibility = Visibility.Collapsed;
-            _discreteGPUStatusPoweredOffIndicator.Visibility = Visibility.Visible;
+            IsGpuActive = false;
+            IsGpuInactive = false;
+            IsGpuPoweredOff = true;
             _discreteGPUStatusDescription.Text = Resource.PoweredOff;
             _gpuInfoButton.ToolTip = tooltipStringBuilder.ToString();
             _gpuInfoButton.IsEnabled = true;
         }
         else
         {
-            _discreteGPUStatusActiveIndicator.Visibility = Visibility.Collapsed;
-            _discreteGPUStatusInactiveIndicator.Visibility = Visibility.Visible;
-            _discreteGPUStatusPoweredOffIndicator.Visibility = Visibility.Collapsed;
+            IsGpuActive = false;
+            IsGpuInactive = true;
+            IsGpuPoweredOff = false;
             _discreteGPUStatusDescription.Text = Resource.Inactive;
             _gpuInfoButton.ToolTip = tooltipStringBuilder.ToString();
             _gpuInfoButton.IsEnabled = true;
         }
 
-        _deactivateGPUButton.IsEnabled = e.State is GPUState.Active or GPUState.Inactive;
+        CanDeactivateGpu = e.State is GPUState.Active or GPUState.Inactive;
         _killAppsMenuItem.IsEnabled = e.State is GPUState.Active;
         _restartGPUMenuItem.IsEnabled = e.State is GPUState.Active or GPUState.Inactive;
 
@@ -141,7 +187,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             _deactivateGPUButtonIcon.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
         }
 
-        _content.Visibility = Visibility.Visible;
+        IsGpuContentReady = true;
     });
 
     private void DeactivateGPUButton_Click(object sender, RoutedEventArgs e)
@@ -156,7 +202,8 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
     private async void KillAppsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        _deactivateGPUButton.IsEnabled = false;
+        var originalCanDeactivate = CanDeactivateGpu;
+        CanDeactivateGpu = false;
 
         try
         {
@@ -169,13 +216,14 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         }
         finally
         {
-            _deactivateGPUButton.IsEnabled = true;
+            CanDeactivateGpu = originalCanDeactivate;
         }
     }
 
     private async void RestartGPUMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        _deactivateGPUButton.IsEnabled = false;
+        var originalCanDeactivate = CanDeactivateGpu;
+        CanDeactivateGpu = false;
 
         try
         {
@@ -188,7 +236,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         }
         finally
         {
-            _deactivateGPUButton.IsEnabled = true;
+            CanDeactivateGpu = originalCanDeactivate;
         }
     }
 }

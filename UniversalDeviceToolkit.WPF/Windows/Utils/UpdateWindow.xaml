@@ -21,6 +21,10 @@
     WindowStartupLocation="CenterOwner">
 
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -102,7 +106,7 @@
                     IsIndeterminate="True"
                     Maximum="1"
                     Minimum="0"
-                    Visibility="Hidden" />
+                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
 
                 <wpfui:Button
                     x:Name="_downloadButton"
@@ -112,9 +116,11 @@
                     Margin="0,0,0,16"
                     HorizontalAlignment="Center"
                     Appearance="Primary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Update}"
                     Click="DownloadButton_Click"
                     Content="{x:Static resources:Resource.Update}"
-                    IsEnabled="False" />
+                    IsEnabled="{Binding HasUpdates, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
 
                 <wpfui:Button
                     x:Name="_cancelDownloadButton"
@@ -123,10 +129,11 @@
                     Height="32"
                     Margin="0,0,0,16"
                     HorizontalAlignment="Center"
+                    AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
                     Click="CancelDownloadButton_Click"
                     Content="{x:Static resources:Resource.Cancel}"
-                    IsEnabled="False"
-                    Visibility="Collapsed" />
+                    IsEnabled="{Binding IsDownloading, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
             </Grid>
         </Grid>
     </Grid>

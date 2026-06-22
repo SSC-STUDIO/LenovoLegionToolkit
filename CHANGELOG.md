@@ -10,11 +10,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed / 变更
+### Fixed / 修复
 
-- Polished the dashboard console chart visuals: trend charts now render smooth curves with faint guide lines and a glowing live-edge marker, and radial gauges gained a gradient value arc with a soft glow and a leading-edge dot whose center text scales with the gauge size / 打磨控制台图表视觉：趋势图改用带浅参考线的平滑曲线并在最新数据点显示发光标记，环形仪表盘新增渐变数值圆弧、柔光与前缘亮点，且中心文字随仪表盘尺寸自适应缩放
+- Fixed a large batch of issues across the codebase including bugs, security vulnerabilities, localization gaps, and CI improvements / 修复代码库中大量问题，包括 Bug、安全漏洞、本地化缺失和 CI 改进
+
+### Security / 安全
+
+- Plugin EXE entry points now require Authenticode signature validation before launch (debug builds allow unsigned override) / 插件 EXE 入口点现在需要经过 Authenticode 签名验证后才能启动（调试版本允许未签名覆盖）
+- Added trusted repository owner allowlist to UpdateChecker; custom repo owners from settings are ignored in release builds / UpdateChecker 添加了受信任仓库所有者白名单；发布版本忽略设置中的自定义仓库
+- SHA256 integrity check is now enforced for update packages; validation is no longer skipped when hash is missing / 更新包现在强制进行 SHA256 完整性校验，哈希缺失时不再跳过验证
+- Plugin store cache (`plugin-store-cache.json`) now uses HMAC-SHA256 integrity verification to prevent tampering / 插件商店缓存现在使用 HMAC-SHA256 完整性验证防止篡改
+- Trusted plugin package store (`trusted-plugin-packages.json`) now uses DPAPI encryption + HMAC integrity / 受信任插件包存储现在使用 DPAPI 加密 + HMAC 完整性保护
+- Download URL allowlist restricts plugin downloads to known trusted hosts (github.com, jsdelivr.net); file:// URLs rejected in production / 下载 URL 白名单仅允许受信任主机；生产环境拒绝 file:// URL
+- UpdateChecker enforces SHA256 validation; missing hashes now throw in release builds / UpdateChecker 强制 SHA256 校验，缺失哈希时在发布版本中抛出异常
 
 ### Fixed / 修复
+
+- CLI IPC client now uses exponential backoff with jitter (up to 40 attempts, 3s max delay) to handle startup race conditions / CLI IPC 客户端改用指数退避 + 抖动策略（最多 40 次重试，3 秒最大延迟）处理启动竞态条件
+- Hardcoded `IsEnabled`/`Visibility` values replaced with data bindings in UpdateWindow, UnsupportedWindow, DeviceInformationWindow, DiscreteGPUControl / UpdateWindow、UnsupportedWindow、DeviceInformationWindow、DiscreteGPUControl 中硬编码的 IsEnabled/Visibility 已替换为数据绑定
+- LargeFilesWindow fully localized with all 15+ hardcoded English strings migrated to resources; AutomationProperties.Name added / LargeFilesWindow 完全本地化，15+ 个硬编码英文字符串已迁移到资源文件；添加了 AutomationProperties.Name
+- MacroPage and AutomationPage ToggleSwitches now sync state through data binding instead of manual Click handlers / MacroPage 和 AutomationPage 的 ToggleSwitch 改为通过数据绑定同步状态
+- PluginManager.CheckForUpdatesAsync no longer returns empty dictionary; delegates to PluginRepositoryService for real update checking / PluginManager.CheckForUpdatesAsync 不再返回空字典，改为委托给 PluginRepositoryService 进行真正的更新检查
+- Application startup refactored: async void Application_Startup is now a thin dispatcher; startup logic extracted to testable StartupOrchestrator class / 应用启动重构：async void Application_Startup 改为薄分发器；启动逻辑提取到可测试的 StartupOrchestrator 类
+- Startup orchestrator and single-instance Mutex activation now have dedicated unit tests / 启动编排器和单实例 Mutex 激活现在有专门的单元测试
+- 170+ hardcoded English exception messages across Lib projects migrated to resource files with ExceptionHelper wrapper / Lib 项目中 170+ 个硬编码英文异常消息已迁移到带 ExceptionHelper 包装器的资源文件
+- DeviceInformationWindow and DiscreteGPUControl now have proper data binding for Visibility and IsEnabled states / DeviceInformationWindow 和 DiscreteGPUControl 的 Visibility 和 IsEnabled 状态现在有正确数据绑定
+- UnsupportedWindow countdown button now uses data binding instead of hardcoded IsEnabled / UnsupportedWindow 倒计时按钮改用数据绑定而非硬编码 IsEnabled
+- Power consumption can now be read reliably; sensor data reads have a 2-second timeout so slow sensors no longer block the UI, and failures fall back to the session cache instead of leaving stale values / 功耗读取恢复正常；传感器读取加入 2 秒超时保护，慢速传感器不再阻塞 UI，读取失败时会回退到会话缓存而非显示过期数据
 
 - Dashboard trend charts no longer restart from scratch when navigating away and back; accumulated history is now restored across page navigation / 控制台趋势图切换页面后不再重新从头显示，累积的历史趋势数据在页面导航中得以保留
 

@@ -10893,5 +10893,19 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string SensorsControl_GPU_Power { get { return ResourceManager.GetString("SensorsControl_GPU_Power", resourceCulture); } }
         public static string SensorsControl_Memory_Title { get { return ResourceManager.GetString("SensorsControl_Memory_Title", resourceCulture); } }
         public static string SensorItem_PchTemperature { get { return ResourceManager.GetString("SensorItem_PchTemperature", resourceCulture); } }
+        public static string LargeFilesWindow_Title { get { return ResourceManager.GetString("LargeFilesWindow_Title", resourceCulture); } }
+        public static string LargeFilesWindow_Description { get { return ResourceManager.GetString("LargeFilesWindow_Description", resourceCulture); } }
+        public static string LargeFilesWindow_FilterLabel { get { return ResourceManager.GetString("LargeFilesWindow_FilterLabel", resourceCulture); } }
+        public static string LargeFilesWindow_Filter_1GB { get { return ResourceManager.GetString("LargeFilesWindow_Filter_1GB", resourceCulture); } }
+        public static string LargeFilesWindow_Filter_10GB { get { return ResourceManager.GetString("LargeFilesWindow_Filter_10GB", resourceCulture); } }
+        public static string LargeFilesWindow_Filter_100GB { get { return ResourceManager.GetString("LargeFilesWindow_Filter_100GB", resourceCulture); } }
+        public static string LargeFilesWindow_Filter_1TB { get { return ResourceManager.GetString("LargeFilesWindow_Filter_1TB", resourceCulture); } }
+        public static string LargeFilesWindow_Filter_Custom { get { return ResourceManager.GetString("LargeFilesWindow_Filter_Custom", resourceCulture); } }
+        public static string LargeFilesWindow_Header_Select { get { return ResourceManager.GetString("LargeFilesWindow_Header_Select", resourceCulture); } }
+        public static string LargeFilesWindow_Header_FileName { get { return ResourceManager.GetString("LargeFilesWindow_Header_FileName", resourceCulture); } }
+        public static string LargeFilesWindow_Header_Size { get { return ResourceManager.GetString("LargeFilesWindow_Header_Size", resourceCulture); } }
+        public static string LargeFilesWindow_Header_Path { get { return ResourceManager.GetString("LargeFilesWindow_Header_Path", resourceCulture); } }
+        public static string LargeFilesWindow_Confirm { get { return ResourceManager.GetString("LargeFilesWindow_Confirm", resourceCulture); } }
+        public static string LargeFilesWindow_SelectedFiles { get { return ResourceManager.GetString("LargeFilesWindow_SelectedFiles", resourceCulture); } }
     }
 }

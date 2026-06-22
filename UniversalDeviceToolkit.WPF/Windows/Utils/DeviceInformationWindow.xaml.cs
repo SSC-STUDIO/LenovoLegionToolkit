@@ -18,6 +18,24 @@ public partial class DeviceInformationWindow
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
     private readonly Snackbar _snackBar;
 
+    public static readonly DependencyProperty HasHardwareInfoProperty =
+        DependencyProperty.Register(nameof(HasHardwareInfo), typeof(bool), typeof(DeviceInformationWindow), new PropertyMetadata(false));
+
+    public static readonly DependencyProperty HasWarrantyInfoProperty =
+        DependencyProperty.Register(nameof(HasWarrantyInfo), typeof(bool), typeof(DeviceInformationWindow), new PropertyMetadata(false));
+
+    public bool HasHardwareInfo
+    {
+        get => (bool)GetValue(HasHardwareInfoProperty);
+        set => SetValue(HasHardwareInfoProperty, value);
+    }
+
+    public bool HasWarrantyInfo
+    {
+        get => (bool)GetValue(HasWarrantyInfoProperty);
+        set => SetValue(HasWarrantyInfoProperty, value);
+    }
+
     public DeviceInformationWindow()
     {
         InitializeComponent();
@@ -64,7 +82,7 @@ public partial class DeviceInformationWindow
             _mtmLabel.Text = "-";
             _serialNumberLabel.Text = "-";
             _biosLabel.Text = "-";
-            _hardwareInfo.Visibility = Visibility.Collapsed;
+            HasHardwareInfo = false;
 
             // Show error notification
             _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
@@ -83,7 +101,7 @@ public partial class DeviceInformationWindow
             _warrantyStartLabel.Text = "-";
             _warrantyEndLabel.Text = "-";
             _warrantyLinkCardAction.Tag = null;
-            _warrantyLinkCardAction.IsEnabled = false;
+            HasWarrantyInfo = false;
 
             var warrantyInfo = await _warrantyChecker.GetWarrantyInfo(mi, forceRefresh);
 
@@ -93,8 +111,7 @@ public partial class DeviceInformationWindow
             _warrantyStartLabel.Text = warrantyInfo.Value.Start is not null ? warrantyInfo.Value.Start?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyEndLabel.Text = warrantyInfo.Value.End is not null ? warrantyInfo.Value.End?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyLinkCardAction.Tag = warrantyInfo.Value.Link;
-            _warrantyLinkCardAction.IsEnabled = true;
-            _warrantyInfo.Visibility = Visibility.Visible;
+            HasWarrantyInfo = true;
         }
         catch (Exception ex)
         {
@@ -120,7 +137,7 @@ public partial class DeviceInformationWindow
         anyVisible |= SetCardText(_baseBoardCard, _baseBoardLabel, FormatBaseBoard(hardware.BaseBoard));
         anyVisible |= SetCardText(_chassisCard, _chassisLabel, FormatChassis(hardware.Chassis));
 
-        _hardwareInfo.Visibility = anyVisible ? Visibility.Visible : Visibility.Collapsed;
+        HasHardwareInfo = anyVisible;
     }
 
     private static bool SetCardText(UIElement card, TextBlock label, string text)

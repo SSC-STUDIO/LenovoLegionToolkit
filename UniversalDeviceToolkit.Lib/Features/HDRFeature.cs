@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
@@ -41,7 +42,7 @@ public class HDRFeature : IFeature<HDRState>
 
     public Task<bool> IsHdrBlockedAsync()
     {
-        var display = InternalDisplay.Get() ?? throw new InvalidOperationException("Built in display not found");
+        var display = InternalDisplay.Get() ?? throw ExceptionHelper.BuiltInDisplayNotFound();
 
         var result = display.GetAdvancedColorInfo().AdvancedColorForceDisabled;
         return Task.FromResult(result);
@@ -54,7 +55,7 @@ public class HDRFeature : IFeature<HDRState>
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting current HDR state...");
 
-        var display = InternalDisplay.Get() ?? throw new InvalidOperationException("Built in display not found");
+        var display = InternalDisplay.Get() ?? throw ExceptionHelper.BuiltInDisplayNotFound();
 
         var result = display.GetAdvancedColorInfo().AdvancedColorEnabled ? HDRState.On : HDRState.Off;
 
@@ -75,7 +76,7 @@ public class HDRFeature : IFeature<HDRState>
             return;
         }
 
-        var display = InternalDisplay.Get() ?? throw new InvalidOperationException("Built in display not found");
+        var display = InternalDisplay.Get() ?? throw ExceptionHelper.BuiltInDisplayNotFound();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting display HDR to {state}");

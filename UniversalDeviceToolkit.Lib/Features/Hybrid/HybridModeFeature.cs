@@ -164,7 +164,7 @@ public class HybridModeFeature(
         HybridModeState.OnIGPUOnly => (GSyncState.Off, IGPUModeState.IGPUOnly),
         HybridModeState.OnAuto => (GSyncState.Off, IGPUModeState.Auto),
         HybridModeState.Off => (GSyncState.On, IGPUModeState.Default),
-        _ => throw new InvalidOperationException("Invalid state"),
+        _ => throw ExceptionHelper.InvalidState(),
     };
 
     private static HybridModeState Pack(GSyncState state1, IGPUModeState state2) => (state1, state2) switch
@@ -173,6 +173,6 @@ public class HybridModeFeature(
         (GSyncState.Off, IGPUModeState.IGPUOnly) => HybridModeState.OnIGPUOnly,
         (GSyncState.Off, IGPUModeState.Auto) => HybridModeState.OnAuto,
         (GSyncState.On, _) => HybridModeState.Off,
-        _ => throw new InvalidOperationException("Invalid state"),
-    };
+        _ => throw ExceptionHelper.InvalidState(),
+};
 }

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Settings;
 using Windows.Win32;
@@ -131,7 +132,7 @@ public class WindowsOptimizationService
     {
         // Validate action key to prevent injection
         if (!IsValidActionKey(actionKey))
-            throw new ArgumentException("Invalid action key", nameof(actionKey));
+            throw ExceptionHelper.InvalidActionKey(nameof(actionKey));
 
         var actions = GetActionsByKey();
         if (actions.TryGetValue(actionKey, out var action))
@@ -144,7 +145,7 @@ public class WindowsOptimizationService
     {
         // Validate action key to prevent injection
         if (!IsValidActionKey(actionKey))
-            throw new ArgumentException("Invalid action key", nameof(actionKey));
+            throw ExceptionHelper.InvalidActionKey(nameof(actionKey));
 
         var actions = GetActionsByKey();
         if (actions.TryGetValue(actionKey, out var action))
@@ -229,7 +230,7 @@ public class WindowsOptimizationService
     {
         // Validate action key
         if (!IsValidActionKey(actionKey))
-            throw new ArgumentException("Invalid action key", nameof(actionKey));
+            throw ExceptionHelper.InvalidActionKey(nameof(actionKey));
 
         var actionsByKey = GetActionsByKey();
         if (!actionsByKey.TryGetValue(actionKey, out var definition))
@@ -294,7 +295,7 @@ public class WindowsOptimizationService
         foreach (var command in commands)
         {
             if (!IsValidCommand(command))
-                throw new ArgumentException($"Invalid or unsafe command: {command}", nameof(commands));
+                throw new ArgumentException(string.Format(Resource.Exception_CommandFailedSecurity, command), nameof(commands));
         }
 
         return new(
@@ -362,12 +363,12 @@ public class WindowsOptimizationService
     private async Task ExecuteCommandLineAsync(string command, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(command))
-            throw new ArgumentException("Command cannot be null or empty.", nameof(command));
+            throw ExceptionHelper.CommandCannotBeEmpty(nameof(command));
 
         // Validate command before execution
         if (!IsValidCommand(command))
         {
-            throw new InvalidOperationException($"Command failed security validation: {command}");
+            throw ExceptionHelper.CommandFailedSecurity(command);
         }
 
         try
@@ -378,7 +379,7 @@ public class WindowsOptimizationService
             // Double-check the parsed command
             if (!IsAllowedExecutable(fileName))
             {
-                throw new InvalidOperationException($"Executable not in allowlist: {fileName}");
+                throw ExceptionHelper.NotInAllowlist(fileName);
             }
 
             // Build process start info with parameterized arguments
@@ -512,7 +513,7 @@ public class WindowsOptimizationService
         // Check for dangerous patterns in arguments
         if (CommandInjectionValidator.ContainsDangerousPatterns(arguments))
         {
-            throw new InvalidOperationException($"Dangerous pattern detected in arguments for {fileName}");
+            throw ExceptionHelper.DangerousPatternInArgs(fileName);
         }
 
         // Additional validation for specific commands
@@ -548,14 +549,14 @@ public class WindowsOptimizationService
         {
             if (lowerArgs.Contains(sysPath))
             {
-                throw new InvalidOperationException("Deletion of system paths is not allowed");
+                throw ExceptionHelper.DeletionSystemPathsNotAllowed();
             }
         }
 
         // Block wildcards that could match system files
         if (arguments.Contains("*.*") && !arguments.Contains("?") && !arguments.Contains("\\temp"))
         {
-            throw new InvalidOperationException("Wildcard deletion is restricted");
+            throw ExceptionHelper.WildcardDeletionRestricted();
         }
     }
 
@@ -578,7 +579,7 @@ public class WindowsOptimizationService
         {
             if (lowerArgs.Contains(key) && lowerArgs.Contains("delete"))
             {
-                throw new InvalidOperationException("Deletion of critical registry keys is not allowed");
+                throw ExceptionHelper.DeletionCriticalRegistryNotAllowed();
             }
         }
     }

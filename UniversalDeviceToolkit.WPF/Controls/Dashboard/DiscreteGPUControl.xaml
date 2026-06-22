@@ -5,7 +5,11 @@
     xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
-    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    >
+    <controls:AbstractRefreshingControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </controls:AbstractRefreshingControl.Resources>
     <custom:CardControl Margin="0,0,0,8" Icon="DeveloperBoard24">
         <custom:CardControl.Header>
             <controls:CardHeaderControl Title="{x:Static resources:Resource.DiscreteGPUControl_Title}" Subtitle="{x:Static resources:Resource.DiscreteGPUControl_Message}" />
@@ -13,7 +17,7 @@
         <StackPanel
             x:Name="_content"
             Orientation="Vertical"
-            Visibility="Hidden">
+            Visibility="{Binding IsGpuContentReady, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
             <Grid HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -27,21 +31,21 @@
                     Width="12"
                     Height="12"
                     Fill="{StaticResource GpuStatusActiveBrush}"
-                    Visibility="Collapsed" />
+                    Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusInactiveIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
                     Fill="{StaticResource GpuStatusInactiveBrush}"
-                    Visibility="Collapsed" />
+                    Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusPoweredOffIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
                     Fill="{StaticResource GpuStatusPoweredOffBrush}"
-                    Visibility="Collapsed" />
+                    Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <TextBlock
                     x:Name="_discreteGPUStatusDescription"
                     Grid.Column="1"
@@ -60,6 +64,7 @@
                     ClickMode="Hover"
                     FontSize="20"
                     Icon="QuestionCircle24"
+                    ToolTip="{x:Static resources:Resource.Information}"
                     ToolTipService.InitialShowDelay="0" />
             </Grid>
             <wpfui:Button
@@ -69,7 +74,7 @@
                 Appearance="Primary"
                 AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}"
                 Click="DeactivateGPUButton_Click"
-                IsEnabled="False"
+                IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource Self}}"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowOnDisabled="True">
                 <wpfui:Button.Content>
@@ -96,10 +101,12 @@
                         <ContextMenu.Items>
                             <wpfui:MenuItem
                                 x:Name="_killAppsMenuItem"
+                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_KillApps}"
                                 Click="KillAppsMenuItem_Click"
                                 Header="{x:Static resources:Resource.DiscreteGPUControl_KillApps}" />
                             <wpfui:MenuItem
                                 x:Name="_restartGPUMenuItem"
+                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}"
                                 Click="RestartGPUMenuItem_Click"
                                 Header="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}" />
                         </ContextMenu.Items>

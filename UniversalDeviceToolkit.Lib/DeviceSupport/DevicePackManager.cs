@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Serialization;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.DeviceSupport;
@@ -54,14 +55,14 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
     public async Task<DevicePack> InstallAsync(string packId, IProgress<float>? progress = null, CancellationToken token = default)
     {
         if (!PathSecurity.IsValidPluginId(packId))
-            throw new ArgumentException("Device pack id contains unsafe characters.", nameof(packId));
+            throw new ArgumentException(Resource.Exception_InvalidFileName, nameof(packId));
 
         var catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
         var resource = catalog.DevicePacks.FirstOrDefault(pack =>
             pack.Id.Equals(packId, StringComparison.OrdinalIgnoreCase));
 
         if (resource is null)
-            throw new InvalidDataException($"Device pack '{packId}' is not available in the online resource catalog.");
+            throw ExceptionHelper.DevicePackNotAvailable(packId);
 
         ValidateResource(resource);
 
@@ -79,17 +80,17 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
 
             var manifestPath = Path.Combine(extractPath, ManifestFileName);
             if (!File.Exists(manifestPath))
-                throw new InvalidDataException($"Device pack '{packId}' does not contain {ManifestFileName}.");
+                throw ExceptionHelper.DevicePackNoManifest(packId, ManifestFileName);
 
             await using var stream = File.OpenRead(manifestPath);
             var pack = await JsonSerializer.DeserializeAsync<DevicePack>(stream, JsonOptions, token).ConfigureAwait(false)
-                       ?? throw new InvalidDataException($"Device pack '{packId}' manifest is empty.");
+                       ?? throw ExceptionHelper.DevicePackManifestEmpty(packId);
 
             if (!pack.Id.Equals(resource.Id, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"Device pack id mismatch. Expected '{resource.Id}', got '{pack.Id}'.");
+                throw ExceptionHelper.DevicePackIdMismatch(resource.Id, pack.Id);
 
             if (!pack.Vendor.Equals(resource.Vendor, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"Device pack vendor mismatch. Expected '{resource.Vendor}', got '{pack.Vendor}'.");
+                throw ExceptionHelper.DevicePackVendorMismatch(resource.Vendor, pack.Vendor);
 
             var destination = GetInstalledPackDirectory(pack.Id);
             var pendingDestination = $"{destination}.pending";
@@ -135,10 +136,10 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
     private static void ValidateResource(OnlineDevicePackResource resource)
     {
         if (string.IsNullOrWhiteSpace(resource.Url))
-            throw new InvalidDataException($"Device pack '{resource.Id}' has an empty download URL.");
+            throw ExceptionHelper.DevicePackUrlEmpty(resource.Id);
 
         if (string.IsNullOrWhiteSpace(resource.Sha256))
-            throw new InvalidDataException($"Device pack '{resource.Id}' is missing SHA256 metadata.");
+            throw ExceptionHelper.DevicePackSha256Missing(resource.Id);
     }
 
     private static JsonSerializerOptions CreateJsonOptions()
@@ -178,11 +179,11 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
         foreach (var entry in archive.Entries)
         {
             if (entry.FullName.Contains('\\'))
-                throw new InvalidDataException($"Device pack contains a Windows-style path separator: {entry.FullName}");
+                throw ExceptionHelper.DevicePackWindowsPathSep(entry.FullName);
 
             var destinationPath = Path.GetFullPath(Path.Combine(destinationRoot, entry.FullName));
             if (!destinationPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException($"Device pack contains an unsafe path: {entry.FullName}");
+                throw ExceptionHelper.DevicePackUnsafePath(entry.FullName);
 
             if (string.IsNullOrEmpty(entry.Name))
             {
@@ -193,7 +194,7 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
             var extension = Path.GetExtension(entry.Name);
             if (BlockedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase) ||
                 !AllowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
-                throw new InvalidDataException($"Device pack contains unsupported file type: {entry.FullName}");
+                throw ExceptionHelper.DevicePackUnsupportedFileType(entry.FullName);
 
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
             entry.ExtractToFile(destinationPath, true);

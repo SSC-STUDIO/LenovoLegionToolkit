@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
@@ -77,7 +78,7 @@ public static class ExplorerRestartHelper
         if (lastException is not null)
             throw lastException;
 
-        throw new InvalidOperationException("Failed to start Explorer.");
+        throw ExceptionHelper.FailedToStartExplorer();
     }
 
     private static ProcessStartInfo[] GetStartOptions()
@@ -112,9 +113,7 @@ public static class ExplorerRestartHelper
             await Task.Delay(PollInterval).ConfigureAwait(false);
         }
 
-        throw new TimeoutException(shouldBeRunning
-            ? "Explorer did not restart in time."
-            : "Explorer did not exit in time.");
+        throw shouldBeRunning ? ExceptionHelper.ExplorerDidNotRestart() : ExceptionHelper.ExplorerDidNotExit();
     }
 
     private static string GetExplorerExecutablePath()

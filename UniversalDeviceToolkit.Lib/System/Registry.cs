@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
@@ -35,7 +36,7 @@ public static class Registry
             try
             {
                 using var baseKey = GetBaseKey(hive);
-                using var key = baseKey.OpenSubKey(subKey) ?? throw new InvalidOperationException($"Key {subKey} could not be opened");
+                using var key = baseKey.OpenSubKey(subKey) ?? throw new InvalidOperationException(string.Format(Resource.Exception_KeyCouldNotBeOpened, subKey));
 
                 var resetEvent = new ManualResetEvent(false);
 
@@ -76,7 +77,7 @@ public static class Registry
     public static IDisposable ObserveValue(string hive, string path, string valueName, Action handler)
     {
         if (hive is "HKEY_CURRENT_USER" or "HKCU")
-            hive = WindowsIdentity.GetCurrent().User?.Value ?? throw new InvalidOperationException("Current user value is null");
+            hive = WindowsIdentity.GetCurrent().User?.Value ?? throw ExceptionHelper.CurrentUserValueNull();
 
         var pathFormatted = @$"SELECT * FROM RegistryValueChangeEvent WHERE Hive = 'HKEY_USERS' AND KeyPath = '{hive}\\{path.Replace(@"\", @"\\")}' AND ValueName = '{valueName}'";
 
@@ -292,6 +293,6 @@ public static class Registry
         "HKU" or "HKEY_USERS" => Microsoft.Win32.Registry.Users,
         "HKCR" or "HKEY_CLASSES_ROOT " => Microsoft.Win32.Registry.ClassesRoot,
         "HKCC" or "HKEY_CURRENT_CONFIG  " => Microsoft.Win32.Registry.CurrentConfig,
-        _ => throw new ArgumentException(@"Unknown hive.", nameof(hive))
+        _ => throw ExceptionHelper.UnknownHive(nameof(hive))
     };
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
@@ -40,7 +41,7 @@ public partial class LargeFilesWindow : BaseWindow
     {
         var selectedCount = _visibleFiles.Count(f => f.IsSelected);
         var totalSize = _visibleFiles.Where(f => f.IsSelected).Sum(f => f.Size);
-        _totalSelectedText.Text = $"Selected: {selectedCount} files ({FormatBytes(totalSize)})";
+        _totalSelectedText.Text = string.Format(Resource.LargeFilesWindow_SelectedFiles, selectedCount, FormatBytes(totalSize));
     }
 
     private void SizeFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

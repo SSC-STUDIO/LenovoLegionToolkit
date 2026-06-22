@@ -2355,7 +2355,11 @@ private string _currentSearchText = string.Empty;
     private bool TryResolvePluginExecutable(string pluginId, out string? exeFile, out string? workingDirectory)
     {
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
+#if DEBUG
+        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory, allowUnsignedOverride: true);
+#else
         return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory);
+#endif
     }
 
     private string GetPluginLocalizedName(IPlugin plugin, PluginManifest? manifest)

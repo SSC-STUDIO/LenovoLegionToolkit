@@ -7,12 +7,13 @@ using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
 public class PowerModeUnavailableWithoutACException(PowerModeState powerMode)
-    : Exception($"Power mode '{powerMode}' is unavailable without AC adapter.")
+    : Exception(string.Format(Resource.Exception_PowerModeUnavailableWithoutAC, powerMode))
 {
     public PowerModeState PowerMode { get; } = powerMode;
 }
@@ -90,14 +91,14 @@ public class PowerModeFeature(
     public override async Task SetStateAsync(PowerModeState state)
     {
         if (!await IsSupportedAsync().ConfigureAwait(false))
-            throw new InvalidOperationException("Power mode switching is not supported on this device.");
+            throw ExceptionHelper.PowerModeNotSupported();
 
         if (state == PowerModeState.Extreme)
-            throw new InvalidOperationException($"Unsupported power mode {state}");
+            throw ExceptionHelper.UnsupportedPowerMode(state);
 
         var allStates = await GetAllStatesAsync().ConfigureAwait(false);
         if (!allStates.Contains(state))
-            throw new InvalidOperationException($"Unsupported power mode {state}");
+            throw ExceptionHelper.UnsupportedPowerMode(state);
 
         if (state is PowerModeState.Performance or PowerModeState.GodMode
             && !AllowAllPowerModesOnBattery

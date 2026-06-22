@@ -72,7 +72,7 @@ public class DpiScaleFeature : IFeature<DpiScale>
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Built in display not found");
-            throw new InvalidOperationException("Built in display not found");
+            throw ExceptionHelper.BuiltInDisplayNotFound();
         }
 
         if ((int)pds.CurrentDPIScale == state.Scale)

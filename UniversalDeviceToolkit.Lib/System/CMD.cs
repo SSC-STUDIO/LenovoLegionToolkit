@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.System;
@@ -48,19 +49,19 @@ public static class CMD
     {
         // Input validation to prevent command injection
         if (!IsValidFileName(file))
-            throw new ArgumentException("Invalid file name", nameof(file));
+            throw ExceptionHelper.InvalidFileName(nameof(file));
         
         if (arguments != null && ContainsDangerousInput(arguments))
-            throw new ArgumentException("Arguments contain dangerous characters", nameof(arguments));
+            throw ExceptionHelper.DangerousArguments(nameof(arguments));
 
         if (waitForExit && string.IsNullOrWhiteSpace(arguments) && RequiresArgumentsForNonInteractiveShell(file))
-            throw new ArgumentException("Interactive shell executables require arguments when waiting for exit", nameof(arguments));
+            throw ExceptionHelper.InteractiveShellRequiresArgs(nameof(arguments));
 
         // Additional PowerShell-specific validation
         if (IsPowerShellExecutable(file) && arguments != null)
         {
             if (ContainsPowerShellDangerousPatterns(arguments))
-                throw new ArgumentException("PowerShell arguments contain dangerous patterns", nameof(arguments));
+                throw ExceptionHelper.PowerShellDangerousArgs(nameof(arguments));
         }
 
         if (Log.Instance.IsTraceEnabled)
@@ -89,7 +90,7 @@ public static class CMD
                 foreach (var (key, value) in environment)
                 {
                     if (!IsValidEnvironmentVariable(key))
-                        throw new ArgumentException($"Invalid environment variable: {key}");
+                        throw new ArgumentException(string.Format(Resource.Exception_InvalidEnvVariable, key));
 
                     if (value == null)
                     {
@@ -102,7 +103,7 @@ public static class CMD
                     }
                     else
                     {
-                        throw new ArgumentException($"Invalid environment variable value: {key}");
+                        throw new ArgumentException(string.Format(Resource.Exception_InvalidEnvVariableValue, key));
                     }
                 }
             }

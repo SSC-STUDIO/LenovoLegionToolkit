@@ -1,5 +1,7 @@
 using System;
 using Autofac;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib;
 
@@ -14,7 +16,7 @@ public static class IoCContainer
         lock (Lock)
         {
             if (_container is not null)
-                throw new InvalidOperationException("IoCContainer already initialized");
+                throw ExceptionHelper.IoCAlreadyInitialized();
 
             var cb = new ContainerBuilder();
 
@@ -30,7 +32,7 @@ public static class IoCContainer
         lock (Lock)
         {
             if (_container is null)
-                throw new InvalidOperationException($"IoCContainer must be initialized first [type={nameof(T)}]");
+                throw ExceptionHelper.IoCMustBeInitialized(nameof(T));
             return _container.Resolve<T>();
         }
     }

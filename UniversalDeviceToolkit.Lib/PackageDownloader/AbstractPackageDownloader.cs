@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.PackageDownloader;
@@ -72,7 +73,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"File checksum mismatch. [fileName={package.FileName}, fileLocation={package.FileLocation}]");
 
-        throw new InvalidDataException("File checksum mismatch");
+        throw ExceptionHelper.FileChecksumMismatch();
     }
 
     private static string? TryExtractFirstSha256Hash(string text)

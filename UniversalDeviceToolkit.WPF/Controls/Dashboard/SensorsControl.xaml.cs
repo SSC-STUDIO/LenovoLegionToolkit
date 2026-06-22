@@ -623,6 +623,14 @@ public partial class SensorsControl
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Sensors refresh failed.", ex);
+
+                    var cached = TryGetSessionSensorDataForDisplay();
+                    if (cached.HasValue)
+                    {
+                        Dispatcher.Invoke(() => UpdateValues(cached.Value));
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Using cached session data as fallback after sensor read failure.");
+                    }
                 }
             }
 
@@ -891,7 +899,7 @@ public partial class SensorsControl
         if (cached is null)
             return;
 
-        UpdateValues(cached.Value);
+        UpdateValues(cached.Value, completesInitialLoad: true);
     }
 
     internal static SensorsData MergeSensorDataForDisplay(SensorsData current, SensorsData? previous) =>

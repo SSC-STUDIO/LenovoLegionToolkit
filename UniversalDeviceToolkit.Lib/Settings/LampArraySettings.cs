@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 
@@ -48,13 +50,13 @@ public class LampArraySettings : AbstractSettings<LampArraySettings.LampArraySet
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         if (!File.Exists(path))
-            throw new FileNotFoundException("Profile file not found.", path);
+            throw ExceptionHelper.ProfileFileNotFound(path);
 
         var json = File.ReadAllText(path);
         var imported = JsonSerializer.Deserialize<LampArraySettingsStore>(json, JsonSerializerOptions);
 
         if (imported is null)
-            throw new InvalidOperationException("Failed to deserialize profile.");
+            throw ExceptionHelper.FailedToDeserializeProfile();
 
         imported = Normalize(imported) ?? new LampArraySettingsStore();
 
