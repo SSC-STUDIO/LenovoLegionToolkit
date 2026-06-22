@@ -47,7 +47,6 @@ public class PowerModeFeature(
         try
         {
             var state = await ReadStateCoreAsync().ConfigureAwait(false);
-            state = await NormalizeExtremeStateAsync(state).ConfigureAwait(false);
             _lastKnownState = state;
             return state;
         }
@@ -105,7 +104,7 @@ public class PowerModeFeature(
             && await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false) is PowerAdapterStatus.Disconnected)
             throw new PowerModeUnavailableWithoutACException(state);
 
-        var currentState = await GetStateAsync().ConfigureAwait(false);
+        var currentState = await NormalizeExtremeStateIfNeededAsync().ConfigureAwait(false);
 
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
@@ -162,8 +161,9 @@ public class PowerModeFeature(
 
     internal virtual Task<PowerModeState> ReadStateCoreAsync() => base.GetStateAsync();
 
-    private async Task<PowerModeState> NormalizeExtremeStateAsync(PowerModeState state)
+    public async Task<PowerModeState> NormalizeExtremeStateIfNeededAsync()
     {
+        var state = await ReadStateCoreAsync().ConfigureAwait(false);
         if (state != PowerModeState.Extreme)
             return state;
 

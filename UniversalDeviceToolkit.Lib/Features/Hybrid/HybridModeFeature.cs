@@ -11,9 +11,9 @@ public class HybridModeFeature(
     IGSyncFeature gSyncFeature,
     IIGPUModeFeature igpuModeFeature,
     IDGPUNotify dgpuNotify,
-    ICompatibilityService compatibilityService) : IFeature<HybridModeState>
+    ICompatibilityService compatibilityService) : IFeature<HybridModeState>, IDisposable
 {
-    private readonly CancellationTokenSource _ensureDGPUEjectedIfNeededCancellationTokenSource = new();
+    private CancellationTokenSource? _ensureDGPUEjectedIfNeededCts = new();
 
     public async Task<bool> IsSupportedAsync()
     {
@@ -61,7 +61,12 @@ public class HybridModeFeature(
 
     public async Task SetStateAsync(HybridModeState state)
     {
-        await _ensureDGPUEjectedIfNeededCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+        if (_ensureDGPUEjectedIfNeededCts is { } cts)
+        {
+            await cts.CancelAsync().ConfigureAwait(false);
+            cts.Dispose();
+        }
+        _ensureDGPUEjectedIfNeededCts = new CancellationTokenSource();
 
         var (gSync, igpuMode) = Unpack(state);
 
@@ -106,6 +111,8 @@ public class HybridModeFeature(
         if (!await igpuModeFeature.IsSupportedAsync().ConfigureAwait(false) || !await dgpuNotify.IsSupportedAsync().ConfigureAwait(false))
             return;
 
+        var token = _ensureDGPUEjectedIfNeededCts?.Token ?? CancellationToken.None;
+
         Task.Run(async () =>
         {
             try
@@ -120,9 +127,9 @@ public class HybridModeFeature(
 
                 while (retry <= MAX_RETRIES)
                 {
-                    await Task.Delay(DELAY).ConfigureAwait(false);
+                    await Task.Delay(DELAY, token).ConfigureAwait(false);
 
-                    if (_ensureDGPUEjectedIfNeededCancellationTokenSource.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Cancelled, aborting...");
@@ -151,11 +158,16 @@ public class HybridModeFeature(
                     retry++;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Cancelled, aborting...");
+            }
             catch (Exception ex)
             {
                 Log.Instance.Error($"Failed to ensure dGPU is ejected", ex);
             }
-        }).Forget("ensure dGPU ejected if needed");
+        }, token).Forget("ensure dGPU ejected if needed");
     }
 
     private static (GSyncState, IGPUModeState) Unpack(HybridModeState state) => state switch
@@ -174,5 +186,11 @@ public class HybridModeFeature(
         (GSyncState.Off, IGPUModeState.Auto) => HybridModeState.OnAuto,
         (GSyncState.On, _) => HybridModeState.Off,
         _ => throw ExceptionHelper.InvalidState(),
-};
+    };
+
+    public void Dispose()
+    {
+        _ensureDGPUEjectedIfNeededCts?.Cancel();
+        _ensureDGPUEjectedIfNeededCts?.Dispose();
+    }
 }

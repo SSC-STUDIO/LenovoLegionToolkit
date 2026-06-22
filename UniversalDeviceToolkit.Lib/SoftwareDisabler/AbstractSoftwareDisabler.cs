@@ -120,7 +120,7 @@ public abstract class AbstractSoftwareDisabler
                 try
                 {
                     name = process.ProcessName;
-                    if (!name.StartsWith(processName, StringComparison.OrdinalIgnoreCase))
+                    if (!name.Equals(processName, StringComparison.OrdinalIgnoreCase))
                         continue;
                 }
                 catch
@@ -271,7 +271,7 @@ public abstract class AbstractSoftwareDisabler
             {
                 try
                 {
-                    if (process.ProcessName.StartsWith(processName, StringComparison.OrdinalIgnoreCase))
+                    if (process.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase))
                     {
                         process.Kill(true);
                         await process.WaitForExitAsync().ConfigureAwait(false);
