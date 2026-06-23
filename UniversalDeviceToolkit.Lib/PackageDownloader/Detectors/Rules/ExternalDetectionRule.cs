@@ -21,6 +21,12 @@ internal readonly struct ExternalDetectionRule : IPackageRule
         ".exe", ".dll", ".msi", ".bat", ".cmd", ".ps1"
     };
 
+    private static readonly HashSet<string> AllowedDownloadHosts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "download.lenovo.com",
+        "downloads.lenovo.com"
+    };
+
     private int[] ReturnCodes { get; init; }
     private string Command { get; init; }
     private string Url { get; init; }
@@ -79,23 +85,22 @@ internal readonly struct ExternalDetectionRule : IPackageRule
                 return false;
             }
 
+            if (!IsAllowedDownloadUrl(Url))
+            {
+                Log.Instance.Warning($"Rejecting download of '{FileName}' from '{Url}': host is not in the allowed list");
+                return false;
+            }
+
             await using var fileStream = File.OpenWrite(filePath);
             await httpClient.DownloadAsync(Url, fileStream, null, token).ConfigureAwait(false);
         }
 
-        var executable = Command.Split(' ').FirstOrDefault();
-        var arguments = string.Join(' ', Command.Split(' ').Skip(1));
+        var parsed = ParseCommand(Command, packagePath);
+        var executable = parsed.Executable;
+        var arguments = parsed.Arguments;
 
-        if (executable is null)
+        if (string.IsNullOrWhiteSpace(executable))
             return false;
-
-        // ReSharper disable StringLiteralTypo
-        if (executable.Contains("%PACKAGEPATH%"))
-            executable = executable.Replace("%PACKAGEPATH%", packagePath);
-        // ReSharper restore StringLiteralTypo
-
-        if (!executable.Contains('\\'))
-            executable = Path.Combine(packagePath, executable);
 
         var resolvedExecutable = Path.GetFullPath(executable);
         var resolvedPackagePath = Path.GetFullPath(packagePath);
@@ -112,10 +117,52 @@ internal readonly struct ExternalDetectionRule : IPackageRule
             return false;
         }
 
+        if (!File.Exists(resolvedExecutable))
+        {
+            Log.Instance.Warning($"Rejecting executable '{resolvedExecutable}': file does not exist");
+            return false;
+        }
+
         Log.Instance.Warning($"Executing external detection command: '{executable}' with args: '{arguments}' for package '{PackageName}'");
 
         var (exitCode, _) = await CMD.RunAsync(executable, arguments, token: token).ConfigureAwait(false);
         var result = ReturnCodes.Contains(exitCode);
         return result;
+    }
+
+    private static bool IsAllowedDownloadUrl(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return false;
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return false;
+
+        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+            return false;
+
+        return AllowedDownloadHosts.Contains(uri.Host);
+    }
+
+    private static (string Executable, string Arguments) ParseCommand(string command, string packagePath)
+    {
+        if (string.IsNullOrWhiteSpace(command))
+            return (string.Empty, string.Empty);
+
+        var substituted = command.Replace("%PACKAGEPATH%", packagePath);
+
+        var parts = substituted.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+            return (string.Empty, string.Empty);
+
+        var executableToken = parts[0];
+        var executable = executableToken;
+
+        if (!executable.Contains('\\') && !executable.Contains('/'))
+            executable = Path.Combine(packagePath, executable);
+
+        var arguments = parts.Length > 1 ? string.Join(' ', parts, 1, parts.Length - 1) : string.Empty;
+
+        return (executable, arguments);
     }
 }

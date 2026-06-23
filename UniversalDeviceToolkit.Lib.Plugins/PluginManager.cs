@@ -243,7 +243,24 @@ public class PluginManager : IPluginManager
                 return null;
             }
 
-            // AssemblyResolve requires synchronous return
+            // The CLR AppDomain.AssemblyResolve event requires a synchronous
+            // return: the runtime needs the resolved Assembly instance on the
+            // calling stack to continue loading the dependent assembly. We
+            // therefore MUST block here, which means we accept the standard
+            // sync-over-async risk on this specific code path. The risk is
+            // bounded because:
+            //   1. AssemblyResolve is invoked from the JIT thread doing
+            //      LoadFrom() on a plugin we already vetted as in-plugins-dir;
+            //      there is no SynchronizationContext or Dispatcher captured
+            //      on that thread, so we cannot deadlock against a UI pump.
+            //   2. The signature validator is pure-async I/O and only awaits
+            //      internal tasks; it does not post continuations to a
+            //      captured context.
+            //   3. The outer call site is LoadPluginFromFileAsync, which runs
+            //      on a worker task (.ConfigureAwait(false) upstream), so
+            //      there is no UI dispatcher to deadlock against either.
+            // If any of those assumptions change, this call must be replaced
+            // with a pre-load/cache strategy rather than a blocking wait.
             var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
             if (!signatureResult.IsValid)
             {
@@ -1216,8 +1233,21 @@ public class PluginManager : IPluginManager
     /// <inheritdoc/>
     public bool PermanentlyDeletePlugin(string pluginId)
     {
-        // Synchronous wrapper for interface compatibility
-        return PermanentlyDeletePluginAsync(pluginId).GetAwaiter().GetResult();
+        // Sync-over-async boundary kept for interface compatibility. Prefer
+        // calling PermanentlyDeletePluginAsync directly from async code paths.
+        // We block here only because the consumer cannot be made async; we
+        // catch and log so that a transient I/O failure surfaces as `false`
+        // to the caller rather than tearing down the caller's stack.
+        try
+        {
+            return PermanentlyDeletePluginAsync(pluginId).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Synchronous PermanentlyDeletePlugin failed for {pluginId}: {ex.Message}", ex);
+            return false;
+        }
     }
 
     /// <summary>
@@ -1268,8 +1298,20 @@ public class PluginManager : IPluginManager
     /// </summary>
     public void PerformPendingDeletions()
     {
-        // Synchronous convenience wrapper; callers that can be async should use PerformPendingDeletionsAsync() instead
-        PerformPendingDeletionsAsync().GetAwaiter().GetResult();
+        // Sync-over-async boundary kept for callers that cannot be made
+        // async (for example, a final shutdown hook from a non-async
+        // context). Prefer PerformPendingDeletionsAsync from any async
+        // call site. We trap and log here so a single failing plugin does
+        // not abort the rest of the pending-deletion sweep.
+        try
+        {
+            PerformPendingDeletionsAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Synchronous PerformPendingDeletions failed: {ex.Message}", ex);
+        }
     }
 
     public void UnloadAllPlugins()

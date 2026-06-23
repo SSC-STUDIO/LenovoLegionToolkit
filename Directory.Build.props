@@ -25,6 +25,8 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);**/obj-*/**</DefaultItemExcludes>
     <EnableUdtTestHooks Condition="'$(EnableUdtTestHooks)' == ''">false</EnableUdtTestHooks>
     <DefineConstants Condition="'$(EnableUdtTestHooks)' == 'true'">$(DefineConstants);UDT_TEST_HOOKS</DefineConstants>
+
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(EnableUdtTestHooks)' == 'true'">

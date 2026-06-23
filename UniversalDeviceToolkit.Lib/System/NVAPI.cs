@@ -8,6 +8,13 @@ using NvAPIWrapper.Native.GPU;
 
 namespace LenovoLegionToolkit.Lib.System;
 
+// TODO(#142): NvAPIWrapper.Net 0.8.1.101 is no longer actively maintained and
+// surfaces as a Dependabot/Renovate warning. Plan a replacement with P/Invoke
+// generated through Microsoft.Windows.CsWin32 (already a direct dependency)
+// or hand-written wrappers over nvapi.h. The surface area used here is small
+// (Initialize, Unload, PhysicalGPU enumeration, Display enumeration, GPU bus
+// info), so a manual migration is feasible but out of scope for the current
+// pass. Tracked in issue #142.
 internal static class NVAPI
 {
     public static void Initialize() => NVIDIA.Initialize();

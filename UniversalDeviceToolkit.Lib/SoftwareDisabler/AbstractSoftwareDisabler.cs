@@ -111,29 +111,12 @@ public abstract class AbstractSoftwareDisabler
 
     protected virtual IEnumerable<string> RunningProcesses()
     {
-        foreach (var process in Process.GetProcesses())
+        foreach (var processName in ProcessNames)
         {
-            using (process)
+            foreach (var process in Process.GetProcessesByName(processName))
             {
-                foreach (var processName in ProcessNames)
-                {
-                    var name = string.Empty;
-
-                    try
-                    {
-                        name = process.ProcessName;
-                        if (!name.Equals(processName, StringComparison.OrdinalIgnoreCase))
-                            continue;
-                    }
-                    catch
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace("Failed to get process name");
-                    }
-
-                    if (!string.IsNullOrEmpty(name))
-                        yield return name;
-                }
+                using (process)
+                    yield return processName;
             }
         }
     }
@@ -269,19 +252,16 @@ public abstract class AbstractSoftwareDisabler
 
     protected virtual async Task KillProcessesAsync()
     {
-        foreach (var process in Process.GetProcesses())
+        foreach (var processName in ProcessNames)
         {
-            using (process)
+            foreach (var process in Process.GetProcessesByName(processName))
             {
-                foreach (var processName in ProcessNames)
+                using (process)
                 {
                     try
                     {
-                        if (process.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            process.Kill(true);
-                            await process.WaitForExitAsync().ConfigureAwait(false);
-                        }
+                        process.Kill(true);
+                        await process.WaitForExitAsync().ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {

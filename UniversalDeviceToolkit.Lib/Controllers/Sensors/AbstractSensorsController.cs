@@ -147,28 +147,21 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             }
         }
 
+        // Apply a hard timeout to prevent slow sensor reads from blocking
+        // the UI. We use a CancellationTokenSource that fires after
+        // SENSOR_READ_TIMEOUT_SECONDS and pass the token into
+        // GetSensorSnapshotAsync so the underlying work is actually
+        // cancelled (and observed via ThrowIfCancellationRequested) instead
+        // of being left running as a "task leak" the way the previous
+        // Task.WhenAny + Task.Delay pattern would. Declared in the outer
+        // scope so the cancellation-aware catch clause can inspect
+        // IsCancellationRequested to distinguish a timeout from a genuine
+        // OperationCanceledException thrown by the caller.
+        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(SENSOR_READ_TIMEOUT_SECONDS));
+
         try
         {
-            // Apply a 2-second timeout to prevent slow sensors from blocking the UI.
-            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(SENSOR_READ_TIMEOUT_SECONDS));
-            var snapshotTask = GetSensorSnapshotAsync(detailed);
-            var timeoutTask = Task.Delay(Timeout.InfiniteTimeSpan, timeoutCts.Token);
-
-            if (await Task.WhenAny(snapshotTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Sensor read timed out after {SENSOR_READ_TIMEOUT_SECONDS}s, falling back to cache. [type={GetType().Name}]");
-
-                lock (_cacheLock)
-                {
-                    if (_cachedSensorsData.HasValue)
-                        return _cachedSensorsData.Value;
-                }
-
-                return new SensorsData(new SensorData(), new SensorData());
-            }
-
-            var (cpu, gpu) = await snapshotTask.ConfigureAwait(false);
+            var (cpu, gpu) = await GetSensorSnapshotAsync(detailed, timeoutCts.Token).ConfigureAwait(false);
 
             var result = new SensorsData(cpu, gpu);
 
@@ -187,6 +180,19 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
             return result;
         }
+        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Sensor read timed out after {SENSOR_READ_TIMEOUT_SECONDS}s, falling back to cache. [type={GetType().Name}]");
+
+            lock (_cacheLock)
+            {
+                if (_cachedSensorsData.HasValue)
+                    return _cachedSensorsData.Value;
+            }
+
+            return new SensorsData(new SensorData(), new SensorData());
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
@@ -202,7 +208,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
     }
 
-    private async Task<(SensorData cpu, SensorData gpu)> GetSensorSnapshotAsync(bool detailed)
+    private async Task<(SensorData cpu, SensorData gpu)> GetSensorSnapshotAsync(bool detailed, CancellationToken cancellationToken = default)
     {
         const int GENERIC_MAX_UTILIZATION = 100;
         const int GENERIC_MAX_TEMPERATURE = 100;
@@ -210,8 +216,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsOnceAsync() =>
             libreHardwareMonitorReadingsTask ??= GetLibreHardwareMonitorReadingsAsync();
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         var cpuUtilization = SafeRead(() => GetCpuUtilization(GENERIC_MAX_UTILIZATION), -1, "CPU utilization");
         var cpuMaxCoreClock = await SafeReadAsync(async () => _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false), -1, "CPU max core clock").ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
         var cpuCoreClock = SafeRead(GetCpuCoreClock, -1, "CPU core clock");
         var cpuCurrentTemperature = NormalizeTemperatureReading(await SafeReadAsync(GetCpuCurrentTemperatureAsync, -1, "CPU temperature").ConfigureAwait(false));
         var cpuCurrentFanSpeed = await SafeReadAsync(GetCpuCurrentFanSpeedAsync, -1, "CPU fan speed").ConfigureAwait(false);
@@ -242,6 +251,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
             cpuCurrentTemperature = fallback > 0 ? fallback : -1;
         }
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (detailed)
         {
@@ -275,6 +286,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var gpuVoltage = gpuInfo.Voltage;
         var gpuCurrentFanSpeed = await SafeReadAsync(GetGpuCurrentFanSpeedAsync, -1, "GPU fan speed").ConfigureAwait(false);
         var gpuMaxFanSpeed = await SafeReadAsync(async () => _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "GPU max fan speed").ConfigureAwait(false);
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || (detailed && (gpuVoltage <= 0 || gpuWattage < 0)))
         {

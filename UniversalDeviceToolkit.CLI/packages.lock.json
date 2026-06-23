@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0-windows10.0.26100": {
+      "System.CommandLine": {
+        "type": "Direct",
+        "requested": "[2.0.8, )",
+        "resolved": "2.0.8",
+        "contentHash": "FbpgF8p/ClXnoXEWLjQB34kNh5rsLewEgIgLyVzLDucAOQ4cNs7ec9Cam7gdKPruSb6zp4Mx8htZGTL4/5PJPg=="
+      },
+      "universaldevicetoolkit.cli.lib": {
+        "type": "Project"
+      }
+    },
+    "net10.0-windows10.0.26100/win-x64": {}
+  }
+}

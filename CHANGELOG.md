@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed / 修复
 
 - Fixed a large batch of issues across the codebase including bugs, security vulnerabilities, localization gaps, and CI improvements / 修复代码库中大量问题，包括 Bug、安全漏洞、本地化缺失和 CI 改进
+- `MessagingCenter.Publish<T>` no longer lets one bad subscriber's exception prevent other subscribers from receiving the message; failures are now logged at trace level / `MessagingCenter.Publish<T>` 不再因单个订阅者抛出异常而阻断其他订阅者，失败时改为以 trace 级别记录日志
+- `ExternalDetectionRule` now validates the download host against a Lenovo allowlist, uses a safer command splitter, and refuses to launch missing executables so the external detection path can no longer pull from arbitrary hosts or run absent binaries / `ExternalDetectionRule` 现对下载主机名做白名单校验、改用更安全的命令切分方式，并在可执行文件缺失时拒绝执行，避免外部检测流程从任意来源下载或运行不存在的二进制
 
 ### Security / 安全
 
@@ -64,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Aligned English and Chinese README product positioning, compatibility scope, version references (v4.2.1), legacy-identifier table, and contribution policy so "Universal" vs Lenovo-only hardware control is explicit / 统一中英文 README 的产品定位、兼容范围、版本引用（v4.2.1）、遗留标识说明与贡献政策，明确「Universal」与联想专用硬件控制的边界
 - Updated winget locale descriptions and draft template to reflect full-control vs basic-mode positioning; removed misleading `vantage` tag / 更新 winget 描述与草稿模板以反映完整控制与基础模式定位，移除易误导的 vantage 标签
 - Marked `Docs/RELEASE_NOTES_4.1.0_DRAFT.md` as historical; current notes live in CHANGELOG / 将 4.1.0 发布说明草稿标记为历史文档，当前说明以 CHANGELOG 为准
+- Enabled `RestorePackagesWithLockFile` in `Directory.Build.props` so future restores consume committed `packages.lock.json` files for reproducible builds / 在 `Directory.Build.props` 中启用 `RestorePackagesWithLockFile`，使后续还原基于已提交的 `packages.lock.json` 实现可复现构建
+- Upgraded `Markdig` 1.2.0 -> 1.3.2 and `Autofac` 9.1.0 -> 9.3.0 in central package management for current fixes and performance improvements / 在中央包管理中将 `Markdig` 由 1.2.0 升至 1.3.2、`Autofac` 由 9.1.0 升至 9.3.0，获取上游修复与性能改进
 
 ## [4.2.1] - 2026-06-07
 

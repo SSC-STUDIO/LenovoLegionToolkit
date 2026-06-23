@@ -44,7 +44,7 @@ public static partial class WMI
             public static async Task<(string vendor, string name, string version, string identifyingNumber)> ReadAsync()
             {
                 var result = await WMI.ReadAsync("root\\CIMV2",
-                    $"SELECT * FROM Win32_ComputerSystemProduct",
+                    $"SELECT Vendor, Name, Version, IdentifyingNumber FROM Win32_ComputerSystemProduct",
                     pdc =>
                     {
                         var vendor = (string)pdc["Vendor"].Value;
@@ -113,7 +113,7 @@ public static partial class WMI
             public static async Task<string> GetNameAsync()
             {
                 var result = await WMI.ReadAsync("root\\CIMV2",
-                    $"SELECT * FROM Win32_Processor",
+                    $"SELECT Name FROM Win32_Processor",
                     pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
                 return result.FirstOrDefault() ?? "Unknown CPU";
             }
@@ -121,7 +121,7 @@ public static partial class WMI
             public static async Task<int> GetAddressWidthAsync()
             {
                 var result = await WMI.ReadAsync("root\\CIMV2",
-                    $"SELECT * FROM Win32_Processor",
+                    $"SELECT AddressWidth FROM Win32_Processor",
                     pdc => Convert.ToInt32(pdc["AddressWidth"].Value)).ConfigureAwait(false);
                 return result.First();
             }
@@ -169,7 +169,7 @@ public static partial class WMI
             {
                 // Prioritize discrete GPU if possible, or return the first one that is not "Microsoft Basic Display Adapter"
                 var result = await WMI.ReadAsync("root\\CIMV2",
-                    $"SELECT * FROM Win32_VideoController",
+                    $"SELECT Name FROM Win32_VideoController",
                     pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
                 
                 // Simple logic: pick the one with "NVIDIA" or "AMD" or "Intel" (Arc?) if multiple
@@ -225,7 +225,7 @@ public static partial class WMI
             public static async Task<string> GetBuildNumberAsync()
             {
                 var result = await ReadAsync("root\\CIMV2",
-                    $"SELECT * FROM Win32_OperatingSystem",
+                    $"SELECT BuildNumber FROM Win32_OperatingSystem",
                     pdc => (string)pdc["BuildNumber"].Value).ConfigureAwait(false);
                 return result.First();
             }
@@ -245,7 +245,7 @@ public static partial class WMI
         public static class PnpSignedDriver
         {
             public static Task<IEnumerable<DriverInfo>> ReadAsync() => WMI.ReadAsync("root\\CIMV2",
-                $"SELECT * FROM Win32_PnPSignedDriver",
+                $"SELECT DeviceID, HardWareID, DriverVersion, DriverDate FROM Win32_PnPSignedDriver",
                 pdc =>
                 {
                     var deviceId = pdc["DeviceID"].Value as string ?? string.Empty;

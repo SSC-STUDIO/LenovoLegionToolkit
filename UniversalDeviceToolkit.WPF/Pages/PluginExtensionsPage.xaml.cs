@@ -2095,7 +2095,7 @@ private string _currentSearchText = string.Empty;
             _pluginManager.UninstallPlugin(pluginId);
 
             // Permanently delete from disk
-            var deleted = await Task.Run(() => _pluginManager.PermanentlyDeletePlugin(pluginId));
+            var deleted = await _pluginManager.PermanentlyDeletePluginAsync(pluginId).ConfigureAwait(true);
 
             UpdateAllPluginsUI();
 
