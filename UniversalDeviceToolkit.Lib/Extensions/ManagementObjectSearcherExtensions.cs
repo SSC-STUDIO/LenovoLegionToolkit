@@ -7,5 +7,9 @@ namespace LenovoLegionToolkit.Lib.Extensions;
 
 public static class ManagementObjectSearcherExtensions
 {
-    public static Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos) => Task.Run(() => mos.Get().Cast<ManagementBaseObject>());
+    public static async Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos)
+    {
+        using var collection = mos.Get();
+        return collection.Cast<ManagementBaseObject>().ToArray();
+    }
 }

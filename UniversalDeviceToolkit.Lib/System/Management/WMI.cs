@@ -141,7 +141,7 @@ public static partial class WMI
             {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-            var managementObject = managementObjects.FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
+            var managementObject = managementObjects.Cast<ManagementObject>().FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
 
                 var mo = (ManagementObject)managementObject;
                 var methodParamsObject = mo.GetMethodParameters(methodName);
