@@ -5,7 +5,7 @@ using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 
-public class DGPUFeatureFlagsNotify : AbstractDGPUNotify
+public class DGPUFeatureFlagsNotify(IDelayProvider delayProvider) : AbstractDGPUNotify(delayProvider)
 {
     public override async Task<bool> IsSupportedAsync()
     {

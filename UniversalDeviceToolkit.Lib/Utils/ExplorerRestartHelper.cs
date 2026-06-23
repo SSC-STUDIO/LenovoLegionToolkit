@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Resources;
 
@@ -9,6 +10,10 @@ namespace LenovoLegionToolkit.Lib.Utils;
 
 public static class ExplorerRestartHelper
 {
+    private static IDelayProvider _delayProvider = new DefaultDelayProvider();
+
+    public static void SetDelayProvider(IDelayProvider delayProvider) => _delayProvider = delayProvider;
+
     private static readonly TimeSpan ShutdownTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan StartupTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(250);
@@ -56,7 +61,7 @@ public static class ExplorerRestartHelper
             {
                 using var process = Process.Start(startInfo);
 
-                await Task.Delay(PollInterval).ConfigureAwait(false);
+                await _delayProvider.Delay(PollInterval, CancellationToken.None).ConfigureAwait(false);
 
                 if (IsExplorerRunning())
                 {
@@ -110,7 +115,7 @@ public static class ExplorerRestartHelper
             if (IsExplorerRunning() == shouldBeRunning)
                 return;
 
-            await Task.Delay(PollInterval).ConfigureAwait(false);
+            await _delayProvider.Delay(PollInterval, CancellationToken.None).ConfigureAwait(false);
         }
 
         throw shouldBeRunning ? ExceptionHelper.ExplorerDidNotRestart() : ExceptionHelper.ExplorerDidNotExit();

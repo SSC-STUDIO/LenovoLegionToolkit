@@ -24,9 +24,11 @@ public class PowerModeFeature(
     WindowsPowerModeController windowsPowerModeController,
     WindowsPowerPlanController windowsPowerPlanController,
     ThermalModeListener thermalModeListener,
-    PowerModeListener powerModeListener)
+    PowerModeListener powerModeListener,
+    IDelayProvider? delayProvider = null)
     : AbstractWmiFeature<PowerModeState>(WMI.LenovoGameZoneData.GetSmartFanModeAsync, WMI.LenovoGameZoneData.SetSmartFanModeAsync, WMI.LenovoGameZoneData.IsSupportSmartFanAsync, 1), IFeature<PowerModeState>
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private PowerModeState? _lastKnownState;
 
     public bool AllowAllPowerModesOnBattery { get; set; }
@@ -121,7 +123,7 @@ public class PowerModeFeature(
         {
             thermalModeListener.SuppressNext();
             await base.SetStateAsync(PowerModeState.Balance, cancellationToken).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
+            await _delayProvider.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
         }
 
         if (mi.Properties.HasGodModeToOtherModeSwitchingBug && currentState == PowerModeState.GodMode && state != PowerModeState.GodMode)
@@ -141,7 +143,7 @@ public class PowerModeFeature(
                     break;
             }
 
-            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
+            await _delayProvider.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
 
         }
 

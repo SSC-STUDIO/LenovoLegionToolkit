@@ -9,8 +9,9 @@ using Microsoft.Win32.SafeHandles;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
-public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandleHandle, uint controlCode) : IFeature<T> where T : struct, Enum, IComparable
+public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandleHandle, uint controlCode, IDelayProvider? delayProvider = null) : IFeature<T> where T : struct, Enum, IComparable
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     protected readonly uint ControlCode = controlCode;
     protected readonly Func<SafeFileHandle> DriverHandle = driverHandleHandle;
 
@@ -126,7 +127,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
             retries++;
 
-            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
+            await _delayProvider.Delay(TimeSpan.FromMilliseconds(50), cancellationToken).ConfigureAwait(false);
         }
 
         Log.Instance.Warning($"Verify state {state} set failed. [feature={GetType().Name}]");

@@ -12,8 +12,10 @@ public class HybridModeFeature(
     IGSyncFeature gSyncFeature,
     IIGPUModeFeature igpuModeFeature,
     IDGPUNotify dgpuNotify,
-    ICompatibilityService compatibilityService) : IFeature<HybridModeState>, IDisposable
+    ICompatibilityService compatibilityService,
+    IDelayProvider? delayProvider = null) : IFeature<HybridModeState>, IDisposable
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private CancellationTokenSource? _ensureDGPUEjectedIfNeededCts = new();
 
     public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
@@ -142,7 +144,7 @@ public class HybridModeFeature(
 
                 while (retry <= MAX_RETRIES)
                 {
-                    await Task.Delay(DELAY, token).ConfigureAwait(false);
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(DELAY), token).ConfigureAwait(false);
 
                     if (token.IsCancellationRequested)
                     {

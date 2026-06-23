@@ -44,6 +44,7 @@ public class SpectrumKeyboardBacklightController : IDisposable
     private readonly SpecialKeyListener _listener;
     private readonly VantageDisabler _vantageDisabler;
     private readonly ISpectrumScreenCapture _screenCapture;
+    private readonly IDelayProvider _delayProvider;
 
     private SafeFileHandle? _deviceHandle;
 
@@ -54,11 +55,12 @@ public class SpectrumKeyboardBacklightController : IDisposable
 
     public bool ForceDisable { get; set; }
 
-    public SpectrumKeyboardBacklightController(SpecialKeyListener listener, VantageDisabler vantageDisabler, ISpectrumScreenCapture screenCapture)
+    public SpectrumKeyboardBacklightController(SpecialKeyListener listener, VantageDisabler vantageDisabler, ISpectrumScreenCapture screenCapture, IDelayProvider delayProvider)
     {
         _listener = listener;
         _vantageDisabler = vantageDisabler;
         _screenCapture = screenCapture;
+        _delayProvider = delayProvider;
 
         _listener.Changed += Listener_Changed;
     }
@@ -230,7 +232,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         var input = new LENOVO_SPECTRUM_SET_PROFILE_REQUEST((byte)profile);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
 
-        await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
+        await _delayProvider.Delay(TimeSpan.FromMilliseconds(100), default).ConfigureAwait(false);
 
         await StartAuroraIfNeededAsync(profile).ConfigureAwait(false);
 
@@ -478,7 +480,10 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
             while (!token.IsCancellationRequested)
             {
-                var delay = Task.Delay(_auroraRefreshInterval, token);
+                // Overlap delay — intentional. The delay runs concurrently with the
+                // screen-capture + send work below so the next refresh interval
+                // starts measuring from when this loop iteration began, not when it ends.
+                var delay = _delayProvider.Delay(_auroraRefreshInterval, token);
 
                 try
                 {
@@ -489,7 +494,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Screen capture failed. Delaying before next refresh...", ex);
 
-                    await Task.Delay(TimeSpan.FromSeconds(1), token).ConfigureAwait(false);
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
                 }
 
                 token.ThrowIfCancellationRequested();
@@ -589,7 +594,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     }
 
                     if (i < RETRIES - 1)
-                        await Task.Delay(DELAY).ConfigureAwait(false);
+                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(DELAY), default).ConfigureAwait(false);
                 }
 
                 if (newDeviceHandle is null)

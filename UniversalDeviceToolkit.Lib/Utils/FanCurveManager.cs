@@ -83,6 +83,9 @@ public class FanCurveManager : IDisposable
         _isInitialized = true;
     }
 
+    // async void: required by event handler signature.
+    // The try-catch MUST remain — unhandled exceptions in async void abort the
+    // ThreadPool thread and crash the process (AppDomain.UnhandledException).
     private async void OnPowerModeChanged(object? sender, PowerModeListener.ChangedEventArgs e)
     {
         if (_isThinkBook) return;

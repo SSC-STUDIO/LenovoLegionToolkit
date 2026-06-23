@@ -636,6 +636,12 @@ public class SensorsGroupController : IDisposable
     public event EventHandler? SensorsUpdated;
 
     private readonly GPUController _gpuController = IoCContainer.Resolve<GPUController>();
+    private readonly IDelayProvider _delayProvider;
+
+    public SensorsGroupController(IDelayProvider delayProvider)
+    {
+        _delayProvider = delayProvider;
+    }
 
     private float _snapshotCpuTemp = INVALID_VALUE_FLOAT;
     private float _snapshotCpuUsage = INVALID_VALUE_FLOAT;
@@ -2369,7 +2375,7 @@ public class SensorsGroupController : IDisposable
                 await UpdateAsync().ConfigureAwait(false);
                 SensorsUpdated?.Invoke(this, EventArgs.Empty);
 
-                await Task.Delay(minInterval, token).ConfigureAwait(false);
+                await _delayProvider.Delay(minInterval, token).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -2378,7 +2384,7 @@ public class SensorsGroupController : IDisposable
             catch (Exception ex)
             {
                 Log.Instance.Trace($"ProducerLoop error: {ex}");
-                await Task.Delay(1000, token).ConfigureAwait(false);
+                await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -17,9 +18,11 @@ public class SpecialKeyListener(
     ApplicationSettings settings,
     FnKeysDisabler fnKeysDisabler,
     RefreshRateFeature feature,
-    MicrophoneFeature microphoneFeature)
+    MicrophoneFeature microphoneFeature,
+    IDelayProvider? delayProvider = null)
     : AbstractWMIListener<SpecialKeyListener.ChangedEventArgs, SpecialKey, int>(WMI.LenovoUtilityEvent.Listen)
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     public class ChangedEventArgs(SpecialKey specialKey) : EventArgs
     {
         public SpecialKey SpecialKey { get; } = specialKey;
@@ -184,7 +187,7 @@ public class SpecialKeyListener(
 
             await feature.SetStateAsync(next).ConfigureAwait(false);
 
-            _ = Task.Delay(TimeSpan.FromSeconds(1)).ContinueWith(_ =>
+            _ = _delayProvider.Delay(TimeSpan.FromSeconds(1), CancellationToken.None).ContinueWith(_ =>
             {
                 MessagingCenter.Publish(new NotificationMessage(NotificationType.RefreshRate, next.DisplayName));
             });

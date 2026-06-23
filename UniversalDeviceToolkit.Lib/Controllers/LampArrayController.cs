@@ -48,9 +48,15 @@ public class LampArrayController : IDisposable
     private double _transitionStartTime = 0;
     private double _transitionDuration = 0;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
+    private readonly IDelayProvider _delayProvider;
 
     private readonly global::System.Collections.Concurrent.ConcurrentDictionary<int, ILampEffect> _effectOverrides = new();
     private readonly global::System.Collections.Concurrent.ConcurrentDictionary<int, Color> _lastFrameColors = new();
+
+    public LampArrayController(IDelayProvider delayProvider)
+    {
+        _delayProvider = delayProvider;
+    }
 
     private class LampArrayDevice
     {
@@ -191,7 +197,7 @@ public class LampArrayController : IDisposable
                 {
                     Log.Instance.Trace($"Render loop error: {ex.Message}");
                 }
-                await Task.Delay(33, token);
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token);
             }
         }, token);
     }
@@ -288,7 +294,7 @@ public class LampArrayController : IDisposable
                         if (e is AuroraSyncEffect ae)
                             ae.UpdateScreenData(_screenBuffer, 32, 18);
 
-                    await Task.Delay(33, token);
+                await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token);
                 }
             }
             catch (OperationCanceledException) { }
@@ -509,6 +515,8 @@ public class LampArrayController : IDisposable
         );
     }
 
+    // async void: required by DeviceWatcher.Added event handler signature.
+    // The try-catch MUST remain — unhandled exceptions in async void crash the process.
     private async void Watcher_Added(DeviceWatcher sender, DeviceInformation args)
     {
         try
@@ -564,6 +572,9 @@ public class LampArrayController : IDisposable
         }
     }
 
+    // try-catch is defensive — DeviceWatcher events can throw if the device
+    // disconnects during removal processing. Unhandled exceptions here would
+    // propagate to the watcher infrastructure and may terminate the watcher.
     private void Watcher_Removed(DeviceWatcher sender, DeviceInformationUpdate args)
     {
         try

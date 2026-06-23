@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -31,6 +32,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
     private readonly DGPUNotify _dgpuNotify;
     private readonly SmartFnLockController _smartFnLockController;
     private readonly PowerModeFeature _powerModeFeature;
+    private readonly IDelayProvider _delayProvider;
 
     private readonly HOOKPROC _kbProc;
 
@@ -48,19 +50,20 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
     public event EventHandler<ChangedEventArgs>? Changed;
 
-    public NativeWindowsMessageListener(IMainThreadDispatcher mainThreadDispatcher, DGPUNotify dgpuNotify, SmartFnLockController smartFnLockController, PowerModeFeature powerModeFeature)
+    public NativeWindowsMessageListener(IMainThreadDispatcher mainThreadDispatcher, DGPUNotify dgpuNotify, SmartFnLockController smartFnLockController, PowerModeFeature powerModeFeature, IDelayProvider delayProvider)
     {
         _mainThreadDispatcher = mainThreadDispatcher;
         _dgpuNotify = dgpuNotify;
         _smartFnLockController = smartFnLockController;
         _powerModeFeature = powerModeFeature;
+        _delayProvider = delayProvider;
 
         _kbProc = LowLevelKeyboardProc;
     }
 
     public async Task TurnOffMonitorAsync()
     {
-        await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+        await _delayProvider.Delay(TimeSpan.FromSeconds(1), CancellationToken.None).ConfigureAwait(false);
         await _mainThreadDispatcher.DispatchAsync(() =>
         {
             PInvoke.SendMessage(new HWND(Handle), PInvoke.WM_SYSCOMMAND, new WPARAM(PInvoke.SC_MONITORPOWER), new LPARAM(2));
@@ -270,7 +273,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
     private async Task WaitForInit()
     {
-        var delayTask = Task.Delay(TimeSpan.FromSeconds(3));
+        var delayTask = _delayProvider.Delay(TimeSpan.FromSeconds(3), CancellationToken.None);
         var task = Task.WhenAll(
             _isMonitorOnTaskCompletionSource.Task,
             _isLidOpenTaskCompletionSource.Task

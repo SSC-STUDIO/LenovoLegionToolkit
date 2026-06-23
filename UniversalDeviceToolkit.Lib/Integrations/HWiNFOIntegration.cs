@@ -9,8 +9,9 @@ using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Integrations;
 
-public class HWiNFOIntegration(SensorsController sensorController, IntegrationsSettings settings)
+public class HWiNFOIntegration(SensorsController sensorController, IntegrationsSettings settings, IDelayProvider? delayProvider = null)
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private const string CUSTOM_SENSOR_HIVE = "HKEY_CURRENT_USER";
     private const string CUSTOM_SENSOR_PATH = @"Software\HWiNFO64\Sensors\Custom";
     private const string CUSTOM_SENSOR_GROUP_NAME = "Lenovo Legion Toolkit";
@@ -67,7 +68,7 @@ public class HWiNFOIntegration(SensorsController sensorController, IntegrationsS
 
             while (true)
             {
-                await Task.Delay(_refreshInterval, token).ConfigureAwait(false);
+                await _delayProvider.Delay(_refreshInterval, token).ConfigureAwait(false);
                 await SetSensorValuesAsync(false).ConfigureAwait(false);
             }
         }

@@ -35,8 +35,14 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
         private readonly Lock _lockObject = new Lock();
         private bool _isRunning = false;
         private CancellationTokenSource? _currentProcessTokenSource;
+        private readonly IDelayProvider _delayProvider;
 
         public event EventHandler<FpsData>? FpsDataUpdated;
+
+        public FpsSensorController(IDelayProvider delayProvider)
+        {
+            _delayProvider = delayProvider;
+        }
 
         public void InitializeBlacklist()
         {
@@ -92,7 +98,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                             lastProcess = null;
                         }
 
-                        await Task.Delay(1000, _cancellationTokenSource.Token).ConfigureAwait(false);
+                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
                     }
                     catch (TaskCanceledException)
                     {
@@ -101,7 +107,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                     catch (Exception ex)
                     {
                         Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
-                        await Task.Delay(1000, _cancellationTokenSource.Token).ConfigureAwait(false);
+                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
                     }
                 }
             }, _cancellationTokenSource.Token);

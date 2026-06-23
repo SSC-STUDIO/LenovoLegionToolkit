@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -33,6 +34,7 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
     private readonly BatteryFeature _batteryFeature;
     private readonly DGPUNotify _dgpuNotify;
     private readonly RGBKeyboardBacklightController _rgbController;
+    private readonly IDelayProvider _delayProvider;
 
     private bool _started;
     private HPOWERNOTIFY _handle;
@@ -41,12 +43,13 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
 
     public event EventHandler<ChangedEventArgs>? Changed;
 
-    public unsafe PowerStateListener(PowerModeFeature powerModeFeature, BatteryFeature batteryFeature, DGPUNotify dgpuNotify, RGBKeyboardBacklightController rgbController)
+    public unsafe PowerStateListener(PowerModeFeature powerModeFeature, BatteryFeature batteryFeature, DGPUNotify dgpuNotify, RGBKeyboardBacklightController rgbController, IDelayProvider delayProvider)
     {
         _powerModeFeature = powerModeFeature;
         _batteryFeature = batteryFeature;
         _dgpuNotify = dgpuNotify;
         _rgbController = rgbController;
+        _delayProvider = delayProvider;
 
         _callback = Callback;
         _recipientHandle = new StructSafeHandle<DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS>(new DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS
@@ -190,7 +193,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
 
                 if (await _dgpuNotify.IsSupportedAsync().ConfigureAwait(false))
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                    await _delayProvider.Delay(TimeSpan.FromSeconds(5), CancellationToken.None).ConfigureAwait(false);
                     await _dgpuNotify.NotifyAsync().ConfigureAwait(false);
                 }
             }).Forget("restore hardware state after resume");
@@ -205,7 +208,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
 
                 if (await _dgpuNotify.IsSupportedAsync().ConfigureAwait(false))
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                    await _delayProvider.Delay(TimeSpan.FromSeconds(5), CancellationToken.None).ConfigureAwait(false);
                     await _dgpuNotify.NotifyAsync().ConfigureAwait(false);
                 }
             }).Forget("restore hardware state after power adapter connection");

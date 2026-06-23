@@ -6,8 +6,9 @@ using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Services;
 
-public class BatteryDischargeRateMonitorService : IDisposable
+public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = null) : IDisposable
 {
+    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
     private readonly object _lock = new();
@@ -65,7 +66,7 @@ public class BatteryDischargeRateMonitorService : IDisposable
 
                         Battery.SetMinMaxDischargeRate();
 
-                        await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                        await _delayProvider.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {

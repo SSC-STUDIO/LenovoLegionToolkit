@@ -750,7 +750,7 @@ public static partial class Compatibility
     {
         if (_machineInformationLazy.IsValueCreated && _machineInformationLazy.Value.IsCompletedSuccessfully)
         {
-            var mi = _machineInformationLazy.Value.Result;
+            var mi = _machineInformationLazy.Value.GetAwaiter().GetResult();
             return mi.LegionSeries is not (LegionSeries.Legion_7 or LegionSeries.Legion_Pro_7) || mi.Generation < 10;
         }
 

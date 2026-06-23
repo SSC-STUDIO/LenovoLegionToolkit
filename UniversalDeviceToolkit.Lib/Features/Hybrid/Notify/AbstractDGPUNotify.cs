@@ -16,7 +16,13 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
     [GeneratedRegex("pci#ven_([0-9A-Fa-f]{4})|dev_([0-9A-Fa-f]{4})")]
     private static partial Regex HardwareIdRegex();
 
+    private readonly IDelayProvider _delayProvider;
     private readonly object _lock = new();
+
+    protected AbstractDGPUNotify(IDelayProvider delayProvider)
+    {
+        _delayProvider = delayProvider;
+    }
 
     private CancellationTokenSource? _notifyLaterCancellationTokenSource;
 
@@ -81,7 +87,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
         {
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(5), token).ConfigureAwait(false);
+                await _delayProvider.Delay(TimeSpan.FromSeconds(5), token).ConfigureAwait(false);
                 await NotifyLaterAsync().ConfigureAwait(false);
             }
             catch (OperationCanceledException)

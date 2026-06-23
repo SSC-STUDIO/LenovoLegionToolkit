@@ -34,6 +34,7 @@ public class GPUController : IDisposable
     private readonly AsyncLock _lock = new();
     private readonly IGPUProcessManager _processManager;
     private readonly IGPUHardwareManager _hardwareManager;
+    private readonly IDelayProvider _delayProvider;
     private volatile bool _disposed = false;
 
     private Task? _refreshTask;
@@ -72,10 +73,11 @@ public class GPUController : IDisposable
     /// </summary>
     /// <param name="processManager">GPU进程管理器。</param>
     /// <param name="hardwareManager">GPU硬件管理器。</param>
-    public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager)
+    public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager, IDelayProvider delayProvider)
     {
         _processManager = processManager;
         _hardwareManager = hardwareManager;
+        _delayProvider = delayProvider;
     }
 
     public async Task<bool> IsSupportedAsync()
@@ -221,7 +223,7 @@ public class GPUController : IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"NVAPI initialized");
 
-            await Task.Delay(delay, token).ConfigureAwait(false);
+            await _delayProvider.Delay(TimeSpan.FromMilliseconds(delay), token).ConfigureAwait(false);
 
             while (true)
             {
@@ -238,7 +240,7 @@ public class GPUController : IDisposable
 
                 var adjustedInterval = AdjustRefreshInterval();
                 if (adjustedInterval > 0)
-                    await Task.Delay(adjustedInterval, token).ConfigureAwait(false);
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(adjustedInterval), token).ConfigureAwait(false);
                 else
                     break;
             }
