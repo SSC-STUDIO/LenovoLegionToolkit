@@ -329,6 +329,7 @@ public static class Devices
                 continue;
 
             PHIDP_PREPARSED_DATA preParsedData = default;
+            var matched = false;
             try
             {
                 PInvoke.HidD_GetPreparsedData(fileHandle, out preParsedData);
@@ -339,13 +340,15 @@ public static class Devices
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Found device. [vendorId={hidAttributes.VendorID:X2}, productId={hidAttributes.ProductID:X2}, descriptorLength={caps.FeatureReportByteLength}]");
 
+                    matched = true;
                     return fileHandle;
                 }
             }
             finally
             {
                 PInvoke.HidD_FreePreparsedData(preParsedData);
-                fileHandle.Dispose();
+                if (!matched)
+                    fileHandle.Dispose();
             }
         }
 
