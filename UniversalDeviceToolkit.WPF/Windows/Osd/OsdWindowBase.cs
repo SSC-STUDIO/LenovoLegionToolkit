@@ -122,7 +122,7 @@ public abstract class OsdWindowBase : Window
     {
         MessagingCenter.Subscribe<OsdElementChangedMessage>(this, (message) =>
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 if (App.Current.OsdWindow == null) return;
 
@@ -136,7 +136,7 @@ public abstract class OsdWindowBase : Window
 
         MessagingCenter.Subscribe<OsdAppearanceChangedMessage>(this, _ =>
         {
-            Dispatcher.Invoke(ApplyAppearanceSettings);
+            Dispatcher.BeginInvoke(ApplyAppearanceSettings);
         });
     }
 

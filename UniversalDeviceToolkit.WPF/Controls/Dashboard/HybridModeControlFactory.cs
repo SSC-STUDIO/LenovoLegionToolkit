@@ -112,7 +112,7 @@ public static class HybridModeControlFactory
             return TimeSpan.FromSeconds(5);
         }
 
-        private void DGPUNotify_Notified(object? sender, bool e) => Dispatcher.Invoke(() =>
+        private void DGPUNotify_Notified(object? sender, bool e) => Dispatcher.BeginInvoke(() =>
         {
             SnackbarHelper.Show(e ? Resource.DGPU_Connected_Title : Resource.DGPU_Disconnected_Title, type: SnackbarType.Info);
         });

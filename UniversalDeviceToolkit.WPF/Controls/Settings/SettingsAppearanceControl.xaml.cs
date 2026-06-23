@@ -281,7 +281,7 @@ public partial class SettingsAppearanceControl
     {
         if (!Dispatcher.CheckAccess())
         {
-            Dispatcher.Invoke(() => LanguagePackInstallCoordinator_Changed(sender, e));
+            Dispatcher.BeginInvoke(() => LanguagePackInstallCoordinator_Changed(sender, e));
             return;
         }
 
@@ -327,7 +327,7 @@ public partial class SettingsAppearanceControl
     {
         if (!Dispatcher.CheckAccess())
         {
-            Dispatcher.Invoke(() => ReportLanguageOperationProgress(value));
+            Dispatcher.BeginInvoke(() => ReportLanguageOperationProgress(value));
             return;
         }
 

@@ -649,7 +649,7 @@ private string _currentSearchText = string.Empty;
     {
         if (!Dispatcher.CheckAccess())
         {
-            Dispatcher.Invoke(() => PluginInstallCoordinator_Changed(sender, e));
+            Dispatcher.BeginInvoke(() => PluginInstallCoordinator_Changed(sender, e));
             return;
         }
 
@@ -2718,7 +2718,7 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
     private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
     {
         // Update UI when plugin state changes (installed/uninstalled)
-        Dispatcher.Invoke(() =>
+        Dispatcher.BeginInvoke(() =>
         {
             UpdateSpecificPluginUI(e.PluginId);
             UpdateAllPluginsUI();

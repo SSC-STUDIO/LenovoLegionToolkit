@@ -160,7 +160,7 @@ public partial class WindowsOptimizationPage
             if (!token.IsCancellationRequested)
             {
                 // Ensure UI update happens on UI thread
-                Dispatcher.Invoke(() => DriverReload());
+                Dispatcher.BeginInvoke(() => DriverReload());
             }
         }
         catch (TaskCanceledException)
@@ -352,7 +352,7 @@ public partial class WindowsOptimizationPage
             _driverPackages = packages;
 
             // Ensure UI update happens on UI thread
-            Dispatcher.Invoke(() => DriverReload());
+            Dispatcher.BeginInvoke(() => DriverReload());
 
             StopDriverRetryTimer();
 
@@ -392,7 +392,7 @@ public partial class WindowsOptimizationPage
             }
 
             // UI updates must be on UI thread
-            Dispatcher.Invoke(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 if (!errorOccurred && _driverLoadingIndicator != null)
                     _driverLoadingIndicator.Visibility = Visibility.Collapsed;

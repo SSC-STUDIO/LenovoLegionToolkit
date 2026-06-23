@@ -42,7 +42,7 @@ public class ThemeManager
         _listener = systemThemeListener;
         _settings = settings;
 
-        _listener.Changed += (_, _) => Application.Current.Dispatcher.Invoke(Apply);
+        _listener.Changed += (_, _) => Application.Current.Dispatcher.BeginInvoke(Apply);
     }
 
     public void Apply()

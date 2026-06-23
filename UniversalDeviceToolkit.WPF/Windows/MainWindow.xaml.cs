@@ -462,31 +462,39 @@ public partial class MainWindow
 
         Task.Run(async () =>
         {
-            _ = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
-            _ = await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false);
-            _ = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+            try
+            {
+                _ = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
+                _ = await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false);
+                _ = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to update disabler statuses.", ex);
+            }
         });
     }
 
     private void SpecialKeyListener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e)
     {
         if (e.SpecialKey == SpecialKey.FnN)
-            Dispatcher.Invoke(BringToForeground);
+            Dispatcher.BeginInvoke(BringToForeground);
     }
 
     private void VantageDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.Invoke(() => _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() => _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
     }
 
     private void LegionZoneDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.Invoke(() => _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() => _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
     }
 
     private void FnKeysDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.Invoke(() => _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() => _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
     }
 
     public async Task CheckForUpdates(bool manualCheck = false)

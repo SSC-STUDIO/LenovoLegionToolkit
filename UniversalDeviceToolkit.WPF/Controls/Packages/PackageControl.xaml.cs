@@ -790,7 +790,7 @@ public partial class PackageControl : IProgress<float>
         _ => string.Empty
     };
 
-    public void Report(float value) => Dispatcher.Invoke(() =>
+    public void Report(float value) => Dispatcher.BeginInvoke(() =>
     {
         _downloadProgressRing.IsIndeterminate = !(value > 0);
         _downloadProgressRing.Progress = value * 100;

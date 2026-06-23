@@ -614,28 +614,36 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public async Task UpdateEstimatedCleanupSizeAsync()
     {
-        var selectedKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
-        
-        var size = await _cleanupService.EstimateCleanupSizeAsync(selectedKeys, CancellationToken.None, path =>
+        try
         {
-            // Update progress text on UI thread
-            if (Application.Current?.Dispatcher != null)
+            var selectedKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
+            
+            var size = await _cleanupService.EstimateCleanupSizeAsync(selectedKeys, CancellationToken.None, path =>
             {
-                Application.Current.Dispatcher.BeginInvoke(() =>
+                // Update progress text on UI thread
+                if (Application.Current?.Dispatcher != null)
                 {
-                    CurrentOperationText = path;
-                });
+                    Application.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        CurrentOperationText = path;
+                    });
+                }
+            }).ConfigureAwait(false);
+            
+            // Ensure UI updates happen on UI thread
+            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+            {
+                await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size);
             }
-        }).ConfigureAwait(false);
-        
-        // Ensure UI updates happen on UI thread
-        if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-        {
-            await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size);
+            else
+            {
+                EstimatedCleanupSize = size;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            EstimatedCleanupSize = size;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to estimate cleanup size.", ex);
         }
     }
 

@@ -21,19 +21,19 @@ public static class WindowExtensions
     private const int WS_EX_TRANSPARENT = 0x00000020;
     private const int SWP_NOACTIVATE = 0x0010;
 
-    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
-    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-    [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     private static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
 
-    [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     private static extern IntPtr SetWindowLong32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-    [DllImport("user32.dll", EntryPoint = "GetWindowBand", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("user32.dll", EntryPoint = "GetWindowBand", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GetWindowBand(IntPtr hWnd, out uint pdwBand);
 
