@@ -421,9 +421,9 @@ public partial class SensorsControl
                 ?? _batteryGauge.RingBrush;
         }
 
-        if (FindName("_batteryStatusLabel") is ContentControl statusLabel)
+        if (FindName("_batteryStatusLabel") is TextBlock statusLabel)
         {
-            statusLabel.Content = GetBatteryStatusText(batteryInfo);
+            statusLabel.Text = GetBatteryStatusText(batteryInfo);
             statusLabel.Visibility = (batteryInfo.IsLowBattery || powerAdapterStatus == PowerAdapterStatus.ConnectedLowWattage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;

@@ -31,7 +31,13 @@ IF "%VERSION%"=="" (
 CALL :RESOLVE_CROSS_PLATFORM_CLI_POLICY
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
-SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
+where iscc >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo Inno Setup compiler (iscc.exe) not found in PATH.
+    echo Download from https://jrsoftware.org/isdl.php
+    set ERROR_COUNT=1
+    goto :BUILD_FAILED
+)
 
 CALL :CLEAN_WORKSPACE
 IF %ERROR_COUNT% NEQ 0 GOTO END
@@ -241,7 +247,7 @@ endlocal & exit /b %ERROR_COUNT%
 
 :RESOLVE_VERSION
 REM MajorVersion, MinorVersion, PatchVersion are plain numeric text nodes.
-REM Reading them directly avoids the '$(â€?' MSBuild-expression interpolation
+REM Reading them directly avoids the '$(ï¿½?' MSBuild-expression interpolation
 REM trap that causes NuGet to see '..' as a version string on some runners.
 for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$props=[xml](Get-Content -Raw 'Directory.Build.props'); $group=$props.Project.PropertyGroup | Where-Object { $_.MajorVersion -ne $null } | Select-Object -First 1; $maj=[string]$group.MajorVersion; $min=[string]$group.MinorVersion; $pat=[string]$group.PatchVersion; if ([string]::IsNullOrWhiteSpace($maj) -or [string]::IsNullOrWhiteSpace($min) -or [string]::IsNullOrWhiteSpace($pat)) { exit 1 }; '{0}.{1}.{2}' -f $maj,$min,$pat"`) do SET VERSION=%%v
 exit /b %ERRORLEVEL%

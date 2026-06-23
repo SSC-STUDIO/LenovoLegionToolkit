@@ -113,24 +113,27 @@ public abstract class AbstractSoftwareDisabler
     {
         foreach (var process in Process.GetProcesses())
         {
-            foreach (var processName in ProcessNames)
+            using (process)
             {
-                var name = string.Empty;
-
-                try
+                foreach (var processName in ProcessNames)
                 {
-                    name = process.ProcessName;
-                    if (!name.Equals(processName, StringComparison.OrdinalIgnoreCase))
-                        continue;
-                }
-                catch
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("Failed to get process name");
-                }
+                    var name = string.Empty;
 
-                if (!string.IsNullOrEmpty(name))
-                    yield return name;
+                    try
+                    {
+                        name = process.ProcessName;
+                        if (!name.Equals(processName, StringComparison.OrdinalIgnoreCase))
+                            continue;
+                    }
+                    catch
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Failed to get process name");
+                    }
+
+                    if (!string.IsNullOrEmpty(name))
+                        yield return name;
+                }
             }
         }
     }
@@ -267,21 +270,26 @@ public abstract class AbstractSoftwareDisabler
     protected virtual async Task KillProcessesAsync()
     {
         foreach (var process in Process.GetProcesses())
-            foreach (var processName in ProcessNames)
+        {
+            using (process)
             {
-                try
+                foreach (var processName in ProcessNames)
                 {
-                    if (process.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase))
+                    try
                     {
-                        process.Kill(true);
-                        await process.WaitForExitAsync().ConfigureAwait(false);
+                        if (process.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            process.Kill(true);
+                            await process.WaitForExitAsync().ConfigureAwait(false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Couldn't kill process.", ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Couldn't kill process.", ex);
-                }
             }
+        }
     }
 }

@@ -19,6 +19,15 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
     public async Task<OnlineResourceCatalog> GetCatalogAsync(CancellationToken token = default)
     {
         var catalogUrl = Environment.GetEnvironmentVariable(CatalogUrlEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(catalogUrl))
+        {
+            if (!Uri.TryCreate(catalogUrl, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                catalogUrl = null;
+            }
+        }
+
         if (string.IsNullOrWhiteSpace(catalogUrl))
             catalogUrl = AppIdentity.StableResourceCatalogUrl;
 

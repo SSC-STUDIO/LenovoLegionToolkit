@@ -87,7 +87,7 @@
                                         Padding="4"
                                         Background="Transparent"
                                         BorderThickness="0"
-                                        Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Command="{Binding Path=CloseButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                         Icon="Dismiss24"
                                         IsEnabled="True" />
                                 </Border>

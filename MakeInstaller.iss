@@ -20,7 +20,7 @@
 #endif
 
 #ifndef MyAppId
-  #define MyAppId "{{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}"
+  #define MyAppId "{{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}}"
 #endif
 
 #ifndef MyAppPrivilegesRequired

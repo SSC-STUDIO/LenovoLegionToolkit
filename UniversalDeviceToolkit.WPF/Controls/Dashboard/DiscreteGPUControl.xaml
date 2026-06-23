@@ -30,21 +30,21 @@
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="{StaticResource GpuStatusActiveBrush}"
+                    Fill="GreenYellow"
                     Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusInactiveIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="{StaticResource GpuStatusInactiveBrush}"
+                    Fill="Orange"
                     Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusPoweredOffIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
-                    Fill="{StaticResource GpuStatusPoweredOffBrush}"
+                    Fill="Gray"
                     Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
                 <TextBlock
                     x:Name="_discreteGPUStatusDescription"
