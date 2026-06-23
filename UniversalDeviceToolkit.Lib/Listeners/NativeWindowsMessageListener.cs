@@ -318,7 +318,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
     private void OnBatterySaverEnabled()
     {
-        Task.Run(_powerModeFeature.EnsureCorrectWindowsPowerSettingsAreSetAsync)
+        Task.Run(() => _powerModeFeature.EnsureCorrectWindowsPowerSettingsAreSetAsync())
             .Forget("apply Windows power settings after battery saver event");
 
         RaiseChanged(NativeWindowsMessage.BatterySaverEnabled);

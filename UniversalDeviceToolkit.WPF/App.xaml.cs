@@ -55,25 +55,9 @@ public partial class App
         [LibraryImport("kernel32.dll")]
         private static partial void ExitProcess(uint uExitCode);
 
-        private const string MUTEX_NAME = AppIdentity.CompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string EVENT_NAME = AppIdentity.CompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string ACK_EVENT_NAME = AppIdentity.CompactName + "_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string LEGACY_MUTEX_NAME = AppIdentity.LegacyCompactName + "_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string LEGACY_EVENT_NAME = AppIdentity.LegacyCompactName + "_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const string LEGACY_ACK_EVENT_NAME = AppIdentity.LegacyCompactName + "_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
-    private const int SINGLE_INSTANCE_ACTIVATION_TIMEOUT_MS = 1200;
-    private const string RECOVERY_SINGLE_INSTANCE_SUFFIX = "_Recovery";
+        private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
-    private Mutex? _singleInstanceMutex;
-    private Mutex? _legacySingleInstanceMutex;
-    private EventWaitHandle? _singleInstanceWaitHandle;
-    private EventWaitHandle? _legacySingleInstanceWaitHandle;
-    private EventWaitHandle? _singleInstanceAckWaitHandle;
-    private EventWaitHandle? _legacySingleInstanceAckWaitHandle;
-    private bool _singleInstanceMutexOwned;
-    private bool _legacySingleInstanceMutexOwned;
-    private Thread? _singleInstanceThread;
+    private SingleInstanceGuard? _singleInstanceGuard;
     private Task? _backgroundInitializationTask;
     private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
     private readonly object _shutdownLock = new();
@@ -83,6 +67,24 @@ public partial class App
     private bool _inExitHandler;
     private bool _exceptionHandlerExecuting;
     private StartupOrchestrator? _orchestrator;
+
+    // Lazily-resolved service caches (service-locator reduction per issue #129).
+    // WPF constructs App with a parameterless constructor and the IoC container is
+    // initialised later in Application_Startup, so lazy resolution via the shared
+    // GetCachedService<T>/TryGetCachedService<T> helpers is the only option.
+    // The dictionary is populated on first access and reused thereafter so each
+    // registered type is resolved from the IoC container exactly once.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, object?> s_serviceCache = new();
+
+    private static T GetCachedService<T>() where T : class
+    {
+        return (T)(s_serviceCache.GetOrAdd(typeof(T), _ => IoCContainer.Resolve<T>()) ?? IoCContainer.Resolve<T>());
+    }
+
+    private static T? TryGetCachedService<T>() where T : class
+    {
+        return (T?)s_serviceCache.GetOrAdd(typeof(T), _ => IoCContainer.TryResolve<T>());
+    }
 
     internal static async Task RunInitStepAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
     {
@@ -147,7 +149,7 @@ public partial class App
     {
         try
         {
-            var pluginManager = IoCContainer.Resolve<IPluginManager>();
+            var pluginManager = GetCachedService<IPluginManager>();
             
             // System Optimization and Tools are now default interfaces, not plugins
             // They are registered directly in MainWindow.xaml as NavigationItems
@@ -433,11 +435,6 @@ public partial class App
         try { Log.Instance.Shutdown(); }
         catch { /* Log shutdown failed - continue with exit */ }
 
-        try { _singleInstanceMutex?.Close(); }
-        catch { /* Mutex cleanup failed - continue with exit */ }
-        try { _legacySingleInstanceMutex?.Close(); }
-        catch { /* Legacy mutex cleanup failed - continue with exit */ }
-
         StopMacroControllerSafely();
         StopSingleInstanceThreadSafely();
 
@@ -452,13 +449,13 @@ public partial class App
             mw.Close();
         }
 
-        var mainWindow = new MainWindow(IoCContainer.Resolve<ApplicationSettings>(),
-            IoCContainer.Resolve<IPluginManager>(),
-            IoCContainer.Resolve<SpecialKeyListener>(),
-            IoCContainer.Resolve<VantageDisabler>(),
-            IoCContainer.Resolve<LegionZoneDisabler>(),
-            IoCContainer.Resolve<FnKeysDisabler>(),
-            IoCContainer.Resolve<UpdateChecker>())
+        var mainWindow = new MainWindow(GetCachedService<ApplicationSettings>(),
+            GetCachedService<IPluginManager>(),
+            GetCachedService<SpecialKeyListener>(),
+            GetCachedService<VantageDisabler>(),
+            GetCachedService<LegionZoneDisabler>(),
+            GetCachedService<FnKeysDisabler>(),
+            GetCachedService<UpdateChecker>())
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
@@ -475,7 +472,7 @@ public partial class App
     {
         try
         {
-            if (IoCContainer.TryResolve<MacroController>() is { } macroController)
+            if (TryGetCachedService<MacroController>() is { } macroController)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Stopping MacroController...");
@@ -494,115 +491,18 @@ public partial class App
     /// <summary>
     /// Stops the single instance thread safely with timeout
     /// </summary>
-    private void StopSingleInstanceThreadSafely()
-    {
-        if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Stopping single instance thread...");
-
-                _singleInstanceWaitHandle?.Dispose();
-                _singleInstanceWaitHandle = null;
-                _legacySingleInstanceWaitHandle?.Dispose();
-                _legacySingleInstanceWaitHandle = null;
-                _singleInstanceAckWaitHandle?.Dispose();
-                _singleInstanceAckWaitHandle = null;
-                _legacySingleInstanceAckWaitHandle?.Dispose();
-                _legacySingleInstanceAckWaitHandle = null;
-
-                if (!_singleInstanceThread.Join(500))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Single instance thread did not finish in time.");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error stopping single instance thread: {ex.Message}", ex);
-            }
-        }
-    }
+    private void StopSingleInstanceThreadSafely() => _singleInstanceGuard?.StopListener();
 
     /// <summary>
     /// Cleanup single instance resources (mutex and wait handle)
     /// </summary>
     private void CleanupSingleInstanceResources()
     {
-        try
-        {
-            if (_singleInstanceMutexOwned && _singleInstanceMutex != null)
-            {
-                void ReleaseMutex()
-                {
-                    if (_singleInstanceMutexOwned && _singleInstanceMutex != null)
-                    {
-                        _singleInstanceMutex.ReleaseMutex();
-                        _singleInstanceMutexOwned = false;
-                    }
-                }
+        if (_singleInstanceGuard is null)
+            return;
 
-                if (Dispatcher.CheckAccess())
-                {
-                    ReleaseMutex();
-                }
-                else if (!Dispatcher.HasShutdownStarted && !Dispatcher.HasShutdownFinished)
-                {
-                    Dispatcher.Invoke(ReleaseMutex);
-                }
-                else
-                {
-                    _singleInstanceMutexOwned = false;
-                }
-            }
-
-            _singleInstanceMutex?.Close();
-            _singleInstanceMutex = null;
-            if (_legacySingleInstanceMutexOwned && _legacySingleInstanceMutex != null)
-            {
-                _legacySingleInstanceMutex.ReleaseMutex();
-                _legacySingleInstanceMutexOwned = false;
-            }
-
-            _legacySingleInstanceMutex?.Close();
-            _legacySingleInstanceMutex = null;
-        }
-        catch (ApplicationException ex) when (ex.Message.Contains("Object synchronization method", StringComparison.OrdinalIgnoreCase))
-        {
-            _singleInstanceMutexOwned = false;
-            _singleInstanceMutex?.Close();
-            _singleInstanceMutex = null;
-            _legacySingleInstanceMutexOwned = false;
-            _legacySingleInstanceMutex?.Close();
-            _legacySingleInstanceMutex = null;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Single instance mutex was not owned by the current thread; closed without explicit release.");
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error disposing single instance mutex: {ex.Message}", ex);
-        }
-
-        try
-        {
-            _singleInstanceWaitHandle?.Dispose();
-            _singleInstanceWaitHandle = null;
-            _legacySingleInstanceWaitHandle?.Dispose();
-            _legacySingleInstanceWaitHandle = null;
-            _singleInstanceAckWaitHandle?.Dispose();
-            _singleInstanceAckWaitHandle = null;
-            _legacySingleInstanceAckWaitHandle?.Dispose();
-            _legacySingleInstanceAckWaitHandle = null;
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error disposing wait handle: {ex.Message}", ex);
-        }
+        _singleInstanceGuard.Dispose();
+        _singleInstanceGuard = null;
     }
 
     private void ForceExit(uint exitCode)
@@ -620,7 +520,7 @@ public partial class App
     {
         try
         {
-            if (IoCContainer.TryResolve<T>() is not { } service)
+            if (TryGetCachedService<T>() is not { } service)
                 return;
 
             await stopAction(service);
@@ -722,7 +622,7 @@ public partial class App
     {
         try
         {
-            if (IoCContainer.TryResolve<IPluginManager>() is not { } pluginManager)
+            if (TryGetCachedService<IPluginManager>() is not { } pluginManager)
                 return;
 
             var registeredPlugins = pluginManager.GetRegisteredPlugins().ToList();
@@ -915,72 +815,18 @@ public partial class App
 
     internal bool EnsureSingleInstance()
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Checking for other instances...");
+        if (_singleInstanceGuard is not null)
+            throw new InvalidOperationException("Single instance guard already initialized.");
 
-        var mutexName = ResolveSingleInstanceObjectName(MUTEX_NAME);
-        var eventName = ResolveSingleInstanceObjectName(EVENT_NAME);
-        var ackEventName = ResolveSingleInstanceObjectName(ACK_EVENT_NAME);
-        var legacyMutexName = ResolveSingleInstanceObjectName(LEGACY_MUTEX_NAME);
-        var legacyEventName = ResolveSingleInstanceObjectName(LEGACY_EVENT_NAME);
-        var legacyAckEventName = ResolveSingleInstanceObjectName(LEGACY_ACK_EVENT_NAME);
-        _singleInstanceMutex = new Mutex(true, mutexName, out var isOwned);
-        _singleInstanceMutexOwned = isOwned;
-        _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
-        _singleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, ackEventName);
-        _legacySingleInstanceMutex = new Mutex(true, legacyMutexName, out var legacyIsOwned);
-        _legacySingleInstanceMutexOwned = legacyIsOwned;
-        _legacySingleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, legacyEventName);
-        _legacySingleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, legacyAckEventName);
+        _singleInstanceGuard = new SingleInstanceGuard(Dispatcher);
 
-        if (!isOwned || !legacyIsOwned)
+        if (!_singleInstanceGuard.TryAcquire(out _))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Another instance running, signaling existing instance...");
-
-            if (SignalAndWaitForSingleInstanceActivation())
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Another instance acknowledged activation, closing...");
-
-                Shutdown();
-                return false;
-            }
-
-            if (TrySwitchToRecoverySingleInstance(mutexName, eventName, ackEventName, legacyMutexName, legacyEventName, legacyAckEventName))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Existing instance did not acknowledge activation; continuing with recovery single-instance guard.");
-            }
-            else
-            {
-                Shutdown();
-                return false;
-            }
+            _singleInstanceGuard = null;
+            return false;
         }
 
-        _singleInstanceThread = new Thread(() =>
-        {
-            try
-            {
-                while (WaitForSingleInstanceSignal())
-                    BringMainWindowToForegroundFromSingleInstanceThread();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Expected when wait handle is disposed during shutdown
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error in single instance thread.", ex);
-            }
-        })
-        {
-            IsBackground = true,
-            Name = "SingleInstanceThread"
-        };
-        _singleInstanceThread.Start();
+        _singleInstanceGuard.StartListener(BringMainWindowToForegroundFromSingleInstanceThread);
         return true;
     }
 
@@ -993,84 +839,6 @@ public partial class App
         catch { /* Fall back to native process exit. */ }
 
         ExitProcess(0);
-    }
-
-    private bool WaitForSingleInstanceSignal()
-    {
-        var handles = new[] { _singleInstanceWaitHandle, _legacySingleInstanceWaitHandle }
-            .Where(handle => handle is not null)
-            .Cast<WaitHandle>()
-            .ToArray();
-
-        if (handles.Length == 0)
-            return false;
-
-        return WaitHandle.WaitAny(handles) != WaitHandle.WaitTimeout;
-    }
-
-    private bool SignalAndWaitForSingleInstanceActivation()
-    {
-        _singleInstanceAckWaitHandle?.Reset();
-        _legacySingleInstanceAckWaitHandle?.Reset();
-
-        _singleInstanceWaitHandle?.Set();
-        _legacySingleInstanceWaitHandle?.Set();
-
-        var handles = new[] { _singleInstanceAckWaitHandle, _legacySingleInstanceAckWaitHandle }
-            .Where(handle => handle is not null)
-            .Cast<WaitHandle>()
-            .ToArray();
-
-        return handles.Length > 0
-               && WaitHandle.WaitAny(handles, SINGLE_INSTANCE_ACTIVATION_TIMEOUT_MS) != WaitHandle.WaitTimeout;
-    }
-
-    private void SignalSingleInstanceActivationAck()
-    {
-        try { _singleInstanceAckWaitHandle?.Set(); }
-        catch { /* Activation acknowledgement is best effort. */ }
-
-        try { _legacySingleInstanceAckWaitHandle?.Set(); }
-        catch { /* Activation acknowledgement is best effort. */ }
-    }
-
-    private bool TrySwitchToRecoverySingleInstance(
-        string mutexName,
-        string eventName,
-        string ackEventName,
-        string legacyMutexName,
-        string legacyEventName,
-        string legacyAckEventName)
-    {
-        CleanupSingleInstanceResources();
-
-        var recoveryMutexName = mutexName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-        var recoveryEventName = eventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-        var recoveryAckEventName = ackEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-        var recoveryLegacyMutexName = legacyMutexName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-        var recoveryLegacyEventName = legacyEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-        var recoveryLegacyAckEventName = legacyAckEventName + RECOVERY_SINGLE_INSTANCE_SUFFIX;
-
-        _singleInstanceMutex = new Mutex(true, recoveryMutexName, out var recoveryIsOwned);
-        _singleInstanceMutexOwned = recoveryIsOwned;
-        _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryEventName);
-        _singleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryAckEventName);
-        _legacySingleInstanceMutex = new Mutex(true, recoveryLegacyMutexName, out var recoveryLegacyIsOwned);
-        _legacySingleInstanceMutexOwned = recoveryLegacyIsOwned;
-        _legacySingleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryLegacyEventName);
-        _legacySingleInstanceAckWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, recoveryLegacyAckEventName);
-
-        if (recoveryIsOwned && recoveryLegacyIsOwned)
-            return true;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Recovery single-instance guard is already owned, signaling recovery instance...");
-
-        if (!SignalAndWaitForSingleInstanceActivation() && Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Recovery instance did not acknowledge activation.");
-
-        CleanupSingleInstanceResources();
-        return false;
     }
 
     private void BringMainWindowToForegroundFromSingleInstanceThread()
@@ -1086,8 +854,6 @@ public partial class App
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
-
-                    SignalSingleInstanceActivationAck();
 
                     try
                     {
@@ -1115,43 +881,6 @@ public partial class App
         }
     }
 
-    private static string ResolveSingleInstanceObjectName(string baseName)
-    {
-#if UDT_TEST_HOOKS
-        var isolationKey = ResolveSingleInstanceIsolationKey();
-        if (string.IsNullOrWhiteSpace(isolationKey))
-            return baseName;
-
-        var sanitizedKey = string.Concat(isolationKey
-            .Trim()
-            .Where(character => char.IsLetterOrDigit(character) || character is '-' or '_'));
-
-        return string.IsNullOrWhiteSpace(sanitizedKey)
-            ? baseName
-            : $"{baseName}_{sanitizedKey}";
-#else
-        return baseName;
-#endif
-    }
-
-#if UDT_TEST_HOOKS
-    private static string? ResolveSingleInstanceIsolationKey()
-    {
-        var overridePath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
-        if (string.IsNullOrWhiteSpace(overridePath))
-            return null;
-
-        try
-        {
-            return Path.GetFullPath(overridePath);
-        }
-        catch
-        {
-            return overridePath;
-        }
-    }
-#endif
-
     private static void ApplyStartupOverrides(Flags flags)
     {
         _ = flags;
@@ -1161,7 +890,7 @@ public partial class App
     {
         try
         {
-            if (IoCContainer.TryResolve<AmdOverclockingController>() is { } amdController && amdController.IsActive())
+            if (TryGetCachedService<AmdOverclockingController>() is { } amdController && amdController.IsActive())
             {
                 amdController.SaveShutdownInfo(new ShutdownInfo
                 {
@@ -1170,14 +899,14 @@ public partial class App
                 });
             }
 
-            if (IoCContainer.TryResolve<FanCurveManager>() is { } fanManager &&
+            if (TryGetCachedService<FanCurveManager>() is { } fanManager &&
                 await fanManager.IsSupportedAsync().ConfigureAwait(false))
             {
                 await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
             }
 
-            if (IoCContainer.TryResolve<LampArrayController>() is { } lampArrayController &&
-                IoCContainer.TryResolve<LampArraySettings>() is { } lampArraySettings)
+            if (TryGetCachedService<LampArrayController>() is { } lampArrayController &&
+                TryGetCachedService<LampArraySettings>() is { } lampArraySettings)
             {
                 lampArrayController.SaveSettings(lampArraySettings);
             }
@@ -1191,7 +920,7 @@ public partial class App
 
     private static void InitMacroController()
     {
-        var controller = IoCContainer.Resolve<MacroController>();
+        var controller = GetCachedService<MacroController>();
         controller.Start();
     }
 
@@ -1205,7 +934,7 @@ public partial class App
             });
         });
 
-        var osdSettings = IoCContainer.Resolve<OsdSettings>();
+        var osdSettings = GetCachedService<OsdSettings>();
 
         if (osdSettings.Store.ShowOsd)
         {
@@ -1215,7 +944,7 @@ public partial class App
 
     private void HandleOsdCommand(OsdState command)
     {
-        var osdSettings = IoCContainer.Resolve<OsdSettings>();
+        var osdSettings = GetCachedService<OsdSettings>();
         bool shouldBeBar = osdSettings.Store.SelectedStyleIndex == 1;
 
         switch (command)

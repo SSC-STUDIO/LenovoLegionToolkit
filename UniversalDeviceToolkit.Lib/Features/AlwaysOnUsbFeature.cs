@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -11,7 +12,7 @@ public class AlwaysOnUSBFeature() : AbstractDriverFeature<AlwaysOnUSBState>(Driv
 {
     protected override uint GetInBufferValue() => 0x2;
 
-    protected override Task<uint[]> ToInternalAsync(AlwaysOnUSBState state)
+    protected override Task<uint[]> ToInternalAsync(AlwaysOnUSBState state, CancellationToken cancellationToken = default)
     {
         var result = state switch
         {
@@ -23,7 +24,7 @@ public class AlwaysOnUSBFeature() : AbstractDriverFeature<AlwaysOnUSBState>(Driv
         return Task.FromResult(result);
     }
 
-    protected override Task<AlwaysOnUSBState> FromInternalAsync(uint state)
+    protected override Task<AlwaysOnUSBState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         state = state.ReverseEndianness();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System.Management;
@@ -8,8 +9,10 @@ namespace LenovoLegionToolkit.Lib.Features.Hybrid;
 
 public class IGPUModeFeatureFlagsFeature : IFeature<IGPUModeState>
 {
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
@@ -21,10 +24,16 @@ public class IGPUModeFeatureFlagsFeature : IFeature<IGPUModeState>
         }
     }
 
-    public Task<IGPUModeState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<IGPUModeState>());
-
-    public async Task<IGPUModeState> GetStateAsync()
+    public Task<IGPUModeState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<IGPUModeState>());
+    }
+
+    public async Task<IGPUModeState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
@@ -44,8 +53,10 @@ public class IGPUModeFeatureFlagsFeature : IFeature<IGPUModeState>
         return result;
     }
 
-    public async Task SetStateAsync(IGPUModeState state)
+    public async Task SetStateAsync(IGPUModeState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}...");
 
@@ -58,7 +69,13 @@ public class IGPUModeFeatureFlagsFeature : IFeature<IGPUModeState>
             throw new IGPUModeChangeException(state);
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -18,20 +19,28 @@ public class InstantBootCapabilityFeature : IFeature<InstantBootState>
     private readonly InstantBootAcFeature _ac = new();
     private readonly InstantBootUsbPowerDeliveryFeature _usbPowerDelivery = new();
 
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
-        return await _ac.IsSupportedAsync().ConfigureAwait(false) && await _usbPowerDelivery.IsSupportedAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return await _ac.IsSupportedAsync(cancellationToken).ConfigureAwait(false) && await _usbPowerDelivery.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<InstantBootState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<InstantBootState>());
-
-    public async Task<InstantBootState> GetStateAsync()
+    public Task<InstantBootState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<InstantBootState>());
+    }
+
+    public async Task<InstantBootState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
-        var ac = await _ac.GetStateAsync().ConfigureAwait(false);
-        var usbPowerDelivery = await _usbPowerDelivery.GetStateAsync().ConfigureAwait(false);
+        var ac = await _ac.GetStateAsync(cancellationToken).ConfigureAwait(false);
+        var usbPowerDelivery = await _usbPowerDelivery.GetStateAsync(cancellationToken).ConfigureAwait(false);
 
         var result = (ac, usbPowerDelivery) switch
         {
@@ -47,8 +56,10 @@ public class InstantBootCapabilityFeature : IFeature<InstantBootState>
         return result;
     }
 
-    public async Task SetStateAsync(InstantBootState state)
+    public async Task SetStateAsync(InstantBootState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}...");
 
@@ -60,10 +71,14 @@ public class InstantBootCapabilityFeature : IFeature<InstantBootState>
             _ => (State.Off, State.Off)
         };
 
-        await _ac.SetStateAsync(ac).ConfigureAwait(false);
-        await _usbPowerDelivery.SetStateAsync(usbPowerDelivery).ConfigureAwait(false);
+        await _ac.SetStateAsync(ac, cancellationToken).ConfigureAwait(false);
+        await _usbPowerDelivery.SetStateAsync(usbPowerDelivery, cancellationToken).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

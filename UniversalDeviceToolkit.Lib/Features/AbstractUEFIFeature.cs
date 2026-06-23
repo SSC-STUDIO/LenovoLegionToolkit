@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
@@ -10,11 +11,13 @@ namespace LenovoLegionToolkit.Lib.Features;
 public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint scopeAttribute)
     : IFeature<T> where T : struct, Enum, IComparable
 {
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
-            _ = await GetStateAsync().ConfigureAwait(false);
+            _ = await GetStateAsync(cancellationToken).ConfigureAwait(false);
             return true;
         }
         catch
@@ -23,14 +26,24 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
         }
     }
 
-    public Task<T[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<T>());
-
-    public abstract Task<T> GetStateAsync();
-
-    public abstract Task SetStateAsync(T state);
-
-    protected unsafe Task<TS> ReadFromUefiAsync<TS>() where TS : struct => Task.Run(() =>
+    public Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<T>());
+    }
+
+    public abstract Task<T> GetStateAsync(CancellationToken cancellationToken = default);
+
+    public abstract Task SetStateAsync(T state, CancellationToken cancellationToken = default);
+
+    public virtual void InvalidateResolution()
+    {
+    }
+
+    protected unsafe Task<TS> ReadFromUefiAsync<TS>(CancellationToken cancellationToken = default) where TS : struct => Task.Run(() =>
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Reading from UEFI... [feature={GetType().Name}]");
 
@@ -71,10 +84,12 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
             Marshal.FreeHGlobal(ptr);
             TokenManipulator.RemovePrivileges(TokenManipulator.SE_SYSTEM_ENVIRONMENT_PRIVILEGE);
         }
-    });
+    }, cancellationToken);
 
-    protected unsafe Task WriteToUefiAsync<TS>(TS structure) where TS : struct => Task.Run(() =>
+    protected unsafe Task WriteToUefiAsync<TS>(TS structure, CancellationToken cancellationToken = default) where TS : struct => Task.Run(() =>
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var ptr = Marshal.AllocHGlobal(Marshal.SizeOf<TS>());
 
         try
@@ -109,5 +124,5 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
             Marshal.FreeHGlobal(ptr);
             TokenManipulator.RemovePrivileges(TokenManipulator.SE_SYSTEM_ENVIRONMENT_PRIVILEGE);
         }
-    });
+    }, cancellationToken);
 }

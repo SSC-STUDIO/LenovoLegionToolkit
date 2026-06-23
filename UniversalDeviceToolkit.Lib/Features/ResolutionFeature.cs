@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
@@ -11,10 +12,12 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class ResolutionFeature : IFeature<Resolution>
 {
-    public Task<bool> IsSupportedAsync() => Task.FromResult(true);
+    public Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
 
-    public Task<Resolution[]> GetAllStatesAsync()
+    public Task<Resolution[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting all resolutions...");
 
@@ -49,8 +52,10 @@ public class ResolutionFeature : IFeature<Resolution>
         return Task.FromResult(result);
     }
 
-    public Task<Resolution> GetStateAsync()
+    public Task<Resolution> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting current resolution...");
 
@@ -72,8 +77,10 @@ public class ResolutionFeature : IFeature<Resolution>
         return Task.FromResult(result);
     }
 
-    public Task SetStateAsync(Resolution state)
+    public Task SetStateAsync(Resolution state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var display = InternalDisplay.Get();
         if (display is null)
         {
@@ -120,6 +127,10 @@ public class ResolutionFeature : IFeature<Resolution>
         }
 
         return Task.CompletedTask;
+    }
+
+    public void InvalidateResolution()
+    {
     }
 
     private static bool Match(DisplayPossibleSetting dps, DisplayPossibleSetting ds)

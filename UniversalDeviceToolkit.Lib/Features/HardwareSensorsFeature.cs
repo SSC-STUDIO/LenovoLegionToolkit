@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -10,20 +11,24 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class HardwareSensorsFeature(ApplicationSettings settings, OsdSettings osdSettings, SensorsGroupController sensorsGroupController) : IFeature<HardwareSensorsState>
 {
-    public Task<bool> IsSupportedAsync() => Task.FromResult(PawnIOHelper.IsPawnIOInstalled());
+    public Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default) => Task.FromResult(PawnIOHelper.IsPawnIOInstalled());
 
-    public Task<HardwareSensorsState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<HardwareSensorsState>());
+    public Task<HardwareSensorsState[]> GetAllStatesAsync(CancellationToken cancellationToken = default) => Task.FromResult(Enum.GetValues<HardwareSensorsState>());
 
-    public Task<HardwareSensorsState> GetStateAsync()
+    public Task<HardwareSensorsState> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var state = settings.Store.EnableHardwareSensors
             ? HardwareSensorsState.On
             : HardwareSensorsState.Off;
         return Task.FromResult(state);
     }
 
-    public async Task SetStateAsync(HardwareSensorsState state)
+    public async Task SetStateAsync(HardwareSensorsState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (state == HardwareSensorsState.On && !sensorsGroupController.IsLibreHardwareMonitorInitialized())
             await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false);
 
@@ -36,5 +41,9 @@ public class HardwareSensorsFeature(ApplicationSettings settings, OsdSettings os
 
         settings.Store.EnableHardwareSensors = state == HardwareSensorsState.On;
         settings.SynchronizeStore();
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

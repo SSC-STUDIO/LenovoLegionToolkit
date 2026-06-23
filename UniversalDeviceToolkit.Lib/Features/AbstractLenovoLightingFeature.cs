@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -9,8 +10,10 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
 {
     public bool ForceDisable { get; set; }
 
-    public virtual async Task<bool> IsSupportedAsync()
+    public virtual async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (ForceDisable)
             return false;
 
@@ -33,7 +36,7 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
                 return false;
             }
 
-            _ = await GetStateAsync().ConfigureAwait(false);
+            _ = await GetStateAsync(cancellationToken).ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Supported [feature={GetType().Name}]");
@@ -48,14 +51,21 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
         }
     }
 
-    public Task<T[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<T>());
-
-    public async Task<T> GetStateAsync()
+    public Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<T>());
+    }
+
+    public async Task<T> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state... [feature={GetType().Name}]");
 
         var (stateType, level) = await WMI.LenovoLightingMethod.GetLightingCurrentStatusAsync(lightingID).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
         var result = FromInternal(stateType, level);
 
         if (Log.Instance.IsTraceEnabled)
@@ -64,17 +74,24 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
         return result;
     }
 
-    public async Task SetStateAsync(T state)
+    public async Task SetStateAsync(T state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}... [feature={GetType().Name}]");
 
         var (stateType, level) = ToInternal(state);
 
         await WMI.LenovoLightingMethod.SetLightingCurrentStatusAsync(lightingID, stateType, level).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state} [feature={GetType().Name}]");
+    }
+
+    public virtual void InvalidateResolution()
+    {
     }
 
     protected abstract T FromInternal(int stateType, int level);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
@@ -9,8 +10,10 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class HDRFeature : IFeature<HDRState>
 {
-    public Task<bool> IsSupportedAsync()
+    public Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -48,10 +51,16 @@ public class HDRFeature : IFeature<HDRState>
         return Task.FromResult(result);
     }
 
-    public Task<HDRState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<HDRState>());
-
-    public Task<HDRState> GetStateAsync()
+    public Task<HDRState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<HDRState>());
+    }
+
+    public Task<HDRState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting current HDR state...");
 
@@ -65,9 +74,11 @@ public class HDRFeature : IFeature<HDRState>
         return Task.FromResult(result);
     }
 
-    public async Task SetStateAsync(HDRState state)
+    public async Task SetStateAsync(HDRState state, CancellationToken cancellationToken = default)
     {
-        var currentState = await GetStateAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var currentState = await GetStateAsync(cancellationToken).ConfigureAwait(false);
 
         if (currentState == state)
         {
@@ -82,5 +93,9 @@ public class HDRFeature : IFeature<HDRState>
             Log.Instance.Trace($"Setting display HDR to {state}");
 
         display.SetAdvancedColorState(state == HDRState.On);
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

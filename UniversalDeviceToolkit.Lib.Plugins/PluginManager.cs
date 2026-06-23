@@ -21,10 +21,22 @@ public class PluginManager : IPluginManager
     private readonly IPluginLoader _loader;
     private readonly IPluginRegistry _registry;
     private readonly IPluginFileSystemManager _fileSystemManager;
+    private readonly PluginLifecycleStateMachine _stateMachine = new();
+    private readonly Dictionary<string, PluginState> _pluginStates = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _stateLock = new();
     private ResolveEventHandler? _assemblyResolveHandler;
     private bool _disposed;
 
     public event EventHandler<PluginEventArgs>? PluginStateChanged;
+
+    /// <summary>
+    /// Raised when a plugin's <see cref="PluginState"/> transitions through the
+    /// lifecycle state machine. This is the rich counterpart of
+    /// <see cref="PluginStateChanged"/> and is intended for hosts/UI that want
+    /// full before/after state information; existing consumers can keep
+    /// subscribing to <see cref="PluginStateChanged"/>.
+    /// </summary>
+    public event EventHandler<PluginStateChangedEventArgs>? LifecycleStateChanged;
 
     public PluginManager(
         ApplicationSettings applicationSettings,
@@ -38,6 +50,64 @@ public class PluginManager : IPluginManager
         _loader = loader ?? throw new ArgumentNullException(nameof(loader));
         _registry = registry ?? throw new ArgumentNullException(nameof(registry));
         _fileSystemManager = fileSystemManager ?? throw new ArgumentNullException(nameof(fileSystemManager));
+    }
+
+    /// <summary>
+    /// Read the cached lifecycle state for a plugin. Returns
+    /// <see cref="PluginState.NotInstalled"/> when no state has been recorded
+    /// yet (the natural default for a never-installed plugin).
+    /// </summary>
+    private PluginState GetPluginState(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return PluginState.NotInstalled;
+
+        lock (_stateLock)
+        {
+            return _pluginStates.TryGetValue(pluginId, out var state) ? state : PluginState.NotInstalled;
+        }
+    }
+
+    /// <summary>
+    /// Persist the cached lifecycle state for a plugin. Intended to be called
+    /// from <see cref="TransitionLifecycleState"/> after the state machine has
+    /// approved a transition.
+    /// </summary>
+    private void SetPluginState(string pluginId, PluginState state)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        lock (_stateLock)
+        {
+            _pluginStates[pluginId] = state;
+        }
+    }
+
+    /// <summary>
+    /// Drive a plugin through the <see cref="PluginLifecycleStateMachine"/>.
+    /// Validates the transition, logs rejected attempts, and on success
+    /// updates the cached state and raises the lifecycle events. The
+    /// <paramref name="legacyIsInstalled"/> parameter is forwarded to the
+    /// existing <see cref="PluginStateChanged"/> event for backward
+    /// compatibility with subscribers that only care about the install flag.
+    /// </summary>
+    /// <returns><c>true</c> when the transition was applied.</returns>
+    private bool TransitionLifecycleState(string pluginId, PluginState targetState, bool legacyIsInstalled)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        var oldState = GetPluginState(pluginId);
+        var result = _stateMachine.ValidateAndLog(pluginId, oldState, targetState);
+        if (!result.IsAllowed)
+            return false;
+
+        SetPluginState(pluginId, targetState);
+
+        LifecycleStateChanged?.Invoke(this, new PluginStateChangedEventArgs(pluginId, oldState, targetState));
+        OnPluginStateChanged(pluginId, legacyIsInstalled);
+        return true;
     }
 
     /// <summary>
@@ -523,7 +593,20 @@ public class PluginManager : IPluginManager
                 {
                     if (plugin is IAppStartupPlugin startupPlugin)
                     {
+                        // Ensure state machine sees the plugin as Installed
+                        // before driving it to Enabled. We do not raise
+                        // PluginStateChanged for the synthesized Installed
+                        // transition because plugins discovered at startup
+                        // were already installed by the previous session;
+                        // raising the event here would be a duplicate of
+                        // what the user already saw.
+                        var current = GetPluginState(plugin.Id);
+                        if (current == PluginState.NotInstalled)
+                            _stateMachine.ValidateAndLog(plugin.Id, current, PluginState.Installed);
+                        SetPluginState(plugin.Id, PluginState.Installed);
+
                         startupPlugin.OnAppStarted();
+                        TransitionLifecycleState(plugin.Id, PluginState.Enabled, legacyIsInstalled: true);
                     }
                     else
                     {
@@ -534,6 +617,7 @@ public class PluginManager : IPluginManager
                 catch (Exception ex)
                 {
                     _registry.MarkStopped(plugin.Id);
+                    TransitionLifecycleState(plugin.Id, PluginState.Error, legacyIsInstalled: true);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Failed to start plugin {plugin.Id}: {ex.Message}", ex);
                 }
@@ -744,7 +828,7 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Triggering PluginStateChanged for {pluginId} (installed=true)");
 
-            OnPluginStateChanged(pluginId, true);
+            TransitionLifecycleState(pluginId, PluginState.Installed, legacyIsInstalled: true);
         }
         else
         {
@@ -822,7 +906,13 @@ public class PluginManager : IPluginManager
         // Trigger uninstall callback
         plugin?.OnUninstalled();
 
-        OnPluginStateChanged(pluginId, false);
+        // Drive the state machine through Enabled -> NotInstalled (or
+        // Installed -> NotInstalled when the plugin was never started).
+        // If the state machine rejects the transition (e.g. the plugin was
+        // already in NotInstalled because the user re-ran uninstall) we still
+        // raise the legacy event for backward compatibility.
+        if (!TransitionLifecycleState(pluginId, PluginState.NotInstalled, legacyIsInstalled: false))
+            OnPluginStateChanged(pluginId, false);
 
         return true;
     }
@@ -1357,6 +1447,13 @@ public class PluginManager : IPluginManager
             _registry.ReplaceWithMetadataAdapter(pluginId);
             _loader.Unload(pluginId);
 
+            // Drive the state machine Enabled -> Installed. We deliberately
+            // do not block on the result: a plugin that was never started
+            // (state NotInstalled) should not be force-transitioned to
+            // Installed just because Stop was called. The state machine logs
+            // any illegal transition attempt at trace level.
+            TransitionLifecycleState(pluginId, PluginState.Installed, legacyIsInstalled: true);
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin {pluginId} stopped successfully");
 
@@ -1397,6 +1494,12 @@ public class PluginManager : IPluginManager
                 _registry.MarkStopped(pluginId);
                 _registry.ReplaceWithMetadataAdapter(pluginId);
                 _loader.Unload(pluginId);
+
+                // Drive the state machine Enabled -> Installed for each
+                // plugin that was actually started. Illegal transitions
+                // (e.g. a plugin that was never started) are logged and
+                // skipped; we do not raise the lifecycle event in that case.
+                TransitionLifecycleState(pluginId, PluginState.Installed, legacyIsInstalled: true);
             }
 
             if (Log.Instance.IsTraceEnabled)

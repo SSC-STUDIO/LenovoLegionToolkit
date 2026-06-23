@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
@@ -9,10 +10,12 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class DpiScaleFeature : IFeature<DpiScale>
 {
-    public Task<bool> IsSupportedAsync() => Task.FromResult(true);
+    public Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
 
-    public Task<DpiScale[]> GetAllStatesAsync()
+    public Task<DpiScale[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting all DPI scales...");
 
@@ -41,8 +44,10 @@ public class DpiScaleFeature : IFeature<DpiScale>
         return Task.FromResult(result);
     }
 
-    public Task<DpiScale> GetStateAsync()
+    public Task<DpiScale> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting current DPI scale...");
 
@@ -64,8 +69,10 @@ public class DpiScaleFeature : IFeature<DpiScale>
         return Task.FromResult(new DpiScale(result));
     }
 
-    public Task SetStateAsync(DpiScale state)
+    public Task SetStateAsync(DpiScale state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var display = InternalDisplay.Get();
         var pds = display?.ToPathDisplaySource();
         if (pds is null)
@@ -94,5 +101,9 @@ public class DpiScaleFeature : IFeature<DpiScale>
 
         pds.CurrentDPIScale = (DisplayConfigSourceDPIScale)state.Scale;
         return Task.CompletedTask;
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

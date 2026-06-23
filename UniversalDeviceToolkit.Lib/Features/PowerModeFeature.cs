@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
@@ -30,29 +31,33 @@ public class PowerModeFeature(
 
     public bool AllowAllPowerModesOnBattery { get; set; }
 
-    async Task<bool> IFeature<PowerModeState>.IsSupportedAsync() => await IsSupportedAsync().ConfigureAwait(false);
-    async Task<PowerModeState> IFeature<PowerModeState>.GetStateAsync() => await GetStateAsync().ConfigureAwait(false);
+    async Task<bool> IFeature<PowerModeState>.IsSupportedAsync(CancellationToken cancellationToken) => await IsSupportedAsync(cancellationToken).ConfigureAwait(false);
+    async Task<PowerModeState> IFeature<PowerModeState>.GetStateAsync(CancellationToken cancellationToken) => await GetStateAsync(cancellationToken).ConfigureAwait(false);
 
-    public new async Task<bool> IsSupportedAsync()
+    public new async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
-        if (await IsWmiSupportedAsync().ConfigureAwait(false))
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (await IsWmiSupportedAsync(cancellationToken).ConfigureAwait(false))
             return true;
 
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         return HasLenovoPowerModeCapability(mi);
     }
 
-    public new async Task<PowerModeState> GetStateAsync()
+    public new async Task<PowerModeState> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
-            var state = await ReadStateCoreAsync().ConfigureAwait(false);
+            var state = await ReadStateCoreAsync(cancellationToken).ConfigureAwait(false);
             _lastKnownState = state;
             return state;
         }
         catch (Exception ex)
         {
-            var fallbackState = await GetFallbackStateAsync().ConfigureAwait(false);
+            var fallbackState = await GetFallbackStateAsync(cancellationToken).ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Falling back to {fallbackState} after power mode state read failure [feature={nameof(PowerModeFeature)}]", ex);
@@ -61,8 +66,10 @@ public class PowerModeFeature(
         }
     }
 
-    public override async Task<PowerModeState[]> GetAllStatesAsync()
+    public override async Task<PowerModeState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var supportedPowerModes = mi.SupportedPowerModes ?? [];
         var states = new List<PowerModeState>
@@ -87,15 +94,17 @@ public class PowerModeFeature(
         return [.. states.Distinct()];
     }
 
-    public override async Task SetStateAsync(PowerModeState state)
+    public override async Task SetStateAsync(PowerModeState state, CancellationToken cancellationToken = default)
     {
-        if (!await IsSupportedAsync().ConfigureAwait(false))
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!await IsSupportedAsync(cancellationToken).ConfigureAwait(false))
             throw ExceptionHelper.PowerModeNotSupported();
 
         if (state == PowerModeState.Extreme)
             throw ExceptionHelper.UnsupportedPowerMode(state);
 
-        var allStates = await GetAllStatesAsync().ConfigureAwait(false);
+        var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
         if (!allStates.Contains(state))
             throw ExceptionHelper.UnsupportedPowerMode(state);
 
@@ -104,15 +113,15 @@ public class PowerModeFeature(
             && await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false) is PowerAdapterStatus.Disconnected)
             throw new PowerModeUnavailableWithoutACException(state);
 
-        var currentState = await NormalizeExtremeStateIfNeededAsync().ConfigureAwait(false);
+        var currentState = await NormalizeExtremeStateIfNeededAsync(cancellationToken).ConfigureAwait(false);
 
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
         if (mi.Properties.HasQuietToPerformanceModeSwitchingBug && currentState == PowerModeState.Quiet && state == PowerModeState.Performance)
         {
             thermalModeListener.SuppressNext();
-            await base.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+            await base.SetStateAsync(PowerModeState.Balance, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
         }
 
         if (mi.Properties.HasGodModeToOtherModeSwitchingBug && currentState == PowerModeState.GodMode && state != PowerModeState.GodMode)
@@ -122,48 +131,48 @@ public class PowerModeFeature(
             switch (state)
             {
                 case PowerModeState.Quiet:
-                    await base.SetStateAsync(PowerModeState.Performance).ConfigureAwait(false);
+                    await base.SetStateAsync(PowerModeState.Performance, cancellationToken).ConfigureAwait(false);
                     break;
                 case PowerModeState.Balance:
-                    await base.SetStateAsync(PowerModeState.Quiet).ConfigureAwait(false);
+                    await base.SetStateAsync(PowerModeState.Quiet, cancellationToken).ConfigureAwait(false);
                     break;
                 case PowerModeState.Performance:
-                    await base.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
+                    await base.SetStateAsync(PowerModeState.Balance, cancellationToken).ConfigureAwait(false);
                     break;
             }
 
-            await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
 
         }
 
         thermalModeListener.SuppressNext();
-        await base.SetStateAsync(state).ConfigureAwait(false);
+        await base.SetStateAsync(state, cancellationToken).ConfigureAwait(false);
         _lastKnownState = state;
 
         await powerModeListener.NotifyAsync(state).ConfigureAwait(false);
     }
 
-    public async Task EnsureCorrectWindowsPowerSettingsAreSetAsync()
+    public async Task EnsureCorrectWindowsPowerSettingsAreSetAsync(CancellationToken cancellationToken = default)
     {
-        var state = await GetStateAsync().ConfigureAwait(false);
+        var state = await GetStateAsync(cancellationToken).ConfigureAwait(false);
         await windowsPowerModeController.SetPowerModeAsync(state).ConfigureAwait(false);
         await windowsPowerPlanController.SetPowerPlanAsync(state, true).ConfigureAwait(false);
     }
 
-    public async Task EnsureGodModeStateIsAppliedAsync()
+    public async Task EnsureGodModeStateIsAppliedAsync(CancellationToken cancellationToken = default)
     {
-        var state = await GetStateAsync().ConfigureAwait(false);
+        var state = await GetStateAsync(cancellationToken).ConfigureAwait(false);
         if (state != PowerModeState.GodMode)
             return;
 
         await godModeController.ApplyStateAsync().ConfigureAwait(false);
     }
 
-    internal virtual Task<PowerModeState> ReadStateCoreAsync() => base.GetStateAsync();
+    internal virtual Task<PowerModeState> ReadStateCoreAsync(CancellationToken cancellationToken = default) => base.GetStateAsync(cancellationToken);
 
-    public async Task<PowerModeState> NormalizeExtremeStateIfNeededAsync()
+    public async Task<PowerModeState> NormalizeExtremeStateIfNeededAsync(CancellationToken cancellationToken = default)
     {
-        var state = await ReadStateCoreAsync().ConfigureAwait(false);
+        var state = await ReadStateCoreAsync(cancellationToken).ConfigureAwait(false);
         if (state != PowerModeState.Extreme)
             return state;
 
@@ -171,19 +180,19 @@ public class PowerModeFeature(
             Log.Instance.Trace($"Migrating {PowerModeState.Extreme} to {PowerModeState.Performance} [feature={nameof(PowerModeFeature)}]");
 
         thermalModeListener.SuppressNext();
-        await base.SetStateAsync(PowerModeState.Performance).ConfigureAwait(false);
+        await base.SetStateAsync(PowerModeState.Performance, cancellationToken).ConfigureAwait(false);
         await powerModeListener.NotifyAsync(PowerModeState.Performance).ConfigureAwait(false);
         return PowerModeState.Performance;
     }
 
-    private async Task<PowerModeState> GetFallbackStateAsync()
+    private async Task<PowerModeState> GetFallbackStateAsync(CancellationToken cancellationToken)
     {
         if (_lastKnownState.HasValue)
             return _lastKnownState.Value;
 
         try
         {
-            var allStates = await GetAllStatesAsync().ConfigureAwait(false);
+            var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
 
             if (allStates.Contains(PowerModeState.Balance))
                 return PowerModeState.Balance;
@@ -200,7 +209,11 @@ public class PowerModeFeature(
         return PowerModeState.Balance;
     }
 
-    internal virtual Task<bool> IsWmiSupportedAsync() => base.IsSupportedAsync();
+    internal virtual Task<bool> IsWmiSupportedAsync(CancellationToken cancellationToken = default) => base.IsSupportedAsync(cancellationToken);
+
+    public override void InvalidateResolution()
+    {
+    }
 
     internal static bool HasLenovoPowerModeCapability(MachineInformation machineInformation)
     {

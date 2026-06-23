@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 using LenovoLegionToolkit.Lib.Utils;
@@ -15,14 +16,18 @@ public class HybridModeFeature(
 {
     private CancellationTokenSource? _ensureDGPUEjectedIfNeededCts = new();
 
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var mi = await compatibilityService.GetMachineInformationAsync().ConfigureAwait(false);
         return mi.Properties.SupportsGSync || mi.Properties.SupportsIGPUMode;
     }
 
-    public async Task<HybridModeState[]> GetAllStatesAsync()
+    public async Task<HybridModeState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var mi = await compatibilityService.GetMachineInformationAsync().ConfigureAwait(false);
 
         return (mi.Properties.SupportsGSync, mi.Properties.SupportsIGPUMode) switch
@@ -34,22 +39,24 @@ public class HybridModeFeature(
         };
     }
 
-    public async Task<HybridModeState> GetStateAsync()
+    public async Task<HybridModeState> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
-        var gSyncSupported = await gSyncFeature.IsSupportedAsync().ConfigureAwait(false);
-        var igpuModeSupported = await igpuModeFeature.IsSupportedAsync().ConfigureAwait(false);
+        var gSyncSupported = await gSyncFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
+        var igpuModeSupported = await igpuModeFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
 
         var gSync = GSyncState.Off;
         var igpuMode = IGPUModeState.Default;
 
         if (gSyncSupported)
-            gSync = await gSyncFeature.GetStateAsync().ConfigureAwait(false);
+            gSync = await gSyncFeature.GetStateAsync(cancellationToken).ConfigureAwait(false);
 
         if (igpuModeSupported)
-            igpuMode = await igpuModeFeature.GetStateAsync().ConfigureAwait(false);
+            igpuMode = await igpuModeFeature.GetStateAsync(cancellationToken).ConfigureAwait(false);
 
         var state = Pack(gSync, igpuMode);
 
@@ -59,8 +66,10 @@ public class HybridModeFeature(
         return state;
     }
 
-    public async Task SetStateAsync(HybridModeState state)
+    public async Task SetStateAsync(HybridModeState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (_ensureDGPUEjectedIfNeededCts is { } cts)
         {
             await cts.CancelAsync().ConfigureAwait(false);
@@ -73,22 +82,22 @@ public class HybridModeFeature(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}... [gSync={gSync}, igpuMode={igpuMode}]");
 
-        var gSyncSupported = await gSyncFeature.IsSupportedAsync().ConfigureAwait(false);
-        var igpuModeSupported = await igpuModeFeature.IsSupportedAsync().ConfigureAwait(false);
+        var gSyncSupported = await gSyncFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
+        var igpuModeSupported = await igpuModeFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
 
         var gSyncChanged = false;
 
-        if (gSyncSupported && await gSyncFeature.GetStateAsync().ConfigureAwait(false) != gSync)
+        if (gSyncSupported && await gSyncFeature.GetStateAsync(cancellationToken).ConfigureAwait(false) != gSync)
         {
-            await gSyncFeature.SetStateAsync(gSync).ConfigureAwait(false);
+            await gSyncFeature.SetStateAsync(gSync, cancellationToken).ConfigureAwait(false);
             gSyncChanged = true;
         }
 
-        if (igpuModeSupported && await igpuModeFeature.GetStateAsync().ConfigureAwait(false) != igpuMode)
+        if (igpuModeSupported && await igpuModeFeature.GetStateAsync(cancellationToken).ConfigureAwait(false) != igpuMode)
         {
             try
             {
-                await igpuModeFeature.SetStateAsync(igpuMode).ConfigureAwait(false);
+                await igpuModeFeature.SetStateAsync(igpuMode, cancellationToken).ConfigureAwait(false);
             }
             catch (IGPUModeChangeException)
             {
@@ -104,6 +113,12 @@ public class HybridModeFeature(
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State set to {state} [gSync={gSync}, igpuMode={igpuMode}]");
+    }
+
+    public void InvalidateResolution()
+    {
+        gSyncFeature.InvalidateResolution();
+        igpuModeFeature.InvalidateResolution();
     }
 
     public async Task EnsureDGPUEjectedIfNeededAsync()

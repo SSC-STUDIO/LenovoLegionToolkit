@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
 public interface IFeature<T> where T : struct
 {
-    Task<bool> IsSupportedAsync();
-    Task<T[]> GetAllStatesAsync();
-    Task<T> GetStateAsync();
-    Task SetStateAsync(T state);
+    Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default);
+    Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default);
+    Task<T> GetStateAsync(CancellationToken cancellationToken = default);
+    Task SetStateAsync(T state, CancellationToken cancellationToken = default);
+    void InvalidateResolution();
 }

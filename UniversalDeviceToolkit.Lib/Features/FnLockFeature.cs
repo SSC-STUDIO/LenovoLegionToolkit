@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -11,7 +12,7 @@ public class FnLockFeature() : AbstractDriverFeature<FnLockState>(Drivers.GetEne
 {
     protected override uint GetInBufferValue() => 0x2;
 
-    protected override Task<uint[]> ToInternalAsync(FnLockState state)
+    protected override Task<uint[]> ToInternalAsync(FnLockState state, CancellationToken cancellationToken = default)
     {
         var lockOn = state switch
         {
@@ -24,7 +25,7 @@ public class FnLockFeature() : AbstractDriverFeature<FnLockState>(Drivers.GetEne
         return Task.FromResult(value);
     }
 
-    protected override Task<FnLockState> FromInternalAsync(uint state)
+    protected override Task<FnLockState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         var value = state.GetNthBit(10) ? FnLockState.On : FnLockState.Off;
         return Task.FromResult(value);

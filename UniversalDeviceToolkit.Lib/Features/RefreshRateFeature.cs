@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
@@ -11,10 +12,12 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class RefreshRateFeature : IFeature<RefreshRate>
 {
-    public Task<bool> IsSupportedAsync() => Task.FromResult(true);
+    public Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
 
-    public Task<RefreshRate[]> GetAllStatesAsync()
+    public Task<RefreshRate[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting all refresh rates...");
 
@@ -49,8 +52,10 @@ public class RefreshRateFeature : IFeature<RefreshRate>
         return Task.FromResult(result);
     }
 
-    public Task<RefreshRate> GetStateAsync()
+    public Task<RefreshRate> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting current refresh rate...");
 
@@ -72,8 +77,10 @@ public class RefreshRateFeature : IFeature<RefreshRate>
         return Task.FromResult(result);
     }
 
-    public Task SetStateAsync(RefreshRate state)
+    public Task SetStateAsync(RefreshRate state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var display = InternalDisplay.Get();
         if (display is null)
         {
@@ -119,6 +126,10 @@ public class RefreshRateFeature : IFeature<RefreshRate>
         }
 
         return Task.CompletedTask;
+    }
+
+    public void InvalidateResolution()
+    {
     }
 
     private static bool Match(DisplayPossibleSetting dps, DisplayPossibleSetting ds)

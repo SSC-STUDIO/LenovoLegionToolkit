@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System.Management;
@@ -11,8 +12,10 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
     private const int AC_INDEX = 5;
     private const int USB_POWER_DELIVERY_INDEX = 6;
 
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
@@ -24,10 +27,16 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
         }
     }
 
-    public Task<InstantBootState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<InstantBootState>());
-
-    public async Task<InstantBootState> GetStateAsync()
+    public Task<InstantBootState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<InstantBootState>());
+    }
+
+    public async Task<InstantBootState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
@@ -50,8 +59,10 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
         return result;
     }
 
-    public async Task SetStateAsync(InstantBootState state)
+    public async Task SetStateAsync(InstantBootState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}...");
 
@@ -68,5 +79,9 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
+    }
+
+    public void InvalidateResolution()
+    {
     }
 }

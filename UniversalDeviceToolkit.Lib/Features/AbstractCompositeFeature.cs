@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
@@ -12,40 +13,62 @@ public abstract class AbstractCompositeFeature<T>(params IFeature<T>[] features)
     private bool _resolved;
     private IFeature<T>? _feature;
 
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
-        var feature = await ResolveInternalAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var feature = await ResolveInternalAsync(cancellationToken).ConfigureAwait(false);
         if (feature is null)
             return false;
-        return await feature.IsSupportedAsync().ConfigureAwait(false);
+        return await feature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T[]> GetAllStatesAsync()
+    public async Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
-        var feature = await ResolveInternalAsync().ConfigureAwait(false)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var feature = await ResolveInternalAsync(cancellationToken).ConfigureAwait(false)
                       ?? throw ExceptionHelper.NoSupportedFeature(GetType().Name);
-        return await feature.GetAllStatesAsync().ConfigureAwait(false);
+        return await feature.GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T> GetStateAsync()
+    public async Task<T> GetStateAsync(CancellationToken cancellationToken = default)
     {
-        var feature = await ResolveInternalAsync().ConfigureAwait(false)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var feature = await ResolveInternalAsync(cancellationToken).ConfigureAwait(false)
                       ?? throw ExceptionHelper.NoSupportedFeature(GetType().Name);
-        return await feature.GetStateAsync().ConfigureAwait(false);
+        return await feature.GetStateAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task SetStateAsync(T state)
+    public async Task SetStateAsync(T state, CancellationToken cancellationToken = default)
     {
-        var feature = await ResolveInternalAsync().ConfigureAwait(false)
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var feature = await ResolveInternalAsync(cancellationToken).ConfigureAwait(false)
                       ?? throw ExceptionHelper.NoSupportedFeature(GetType().Name);
-        await feature.SetStateAsync(state).ConfigureAwait(false);
+        await feature.SetStateAsync(state, cancellationToken).ConfigureAwait(false);
     }
 
-    protected virtual async Task<IFeature<T>?> ResolveAsync()
+    public void InvalidateResolution()
+    {
+        using (_lock.Lock())
+        {
+            _resolved = false;
+            _feature = null;
+
+            foreach (var feature in features)
+                feature.InvalidateResolution();
+        }
+    }
+
+    protected virtual async Task<IFeature<T>?> ResolveAsync(CancellationToken cancellationToken = default)
     {
         foreach (var feature in features)
         {
-            if (!await feature.IsSupportedAsync().ConfigureAwait(false))
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!await feature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
                 continue;
 
             return feature;
@@ -54,14 +77,14 @@ public abstract class AbstractCompositeFeature<T>(params IFeature<T>[] features)
         return null;
     }
 
-    private async Task<IFeature<T>?> ResolveInternalAsync()
+    private async Task<IFeature<T>?> ResolveInternalAsync(CancellationToken cancellationToken)
     {
-        using (await _lock.LockAsync().ConfigureAwait(false))
+        using (await _lock.LockAsync(cancellationToken).ConfigureAwait(false))
         {
             if (_resolved)
                 return _feature;
 
-            _feature = await ResolveAsync().ConfigureAwait(false);
+            _feature = await ResolveAsync(cancellationToken).ConfigureAwait(false);
             _resolved = true;
             return _feature;
         }

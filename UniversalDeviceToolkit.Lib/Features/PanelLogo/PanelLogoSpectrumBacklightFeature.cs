@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 
@@ -6,8 +7,10 @@ namespace LenovoLegionToolkit.Lib.Features.PanelLogo;
 
 public class PanelLogoSpectrumBacklightFeature(SpectrumKeyboardBacklightController controller) : IFeature<PanelLogoBacklightState>
 {
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var isSupported = await controller.IsSupportedAsync().ConfigureAwait(false);
         if (!isSupported)
             return false;
@@ -16,11 +19,28 @@ public class PanelLogoSpectrumBacklightFeature(SpectrumKeyboardBacklightControll
         return layout == SpectrumLayout.Full;
     }
 
-    public Task<PanelLogoBacklightState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<PanelLogoBacklightState>());
+    public Task<PanelLogoBacklightState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<PanelLogoBacklightState>());
+    }
 
-    public async Task<PanelLogoBacklightState> GetStateAsync() => await controller.GetLogoStatusAsync().ConfigureAwait(false)
-        ? PanelLogoBacklightState.On
-        : PanelLogoBacklightState.Off;
+    public async Task<PanelLogoBacklightState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
 
-    public Task SetStateAsync(PanelLogoBacklightState state) => controller.SetLogoStatusAsync(state == PanelLogoBacklightState.On);
+        return await controller.GetLogoStatusAsync().ConfigureAwait(false)
+            ? PanelLogoBacklightState.On
+            : PanelLogoBacklightState.Off;
+    }
+
+    public Task SetStateAsync(PanelLogoBacklightState state, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return controller.SetLogoStatusAsync(state == PanelLogoBacklightState.On);
+    }
+
+    public void InvalidateResolution()
+    {
+    }
 }

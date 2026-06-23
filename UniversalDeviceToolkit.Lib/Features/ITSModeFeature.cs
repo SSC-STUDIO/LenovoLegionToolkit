@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -56,14 +57,18 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
     public ITSMode LastItsMode { get; set; } = ITSMode.None;
 
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var machineInfo = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         return machineInfo.Properties.SupportsITSMode;
     }
 
-    public async Task<ITSMode[]> GetAllStatesAsync()
+    public async Task<ITSMode[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
         if (mi.LegionSeries == LegionSeries.ThinkBook)
@@ -82,11 +87,13 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         }
     }
 
-    public async Task<ITSMode> GetStateAsync()
+    public async Task<ITSMode> GetStateAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
-            return await GetItsModeInternalAsync().ConfigureAwait(false);
+            return await GetItsModeInternalAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -96,13 +103,15 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         }
     }
 
-    public async Task SetStateAsync(ITSMode state)
+    public async Task SetStateAsync(ITSMode state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         Log.Instance.Trace($"Setting ITS mode to: {state}");
 
         try
         {
-            await SetItsModeInternalAsync(state).ConfigureAwait(false);
+            await SetItsModeInternalAsync(state, cancellationToken).ConfigureAwait(false);
             LastItsMode = state;
 
             Log.Instance.Trace($"ITS mode set successfully to: {state}");
@@ -117,12 +126,16 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         }
     }
 
-    public async Task ToggleItsMode()
+    public void InvalidateResolution()
+    {
+    }
+
+    public async Task ToggleItsMode(CancellationToken cancellationToken = default)
     {
         try
         {
-            var currentState = await GetStateAsync().ConfigureAwait(false);
-            var allStates = await GetAllStatesAsync().ConfigureAwait(false);
+            var currentState = await GetStateAsync(cancellationToken).ConfigureAwait(false);
+            var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
             var availableStates = allStates.Where(state => state != ITSMode.None).ToArray();
 
             if (availableStates.Length == 0)
@@ -146,7 +159,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
             Log.Instance.Trace($"Toggling ITS mode: {currentState} -> {nextState}");
 
-            await SetStateAsync(nextState).ConfigureAwait(false);
+            await SetStateAsync(nextState, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -154,8 +167,10 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         }
     }
 
-    private async Task<ITSMode> GetItsModeInternalAsync()
+    private async Task<ITSMode> GetItsModeInternalAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             CIntelligentCooling instance = default;
@@ -193,8 +208,10 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         return mode;
     }
 
-    private async Task SetItsModeInternalAsync(ITSMode state)
+    private async Task SetItsModeInternalAsync(ITSMode state, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         CIntelligentCooling instance = default;
         var machineInfo = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var isThinkBook = machineInfo.LegionSeries == LegionSeries.ThinkBook;

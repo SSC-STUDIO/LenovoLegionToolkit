@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -11,7 +12,7 @@ public class BatteryNightChargeFeature() : AbstractDriverFeature<BatteryNightCha
 {
     protected override uint GetInBufferValue() => 0x11;
 
-    protected override Task<uint[]> ToInternalAsync(BatteryNightChargeState state)
+    protected override Task<uint[]> ToInternalAsync(BatteryNightChargeState state, CancellationToken cancellationToken = default)
     {
         uint[] result = state switch
         {
@@ -22,7 +23,7 @@ public class BatteryNightChargeFeature() : AbstractDriverFeature<BatteryNightCha
         return Task.FromResult(result);
     }
 
-    protected override Task<BatteryNightChargeState> FromInternalAsync(uint state)
+    protected override Task<BatteryNightChargeState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         if (state.GetNthBit(0))
             return Task.FromResult(state.GetNthBit(4) ? BatteryNightChargeState.On : BatteryNightChargeState.Off);

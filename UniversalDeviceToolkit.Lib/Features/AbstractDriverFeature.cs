@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -15,8 +16,10 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
     protected T LastState;
 
-    public virtual async Task<bool> IsSupportedAsync()
+    public virtual async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
@@ -24,7 +27,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 
-            _ = await GetStateAsync().ConfigureAwait(false);
+            _ = await GetStateAsync(cancellationToken).ConfigureAwait(false);
             return true;
         }
         catch
@@ -33,19 +36,25 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
         }
     }
 
-    public Task<T[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<T>());
-
-    public virtual async Task<T> GetStateAsync()
+    public Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<T>());
+    }
+
+    public virtual async Task<T> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state... [feature={GetType().Name}]");
 
-        var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, GetInBufferValue()).ConfigureAwait(false);
+        var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, GetInBufferValue(), cancellationToken).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Buffer value: {outBuffer} [feature={GetType().Name}]");
 
-        var state = await FromInternalAsync(outBuffer).ConfigureAwait(false);
+        var state = await FromInternalAsync(outBuffer, cancellationToken).ConfigureAwait(false);
         LastState = state;
 
         if (Log.Instance.IsTraceEnabled)
@@ -54,30 +63,41 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
         return state;
     }
 
-    public virtual async Task SetStateAsync(T state)
+    public virtual async Task SetStateAsync(T state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}... [feature={GetType().Name}]");
 
-        var codes = await ToInternalAsync(state).ConfigureAwait(false);
+        var codes = await ToInternalAsync(state, cancellationToken).ConfigureAwait(false);
         foreach (var code in codes)
-            await SendCodeAsync(DriverHandle(), ControlCode, code).ConfigureAwait(false);
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await SendCodeAsync(DriverHandle(), ControlCode, code, cancellationToken).ConfigureAwait(false);
+        }
         LastState = state;
 
-        await VerifyStateSetAsync(state).ConfigureAwait(false);
+        await VerifyStateSetAsync(state, cancellationToken).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State set to {state} [feature={GetType().Name}]");
     }
 
-    protected abstract Task<T> FromInternalAsync(uint state);
+    public virtual void InvalidateResolution()
+    {
+    }
+
+    protected abstract Task<T> FromInternalAsync(uint state, CancellationToken cancellationToken = default);
 
     protected abstract uint GetInBufferValue();
 
-    protected abstract Task<uint[]> ToInternalAsync(T state);
+    protected abstract Task<uint[]> ToInternalAsync(T state, CancellationToken cancellationToken = default);
 
-    protected Task<uint> SendCodeAsync(SafeFileHandle handle, uint controlCode, uint inBuffer) => Task.Run(() =>
+    protected Task<uint> SendCodeAsync(SafeFileHandle handle, uint controlCode, uint inBuffer, CancellationToken cancellationToken = default) => Task.Run(() =>
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (PInvokeExtensions.DeviceIoControl(handle, controlCode, inBuffer, out uint outBuffer))
             return outBuffer;
 
@@ -86,15 +106,17 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
         Log.Instance.Warning($"DeviceIoControl returned 0, last error: {error} [feature={GetType().Name}]");
 
         throw new InvalidOperationException(string.Format(Resource.Exception_DeviceIoControlError, error));
-    });
+    }, cancellationToken);
 
-    private async Task VerifyStateSetAsync(T state)
+    private async Task VerifyStateSetAsync(T state, CancellationToken cancellationToken)
     {
         var retries = 0;
 
         while (retries < 10)
         {
-            if (state.Equals(await GetStateAsync().ConfigureAwait(false)))
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (state.Equals(await GetStateAsync(cancellationToken).ConfigureAwait(false)))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Verify state {state} set succeeded. [feature={GetType().Name}]");
@@ -104,7 +126,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
             retries++;
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
         }
 
         Log.Instance.Warning($"Verify state {state} set failed. [feature={GetType().Name}]");

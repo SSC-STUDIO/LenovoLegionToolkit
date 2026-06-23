@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -8,8 +9,10 @@ namespace LenovoLegionToolkit.Lib.Features.Hybrid;
 
 public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
 {
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
@@ -21,15 +24,22 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
         }
     }
 
-    public Task<IGPUModeState[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<IGPUModeState>());
-
-    public async Task<IGPUModeState> GetStateAsync()
+    public Task<IGPUModeState[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<IGPUModeState>());
+    }
+
+    public async Task<IGPUModeState> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state...");
 
         var value = await TryGetFeatureValueAsync(CapabilityID.IGPUMode).ConfigureAwait(false)
                     ?? throw CreateUnavailableException(CapabilityID.IGPUMode);
+        cancellationToken.ThrowIfCancellationRequested();
         var result = (IGPUModeState)value;
 
         if (Log.Instance.IsTraceEnabled)
@@ -38,8 +48,10 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
         return result;
     }
 
-    public async Task SetStateAsync(IGPUModeState state)
+    public async Task SetStateAsync(IGPUModeState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}...");
 
@@ -52,8 +64,14 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
             throw new IGPUModeChangeException(state);
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
+    }
+
+    public void InvalidateResolution()
+    {
     }
 
     private static async Task<int?> TryGetFeatureValueAsync(CapabilityID capabilityId)

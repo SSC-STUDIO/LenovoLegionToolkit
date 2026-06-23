@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
@@ -9,11 +10,13 @@ namespace LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 public class WhiteKeyboardDriverBacklightFeature()
     : AbstractDriverFeature<WhiteKeyboardBacklightState>(Drivers.GetEnergy, Drivers.IOCTL_ENERGY_KEYBOARD)
 {
-    public override async Task<bool> IsSupportedAsync()
+    public override async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
-            var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, 0x1).ConfigureAwait(false);
+            var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, 0x1, cancellationToken).ConfigureAwait(false);
             outBuffer >>= 1;
             return outBuffer == 0x2;
         }
@@ -25,7 +28,7 @@ public class WhiteKeyboardDriverBacklightFeature()
 
     protected override uint GetInBufferValue() => 0x22;
 
-    protected override Task<uint[]> ToInternalAsync(WhiteKeyboardBacklightState state)
+    protected override Task<uint[]> ToInternalAsync(WhiteKeyboardBacklightState state, CancellationToken cancellationToken = default)
     {
         var result = state switch
         {
@@ -37,7 +40,7 @@ public class WhiteKeyboardDriverBacklightFeature()
         return Task.FromResult(result);
     }
 
-    protected override Task<WhiteKeyboardBacklightState> FromInternalAsync(uint state)
+    protected override Task<WhiteKeyboardBacklightState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         var result = state switch
         {

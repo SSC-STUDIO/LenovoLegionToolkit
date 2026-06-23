@@ -1,3 +1,9 @@
+// Plugin SDK surface: see SDK_BOUNDARY.md for the full public contract
+// that plugins are allowed to depend on. This file is part of the
+// public SDK; transitions between PluginState values are enforced
+// by PluginLifecycleStateMachine (host-internal) rather than by
+// plugins themselves.
+
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>

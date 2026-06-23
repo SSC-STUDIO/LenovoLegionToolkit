@@ -1,5 +1,6 @@
 using System;
 using System.Management;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Resources;
@@ -10,8 +11,10 @@ namespace LenovoLegionToolkit.Lib.Features;
 public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
     : IFeature<T> where T : struct, Enum, IComparable, IConvertible
 {
-    public async Task<bool> IsSupportedAsync()
+    public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
@@ -27,10 +30,16 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         }
     }
 
-    public Task<T[]> GetAllStatesAsync() => Task.FromResult(Enum.GetValues<T>());
-
-    public async Task<T> GetStateAsync()
+    public Task<T[]> GetAllStatesAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(Enum.GetValues<T>());
+    }
+
+    public async Task<T> GetStateAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state... [feature={GetType().Name}]");
 
@@ -44,6 +53,8 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
             throw ExceptionHelper.WmiFeatureUnavailable(capabilityID, ex);
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         var result = (T)Enum.ToObject(typeof(T), value);
         if (!Enum.IsDefined(result))
             throw ExceptionHelper.UndefinedValueReceived(result);
@@ -54,14 +65,21 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         return result;
     }
 
-    public async Task SetStateAsync(T state)
+    public async Task SetStateAsync(T state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}... [feature={GetType().Name}]");
 
         await WMI.LenovoOtherMethod.SetFeatureValueAsync(capabilityID, Convert.ToInt32(state)).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state} [feature={GetType().Name}]");
+    }
+
+    public virtual void InvalidateResolution()
+    {
     }
 }

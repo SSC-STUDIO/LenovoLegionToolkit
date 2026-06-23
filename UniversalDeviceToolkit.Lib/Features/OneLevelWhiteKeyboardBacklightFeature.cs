@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.System;
@@ -8,11 +9,13 @@ namespace LenovoLegionToolkit.Lib.Features;
 
 public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<OneLevelWhiteKeyboardBacklightState>(Drivers.GetEnergy, Drivers.IOCTL_ENERGY_SETTINGS)
 {
-    public override async Task<bool> IsSupportedAsync()
+    public override async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
-            var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, GetInBufferValue()).ConfigureAwait(false);
+            var outBuffer = await SendCodeAsync(DriverHandle(), ControlCode, GetInBufferValue(), cancellationToken).ConfigureAwait(false);
             var result = ((int)outBuffer & 16) == 16;
             return result;
         }
@@ -24,7 +27,7 @@ public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<One
 
     protected override uint GetInBufferValue() => 0x2;
 
-    protected override Task<uint[]> ToInternalAsync(OneLevelWhiteKeyboardBacklightState state)
+    protected override Task<uint[]> ToInternalAsync(OneLevelWhiteKeyboardBacklightState state, CancellationToken cancellationToken = default)
     {
         var result = state switch
         {
@@ -35,7 +38,7 @@ public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<One
         return Task.FromResult(result);
     }
 
-    protected override Task<OneLevelWhiteKeyboardBacklightState> FromInternalAsync(uint state)
+    protected override Task<OneLevelWhiteKeyboardBacklightState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         var isOn = ((int)state & 32) == 32;
         var result = isOn ? OneLevelWhiteKeyboardBacklightState.On : OneLevelWhiteKeyboardBacklightState.Off;

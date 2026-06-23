@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 
@@ -26,14 +27,18 @@ public class FlipToStartUEFIFeature() : AbstractUEFIFeature<FlipToStartState>(
 
     // ReSharper disable once StringLiteralTypo
 
-    public override async Task<FlipToStartState> GetStateAsync()
+    public override async Task<FlipToStartState> GetStateAsync(CancellationToken cancellationToken = default)
     {
-        var result = await ReadFromUefiAsync<FlipToBootStruct>().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var result = await ReadFromUefiAsync<FlipToBootStruct>(cancellationToken).ConfigureAwait(false);
         return result.FlipToBootEn == 0 ? FlipToStartState.Off : FlipToStartState.On;
     }
 
-    public override async Task SetStateAsync(FlipToStartState state)
+    public override async Task SetStateAsync(FlipToStartState state, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var structure = new FlipToBootStruct
         {
             FlipToBootEn = state == FlipToStartState.On ? (byte)1 : (byte)0,
@@ -41,6 +46,6 @@ public class FlipToStartUEFIFeature() : AbstractUEFIFeature<FlipToStartState>(
             Reserved2 = 0,
             Reserved3 = 0
         };
-        await WriteToUefiAsync(structure).ConfigureAwait(false);
+        await WriteToUefiAsync(structure, cancellationToken).ConfigureAwait(false);
     }
 }

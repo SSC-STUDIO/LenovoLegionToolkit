@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+
+- `IFeature<T>` interface and all abstract base classes (`AbstractWmiFeature`, `AbstractCapabilityFeature`, `AbstractDriverFeature`, `AbstractUEFIFeature`, `AbstractLenovoLightingFeature`, `AbstractCompositeFeature`) now accept a `CancellationToken` on every async method, and a new `InvalidateResolution()` method lets callers force composite features to re-resolve their delegate implementation on demand / `IFeature<T>` 接口及所有抽象基类（`AbstractWmiFeature`、`AbstractCapabilityFeature`、`AbstractDriverFeature`、`AbstractUEFIFeature`、`AbstractLenovoLightingFeature`、`AbstractCompositeFeature`）的异步方法现在接受 `CancellationToken`，新增的 `InvalidateResolution()` 方法允许调用方按需强制复合特性重新解析其委托实现
+- Plugin lifecycle is now driven by an explicit `PluginLifecycleStateMachine`; the legal transitions between `NotInstalled` → `Installed` → `Enabled`/`Disabled` are enforced centrally and illegal attempts (e.g. `NotInstalled` → `Enabled`, or `Error` → `Enabled`) are logged and rejected. A richer `LifecycleStateChanged` event exposing old/new `PluginState` is now available alongside the existing boolean `PluginStateChanged` event / 插件生命周期现在由显式的 `PluginLifecycleStateMachine` 状态机驱动，`NotInstalled` → `Installed` → `Enabled`/`Disabled` 之间的合法转换被集中强制执行，非法尝试（如 `NotInstalled` → `Enabled`，或 `Error` → `Enabled`）会被记录并拒绝。除原有布尔型 `PluginStateChanged` 事件外，还提供暴露旧/新 `PluginState` 的 `LifecycleStateChanged` 事件
+- `SDK_BOUNDARY.md` now documents which types in `UniversalDeviceToolkit.Lib.Plugins` are part of the public plugin SDK and which are host-internal; plugins must not reference host-internal types at compile time / `SDK_BOUNDARY.md` 现已明确记录 `UniversalDeviceToolkit.Lib.Plugins` 中哪些类型属于公开插件 SDK，哪些是宿主机内部类型；插件在编译时不得引用宿主机内部类型
+
 ### Fixed / 修复
 
 - Fixed a large batch of issues across the codebase including bugs, security vulnerabilities, localization gaps, and CI improvements / 修复代码库中大量问题，包括 Bug、安全漏洞、本地化缺失和 CI 改进

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -18,7 +19,7 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
 
     protected override uint GetInBufferValue() => 0xFF;
 
-    protected override Task<uint[]> ToInternalAsync(BatteryState state)
+    protected override Task<uint[]> ToInternalAsync(BatteryState state, CancellationToken cancellationToken = default)
     {
         var result = state switch
         {
@@ -30,7 +31,7 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
         return Task.FromResult(result);
     }
 
-    protected override Task<BatteryState> FromInternalAsync(uint state)
+    protected override Task<BatteryState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
     {
         state = state.ReverseEndianness();
 
@@ -43,23 +44,23 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
         throw ExceptionHelper.UnknownBatteryState(state, Convert.ToString(state, 2));
     }
 
-    public override async Task SetStateAsync(BatteryState state)
+    public override async Task SetStateAsync(BatteryState state, CancellationToken cancellationToken = default)
     {
-        await base.SetStateAsync(state).ConfigureAwait(false);
+        await base.SetStateAsync(state, cancellationToken).ConfigureAwait(false);
         SetStateInRegistry(state);
     }
 
-    public async Task EnsureCorrectBatteryModeIsSetAsync()
+    public async Task EnsureCorrectBatteryModeIsSetAsync(CancellationToken cancellationToken = default)
     {
         var state = GetStateFromRegistry();
 
         if (!state.HasValue)
             return;
 
-        if (await GetStateAsync().ConfigureAwait(false) == state.Value)
+        if (await GetStateAsync(cancellationToken).ConfigureAwait(false) == state.Value)
             return;
 
-        await SetStateAsync(state.Value).ConfigureAwait(false);
+        await SetStateAsync(state.Value, cancellationToken).ConfigureAwait(false);
     }
 
     private static BatteryState? GetStateFromRegistry()
