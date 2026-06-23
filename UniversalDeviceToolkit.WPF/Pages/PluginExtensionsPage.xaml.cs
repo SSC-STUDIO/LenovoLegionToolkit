@@ -1624,7 +1624,7 @@ private string _currentSearchText = string.Empty;
     private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
     {
         _pluginIdsReloadedForUi.Remove(pluginId);
-        await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime).ConfigureAwait(true);
+        await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime).ConfigureAwait(false);
         LocalizationHelper.SetPluginResourceCultures();
         UpdateAllPluginsUI();
 
@@ -2095,7 +2095,7 @@ private string _currentSearchText = string.Empty;
             _pluginManager.UninstallPlugin(pluginId);
 
             // Permanently delete from disk
-            var deleted = await _pluginManager.PermanentlyDeletePluginAsync(pluginId).ConfigureAwait(true);
+            var deleted = await _pluginManager.PermanentlyDeletePluginAsync(pluginId).ConfigureAwait(false);
 
             UpdateAllPluginsUI();
 

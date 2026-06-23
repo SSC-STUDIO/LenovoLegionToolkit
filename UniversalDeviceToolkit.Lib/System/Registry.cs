@@ -38,7 +38,7 @@ public static class Registry
                 using var baseKey = GetBaseKey(hive);
                 using var key = baseKey.OpenSubKey(subKey) ?? throw new InvalidOperationException(string.Format(Resource.Exception_KeyCouldNotBeOpened, subKey));
 
-                var resetEvent = new ManualResetEvent(false);
+                using var resetEvent = new ManualResetEvent(false);
 
                 while (true)
                 {
@@ -293,8 +293,8 @@ public static class Registry
         "HKLM" or "HKEY_LOCAL_MACHINE" => Microsoft.Win32.Registry.LocalMachine,
         "HKCU" or "HKEY_CURRENT_USER" => Microsoft.Win32.Registry.CurrentUser,
         "HKU" or "HKEY_USERS" => Microsoft.Win32.Registry.Users,
-        "HKCR" or "HKEY_CLASSES_ROOT " => Microsoft.Win32.Registry.ClassesRoot,
-        "HKCC" or "HKEY_CURRENT_CONFIG  " => Microsoft.Win32.Registry.CurrentConfig,
+        "HKCR" or "HKEY_CLASSES_ROOT" => Microsoft.Win32.Registry.ClassesRoot,
+        "HKCC" or "HKEY_CURRENT_CONFIG" => Microsoft.Win32.Registry.CurrentConfig,
         _ => throw ExceptionHelper.UnknownHive(nameof(hive))
     };
 }

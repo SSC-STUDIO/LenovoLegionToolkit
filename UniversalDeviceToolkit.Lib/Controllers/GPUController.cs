@@ -41,7 +41,7 @@ public class GPUController : IDisposable
     private readonly object _startStopLock = new();
 
     private GPUState _state = GPUState.Unknown;
-    private List<Process> _processes = [];
+    private IReadOnlyList<Process> _processes = Array.Empty<Process>();
     private string? _gpuInstanceId;
     private string? _performanceState;
     private int _currentInterval;
@@ -343,7 +343,7 @@ public class GPUController : IDisposable
     private void ResetState()
     {
         _state = GPUState.Unknown;
-        _processes = [];
+        _processes = Array.Empty<Process>();
         _gpuInstanceId = null;
         _performanceState = null;
     }
@@ -477,7 +477,7 @@ public class GPUController : IDisposable
                                     Log.Instance.Trace("Failed to dispose process");
                             }
                         }
-                        _processes.Clear();
+                        _processes = Array.Empty<Process>();
                     }
                 }
                 catch (Exception ex)

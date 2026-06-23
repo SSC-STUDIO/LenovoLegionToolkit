@@ -100,7 +100,10 @@ public partial class WindowsOptimizationPage : Page
         // Close windows
         _actionDetailsWindow?.Close();
         _selectedActionsWindow?.Close();
-        
+
+        // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
+        UnsubscribeFromPackageControlHandlers();
+
         // Clean up CancellationTokenSource instances to prevent memory leaks
         CleanupCancellationTokenSources();
     }
@@ -153,7 +156,7 @@ public partial class WindowsOptimizationPage : Page
         Dispatcher.InvokeAsync(async () =>
         {
             if (e.IsInstalled)
-                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(true);
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
 
             ViewModel.Initialize();
 

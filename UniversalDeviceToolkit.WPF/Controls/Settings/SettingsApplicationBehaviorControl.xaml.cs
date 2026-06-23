@@ -373,7 +373,7 @@ public partial class SettingsApplicationBehaviorControl
 
         if (state.Value && !PawnIOHelper.IsPawnIOInstalled())
         {
-            await PawnIOHelper.TryShowPawnIONotFoundDialogAsync().ConfigureAwait(true);
+            await PawnIOHelper.TryShowPawnIONotFoundDialogAsync().ConfigureAwait(false);
             _hardwareSensorsToggle.IsChecked = false;
             return;
         }
@@ -383,7 +383,7 @@ public partial class SettingsApplicationBehaviorControl
             await RunWithToggleDisabledAsync(_hardwareSensorsToggle, async () =>
             {
                 await _hardwareSensorsFeature.SetStateAsync(
-                    state.Value ? HardwareSensorsState.On : HardwareSensorsState.Off).ConfigureAwait(true);
+                    state.Value ? HardwareSensorsState.On : HardwareSensorsState.Off).ConfigureAwait(false);
 
                 if (state.Value)
                 {

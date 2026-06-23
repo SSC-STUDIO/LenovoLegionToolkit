@@ -573,7 +573,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
  
                 SafeFileHandle? newDeviceHandle = null;
 
-                const int RETRIES = 1;
+                const int RETRIES = 3;
                 const int DELAY = 10;
 
                 for (var i = 0; i < RETRIES; i++)
@@ -615,6 +615,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Handle refreshed.");
 
+                _deviceHandle?.Dispose();
                 _deviceHandle = newDeviceHandle;
                 return newDeviceHandle;
             }

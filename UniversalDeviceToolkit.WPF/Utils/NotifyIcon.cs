@@ -42,6 +42,7 @@ public class NotifyIcon : NativeWindow, IDisposable
     }
 
     private Icon? _icon;
+    private HICON _currentHIcon = HICON.Null;
     public Icon? Icon
     {
         set
@@ -226,7 +227,12 @@ public class NotifyIcon : NativeWindow, IDisposable
             if (_icon is not null)
             {
                 data.uFlags |= NOTIFY_ICON_DATA_FLAGS.NIF_ICON;
-                data.hIcon = new HICON(_icon.Handle);
+                var newHIcon = new HICON(_icon.Handle);
+                var previousHIcon = _currentHIcon;
+                _currentHIcon = newHIcon;
+                data.hIcon = newHIcon;
+                if (!previousHIcon.IsNull && previousHIcon != newHIcon)
+                    PInvoke.DestroyIcon(previousHIcon);
             }
 
             if (_text is not null && _toolTipWindow is null)
@@ -265,6 +271,12 @@ public class NotifyIcon : NativeWindow, IDisposable
         UpdateIcon();
 
         _icon?.Dispose();
+
+        if (!_currentHIcon.IsNull)
+        {
+            PInvoke.DestroyIcon(_currentHIcon);
+            _currentHIcon = HICON.Null;
+        }
 
         _icon = null;
         _text = null;

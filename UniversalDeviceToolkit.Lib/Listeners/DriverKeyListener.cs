@@ -58,7 +58,7 @@ public class DriverKeyListener(
     {
         try
         {
-            var resetEvent = new ManualResetEvent(false);
+            using var resetEvent = new ManualResetEvent(false);
             var setHandleResult = BindListener(resetEvent);
             if (!setHandleResult)
                 PInvokeExtensions.ThrowIfWin32Error("DeviceIoControl, setHandleResult");

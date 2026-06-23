@@ -61,7 +61,7 @@ public sealed class StartupDeviceSetupCoordinator
         var window = _createWindow(machineInformation, recommendedPack, availability.IsBasicMode);
         LocalizationHelper.ApplyStartupTheme(window);
         window.Show();
-        var result = await window.ShouldContinue.ConfigureAwait(true);
+        var result = await window.ShouldContinue.ConfigureAwait(false);
 
         if (!result.Confirmed)
             return;

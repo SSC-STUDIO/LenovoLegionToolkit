@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -457,19 +458,7 @@ public partial class WindowsOptimizationPage
                 existingSelectedPackage.AttachSource(control);
             }
 
-            control.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(PackageControl.IsSelected))
-                {
-                    SyncSelectedDriverPackage(control);
-                }
-                else if (e.PropertyName == nameof(PackageControl.Status) ||
-                         e.PropertyName == nameof(PackageControl.IsDownloading))
-                {
-                    UpdateDriverRunningState();
-                    ViewModel.NotifyDriverSelectionChanged();
-                }
-            };
+            control.PropertyChanged += OnPackageControlPropertyChanged;
 
             controlsToAdd.Add(control);
         }
@@ -676,6 +665,32 @@ public partial class WindowsOptimizationPage
         }
     }
 
-    
+    private void OnPackageControlPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not PackageControl control)
+            return;
+
+        if (e.PropertyName == nameof(PackageControl.IsSelected))
+        {
+            SyncSelectedDriverPackage(control);
+        }
+        else if (e.PropertyName == nameof(PackageControl.Status) ||
+                 e.PropertyName == nameof(PackageControl.IsDownloading))
+        {
+            UpdateDriverRunningState();
+            ViewModel.NotifyDriverSelectionChanged();
+        }
+    }
+
+    public void UnsubscribeFromPackageControlHandlers()
+    {
+        if (_driverPackagesStackPanel?.Children is null)
+            return;
+
+        foreach (var control in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+            control.PropertyChanged -= OnPackageControlPropertyChanged;
+    }
+
+
 }
 
