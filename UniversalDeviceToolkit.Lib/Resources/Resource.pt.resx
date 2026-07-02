@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -507,5 +507,404 @@
   </data>
   <data name="ThemeStylePreset_Official" xml:space="preserve">
     <value>Oficial frio</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Extremo</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Desligado</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Ligado</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Temperatura do Disco 1</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Temperatura do Disco 2</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>Clock E-Core</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Ventoinha</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Tempo de Quadro</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Frequência</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Temperatura da Memória</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Temperatura da Placa-Mãe</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Energia</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>Clock P-Core</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Temperatura</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Utilização</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>Temperatura da VRAM</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>Utilização da VRAM</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Mostrar</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Alternar</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>O perfil não será aplicado sem o carregador (potência máxima) conectado.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Não inicializado.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Não suportado.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>Ventoinha da CPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>Ventoinha da GPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Ventoinha do Sistema</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Desligado</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Ligado</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Alternar</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Economia de Bateria</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Refrigeração Inteligente</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Desempenho Extremo</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geek</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Estado inválido</value>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Nome de arquivo inválido</value>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Os argumentos contêm caracteres perigosos</value>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Executáveis de shell interativo requerem argumentos ao aguardar saída</value>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>Os argumentos do PowerShell contêm padrões perigosos</value>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Hive desconhecido.</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Nenhuma atualização disponível</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>URL do arquivo de configuração não encontrado</value>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>Teclado RGB não suportado</value>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Não é possível gerenciar o teclado RGB com o Vantage ativado</value>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>A mudança de modo de energia não é suportada neste dispositivo.</value>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>Não é possível definir privilégios UEFI</value>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Falha ao iniciar o Explorador.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>O Explorador não reiniciou a tempo.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>O Explorador não saiu a tempo.</value>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Chave de ação inválida</value>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>O comando não pode ser nulo ou vazio.</value>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>A exclusão de caminhos do sistema não é permitida</value>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>A exclusão com curingas é restrita</value>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>A exclusão de chaves de registro críticas não é permitida</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Valor do usuário atual é nulo</value>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>Handle inválido</value>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Falha ao deserializar JSON</value>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Variável de ambiente inválida: {0}</value>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Valor de variável de ambiente inválido: {0}</value>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Nenhum recurso compatível encontrado</value>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Display integrado não encontrado</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Falha ao deserializar o perfil.</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>O brilho deve estar entre 0 e 9</value>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>O perfil deve estar entre 0 e 6</value>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Os dados da tabela não podem estar vazios</value>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>A matriz de temperatura deve ter exatamente 10 elementos</value>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Incompatibilidade de soma de verificação do arquivo</value>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>A propriedade do dispositivo não é um GUID</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>A propriedade do dispositivo não é uma cadeia de caracteres</value>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Deslocamento e contagem excedem os limites da matriz</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Arquivo de perfil não encontrado.</value>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Erro ao abrir serviço</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Erro ao abrir o gerenciador de serviços</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Catálogo de recursos vazio.</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Não foi possível deserializar efeitos</value>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>Não é possível ler a variável {0} do UEFI</value>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>Não é possível gravar a variável {0} no UEFI</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>O valor do recurso WMI está indisponível para {0}.</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Valor indefinido recebido: {0}</value>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Modo de energia não suportado {0}</value>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>O modo de energia '{0}' está indisponível sem o carregador.</value>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Falha na validação de segurança do comando: {0}</value>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Executável não está na lista de permissões: {0}</value>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Padrão perigoso detectado nos argumentos de {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>O pacote de dispositivo contém um tipo de arquivo não suportado: {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>O pacote de dispositivo contém um caminho inseguro: {0}</value>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>O pacote de dispositivo contém um separador de caminho no estilo Windows: {0}</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>O pacote de dispositivo '{0}' não está disponível no catálogo online de recursos.</value>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>O pacote de dispositivo '{0}' não contém {1}.</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>O manifesto do pacote de dispositivo '{0}' está vazio.</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Incompatibilidade de ID do pacote de dispositivo. Esperado '{0}', obtido '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Incompatibilidade de fornecedor do pacote de dispositivo. Esperado '{0}', obtido '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>O URL de download do pacote de dispositivo '{0}' está vazio.</value>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>O pacote de dispositivo '{0}' está sem metadados SHA256.</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Estado desconhecido da bateria: {0}</value>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>Falha ao verificar se o estado de {0} foi definido como {1}.</value>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl retornou 0, último erro: {0}</value>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>A chave {0} não pôde ser aberta</value>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Deve ser legível</value>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Deve ser gravável</value>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Handle do dispositivo não disponível</value>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>O módulo principal não pode ser nulo</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>O nome do arquivo do processo atual não pode ser nulo</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>A versão do arquivo do processo atual não pode ser nula</value>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Falha na validação SHA256 do recurso baixado. Esperado: {0}, obtido: {1}.</value>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer já inicializado</value>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer deve ser inicializado primeiro [type={0}]</value>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>O comprimento da tabela de ventoinhas deve ser 10</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>O nome da tag não pode ser nulo ou vazio</value>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Não foi possível analisar a versão do nome da tag: '{0}'. Formato esperado: '3.0.1'</value>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>Predefinição com ID {0} não encontrada</value>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Nenhuma predefinição do God Mode pôde ser criada.</value>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>Nenhuma predefinição do God Mode disponível.</value>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Nenhuma versão compatível encontrada</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Nenhum controlador compatível encontrado</value>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Nome de arquivo de configurações inválido: {0}</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>O caminho das configurações escapa do diretório permitido: {0}</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Falha ao registrar alterações na tarefa {0} em {1} [type={2}]</value>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>Não foi possível ler a configuração {0}</value>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>Não foi possível obter a cor "{0}"</value>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Falha ao obter o handle do driver: {0}</value>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Erro ao obter o handle do driver: {0}</value>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl falhou com erro: {0}</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Erro ao enviar comando do driver: controlCode={0}</value>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>Classe ou namespace WMI não disponível [scope={0}, query={1}]</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Falha na leitura: {0} [scope={1}, query={2}]</value>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Falha na chamada: {0} [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Falha na chamada: {0}. [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Nenhum resultado na consulta</value>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Tipo de formatação inválido</value>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Falha na verificação de integridade do pacote de atualização: nenhum hash SHA256 disponível para a atualização {0}. A verificação de integridade é necessária por segurança.</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Falha na verificação de integridade do pacote de atualização. SHA256 esperado: {0}, calculado: {1}</value>
   </data>
 </root>

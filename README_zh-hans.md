@@ -5,6 +5,10 @@
 [![Build](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
+> **开源 · 不用账号 · 不碰遥测**
+>
+> 拯救者用户可以不用 Vantage 也能管 Fn+Q 和 RGB；其他 Windows 电脑也能装插件凑合用。
+
 ---
 
 Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的联想游戏本上提供完整硬件控制，在其他联想机型及非联想 PC 上则以**基础模式**运行（隐藏不支持的硬件项，仍可使用插件、系统优化、主题、更新与日志等功能）。插件扩展是一等公民能力，可在「插件扩展」页面安装、更新、配置与卸载。
@@ -12,6 +16,25 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 > [!NOTE]
 > **「Universal」的含义**
 > UDT 是 Windows 工具平台：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型；**基础模式**面向其他联想型号及华硕、戴尔、惠普、宏碁、小米、华为等非联想 PC，提供插件与通用系统工具，而非全品牌 Vantage 级硬件控制。名称强调可扩展性与基础模式覆盖范围。
+
+### 为什么选择 UDT？
+
+| | UDT | Lenovo Vantage |
+|---|:---:|:---:|
+| 后台服务 | **无** | 需要 |
+| 遥测 / 联想账号 | **无** | 需要 |
+| 开源（GPL-3.0） | **是** | 否 |
+| 插件扩展 | **是** | 有限 |
+| 命令行与自动化 | **是** | 否 |
+| 非联想 PC 可用 | **基础模式** | 否 |
+
+**适合谁**
+
+- 拯救者 / LOQ 用户，想卸 Vantage 但还要 Fn+Q、RGB、独显控制
+- 随便哪台 Windows，想试试插件和系统工具（基础模式）
+- 爱折腾的：命令行 `llt.exe`、宏、代码是 GPL 开源能自己看
+
+宣发文案（口语版）：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
 本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户可直接升级；设置、插件与包管理器标识在更名期间保持兼容。
 
@@ -23,6 +46,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 &nbsp;
 
 # 目录
+  - [为什么选择 UDT？](#为什么选择-udt)
   - [免责声明](#免责声明)
   - [下载](#下载)
   - [兼容性](#兼容性)
@@ -402,11 +426,13 @@ LLT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 ## 插件系统
 
-LLT 支持全面的插件系统，允许动态扩展应用程序功能。插件可以在不重启应用程序的情况下进行安装、更新和卸载。
+UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件可在插件扩展页面中安装、更新、配置和卸载。
+
+官方插件在独立仓库 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 维护，通过在线目录分发到插件扩展页面。
 
 ### 核心特性
 
-- **动态加载**：插件从 `Build/plugins` 目录在运行时加载
+- **动态加载**：插件从宿主 `plugins` 目录在运行时加载（开发构建为 `Build/plugins`，安装后为 `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`）
 - **在线插件仓库**：从在线仓库浏览和安装插件
 - **依赖管理**：自动安装和检查插件依赖
 - **UI 集成**：插件可以提供自定义 UI 页面和设置
@@ -419,17 +445,20 @@ LLT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 ### 插件类型
 
 - **系统插件**：内置插件，提供核心功能
-- **第三方插件**：社区创建的插件，扩展 LLT 功能
+- **第三方插件**：社区创建的插件，扩展 UDT 功能
 
 ### 可用插件
 
-LLT 目前提供以下插件：
+官方插件发布自 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)。在线目录当前包括：
 
-- **ViVeTool 插件**：管理 Windows 功能标志，启用或禁用实验性 Windows 功能
+- **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
+- **Network Acceleration（网络加速）**：网络调优，含功能页与设置页
+- **Shell Integration（Shell 集成）**：右键菜单与 Shell 样式（系统插件）
+- **ViVeTool**：管理 Windows 功能标志与实验性功能
 
 ### 插件管理 UI
 
-LLT 提供了功能全面的插件扩展页面，具有以下特点：
+UDT 提供了功能全面的插件扩展页面，具有以下特点：
 
 - **插件浏览**：查看所有可用插件（本地和在线）
 - **搜索和筛选**：按名称或描述搜索插件，按安装状态筛选
@@ -449,14 +478,16 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
    - 点击插件查看详情
    - 点击"安装"自动下载并安装
 
-2. **手动安装**：
-   - 下载插件 DLL 文件
-   - 将其放置在 `Build/plugins` 目录中
-   - 重启 LLT，或使用插件管理器 UI 扫描新插件
+2. **手动安装**（进阶）：
+   - 从 [UniversalDeviceToolkit-Plugins Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases) 下载插件 ZIP，或在插件仓库使用 `llt-plugin.cmd package` 本地打包
+   - 解压到宿主 `plugins` 目录（每个插件单独子文件夹）：
+     - 已安装 UDT：`%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
+     - 本地开发构建：`Build\plugins\`
+   - 重启 UDT，或在插件扩展页面刷新已安装插件
 
 ### 插件开发
 
-有关如何为 LLT 开发插件的信息，请参考插件开发文档。
+请在独立仓库 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 中开发插件，从 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md)。
 
 ## 贡献者
 
@@ -717,6 +748,9 @@ crowdin download --config crowdin.yml
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | 系统架构、组件与数据流 |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
 | [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
+| [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |
+| [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | 发布与社区宣发文案（英文） |
+| [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | 社区发帖手册与提交记录 |
 | [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
 

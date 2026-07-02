@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+    Version 2.0
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন এসি পাওয়ার অ্যাডাপ্টার সংযুক্ত হয়</value>
+  </data>
+  <data name="ACAdapterDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন এসি পাওয়ার অ্যাডাপ্টার সংযোগ বিচ্ছিন্ন হয়</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepState_KillApps" xml:space="preserve">
+    <value>অ্যাপ বন্ধ করুন</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepState_RestartGPU" xml:space="preserve">
+    <value>জিপিইউ পুনরায় চালু করুন</value>
+  </data>
+  <data name="Delay_Second" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+  </data>
+  <data name="Delay_Second_Many" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+  </data>
+  <data name="LowWattageACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন কম ওয়াটেজের এসি পাওয়ার অ্যাডাপ্টার সংযুক্ত হয়</value>
+  </data>
+  <data name="OnStartupAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>স্টার্টআপে</value>
+  </data>
+  <data name="PowerModeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন পাওয়ার মোড পরিবর্তন হয়</value>
+  </data>
+  <data name="ProcessesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন অ্যাপ শুরু হয়</value>
+  </data>
+  <data name="ProcessesStopRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন অ্যাপ বন্ধ হয়</value>
+  </data>
+  <data name="TimeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>নির্দিষ্ট সময়ে</value>
+  </data>
+  <data name="ExternalDisplayConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন বাহ্যিক ডিসপ্লে সংযুক্ত হয়</value>
+  </data>
+  <data name="ExternalDisplayDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন বাহ্যিক ডিসপ্লে সংযোগ বিচ্ছিন্ন হয়</value>
+  </data>
+  <data name="DisplayOnAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ডিসপ্লে চালু হয়</value>
+  </data>
+  <data name="DisplayOffAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ডিসপ্লে বন্ধ হয়</value>
+  </data>
+  <data name="LidOpenedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>লিড খোলা হয়েছে</value>
+  </data>
+  <data name="LidClosedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>লিড বন্ধ হয়েছে</value>
+  </data>
+  <data name="GamesStopAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন গেম বন্ধ হয়</value>
+  </data>
+  <data name="GamesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন গেম চলছে</value>
+  </data>
+  <data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve">
+    <value>যখন ব্যবহারকারী সক্রিয় হন</value>
+  </data>
+  <data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ব্যবহারকারী নিষ্ক্রিয় হন</value>
+  </data>
+  <data name="DeactivateGpuQuickAction_Title" xml:space="preserve">
+    <value>জিপিইউ নিষ্ক্রিয় করুন</value>
+    <comment>The display name of the default Quick Action that is presented to the user upon first installation.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepState_Off" xml:space="preserve">
+    <value>বন্ধ</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve">
+    <value>চালু</value>
+  </data>
+  <data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন কাস্টম মোড প্রিসেট পরিবর্তন হয়</value>
+  </data>
+  <data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>পর্যায়ক্রমিক ক্রিয়া</value>
+    <comment>The display name of the periodic automation action.</comment>
+  </data>
+  <data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ওয়াই-ফাই সংযুক্ত হয়</value>
+  </data>
+  <data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ওয়াই-ফাই সংযোগ বিচ্ছিন্ন হয়</value>
+  </data>
+  <data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>পুনরায় শুরুতে</value>
+  </data>
+  <data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন এইচডিআর বন্ধ হয়</value>
+  </data>
+  <data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন এইচডিআর চালু হয়</value>
+  </data>
+  <data name="MacroAutomationStepState_Off" xml:space="preserve">
+    <value>বন্ধ</value>
+  </data>
+  <data name="MacroAutomationStepState_On" xml:space="preserve">
+    <value>চালু</value>
+  </data>
+  <data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ডিভাইস সংযোগ বিচ্ছিন্ন হয়</value>
+  </data>
+  <data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>যখন ডিভাইস সংযুক্ত হয়</value>
+  </data>
+  <data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>সেশন লক হয়েছে</value>
+  </data>
+  <data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>সেশন আনলক হয়েছে</value>
+  </data>
+</root>

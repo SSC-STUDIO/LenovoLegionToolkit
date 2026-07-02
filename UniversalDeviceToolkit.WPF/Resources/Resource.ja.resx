@@ -1,51 +1,51 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
-              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:schema id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" ns1:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -314,7 +314,7 @@
     <value>キャンセル</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>温度 °C</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>閉じる</value>
@@ -520,7 +520,7 @@
     <value>GPUの動作モードについて</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>℉</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>cpu</value>
@@ -643,13 +643,13 @@
 警告: 内蔵ディスプレイがオフの場合、このアクションは正しく実行されません。</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>ハードディスクレコーディング</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>内蔵ディスプレイでハイダイナミックレンジ（HDR）を有効にします。</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>ハードディスクレコーディング</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>HDRの使用はWindowsの設定によってブロックされています。</value>
@@ -1754,7 +1754,7 @@
     <value>ネットワーク名 (SSID)</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>Hwinfo64</value>
+    <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
     <value>統合</value>
@@ -2068,7 +2068,7 @@
     <value>コンパクトビュー</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occured when reading device information.</value>
+    <value>デバイス情報の読み取り中にエラーが発生しました。</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
     <value>参照…</value>
@@ -2896,7 +2896,7 @@
     <value>レジストリのクリーンアップ</value>
   </data>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>DISM ????</value>
+    <value>DISMコマンド</value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>使用時間</value>
@@ -2974,13 +2974,13 @@
     <value>Windowsの組み込みレジストリクリーンアップ機能の利用</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (DNS ???????????)</value>
+    <value>ipconfig /flushdns (DNSキャッシュのフラッシュ)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (Winsock ????? ?????????)</value>
+    <value>netsh winsock reset (Winsockプロトコルスタックのリセット)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (TCP/IP ????? ?????????)</value>
+    <value>netsh int ip reset (TCP/IPプロトコルスタックのリセット)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>プラグイン拡張</value>
@@ -3340,112 +3340,112 @@
     <value>クリーンアップするアイテムを少なくとも1つ選択してください。</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>ソフトウェアレンダリングを強制する</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>リモートデスクトップまたはヘッドレスディスプレイが検出された場合にソフトウェアレンダリングを使用します。再起動を推奨します。</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>インストーラーがコード {0} で終了しました</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>キューに追加済み</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
+    <value>{0} 作</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>最適化</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>クイックオープン</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>設定</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>更新</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>プラグインの利用可能状況を確認しています...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>インストール可能</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>現在のフィードに {0} 件の追加プラグインがあります。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>インストール済み</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>ストアパルス</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>プラグイン総数</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>検出されたすべてのプラグインは最新です。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>最新</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>更新が利用可能</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>更新準備完了</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} 件のプラグイン更新をインストールする準備が完了しています。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>プラグインメタデータの読み込みを待機しています。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>メタデータを読み込み中</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>言語、温度単位、テーマ、アクセントカラーをカスタマイズします。</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>外観</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>アプリケーション</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit は {0} 付きで起動されました。引数なしで再起動するまで、自動および手動の更新チェック、ならびに以下の更新設定は無効になります。</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>このセッションでは更新の確認が無効になっています</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>選択したソースとネットワーク接続を確認してから、もう一度スキャンしてください。</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>ドライバースキャンが完了しませんでした</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>フィルター、更新のみオプション、または非表示ダウンロードリストを調整してください。</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>一致するダウンロードが見つかりません</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>別のソース、オペレーティングシステム、またはマシンの種類をお試しください。</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>ドライバーダウンロードが見つかりません</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>ソースを選択してスキャンすると、対応するドライバーダウンロードが表示されます。</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>ドライバーパッケージをスキャン</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>{0} の適用に失敗しました: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>閉じる</value>
@@ -3542,5 +3542,347 @@
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>デバイスパック: 基本モード</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>このデバイスは基本モードで起動します。互換性のあるデバイスパックが利用可能になるまで、ハードウェア固有のコントロールは非表示になります。</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>デバイスパック: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit は一致するデバイスパックを検出しました。今すぐ確認すると、アプリケーションがハードウェア固有の機能を準備できます。</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>デバイスセットアップを準備中…</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>選択を確定</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>削除するファイルを選択してください。フィルターに一致するファイルのみが表示されます。</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>カスタム…</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>次のサイズより大きいファイルをフィルター:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>パス</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>サイズ</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>選択済み: {0} 件のファイル ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>大きなファイルの分析</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>ファン</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>ディスク 1 の温度</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>ディスク 2 の温度</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E コアクロック</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>フレーム時間</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>ゲーム</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>ファン</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>温度</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>使用率</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH ファン</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P コアクロック</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>バー</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>パネル</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD を表示または非表示</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>カテゴリ色</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>角丸の半径</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>下</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>上</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>重大な色</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>フォントサイズ</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>ラベル色</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>値の色</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>警告色</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>位置をロック</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>オーバーレイスタイル</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>更新間隔</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>センサーの更新間隔</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>位置をリセット</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>スナップしきい値</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>外観</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>センサー</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>しきい値</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>重大</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS レッドライン</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>許容される最低フレームレート。これを下回ると、色が重大状態に変わります。</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>低 FPS デルタ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>平均 FPS と 1% ローとの最大差。これを超えるとカウンターが重大状態に変わります。</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>パフォーマンス</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>温度</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>使用率</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD 設定</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>プラグイン {0} はインストールされましたが、ユーザー向けのエントリ ポイントは公開されていません。バックグラウンド サービスまたはマニフェスト データのみを提供する場合があります。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>インストール済みですが、エントリ ポイントがありません</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>プラグイン {0} はインストールされましたが、ランタイム UI を読み込めませんでした。アプリを再起動するか、プラグインを再インストールしてください。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>インストール待機中 (別のプラグインをダウンロード中)…</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>プラグイン {0} がインストールされ、システムの最適化で開かれました。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>プラグイン {0} がインストールされました。「開く」を使用して利用可能なエントリ ポイントを起動してください。</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH 温度</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>電力</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>コア</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>メモリ</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>プラットフォーム</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E コアクロック</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>電力</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>コア温度</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU ホットスポット</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM 温度</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe スループット</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM 使用率</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>読み込み中…</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>メモリ温度</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>メモリ使用量</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>ボード温度</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>マザーボード</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>該当なし</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P コアクロック</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>共有メモリ使用量</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD 温度</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>不明なバッテリー</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>不明な CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>不明な GPU</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM 温度</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM 使用量</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>詳細な温度、周波数、電力制限を監視するために、高度なハードウェアポーリングを有効にします。</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>ハードウェアセンサーを使用するには、先に PawnIO をインストールする必要があります!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>ハードウェアセンサー</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>言語パックをダウンロードできませんでした。ネットワーク接続、プロキシ、または TLS 設定を確認してから、もう一度お試しください。</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>ディスプレイ</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>スマートキー</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>センサー データをリアルタイムで表示するフローティング オーバーレイ。</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD を有効化</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

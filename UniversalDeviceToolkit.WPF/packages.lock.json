@@ -98,6 +98,12 @@
           "PixiEditor.ColorPicker.Models": "1.0.11"
         }
       },
+      "PixiEditor.ColorPicker.Models": {
+        "type": "Direct",
+        "requested": "[1.0.11, )",
+        "resolved": "1.0.11",
+        "contentHash": "Pedk5E5ChHH7hYNA0dqf51Izm329eQ1w1Sz4bU17Ls41CxwvH31Z/qGXcNRlaywX6w94sKtqlzSq+sj3gMkpow=="
+      },
       "WPF-UI": {
         "type": "Direct",
         "requested": "[4.3.0, )",
@@ -608,11 +614,6 @@
         "type": "Transitive",
         "resolved": "2.3.0",
         "contentHash": "jMd7r6dB6tAtXhOYL58ntPqwERNm1/Rhw5MKOIYvsnXzuX+PTGsa2VMam6n0npZYSwlSidKa4GAm4bFcXFUlcg=="
-      },
-      "PixiEditor.ColorPicker.Models": {
-        "type": "Transitive",
-        "resolved": "1.0.11",
-        "contentHash": "Pedk5E5ChHH7hYNA0dqf51Izm329eQ1w1Sz4bU17Ls41CxwvH31Z/qGXcNRlaywX6w94sKtqlzSq+sj3gMkpow=="
       },
       "runtime.android-arm.runtime.native.System.IO.Ports": {
         "type": "Transitive",

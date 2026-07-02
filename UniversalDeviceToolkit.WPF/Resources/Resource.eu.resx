@@ -1,0 +1,3879 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>Builda</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>Azken bertsioa GitHub-en</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>Estekak</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>Proiektuaren webgunea GitHub-en</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>Hirugarrenen liburutegiak</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>Honi buruz</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Itzulpenak komunitateak eskainiak.</value>
+    <comment>Please replace this text with something like &quot;Translated into &lt;language&gt; by &lt;your name&gt;.&quot;</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>Bertsioa</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Gehitu</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Berria gehitu</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>Kargatu USB gailuak ordenagailua itzalita, lo edo hibernatuta dagoenean.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>USB beti piztuta</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>Kargatu USB gailuak ordenagailua itzalita, lo edo hibernatuta dagoenean.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>USB beti piztuta</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Aplikatu</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>Aplikatu eta itxi</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Universal Device Toolkit exekutatu behar da ekintza automatikoek funtziona dezaten.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>Gaitu</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>Ez dago ekintzarik zehaztuta. Sakatu &quot;Berria gehitu&quot; ekintza berri bat sortzeko.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>Gaituz gero, ekintza hauek automatikoki exekutatuko dira. Egoera aldatzen denean, ekintza guztiak goitik behera ebaluatuko dira.
+Egoera unekoarekin bat datozen ekintzak soilik exekutatuko dira.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>Ekintzak</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>Izena...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>Berria gehitu</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>Ez dago ekintza azkarrik zehaztuta. Sakatu &quot;Berria gehitu&quot; ekintza azkar berri bat sortzeko.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>Ekintza azkarrak erabilgarri daude sistemako ikonoaren eskuin klik menuan.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>Ekintza azkarrak</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>Izena...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>Berrizendatu</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>Aldaketa guztiak desegin dira!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>Desegina</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>Aldaketak ongi gorde dira!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>Gordeta</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>Automatizazioa</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>Urratsa gehitu</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>Konfiguratu</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Esklusiboa</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>Ez exekutatu ekintza gehiago ekintza hau exekutatzen denean.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>Exekutatu orain</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>Erroreekin osatu da.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>Exekutatu orain</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>Ongi osatu da!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>Exekutatu orain</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>Exekutatzen...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} urrats</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} urrats</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>Aplikazioak</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>Egunsentian</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>Ilunabarrean</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>{0:D2}:{1:D2}-etan</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>Energia modua</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>Izenik gabe</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>Joko jakin batzuk exekutatzen direnean automatikoki detektatzen du eta CPU eta GPU errendimendua doitzen du. Tenperaturak eta haizagailuen zarata handitu daitezke.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>Gaitu AI motorra</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>Oreka moduaren ezarpenak</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>Aukeratu bateria nola kargatzen den.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>Bateria modua</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>Aukeratu bateria nola kargatzen den.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>Bateria modua</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>Konektatuta, kargatzen...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>Konektatuta, ez kargatzen</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>Bateriaren uneko tenperatura.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>Bateriaren tenperatura</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>Bateriaren uneko edukiera.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>Uneko edukiera</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>Karga/deskarga zikloen kopurua.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>Ziklo kopurua</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>Diseinatutako bateriaren edukiera.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>Diseinu edukiera</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>Bateria kargatzen (+) edo deskargatzen (-) den abiadura.</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>Deskarga abiadura</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Bateria kargatzen (+) edo deskargatzen (-) den gutxieneko abiadura.</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Gutxieneko deskarga abiadura</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Bateria kargatzen (+) edo deskargatzen (-) den gehienezko abiadura.</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Gehienezko deskarga abiadura</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>Geratzen den denbora estimatua: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>Denbora kalkulatzen...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>Lehen erabilera data</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>Bateria noiz erabili zen lehen aldiz.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>Bateriaren edukiera erabat kargatuta dagoenean.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>Karga osoko edukiera</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Bateriaren gehienezko karga edukiera.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Bateriaren osasuna</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>Wataje baxuko kargagailua konektatuta</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>Bateria noiz fabrikatu zen.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>Fabrikazio data</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>Ordenagailua azkenekoz AC elikadurara noiz konektatu zen.
+Denbora hau ez da baliteke zehatza izatea, ordenagailua lo edo itzalita zegoenean kargatu bazen.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>Baterian noiztik</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Ezeztatu</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Itxi</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Urdina</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Berdea</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Gorria</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>Aukeratu GPUaren funtzionamendu modua zure ordenagailuaren erabileraren eta energia baldintzen arabera.
+Moduak aldatzeak berrabiaraztea eska dezake.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>{0}-ra aldatzeak berrabiaraztea eskatzen du. Orain berrabiarazi nahi duzu?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Berrabiaraztea beharrezkoa</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>GPUaren lan modua</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>Ekintza azkarrak</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Jarraitu</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>Dena kopiatu</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>Grafikoak</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>Besteak</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>Energia</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>Hasiera</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Desgaitu GPU diskretua beharrezkoa ez bada aktibo.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago edo Hybrid modua aktibo ez badago.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPUa desgaitu</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>Gehitu atzerapena hurrengo urratsa exekutatu aurretik.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>Atzerapena</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Ezabatu</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS bertsioa</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>Testua arbelera kopiatu da.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>&quot;{0}&quot; arbelera kopiatu da.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>Kopiatuta!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>Gailua</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Hardwarea</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Oinarrizko plaka</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Txasisa</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Lenovo Support</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>Makina mota</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>Fabrikatzailea</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>Modeloa</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>Serie zenbakia</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>Zure gailuari buruz</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>Amaiera data</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>Hasiera data</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>Bermea</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktiboa</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>Desgaitu</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inaktiboa</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>Amaitu aplikazioak</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>Desgaitu GPU diskretua beharrezkoa ez bada aktibo.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>Monitor bat dago nVidia GPUra konektatuta.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>Prozesurik ez</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>Errendimendu egoera</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>Ezezaguna</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>Prozesuak</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>Berrabiarazi GPUa</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU diskretua</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren distira.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Pantailaren distira</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editatu</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Desmarkatu erabili nahi ez dituzun freskatze tasa, Fn+R lasterbidea erabiltzen denean.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>Ziurtatu ordenagailuaren pantaila piztuta dagoela. Universal Device Toolkit ezin ditu freskatze tasak kargatu piztuta ez dagoen pantaila batentzat.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>Ez da freskatze tasarik aurkitu</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>Baztertu freskatze tasak</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Irten</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Esportatu</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>Erabili GPU integratua soilik baterian dagoenean eta GPU integratu zein diskretua AC elikadura konektatuta dagoenean. Ez-estandarra den elikagailu bat konektatzen denean, sistemak Hybrid-iGPU Only Modura aldatzen du.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>Hybrid-Auto modua</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>Modu honetara eta honetatik aldatzeak berrabiaraztea eskatzen du.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>Erabili GPU diskretua soilik. Modu honek grafiko errendimendu onena eskaintzen du, baina energia kontsumoa handitzen du.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU modua</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>GPU integratua zein diskretua gaituta daude. Sistemak automatikoki aldatuko ditu bere beharren arabera.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>Hybrid modua</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>Modu honek eragina du soilik GPU diskretua ez dabilenean.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>Erabili GPU integratua soilik. Modu honek energia kontsumoa eta zarata minimizatzen ditu.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Hybrid-iGPU Only modua</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>GPUaren lan moduei buruz</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>CPU sentsorea</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>Haizagailuen abiadura</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>Piztu ordenagailua tapa irekitzean.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>Piztu ordenagailua tapa irekitzean.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Erabili F1-F12 teklako bigarren mailako funtzioak Fn tekla sakatu gabe.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn blokeoa</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Erabili F1-F12 teklako bigarren mailako funtzioak Fn tekla sakatu gabe.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn blokeoa</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>ABISUA!
+Ordenagailu batzuk adierazten dutena baino balio txikiagoak onar ditzakete, baina kontu ibili. Aukera honek portaera ezezaguna eragin dezake. Ziur ez bazaude zer ari zaren egiten, utzi honi 0 balioa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>Gutxieneko desfasea</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>ABISUA!
+Ordenagailu batzuk adierazten dutena baino balio handiagoak onar ditzakete, baina kontu ibili. Aukera honek portaera ezezaguna eragin dezake. Ziur ez bazaude zer ari zaren egiten, utzi honi 0 balioa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>Gehienezko desfasea</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>Ez aldatu beheko aukerak benetan badakizu zer ari zaren egiten ez baduzu.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>Aurreratua</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>Epe luzeko potentzia muga (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>Epe luzeko potentzia muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>Epe laburreko potentzia muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU tenperatura muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>Ezin izan dira ezarpenak aplikatu</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>Ezin izan da ezarpena kargatu.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>Haizagailuen abiadura ez dago tenperatura sentsore bakar batek zehaztuta. CPU, GPU eta heatsink tenperaturen artean sentsorerik altuenaren arabera altxatu edo jaitsiko du abiadura. Balio zehatzak agertuko dira urrats bakoitzaren gainean sagua jartzen duzunean.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>Haizagailuen kurba</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>ABISUA!
+Aukera honen erabilera luzeak haizagailuen bizitza erabilgarria murriztuko du.
+Benetan, kontu ibili aukera honekin!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>Gehienezko haizagailuen abiadura</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>Haizagailuak</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>TGP konfiguragarria</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Boost dinamikoa</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>GPU tenperatura muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>Modu pertsonalizatuaren ezarpenak</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>Gaitu gamma dinamiko handia (HDR) barneko pantailan.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>Gaitu gamma dinamiko handia (HDR) barneko pantailan.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>HDR erabilera Windowsen ezarpenen bidez blokeatuta dago.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Inportatu</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>Gailu hau ez da bateragarria Universal Device Toolkit-ekin.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Zure gailuari baliteke sistema osagaiak (LenovoGameZoneData) faltatzea.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>&quot;Ados&quot; sakatzen baduzu jarraitzeko:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Softwarea modu mugatuan exekutatuko da</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Ezaugarri batzuk desgaituko dira (Arbela, Automatizazioa, Makroak)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Oinarrizko beste ezaugarri batzuk eskuragarri egongo dira</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Gailuaren informazioa:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Saltzailea:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Modeloa:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Makina mota:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Sakatu &quot;Ados&quot; jarraitzeko, edo &quot;Ezeztatu&quot; irteteko.</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>Ez da teklatu bateragarririk aurkitu</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Teklatuaren atzeko argia ezin da hemen kontrolatu Lenovo Vantage edo bere zerbitzuak exekutatzen ari direnean.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage edo bere zerbitzuak exekutatzen ari dira</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>Honi buruz</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>Ekintzak</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>Arbela</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>Teklatua</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>Deskargak</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Sistemaren optimizazioa</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Plugin hedapenak</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Nabigazio elementuen ezarpenak</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Konfiguratu alboko barran bistaratzen diren nabigazio elementuak. Arbela eta Ezarpenak beti ikusgai egongo dira.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Teklatua nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Bateria nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Automatizazioa nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Makroa nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Sistemaren Optimizazioa nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Plugin hedapenak nabigazio elementua</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu Honi buruz nabigazio elementua</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Nabigazio elementuak</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Konfiguratu alboko barran bistaratzen diren nabigazio elementuak</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>Eguneratzea eskuragarri!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>{0} eguneratzea eskuragarri!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Behera mugitu</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Gora mugitu</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Ez</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>AC elikagailua konektatuta</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>AC elikagailua konektatuta (Wataje baxua)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>AC elikagailua deskonektatuta</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>Kamera itzalita</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>Kamera piztuta</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock itzalita</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock piztuta</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock itzalita</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock piztuta</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>Mikrofonoa itzalita</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>Mikrofonoa piztuta</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock itzalita</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock piztuta</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>Atzeko argia {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>Distira {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>Profila {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>Touchpad itzalita</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>Touchpad piztuta</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>Atzeko argia {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>AC elikagailua</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock eta Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>Desgaitu jakinarazpenak Fn teklako ekintzentzat (mikrofonoa isilarazi bezala). Gaitu aukera hau pantaila osoko aplikazioekin gatazkak badituzu.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>Ez erakutsi jakinarazpenak</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>Mikrofonoa</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>Posizioa</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>Energia modua</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>Freskatze tasa</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Tekla adimenduna</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>Jakinarazpenak</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>Touchpad blokeoa</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Ados</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Ireki</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>Hobetu barneko pantailaren erantzun denbora.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>Hobetu barneko pantailaren erantzun denbora.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} deskargatu da!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>Deskarga osatuta</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>Zerbait oker joan da</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>Zerbitzariak 404 kodea itzuli du.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>Fitxategia desagertu egin dela dirudi</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>Egiaztatu zure internet konexioa martxan dagoela.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>Zerbait oker joan da</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>Eguneratzea eskuragarri!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>Pakete hau urtebete baino zaharragoa da.</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>Bertsioa</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>Hona hemen zure ordenagailuarekin bateragarri gisa markatutako software paketeen zerrenda.
+Ziurtatu beti pakete zuzenak instalatzen dituzula.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Egiaztatu Makina mota eta Sistema eragilea ongi ezarrita daudela.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>Zerbait oker joan da</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Ordenatzeak, emaitzen iragazketak, paketeak ezkutatzeak edo zerrenda freskatzeak deskarga geldituko du. Jarraitu nahi duzu?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>Deskarga martxan</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Iragazi...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>Makina mota</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>Sistema eragilea</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>Lehen mailakoa (Gomendatua)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Lenovo Vantage bezala</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>Bigarren mailakoa</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Lenovo PC Support bezala</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>Izena</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>Iturria</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>Deskargak</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Itsatsi</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Aldatu errendimendu modua.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Energia modua</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>Aldatu errendimendu modua.
+Errendimendu modua Fn+Q-rekin ere alda daiteke.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>Energia modua</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>Hautatutako energia modua ez da ondo funtzionatuko AC elikagailurik konektatu gabe.</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>Lehenetsia</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows energia planak</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Driver pakete eskuragarriak bilatzen, mesedez itxaron...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Bilatu driver paketeak</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Aukeratu iturri bat eta eskaneatu bateragarriak diren driver deskargen zerrenda lortzeko.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Ez da driver deskargarik aurkitu</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Saiatu beste iturri, sistema eragile edo makina mota batekin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Ez dira deskarga egokirik aurkitu</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Doitu iragazkia, eguneratze soilik aukera edo ezkutatutako deskargen zerrenda.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Driver eskaneatzea ez da osatu</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Egiaztatu hautatutako iturria eta sare konexioa, ondoren eskaneatu berriro.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Sare errorea gertatu da. Automatikoki berriz saiatzen...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Driver paketeak berreskuratzen berriz saiatzen...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Garbitze informazioa</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Ikusi garbitze eragiketaren aurrerapena eta tamaina estimatua.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Doitu teklatuaren atzeko argiaren aurrekonfigurazioa.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>Distira</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>Aurrekonfigurazioa 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>Aurrekonfigurazioa 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>Aurrekonfigurazioa 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>Aurrekonfigurazioa 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>Itzalita</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>1 zona</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>2 zona</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>3 zona</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>4 zona</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>Efektua</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>Abiadura</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Freskatu</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren freskatze tasa.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>Freskatze tasa</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren freskatze tasa.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>Freskatze tasa</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Berrizendatu</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>Geroago berrabiaraziko dut</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>Orain berrabiarazi</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Desegin</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>Argumentuak</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>Exekutagarriaren bidea</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>Exekutatu script edo programa bat. Ziurtatu zure scripta lehenik ongi exekutatzen dela.</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>Exekutatu</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Gorde</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Gordetzen...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>Aukeratu ekintza azkar bat edo gehiago txandakatzeko</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>Ez dago ekintza azkarrik zehaztuta.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>Erakutsi aplikazio hau</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>Aldatu aplikazioaren azentuaren kolorea.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>Azentu kolorea</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Hasi minimizatuta sistemako ikonora Windowsen saioa hasten duzunean.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>Abiarazte automatikoa</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Hasi minimizatuta sistemako ikonora Windowsen saioa hasten duzunean.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Baliteke Legion Zone ez dela ongi desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Ezin izan da Legion Zone desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Desgaitu Legion Zone eta bere zerbitzua desinstalatu gabe.
+Aukera hau aldatu ondoren berrabiaraztea gomendatzen da.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Desgaitu Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Baliteke Lenovo Hotkeys ez dela ongi desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Ezin izan dira Lenovo Hotkeys desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Desgaitu Lenovo Hotkeys eta bere zerbitzua desinstalatu gabe.
+Desgaituz gero, aplikazio honek kudeatuko ditu Fn lasterbideak.
+Aukera hau aldatu ondoren berrabiaraztea gomendatzen da.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Sistemaren optimizazioa</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Aplikatu errendimendu doikuntza gomendatuak eta garbitu behin-behineko fitxategiak.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Aplikatu errendimendu eta zerbitzu doikuntzak</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Errendimendu optimizazioak aplikatu dira.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Ezin izan dira errendimendu optimizazioak aplikatu.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Exekutatu garbitzea</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Garbitzea osatu da.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Garbitzeak huts egin du.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Ekintza hauek sistema zerbitzuak eta fitxategiak aldatzen dituzte. Administratzaile baimenak behar izan daitezke.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Aplikatu hautatutako ekintzak</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Hautatu gomendatuak</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Garbitu hautaketa</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Eskaneatu</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Exekutatu garbitze ekintzak</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} ekintza hautatuta</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Ez da ekintzarik hautatu oraindik.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Hautatutako ekintzak</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Garbitzea</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Edertzea</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Driver deskarga</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Segurtasun berrespena</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Sistemaren garbitzeak behin-behineko fitxategiak eta cachea betiko ezabatuko ditu. Normalean segurua izan arren, gomendatzen da datu garrantzitsuen babeskopiak izatea. Jarraitu nahi duzu?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Hedapenak</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Kudeatu sistemaren optimizazio hedapenak eta tresnak</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Ez dago hedapenik eskuragarri</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Instalatu hedapenak Plugin Hedapenak orritik sistemaren optimizazioaren funtzionalitatea hobetzeko.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Laster</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Hedapen merkatua etorkizuneko eguneratze batean eskuragarri egongo da.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows optimizazioa</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Hautatu denak</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Garbitze arau pertsonalizatuak</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Aukeratu garbitzean ezabatu behar diren karpetak eta fitxategi luzapenak.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Gehitu araua</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Editatu</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Kendu</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Garbitu denak</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Ez dago garbitze arau pertsonalizaturik konfiguraturik.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Sartu azpikarpetak</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX kudeaketa</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Aukeratu aurreinstalatutako Microsoft Store aplikazioak erabiltzaile guztientzat kentzeko.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Ez da aplikaziorik hautatu kentzeko.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Desinstalatu hautatutako aplikazioak</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Hautatutako aplikazioak kentzeko programatuta.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Hautatutako aplikazioak kentzeak huts egin du.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Aplikazioak kargatzen, mesedez itxaron...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Pluginak kargatzen...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Huts egin du kargatzean: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Argitaratzailea: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Erregistroaren MRU/historia garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Garbitu ohiko erabiltzaile erregistroen historiak (Run MRU, RecentDocs, Open/Save elkarrizketak, TypedPaths). Honek ez ditu sistema-sarrera kritikoak kentzen.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Ekintzak</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Garbitze arau pertsonalizatua</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Karpeta</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Luzapenak</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Bereizi hainbat luzapen komekin (adibidez: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Sartu azpikarpetak</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Arakatu…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Mesedez aukeratu karpeta bat.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Mesedez sartu gutxienez fitxategi luzapen bat.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Mesedez hautatu gutxienez ekintza bat.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Hautatutako ekintzak ongi osatu dira.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Ezin izan dira hautatutako ekintzak osatu.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Arakatzailea eta interfazea</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Sistemaren edertzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Doitu taskbarra, Fitxategi arakatzailea eta erabiltzaile interfazearen portaera.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Errendimendua</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Doitu sistemaren errendimendua eta erantzukizun ezarpenak.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Zerbitzuak</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Desgaitu baliabideak kontsumitzen dituzten atzeko plano zerbitzuak.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Kendu cachea, behin-behineko fitxategiak eta beste hondarrak.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Cachearen garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Garbitu cache fitxategiak hainbat aplikaziotatik eta sistematik biltegiratze lekua askatzeko.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Sistemaren fitxategien garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Garbitu sistemako fitxategiak hala nola behin-behineko fitxategiak, egunkariak, kraskadura memoria dumpak, etab.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Sistemaren osagaien garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Garbitu sistemaren osagai fitxategiak hala nola Windows Update cachea, osagai biltegia, etab.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Errendimenduaren garbitzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Garbitu errendimenduan eragina izan dezaketen fitxategiak, hala nola prefetch fitxategiak, etab.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Garbitze pertsonalizatua</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Garbitu zehaztutako fitxategiak eta direktorioak arau pertsonalizatuak erabiliz.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Taskbarra eta hasiera menuaren diseinua</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Ezkutatu bilaketa kutxa eta Task View botoia, desgaitu taskbarra taldekatzea eta erakutsi beti sistemako ikonoak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Desgaitu hasiera menua eta ireki bilaketa Win tekla erabiliz</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Desgaitu hasiera menua erabat. Win tekla sakatzean, bilaketa irekiko du hasiera menuaren ordez.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Hobetu Arakatzailearen erantzukizuna</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Murriztu menu atzerapenak, itxi blokeatutako aplikazioak azkarrago eta ireki Ordenagailua lehenetsita.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Fitxategi ikusgarritasun aukerak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Erakutsi fitxategi luzapenak eta ezkutatutako fitxategiak Fitxategi Arakatzailean.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Desgaitu Arakatzailearen iradokizunak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Itzali hodei edukien iradokizunak eta gomendio banner-ak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Aldatu Windows tekla bilaketa irekitzeko</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Aldatu Windows teklaren portaera bilaketa irekitzeko hasiera menuaren ordez.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Optimizatu multimedia programazioa</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Kendu sareko throttling-a eta jaitsi sistemaren erantzukizun latentzia.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Hobetu memoriaren kudeaketa</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Mantendu sistema cachea memorian eta saihestu kernel driver-ak orrialdean jartzea.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Desgaitu akrilikoa eta jakinarazpen zentroa</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Kendu saio hasierako akriliko efektuak eta ezkutatu Windowsen jakinarazpen zentroa.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Murriztu telemetria eta aholkuak</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Desgaitu publizitate ID-a, Spotlight ezaugarriak eta iradokizun automatikoak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Behartu errendimendu handiko plana</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Aktibatu errendimendu handiko energia plana eta desgaitu hibernazioa.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Desgaitu diagnostiko zerbitzuak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Gelditu eta desgaitu Connected User Experiences, Diagnostics Hub eta Delivery Optimisation zerbitzuak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>Desgaitu SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Itzali Superfetch/SysMain atzeko plano disko jarduera murrizteko.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Desgaitu Windows Search indizea</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Gelditu Windows Search zerbitzua indize eguneraketak saihesteko.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Desgaitu urruneko erregistroa</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Babestu sistema urruneko erregistro sarbidea desgaituz.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Desgaitu errore jakinarazpena</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Gelditu Windows Error Reporting kraskadura datuak bildu eta bidaltzetik.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Garbitu Remote Desktop cachea</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Kendu Remote Desktop bezeroak sortutako cache fitxategiak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Garbitu Windows Update cachea</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Ezabatu deskargatutako eguneratze fitxategiak eta Delivery Optimisation cachea.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Garbitu nabigatzaileen cachea</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Garbitu hainbat aplikazioek utzitako behin-behineko fitxategiak eta egunkariak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Aplikazioen hondarrak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Kendu Internet Explorer eta Edge cache eta cookie fitxategiak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Garbitu miniaturen cacheak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Ezabatu Arakatzailearen miniatura datu baseak eta Direct3D shader cachea.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>Garbitu .NET irudi natiboak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Kendu cacheatutako .NET Native irudiak disko espazioa berreskuratzeko.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Kendu egunkariak eta diagnostiko datuak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Eskaneatzen ditu zure sistema unitatean espazio handia har dezaketen fitxategi handiak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Fitxategi handien eskaneatzea</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Identifikatu eta kudeatu zure sistemako fitxategi handiak.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Fitxategi handiak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Ezabatu Windows egunkariak, errore txostenak eta diagnostiko aztarnak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Ezabatu kraskadura dumpak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Kendu sistema kraskaduren ondoren geratzen diren memoria dump fitxategiak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Garbitu Defender eskaneatzeak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Ezabatu Windows Defender eskaneatzeen historia eta cacheak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Garbitu behin-behineko fitxategiak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Hustu Windows eta erabiltzaileen behin-behineko direktorioak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Kendu bildutako Windows aplikazioak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Desinstalatu hautatutako aurreinstalatutako UWP aplikazioak erabiltzaile guztientzat.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Hustu Zakarrontzia</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Kendu Zakarrontzian biltegiratutako ezabatutako fitxategiak.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Garbitu prefetch datuak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Ezabatu Windows prefetch datuak aztarna berriak sortzeko.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Garbitu fitxategi pertsonalizatuak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Ezabatu konfiguratutako luzapenak bat datozen fitxategiak hautatutako karpetetatik.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Zerbitzuaren osagai biltegia</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>Exekutatu DISM garbitzea eta garbitu WinSxS behin-behineko fitxategiak.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Desgaitu Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Baliteke Lenovo Vantage eta/edo ImController ez direla ongi desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Ezin izan dira Lenovo Vantage eta/edo ImController desgaitu</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Desgaitu Lenovo Vantage eta ImController desinstalatu gabe.
+Aukera hau aldatu ondoren berrabiaraztea gomendatzen da.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Desgaitu Lenovo Vantage eta ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Baliteke Legion Zone ez dela ongi gaitu</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Ezin izan da Legion Zone gaitu</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Baliteke Lenovo Hotkeys ez direla ongi gaitu</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Ezin izan dira Lenovo Hotkeys gaitu</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Baliteke Lenovo Vantage eta/edo ImController ez direla ongi gaitu</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Ezin izan dira Lenovo Vantage eta/edo ImController gaitu</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Freskatze tasak baztertu ditzakezu, Fn+R lasterbidea erabilgarriagoa izan dadin.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>Baztertu freskatze tasak</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>Aukeratu hizkuntza.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Instalatu hizkuntza</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Hizkuntza instalazioak huts egin du</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Hizkuntza instalatzen</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Hizkuntza paketea deskargatzen…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Estraktzen eta instalatzen…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>%{0}</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Erabili deskargatze botoia hizkuntza pakete hau instalatzeko.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Hizkuntza ez dago instalatuta</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>Hizkuntza</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Desinstalatu hizkuntza</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Hizkuntza desinstalazioak huts egin du</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Hizkuntza desinstalatzen</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>Beti minimizatu sistemako ikonora. Itxi eskuin klik eginez sistemako ikonoan.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>Minimizatu itxieran</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Ezkutatu abiaraztean agertzen den gailu bateraezin abisua.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Desgaitu gailu bateraezinaren abisua</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>Konfiguratu zein jakinarazpen erakusten diren.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>Jakinarazpenak</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows energia planak</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Esleitu ekintza azkarra Fn+F9 bi aldiz sakatzeko.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Tekla adimendunaren bigarren mailako ekintza</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Esleitu ekintza azkarra Fn+F9 behin sakatzeko.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Tekla adimendunaren ekintza</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>Ezarri argi gaia, gai iluna edo jarraitu sistemaren ezarpenak.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>Gaia</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Konfiguratu aplikazioaren itxura, portaera eta funtzionalitate aukerak.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Doitu teklatuaren atzeko argiaren distira.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>Itzalita</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argiaren distira</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>Gehitu efektua</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>Ezin izan da profila aplikatu</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>Ezin izan da argiztapen profila aplikatu.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>Distira</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>Desautatu zona guztiak</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>Efektuak</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>Ezin izan da profila esportatu</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>Ezin izan da profila esportatu</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>Ezin izan da profila inportatu</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>Ezin izan da profila inportatu</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>Ez da efekturik gehitu.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>Berrezarri lehenetsira</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>Hautatu zona guztiak</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>Aldatu teklatuaren diseinua</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>Norantza</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>Kolorea</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>Koloreak</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>Norantza</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>Efektua</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>Efektu hau teklatu osoari aplikatuko zaio eta beste efektu guztiak ordezkatuko ditu.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>Abiadura</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>Gehitu efektua</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>Editatu efektua</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Doitu teklatuaren atzeko argiaren profila.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argiaren profila</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>Tekla guztiak</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} zona</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>Egunsentia</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>Ilunabarra</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>Ordua</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Baimendu GPU integratu eta diskretuaren artean aldatzea. Berrabiaraztea eskatzen du.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Hybrid modua aldatzeak berrabiaraztea eskatzen du. Orain berrabiarazi nahi duzu?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Berrabiaraztea beharrezkoa</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>Hybrid modua</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Desgaitu touchpad-a.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Touchpad blokeoa</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>Desgaitu touchpad-a.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>Touchpad blokeoa</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Saiatu berriro</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Ustekabeko salbuespena gertatu da:
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Ezabatu txostena</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>Kraskadura txosten bat diskoan gorde da. Txostenaren xehetasunak behean berrikusi ditzakezu. Txostenak ez dira automatikoki bidaltzen.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Aplikazioa kraskatu egin da aurreko saioan</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Ezin izan da kraskadura txostena ireki: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Ireki txostena</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Itxi</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Kraskadura txostena hemen gorde da: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Kraskadura txostena detektatu da</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Ezin izan dira kraskadura txostenaren xehetasunak kargatu.</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>Izenik gabe</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>Zure ardurapean jarraitzea erabaki dezakezu, baina kontuan izan ezaugarri batzuk eskuragarri ez egotea eta/edo ondo ez funtzionatzea.
+
+Erregistroa automatikoki gaituko da jarraitzea erabakitzen baduzu.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Ikusi proiektuaren orrialdea GitHub-en informazio gehiagorako.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>Egunkarien karpeta</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>Makina mota</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ez da zure gailuarekin probatu.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Abisu hau edozein unetan desgaitu dezakezu Ezarpenetan.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>Modeloa</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>Onartzen ez den gailua</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>Saltzailea</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Eguneratu</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>Eguneratzea eskuragarri</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>Zer dago berri?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Doitu teklatuaren atzeko argiaren distira.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Distira aldatu dezakezu Fn+Zuriune teklarekin</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>Desgaitu Windows tekla teklatu integratuan.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Windows teklaren blokeoa</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>Teklatu integratuan soilik funtzionatzen du.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Windows teklaren blokeoa</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Bai</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>Mikrofonoa</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>Itzalita dagoenean, mikrofonoak mututu egingo dira.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>Mikrofonoa</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>Itzalita dagoenean, mikrofonoak mututu egingo dira.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>Bereizmena</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren bereizmena.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>Bereizmena</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren bereizmena.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren eskala.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>Aldatu barneko pantailaren eskala.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>Pantaila</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Atzeko argia piztu edo itzal dezakezu Fn+Zuriune teklarekin.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Teklatuaren atzeko argia</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Piztu edo itzali atzeko argia.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>Ez dira deskarga egokirik aurkitu</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>Erakutsi eguneraketak soilik</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>Arbola pertsonalizatu</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Kargatu</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>Sortu taldea</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>Izena</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>Ezaugarri batzuk ager ez daitezke Arbolan, zure ordenagailuaren egoeraren eta konfigurazioaren arabera.</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>Pertsonalizatu</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>Itzali pantailak</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>Itzali eskuragarri dauden pantaila guztiak. Sagua mugitzeak edo teklatua sakatzeak esnatuko ditu pantailak.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>Itzali</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>Itzali pantailak</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>Itzali eskuragarri dauden pantaila guztiak.</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>Editatu taldearen izena</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>Izena</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Legion logoa piztuta</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Legion logoa itzalita</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Ataka atzeko argia piztuta</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Ataka atzeko argia itzalita</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>Berrabiaraztea beharrezkoa</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>Itzaltzea beharrezkoa</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>Berrabiaraztea gomendatzen da</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Gomendatua</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Ilaran</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Deskargatzen</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Instalatzen</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Osatuta</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Ez da ekintzaren definizioa aurkitu</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Ez dago xehetasun tekniko eskuragarririk ekintza honentzat</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Kargatzeak huts egin du</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Ezezaguna</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Komandoaren exekuzioa</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Erregistroaren aldaketa</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Zerbitzuen kudeaketa</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Erregistroaren aldaketa + PowerShell scripta</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Erregistroaren garbitzea</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM komandoa</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Gorde eta itxi</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>Modu pertsonalizatuaren aurrekonfigurazioa</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>Aktibatu Modu pertsonalizatuaren aurrekonfigurazioa. Ezarpen hauek Modu pertsonalizatua gaituta dagoenean soilik dute eragina.</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>Aurrekonfigurazioaren izena</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>Izena</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>Aurrekonfigurazio aktiboa</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>Aplikazioaren karpetak</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>Datuak</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>Aldi baterako</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>Pantaila bakarreko distira</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>Piztuta dagoenean, distira maila bera aplikatuko zaie Windows energia plan guztiei aldatzen duzunean.</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>{0} eguneratzea eskuragarri!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>Punta potentzia muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU sPPT potentzia muga</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>CPUak lor dezakeen etengabeko potentzia kontsumoa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>CPUak denbora laburrean lor dezakeen punta potentzia kontsumoa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>CPUak lor dezakeen gehienezko uneko potentzia kontsumoa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>CPUak lor dezakeen gehienezko potentzia kontsumoa, CPU eta GPUa erabat erabiltzen ari direnean.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>CPUak atzerapen txiki batekin lor dezakeen punta potentzia kontsumoa.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>CPUak lor dezakeen gehienezko tenperatura, maiztasuna eta potentzia murriztu aurretik.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>CPUaren potentzia kontsumoaren arabera GPUari esleitu dakiokeen gehienezko potentzia gehigarria.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>Oinarrizko potentzia kontsumoaren gainetik GPUari esleitu dakiokeen potentzia gehigarria.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>GPUak lor dezakeen gehienezko tenperatura, maiztasuna eta potentzia murriztu aurretik.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Lehenetsia</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Epe laburreko potentzia mugaren iraupena</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>CPUari Epe laburreko potentzia muga erabiltzeko eta handitzeko baimendutako denbora. Tau amaitzen denean, Epe luzeko potentzia muga erabiltzen da.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>Prozesadorearen potentzia helburua AC-n</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPUak GPUaren dinamikoki potentzia kontsumoaren doikuntza abiarazten duen puntua.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Sortu</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>Gehitu urratsa</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>Sortu ekintza</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>Energia modua</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>Aurrekonfigurazioa</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>GPU diskretua</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>Energia egoera</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>Modua</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>Deskarga abiadura</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Gutxieneko deskarga abiadura</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Gehienezko deskarga abiadura</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Erabilera denbora</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>Eguneratzea eskuragarri!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>Aukeratu ikonoa</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>Aldatu ikonoa</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>Bateria maila baxua</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>Konfiguratu</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 Lower Power Model detektatuta</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows-ek adierazten du ordenagailu honek Modern Standby onartzen duela. Oreka ez den beste energia plan bat erabiltzeak portaera ustekabea eragin dezake.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Aukeratu Windows energia planak Energia modua aldatzen denean aplikatzeko.</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>Energia</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Energia planaren aukerak Windows-en Kontrol Panelean</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>Itzalita</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Inportatu teklatuaren atzeko argiaren profila</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Inportatu eta aplikatu atzeko argiaren konfigurazioa uneko profilera.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>Bidea</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>{0} ondoren</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>Hainbat abiarazle...
+Hainbat abiarazle bateratzeko aukera ematen du hautatutako ekintzak exekutatzeko.</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>GPUa overclock ezarpenak</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Nukleo maiztasunaren desfasea</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Memoria maiztasunaren desfasea</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPUa overclock egin</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>Handitu errendimendua GPU diskretua overclock eginez.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPUa overclock egin</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Handitu errendimendua GPU diskretua overclock eginez.
+
+ABISUA: Ekintza hau ez da ondo exekutatuko GPU diskretua eskuragarri ez badago.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Ataken atzeko argia</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Piztu edo itzali ordenagailuaren atzeko aldeko ataken atzeko argia.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Ataken atzeko argia</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Piztu edo itzali ordenagailuaren atzeko aldeko ataken atzeko argia.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Panelaren logoaren atzeko argia</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>Piztu edo itzali ordenagailuaren tapako atzeko argia.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Panelaren logoaren atzeko argia</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Piztu edo itzali ordenagailuaren tapako atzeko argia.</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>Gehienezkoa: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>Erabilera</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>Nukleo erlojua</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P nukleo erlojua</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E nukleo erlojua</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>Tenperatura</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>Haizagailua</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>Memoria erlojua</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Memoria erabilera</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Memoria tenperatura</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD tenperatura</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM erabilera</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Memoria partekatuaren erabilera</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM tenperatura</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU puntu beroa</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe iragazkortasuna</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Nukleoak</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Plataforma</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>Freskatze tartea</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>Abiarazte azkarra</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>Piztu ordenagailua kargagailua konektatzen denean.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>Abiarazte azkarra</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>Piztu ordenagailua kargagailua konektatzen denean.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>Ezin da Energia modua aldatu</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} energia modua ez dago eskuragarri AC elikadurarik gabe.</value>
+    <comment>For example: &quot;{Performance} power mode is not available without AC power.&quot;</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Sentsoreak</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>Ezin izan da GPUaren lan modua aldatu</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Saiatu modua berriro aldatzen segundo batzuk barru, espero zen emaitza ikusten ez baduzu.
+GPU diskretuak ez badu batere erantzuten, mesedez berrabiarazi zure ordenagailua.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>GPU diskretua erabiltzen ari da</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>GPU diskretua automatikoki deskonektatuko da erabiltzen ez denean.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>GPU diskretua erabiltzen ari da edo ordenagailua ez dago baterian</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>GPU diskretua automatikoki deskonektatuko da erabiltzen ez denean eta ordenagailua baterian dagoenean.</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Modu pertsonalizatuaren ezarpenak ez dira ondo aplikatuko Lenovo Vantage edo bere zerbitzuak exekutatzen ari direnean.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Modu pertsonalizatuaren ezarpenak ez dira ondo aplikatuko Legion Zone edo bere zerbitzuak exekutatzen ari direnean.</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU konektatuta</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU deskonektatuta</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPUaren lan modua</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Aukeratu GPUaren funtzionamendu modua zure ordenagailuaren erabileraren eta energia baldintzen arabera.
+Moduak aldatzeak berrabiaraztea eska dezake.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Hybrid modua</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Baimendu GPU integratu eta diskretuaren artean aldatzea. Berrabiaraztea eskatzen du.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>Iraupena</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>Eguneraketak</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPUtik CPUra Boost dinamikoa</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>Hau GPUetik CPUari esleitu dakiokeen gehienezko potentzia gehigarria da, CPUaren erabileraren arabera. Balioa zenbat eta handiagoa, orduan eta errendimendu hobea CPUa erabiltzen duten aplikazioentzat.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>Abiarazte logoa</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>Pertsonalizatu Abiarazte logoaren irudia, sistema abiaraztean ikusgai dagoena.</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>Abiarazte logoa</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>Abiarazte logo lehenetsia ezarrita</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>Abiarazte logo pertsonalizatua ezarrita</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>Egoera</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>Berrezarri lehenetsira</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>Pertsonalizatu</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>Ekintzak</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>Jakinarazpenaren testua</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>Erakutsi jakinarazpena</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>Aurrekonfigurazioa</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Fn Lock adimenduna</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Fn Lock aldi baterako desgaituko da Alt, Ctrl edo Shift tekla sakatzen denean.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Itzalita</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>Abiarazte logo pertsonalizatuak zehazki {0} pixel izan behar ditu. Onartutako formatuak: {1}.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>Gauerako bateria karga</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>Gaituta dagoenean, gailu hau %80ra kargatuko da gauez entxufatuta dagoenean eta kargak %100era amaituko ditu gailua goizean erabiltzen duzunerako.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Gauerako bateria karga</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>Gaituta dagoenean, gailu hau %80ra kargatuko da gauez entxufatuta dagoenean eta kargak %100era amaituko ditu gailua goizean erabiltzen duzunerako.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>Irudiaren tamaina baliogabea.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>Irudiaren formatua baliogabea.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>Ezin da EFI partizioa muntatu.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>Ezin da UEFI pribilegioa ezarri.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>Ez dago nahiko leku librerik EFI partizioan.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>Ezin izan da logo pertsonalizatua ezarri: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>Ezin izan da logo lehenetsia ezarri: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>Abiarazte logo lehenetsia ezarrita.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>Abiarazte logo pertsonalizatua ezarrita.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>Sarearen izena (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Kopiatu uneko sarearen izena</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Utzi hutsik edozein Wi-Fi sarerako.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>Partekatu haizagailuen abiadura, bateria tenperatura etab. HWiNFO64-rekin. Baliteke HWiNFO64 berrabiarazi behar izatea aukera hau aldatu ondoren.</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>Integrazioak</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Informazioa</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>Deskargen karpeta</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>Ireki deskargen karpeta</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>Deskargatu</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Instalatu</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Desinstalatu</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Instalazioak huts egin du</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Fitxategia ez da aurkitu, mesedez deskargatu lehenik</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Instalazioa hasi da</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Instalatzailea abiarazten: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>Ireki README</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>Aurrekonfigurazioa</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>Freskatu</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>Ezabatu</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>Aldia (minutuak)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Baterian noiztik kontagailua berrabiarazten du sistemak berrabiaraztean.</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>Berrezarri &quot;Baterian noiztik&quot; abiaraztean</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Itzali Wi-Fi</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Piztu Wi-Fi</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>Exekutatu isilik</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>Itxaron amaitu arte</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>Exekutatu kontsola aplikazioak, kontsola leihoa sortu gabe.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>Itxaron programa edo scripta exekutatzen amaitu arte</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>Isilarazita dagoenean, audio irteerako gailu aktibo guztiak mututu egingo dira.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>Bozgorailua</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>Minimizatu sistemako ikonora</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>Beti minimizatu sistemako ikonora taskbarraren ordez.</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows energia moduak</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Aldatu Modu pertsonalizura Fn+Q-rekin</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Baimendu Modu pertsonalizura azkar aldatzea Fn+Q erabiliz.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>Energia moduaren sinkronizazioa</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>Automatikoki aldatu Windows Energia Plana edo Windows Energia Modua Energia Moduak aldatzen dituzunean.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows energia moduak</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>Aukeratu Windows Energia Modua Energia Modua aldatzen denean aplikatzeko.</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Errorea gertatu da gailuaren informazioa irakurtzean.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Bateragarritasun egiaztaketa errorea</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Aplikazioak ezin izan du gailuaren informazioa irakurri abiaraztean. Mesedez egiaztatu beheko errore xehetasunak eta saiatu arazoak konpontzeko urratsak behar izanez gero.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Arazoak konpontzeko urratsak</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Ziurtatu Windows Management Instrumentation (WMI) zerbitzua exekutatzen ari dela: Ireki Zerbitzuak (services.msc) eta egiaztatu &quot;Windows Management Instrumentation&quot; exekutatzen ari dela.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Exekutatu aplikazioa Administratzaile gisa sistemaren erregistroa eta WMI atzitzeko baimen nahikoak ziurtatzeko.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Egiaztatu sistemaren baliabideak: Itxi beste baliabide intentsiboak diren aplikazioak eta saiatu berriro.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Berrikusi egunkari fitxategia errorearen informazio zehatza lortzeko behean &quot;Ireki Egunkaria&quot; sakatuz.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Ireki egunkari fitxategia</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>Makroa</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>Makroa</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>Errepikatu</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>Ez ikusi atzerapenak</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Garbitu</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>Grabatu</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>Gelditu grabaketa</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>Ez errepikatu</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Universal Device Toolkit exekutatu behar da makroek funtziona dezaten.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>Gaitu</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>Tekla sakatzeen segida grabatu eta zure teklatuko zenbaki teklatuaren bidez exekutatu ditzakezu.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>Makroa</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>Gaitu edo desgaitu makroak.</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>Eten beste tekla bat sakatzen bada</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Ezkutatu</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>Ezkutatu denak</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Gailuak</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Desautatu denak</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Hautatu denak</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>Teklatua soilik</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>Teklatuko teklak eta saguaren botoiak</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>Sarrera guztiak</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>Grabaketa aukerak</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>Grabaketa 3 segundotan hasiko da...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>Grabatzen...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>Sakatu ESC gelditzeko.</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Erakutsi hautatutako gailuak soilik</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Erakutsi gailu kengarriak soilik</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Erakutsi konektatutako gailuak soilik</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Gaitu Komando Lerroko Interfazea komando lerrotik kontrolatzeko aukera ematen duena.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>Gehitu CLI PATH-era</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>Gehitu CLI erabiltzailearen PATH ingurune aldagaia.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>Tenperatura</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>Aukeratu unitateak tenperatura sentsoreentzat.</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys atzeko planoan exekutatzen ari da.</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone atzeko planoan exekutatzen ari da.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage eta/edo ImController atzeko planoan exekutatzen ari da.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Erakutsi jakinarazpena zure gailura konektatutako pantaila guztietan.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Jakinarazpena pantaila guztietan</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>Egiaztatu</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>Eguneraketak egiaztatzen...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>Egiaztatu eguneraketak</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>Eguneratu</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Eguneratze egiaztapenak desgaituta daude saio honentzat</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit {0}-rekin abiarazi da. Eguneratze egiaztapen automatiko eta eskuzkoak, eta beheko eguneratze ezarpenak desgaituta daude hasierako argumentu hori gabe berriro abiarazi arte.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API rate limit-a lortu da, mesedez saiatu berriro geroago.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>Huts egin du eguneraketak egiaztatzeak</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>Zerbait oker joan da, mesedez saiatu berriro geroago.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>Ez da eguneraketarik aurkitu</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>Automatikoki egiaztatu eguneraketak</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Eguneratze biltegia</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Konfiguratu eguneraketak egiaztatzeko GitHub biltegia. Utzi hutsik lehenetsia erabiltzeko.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Biltegiaren jabea</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>adib., SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Biltegiaren izena</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>adib., UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>Eguneratze katalogoa ez da aurkitu</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>Saiatu eguneraketak beste iturritik eskuratzen.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Zerbait oker joan da</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Egiaztatu zure internet konexioa martxan dagoela.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Erreproduzitu soinua</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>Musika formatu arruntak onartzen dira, hala nola wav edo mp3.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Ekintza azkarra</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Exekutatu gordetako ekintza azkar bat.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Jakinarazpena beti gainean</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Jarri jakinarazpena beti gainean.
+Ez ditu eraginak beste pantaila osoko leihoetan, baina ezin izango duzu jakinarazpenetan klik egin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Gomendatua</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Pausatu denak</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Ekintzaren xehetasunak</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Inplementazio teknikoaren xehetasunak</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Inplementazio mota:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Itxi</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{1} ekintzatik {0} hautatuta</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Garbitze tamaina estimatua: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Sakatu Eskaneatu guztirako tamaina kalkulatzeko</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Exekutatzen: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Hautatutako aplikazioak desinstalatzen...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Ikuspegi trinkoa</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>Sistemaren edertzea</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windowsen edertzea</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Pertsonalizatu Windowsen itxura eta portaera.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Efektuak</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Pertsonalizatu efektu bisualak.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Gardentasuna</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Hedatu denak</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Tolestu denak</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{0} askatu {1}s-n</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>%{0} exekutatzen</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Eragiketa ezeztatuta</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Errorearen xehetasunak: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Erakutsi ezkutatutako deskargak</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Erakutsi ezkutatutako deskargak</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Aukeratu hizkuntza</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Gailu hau oinarrizko moduan hasiko da. Hardware espezifiko kontrolak ezkutatuta daude gailu pakete bateragarri bat eskuragarri egon arte.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Gailu paketea: Oinarrizko modua</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit-ek bat datorren gailu pakete bat detektatu du. Berretsi orain hardware espezifiko ezaugarriak aplikazioak prestatu ahal izateko.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Gailu paketea: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Gailuaren konfigurazioa prestatzen...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Konektatu gabe</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Sinkronizatu zonak</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Windowsen erregistroa garbitzeko funtzionalitate integratua erabiliz</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (DNS cachea hustu)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Winsock protokolo maila berrezarri)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (TCP/IP protokolo maila berrezarri)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Plugin hedapenak</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Instalatu eta kudeatu pluginak funtzionalitatea zabaltzeko</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Instalatu</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Instalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Ezin da desinstalatu</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Pluginaren ezarpenak</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Pluginaren izena</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Pluginaren deskribapena</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>Plugin honek ez du konfiguragarria den ezarpenik.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Itxi</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Ez da plugina aurkitu: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Errorea</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Egilea: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Pluginaren konfigurazio interfazearen formatua okerra da.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Errorea pluginaren ezarpenak kargatzean: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Bilatu pluginak...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>Denak</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Instalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Instalatu gabe</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>Ez dago pluginik eskuragarri</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>Plugin denda une honetan hutsik dago. Itxaron etorkizuneko plugin eguneraketak.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Konfiguratu</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Desinstalatu</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Ireki</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Hizkuntza:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Erabili aplikazioaren lehenetsia</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>{0} plugin aurkitu</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Inportazio masiboa</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Inportatu pluginak tokiko ZIP fitxategietatik</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Inportatu fitxategietatik</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Aukeratu plugin fitxategiak (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} plugin ongi inportatu dira</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} plugin ongi inportatu dira eta eskuragarri daude</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Inportazio masiboak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Ezin izan dira pluginak inportatu: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Pluginak inportatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} inportatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} prozesatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Plugin arrakastaz instalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Plugin arrakastaz instalatu da</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Instalazioak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Ezin izan da plugina instalatu: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Plugin arrakastaz desinstalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Plugin arrakastaz desinstalatu da</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Desinstalazioak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Ezin izan da plugina desinstalatu: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Ezin izan da plugina ireki</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Ezin izan da plugina ireki: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Ezin izan da plugina ireki: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Plugina ez dago instalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Plugina ez dago instalatuta eta ezin da ireki</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>{0} ostalari bertsio minimoa behar da</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Plugina betiko ezabatuko da</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Plugina betiko ezabatuko da. Ekintza hau ezin da desegin.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>Eguneratzeak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>Pluginaren eguneratzeak huts egin du, mesedez egiaztatu sare konexioa eta saiatu berriro geroago.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>Eguneratze arrakastatsua</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>Plugin arrakastaz eguneratu da</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>Plugin eguneratzen</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>Plugin deskargatzen eta eguneratzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Eguneratu denak</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>Exekutatu plugina</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>Plugin hasi da</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>Plugin desinstalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>Plugina ezabatuko da programa itxi bezain laster.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>Ezabatzeak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>Errorea gertatu da plugina ezabatzean</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>Konfigurazioak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>Plugina instalatuta dago baina ez dago kargatuta. Mesedez saiatu aplikazioa berrabiarazten.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>Konfiguraziorik ez</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>Pluginak ez du konfigurazio aukerarik.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>Konfigurazioa ez da onartzen</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>Pluginak ez du konfigurazioa onartzen.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>Plugin egoerak berrezarrita</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>Plugin instalazio egoera guztiak garbitu dira</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Eguneratze masiboa osatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>Plugin guztiak prozesatu dira.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Deskarga prestatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Lokala</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>Bertsio berria eskuragarri</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Bertsioa: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Argitaratze data: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>Zer dago berri:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Xehetasunak</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Erabilera gida</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Erakutsi xehetasunak</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Ezkutatu xehetasunak</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Eskuragarri</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Freskatu plugin zerrenda</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>Ez da zure bilaketarekin bat datorren pluginik aurkitu.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Eguneratu eskuragarri dauden plugin guztiak</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Instalatu denak</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Instalatu eskuragarri dauden plugin guztiak</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Denak instalatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>{0} plugin instalatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Instalazio masiboa osatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} plugin instalatu.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Instalazio masiboak huts egin du</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Ezin izan dira pluginak instalatu: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Denak eguneratzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Eguneratzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Ireki karpeta</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Kopiatu pluginaren IDa</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Karpeta ez da aurkitu</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>Pluginaren direktorioa ez da oraindik existitzen.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Kopiatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>Pluginaren IDa '{0}' arbelera kopiatu da.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Deskarga osatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Deskargatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Deskargatzen... {0:F1} / {1:F1} MB (%{2:F0})</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>Ez dago tresnarik eskuragarri. Mesedez gehitu tresnak tresnen karpetan aplikazioaren direktorioan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Tresnak hemen agertuko dira tresnen direktorioan eskuragarri egon bezain laster.</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Modeloa</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Potentzia erabilera</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Karga</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Osasuna</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Abiadura</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Gutxieneko abiadura</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Gehienezko abiadura</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Zikloak</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Edukiera</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Edukiera osoa</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Diseinua</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Nukleo / Memoria erlojua</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Nukleo tentsioa</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Tentsio tartea</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Alboko barra</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Abiadura tartea</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Egin klik bikoitza sentsoreen informazio zehatza erakutsi edo ezkutatzeko.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Mesedez hautatu gutxienez garbitze aukera bat.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Hasi denak</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>adib. 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>adib. C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Mesedez hautatu gutxienez garbitzeko elementu bat.</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Behartu software errendatzea</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Erabili software errendatzea urruneko mahaigaina edo bururik gabeko pantaila detektatzen denean. Berrabiaraztea gomendatzen da.</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Instalatzaileak {0} kodearekin irten da</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>{0}-(e)k egina</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimizatu</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Ireki azkarra</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Ezarpenak</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Eguneratu</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Pluginen eskuragarritasuna egiaztatzen...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Instalatzeko eskuragarri</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>{0} plugin gehigarri eskuragarri daude uneko jarioan.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Instalatuta</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Dendako pultsoa</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Plugin guztira</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>Detektatutako plugin guztiak eguneratuak daude.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Eguneratua</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Eguneraketak eskuragarri</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Eguneraketak prest</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} plugin eguneratze instalatzeko prest daude.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Pluginen metadatuak kargatzeko zain.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Metadatuak kargatzen</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Pertsonalizatu hizkuntza, tenperatura unitatea, gaia eta azentu kolorea.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Itxura</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Aplikazioa</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Huts egin du {0} aplikatzean: {1}</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Gaia estiloa</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Aukeratu aplikaziorako estilo bisual aurrekonfiguratua. Gaia modua eta azentu kolorea oraindik aplikatzen dira.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>{0} plugina instalatu da. Erabili Ireki eskuragarri dagoen sarrera puntua abiarazteko.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>{0} plugina instalatu eta Sistemaren Optimizazioan ireki da.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Instalatuta, baina sarrera punturik ez</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>{0} plugina instalatu da, baina bere runtime UIa ezin izan da kargatu. Berrabiarazi aplikazioa edo berrinstalatu plugina.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>{0} plugina instalatu da, baina ez du erabiltzailearentzat sarrera punturik erakusten. Baliteke atzeko plano zerbitzuak edo manifestu datuak soilik eskaintzea.</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Fitxategi handien analisia</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Aukeratu kendu nahi dituzun fitxategiak. Iragazkiarekin bat datozen fitxategiak soilik erakusten dira.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Iragazi hau baino handiagoak diren fitxategiak:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Pertsonalizatua...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Hautatu</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Fitxategi izena</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Tamaina</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Bidea</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Berretsi hautaketa</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Hautatuta: {0} fitxategi ({1})</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Haizagailua</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>1 diskaren tenperatura</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>2 diskaren tenperatura</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core erlojua</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Frame denbora</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Jokoa</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Haizagailua</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Tenperatura</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Erabilera</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH haizagailua</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core erlojua</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Barra</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panela</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Erakutsi edo ezkutatu OSDa</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Atzeko planoaren kolorea</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Kategoriaren kolorea</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Izburraren erradioa</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Behea</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Goia</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kolore kritikoa</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Letra tamaina</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Etiketaren kolorea</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Opakutasuna</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Balioaren kolorea</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Abisuaren kolorea</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Blokeatu posizioa</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Gainjartze estiloa</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Freskatze tartea</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Sentsoreen freskatze tartea</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Berrezarri posizioa</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Atsedena atalasea</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Itxura</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Orokorra</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sentsoreak</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Atalaseak</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritikoa</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS lerro gorria</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Onartzen den gutxieneko frame tasa. Honen azpitik, kolorea kritiko bihurtzen da.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>FPS baxuaren delta</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Batez besteko FPSaren eta %1 Low-ren arteko gehienezko aldea. Honen gainetik, kontagailua kritiko bihurtzen da.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Errendimendua</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Tenperatura</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Erabilera</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Abisua</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD ezarpenak</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Instalatzeko zain (beste plugin bat deskargatzen ari da)...</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH tenperatura</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Potentzia</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Potentzia</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Nukleo tenp</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM tenp</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM erabilera</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Kargatzen...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Plakaren tenperatura</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Plaka nagusia</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>E/E</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Bateria ezezaguna</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>CPU ezezaguna</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>GPU ezezaguna</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Gaitu hardware inkesta aurreratua tenperatura, maiztasun eta potentzia muga zehatzak monitorizatzeko.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>PawnIO instalatu behar duzu lehenik hardware sentsoreak erabiltzeko!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Hardware sentsoreak</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Ezin izan da hizkuntza paketea deskargatu. Egiaztatu zure sare konexioa, proxy-a edo TLS ezarpenak, ondoren saiatu berriro.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Pantaila</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Tekla adimendunak</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Sentsore datuak zuzenean erakusten dituen gainjartze flotagarria.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Gaitu OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+</root>

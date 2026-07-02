@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
 using Moq;
 
@@ -23,7 +24,7 @@ public class GPUControllerTests : UnitTestBase
     {
         _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
         _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
-        _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object);
+        _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
     }
 
     protected override void Cleanup()

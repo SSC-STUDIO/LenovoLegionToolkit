@@ -182,6 +182,9 @@ public partial class MainWindow
             Title = appName;
             _title.Text = appName;
         }
+
+        if (e.Content is FrameworkElement entranceTarget)
+            PageEntranceAnimator.Play(entranceTarget);
     }
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e)

@@ -70,6 +70,14 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         _nativeWindowsMessageListener.Changed += NativeWindowsMessageListener_Changed;
 
         IsVisibleChanged += DiscreteGPUControl_IsVisibleChanged;
+        Unloaded += DiscreteGPUControl_Unloaded;
+    }
+
+    private void DiscreteGPUControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _gpuController.Refreshed -= GpuController_Refreshed;
+        _nativeWindowsMessageListener.Changed -= NativeWindowsMessageListener_Changed;
+        IsVisibleChanged -= DiscreteGPUControl_IsVisibleChanged;
     }
 
     protected override void OnFinishedLoading() { }

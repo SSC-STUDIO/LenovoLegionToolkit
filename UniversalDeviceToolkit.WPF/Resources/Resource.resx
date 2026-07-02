@@ -1433,6 +1433,24 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
     <value>Disable background services that consume resources.</value>
   </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>Cleanup</value>
   </data>
@@ -3618,6 +3636,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>Failed to apply {0}: {1}</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
   </data>
   <data name="LargeFilesWindow_Title" xml:space="preserve">
     <value>Large Files Analysis</value>

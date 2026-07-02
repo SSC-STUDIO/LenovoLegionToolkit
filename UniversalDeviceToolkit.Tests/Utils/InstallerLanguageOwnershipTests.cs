@@ -30,12 +30,12 @@ public class InstallerLanguageOwnershipTests
     [Fact]
     public void AppStartup_ShouldOwnInteractiveLanguageInitialization()
     {
-        var appStartup = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "App.xaml.cs");
+        var appStartup = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Startup", "StartupOrchestrator.cs");
         var localizationHelper = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Utils", "LocalizationHelper.cs");
         var languageWindow = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "LanguageSelectorWindow.xaml.cs");
 
-        appStartup.Should().Contain("LocalizationHelper.SetLanguageAsync(true, CreateStartupLanguagePackManager(flags))");
-        appStartup.Should().Contain("CreateStartupLanguagePackManager(flags)");
+        appStartup.Should().Contain("LocalizationHelper.SetLanguageAsync(true, App.CreateStartupLanguagePackManager(_flags))");
+        appStartup.Should().Contain("App.CreateStartupLanguagePackManager(_flags)");
         localizationHelper.Should().Contain("showLanguageSelector = interactive && (savedCultureInfo is null || !deviceSetupExists)");
         localizationHelper.Should().Contain("new LanguageSelectorWindow(Languages");
         localizationHelper.Should().Contain("LanguagePackManager? languagePackManager");

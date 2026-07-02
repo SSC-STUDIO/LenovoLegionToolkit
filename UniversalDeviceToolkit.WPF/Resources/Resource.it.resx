@@ -313,7 +313,7 @@ l'orario indicato potrebbe non essere corretto se il laptop è stato caricato me
     <value>Annulla</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>fosfito</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Chiudi</value>
@@ -520,7 +520,7 @@ ATTENZIONE: questa azione non verrà eseguita correttamente se il display intern
     <value>Informazioni sulle modalità di lavoro della GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>° C</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>Processore centrale</value>
@@ -3336,112 +3336,112 @@ Richiede il riavvio.</value>
     <value>Seleziona almeno un elemento da pulire.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Forza rendering software</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Utilizza il rendering software quando vengono rilevati desktop remoto o schermo headless. Riavvio consigliato.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>Il programma di installazione è terminato con codice {0}</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>In coda</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
+    <value>di {0}</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Ottimizza</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Apertura rapida</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Impostazioni</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Aggiorna</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Verifica disponibilità plugin in corso...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>Disponibili per l'installazione</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>{0} plugin aggiuntivi sono disponibili nel feed corrente.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>Installati</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
     <value>Store Pulse</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Plugin totali</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Tutti i plugin rilevati sono aggiornati.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Aggiornati</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Aggiornamenti disponibili</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Aggiornamenti pronti</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} aggiornamenti di plugin sono pronti per l'installazione.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>In attesa del caricamento dei metadati dei plugin.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Caricamento metadati</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Personalizza lingua, unità di temperatura, tema e colore principale.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Aspetto</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Applicazione</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit è stato avviato con {0}. I controlli aggiornamenti automatici e manuali, insieme alle impostazioni di aggiornamento sottostanti, sono disabilitati finché non riavvii senza quell'argomento di avvio.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>I controlli aggiornamenti sono disabilitati per questa sessione</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>Controlla l'origine selezionata e la connessione di rete, quindi ripeti la scansione.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>Scansione driver non completata</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>Modifica il filtro, l'opzione solo aggiornamenti o l'elenco dei download nascosti.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Nessun download corrispondente trovato</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>Prova un'origine, un sistema operativo o un tipo di macchina diversi.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>Nessun download di driver trovato</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>Scegli un'origine ed esegui la scansione per elencare i download di driver compatibili.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Scansiona i pacchetti driver</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>Impossibile applicare {0}: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Chiudi</value>
@@ -3538,5 +3538,347 @@ Richiede il riavvio.</value>
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Pacchetto dispositivo: Modalità base</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Questo dispositivo si avvierà in modalità base. I controlli specifici dell&apos;hardware sono nascosti finché non sarà disponibile un pacchetto dispositivo compatibile.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Pacchetto dispositivo: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit ha rilevato un pacchetto dispositivo corrispondente. Confermalo ora così l&apos;app potrà preparare le funzionalità specifiche dell&apos;hardware.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Preparazione configurazione dispositivo...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Conferma Selezione</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Seleziona i file che vuoi rimuovere. Vengono mostrati solo i file che corrispondono al filtro.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Filtra i file più grandi di:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Personalizzato...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Nome File</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Percorso</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Seleziona</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Selezionati: {0} file ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Analisi File di Grandi Dimensioni</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Mostra o Nascondi l&apos;OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Colore Sfondo</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Colore Categoria</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Raggio Angolo</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Inferiore</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Superiore</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Colore Critico</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Dimensione Font</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Colore Etichetta</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Opacità</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Colore Valore</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Colore Avviso</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Blocca Posizione</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Stile Overlay</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Intervallo di Aggiornamento</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Intervallo di aggiornamento dei sensori</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Ripristina Posizione</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Soglia di Aggancio</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Aspetto</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Generale</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensori</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Soglie</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Critico</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS Minimo</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>La frequenza dei fotogrammi minima accettabile. Al di sotto di questo, il colore diventa critico.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Delta FPS Basso</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>La differenza massima tra FPS medio e 1% Low. Sopra questo, il contatore diventa critico.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Prestazioni</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Temperatura</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Utilizzo</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Avviso</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>Impostazioni OSD</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Ventola</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Temperatura Disco 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Temperatura Disco 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>Clock Core E</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Tempo Fotogramma</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Ventola</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Gioco</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Temperatura</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Utilizzo</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>Ventola PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>Clock Core P</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Barra</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Pannello</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>In attesa di installazione (un altro plugin è in download)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Il plugin {0} è stato installato e aperto in Ottimizzazione del Sistema.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Il plugin {0} è stato installato. Usa Apri per avviare il suo punto di ingresso disponibile.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Il plugin {0} è stato installato, ma non espone un punto di ingresso per l&apos;utente. Potrebbe fornire solo servizi in background o dati del manifesto.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Installato, ma senza punto di ingresso</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Il plugin {0} è stato installato, ma non è stato possibile caricare la sua interfaccia runtime. Riavvia l&apos;app o reinstalla il plugin.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>Temperatura PCH</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Potenza</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Core</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Piattaforma</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>Clock Core E</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Potenza</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Temp. Core</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>Hot Spot GPU</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>Temp. VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>Throughput PCIe</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>Utilizzo VRAM</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Caricamento...</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Temperatura Memoria</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Utilizzo Memoria</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Temperatura Scheda</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Scheda Madre</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>Clock Core P</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Utilizzo Memoria Condivisa</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>Temperatura SSD</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Batteria sconosciuta</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>CPU sconosciuta</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>GPU sconosciuta</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>Temperatura VRAM</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>Utilizzo VRAM</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Abilita il polling hardware avanzato per monitorare temperature, frequenze e limiti di potenza dettagliati.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Devi prima installare PawnIO per utilizzare i sensori hardware!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Sensori Hardware</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Impossibile scaricare il pacchetto lingue. Verifica la connessione di rete, il proxy o le impostazioni TLS, quindi riprova.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Tasti Smart</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Overlay mobile che mostra i dati dei sensori in tempo reale.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Abilita OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

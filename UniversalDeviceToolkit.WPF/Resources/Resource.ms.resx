@@ -1,0 +1,3844 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>Bina</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>Pelepasan terkini di GitHub</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>Pautan</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>Laman web projek di GitHub</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>Pustaka pihak ketiga</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>Tentang</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Terjemahan disediakan oleh komuniti.</value>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>Versi</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Tambah</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Tambah baru</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>Cas peranti USB apabila komputer riba dimatikan, tidur atau hibernasi.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>Sentiasa Hidup USB</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>Cas peranti USB apabila komputer riba dimatikan, tidur atau hibernasi.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>Sentiasa Hidup USB</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Guna</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>Guna dan Tutup</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Universal Device Toolkit mesti berjalan untuk tindakan automatik berfungsi.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>Dayakan</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>Tiada Tindakan ditakrifkan. Klik "Tambah baru" untuk mencipta Tindakan baru.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>Jika didayakan, tindakan ini akan berjalan secara automatik. Apabila keadaan berubah, semua tindakan akan dinilai dari atas ke bawah. Hanya tindakan yang sepadan dengan keadaan semasa akan berjalan.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>Tindakan</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>Nama...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>Tambah baru</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>Tiada Tindakan Pantas ditakrifkan. Klik "Tambah baru" untuk mencipta Tindakan Pantas baru.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>Tindakan pantas tersedia dalam menu klik kanan ikon dulang.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>Tindakan Pantas</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>Nama...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>Namakan semula</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>Semua perubahan dikembalikan!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>Dikembalikan</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>Perubahan berjaya disimpan!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>Disimpan</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>Automasi</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>Tambah langkah</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>Konfigurasikan</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Eksklusif</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>Jangan laksanakan tindakan lanjut apabila tindakan ini berjalan.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>Jalankan sekarang</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>Selesai dengan ralat.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>Jalankan sekarang</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>Berjaya selesai!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>Jalankan sekarang</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>Sedang berjalan...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} langkah</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} langkah</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>Aplikasi</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>Pada matahari terbit</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>Pada matahari terbenam</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>Pada {0:D2}:{1:D2}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>Mod Kuasa</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>Tanpa nama</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>Mengesan secara automatik apabila permainan tertentu berjalan dan menala prestasi CPU dan GPU. Suhu dan bunyi kipas mungkin meningkat.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>Dayakan Enjin AI</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>Tetapan Mod Seimbang</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>Pilih cara bateri dicas.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>Mod Bateri</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>Pilih cara bateri dicas.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>Mod Bateri</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>Disambungkan, sedang mengecas...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>Disambungkan, tidak mengecas</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>Suhu semasa bateri.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>Suhu bateri</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>Kapasiti bateri semasa.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>Kapasiti semasa</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>Bilangan kitaran cas/nyahcas.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>Bilangan kitaran</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>Kapasiti bateri seperti yang direka bentuk.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>Kapasiti reka bentuk</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>Kadar bateri dicas (+), atau dinyahcas (-).</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>Kadar nyahcas</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Kadar minimum bateri dicas (+), atau dinyahcas (-).</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Kadar nyahcas minimum</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Kadar maksimum bateri dicas (+), atau dinyahcas (-).</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Kadar nyahcas maksimum</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>Anggaran masa berbaki: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>Menganggar masa...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>Tarikh penggunaan pertama</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>Bilakah bateri mula-mula digunakan.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>Kapasiti bateri apabila dicas sepenuhnya.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>Kapasiti cas penuh</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Kapasiti cas maksimum bateri.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Kesihatan bateri</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>Pengecas berkuasa rendah disambungkan</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>Bilakah bateri dihasilkan.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>Tarikh pembuatan</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>Masa sejak komputer riba kali terakhir disambungkan ke kuasa AC. Masa ini mungkin tidak tepat, jika komputer riba dicas semasa tidur atau dimatikan.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>Menggunakan bateri sejak</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>Bateri</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Biru</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Hijau</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Merah</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>Pilih mod operasi GPU berdasarkan penggunaan dan keadaan kuasa komputer anda. Menukar mod mungkin memerlukan permulaan semula.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Menukar kepada {0} memerlukan permulaan semula. Adakah anda ingin mulakan semula sekarang?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Permulaan semula diperlukan</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>Mod Kerja GPU</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>Tindakan Pantas</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Teruskan</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>Salin semua</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>Grafik</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>Lain-lain</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>Kuasa</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>Laman Utama</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Nyahdayakan GPU diskret jika ia aktif tanpa perlu. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan atau mod Hibrid tidak aktif.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Nyahaktifkan GPU</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>Tambah kelewatan sebelum menjalankan langkah seterusnya.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>Kelewatan</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Padam</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>Versi BIOS</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>Teks disalin ke papan keratan.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" disalin ke papan keratan.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>Disalin!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>Peranti</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Perkakasan</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Papan Induk</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Casis</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Memori</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Sokongan Lenovo</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>Jenis Mesin</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>Pengeluar</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>Nombor siri</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>Tentang peranti anda</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>Tarikh tamat</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>Tarikh mula</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>Waranti</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktif</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>Nyahaktifkan</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Tidak aktif</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>Tamatkan aplikasi</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>Nyahdayakan GPU diskret jika ia aktif tanpa perlu.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>Monitor disambungkan ke GPU nVidia.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>Tiada proses</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>Keadaan prestasi</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>Tidak Diketahui</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>Proses</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>Mulakan semula GPU</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU Diskret</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Ubah kecerahan paparan paparan terbina dalam. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Kecerahan paparan</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Nyahpilih kadar muat semula yang anda tidak mahu gunakan apabila pintasan Fn+R digunakan.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>Pastikan paparan komputer riba dihidupkan. Universal Device Toolkit tidak dapat memuatkan kadar muat semula untuk paparan yang tidak dihidupkan.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>Tiada Kadar Muat Semula dijumpai</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>Kecualikan Kadar Muat Semula</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Keluar</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Eksport</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>Gunakan hanya GPU bersepadu apabila menggunakan bateri dan kedua-dua GPU bersepadu dan diskret apabila penyesuai AC disambungkan. Apabila penyesuai bukan standard disambungkan, sistem bertukar kepada Mod Hibrid-iGPU Sahaja.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>Mod Hibrid-Auto</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>Menukar ke dan dari mod ini memerlukan permulaan semula.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>Gunakan hanya GPU diskret. Mod ini memberikan prestasi grafik terbaik, tetapi meningkatkan penggunaan kuasa.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>Mod dGPU</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>Kedua-dua GPU bersepadu dan diskret didayakan. Sistem akan secara automatik bertukar antara mereka berdasarkan keperluannya.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>Mod Hibrid</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>Mod ini hanya berkuat kuasa apabila GPU diskret tidak berfungsi.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>Hanya gunakan GPU bersepadu. Mod ini meminimumkan penggunaan kuasa dan bunyi.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Mod Hibrid-iGPU Sahaja</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>Tentang Mod Kerja GPU</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>Penderia CPU</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>Kelajuan Kipas</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>Hidupkan komputer riba apabila anda membuka tudung.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Buka Untuk Mula</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>Hidupkan komputer riba apabila anda membuka tudung.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Buka Untuk Mula</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Gunakan fungsi sekunder kekunci F1-F12 tanpa menahan kekunci Fn.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Kunci Fn</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Gunakan fungsi sekunder kekunci F1-F12 tanpa menahan kekunci Fn.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Kunci Fn</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>AMARAN! Sesetengah komputer riba mungkin menerima nilai yang lebih rendah daripada yang ditunjukkan, tetapi berhati-hati. Pilihan ini boleh menyebabkan tingkah laku yang tidak dijangka. Jika anda tidak pasti apa yang anda lakukan, biarkan pada 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>Ofset minimum</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>AMARAN! Sesetengah komputer riba mungkin menerima nilai yang lebih tinggi daripada yang ditunjukkan, tetapi berhati-hati. Pilihan ini boleh menyebabkan tingkah laku yang tidak dijangka. Jika anda tidak pasti apa yang anda lakukan, biarkan pada 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>Ofset maksimum</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>Jangan ubah pilihan di bawah melainkan anda benar-benar tahu apa yang anda lakukan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>Lanjutan</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>Had Kuasa Jangka Panjang (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>Had Kuasa Jangka Panjang</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>Had Kuasa Jangka Pendek</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>Had Suhu CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>Tidak dapat menggunakan tetapan</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>Tidak dapat memuatkan tetapan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>Kelajuan kipas tidak ditentukan dengan ketat oleh satu penderia suhu. Ia akan menaikkan atau menurunkan kelajuan mengikut penderia tertinggi antara suhu CPU, GPU dan Heatsink. Nilai tepat akan muncul apabila anda meletakkan tetikus di atas setiap langkah.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>Lengkung kipas</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>AMARAN! Penggunaan berpanjangan pilihan ini akan merendahkan kipas mengurangkan jangka hayatnya. Serius, berhati-hati dengan pilihan ini!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>Kelajuan kipas maksimum</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>Kipas</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>TGP Boleh Konfigurasikan</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Dynamic Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>Had Suhu GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>Tetapan Mod Tersuai</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>Dayakan julat dinamik tinggi (HDR) pada paparan terbina dalam. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>Dayakan julat dinamik tinggi (HDR) pada paparan terbina dalam.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>Penggunaan HDR disekat oleh tetapan Windows.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>Peranti ini tidak serasi dengan Universal Device Toolkit.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Peranti anda mungkin kehilangan komponen sistem yang diperlukan (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Jika anda klik "OK" untuk teruskan:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Perisian akan berjalan dalam mod terhad</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Sesetengah ciri akan dinyahdayakan (Papan Pemuka, Automasi, Makro)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Ciri asas lain masih akan tersedia</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Maklumat Peranti:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Pembekal:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Jenis Mesin:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Klik "OK" untuk teruskan, atau "Batal" untuk keluar.</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>Tiada papan kekunci yang serasi dijumpai</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>Lampu Latar Papan Kekunci</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Lampu latar papan kekunci tidak boleh dikawal di sini apabila Lenovo Vantage atau perkhidmatannya berjalan.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage atau perkhidmatannya berjalan</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>Tentang</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>Tindakan</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>Bateri</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>Papan Pemuka</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>Papan Kekunci</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>Muat Turun</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Pengoptimuman sistem</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Sambungan Pemalam</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Tetapan Item Navigasi</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Konfigurasikan item navigasi yang dipaparkan dalam bar sisi. Papan Pemuka dan Tetapan akan sentiasa kelihatan.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Papan Kekunci</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Bateri</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Automasi</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Makro</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Pengoptimuman Sistem</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Sambungan Pemalam</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Tunjukkan atau sembunyikan item navigasi Tentang</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Item Navigasi</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Konfigurasikan item navigasi yang dipaparkan dalam bar sisi</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>Kemas kini tersedia!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>Kemas kini {0} tersedia!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Alih ke bawah</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Alih ke atas</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Tidak</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>Penyesuai AC disambungkan</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>Penyesuai AC disambungkan (Kuasa rendah)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>Penyesuai AC ditanggalkan</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>Kamera dimatikan</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>Kamera dihidupkan</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock dimatikan</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock dihidupkan</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Kunci Fn dimatikan</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Kunci Fn dihidupkan</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>Mikrofon dimatikan</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>Mikrofon dihidupkan</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock dimatikan</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock dihidupkan</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>Lampu latar {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>Kecerahan {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>Profil {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>Pad sentuh dimatikan</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>Pad sentuh dihidupkan</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>Lampu latar {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>Penyesuai AC</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock dan Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>Nyahdayakan pemberitahuan untuk tindakan kekunci Fn seperti senyap mikrofon. Dayakan pilihan ini jika anda mempunyai konflik dengan aplikasi skrin penuh.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>Jangan tunjukkan pemberitahuan</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Kunci Fn</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>Lampu Latar Papan Kekunci</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>Kedudukan</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>Mod Kuasa</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>Kadar Muat Semula</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Kunci Pintar</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>Pemberitahuan</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>Kunci Pad Sentuh</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Buka</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>Tingkatkan masa tindak balas paparan terbina dalam.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>Tingkatkan masa tindak balas paparan terbina dalam.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} dimuat turun!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>Muat turun selesai</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>Sesuatu telah berlaku ralat</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>Pelayan memulangkan kod 404.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>Fail nampaknya telah hilang</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>Periksa jika sambungan internet anda hidup dan berjalan.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>Sesuatu telah berlaku ralat</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>Kemas kini tersedia!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>Pakej ini sudah lebih setahun.</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>Versi</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>Di bawah adalah senarai pakej perisian yang ditandakan sebagai serasi dengan komputer riba anda. Sentiasa pastikan anda memasang pakej yang betul.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Periksa jika Jenis Mesin dan OS ditetapkan dengan betul.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>Sesuatu telah berlaku ralat</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Menukar isihan, menapis keputusan, menyembunyikan pakej atau memuat semula senarai akan menghentikan muat turun. Adakah anda ingin teruskan?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>Muat turun sedang berjalan</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Tapis...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>Jenis Mesin</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>Sistem Pengendalian</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>Utama (Disyorkan)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Sama seperti Lenovo Vantage</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>Sekunder</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Sama seperti Lenovo PC Support</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>Tarikh</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>Sumber</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>Muat Turun</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Tampal</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Tukar mod prestasi.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Mod Kuasa</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>Tukar mod prestasi. Mod prestasi juga boleh ditukar dengan Fn+Q.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>Mod Kuasa</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>Mod kuasa yang dipilih mungkin tidak berfungsi dengan betul tanpa penyesuai AC disambungkan.</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>Lalai</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Pelan Kuasa Windows</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Mengimbas pakej pemandu yang tersedia, sila tunggu...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Imbas pakej pemandu</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Pilih sumber dan imbas untuk menyenaraikan muat turun pemandu yang serasi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Tiada muat turun pemandu dijumpai</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Cuba sumber, sistem pengendalian, atau jenis mesin yang lain.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Tiada muat turun yang sepadan dijumpai</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Laraskan penapis, pilihan kemas kini sahaja, atau senarai muat turun tersembunyi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Imbasan pemandu tidak selesai</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Periksa sumber yang dipilih dan sambungan rangkaian, kemudian imbas semula.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Ralat rangkaian berlaku. Mencuba semula secara automatik...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Mencuba semula untuk mendapatkan pakej pemandu...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Maklumat Pembersihan</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Lihat kemajuan operasi pembersihan dan saiz anggaran.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Laraskan pratetap lampu latar papan kekunci.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Lampu latar papan kekunci</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>Kecerahan</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>Pratetap 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>Pratetap 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>Pratetap 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>Pratetap 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>Zon 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>Zon 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>Zon 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>Zon 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>Kesan</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>Kelajuan</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>README</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Muat semula</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>Tukar kadar muat semula paparan terbina dalam. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>Kadar muat semula</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>Tukar kadar muat semula paparan terbina dalam.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>Kadar muat semula</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Namakan semula</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>Saya akan mulakan semula kemudian</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>Mulakan semula sekarang</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Asingkan</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>Argumen</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>Laluan Pelaksanaan</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>Jalankan skrip atau program. Pastikan skrip anda berjalan dengan betul dahulu.</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>Jalankan</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Simpan</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Menyimpan...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>Pilih satu atau lebih tindakan pantas untuk kitaran</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>Tiada Tindakan Pantas ditakrifkan.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>Tunjukkan aplikasi ini</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>Tukar warna aksen aplikasi.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>Warna aksen</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Penampilan</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Sesuaikan bahasa, unit suhu, tema dan warna aksen.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>Automatik jalan</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Mula diminimumkan ke dulang apabila anda log masuk ke Windows.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone mungkin tidak dinyahdayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Tidak dapat menyahdayakan Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Nyahdayakan Legion Zone dan perkhidmatannya tanpa menyahpasangnya. Permulaan semula disyorkan selepas menukar pilihan ini.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Nyahdayakan Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys mungkin tidak dinyahdayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Tidak dapat menyahdayakan Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Nyahdayakan Lenovo Hotkeys dan perkhidmatannya tanpa menyahpasangnya. Jika dinyahdayakan, aplikasi ini akan mengendalikan pintasan Fn. Permulaan semula disyorkan selepas menukar pilihan ini.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Pengoptimuman sistem</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Guna tweak prestasi yang disyorkan dan bersihkan fail sementara.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Guna tweak prestasi dan perkhidmatan</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Pengoptimuman prestasi digunakan.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Tidak dapat menggunakan pengoptimuman prestasi.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Jalankan pembersihan</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Pembersihan selesai.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Pembersihan gagal.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Tindakan ini mengubah suai perkhidmatan dan fail sistem. Hak pentadbir mungkin diperlukan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Guna tindakan yang dipilih</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Pilih yang disyorkan</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Kosongkan pilihan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Imbas</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Jalankan tindakan pembersihan</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} tindakan dipilih</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Belum ada tindakan dipilih.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Tindakan yang dipilih</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Pembersihan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Pencantikan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Muat Turun Pemandu</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Pengesahan Keselamatan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Pembersihan sistem akan memadam secara kekal fail sementara dan cache. Walaupun biasanya selamat, adalah disyorkan untuk memastikan anda mempunyai sandaran data penting. Adakah anda ingin teruskan?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Sambungan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Urus sambungan dan alat pengoptimuman sistem</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Tiada Sambungan Tersedia</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Pasang sambungan dari halaman Sambungan Pemalam untuk meningkatkan fungsi pengoptimuman sistem.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Akan Datang</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Pasaran sambungan akan tersedia dalam kemas kini masa hadapan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Pengoptimuman Windows</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Pilih semua</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Peraturan pembersihan tersuai</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Pilih folder dan sambungan fail yang patut dipadam semasa pembersihan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Tambah peraturan</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Buang</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Kosongkan semua</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Tiada peraturan pembersihan tersuai dikonfigurasikan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Sertakan subfolder</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>Pengurusan AppX</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Pilih aplikasi Microsoft Store yang telah dipasang untuk membuang bagi semua pengguna.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Tiada aplikasi dipilih untuk dibuang.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Nyahpasang aplikasi yang dipilih</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Aplikasi yang dipilih dijadualkan untuk dibuang.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Gagal membuang aplikasi yang dipilih.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Memuatkan aplikasi, sila tunggu...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Memuatkan pemalam...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Gagal memuatkan: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Penerbit: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Pembersihan MRU/sejarah pendaftaran</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Kosongkan sejarah pendaftaran pengguna biasa (Run MRU, RecentDocs, dialog Buka/Simpan, TypedPaths). Ini tidak membuang entri kritikal sistem.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Tindakan</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Peraturan pembersihan tersuai</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Sambungan</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Asingkan berbilang sambungan dengan koma (contoh: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Sertakan subfolder</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Layari</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Sila pilih folder.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Sila masukkan sekurang-kurangnya satu sambungan fail.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Sila pilih sekurang-kurangnya satu tindakan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Tindakan yang dipilih berjaya selesai.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Gagal menyelesaikan tindakan yang dipilih.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer dan antara muka</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Pencantikan sistem</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Tala bar tugas, File Explorer dan tingkah laku antara muka pengguna.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Prestasi</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Laraskan prestasi sistem dan tetapan kep respons.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Perkhidmatan</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Nyahdayakan perkhidmatan latar belakang yang menggunakan sumber.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Pembersihan</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Buang cache, fail sementara dan sisa lain.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Pembersihan Cache</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Bersihkan fail cache daripada pelbagai aplikasi dan sistem untuk membebaskan ruang storan.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Pembersihan Fail Sistem</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Bersihkan fail sistem seperti fail sementara, log, dump ranap, dll.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Pembersihan Komponen Sistem</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Bersihkan fail komponen sistem seperti cache Windows Update, stor komponen, dll.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Pembersihan Prestasi</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Bersihkan fail yang boleh menjejaskan prestasi sistem, seperti fail prefetch, dll.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Pembersihan Tersuai</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Bersihkan fail dan direktori yang ditentukan menggunakan peraturan tersuai.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Susun atur bar tugas dan menu mula</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Sembunyikan kotak carian dan butang Task View, nyahdayakan pengelompokan bar tugas dan sentiasa tunjukkan ikon dulang.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Nyahdayakan menu mula dan buka carian dengan kekunci Win</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Nyahdayakan menu mula sepenuhnya. Apabila anda menekan kekunci Win, ia akan membuka carian dan bukannya menu mula.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Tingkatkan kep respons Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Kurangkan kelewatan menu, tutup aplikasi tergantung lebih cepat dan buka PC Ini secara lalai.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Pilihan kebolehlihatan fail</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Tunjukkan sambungan fail dan fail tersembunyi dalam File Explorer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Nyahdayakan cadangan Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Matikan cadangan kandungan awan dan sepanduk cadangan.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Tukar kekunci Windows untuk membuka carian</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Ubah suai tingkah laku kekunci Windows untuk membuka carian dan bukannya menu mula.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Optimumkan penjadualan multimedia</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Buang pendikit rangkaian dan kurangkan kependaman kep respons sistem.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Tingkatkan pengurusan memori</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Kekalkan cache sistem dalam memori dan elakkan pemandu kernel paging.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Nyahdayakan akrilik dan pusat pemberitahuan</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Buang kesan akrilik pada log masuk dan sembunyikan pusat pemberitahuan Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Kurangkan telemetri dan petua</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Nyahdayakan ID pengiklanan, ciri Spotlight dan cadangan automatik.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Paksa pelan prestasi tinggi</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Aktifkan skim kuasa prestasi tinggi dan nyahdayakan hibernasi.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Nyahdayakan perkhidmatan diagnostik</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Hentikan dan nyahdayakan perkhidmatan Connected User Experiences, Diagnostics Hub dan Delivery Optimisation.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>Nyahdayakan SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Matikan Superfetch/SysMain untuk mengurangkan aktiviti cakera latar belakang.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Nyahdayakan pengindeksan Windows Search</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Hentikan perkhidmatan Windows Search untuk mengelakkan kemas kini indeks.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Nyahdayakan Pendaftaran Jauh</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Selamatkan sistem dengan menyahdayakan akses pendaftaran jauh.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Nyahdayakan pelaporan ralat</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Hentikan Windows Error Reporting daripada mengumpul dan menghantar data ranap.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Kosongkan cache Remote Desktop</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Buang fail cache yang dicipta oleh klien Remote Desktop.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Bersihkan cache Windows Update</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Padam fail kemas kini yang dimuat turun dan cache Delivery Optimisation.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Bersihkan cache pelayar</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Membersihkan fail sementara dan log yang ditinggalkan oleh pelbagai aplikasi.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Sisa Aplikasi</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Buang cache dan fail kuki Internet Explorer dan Edge.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Bersihkan cache thumbnail</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Padam pangkalan data thumbnail Explorer dan cache shader Direct3D.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>Kosongkan imej natif .NET</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Buang imej .NET Native yang di-cache untuk mendapatkan semula ruang cakera.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Buang log dan data diagnostik</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Mengimbas fail besar pada pemacu sistem anda yang mungkin mengambil ruang yang ketara.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Imbasan Fail Besar</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Kenal pasti dan urus fail besar pada sistem anda.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Fail Besar</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Padam log Windows, laporan ralat dan surihan diagnostik.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Padam dump ranap</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Buang fail dump memori yang ditinggalkan selepas ranap sistem.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Bersihkan imbasan Defender</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Padam sejarah dan cache imbasan Windows Defender.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Bersihkan fail sementara</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Kosongkan direktori sementara Windows dan pengguna.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Buang aplikasi Windows terbundel</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Nyahpasang aplikasi UWP yang telah dipasang untuk semua pengguna.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Kosongkan Tong Kitar Semula</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Buang fail yang dipadam yang disimpan dalam Tong Kitar Semula.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Kosongkan data prefetch</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Padam data prefetch Windows untuk menjana semula surihan baru.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Bersihkan fail tersuai</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Padam fail yang sepadan dengan sambungan yang dikonfigurasikan dari folder yang dipilih.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Stor komponen perkhidmatan</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>Jalankan pembersihan DISM dan kosongkan fail sementara WinSxS.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Nyahdayakan Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage dan/atau ImController mungkin tidak dinyahdayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Tidak dapat menyahdayakan Lenovo Vantage dan/atau ImController</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Nyahdayakan Lenovo Vantage dan ImController tanpa menyahpasangnya. Permulaan semula disyorkan selepas menukar pilihan ini.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Nyahdayakan Lenovo Vantage dan ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone mungkin tidak didayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Tidak dapat mendayakan Legion Zone</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys mungkin tidak didayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Tidak dapat mendayakan Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage dan/atau ImController mungkin tidak didayakan dengan betul</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Tidak dapat mendayakan Lenovo Vantage dan/atau ImController</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Anda boleh mengecualikan kadar muat semula, untuk menjadikan pintasan Fn+R lebih berguna.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>Kecualikan Kadar Muat Semula</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>Pilih bahasa.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Pasang bahasa</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Pemasangan bahasa gagal</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Tidak dapat memuat turun pek bahasa. Periksa sambungan rangkaian, proksi, atau tetapan TLS anda, kemudian cuba lagi.</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Memasang bahasa</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Memuat turun pek bahasa</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Mengekstrak dan memasang</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0} peratus</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Gunakan butang muat turun untuk memasang pek bahasa ini.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Bahasa tidak dipasang</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Nyahpasang bahasa</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Nyahpasang bahasa gagal</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Menyahpasang bahasa</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>Sentiasa minimumkan ke dulang. Tutup dengan klik kanan pada ikon dulang.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>Minimumkan apabila tutup</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Sembunyikan amaran peranti tidak serasi yang muncul pada permulaan.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Nyahdayakan amaran peranti tidak serasi</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>Konfigurasikan pemberitahuan yang ditunjukkan.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>Pemberitahuan</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Pelan Kuasa Windows</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Tetapkan Tindakan Pantas untuk tekanan dua kali Fn+F9.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Tindakan Sekunder Kunci Pintar</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Tetapkan Tindakan Pantas untuk tekanan tunggal Fn+F9.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Tindakan Kunci Pintar</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>Tetapkan tema terang, tema gelap atau ikut tetapan sistem.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Penampilan</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Aplikasi</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Kunci Pintar</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Paparan</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Konfigurasikan pilihan penampilan, tingkah laku, dan fungsi aplikasi.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Laraskan kecerahan lampu latar papan kekunci.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Kecerahan lampu latar papan kekunci</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>Tambah kesan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>Tidak dapat menggunakan profil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>Profil pencahayaan tidak dapat digunakan.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>Kecerahan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>Nyahpilih semua zon</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>Kesan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>Profil tidak dapat dieksport</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>Tidak dapat mengeksport profil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>Profil tidak dapat diimport</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>Tidak dapat mengimport profil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>Tiada kesan ditambah.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>Tetapkan semula kepada lalai</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>Pilih semua zon</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>Tukar susun atur papan kekunci</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>Arah</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>Warna</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>Warna</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>Arah</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>Kesan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>Kesan ini akan digunakan pada keseluruhan papan kekunci dan akan menggantikan semua kesan lain.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>Kelajuan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>Tambah kesan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>Edit kesan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Laraskan profil lampu latar papan kekunci.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Profil lampu latar papan kekunci</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>Semua kekunci</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} zon</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>Matahari terbit</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>Matahari terbenam</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>Masa</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Benarkan pertukaran antara GPU bersepadu dan diskret. Memerlukan permulaan semula.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Menukar Mod Hibrid memerlukan permulaan semula. Adakah anda ingin mulakan semula sekarang?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Permulaan semula diperlukan</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>Mod Hibrid</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Nyahdayakan pad sentuh.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Kunci Pad Sentuh</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>Nyahdayakan pad sentuh.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>Kunci Pad Sentuh</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Cuba lagi</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Pengecualian tidak dijangka berlaku:{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Padam Laporan</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>Laporan ranap telah disimpan ke cakera. Anda boleh menyemak butiran laporan di bawah. Laporan tidak dihantar secara automatik.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Aplikasi ranap semasa sesi sebelumnya</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Gagal membuka laporan ranap: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Buka Laporan</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Laporan ranap disimpan ke: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Laporan Ranap Dikesan</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Tidak dapat memuatkan butiran laporan ranap.</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>Tanpa nama</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>Anda boleh memilih untuk teruskan atas risiko anda sendiri, tetapi ingat bahawa sesetengah ciri mungkin tidak tersedia dan/atau tidak berfungsi dengan betul. Pengelogan akan didayakan secara automatik jika anda memilih untuk teruskan.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Lihat halaman projek di GitHub untuk maklumat lanjut.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>Folder log</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>Jenis Mesin</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit belum diuji dengan peranti anda.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Anda boleh menyahdayakan amaran ini pada bila-bila masa dalam Tetapan.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>Peranti tidak disokong</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>Pembekal</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Kemas kini</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>Kemas kini tersedia</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>Apa yang baru?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Laraskan kecerahan lampu latar papan kekunci.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Lampu latar papan kekunci</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Anda boleh menukar kecerahan dengan Fn Space</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Lampu latar papan kekunci</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>Nyahdayakan kekunci Windows pada papan kekunci terbina dalam.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Kunci Kekunci Windows</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>Hanya berfungsi pada papan kekunci terbina dalam.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Kunci Kekunci Windows</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ya</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>Apabila dimatikan, mikrofon akan disenyapkan.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>Apabila dimatikan, mikrofon akan disenyapkan.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>Resolusi</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>Tukar resolusi paparan terbina dalam.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>Resolusi</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>Tukar resolusi paparan terbina dalam. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>Tukar skala paparan terbina dalam.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>Tukar penskalaan paparan terbina dalam. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika paparan dalaman dimatikan.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>Paparan</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Lampu latar papan kekunci</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Anda boleh menghidupkan atau mematikan lampu latar dengan Fn Space.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Lampu latar papan kekunci</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Hidupkan atau matikan lampu latar.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>Tiada muat turun yang sepadan dijumpai</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>Tunjukkan kemas kini sahaja</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>Sesuaikan Papan Pemuka</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Muatkan</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>Cipta kumpulan</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>Sesetengah ciri mungkin tidak muncul pada Papan Pemuka bergantung pada keadaan dan konfigurasi komputer riba anda.</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>Sesuaikan</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>Matikan paparan</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>Matikan semua paparan yang tersedia. Menggerakkan tetikus atau menekan papan kekunci akan membangunkan paparan.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>Matikan</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>Matikan paparan</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>Matikan semua paparan yang tersedia.</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>Edit nama kumpulan</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Logo Legion dihidupkan</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Logo Legion dimatikan</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Lampu latar port dihidupkan</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Lampu latar port dimatikan</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>Permulaan semula diperlukan</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>Penutupan diperlukan</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>Permulaan semula disyorkan</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Disyorkan</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Beratur</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Memuat turun</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Memasang</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Selesai</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Takrifan tindakan tidak dijumpai</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Butiran pelaksanaan teknikal tidak tersedia untuk tindakan ini</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Pemuatan gagal</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Tidak Diketahui</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Pelaksanaan arahan</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Pengubahsuaian pendaftaran</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Pengurusan perkhidmatan</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Pengubahsuaian pendaftaran dan skrip PowerShell</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Pembersihan pendaftaran</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>Arahan DISM</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Simpan dan Tutup</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>Pratetap Mod Tersuai</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>Aktifkan pratetap Mod Tersuai. Tetapan ini hanya berkuat kuasa apabila Mod Tersuai didayakan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>Nama pratetap</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>Pratetap aktif</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>Folder Aplikasi</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>Sementara</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>Kecerahan Paparan Tunggal</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>Apabila dihidupkan, tahap kecerahan yang sama akan digunakan pada semua pelan kuasa Windows apabila anda menukarnya.</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>Kemas kini {0} tersedia!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>Had Kuasa Puncak</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>Had Kuasa sPPT APU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>Penggunaan kuasa berterusan yang boleh dicapai oleh CPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>Penggunaan kuasa puncak yang boleh dicapai oleh CPU dalam masa yang singkat.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>Penggunaan kuasa seketika maksimum yang boleh dicapai oleh CPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>Penggunaan kuasa maksimum yang boleh dicapai oleh CPU apabila kedua-dua CPU dan GPU digunakan sepenuhnya.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>Penggunaan kuasa puncak yang boleh dicapai oleh CPU dengan kelewatan kecil.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>Suhu maksimum yang boleh dicapai oleh CPU sebelum frekuensi dan kuasa dikurangkan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>Kuasa maksimum tambahan yang boleh diperuntukkan kepada GPU berdasarkan penggunaan kuasa CPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>Jumlah kuasa tambahan yang boleh diperuntukkan kepada GPU di atas penggunaan kuasa asas.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>Suhu maksimum yang boleh dicapai oleh GPU sebelum frekuensi dan kuasa dikurangkan.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Lalai</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Tempoh Had Kuasa Jangka Pendek</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>Jumlah masa CPU dibenarkan untuk meningkatkan dan menggunakan Had Kuasa Jangka Pendek. Apabila Tau tamat, Had Kuasa Jangka Panjang digunakan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>Sasaran Kuasa Pemprosesan Jumlah Dalam AC</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>Titik di mana CPU mencetuskan pelarasan penggunaan kuasa dinamik untuk GPU.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Cipta</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>Tambah langkah</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>Cipta Tindakan</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>Mod Kuasa</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>Pratetap</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>GPU Diskret</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>Keadaan Kuasa</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>Bateri</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>Mod</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>Kadar nyahcas</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Kadar nyahcas min</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Kadar nyahcas maks</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Masa penggunaan</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>Kemas kini tersedia!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>Pilih ikon</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>Tukar ikon</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>Tahap bateri rendah</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>Konfigurasikan</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>Model Kuasa Rendah S0 dikesan</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows melaporkan bahawa komputer riba ini menyokong Modern Standby. Menggunakan pelan kuasa selain Seimbang boleh menyebabkan tingkah laku yang tidak dijangka.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Pilih Pelan Kuasa Windows untuk digunakan apabila Mod Kuasa berubah.</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>Kuasa</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Pilihan Pelan Kuasa dalam Panel Kawalan Windows</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>Dimatikan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Import profil lampu latar papan kekunci</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Import dan gunakan konfigurasi lampu latar pada profil semasa.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>Laluan</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>Selepas {0}</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>Berbilang pencetus</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>Tetapan Overclock GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Ofset Frekuensi Teras</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Ofset Frekuensi Memori</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>Overclock GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>Tingkatkan prestasi dengan overclock GPU diskret.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Overclock GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Tingkatkan prestasi dengan overclock GPU diskret. AMARAN: Tindakan ini tidak akan berjalan dengan betul jika GPU diskret tidak tersedia.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Lampu latar port</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Hidupkan atau matikan lampu latar port di belakang komputer riba.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Lampu latar port</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Hidupkan atau matikan lampu latar port di belakang komputer riba.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Lampu latar logo panel</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>Hidupkan atau matikan lampu latar pada tudung komputer riba.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Lampu latar logo panel</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Hidupkan atau matikan lampu latar pada tudung komputer riba.</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>Maksimum: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>Penggunaan</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>Jam Teras</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>Jam P Teras</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>Jam E Teras</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>Suhu</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>Kipas</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>Jam Memori</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Penggunaan Memori</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Suhu Memori</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>Suhu SSD</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>Penggunaan VRAM</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Penggunaan Memori Dikongsi</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>Suhu VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>Titik Panas GPU</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>Throughput PCIe</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Teras</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Memori</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>Selang muat semula</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>Boot Segera</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>Hidupkan komputer riba apabila pengecas disambungkan.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>Boot Segera</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>Hidupkan komputer riba apabila pengecas disambungkan.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>Tidak dapat menukar Mod Kuasa</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} mod kuasa tidak tersedia tanpa kuasa AC.</value>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Penderia</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>Tidak dapat menukar Mod Kerja GPU</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Cuba tukar mod lagi dalam beberapa saat, jika anda tidak melihat keputusan yang dijangka. Jika dGPU tidak bertindak balas langsung, sila mulakan semula komputer riba anda.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU sedang digunakan</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU akan terputus secara automatik apabila tidak digunakan.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU sedang digunakan atau komputer riba tidak menggunakan kuasa bateri</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU akan terputus secara automatik apabila tidak digunakan dan komputer riba menggunakan kuasa bateri.</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Tetapan Mod Tersuai tidak akan digunakan dengan betul apabila Lenovo Vantage atau perkhidmatannya berjalan.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Tetapan Mod Tersuai tidak akan digunakan dengan betul apabila Legion Zone atau perkhidmatannya berjalan.</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU disambungkan</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU ditanggalkan</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Mod Kerja GPU</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Pilih mod operasi GPU berdasarkan penggunaan dan keadaan kuasa komputer anda. Menukar mod mungkin memerlukan permulaan semula.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Mod Hibrid</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Benarkan pertukaran antara GPU bersepadu dan diskret. Memerlukan permulaan semula.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>Tempoh</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>Kemas kini</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>Boost Dinamik GPU ke CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>Ini adalah kuasa tambahan maksimum yang boleh diperuntukkan kepada CPU daripada GPU berdasarkan penggunaan CPU. Semakin tinggi nilai, semakin baik prestasi aplikasi yang menggunakan CPU.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>Logo Boot</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>Sesuaikan imej Logo Boot, kelihatan semasa permulaan sistem.</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>Logo Boot</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>Logo Boot Lalai ditetapkan</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>Logo Boot Tersuai ditetapkan</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>Kembalikan kepada lalai</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>Sesuaikan</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>Tindakan</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>Teks Pemberitahuan</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>Tunjukkan pemberitahuan</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>Pratetap</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Kunci Fn Pintar</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Kunci Fn akan dinyahdayakan buat sementara waktu apabila kekunci Alt, Ctrl atau Shift ditekan.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>Logo boot tersuai mestilah tepat {0} piksel. Format yang disokong ialah: {1}.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>Pengecasan Bateri Semalaman</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>Apabila didayakan, peranti ini akan mengecas sehingga 80 peratus apabila dipasang semalaman dan menyelesaikan pengecasan sehingga 100 peratus pada masa anda menggunakan peranti ini pada waktu pagi.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Pengecasan Bateri Semalaman</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>Apabila didayakan, peranti ini akan mengecas sehingga 80 peratus apabila dipasang semalaman dan menyelesaikan pengecasan sehingga 100 peratus pada masa anda menggunakan peranti ini pada waktu pagi.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>Saiz imej tidak sah.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>Format imej tidak sah.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>Tidak dapat melancarkan partition EFI.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>Tidak dapat menetapkan keistimewaan UEFI.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>Ruang kosong pada partition EFI tidak mencukupi.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>Logo tersuai tidak dapat ditetapkan: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>Logo lalai tidak dapat ditetapkan: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>Logo boot lalai ditetapkan.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>Logo boot tersuai ditetapkan.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>Nama rangkaian SSID</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Salin nama rangkaian semasa</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Biarkan kosong untuk mana-mana rangkaian Wi-Fi.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>Kongsi kelajuan kipas, suhu bateri dll. dengan HWiNFO64. Anda mungkin perlu mulakan semula HWiNFO64 selepas menukar pilihan ini.</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>Integrasi</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Maklumat</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>Folder muat turun</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>Buka folder Muat turun</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>Muat turun</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Pasang</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Nyahpasang</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Pemasangan gagal</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Fail tidak dijumpai, sila muat turun dahulu</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Pemasang keluar dengan kod {0}</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Pemasangan dimulakan</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Memulakan pemasang: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>Buka README</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>Pratetap</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>Muat semula</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>Padam</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>Tempoh minit</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Tetapkan semula pembilang untuk Menggunakan bateri sejak dalam seksyen bateri apabila sistem dimulakan semula.</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>Tetapkan semula Menggunakan bateri sejak pada permulaan</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Matikan Wi-Fi</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Hidupkan Wi-Fi</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>Jalankan secara senyap</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>Tunggu sehingga selesai</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>Laksanakan aplikasi konsol, tanpa mencipta tetingkap konsol.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>Tunggu sehingga program atau skrip selesai melaksanakan</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>Apabila disenyapkan, semua peranti output audio aktif akan disenyapkan.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>Pembesar suara</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>Minimumkan ke dulang</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>Sentiasa minimumkan ke dulang dan bukannya bar tugas.</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Mod Kuasa Windows</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Tukar ke Mod Tersuai dengan Fn Q</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Benarkan pertukaran pantas ke Mod Tersuai dengan Fn Q.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>Penyegerakan Mod Kuasa</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>Tukar Pelan Kuasa Windows atau Mod Kuasa Windows secara automatik apabila menukar Mod Kuasa.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Mod Kuasa Windows</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>Pilih Mod Kuasa Windows untuk digunakan apabila Mod Kuasa berubah.</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Ralat berlaku semasa membaca maklumat peranti.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Ralat Pemeriksaan Keserasian</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Aplikasi gagal membaca maklumat peranti semasa permulaan. Sila periksa butiran ralat di bawah dan cuba langkah penyelesaian jika diperlukan.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Langkah Penyelesaian</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Pastikan perkhidmatan Windows Management Instrumentation WMI berjalan: Buka Services services.msc dan periksa bahawa Windows Management Instrumentation berjalan.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Jalankan aplikasi sebagai Pentadbir untuk memastikan kebenaran yang mencukupi untuk mengakses pendaftaran sistem dan WMI.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Periksa sumber sistem: Tutup aplikasi intensif sumber lain dan cuba lagi.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Semak fail log untuk maklumat ralat terperinci dengan mengklik Buka Log di bawah.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Buka Fail Log</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>Ulang</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>Abaikan kelewatan</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Kosongkan</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>Rakam</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>Hentikan rakaman</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>Jangan ulang</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Universal Device Toolkit mesti berjalan untuk makro berfungsi.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>Dayakan</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>Anda boleh merakam siri tekanan kekunci dan menggunakannya menggunakan pad nombor pada papan kekunci anda.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>Dayakan atau nyahdayakan makro.</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>Ganggu jika kekunci lain ditekan</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Sembunyi</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>Sembunyi semua</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Peranti</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Nyahpilih semua</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Pilih semua</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>Papan kekunci sahaja</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>Kekunci papan kekunci dan butang tetikus</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>Semua input</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>Pilihan rakaman</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>Rakaman akan bermula dalam 3 saat</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>Merakam</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>Tekan ESC untuk berhenti.</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Tunjukkan peranti yang dipilih sahaja</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Tunjukkan peranti boleh tanggal sahaja</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Tunjukkan peranti yang disambungkan sahaja</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Dayakan Command Line Interface yang membenarkan kawalan dari baris arahan.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>Tambah CLI ke PATH</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>Tambah CLI kepada pembolehubah persekitaran PATH pengguna.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>Suhu</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>Pilih unit untuk penderia suhu.</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys berjalan di latar belakang.</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone berjalan di latar belakang.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage dan/atau ImController berjalan di latar belakang.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Tunjukkan pemberitahuan pada semua skrin yang disambungkan ke peranti anda.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Pemberitahuan pada semua skrin</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>Periksa</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>Menyemak kemas kini</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>Periksa kemas kini</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>Kemas kini</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Pemeriksaan kemas kini dinyahdayakan untuk sesi ini</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit dimulakan dengan {0}. Pemeriksaan kemas kini automatik dan manual, serta tetapan kemas kini di bawah, dinyahdayakan sehingga anda melancarkan semula tanpa argumen permulaan tersebut.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>Had kadar API dicapai, sila cuba lagi kemudian.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>Gagal menyemak kemas kini</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>Sesuatu telah berlaku ralat, sila cuba lagi kemudian.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>Tiada kemas kini dijumpai</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>Secara automatik menyemak kemas kini</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Repositori kemas kini</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Konfigurasikan repositori GitHub untuk menyemak kemas kini. Biarkan kosong untuk menggunakan lalai.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Pemilik Repositori</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>cth. SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Nama Repositori</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>cth. UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>Katalog kemas kini tidak dijumpai</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>Cuba dapatkan kemas kini dari sumber lain.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Sesuatu telah berlaku ralat</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Periksa jika sambungan internet anda hidup dan berjalan.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Mainkan bunyi</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>Format muzik biasa seperti wav atau mp3 disokong.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Tindakan Pantas</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Jalankan tindakan pantas yang disimpan.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Pemberitahuan sentiasa di atas</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Sentiasa letakkan pemberitahuan di atas. Ia tidak akan menjejaskan tetingkap skrin penuh lain, tetapi anda tidak akan dapat mengklik pada pemberitahuan.</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Disyorkan</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Jedakan semua</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Butiran Tindakan</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Butiran Pelaksanaan Teknikal</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Jenis Pelaksanaan:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{0} daripada {1} tindakan dipilih</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Anggaran saiz pembersihan: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Klik Imbas untuk mengira jumlah saiz</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Sedang berjalan: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Menyahpasang aplikasi yang dipilih</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Paparan padat</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>Pencantikan Sistem</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Pencantikan Windows</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Sesuaikan penampilan dan tingkah laku Windows.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Kesan</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Sesuaikan kesan visual.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Ketelusan</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Kembangkan semua</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Runtuhkan semua</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>Membebaskan {0} dalam {1} saat</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Melaksanakan {0} peratus</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Operasi dibatalkan</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Butiran ralat: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Tunjukkan muat turun tersembunyi</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Tunjukkan muat turun tersembunyi</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Pilih bahasa</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Peranti ini akan bermula dalam mod asas. Kawalan khusus perkakasan disembunyikan sehingga pek peranti yang serasi tersedia.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Pek peranti: Mod asas</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit mengesan pek peranti yang sepadan. Sahkan sekarang supaya ciri khusus perkakasan boleh disediakan oleh aplikasi.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Pek peranti: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Menyediakan persediaan peranti</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Tidak disambungkan</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Segerakkan zon</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Menggunakan fungsi pembersihan pendaftaran terbina dalam Windows</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig flushdns Kosongkan cache DNS</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset Tetapkan semula tindanan protokol Winsock</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset Tetapkan semula tindanan protokol TCP IP</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Sambungan Pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Pasang dan urus pemalam untuk melanjutkan fungsi</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Jumlah Pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Kemas Kini Sedia</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Denyut Stor</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Menyemak ketersediaan pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} kemas kini pemalam sedia untuk dipasang.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>{0} pemalam tambahan tersedia dalam suapan semasa.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Menunggu metadata pemalam dimuatkan.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>Semua pemalam yang dikesan kini terkini.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Kemas kini tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Tersedia untuk dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Memuatkan metadata</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Terkini</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>oleh {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Buka Pantas</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimumkan</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Kemas kini</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Pasang</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Tidak Dapat Menyahpasang</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Tetapan Pemalam</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Nama Pemalam</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Penerangan Pemalam</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>Pemalam ini tidak mempunyai tetapan yang boleh dikonfigurasikan.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Pemalam tidak dijumpai: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Ralat</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Tetapan</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Pengarang: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Format antara muka konfigurasi pemalam tidak betul.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Ralat memuatkan tetapan pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Cari pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>Semua</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Tidak Dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>Tiada pemalam tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>Stor pemalam kini kosong. Nantikan kemas kini pemalam masa hadapan.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Konfigurasikan</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Nyahpasang</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Buka</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Bahasa:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Gunakan Lalai Aplikasi</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>Menjumpai {0} pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Import Pukal</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Import pemalam daripada fail ZIP tempatan</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Import daripada Fail</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Pilih fail pemalam zip</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} pemalam berjaya diimport</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} pemalam telah berjaya diimport dan tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Import pukal gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Gagal mengimport pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Mengimport pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>Mengimport {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>Memproses {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Pemalam berjaya dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Pemalam telah berjaya dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Pemasangan gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Tidak dapat memasang pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Pemalam berjaya dinyahpasang</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Pemalam telah berjaya dinyahpasang</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Nyahpasang gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Tidak dapat menyahpasang pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Gagal membuka pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Tidak dapat membuka pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Tidak dapat membuka pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Pemalam tidak dipasang</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Pemalam tidak dipasang dan tidak dapat dibuka</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Versi hos minimum {0} diperlukan</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Pemalam akan dipadam secara kekal</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Pemalam akan dipadam secara kekal. Tindakan ini tidak boleh dibuat asal.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>Kemas Kini Gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>Kemas kini pemalam gagal, sila periksa sambungan rangkaian dan cuba lagi kemudian.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>Kemas Kini Berjaya</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>Pemalam telah berjaya dikemas kini</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>Mengemas kini Pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>Memuat turun dan mengemas kini pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Kemas kini Semua</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>Jalankan Pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>Pemalam dimulakan</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>Pemalam Dinyahpasang</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>Pemalam akan dipadam apabila program ditutup.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>Pemadaman Gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>Ralat berlaku semasa memadam pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>Konfigurasi Gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>Pemalam dipasang tetapi tidak dimuatkan. Sila cuba mulakan semula aplikasi.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>Tiada Konfigurasi</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>Pemalam tidak mempunyai pilihan konfigurasi.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>Konfigurasi Tidak Disokong</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>Pemalam tidak menyokong konfigurasi.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>Keadaan Pemalam Ditetapkan Semula</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>Semua keadaan pemasangan pemalam telah dikosongkan</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Kemas Kini Pukal Selesai</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>Semua pemalam telah diproses.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Menyediakan muat turun</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Tempatan</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>Versi Baru Tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Versi:</value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Tarikh Pelepasan:</value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>Apa yang Baru:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Butiran</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Panduan Penggunaan</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Tunjukkan butiran</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Sembunyikan butiran</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Muat semula senarai pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>Tiada pemalam dijumpai sepadan dengan carian anda.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Kemas kini semua pemalam yang tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Pasang Semua</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Pasang semua pemalam yang tersedia</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Memasang Semua</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>Memasang {0} pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Pemasangan Pukal Selesai</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} pemalam dipasang.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Pemasangan Pukal Gagal</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Gagal memasang pemalam: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Mengemas kini Semua</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Mengemas kini</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Buka Folder</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Salin ID Pemalam</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Folder Tidak Dijumpai</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>Direktori pemalam belum wujud.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Disalin</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>ID pemalam {0} disalin ke papan keratan.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Muat turun selesai</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Memuat turun</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Memuat turun {0:F1} {1:F1} MB {2:F0} peratus</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Menunggu untuk dipasang pemalam lain sedang dimuat turun</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>Tiada alat tersedia. Sila tambah alat dalam folder alat dalam direktori aplikasi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Alat akan muncul di sini setelah tersedia dalam direktori alat.</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Penggunaan Kuasa</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Cas</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Kesihatan</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Kadar</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Kadar Min</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Kadar Maks</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Kitaran</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Kapasiti</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Kapasiti Penuh</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Reka Bentuk</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Tarikh</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Jam Teras dan Memori</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Voltan Teras</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Julat Voltan</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Bar Sisi</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Julat Kadar</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Klik dua kali untuk menunjukkan atau menyembunyikan maklumat penderia terperinci.</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Memuatkan</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Tidak Tersedia</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Bateri tidak diketahui</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>CPU tidak diketahui</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>GPU tidak diketahui</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Sila pilih sekurang-kurangnya satu pilihan pembersihan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Mulakan Semua</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>cth. 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>cth. C Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Sila pilih sekurang-kurangnya satu item untuk dibersihkan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Gagal menggunakan {0}: {1}</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Analisis Fail Besar</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Pilih fail yang anda ingin buang. Hanya fail yang sepadan dengan penapis ditunjukkan.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Tapis fail yang lebih besar daripada:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Tersuai</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Pilih</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Nama Fail</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Saiz</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Laluan</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Sahkan Pilihan</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Dipilih: {0} fail {1}</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Paksa pemaparan perisian</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Gunakan pemaparan perisian apabila desktop jauh atau paparan tanpa kepala dikesan. Permulaan semula disyorkan.</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Gaya tema</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Pilih pratetap gaya visual untuk aplikasi. Mod tema dan warna aksen masih digunakan di atas.</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Tunjukkan atau Sembunyikan OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Warna Latar Belakang</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Warna Kategori</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Jejari Sudut</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Bawah</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Atas</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Warna Kritikal</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Saiz Fon</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Warna Label</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Kelegapan</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Warna Nilai</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Warna Amaran</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Kunci Kedudukan</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Gaya Tindanan</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Selang Muat Semula</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Selang muat semula penderia</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Tetapkan Semula Kedudukan</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Ambang Snap</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Penampilan</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Umum</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Penderia</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Ambang</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritikal</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>Garis Merah FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Kadar bingkai minimum yang boleh diterima. Di bawah ini, warna menjadi kritikal.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Delta FPS Rendah</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Perbezaan maksimum antara FPS purata dan 1 peratus Rendah. Di atas ini, pembilang menjadi kritikal.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Prestasi</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Suhu</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Penggunaan</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Amaran</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>Tetapan OSD</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Kipas</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Suhu Cakera 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Suhu Cakera 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>Jam E-Teras</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Masa Bingkai</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Permainan</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Kipas</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Suhu</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Penggunaan</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>Kipas PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>Jam P-Teras</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Bar</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>peratus</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Suhu Papan</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Papan Induk</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Dayakan pengundian perkakasan lanjutan untuk memantau suhu, frekuensi, dan had kuasa terperinci.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Anda perlu memasang PawnIO dahulu untuk menggunakan penderia perkakasan.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Penderia Perkakasan</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Tindanan terapung menunjukkan data penderia langsung.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Dayakan OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Kuasa</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Suhu Teras</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>Suhu VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>Penggunaan VRAM</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Kuasa</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>Suhu PCH</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Pemalam {0} telah dipasang. Gunakan Buka untuk melancarkan titik masuk yang tersedia.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Pemalam {0} telah dipasang dan dibuka dalam Pengoptimuman Sistem.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Dipasang, tetapi tiada titik masuk</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Pemalam {0} telah dipasang, tetapi UI runtime tidak dapat dimuatkan. Mulakan semula aplikasi atau pasang semula pemalam.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Pemalam {0} telah dipasang, tetapi ia tidak mendedahkan titik masuk yang menghadap pengguna. Ia mungkin hanya menyediakan perkhidmatan latar belakang atau data manifes.</value>
+  </data>
+
+</root>
+

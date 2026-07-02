@@ -683,6 +683,18 @@
     <value>Invalid action key</value>
     <comment>Exception message for invalid optimization action key</comment>
   </data>
+  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
+    <value>Optimization action not found: {0}</value>
+    <comment>Exception message when optimization action key is unknown</comment>
+  </data>
+  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
+    <value>Optimization action cannot be reverted: {0}</value>
+    <comment>Exception message when optimization action has no rollback handler</comment>
+  </data>
+  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
+    <value>Command '{0}' failed with exit code {1}. {2}</value>
+    <comment>Exception message when a shell command returns non-zero exit code</comment>
+  </data>
   <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
     <value>Command cannot be null or empty.</value>
     <comment>Exception message for empty command parameter</comment>

@@ -13,9 +13,14 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Appearance" Value="Transparent" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Appearance" Value="Secondary" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
         <Style x:Key="PackageMetadataTextStyle" TargetType="TextBlock">
@@ -35,9 +40,9 @@
         </Style>
     </UserControl.Resources>
 
-    <custom:CardControl Margin="0,0,0,8">
+        <custom:CardControl Margin="0,0,0,8" ClipToBounds="False">
         <custom:CardControl.Header>
-            <Grid MinHeight="108">
+            <Grid MinHeight="108" ClipToBounds="False" Margin="4,6,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -57,14 +62,15 @@
                     Grid.Row="0"
                     Grid.RowSpan="6"
                     Grid.Column="0"
-                    Width="20"
-                    Margin="0,0,14,0"
-                    VerticalAlignment="Center" />
+                    Margin="0,2,14,0"
+                    VerticalAlignment="Top"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True" />
 
                 <Grid
                     Grid.Row="0"
                     Grid.Column="1"
-                    Margin="0,0,16,0">
+                    Margin="0,2,16,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -234,18 +240,26 @@
                     <wpfui:Button
                         x:Name="_readmeButton"
                         Click="ReadmeButton_Click"
-                        FontSize="18"
-                        Icon="DocumentBulletList24"
                         Style="{StaticResource PackageActionButtonStyle}"
-                        ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}" />
+                        ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="DocumentBulletList24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
 
                     <wpfui:Button
                         x:Name="_downloadButton"
                         Click="DownloadButton_Click"
-                        FontSize="18"
-                        Icon="ArrowDownload24"
                         Style="{StaticResource PackageActionButtonStyle}"
-                        ToolTip="{x:Static resources:Resource.PackageControl_Download}" />
+                        ToolTip="{x:Static resources:Resource.PackageControl_Download}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="ArrowDownload24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
                 </StackPanel>
 
                 <StackPanel
@@ -272,10 +286,14 @@
                     <wpfui:Button
                         Margin="8,0,0,0"
                         Click="CancelDownloadButton_Click"
-                        FontSize="18"
-                        Icon="Dismiss24"
                         Style="{StaticResource PackageActionButtonStyle}"
-                        ToolTip="{x:Static resources:Resource.Cancel}" />
+                        ToolTip="{x:Static resources:Resource.Cancel}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="Dismiss24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
                 </StackPanel>
             </Grid>
         </custom:CardControl.Header>

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
@@ -287,9 +287,9 @@ public class SensorsControlTests
 
         restartMethod.Should().Contain("ClearTrendCharts();");
         restartMethod.Should().Contain("InitializeTrendChartsFromSessionCache();");
-        cacheWarmupMethod.Should().Contain("TryGetSessionSensorDataForDisplay()");
-        cacheWarmupMethod.Should().Contain("PushTrendSamples(_cpuTrendChart, data.CPU);");
-        cacheWarmupMethod.Should().Contain("PushTrendSamples(_gpuTrendChart, data.GPU);");
+        cacheWarmupMethod.Should().Contain("ReplayHistoryIntoChart(_cpuTrendChart, CpuScope);");
+        cacheWarmupMethod.Should().Contain("ReplayHistoryIntoChart(_gpuTrendChart, GpuScope);");
+        cacheWarmupMethod.Should().Contain("ReplayHistoryIntoChart(_batteryTrendChart, BatteryScope);");
     }
 
     [Fact]

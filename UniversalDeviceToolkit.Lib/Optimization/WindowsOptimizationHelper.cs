@@ -51,15 +51,7 @@ internal static class WindowsOptimizationHelper
 
     public static void ApplyRegistryTweak(RegistryValueDefinition tweak)
     {
-        try
-        {
-            ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, tweak.Value, true, tweak.Kind);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to apply registry tweak. [hive={tweak.Hive}, key={tweak.SubKey}, value={tweak.ValueName}]", ex);
-        }
+        ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, tweak.Value, true, tweak.Kind);
     }
 
     public static bool AreServicesDisabled(IEnumerable<string> services)
@@ -99,15 +91,7 @@ internal static class WindowsOptimizationHelper
 
     public static void DisableService(string serviceName)
     {
-        try
-        {
-            ToolkitRegistry.SetValue("HKEY_LOCAL_MACHINE", $@"SYSTEM\CurrentControlSet\Services\{serviceName}", "Start", 4, true, RegistryValueKind.DWord);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to set service start type. [service={serviceName}]", ex);
-        }
+        ToolkitRegistry.SetValue("HKEY_LOCAL_MACHINE", $@"SYSTEM\CurrentControlSet\Services\{serviceName}", "Start", 4, true, RegistryValueKind.DWord);
 
         try
         {
@@ -122,11 +106,6 @@ internal static class WindowsOptimizationHelper
         catch (InvalidOperationException)
         {
             // Service not found, ignore.
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to stop service. [service={serviceName}]", ex);
         }
     }
 }

@@ -223,8 +223,8 @@ PackageUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 License: GPL-3.0
 LicenseUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE
 Copyright: Copyright (C) Universal Device Toolkit contributors
-ShortDescription: Lightweight hardware control toolkit for supported Lenovo laptops.
-Description: Universal Device Toolkit is a lightweight, open-source utility for supported Lenovo Legion, LOQ, Ideapad Gaming, and related laptops. It provides access to power modes, battery settings, RGB controls, dGPU state, driver updates, CLI control, and plugin extensions without running a background service or collecting telemetry.
+ShortDescription: Lightweight open-source Windows device toolkit — Legion hardware control, plugins, no telemetry.
+Description: Universal Device Toolkit (UDT) is a lightweight, open-source Windows utility. Supported Lenovo Legion, LOQ, and IdeaPad Gaming laptops get direct hardware controls (power modes, RGB, dGPU, battery, Custom Mode, and more). Other Lenovo models and non-Lenovo PCs run in basic mode with plugins, system optimization, themes, and updates. No background service, no telemetry, no account. CLI automation via llt.exe. Legacy package ID SSC-STUDIO.LenovoLegionToolkit is retained for in-place upgrades from Lenovo Legion Toolkit.
 Moniker: universaldevicetoolkit
 Tags:
 - lenovo

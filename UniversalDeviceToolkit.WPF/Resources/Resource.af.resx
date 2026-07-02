@@ -1,0 +1,3885 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>Bou</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>Nuutste vrystelling op GitHub</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>Skakels</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>Projek webtuiste op GitHub</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>Derdeparty biblioteke</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>Oor</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Vertalings verskaf deur gemeenskap.</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>Weergawe</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Voeg by</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Voeg nuwe by</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>Laai USB toestelle op wanneer die skootrekenaar af is, slaap of hibernated.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>Altyd aan USB</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>Laai USB toestelle op wanneer die skootrekenaar af is, slaap of hibernated.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>Altyd aan USB</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Pas toe</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>Pas toe en sluit</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Universal Device Toolkit moet loop sodat outomatiese aksies kan werk.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>Aktiveer</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>Geen Aksies gedefinieer nie. Klik "Voeg nuwe by" om 'n nuwe Aksie te skep.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>Indien geaktiveer, sal hierdie aksies outomaties loop. Wanneer die toestand verander, word alle aksies van bo na onder geevalueer.
+Slegs aksies wat by die huidige toestand pas, sal loop.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>Aksies</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>Naam...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>Voeg nuwe by</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>Geen Vinnige Aksies gedefinieer nie. Klik &quot;Voeg nuwe by&quot; om &apos;n nuwe Vinnige Aksie te skep.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>Vinnige aksies is beskikbaar in die regsklik-kieslys van die lysikoon.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>Vinnige Aksies</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>Naam...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>Herbenoem</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>Alle veranderinge teruggekeer!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>Teruggekeer</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>Veranderinge suksesvol gestoor!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>Gestoor</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>Outomatisering</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>Voeg stap by</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>Konfigureer</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Eksklusief</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>Moen verdere aksies uitvoer wanneer hierdie aksie uitgevoer word nie.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>Voer nou uit</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>Voltooi met foute.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>Voer nou uit</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>Suksesvol voltooi!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>Voer nou uit</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>Hard tans...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} stap</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} stappe</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>Toepassings</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>By sonopkoms</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>By sonsondergang</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>By {0:D2}:{1:D2}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>Kragmodus</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>Sonder naam</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>Spoor outomaties op wanneer sekere speletjies hardloop en pas CPU en GPU prestasie aan. Temperature en waaiers geraas mag toeneem.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>Aktiveer AI-enjin</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>Balansmodus Instellings</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>Kies hoe die battery gelaai word.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>Battery Modus</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>Kies hoe die battery gelaai word.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>Battery Modus</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>Gekoppel, laai tans...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>Gekoppel, laai nie</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>Huidige temperatuur van die battery.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>Battery temperatuur</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>Huidige battery kapasiteit.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>Huidige kapasiteit</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>Aantal laai/ontlaai siklusse.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>Siklus telling</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>Battery kapasiteit soos ontwerp.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>Ontwerp kapasiteit</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>Koers waarteen battery gelaai word (+), of ontlaai word (-).</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>Ontlaai koers</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Minimum koers waarteen battery gelaai word (+), of ontlaai word (-).</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Minimum ontlaai koers</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Maksimum koers waarteen battery gelaai word (+), of ontlaai word (-).</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Maksimum ontlaai koers</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>Geraamde oorblywende tyd: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>Beraming van tyd...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>Eerste gebruik datum</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>Wanneer was die battery eerste keer gebruik.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>Battery kapasiteit wanneer ten volle gelaai.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>Volle laai kapasiteit</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Battery maksimum laai kapasiteit.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Battery gesondheid</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>Lae wattage laaier gekoppel</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>Wanneer was die battery vervaardig.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>Vervaardigings datum</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>Tyd sedert die skootrekenaar laas aan WS-krag gekoppel was.
+Hierdie tyd is dalk nie akkuraat nie, indien die skootrekenaar gelaai is tydens slaap of af.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>Op battery sedert</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Kanselleer</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Maak toe</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Blou</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Groen</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Rooi</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>Kies GPU-bedryfsmodus gebaseer op jou rekenaar se gebruik en kragtoestande.
+Die wisseling van modusse mag herbegin vereis.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Verandering na {0} vereis herbegin. Wil jy nou herbegin?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Herbegin vereis</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>GPU Werksmodus</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>Vinnige Aksies</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Gaan voort</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>Kopieer alles</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>Grafika</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>Ander</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>Krag</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>Tuis</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Deaktiveer diskrete GPU indien dit onnodig aktief is.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af is of Hibriedemodus nie aktief is nie.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Deaktiveer GPU</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>Voeg vertraging in voor die volgende stap loop.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>Vertraging</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Skrap</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS weergawe</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>Teks gekopieer na knipbord.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" gekopieer na knipbord.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>Gekopieer!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>Toestel</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Hardeware</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Moederbord</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Onderstel</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Geheue</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Lenovo Ondersteuning</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>Masjien tipe</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>Vervaardiger</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>Serienummer</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>Oor jou toestel</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>Eind datum</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>Begin datum</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>Waarborg</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktief</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>Deaktiveer</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Nie-aktief</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>Stop toepassings</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>Deaktiveer diskrete GPU, indien dit onnodig aktief is.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>'n Skerm is aan nVidia GPU gekoppel.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>Geen prosesse</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>Prestasie toestand</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>Prosesse</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>Herbegin GPU</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>Diskrete GPU</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Verander skermhelderheid van die ingeboude skerm.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af is.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Skerm helderheid</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Redigeer</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Vink verversingstempo&apos;s af wat jy nie wil gebruik wanneer die Fn+R-sneltoets gebruik word nie.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>Maak seker dat die skootrekenaar se skerm aan is. Universal Device Toolkit kan nie verversingstempo&apos;s laai vir &apos;n skerm wat nie aan is nie.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>Geen Verversingstempo's gevind</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>Sluit Verversingstempo's uit</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Sluit af</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Voer uit</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>Gebruik slegs geintegreerde GPU op battery en beide geintegreerde en diskrete GPU wanneer die WS-adapter gekoppel is. Wanneer &apos;n nie-standaard adapter gekoppel is, skakel die stelsel na Hibried-iGPU-alleen-modus.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>Hibried-Auto Modus</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>Wisseling na en vanaf hierdie modus vereis herbegin.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>Gebruik slegs diskrete GPU. Hierdie modus bied die beste grafiese prestasie, maar verhoog kragverbruik.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU Modus</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>Beide geintegreerde en diskrete GPU is geaktiveer. Die stelsel sal outomaties tussen hulle wissel gebaseer op sy behoeftes.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>Hibried Modus</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>Hierdie modus tree slegs in werking wanneer die diskrete GPU nie werk nie.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>Gebruik slegs geintegreerde GPU. Hierdie modus verminder kragverbruik en geraas tot die minimum.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Hibried-iGPU Slegs Modus</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>Oor GPU Werksmodusse</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>SVE</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>SVE-sensor</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>Waaierspoed</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GVE</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel die skootrekenaar aan wanneer jy die deksel oopmaak.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Flip Om Te Begin</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>Skakel die skootrekenaar aan wanneer jy die deksel oopmaak.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Flip Om Te Begin</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Gebruik sekondere funksies van F1-F12-sleutels sonder om die Fn-sleutel in te hou.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn Slot</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Gebruik sekondere funksies van F1-F12-sleutels sonder om die Fn-sleutel in te hou.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn Slot</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>WAARSKUWING!
+Sommige skootrekenaars mag laer waardes aanvaar as wat hulle aandui, maar wees versigtig. Hierdie opsie kan onvoorspelbare gedrag veroorsaak. Indien jy nie seker is wat jy doen nie, los dit op 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>Minimum afwyking</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>WAARSKUWING!
+Sommige skootrekenaars mag hoer waardes aanvaar as wat hulle aandui, maar wees versigtig. Hierdie opsie kan onvoorspelbare gedrag veroorsaak. Indien jy nie seker is wat jy doen nie, los dit op 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>Maksimum afwyking</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>Verander nie opsies hieronder tensy jy regtig weet wat jy doen nie.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>Gevorderd</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>Langtermyn Kraglimiet (Kruislas)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>Langtermyn Kraglimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>Korttermyn Kraglimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU Temperatuurlimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>SVE</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>Kon nie instellings toepas nie</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>Kon nie instelling laai nie</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>Waaierspoed word nie streng deur een temperatuursensor bepaal nie. Dit sal spoed verhoog of verlaag volgens die hoogste sensor tussen SVE-, GPU- en Verkoeler-temperatuur. Presiese waardes sal verskyn wanneer jy met die muis oor elke stap beweeg.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>Waaier kurwe</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>WAARSKUWING!
+Langdurige gebruik van hierdie opsie sal waaiers laat agteruitgaan en hul lewensduur verminder.
+Wees ernstig versigtig met hierdie opsie!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>Maksimum waaierspoed</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>Waaiers</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>Konfigureerbare TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Dinamiese Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>GPU Temperatuurlimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GVE</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>Pasgemaakte Modus Instellings</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>Aktiveer hoe dinamiese omvang (HDR) op die ingeboude skerm.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie as die interne skerm af is.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>Aktiveer hoe dinamiese omvang (HDR) op die ingeboude skerm.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>HDR gebruik word geblokkeer deur Windows instellings.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Voer in</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>Hierdie toestel is nie versoenbaar met Universal Device Toolkit nie.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Jou toestel mag dalk vereiste stelselkomponente (LenovoGameZoneData) kort.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>As jy &quot;OK&quot; klik om voort te gaan:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Die sagteware sal in beperkte modus loop</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Sommige kenmerke sal gedeaktiveer wees (Paneelbord, Outomatisering, Makros)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Ander basiese kenmerke sal steeds beskikbaar wees</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Toestelinligting:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Verkoper:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Masjientipe:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Klik &quot;OK&quot; om voort te gaan, of &quot;Kanselleer&quot; om te verlaat.</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>Geen versoenbare sleutelbordes gevind</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Sleutelbord-agterlig kan nie hier beheer word wanneer Lenovo Vantage of sy dienste loop nie.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage of sy dienste loop</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>Oor</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>Aksies</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>Kontrolepaneel</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>Sleutelbord</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>Aflaaie</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Stelseloptimalisering</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Inpropuitbreidings</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Navigasie item instellings</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Stel in watter navigasie-items in die sybalk vertoon word. Paneelbord en Instellings sal altyd sigbaar wees.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Sleutelbord-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Battery-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Outomatisering-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Makro-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Stelsel-optimalisering-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Invoegtoepassing-uitbreidings-navigasie-item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Wys of versteek die Omtrent-navigasie-item</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Navigasie items</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Stel in watter navigasie-items in die sybalk vertoon word</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>Opgradering beskikbaar!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>Opgradering {0} beskikbaar!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Skuif af</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Skuif op</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nee</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>Wisselaar gekoppel</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>Wisselaar gekoppel (Lae wattage)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>Wisselaar ontkoppel</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>Kamera af</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>Kamera aan</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock af</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock aan</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Slot af</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Slot aan</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>Mikrofoon af</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>Mikrofoon aan</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock af</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock aan</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>Agtergrondlig {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>Helderheid {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>Profiel {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>Raakvlak af</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>Raakvlak aan</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>Agtergrondlig {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>Wisselaar</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock en Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>Deaktiveer kennisgewings vir Fn-sleutel-aksies soos mikrofoondemping.
+Aktiveer hierdie opsie indien jy konflikte met volskerm-toepassings het.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>Moen kennisgewings wys nie</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Slot</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>Mikrofoon</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>Posisie</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>Kragmodus</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>Verversingstempo</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Slim Sleutel</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>Kennisgewings</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>Raakvlak Slot</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Maak oop</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>Verbeter reaksietyd van die ingeboude skerm.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Oor Drie</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>Verbeter reaksietyd van die ingeboude skerm.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Oor Drie</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} afgelaai!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>Aflaai voltooi</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>Iets het verkeerd gegaan</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>Bediener het kode 404 teruggestuur.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>Die lêer lyk of dit weg is</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>Kontroleer of jou internet konneksie werk.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>Iets het verkeerd gegaan</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>Opgradering beskikbaar!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>Hierdie pakket is meer as 'n jaar oud.</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>Weergawe</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>Hieronder is &apos;n lys sagteware-pakkette wat as versoenbaar met jou skootrekenaar gemerk is.
+Maak altyd seker dat jy die korrekte pakkette installeer.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Kyk of Masjientipe en BS korrek gestel is.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>Iets het verkeerd gegaan</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Die verandering van sortering, filterresultate, versteekte pakkette of verfrissing van die lys sal die aflaai stop. Wil jy voortgaan?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>Aflaai aan die gang</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filteer...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>Masjien tipe</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>Bedryfstelsel</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>Primêre (Aanbeveel)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Selfde as Lenovo Vantage</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>Sekondêre</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Selfde as Lenovo PC Ondersteuning</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>Bron</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>Aflaaie</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Plak</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Verander prestasie modus.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Kragmodus</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>Verander prestasie-modus.
+Pestasie-modus kan ook met Fn+Q verander word.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>Kragmodus</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>Gekose kragmodus werk moontlik nie korrek sonder dat die WS-adapter gekoppel is nie.</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>Verstek</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows Kragplanne</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Skandeer vir beskikbare drywer pakkette, wag asseblief...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Skandeer vir drywer pakkette</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Kies &apos;n bron en skandeer om versoenbare bestuurderaflaaie te lys.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Geen drywer aflaaie gevind</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Probeer &apos;n ander bron, bedryfstelsel of masjientipe.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Geen ooreenstemmende aflaaie gevind</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Pas die filter, slegs-opdatering-opsie of versteekte-aflaai-lys aan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Bestuurder-skandering het nie voltooi nie</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Kyk die gekose bron en netwerkverbinding, en skandeer dan weer.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Netwerkfout het voorgekom. Herprobeer outomaties...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Herprobeer om bestuurderpakkette te haal...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Skoonmaak Inligting</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Bekyk skoonmaak operasie vordering en geraamde grootte.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Pas sleutelbord-agterlig-voorinstelling aan.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>Voorafinstelling 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>Voorafinstelling 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>Voorafinstelling 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>Voorafinstelling 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>Af</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>Sone 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>Sone 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>Sone 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>Sone 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>Effek</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>Spoed</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Leesmy</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Verfris</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>Verander verversingstempo van die ingeboude skerm.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af is.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>Verversingstempo</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>Verander verversingstempo van die ingeboude skerm.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>Verversingstempo</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Herbenoem</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>Ek sal later herbegin</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>Herbegin nou</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Keer terug</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>Argumente</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>Uitvoerbare Pad</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>Voer &apos;n skrip of program uit.
+Maak seker dat jou skrip eers korrek loop.</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>Voer uit</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Stoor</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Stoor tans...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>Kies een of meer vinnige aksies om deur te siklusseer</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>Geen Vinnige Aksies gedefinieer.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>Wys hierdie toepassing</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>Verander die aksentkleur van die toepassing.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>Aksentkleur</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Begin geminimaliseer na lys wanneer jy by Windows aanmeld.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>Outostart</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Begin geminimaliseer na lys wanneer jy by Windows aanmeld.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone is moontlik nie korrek gedeaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Kon nie Legion Zone deaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Deaktiveer Legion Zone en sy diens sonder om dit te verwyder nie.
+Herbegin word aanbeveel na verandering van hierdie opsie.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Deaktiveer Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys is moontlik nie korrek gedeaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Kon nie Lenovo Hotkeys deaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Deaktiveer Lenovo Hotkeys en sy diens sonder om dit te verwyder nie.
+Indien gedeaktiveer, sal hierdie toepassing Fn-sneltoetse hanteer.
+Herbegin word aanbeveel na verandering van hierdie opsie.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Stelseloptimalisering</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Pas aanbevole prestasie-wysigings toe en maak tydelike leers skoon.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Pas prestasie- &amp; dienswysigings toe</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Prestasie optimalisering toegepas.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Kon nie prestasie optimalisering toepas nie.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Voer skoonmaak uit</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Skoonmaak voltooi.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Skoonmaak misluk.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Hierdie aksies wysig stelseldienste en leers. Administrateurregte mag vereis word.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Pas gekose aksies toe</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Kies aanbeveel</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Maak seleksie skoon</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Skandeer</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Voer skoonmaak aksies uit</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} aksies gekies</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Nog geen aksies gekies nie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Gekose aksies</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Versiering</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Drywer Aflaai</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Veiligheidsbevestiging</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Stelselskoonmaak sal tydelike leers en kas permanent verwyder. Terwyl dit gewoonlik veilig is, word dit aanbeveel om seker te maak jy het rugsteune van belangrike data. Wil jy voortgaan?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Uitbreidings</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Bestuur stelsel-optimaliserings-uitbreidings en -gereedskap</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Geen Uitbreidings Beskikbaar</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Installeer uitbreidings vanaf die Invoegtoepassing-uitbreidings-blad om stelsel-optimaliserings-funksionaliteit te verbeter.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Binnekort beskikbaar</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Uitbreidingsmark sal in &apos;n toekomstige opdatering beskikbaar wees.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows optimalisering</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Kies alles</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Pasgemaakte skoonmaak reëls</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Kies vouers en leeruitbreidings wat tydens skoonmaak verwyder moet word.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Voeg reël by</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Redigeer</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Maak alles skoon</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Geen pasgemaakte skoonmaak reëls gekonfigureer nie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Sluit subgidse in</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX bestuur</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Kies vooraf-geinstalleerde Microsoft Store-toepassings om vir alle gebruikers te verwyder.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Geen toepassings gekies vir verwydering nie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Verwyder gekose toepassings</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Gekose toepassings geskeduleer vir verwydering.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Kon nie gekose toepassings verwyder nie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Laai toepassings, wag asseblief...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Laai inproppe...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Kon nie laai: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Uitgewer: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Register MRU/geskiedenis skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Vee algemene gebruiker-registergeskiedenisse uit (Run MRU, RecentDocs, Open/Save-dialoogvensters, TypedPaths). Dit verwyder nie stelsel-kritiese inskrywings nie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Aksies</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Pasgemaakte skoonmaak reël</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Gids</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Uitbreidings</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Skei veelvuldige uitbreidings met kommas (voorbeeld: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Sluit subgidse in</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Blaai...</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Kies asseblief 'n gids.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Voer ten minste een lêeruitbreiding in.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Kies asseblief ten minste een aksie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Gekose aksies suksesvol voltooi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Kon nie gekose aksies voltooi nie.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Verkenner &amp; koppelvlak</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Stelsel versiering</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Stel taakbalk, Leerverkenner en gebruikerskoppelvlak-gedrag in.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Prestasie</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Pas stelselprestasie en reaksiegevoeligheid-instellings aan.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Dienste</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Deaktiveer agtergronddienste wat hulpbronne verbruik.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Verwyder kas, tydelike leers en ander oorblyfsels.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Kas Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Maak kasleers van verskeie toepassings en die stelsel skoon om bergingsruimte vry te maak.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Stelsel Lêers Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Maak stelselleers soos tydelike leers, logboeke, ongelukstortings, ens. skoon.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Stelselkomponente Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Maak stelselkomponent-leers soos Windows Update-kas, komponentwinkel, ens. skoon.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Prestasie Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Maak leers skoon wat stelselprestasie kan beinvloed, soos prefetch-leers, ens.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Pasgemaakte Skoonmaak</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Maak gespesifiseerde leers en gidse skoon deur pasgemaakte reels te gebruik.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Taakbalk en kieslys uitleg</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Versteek die soekkassie en Taakaansig-knoppie, deaktiveer taakbalk-groepering en wys altyd lysikone.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Deaktiveer kieslys en maak soek oop met Win sleutel</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Deaktiveer die Start-kieslys heeltemal. Wanneer jy die Win-sleutel druk, sal dit soek oopmaak in plaas van die Start-kieslys.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Verbeter Verkenner responsiwiteit</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Verminder kieslysvertragings, sluit gehangde toepassings vinniger en maak Hierdie rekenaar by verstek oop.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Lêer sigbaarheid opsies</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Wys leeruitbreidings en versteekte leers in Leerverkenner.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Deaktiveer Verkenner voorstelle</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Skakel wolk-inhoudsvoorstelle en aanbeveling-baniere af.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Verander Windows sleutel om soek te open</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Wysig Windows-sleutel-gedrag om soek oop te maak in plaas van die Start-kieslys.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Optimaliseer multimedia skedulering</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Verwyder netwerk-vertraging en verminder stelsel-reaksiegevoeligheid-latensie.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Verbeter geheuebestuur</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Hou stelsel-kas in geheue en vermy om kerneldrywers te pagineer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Deaktiveer akriel en kennisgewingsentrum</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Verwyder akrieleffekte op aanmelding en versteek die Windows-kennisgewing-sentrum.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Verminder telemetrie en wenke</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Deaktiveer advertensie-ID, Spotlight-kenmerke en outomatiese voorstelle.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Forseer hoë prestasie plan</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Aktiveer die hoe prestasie-kragskema en deaktiveer sluimering.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Deaktiveer diagnostiese dienste</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Stop en deaktiveer Connected User Experiences-, Diagnostics Hub- en Delivery Optimisation-dienste.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>Deaktiveer SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Skakel Superfetch/SysMain af om agtergrond-skyfaktiwiteit te verminder.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Deaktiveer Windows Soek indeksering</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Stop die Windows Search-diens om indeksopdaterings te voorkom.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Deaktiveer Afstand Register</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Beveilig die stelsel deur afstandregistertoegang te deaktiveer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Deaktiveer fout rapportering</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Stop Windows Error Reporting om ongelukdata in te samel en te stuur.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Maak Afstandskerm kas skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Verwyder kas-leers wat deur die Remote Desktop-kliant geskep is.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Maak Windows Opdatering kas skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Verwyder afgelaaide opdateringleers en Delivery Optimisation-kas.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Maak blaaier kas skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Maak tydelike leers en logboeke skoon wat deur verskeie toepassings agtergelaat is.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Toepassing oorblyfsels</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Verwyder Internet Explorer- en Edge-kas- en koekielesers.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Maak duimnaelskets kasjes skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Verwyder Verkenner-duimnaelsplyn-databasisse en Direct3D-skaderkas.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>Maak .NET plaaslike beelde skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Verwyder .NET Native-beeld-kas om skyfspasie terug te win.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Verwyder logboeke en diagnostiese data</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Skandeer vir groot leers op jou stelselskyf wat beduidende spasie mag opneem.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Groot Lêers Skandering</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Identifiseer en bestuur groot leers op jou stelsel.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Groot Lêers</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Verwyder Windows-logboeke, foutverslae en diagnostiese spore.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Skrap neerstortingsdumps</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Verwyder geheue-stortingsleers wat na stelselongelukke agtergelaat is.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Maak Verdediger skanderings skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Verwyder Windows Defender-skanderingsgeskiedenis en -kasse.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Maak tydelike lêers skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Maak Windows- en gebruiker-tydelike gidse leeg.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Verwyder gebundelde Windows toepassings</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Verwyder gekose vooraf-geinstalleerde UWP-toepassings vir alle gebruikers.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Maak Asblik leeg</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Verwyder verwyderde leers wat in die Prullenbak gestoor is.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Maak voorhaal data skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Verwyder Windows-prefetch-data om nuwe spore te hergenereer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Maak pasgemaakte lêers skoon</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Verwyder leers wat ooreenstem met gekonfigureerde uitbreidings van gekose gidse.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Diens komponent winkel</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>Voer DISM-skoonmaak uit en maak WinSxS-tydelike leers skoon.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Deaktiveer Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage en/of ImController is moontlik nie korrek gedeaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Kon nie Lenovo Vantage en/of ImController deaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Deaktiveer Lenovo Vantage en ImController sonder om dit te verwyder nie.
+Herbegin word aanbeveel na verandering van hierdie opsie.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Deaktiveer Lenovo Vantage en ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone is moontlik nie korrek geaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Kon nie Legion Zone aktiveer nie</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys is moontlik nie korrek geaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Kon nie Lenovo Hotkeys-sleutels aktiveer nie</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage en/of ImController is moontlik nie korrek geaktiveer nie</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Kon nie Lenovo Vantage en/of ImController aktiveer nie</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Jy kan verversingstempo&apos;s uitsluit om die Fn+R-sneltoets meer nuttig te maak.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>Sluit Verversingstempo's uit</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>Kies taal.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Installeer taal</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Taal installering het misluk</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Installeer taal</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Laai taalpakkie af…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Onttrek en installeer…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Gebruik die aflaai-knoppie om hierdie taalpak te installeer.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Taal nie geïnstalleer nie</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Verwyder taal</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Taal verwydering het misluk</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Verwyder taal</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>Minimaliseer altyd na lys. Sluit met regsklik op lysikoon.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>Minimaliseer by toemaak</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Versteek die onversoenbare toestel-waarskuwing wat by opstart verskyn.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Deaktiveer onversoenare toestel waarskuwing</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>Stel in watter kennisgewings vertoon word.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>Kennisgewings</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows Kragplanne</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Ken Vinnige Aksie toe aan Fn+F9 dubbeldruk.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Slim Sleutel Sekondêre Aksie</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Ken Vinnige Aksie toe aan Fn+F9 enkelvoudige druk.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Slim Sleutel Aksie</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>Stel ligte tema, donker tema of volg stelselinstellings.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Stel die voorkoms, gedrag en funksionaliteitsopsies van die toepassing in.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Pas sleutelbord-agterlig-helderheid aan.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>Af</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig helderheid</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>Voeg effek by</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>Kon nie profiel toepas nie</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>Beligtings profiel kon nie toegepas word nie.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>Ontmerk alle sone</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>Effekte</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>Profiel kon nie uitgevoer word nie</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>Kon nie profiel uitvoer nie</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>Profiel kon nie ingevoer word nie</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>Kon nie profiel invoer nie</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>Geen effekte bygevoeg nie.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>Herstel na verstek</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>Kies alle sone</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>Wissel sleutelbord uitleg</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>Rigting</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>Kleur</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>Kleure</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>Rigting</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>Effek</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>Hierdie effek sal op die hele sleutelbord toegepas word en sal alle ander effekte vervang.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>Spoed</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>Voeg effek by</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>Redigeer effek</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Pas sleutelbord-agterlig-profiel aan.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig profiel</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>Alle sleutels</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} sone</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>Sonopkoms</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>Sonsondergang</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>Tyd</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Laat wisseling tussen geintegreerde en diskrete GPU toe.
+Vereis herbegin.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Verandering van Hibriedemodus vereis herbegin. Wil jy nou herbegin?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Herbegin vereis</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>Hibried Modus</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Deaktiveer raakvlak.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Raakvlak Slot</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>Deaktiveer raakvlak.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>Raakvlak Slot</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Probeer weer</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Onverwagse uitsondering het voorgekom:
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Skrap Verslag</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>&apos;n Ongelukverslag is op skyf gestoor. Jy kan die verslagbesonderhede hieronder hersien. Verslae word nie outomaties gestuur nie.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Die toepassing het neergestort tydens die vorige sessie</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Kon nie ongelukverslag oopmaak nie: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Maak Verslag oop</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Maak toe</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Ongelukverslag gestoor na: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Neerstortingsverslag Opgespoor</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Kan nie ongelukverslag-besonderhede laai nie.</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>Sonder naam</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>Jy kan kies om op jou eie risiko voort te gaan, maar hou in gedagte dat sommige kenmerke moontlik nie beskikbaar sal wees nie en/of nie korrek sal werk nie.
+
+Logboek sal outomaties geaktiveer word, indien jy kies om voort te gaan.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Kyk na die projekblad op GitHub vir meer inligting.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>Logboek gids</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>Masjien tipe</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit is nie met jou toestel getoets nie.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Jy kan hierdie waarskuwing enige tyd in Instellings deaktiveer.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>Onondersteunde toestel</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>Verskaffer</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Opdatering</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>Opgradering beskikbaar</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>Wat is nuut?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Pas sleutelbord-agterlig-helderheid aan.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Jy kan helderheid met Fn+Spatie verander.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>Deaktiveer Windows-sleutel op die ingeboude sleutelbord.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Windows Sleutel Slot</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>Werk slegs op die ingeboude sleutelbord.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Windows Sleutel Slot</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>Mikrofoon</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>Wanneer af, sal mikrofone gedemp word.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>Mikrofoon</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>Wanneer af, sal mikrofone gedemp word.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>Resolusie</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>Verander resolusie van die ingeboude skerm.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>Resolusie</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>Verander resolusie van die ingeboude skerm.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af is.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>Verander skaal van die ingeboude skerm.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>Verander skalering van die ingeboude skerm.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af is.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>Skerm</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Jy kan die agterlig met Fn+Spatie aan of af skakel.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Sleutelbord agtergrondlig</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel agterlig aan of af.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>Geen ooreenstemmende aflaaie gevind</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>Wys slegs opdaterings</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>Pas Kontrolepaneel aan</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Laai</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>Skep groep</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>Sommige kenmerke mag dalk nie op die Paneelbord verskyn nie, afhangende van die toestand en konfigurasie van jou skootrekenaar.</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>Pas aan</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>Skakel skerms af</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>Skakel alle beskikbare skerms af.
+Beweeg van die muis of druk die sleutelbord sal die skerms wakker maak.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>Skakel af</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>Skakel skerms af</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel alle beskikbare skerms af.</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>Wysig groepnaam</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Legion logo aan</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Legion logo af</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Poorte agtergrondlig aan</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Poorte agtergrondlig af</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>Herbegin vereis</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>Afsluit vereis</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>Herbegin aanbeveel</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Aanbeveel</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>In wag ry</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Laai tans af</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Installeer tans</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Voltooi</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Aksie definisie nie gevind nie</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Tegniese implementeringbesonderhede is nie beskikbaar vir hierdie aksie nie</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Laai het misluk</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Opdrag uitvoering</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Register wysiging</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Diens bestuur</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Register wysiging + PowerShell skrip</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Register skoonmaak</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM opdrag</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Stoor en sluit</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>Pasgemaakte Modus voorafinstelling</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>Aktiveer Pasgemaakte Modus-voorinstelling.
+Hierdie instelling tree slegs in werking wanneer Pasgemaakte Modus geaktiveer is.</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>Voorinstellingnaam</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>Aktiewe voorafinstelling</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>Toepassing gidse</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>Tydelik</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>Enkel Skerm Helderheid</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>Wanneer aan, sal dieselfde helderheidsvlak op alle Windows-kragplanne toegepas word wanneer jy dit verander.</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>Opgradering {0} beskikbaar!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>Piekkraglimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU sPPT Kraglimiet</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>Die deurlopende kragverbruik wat deur die SVE bereik kan word.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>Die piek-kragverbruik wat deur die SVE bereik kan word binne &apos;n kort tydperk.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>Die maksimum oombliklike kragverbruik wat deur die SVE bereik kan word.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>Die maksimum kragverbruik wat deur die SVE bereik kan word wanneer beide SVE en GPU ten volle benut word.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>Die piek-kragverbruik wat deur die SVE bereik kan word met &apos;n klein vertraging.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>Die maksimum temperatuur wat deur die SVE bereik kan word voordat frekwensie en krag verminder word.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>Die addisionele maksimum krag wat aan die GPU toegeken kan word gebaseer op die SVE se kragverbruik.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>Die addisionele hoeveelheid krag wat aan die GPU toegeken kan word bo-op die basis-kragverbruik.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>Die maksimum temperatuur wat deur die GPU bereik kan word voordat frekwensie en krag verminder word.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Verstek</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Korttermyn Kraglimiet Duur</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>Die hoeveelheid tyd wat die SVE toegelaat word om te versnel en Korttermyn-kraglimiet te gebruik. Wanneer Tau verval, word Langtermyn-kraglimiet gebruik.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>Totale Verwerker Krag Teiken In Wisselaar</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>Die punt waar die SVE dinamiese kragverbruiksaanpassing vir die GPU aktiveer.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Skep</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>Voeg stap by</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>Skep Aksie</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>Kragmodus</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>Voorafinstelling</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>Diskrete GPU</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>Kragtoestand</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>Modus</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>Ontlaai koers</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Min ontlaai koers</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Maks ontlaai koers</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Gebruikstyd</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>Opgradering beskikbaar!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>Kies icoon</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>Verander icoon</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>Battery vlak laag</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>Konfigureer</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 Laer Krag Modus opgespoor</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows rapporteer dat hierdie skootrekenaar Modern Standby ondersteun. Die gebruik van kragplanne anders as Gebalanseerd kan onverwagse gedrag veroorsaak.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Kies Windows Power Plans om toe te pas wanneer Power Mode verander.</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>Krag</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Power Plan-opsies in Windows Control Panel</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>Afgeskakel</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Voer sleutelbord agtergrondlig profiel in</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Voer agterlig-konfigurasie in en pas dit op die huidige profiel toe.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>Na {0}</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>Veelvuldige snellers...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>Oorklok GPU Instellings</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Kern Frekwensie Afwyking</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Geheue Frekwensie Afwyking</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>Oorklok GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>Verhoog prestasie deur diskrete GPU te oorklok.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Oorklok GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Verhoog prestasie deur diskrete GPU te oorklok.
+
+WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien diskrete GPU nie beskikbaar is nie.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Poorte agtergrondlig</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Skakel die agterlig van die poorte aan die agterkant van die skootrekenaar aan of af.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Poorte agtergrondlig</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel die agterlig van die poorte aan die agterkant van die skootrekenaar aan of af.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Paneel logo agtergrondlig</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>Skakel die agterlig op die deksel van die skootrekenaar aan of af.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Paneel logo agtergrondlig</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel die agterlig op die deksel van die skootrekenaar aan of af.</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>Maksimum: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>SVE</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>Benutting</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>Kernklok</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P Kernklok</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E Kernklok</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>Waaier</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GVE</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>Geheueklok</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Geheue Benutting</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Geheue Temperatuur</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD Temperatuur</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM Benutting</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Gedeelde Geheue Benutting</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM Temperatuur</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU Warm Punt</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe Deurgangsvermoë</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Kerne</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Geheue</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>Verfrissing interval</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>Onmiddelik Begin</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>Skakel die skootrekenaar aan wanneer &apos;n laaier gekoppel word.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>Onmiddelik Begin</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>Skakel die skootrekenaar aan wanneer &apos;n laaier gekoppel word.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>Kan Kragmodus nie verander nie</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} power mode is not available without AC power.</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Sensore</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>Kon nie GPU Werksmodus verander nie</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Probeer die modus weer oor &apos;n paar sekondes verander, indien jy nie die verwagte resultaat sien nie.
+Indien dGPU glad nie reageer nie, herbegin asseblief jou skootrekenaar.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU word tans gebruik</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU sal outomaties ontkoppel wanneer dit nie gebruik word nie.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU word tans gebruik of skootrekenaar is nie op batterykrag nie</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU sal outomaties ontkoppel wanneer dit nie gebruik word nie en skootrekenaar is op batterykrag.</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Pasgemaakte Modus-instellings sal nie korrek toegepas word wanneer Lenovo Vantage of sy dienste loop nie.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Pasgemaakte Modus-instellings sal nie korrek toegepas word wanneer Legion Zone of sy dienste loop nie.</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU gekoppel</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU ontkoppel</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU Werksmodus</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Kies GPU-bedryfsmodus gebaseer op jou rekenaar se gebruik en kragtoestande.
+Die wisseling van modusse mag herbegin vereis.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Hibried Modus</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Laat wisseling tussen geintegreerde en diskrete GPU toe.
+Vereis herbegin.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>Duur</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>Opdaterings</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU na CPU Dinamiese Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>Dit is die maksimum addisionele krag wat aan die SVE toegeken kan word vanaf die GPU gebaseer op SVE-gebruik. Hoe hoer die waarde, hoe beter die prestasie van toepassings wat die SVE gebruik.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>Opstart Logo</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>Pas Begin-logo-beeld aan, sigbaar tydens stelselbegin.</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>Opstart Logo</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>Verstek Opstart Logo is gestel</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>Pasgemaakte Opstart Logo is gestel</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>Keer terug na verstek</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>Pas aan</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>Aksies</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>Kennisgewing teks</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>Wys kennisgewing</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>Voorafinstelling</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Slim Fn Slot</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Fn Lock sal tydelik gedeaktiveer word wanneer Alt, Ctrl of Shift-sleutel ingedruk word.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Af</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>Pasgemaakte begin-logo moet presies {0} pixels groot wees.
+Ondersteunde formate is: {1}.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>Oornag Battery Laai</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>Wanneer geaktiveer, sal hierdie toestel tot 80% laai wanneer dit oornag ingeprop is en teen die tyd wat jy die toestel in die oggend gebruik, voltooi die laai tot 100%.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Oornag Battery Laai</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>Wanneer geaktiveer, sal hierdie toestel tot 80% laai wanneer dit oornag ingeprop is en teen die tyd wat jy die toestel in die oggend gebruik, voltooi die laai tot 100%.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>Ongeldige beeldgrootte.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>Ongeldige beeldformaat.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>Kan nie EFI-partisie monteer nie.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>Kan nie UEFI-voorreg stel nie.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>Nie genoeg vrye spasie op EFI partisie nie.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>Pasgemaakte logo kon nie gestel word: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>Verstek logo kon nie gestel word: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>Verstek opstart logo gestel.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>Pasgemaakte opstart logo gestel.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>Netwerk naam (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Kopieer huidige netwerk naam</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Laat leeg vir enige Wi-Fi netwerk.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>Deel waaierspoed, batterytemperatuur ens. met HWiNFO64. Jy moet dalk HWiNFO64 herbegin na verandering van hierdie opsie.</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>Integrasies</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Inligting</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>Aflaai gids</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>Maak Aflaai gids oop</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>Laai af</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Installeer</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Installering het misluk</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Leer nie gevind nie, laai asseblief eers af</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Installasie begin</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Begin installer: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>Maak README oop</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>Voorafinstelling</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>Verfris</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>Skrap</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>Periode (minute)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>Stel &quot;Op battery sedert&quot; terug by opstart</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Skakel Wi-Fi af</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Skakel Wi-Fi aan</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>Voer stilweg uit</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>Wag tot voltooi</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>Voer konsole-toepassings uit, sonder om &apos;n konsole-venster te skep.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>Wag totdat die program of skrip klaar uitgevoer het</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>Wanneer gedemp, sal alle aktiewe klank-uitvoertoestelle gedemp word.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>Luidspreker</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>Minimaliseer na laai</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>Minimaliseer altyd na lys in plaas van taakbalk.</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows Kragmodusse</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Skakel oor na Pasgemaakte Modus met Fn+Q</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Laat vinnige wisseling na Pasgemaakte Modus met Fn+Q toe.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>Kragmodus Sinchronisasie</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>Verander outomaties Windows Power Plan of Windows Power Mode wanneer kragmodusse verander word.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows Kragmodusse</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>Kies Windows Power Mode om toe te pas wanneer Power Mode verander.</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Fout het voorgekom tydens lees van toestelinligting.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Versoenbaarheid Kontrole Fout</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Die toepassing het misluk om toestelinligting tydens opstart te lees. Kontroleer asseblief die foutbesonderhede hieronder en probeer die foutspoor-stappe indien nodig.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Foutspoor-stappe</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Maak seker Windows Management Instrumentation (WMI)-diens loop: Maak Dienste (services.msc) oop en kyk dat &quot;Windows Management Instrumentation&quot; loop.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Voer die toepassing as Administrateur uit om voldoende toestemmings te verseker om toegang tot die stelselregister en WMI te kry.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Kyk stelselhulpbronne: Sluit ander hulpbron-intensiewe toepassings en probeer weer.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Hersien die logleer vir gedetailleerde foutinligting deur &quot;Open Log&quot; hieronder te klik.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Maak Log Lêer oop</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>Herhaal</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>Ignoreer vertragings</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Maak skoon</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>Neem op</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>Stop opname</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>Moen herhaal nie</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Universal Device Toolkit moet loop vir makros om te werk.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>Aktiveer</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>Jy kan reekse sleuteldrukke opneem en dit oproep deur die syferblok op jou sleutelbord te gebruik.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>Makro</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>Aktiveer of deaktiveer makros.</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>Onderbreek as 'n ander sleutel gedruk is</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Versteek</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>Versteek alles</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Toestelle</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Ontmerk alles</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Kies alles</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>Slegs sleutelbord</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>Sleutelbord sleutels en muisknoppies</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>Alle insette</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>Opname opsies</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>Opname sal in 3 sekondes begin...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>Neem op...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>Druk ESC om te stop.</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Wys slegs gekose toestelle</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Wys slegs verwyderbare toestelle</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Wys slegs gekoppelde toestelle</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Aktiveer Command Line Interface wat beheer vanaf die opdraglyn toelaat.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>Voeg CLI by PATH</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>Voeg CLI by die gebruiker se PATH-omgewingsveranderlike.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>Kies eenhede vir temperatuursensors.</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys loop in die agtergrond.</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone loop in die agtergrond.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage en/of ImController loop in die agtergrond.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Wys kennisgewing op alle skerms wat aan jou toestel gekoppel is.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Kennisgewing op alle skerms</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>Kontroleer</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>Kontroleer vir opdaterings...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>Kontroleer vir opdaterings</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>Opdatering</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Opdatering-kontroles is vir hierdie sessie gedeaktiveer</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit is met {0} begin. Outomatiese en handmatige opdatering-kontroles, plus die opdatering-instellings hieronder, is gedeaktiveer totdat jy herbegin sonder daardie begin-argument.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API-tempolimiet bereik, probeer asseblief later weer.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>Kon nie vir opdaterings kontroleer nie</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>Iets het verkeerd gegaan, probeer asseblief later weer.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>Geen opdaterings gevind</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>Kontroleer outomaties vir opdaterings</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Opdatering bewaarplek</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Stel die GitHub-bewaarplek in om vir opdaterings te kontroleer. Los leeg om verstek te gebruik.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Bewaarplek Eienaar</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>bv., SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Bewaarplek Naam</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>bv., UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>Opdatering katalogus nie gevind</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>Probeer om opdaterings van die ander bron te kry.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Iets het verkeerd gegaan</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Kontroleer of jou internet konneksie werk.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Speel klank</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>Gewone musiekformate soos wav of mp3 word ondersteun.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Vinnige Aksie</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Voer &apos;n gestoorde vinnige aksie uit.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Kennisgewing altyd bo-op</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Plaas kennisgewing altyd bo.
+Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennisgewings kan klik nie.</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Aanbeveel</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Stop alles</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Aksie Besonderhede</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Tegniese Implementering Besonderhede</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Implementering Tipe:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Maak toe</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{0} van {1} aksies gekies</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Geskatte skoonmaakgrootte: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Klik Skandeer om totale grootte te bereken</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Loop tans: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Verwyder tans gekose toepassings...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Kompak aansig</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>Stelsel Versiering</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows Versiering</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Pas Windows-voorkoms en -gedrag aan.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Effekte</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Pas visuele effekte aan.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Deursigtigheid</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Vou alles uit</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Vou alles toe</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{0} vrygemaak in {1}s</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Voer tans uit {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Bewerking gekanselleer</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Foutbesonderhede: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Wys versteekte aflaaie</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Wys versteekte aflaaie</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Kies taal</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Hierdie toestel sal in basiese modus begin. Hardeware-spesifieke kontroles is versteek totdat &apos;n versoenbare toestelpak beskikbaar is.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Toestelpak: Basiese modus</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit het &apos;n pasende toestelpak bespeur. Bevestig dit nou sodat hardeware-spesifieke kenmerke deur die toepassing voorberei kan word.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Toestelpak: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Berei tans toestelopstelling voor...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Nie gekoppel nie</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Sinchroniseer sone</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Gebruik Windows se ingeboude register-skoonmaak-funksionaliteit</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (Spoel DNS-kas uit)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Stel Winsock-protokolstapel terug)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (Stel TCP/IP-protokolstapel terug)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Inpropuitbreidings</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Installeer en bestuur invoegtoepassings om funksionaliteit uit te brei</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Installeer</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Geïnstalleer</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Kan nie verwyder nie</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Inprop Instellings</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Inprop Naam</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Inprop Beskrywing</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>Hierdie invoegtoepassing het geen konfigureerbare instellings nie.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Maak toe</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Invoegtoepassing nie gevind nie: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Fout</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Outeur: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Invoegtoepassing-konfigurasie-koppelvlak-formaat is verkeerd.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Fout met laai van invoegtoepassing-instellings: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Soek inproppe...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Geïnstalleer</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Nie Geïnstalleer nie</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>Geen inproppe beskikbaar</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>Die invoegtoepassing-winkel is tans leeg. Bly ingeskakel vir toekomstige invoegtoepassing-opdaterings.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Konfigureer</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Maak oop</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Taal:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Gebruik Toepassing Verstek</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>{0} invoegtoepassings gevind</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Bulk Invoer</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Voer invoegtoepassings in vanaf plaaslike ZIP-leers</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Voer vanaf Lêers in</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Kies invoegtoepassing-leers (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} invoegtoepassings suksesvol ingevoer</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} invoegtoepassings is suksesvol ingevoer en is beskikbaar</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Bulk invoer het misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Kon nie invoegtoepassings invoer nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Voer inproppe in tans...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>Voer tans {0} in...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>Verwerk tans {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Inprop suksesvol geïnstalleer</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Invoegtoepassing is suksesvol geinstalleer</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Installering het misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Kan nie invoegtoepassing installeer nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Inprop suksesvol verwyder</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Invoegtoepassing is suksesvol verwyder</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Verwydering het misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Kan nie invoegtoepassing verwyder nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Kon nie inprop oopmaak nie</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Kan nie invoegtoepassing oopmaak nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Kan nie invoegtoepassing oopmaak nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Inprop nie geïnstalleer nie</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Invoegtoepassing is nie geinstalleer nie en kan nie oopgemaak word nie</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Minimum gasheer-weergawe {0} word vereis</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Invoegtoepassing sal permanent verwyder word</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Invoegtoepassing sal permanent verwyder word. Hierdie aksie kan nie ongedaan gemaak word nie.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>Opdatering Misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>Invoegtoepassing-opdatering het misluk, kontroleer asseblief netwerkverbinding en probeer later weer.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>Opdatering Suksesvol</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>Invoegtoepassing is suksesvol opgedateer</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>Dateer inprop op tans</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>Laai tans af en dateer invoegtoepassing op...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Dateer alles op</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>Voer Inprop uit</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>Invoegtoepassing begin</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>Inprop Verwyder</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>Invoegtoepassing sal verwyder word wanneer die program sluit.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>Skrapping Misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>Fout het voorgekom tydens verwydering van invoegtoepassing</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>Konfigurasie Misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>Invoegtoepassing is geinstalleer maar nie gelaai nie. Probeer asseblief om die toepassing te herbegin.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>Geen Konfigurasie</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>Invoegtoepassing het geen konfigurasie-opsies nie.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>Konfigurasie Nie Ondersteun nie</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>Invoegtoepassing ondersteun nie konfigurasie nie.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>Inprop State Herstel</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>Alle invoegtoepassing-installasietoestande is skoongemaak</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Bulk Opdatering Voltooi</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>Alle invoegtoepassings is verwerk.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Berei aflaai voor...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Plaaslik</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>Nuwe Weergawe Beskikbaar</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Weergawe: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Vrystelling Datum: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>Wat's Nuut:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Besonderhede</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Gebruiksgids</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Wys besonderhede</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Versteek besonderhede</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Beskikbaar</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Verfris inprop lys</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>Geen invoegtoepassings gevind wat by jou soektog pas nie.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Dateer alle beskikbare inproppe op</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Installeer Alle</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Installeer alle beskikbare invoegtoepassings</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Installeer Alle tans...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>Installeer tans {0} invoegtoepassing(s)...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Bulk Installering Voltooi</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} invoegtoepassing(s) geinstalleer.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Bulk Installering Misluk</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Kon nie invoegtoepassings installeer nie: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Dateer Alle op tans...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Dateer op tans...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Maak Gids oop</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Kopieer Inprop ID</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Gids Nie Gevind nie</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>Die invoegtoepassing-gids bestaan nog nie.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Gekopieer</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>Invoegtoepassing-ID &apos;{0}&apos; na knipbord gekopieer.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Aflaai voltooi</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Laai tans af...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Laai tans af... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>Geen nutsgoed beskikbaar. Voeg asseblief nutsgoed by in die nutsgoed gids in die toepassing gids.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Gereedskap sal hier verskyn sodra dit in die gereedskapgids beskikbaar is.</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Krag Verbruik</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Laai</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Gesondheid</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Tempo</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Min Tempo</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Maks Tempo</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Siklusse</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Kapasiteit</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Volle Kap</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Ontwerp</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Kern / Geheueklok</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Kern Spanning</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Spanning Reeks</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Sybalk</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>Stelsel</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Tempo Reeks</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Dubbelklik om gedetailleerde sensorinligting te wys of te versteek.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Kies asseblief ten minste een skoonmaak-opsie.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Begin alles</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>bv. 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>bv. C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Kies asseblief ten minste een item om skoon te maak.</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Forseer sagteware rendering</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Gebruik sagteware-rendering wanneer afstandlessenaar of hooflose skerm bespeur word. Herbegin aanbeveel.</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Installer het afgesluit met kode {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>deur {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimaliseer</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Vinnig Oopmaak</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Opdatering</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Kontroleer tans invoegtoepassing-beskikbaarheid...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Beskikbaar om te installeer</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>{0} addisionele invoegtoepassing(s) is beskikbaar in die huidige voer.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Geïnstalleer</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Winkel Puls</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Totale Inproppe</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>Alle bespeurde invoegtoepassings is tans op datum.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Op datum</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Opdaterings beskikbaar</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Opdaterings Gereed</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} invoegtoepassing-opdatering(s) is gereed om te installeer.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Wag vir invoegtoepassing-metadata om te laai.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Laai metadata tans</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Pas taal, temperatuureenheid, tema en aksentkleur aan.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Voorkoms</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Toepassing</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Kon nie {0} toepas nie: {1}</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Tema styl</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Kies die visuele styl-voorinstelling vir die toepassing. Temamodus en aksentkleur geld steeds daarop.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Invoegtoepassing {0} is geinstalleer. Gebruik Open om sy beskikbare toegangspunt te lanseer.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Invoegtoepassing {0} is geinstalleer en in Stelsel-optimalisering oopgemaak.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Geinstalleer, maar geen toegangspunt</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Invoegtoepassing {0} is geinstalleer, maar sy looptyd-UI kon nie gelaai word nie. Herbegin die toepassing of herinstalleer die invoegtoepassing.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Invoegtoepassing {0} is geinstalleer, maar dit stel nie &apos;n gebruikersgerigte toegangspunt bloot nie. Dit mag dalk net agtergronddienste of manifestdata verskaf.</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Groot Lêers Analise</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Kies leers wat jy wil verwyder. Slegs leers wat by die filter pas word gewys.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Filter leers groter as:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Pasgemaak...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Kies</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Lêer Naam</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Grootte</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Bevestig Seleksie</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Gekies: {0} lêers ({1})</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>SVE</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Waaier</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Skyf 1 Temperatuur</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Skyf 2 Temperatuur</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Kernklok</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Raam Tyd</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Speletjie</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GVE</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Waaier</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Benutting</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH Waaier</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Kernklok</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Balk</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Paneel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Wys of versteek die OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Agtergrond Kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Kategorie Kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Hoek Radius</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Onder</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Bokant</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kritieke Kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Skrifgrootte</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Etiket Kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Deursigtigheid</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Waarde Kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Waarskuwing Kleur</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Slot Posisie</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Oorleg Styl</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Verfrissing Interval</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Sensor-verfrissingsinterval</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Herstel Posisie</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Vassit Drempel</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Voorkoms</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensore</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Drempels</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritiek</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS Rooilyn</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Die minimum aanvaarbare raamtempo. Onder hierdie word die kleur kritiek.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Laag FPS Delta</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Die maksimum verskil tussen gemiddelde FPS en 1% Laag. Bokant hierdie word die teller kritiek.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Prestasie</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Gebruik</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Waarskuwing</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD Instellings</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Wag om te installeer (&apos;n ander invoegtoepassing laai tans af)...</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH Temperatuur</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Krag</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Krag</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Kern Temp</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM-temp</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM Benutting</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Laai tans...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Moederbord Temperatuur</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Moederbord</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>N/B</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Onbekende battery</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Onbekende CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Onbekende GPU</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Aktiveer gevorderde hardeware-peiling om gedetailleerde temperature, frekwensies en kraglimiete te monitor.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Jy moet PawnIO eers installeer om hardeware-sensors te gebruik!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Hardeware Sensore</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Kon nie die taalpak aflaai nie. Kyk jou netwerkverbinding, instaanbediener of TLS-instellings, en probeer weer.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Skerm</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Slim Sleutels</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Drywende oorleg wat lewendige sensordata wys.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Aktiveer OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+</root>

@@ -1,0 +1,3870 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>เวอร์ชัน</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>เวอร์ชันล่าสุดบน GitHub</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>ลิงก์</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>เว็บไซต์โปรเจกต์บน GitHub</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>ไลบรารีบุคคลที่สาม</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>เกี่ยวกับ</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>การแปลโดยชุมชน</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>เวอร์ชัน</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>เพิ่ม</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>เพิ่มใหม่</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>ชาร์จอุปกรณ์ USB เมื่อปิดเครื่อง โหมดสลีป หรือ hibernated</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>USB เปิดตลอดเวลา</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>ชาร์จอุปกรณ์ USB เมื่อปิดเครื่อง โหมดสลีป หรือ hibernated</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>USB เปิดตลอดเวลา</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>นำไปใช้</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>นำไปใช้และปิด</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ต้องทำงานเพื่อให้การดำเนินการอัตโนมัติทำงานได้</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>เปิดใช้งาน</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>ยังไม่มีการดำเนินการ คลิก "เพิ่มใหม่" เพื่อสร้างการดำเนินการใหม่</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>หากเปิดใช้งาน การดำเนินการเหล่านี้จะทำงานอัตโนมัติ เมื่อสถานะเปลี่ยนแปลง การดำเนินการทั้งหมดจะถูกประเมินจากบนลงล่าง เฉพาะการดำเนินการที่ตรงกับสถานะปัจจุบันเท่านั้นที่จะทำงาน</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>การดำเนินการ</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>ชื่อ...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>เพิ่มใหม่</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>ยังไม่มีการดำเนินการด่วน คลิก "เพิ่มใหม่" เพื่อสร้างการดำเนินการด่วนใหม่</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>การดำเนินการด่วนพร้อมใช้งานในเมนูคลิกขวาของไอคอนถาด</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>การดำเนินการด่วน</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>ชื่อ...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>เปลี่ยนชื่อ</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>การเปลี่ยนแปลงถูกยกเลิกแล้ว</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>ยกเลิก</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>บันทึกแล้ว</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>อัตโนมัติ</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>เพิ่มขั้นตอน</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>กำหนดค่า</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>พิเศษ</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>ไม่ดำเนินการอื่นเพิ่มเติมเมื่อการดำเนินการนี้ทำงาน</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>ทำงานทันที</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>เสร็จสิ้นพร้อมข้อผิดพลาด</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>ทำงานทันที</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>เสร็จสิ้นเรียบร้อย!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>ทำงานทันที</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>กำลังทำงาน...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} ขั้นตอน</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} ขั้นตอน</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>แอป</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>เมื่อพระอาทิตย์ขึ้น</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>เมื่อพระอาทิตย์ตก</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>เมื่อ {0:D2}:{1:D2}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>โหมดพลังงาน</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>ไม่มีชื่อ</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>ตรวจจับเมื่อมีเกมบางเกมกำลังทำงานโดยอัตโนมัติ และปรับประสิทธิภาพ CPU และ GPU อุณหภูมิและเสียงพัดลมอาจเพิ่มขึ้น</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>เปิดใช้งาน AI Engine</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>การตั้งค่าโหมดสมดุล</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>เลือกวิธีการชาร์จแบตเตอรี่</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>โหมดแบตเตอรี่</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>เลือกวิธีการชาร์จแบตเตอรี่</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>โหมดแบตเตอรี่</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>เชื่อมต่อแล้ว กำลังชาร์จ...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>เชื่อมต่อแล้ว ไม่กำลังชาร์จ</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>อุณหภูมิปัจจุบันของแบตเตอรี่</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิแบตเตอรี่</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>ความจุแบตเตอรี่ปัจจุบัน</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>ความจุปัจจุบัน</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>จำนวนรอบการชาร์จ/คายประจุ</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>จำนวนรอบ</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>ความจุแบตเตอรี่ตามการออกแบบ</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>ความจุออกแบบ</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>อัตราการชาร์จ (+) หรือคายประจุ (-)</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>อัตราคายประจุ</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>อัตราการชาร์จขั้นต่ำ (+) หรือคายประจุ (-)</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>อัตราคายประจุขั้นต่ำ</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>อัตราการชาร์จสูงสุด (+) หรือคายประจุ (-)</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>อัตราคายประจุสูงสุด</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>เวลาที่เหลือโดยประมาณ: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>กำลังประมาณเวลา...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>วันที่ใช้ครั้งแรก</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>แบตเตอรี่ถูกใช้ครั้งแรกเมื่อใด</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>ความจุแบตเตอรี่เมื่อชาร์จเต็ม</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>ความจุชาร์จเต็ม</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>ความจุชาร์จสูงสุดของแบตเตอรี่</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>สุขภาพแบตเตอรี่</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>เชื่อมต่อชาร์จเจอร์วัตต์ต่ำ</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>แบตเตอรี่ถูกผลิตเมื่อใด</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>วันที่ผลิต</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>เวลาตั้งแต่เสียบปลั๊ก AC ครั้งสุดท้าย เวลาอาจไม่แม่นยำหากชาร์จขณะสลีปหรือปิดเครื่อง</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>ใช้แบตเตอรี่ตั้งแต่</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>แบตเตอรี่</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>ยกเลิก</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>น้ำเงิน</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>เขียว</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>แดง</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>เลือกโหมดการทำงาน GPU ตามการใช้งานและเงื่อนไขพลังงานของคอมพิวเตอร์ การเปลี่ยนโหมดอาจต้องรีสตาร์ท</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>การเปลี่ยนเป็น {0} ต้องรีสตาร์ท คุณต้องการรีสตาร์ทตอนนี้หรือไม่?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>ต้องรีสตาร์ท</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>โหมดการทำงาน GPU</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>การดำเนินการด่วน</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>ดำเนินการต่อ</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>คัดลอกทั้งหมด</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>กราฟิก</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>อื่นๆ</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>หน้าหลัก</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>ปิดใช้งาน GPU แบบแยกหากทำงานโดยไม่จำเป็น คำเตือน: การดำเนินการนี้จะไม่ทำงานถูกต้องหากจอแสดงผลภายในปิดหรือโหมดไฮบริดไม่ทำงาน</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>ปิดใช้งาน GPU</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>เพิ่มหน่วงเวลาก่อนทำงานขั้นตอนถัดไป</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>หน่วงเวลา</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>ลบ</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>เวอร์ชัน BIOS</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>คัดลอกข้อความไปยังคลิปบอร์ดแล้ว</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" ถูกคัดลอกไปยังคลิปบอร์ดแล้ว</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>คัดลอกแล้ว!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>อุปกรณ์</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>ฮาร์ดแวร์</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>เมนบอร์ด</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>เคส</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>หน่วยความจำ</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>ฝ่ายสนับสนุน Lenovo</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>ประเภทเครื่อง</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>ผู้ผลิต</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>รุ่น</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>หมายเลขซีเรียล</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>เกี่ยวกับอุปกรณ์ของคุณ</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>วันที่สิ้นสุด</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>วันที่เริ่มต้น</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>การรับประกัน</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ทำงานอยู่</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>ไม่ทำงาน</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>ปิดแอป</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>ปิดใช้งาน GPU แบบแยกหากทำงานโดยไม่จำเป็น</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>มีจอแสดงผลเชื่อมต่อกับ nVidia GPU</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>ไม่มีกระบวนการ</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>สถานะประสิทธิภาพ</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>ไม่ทราบ</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>กระบวนการ</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>รีสตาร์ท GPU</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU แบบแยก</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>เปลี่ยนความสว่างจอแสดงผลของจอในตัว คำเตือน: การดำเนินการนี้จะไม่ทำงานถูกต้องหากจอแสดงผลภายในปิด</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>ความสว่างจอแสดงผล</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>แก้ไข</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>ยกเลิกอัตรารีเฟรชที่ไม่ต้องการใช้เมื่อใช้คีย์ลัด Fn+R</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>ตรวจสอบให้แน่ใจว่าจอแสดงผลเปิดอยู่ Universal Device Toolkit ไม่สามารถโหลดอัตรารีเฟรชสำหรับจอที่ไม่ได้เปิด</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>ไม่พบอัตรารีเฟรช</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>ยกเว้นอัตรารีเฟรช</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>ออก</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>ส่งออก</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>ใช้เฉพาะ GPU ในตัวเมื่อใช้แบตเตอรี่ และใช้ทั้ง GPU ในตัวและแบบแยกเมื่อเสียบอะแดปเตอร์ AC เมื่อเสียบอะแดปเตอร์ที่ไม่ใช่มาตรฐาน ระบบจะสลับเป็นโหมด Hybrid-iGPU Only</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>โหมด Hybrid-Auto</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>การสลับเข้าและออกจากโหมดนี้ต้องรีสตาร์ท</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>ใช้เฉพาะ GPU แบบแยก โหมดนี้ให้ประสิทธิภาพกราฟิกดีที่สุด แต่เพิ่มการใช้พลังงาน</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>โหมด dGPU</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>เปิดใช้งานทั้ง GPU ในตัวและแบบแยก ระบบจะสลับอัตโนมัติตามความต้องการ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>โหมดไฮบริด</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>โหมดนี้จะทำงานเฉพาะเมื่อ GPU แบบแยกไม่ได้ทำงาน</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>ใช้เฉพาะ GPU ในตัว โหมดนี้ลดการใช้พลังงานและเสียงรบกวน</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>โหมด Hybrid-iGPU Only</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>เกี่ยวกับโหมดการทำงาน GPU</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>เซ็นเซอร์ CPU</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>ความเร็วพัดลม</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดเครื่องเมื่อเปิดฝา</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>เปิดเครื่องอัตโนมัติ</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>เปิดเครื่องเมื่อเปิดฝา</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>เปิดเครื่องอัตโนมัติ</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>ใช้ฟังก์ชันรองของปุ่ม F1-F12 โดยไม่ต้องกด Fn</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>ล็อก Fn</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>ใช้ฟังก์ชันรองของปุ่ม F1-F12 โดยไม่ต้องกด Fn</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>ล็อก Fn</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>คำเตือน! แล็ปท็อปบางรุ่นอาจรับค่าต่ำกว่าที่ระบุ แต่ระวัง ตัวเลือกนี้อาจทำให้พฤติกรรมไม่คาดคิด หากไม่แน่ใจว่ากำลังทำอะไร ให้ปล่อยไว้ที่ 0</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>ออฟเซตขั้นต่ำ</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>คำเตือน! แล็ปท็อปบางรุ่นอาจรับค่าสูงกว่าที่ระบุ แต่ระวัง ตัวเลือกนี้อาจทำให้พฤติกรรมไม่คาดคิด หากไม่แน่ใจว่ากำลังทำอะไร ให้ปล่อยไว้ที่ 0</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>ออฟเซตสูงสุด</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>อย่าเปลี่ยนตัวเลือกด้านล่างเว้นแต่คุณรู้จริงๆ ว่ากำลังทำอะไร</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>ขั้นสูง</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>ขีดจำกัดพลังงานระยะยาว (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>ขีดจำกัดพลังงานระยะยาว</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>ขีดจำกัดพลังงานระยะสั้น</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>ขีดจำกัดอุณหภูมิ CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>ไม่สามารถนำไปใช้ได้</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>ไม่สามารถโหลดการตั้งค่าได้</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>ความเร็วพัดลมไม่ได้ถูกกำหนดโดยเซ็นเซอร์อุณหภูมิเดียว จะเพิ่มหรือลดความเร็วตามค่าสูงสุดระหว่าง CPU, GPU และอุณหภูมิฮีทซิงค์ ค่าที่แน่นอนจะปรากฏเมื่อเลื่อนเมาส์เหนือแต่ละขั้น</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>เส้นโค้งพัดลม</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>ความเร็วพัดลมสูงสุด</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>ความเร็วสูงสุด</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>พัดลม</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>CTGP GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Dynamic Boost GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>ขีดจำกัดอุณหภูมิ GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>โหมดกำหนดเอง</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิด HDR</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิด HDR</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>การใช้งาน HDR ถูกบล็อกโดยการตั้งค่าของ Windows</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>นำเข้า</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>อุปกรณ์นี้ไม่สามารถใช้งานร่วมกับ Universal Device Toolkit ได้</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>อุปกรณ์ของคุณอาจขาดส่วนประกอบของระบบที่จำเป็น (LenovoGameZoneData)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>หากคุณคลิก &quot;OK&quot; เพื่อดำเนินการต่อ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- ซอฟต์แวร์จะทำงานในโหมดจำกัด</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- คุณสมบัติบางอย่างจะถูกปิดใช้งาน (แดชบอร์ด, ระบบอัตโนมัติ, มาโคร)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- คุณสมบัติพื้นฐานอื่น ๆ จะยังคงใช้งานได้</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>ข้อมูลอุปกรณ์:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>ผู้ผลิต:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>รุ่น:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>ประเภทเครื่อง:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>คลิก &quot;OK&quot; เพื่อดำเนินการต่อ หรือ &quot;Cancel&quot; เพื่อออก</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>ไม่พบแป้นพิมพ์ที่เข้ากันได้</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>ไม่สามารถควบคุมไฟแป้นพิมพ์ได้ที่นี่เมื่อ Lenovo Vantage หรือบริการของมันกำลังทำงานอยู่</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage หรือบริการของมันกำลังทำงาน</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>เกี่ยวกับ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>การดำเนินการ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>แบตเตอรี่</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>แดชบอร์ด</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>แป้นพิมพ์</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>ดาวน์โหลด</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>การปรับแต่งระบบ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>ส่วนขยายปลั๊กอิน</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>การตั้งค่ารายการนำทาง</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>กำหนดค่ารายการนำทางที่จะแสดงในแถบด้านข้าง แดชบอร์ดและการตั้งค่าจะปรากฏเสมอ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางแป้นพิมพ์</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางแบตเตอรี่</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางระบบอัตโนมัติ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางมาโคร</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางการปรับแต่งระบบ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางส่วนขยายปลั๊กอิน</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>แสดงหรือซ่อนรายการนำทางเกี่ยวกับ</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>รายการนำทาง</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>กำหนดค่ารายการนำทางที่จะแสดงในแถบด้านข้าง</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>มีอัปเดต!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>มีอัปเดต {0}!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>เลื่อนลง</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>เลื่อนขึ้น</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>ไม่</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>เชื่อมต่ออะแดปเตอร์ AC</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>เชื่อมต่ออะแดปเตอร์ AC (วัตต์ต่ำ)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>ตัดการเชื่อมต่ออะแดปเตอร์ AC</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>กล้องปิด</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>กล้องเปิด</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock ปิด</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock เปิด</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock ปิด</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock เปิด</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>ไมโครโฟนปิด</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>ไมโครโฟนเปิด</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock ปิด</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock เปิด</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>ไฟแบ็คไลท์ {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>ความสว่าง {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>โปรไฟล์ {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>ทัชแพดปิด</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>ทัชแพดเปิด</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>ไฟแบ็คไลท์ {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>อะแดปเตอร์ AC</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>กล้อง</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock และ Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>ปิดการแจ้งเตือนสำหรับการกระทำของปุ่ม Fn เช่น ปิดเสียงไมโครโฟน
+เปิดใช้ตัวเลือกนี้หากคุณมีข้อขัดแย้งกับแอปพลิเคชันเต็มหน้าจอ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>ไม่ต้องแสดงการแจ้งเตือน</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>ไมโครโฟน</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>ตำแหน่ง</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>โหมดพลังงาน</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>อัตรารีเฟรช</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Smart Key</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>การแจ้งเตือน</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>ล็อกทัชแพด</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>ตกลง</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>ปรับปรุงเวลาตอบสนองของจอแสดงผลในตัว</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>ปรับปรุงเวลาตอบสนองของจอแสดงผลในตัว</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} ดาวน์โหลดเสร็จแล้ว!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>ดาวน์โหลดเสร็จสมบูรณ์</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>มีบางอย่างผิดพลาด</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ส่งคืนรหัส 404</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>ไฟล์ดูเหมือนจะหายไปแล้ว</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>ตรวจสอบว่าการเชื่อมต่ออินเทอร์เน็ตของคุณทำงานอยู่หรือไม่</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>มีบางอย่างผิดพลาด</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>มีอัปเดต!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>แพ็คเกจนี้มีอายุมากกว่าหนึ่งปี</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>เวอร์ชัน</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>ด้านล่างนี้คือรายการแพ็คเกจซอฟต์แวร์ที่ถูกทำเครื่องหมายว่าเข้ากันได้กับแล็ปท็อปของคุณ
+โปรดตรวจสอบให้แน่ใจว่าคุณกำลังติดตั้งแพ็คเกจที่ถูกต้องเสมอ</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>ตรวจสอบว่าตั้งค่าประเภทเครื่องและระบบปฏิบัติการถูกต้อง</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>มีบางอย่างผิดพลาด</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>การเปลี่ยนการเรียงลำดับ การกรองผลลัพธ์ การซ่อนแพ็คเกจ หรือการรีเฟรชรายการจะหยุดการดาวน์โหลด คุณต้องการดำเนินการต่อหรือไม่?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>กำลังดาวน์โหลด</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>ตัวกรอง</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>ประเภทเครื่อง</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>ระบบปฏิบัติการ</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>หลัก (แนะนำ)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>เหมือนกับ Lenovo Vantage</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>รอง</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>เหมือนกับ Lenovo PC Support</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>หมวดหมู่</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>วันที่</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>ดาวน์โหลด</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>วาง</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>เปลี่ยนโหมดประสิทธิภาพ</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>โหมดพลังงาน</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>เปลี่ยนโหมดพลังงาน</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>โหมดพลังงาน</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>โหมดพลังงานที่เลือกอาจไม่ทำงานอย่างถูกต้องหากไม่ได้เชื่อมต่ออะแดปเตอร์ AC</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>ค่าเริ่มต้น</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>แผนการใช้พลังงานของ Windows</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>กำลังสแกนแพ็คเกจไดรเวอร์ที่มี โปรดรอสักครู่...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>สแกนหาแพ็คเกจไดรเวอร์</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>เลือกแหล่งที่มาและสแกนเพื่อแสดงรายการดาวน์โหลดไดรเวอร์ที่เข้ากันได้</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>ไม่พบดาวน์โหลดไดรเวอร์</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>ลองใช้แหล่งที่มา ระบบปฏิบัติการ หรือประเภทเครื่องอื่น</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>ไม่พบดาวน์โหลดที่ตรงกัน</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>ปรับตัวกรอง ตัวเลือกอัปเดตเท่านั้น หรือรายการดาวน์โหลดที่ซ่อนไว้</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>การสแกนไดรเวอร์ไม่เสร็จสมบูรณ์</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>ตรวจสอบแหล่งที่เลือกและการเชื่อมต่อเครือข่าย แล้วสแกนอีกครั้ง</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดเครือข่าย กำลังลองใหม่โดยอัตโนมัติ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>กำลังลองดึงแพ็คเกจไดรเวอร์อีกครั้ง...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>ข้อมูลการล้างข้อมูล</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>ดูความคืบหน้าของการล้างข้อมูลและขนาดที่ประมาณ</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ปรับค่าที่ตั้งล่วงหน้าของไฟแป้นพิมพ์</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>ความสว่าง</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>โซน 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>โซน 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>โซน 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>โซน 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>เอฟเฟกต์</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>ความเร็ว</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>รีเฟรช</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>เปลี่ยนอัตรารีเฟรชของจอแสดงผลในตัว
+
+คำเตือน: การกระทำนี้จะไม่ทำงานอย่างถูกต้อง หากปิดจอแสดงผลภายใน</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>อัตรารีเฟรช</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>เปลี่ยนอัตรารีเฟรชของจอแสดงผลในตัว</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>อัตรารีเฟรช</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>เปลี่ยนชื่อ</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>จะรีสตาร์ทภายหลัง</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>รีสตาร์ทตอนนี้</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>ย้อนกลับ</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>อาร์กิวเมนต์</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>เส้นทางไฟล์ปฏิบัติการ</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>เรียกใช้คำสั่ง</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>เรียกใช้</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>บันทึก</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>กำลังบันทึก...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>เลือกการดำเนินการด่วนอย่างน้อยหนึ่งรายการเพื่อสลับใช้งาน</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>ไม่ได้กำหนดการดำเนินการด่วน</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>แสดงแอปนี้</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>เปลี่ยนสีหลักของแอป</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>สีหลัก</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>เริ่มแอปย่อเล็กสุดไปยังถาดเมื่อคุณลงชื่อเข้าใช้ Windows</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>เปิดอัตโนมัติ</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>เริ่มแอปย่อเล็กสุดไปยังถาดเมื่อคุณลงชื่อเข้าใช้ Windows</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>อาจปิดใช้งาน Legion Zone ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถปิดใช้งาน Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>ปิดใช้งาน Legion Zone และบริการของมันโดยไม่ต้องถอนการติดตั้ง
+แนะนำให้รีสตาร์ทหลังจากเปลี่ยนตัวเลือกนี้</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>ปิดใช้งาน Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>อาจปิดใช้งาน Lenovo Hotkeys ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถปิดใช้งาน Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>ปิดใช้งาน Lenovo Hotkeys และบริการของมันโดยไม่ต้องถอนการติดตั้ง
+หากปิดใช้งาน แอปนี้จะจัดการทางลัด Fn
+แนะนำให้รีสตาร์ทหลังจากเปลี่ยนตัวเลือกนี้</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>การปรับแต่งระบบ</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>ใช้การปรับแต่งประสิทธิภาพที่แนะนำและล้างไฟล์ชั่วคราว</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>ใช้การปรับแต่งประสิทธิภาพและบริการ</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>ใช้การปรับแต่งประสิทธิภาพแล้ว</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>ไม่สามารถใช้การปรับแต่งประสิทธิภาพได้</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>เรียกใช้การล้างข้อมูล</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>การล้างข้อมูลเสร็จสมบูรณ์</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>การล้างข้อมูลล้มเหลว</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>การกระทำเหล่านี้ปรับเปลี่ยนบริการและไฟล์ของระบบ อาจต้องใช้สิทธิ์ผู้ดูแลระบบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>ใช้การกระทำที่เลือก</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>เลือกที่แนะนำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>ล้างการเลือก</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>สแกน</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>เรียกใช้การล้างข้อมูล</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>เลือก {0} การกระทำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>ยังไม่ได้เลือกการกระทำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>การกระทำที่เลือก</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>การล้างข้อมูล</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>การตกแต่ง</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>ดาวน์โหลดไดรเวอร์</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>การยืนยันความปลอดภัย</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>การล้างข้อมูลระบบจะลบไฟล์ชั่วคราวและแคชอย่างถาวร แม้โดยทั่วไปจะปลอดภัย แต่ขอแนะนำให้คุณสำรองข้อมูลสำคัญไว้ก่อน คุณต้องการดำเนินการต่อหรือไม่?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>ส่วนขยาย</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>จัดการส่วนขยายและเครื่องมือเพิ่มประสิทธิภาพระบบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>ไม่มีส่วนขยาย</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>ติดตั้งส่วนขยายจากหน้าส่วนขยายปลั๊กอินเพื่อเพิ่มขีดความสามารถในการปรับแต่งระบบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>เร็ว ๆ นี้</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>ตลาดส่วนขยายจะพร้อมใช้งานในการอัปเดตในอนาคต</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>การปรับแต่ง Windows</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>เลือกทั้งหมด</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>กฎการล้างข้อมูลแบบกำหนดเอง</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>เลือกโฟลเดอร์และนามสกุลไฟล์ที่ควรลบในระหว่างการล้างข้อมูล</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>เพิ่มกฎ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>แก้ไข</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>ลบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>ล้างทั้งหมด</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>ไม่มีกฎการล้างข้อมูลแบบกำหนดเอง</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>รวมโฟลเดอร์ย่อย</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>การจัดการ AppX</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>เลือกแอป Microsoft Store ที่ติดตั้งไว้ล่วงหน้าเพื่อลบสำหรับผู้ใช้ทั้งหมด</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>ไม่มีแอปที่เลือกเพื่อลบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>ถอนการติดตั้งแอปที่เลือก</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>แอปที่เลือกถูกกำหนดเวลาให้ลบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>ไม่สามารถลบแอปที่เลือกได้</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>กำลังโหลดแอป โปรดรอสักครู่...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>กำลังโหลดปลั๊กอิน...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>โหลดล้มเหลว: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>ผู้เผยแพร่: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>การล้างข้อมูล MRU/ประวัติของรีจิสทรี</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>ล้างประวัติรีจิสทรีของผู้ใช้ทั่วไป (Run MRU, RecentDocs, กล่องโต้ตอบเปิด/บันทึก, TypedPaths) โดยไม่ลบรายการที่สำคัญต่อระบบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>การกระทำ</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>กฎการล้างข้อมูลแบบกำหนดเอง</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>โฟลเดอร์</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>นามสกุล</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>คั่นนามสกุลหลายตัวด้วยเครื่องหมายจุลภาค (ตัวอย่าง: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>รวมโฟลเดอร์ย่อย</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>เรียกดู…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>โปรดเลือกโฟลเดอร์</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>โปรดป้อนนามสกุลไฟล์อย่างน้อยหนึ่งตัว</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>โปรดเลือกอย่างน้อยหนึ่งการกระทำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>การกระทำที่เลือกเสร็จสมบูรณ์แล้ว</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>ไม่สามารถทำการกระทำที่เลือกให้เสร็จสมบูรณ์ได้</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer และอินเทอร์เฟซ</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>การตกแต่งระบบ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>ปรับแต่งแถบงาน File Explorer และพฤติกรรมส่วนติดต่อผู้ใช้</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>ประสิทธิภาพ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>ปรับการตั้งค่าประสิทธิภาพและการตอบสนองของระบบ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>บริการ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>ปิดใช้งานบริการเบื้องหลังที่ใช้ทรัพยากร</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>การล้างข้อมูล</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>ลบแคช ไฟล์ชั่วคราว และไฟล์ที่เหลืออื่น ๆ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>การล้างแคช</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>ล้างไฟล์แคชจากแอปพลิเคชันและระบบต่าง ๆ เพื่อเพิ่มพื้นที่จัดเก็บ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>การล้างไฟล์ระบบ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>ล้างไฟล์ระบบ เช่น ไฟล์ชั่วคราว บันทึก ดัมพ์ข้อขัดข้อง ฯลฯ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>การล้างส่วนประกอบระบบ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>ล้างไฟล์ส่วนประกอบของระบบ เช่น แคช Windows Update ที่เก็บส่วนประกอบ ฯลฯ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>การล้างเพื่อประสิทธิภาพ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>ล้างไฟล์ที่อาจส่งผลต่อประสิทธิภาพของระบบ เช่น ไฟล์ Prefetch ฯลฯ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>การล้างแบบกำหนดเอง</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>ล้างไฟล์และไดเรกทอรีที่ระบุโดยใช้กฎที่กำหนดเอง</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>เค้าโครงแถบงานและเมนูเริ่ม</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>ซ่อนช่องค้นหาและปุ่ม Task View ปิดการจัดกลุ่มแถบงาน และแสดงไอคอนถาดเสมอ</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>ปิดเมนูเริ่มและเปิดการค้นหาด้วยปุ่ม Win</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>ปิดเมนูเริ่มโดยสมบูรณ์ เมื่อคุณกดปุ่ม Win ระบบจะเปิดการค้นหาแทนเมนูเริ่ม</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>ปรับปรุงการตอบสนองของ Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>ลดความล่าช้าของเมนู ปิดแอปที่ค้างเร็วขึ้น และเปิด This PC เป็นค่าเริ่มต้น</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>ตัวเลือกการมองเห็นไฟล์</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>แสดงนามสกุลไฟล์และไฟล์ที่ซ่อนใน File Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>ปิดคำแนะนำของ Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>ปิดคำแนะนำเนื้อหาจากคลาวด์และแบนเนอร์คำแนะนำ</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>เปลี่ยนปุ่ม Windows ให้เปิดการค้นหา</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>แก้ไขพฤติกรรมของปุ่ม Windows ให้เปิดการค้นหาแทนเมนูเริ่ม</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>เพิ่มประสิทธิภาพการจัดกำหนดการมัลติมีเดีย</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>ลบการจำกัดเครือข่ายและลดเวลาแฝงของการตอบสนองระบบ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>ปรับปรุงการจัดการหน่วยความจำ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>เก็บแคชของระบบไว้ในหน่วยความจำและหลีกเลี่ยงการเพจไดรเวอร์เคอร์เนล</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>ปิดอะคริลิกและศูนย์การแจ้งเตือน</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>ลบเอฟเฟกต์อะคริลิกในการเข้าสู่ระบบและซ่อนศูนย์การแจ้งเตือนของ Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>ลดการส่งข้อมูลการใช้งานและเคล็ดลับ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>ปิดรหัสโฆษณา คุณสมบัติ Spotlight และคำแนะนำอัตโนมัติ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>บังคับใช้แผนประสิทธิภาพสูง</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>เปิดใช้งานแผนพลังงานประสิทธิภาพสูงและปิดใช้งานโหมดไฮเบอร์เนชัน</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>ปิดบริการวินิจฉัย</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>หยุดและปิดใช้งานบริการ Connected User Experiences, Diagnostics Hub และ Delivery Optimisation</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>ปิด SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>ปิด Superfetch/SysMain เพื่อลดกิจกรรมดิสก์เบื้องหลัง</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>ปิดการจัดทำดัชนี Windows Search</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>หยุดบริการ Windows Search เพื่อป้องกันการอัปเดตดัชนี</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>ปิด Remote Registry</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>รักษาความปลอดภัยของระบบโดยปิดการเข้าถึงรีจิสทรีระยะไกล</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>ปิดการรายงานข้อผิดพลาด</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>หยุด Windows Error Reporting จากการรวบรวมและส่งข้อมูลข้อขัดข้อง</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>ล้างแคช Remote Desktop</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>ลบไฟล์แคชที่สร้างโดยไคลเอนต์ Remote Desktop</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>ล้างแคช Windows Update</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>ลบไฟล์อัปเดตที่ดาวน์โหลดและแคช Delivery Optimisation</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>ล้างแคชเบราว์เซอร์</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>ล้างไฟล์ชั่วคราวและบันทึกที่เหลือจากแอปพลิเคชันต่าง ๆ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>ไฟล์ที่เหลือจากแอป</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>ลบแคชและไฟล์คุกกี้ของ Internet Explorer และ Edge</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>ล้างแคชภาพขนาดย่อ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>ลบฐานข้อมูลภาพขนาดย่อของ Explorer และแคชเชเดอร์ Direct3D</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>ล้างอิมเมจเนทีฟของ .NET</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>ลบอิมเมจ .NET Native ที่แคชไว้เพื่อเรียกคืนพื้นที่ดิสก์</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>ลบบันทึกและข้อมูลวินิจฉัย</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>สแกนหาไฟล์ขนาดใหญ่ในไดรฟ์ระบบของคุณที่อาจใช้พื้นที่มาก</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>การสแกนไฟล์ขนาดใหญ่</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>ระบุและจัดการไฟล์ขนาดใหญ่ในระบบของคุณ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>ไฟล์ขนาดใหญ่</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>ลบบันทึกของ Windows รายงานข้อผิดพลาด และการติดตามการวินิจฉัย</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>ลบดัมพ์ข้อขัดข้อง</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>ลบไฟล์ดัมพ์หน่วยความจำที่เหลือหลังจากระบบขัดข้อง</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>ล้างการสแกนของ Defender</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>ลบประวัติการสแกนและแคชของ Windows Defender</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>ล้างไฟล์ชั่วคราว</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>ล้างไดเรกทอรีชั่วคราวของ Windows และผู้ใช้</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>ลบแอป Windows ที่รวมมา</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>ถอนการติดตั้งแอปพลิเคชัน UWP ที่ติดตั้งไว้ล่วงหน้าที่เลือกสำหรับผู้ใช้ทั้งหมด</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>ล้างถังรีไซเคิล</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>ลบไฟล์ที่ถูกลบซึ่งเก็บไว้ในถังรีไซเคิล</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>ล้างข้อมูล Prefetch</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>ลบข้อมูล Prefetch ของ Windows เพื่อสร้างการติดตามใหม่</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>ล้างไฟล์แบบกำหนดเอง</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>ลบไฟล์ที่ตรงกับนามสกุลที่กำหนดค่าไว้จากโฟลเดอร์ที่เลือก</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>ที่เก็บส่วนประกอบของบริการ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>เรียกใช้การล้างข้อมูล DISM และล้างไฟล์ชั่วคราว WinSxS</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>ปิดใช้งาน Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>อาจปิดใช้งาน Lenovo Vantage และ/หรือ ImController ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถปิดใช้งาน Lenovo Vantage และ/หรือ ImController</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>ปิดใช้งาน Lenovo Vantage และ ImController โดยไม่ต้องถอนการติดตั้ง
+แนะนำให้รีสตาร์ทหลังจากเปลี่ยนตัวเลือกนี้</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>ปิดใช้งาน Lenovo Vantage และ ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>อาจเปิดใช้งาน Legion Zone ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถเปิดใช้งาน Legion Zone</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>อาจเปิดใช้งาน Lenovo Hotkeys ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถเปิดใช้งาน Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>อาจเปิดใช้งาน Lenovo Vantage และ/หรือ ImController ไม่สำเร็จ</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถเปิดใช้งาน Lenovo Vantage และ/หรือ ImController</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>คุณสามารถยกเว้นอัตรารีเฟรชบางค่าเพื่อให้ทางลัด Fn+R มีประโยชน์มากขึ้น</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>ยกเว้นอัตรารีเฟรช</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>เลือกภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>ติดตั้งภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>การติดตั้งภาษาล้มเหลว</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>กำลังติดตั้งภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>กำลังดาวน์โหลดชุดภาษา…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>กำลังแตกไฟล์และติดตั้ง…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>ใช้ปุ่มดาวน์โหลดเพื่อติดตั้งชุดภาษานี้</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>ยังไม่ได้ติดตั้งภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>ภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>ถอนการติดตั้งภาษา</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>การถอนการติดตั้งภาษาล้มเหลว</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>กำลังถอนการติดตั้งภาษา</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>ย่อไปยังถาดเสมอ ปิดด้วยการคลิกขวาที่ไอคอนถาด</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>ย่อเมื่อปิด</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>ซ่อนคำเตือนอุปกรณ์ที่เข้ากันไม่ได้ซึ่งปรากฏเมื่อเริ่มต้น</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>ปิดคำเตือนอุปกรณ์ที่เข้ากันไม่ได้</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>กำหนดค่าการแจ้งเตือนที่จะแสดง</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>การแจ้งเตือน</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>แผนการใช้พลังงานของ Windows</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>กำหนดการดำเนินการด่วนให้กับการกด Fn+F9 สองครั้ง</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>การกระทำรองของ Smart Key</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>กำหนดการดำเนินการด่วนให้กับการกด Fn+F9 ครั้งเดียว</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>การกระทำของ Smart Key</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>ตั้งค่าธีมสว่าง ธีมมืด หรือทำตามการตั้งค่าระบบ</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>ธีม</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>กำหนดค่าตัวเลือกลักษณะที่ปรากฏ พฤติกรรม และฟังก์ชันการทำงานของแอปพลิเคชัน</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>ปรับความสว่างของไฟแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>ความสว่างของไฟแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>เพิ่มเอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>ไม่สามารถใช้โปรไฟล์ได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>ไม่สามารถใช้โปรไฟล์แสงสว่างได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>ความสว่าง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>ยกเลิกการเลือกโซนทั้งหมด</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>เอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>ไม่สามารถส่งออกโปรไฟล์ได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>ไม่สามารถส่งออกโปรไฟล์ได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>ไม่สามารถนำเข้าโปรไฟล์ได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>ไม่สามารถนำเข้าโปรไฟล์ได้</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>ไม่มีการเพิ่มเอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>รีเซ็ตเป็นค่าเริ่มต้น</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>เลือกโซนทั้งหมด</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>สลับเค้าโครงแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>ทิศทาง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>สี</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>สี</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>ทิศทาง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>เอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>เอฟเฟกต์นี้จะถูกนำไปใช้กับแป้นพิมพ์ทั้งหมดและจะแทนที่เอฟเฟกต์อื่น ๆ ทั้งหมด</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>ความเร็ว</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>เพิ่มเอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>แก้ไขเอฟเฟกต์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>ปรับโปรไฟล์ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>โปรไฟล์ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>ปุ่มทั้งหมด</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} โซน</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>พระอาทิตย์ขึ้น</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>พระอาทิตย์ตก</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>เวลา</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>อนุญาตให้สลับระหว่าง GPU แบบรวมและแบบแยก
+ต้องรีสตาร์ท</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>การเปลี่ยนโหมด Hybrid ต้องรีสตาร์ท คุณต้องการรีสตาร์ทตอนนี้หรือไม่?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>ต้องรีสตาร์ท</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>โหมด Hybrid</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>ล็อกหรือปลดล็อกทัชแพด</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>ล็อกทัชแพด</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>ล็อกหรือปลดล็อกทัชแพด</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>ล็อกทัชแพด</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>ลองอีกครั้ง</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดที่ไม่คาดคิด:
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>ลบรายงาน</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>บันทึกรายงานข้อขัดข้องถูกบันทึกลงดิสก์แล้ว คุณสามารถตรวจสอบรายละเอียดของรายงานด้านล่างนี้ รายงานจะไม่ถูกส่งโดยอัตโนมัติ</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>แอปพลิเคชันขัดข้องในระหว่างเซสชันก่อนหน้า</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>ไม่สามารถเปิดรายงานข้อขัดข้องได้: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>เปิดรายงาน</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>บันทึกรายงานข้อขัดข้องที่: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>ตรวจพบรายงานข้อขัดข้อง</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>ไม่สามารถโหลดรายละเอียดรายงานข้อขัดข้องได้</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>ไม่มีชื่อ</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>คุณอาจเลือกดำเนินการต่อโดยยอมรับความเสี่ยงเอง แต่โปรดทราบว่าคุณสมบัติบางอย่างอาจไม่พร้อมใช้งานและ/หรือทำงานไม่ถูกต้อง
+
+การบันทึกข้อมูลจะถูกเปิดใช้งานโดยอัตโนมัติ หากคุณเลือกดำเนินการต่อ</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>ตรวจสอบหน้าโปรเจกต์บน GitHub สำหรับข้อมูลเพิ่มเติม</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>โฟลเดอร์บันทึก</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>ประเภทเครื่อง</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ยังไม่ได้รับการทดสอบกับอุปกรณ์ของคุณ</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>คุณสามารถปิดคำเตือนนี้ได้ตลอดเวลาในการตั้งค่า</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>รุ่น</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>อุปกรณ์ที่ไม่รองรับ</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>ผู้ผลิต</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>อัปเดต</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>มีอัปเดต</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>มีอะไรใหม่?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ปรับความสว่างของไฟแป้นพิมพ์</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>คุณสามารถเปลี่ยนความสว่างด้วย Fn+Space</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>ปิดปุ่ม Windows บนแป้นพิมพ์ในตัว</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>ล็อกปุ่ม Windows</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>ทำงานเฉพาะบนแป้นพิมพ์ในตัว</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>ล็อกปุ่ม Windows</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>ใช่</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>ไมโครโฟน</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไมโครโฟน</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>ไมโครโฟน</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไมโครโฟน</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>ความละเอียด</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>เปลี่ยนความละเอียดของจอแสดงผลในตัว</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>ความละเอียด</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>เปลี่ยนความละเอียดของจอแสดงผลในตัว
+
+คำเตือน: การกระทำนี้จะไม่ทำงานอย่างถูกต้อง หากปิดจอแสดงผลภายใน</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>เปลี่ยนมาตราส่วนของจอแสดงผลในตัว</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>เปลี่ยนมาตราส่วนของจอแสดงผลในตัว
+
+คำเตือน: การกระทำนี้จะไม่ทำงานอย่างถูกต้อง หากปิดจอแสดงผลภายใน</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>จอแสดงผล</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>คุณสามารถเปิดหรือปิดไฟแบ็คไลท์ด้วย Fn+Space</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไฟแบ็คไลท์</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>ไม่พบดาวน์โหลดที่ตรงกัน</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>แสดงเฉพาะอัปเดต</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>ปรับแต่งแดชบอร์ด</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>ภาระ</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>สร้างกลุ่ม</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>คุณสมบัติบางอย่างอาจไม่ปรากฏบนแดชบอร์ด ขึ้นอยู่กับสถานะและการกำหนดค่าของแล็ปท็อปของคุณ</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>ปรับแต่ง</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>ปิดจอแสดงผล</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>ปิดจอแสดงผลที่มีอยู่ทั้งหมด
+การเลื่อนเมาส์หรือการกดแป้นพิมพ์จะปลุกจอแสดงผล</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>ปิดจอแสดงผล</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>ปิดจอแสดงผลที่มีอยู่ทั้งหมด</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>แก้ไขชื่อกลุ่ม</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>โลโก้ Legion เปิด</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>โลโก้ Legion ปิด</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>ไฟพอร์ตเปิด</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>ไฟพอร์ตปิด</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>ต้องรีสตาร์ท</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>ต้องปิดเครื่อง</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>แนะนำให้รีสตาร์ท</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>แนะนำ</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>อยู่ในคิว</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>กำลังดาวน์โหลด</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>กำลังติดตั้ง</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>เสร็จสมบูรณ์</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>ไม่พบคำจำกัดความของการกระทำ</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>รายละเอียดการใช้งานทางเทคนิคไม่พร้อมใช้งานสำหรับการกระทำนี้</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>โหลดล้มเหลว</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>ไม่ทราบ</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>การดำเนินการคำสั่ง</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>การแก้ไขรีจิสทรี</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>การจัดการบริการ</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>การแก้ไขรีจิสทรี + สคริปต์ PowerShell</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>การล้างข้อมูลรีจิสทรี</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>คำสั่ง DISM</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>บันทึกและปิด</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้าของโหมดกำหนดเอง</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดใช้งานค่าที่ตั้งล่วงหน้าของโหมดกำหนดเอง
+การตั้งค่านี้จะมีผลเฉพาะเมื่อเปิดใช้งานโหมดกำหนดเองเท่านั้น</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>ชื่อค่าที่ตั้งล่วงหน้า</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้าที่ใช้งานอยู่</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>โฟลเดอร์แอปพลิเคชัน</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>ข้อมูล</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>ชั่วคราว</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>ความสว่างจอแสดงผลเดียว</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>เมื่อเปิดใช้งาน ระดับความสว่างเดียวกันจะถูกนำไปใช้กับแผนการใช้พลังงานของ Windows ทั้งหมดเมื่อใดก็ตามที่คุณเปลี่ยน</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>มีอัปเดต {0}!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>ขีดจำกัดพลังงานสูงสุด</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>ขีดจำกัดพลังงาน sPPT ของ APU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>การใช้พลังงานต่อเนื่องที่ CPU สามารถเข้าถึงได้</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>การใช้พลังงานสูงสุดที่ CPU สามารถเข้าถึงได้ภายในระยะเวลาสั้น ๆ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>การใช้พลังงานสูงสุดทันทีที่ CPU สามารถเข้าถึงได้</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>การใช้พลังงานสูงสุดที่ CPU สามารถเข้าถึงได้เมื่อทั้ง CPU และ GPU ถูกใช้งานอย่างเต็มที่</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>การใช้พลังงานสูงสุดที่ CPU สามารถเข้าถึงได้โดยมีความล่าช้าเล็กน้อย</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>อุณหภูมิสูงสุดที่ CPU สามารถเข้าถึงได้ก่อนที่ความถี่และพลังงานจะลดลง</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>พลังงานเพิ่มเติมสูงสุดที่สามารถจัดสรรให้กับ GPU ตามการใช้พลังงานของ CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>พลังงานเพิ่มเติมที่สามารถจัดสรรให้กับ GPU นอกเหนือจากการใช้พลังงานพื้นฐาน</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>อุณหภูมิสูงสุดที่ GPU สามารถเข้าถึงได้ก่อนที่ความถี่และพลังงานจะลดลง</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>ค่าเริ่มต้น</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>ระยะเวลาขีดจำกัดพลังงานระยะสั้น</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>ระยะเวลาที่ CPU ได้รับอนุญาตให้เร่งความเร็วและใช้ขีดจำกัดพลังงานระยะสั้น เมื่อ Tau หมดอายุ ระบบจะใช้ขีดจำกัดพลังงานระยะยาว</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>เป้าหมายพลังงานการประมวลผลทั้งหมดใน AC</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>จุดที่ CPU กระตุ้นการปรับการใช้พลังงานแบบไดนามิกสำหรับ GPU</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>สร้าง</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>เพิ่มขั้นตอน</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>สร้างการดำเนินการ</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>โหมดพลังงาน</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>GPU แบบแยก</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>สถานะพลังงาน</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>แบตเตอรี่</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>โหมด</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>อัตราคายประจุ</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>อัตราคายประจุขั้นต่ำ</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>อัตราคายประจุสูงสุด</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>เวลาการใช้งาน</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>มีอัปเดต!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>เลือกไอคอน</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>เปลี่ยนไอคอน</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>ระดับแบตเตอรี่ต่ำ</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>กำหนดค่า</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>ตรวจพบโมเดลพลังงานต่ำ S0</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows รายงานว่าแล็ปท็อปนี้รองรับ Modern Standby การใช้แผนการใช้พลังงานอื่นที่ไม่ใช่ Balanced อาจทำให้เกิดพฤติกรรมที่ไม่คาดคิด</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>เลือกแผนการใช้พลังงานของ Windows ที่จะใช้เมื่อโหมดพลังงานเปลี่ยน</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>ตัวเลือกแผนการใช้พลังงานในแผงควบคุมของ Windows</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>ปิดเครื่อง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>นำเข้าโปรไฟล์ไฟแป้นพิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>นำเข้าและใช้การกำหนดค่าไฟแบ็คไลท์กับโปรไฟล์ปัจจุบัน</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>เส้นทาง</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>หลังจาก {0}</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>ทริกเกอร์หลายตัว...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>การตั้งค่าโอเวอร์คล็อก GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>ออฟเซ็ตความถี่คอร์</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>ออฟเซ็ตความถี่หน่วยความจำ</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>โอเวอร์คล็อก GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>เพิ่มประสิทธิภาพโดยการโอเวอร์คล็อก GPU แบบแยก</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>โอเวอร์คล็อก GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>เพิ่มประสิทธิภาพโดยการโอเวอร์คล็อก GPU แบบแยก
+
+คำเตือน: การกระทำนี้จะไม่ทำงานอย่างถูกต้อง หากไม่มี GPU แบบแยก</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>ไฟพอร์ต</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไฟของพอร์ตที่ด้านหลังของแล็ปท็อป</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>ไฟพอร์ต</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไฟของพอร์ตที่ด้านหลังของแล็ปท็อป</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>แสงพื้นหลังโลโก้</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดแสงพื้นหลังโลโก้</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>ไฟโลโก้ฝาพับ</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดหรือปิดไฟบนฝาพับของแล็ปท็อป</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>สูงสุด: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>การใช้งาน</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>ความถี่คอร์</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>ความถี่ P Core</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>ความถี่ E Core</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>อุณหภูมิ</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>พัดลม</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>ความถี่หน่วยความจำ</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>การใช้หน่วยความจำ</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิหน่วยความจำ</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิ SSD</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>การใช้ VRAM</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>การใช้หน่วยความจำที่ใช้ร่วมกัน</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิ VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>จุดร้อนของ GPU</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>ปริมาณงาน PCIe</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>คอร์</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>หน่วยความจำ</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>แพลตฟอร์ม</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>ช่วงเวลาการรีเฟรช</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>บูตทันที</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>เปิดแล็ปท็อปเมื่อเชื่อมต่อเครื่องชาร์จ</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>บูตทันที</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>เปิดแล็ปท็อปเมื่อเชื่อมต่อเครื่องชาร์จ</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>ไม่สามารถเปลี่ยนโหมดพลังงานได้</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>โหมดพลังงาน {0} ไม่พร้อมใช้งานโดยไม่มีไฟ AC</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>เซ็นเซอร์</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>ไม่สามารถเปลี่ยนโหมดการทำงานของ GPU</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>ลองเปลี่ยนโหมดอีกครั้งในอีกสองสามวินาที หากคุณไม่เห็นผลลัพธ์ที่คาดหวัง
+หาก dGPU ไม่ตอบสนองเลย โปรดรีสตาร์ทแล็ปท็อปของคุณ</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU กำลังถูกใช้งานอยู่</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU จะตัดการเชื่อมต่อโดยอัตโนมัติเมื่อไม่ได้ใช้งาน</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU กำลังถูกใช้งานอยู่หรือแล็ปท็อปไม่ได้ใช้พลังงานจากแบตเตอรี่</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU จะตัดการเชื่อมต่อโดยอัตโนมัติเมื่อไม่ได้ใช้งานและแล็ปท็อปใช้พลังงานจากแบตเตอรี่</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>การตั้งค่าโหมดกำหนดเองจะไม่ถูกนำไปใช้อย่างถูกต้องเมื่อ Lenovo Vantage หรือบริการของมันกำลังทำงานอยู่</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>การตั้งค่าโหมดกำหนดเองจะไม่ถูกนำไปใช้อย่างถูกต้องเมื่อ Legion Zone หรือบริการของมันกำลังทำงานอยู่</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>เชื่อมต่อ dGPU แล้ว</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>ตัดการเชื่อมต่อ dGPU แล้ว</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>โหมดการทำงานของ GPU</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>เลือกโหมดการทำงานของ GPU ตามการใช้งานและสภาวะพลังงานของคอมพิวเตอร์
+การสลับโหมดอาจต้องรีสตาร์ท</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>โหมด Hybrid</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>อนุญาตให้สลับระหว่าง GPU แบบรวมและแบบแยก
+ต้องรีสตาร์ท</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>ระยะเวลา</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>อัปเดต</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>Dynamic Boost จาก GPU ไปยัง CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>นี่คือพลังงานเพิ่มเติมสูงสุดที่สามารถจัดสรรให้กับ CPU จาก GPU ตามการใช้งาน CPU ค่าที่สูงกว่าจะให้ประสิทธิภาพที่ดีกว่าสำหรับแอปพลิเคชันที่ใช้ CPU</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>โลโก้บูต</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>ปรับแต่งภาพโลโก้บูตที่มองเห็นได้ระหว่างการเริ่มต้นระบบ</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>โลโก้บูต</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>ตั้งโลโก้บูตเริ่มต้นแล้ว</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>ตั้งโลโก้บูตแบบกำหนดเองแล้ว</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>สถานะ</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>คืนค่าเริ่มต้น</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>ปรับแต่ง</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>การดำเนินการ</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>ข้อความแจ้งเตือน</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>การแจ้งเตือน</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Smart Fn Lock</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Fn Lock จะถูกปิดชั่วคราวเมื่อกดปุ่ม Alt, Ctrl หรือ Shift</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>โลโก้บูตแบบกำหนดเองต้องมีขนาด {0} พิกเซลพอดี
+รูปแบบที่รองรับ: {1}</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>การชาร์จแบตเตอรี่ข้ามคืน</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>เมื่อเปิดใช้งาน อุปกรณ์นี้จะชาร์จถึง 80% เมื่อเสียบปลั๊กไว้ข้ามคืน และชาร์จให้เสร็จถึง 100% ภายในเวลาที่คุณใช้อุปกรณ์ในตอนเช้า</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>การชาร์จแบตเตอรี่ข้ามคืน</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>เมื่อเปิดใช้งาน อุปกรณ์นี้จะชาร์จถึง 80% เมื่อเสียบปลั๊กไว้ข้ามคืน และชาร์จให้เสร็จถึง 100% ภายในเวลาที่คุณใช้อุปกรณ์ในตอนเช้า</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>ขนาดภาพไม่ถูกต้อง</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>รูปแบบภาพไม่ถูกต้อง</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>ไม่สามารถเมานต์พาร์ติชัน EFI</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>ไม่สามารถตั้งค่าสิทธิ์ UEFI</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>พื้นที่ว่างในพาร์ติชัน EFI ไม่เพียงพอ</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>ไม่สามารถตั้งโลโก้แบบกำหนดเองได้: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>ไม่สามารถตั้งโลโก้เริ่มต้นได้: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>ตั้งโลโก้บูตเริ่มต้นแล้ว</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>ตั้งโลโก้บูตแบบกำหนดเองแล้ว</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>ชื่อเครือข่าย (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>คัดลอกชื่อเครือข่ายปัจจุบัน</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>เว้นว่างไว้สำหรับเครือข่าย Wi-Fi ใดก็ได้</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>แชร์ความเร็วพัดลม อุณหภูมิแบตเตอรี่ ฯลฯ กับ HWiNFO64 คุณอาจต้องรีสตาร์ท HWiNFO64 หลังจากเปลี่ยนตัวเลือกนี้</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>การรวมระบบ</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>ข้อมูล</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>โฟลเดอร์ดาวน์โหลด</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>เปิดโฟลเดอร์ดาวน์โหลด</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>ดาวน์โหลด</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>ติดตั้ง</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>ถอนการติดตั้ง</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>การติดตั้งล้มเหลว</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>ไม่พบไฟล์ กรุณาดาวน์โหลดก่อน</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>เริ่มการติดตั้งแล้ว</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>กำลังเริ่มตัวติดตั้ง: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>เปิด README</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>ค่าที่ตั้งล่วงหน้า</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>รีเฟรช</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>ลบ</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>ระยะเวลา (นาที)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>รีเซ็ตตัวนับสำหรับ &quot;ใช้แบตเตอรี่ตั้งแต่&quot; ในส่วนแบตเตอรี่เมื่อระบบรีบูต</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>รีเซ็ต &quot;ใช้แบตเตอรี่ตั้งแต่&quot; เมื่อเริ่มต้น</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>ปิด Wi-Fi</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>เปิด Wi-Fi</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>เรียกใช้แบบเงียบ</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>รอจนกว่าจะเสร็จสิ้น</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>เรียกใช้แอปพลิเคชันคอนโซลโดยไม่สร้างหน้าต่างคอนโซล</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>รอจนกว่าโปรแกรมหรือสคริปต์จะดำเนินการเสร็จสิ้น</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>เมื่อปิดเสียง อุปกรณ์ส่งออกเสียงที่ใช้งานอยู่ทั้งหมดจะถูกปิดเสียง</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>ลำโพง</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>ย่อไปยังถาด</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>ย่อไปยังถาดเสมอแทนแถบงาน</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>โหมดพลังงานของ Windows</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>สลับไปยังโหมดกำหนดเองด้วย Fn+Q</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>อนุญาตให้สลับไปยังโหมดกำหนดเองได้อย่างรวดเร็วด้วย Fn+Q</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>การซิงโครไนซ์โหมดพลังงาน</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>เปลี่ยนแผนการใช้พลังงานของ Windows หรือโหมดพลังงานของ Windows โดยอัตโนมัติเมื่อเปลี่ยนโหมดพลังงาน</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>โหมดพลังงานของ Windows</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>เลือกโหมดพลังงานของ Windows ที่จะใช้เมื่อโหมดพลังงานเปลี่ยน</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดในการอ่านข้อมูลอุปกรณ์</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>ข้อผิดพลาดในการตรวจสอบความเข้ากันได้</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>แอปพลิเคชันล้มเหลวในการอ่านข้อมูลอุปกรณ์ระหว่างการเริ่มต้น โปรดตรวจสอบรายละเอียดข้อผิดพลาดด้านล่างและลองทำตามขั้นตอนการแก้ไขปัญหาหากจำเป็น</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>ขั้นตอนการแก้ไขปัญหา</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>ตรวจสอบให้แน่ใจว่าบริการ Windows Management Instrumentation (WMI) กำลังทำงานอยู่: เปิด Services (services.msc) และตรวจสอบว่า &quot;Windows Management Instrumentation&quot; กำลังทำงานอยู่</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>เรียกใช้แอปพลิเคชันในฐานะผู้ดูแลระบบเพื่อให้แน่ใจว่ามีสิทธิ์เพียงพอในการเข้าถึงรีจิสทรีของระบบและ WMI</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>ตรวจสอบทรัพยากรระบบ: ปิดแอปพลิเคชันอื่น ๆ ที่ใช้ทรัพยากรมากแล้วลองอีกครั้ง</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>ตรวจสอบไฟล์บันทึกสำหรับข้อมูลข้อผิดพลาดโดยละเอียดโดยคลิก &quot;เปิดบันทึก&quot; ด้านล่าง</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>เปิดไฟล์บันทึก</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>มาโคร</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>มาโคร</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>ทำซ้ำ</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>ไม่สนใจการหน่วงเวลา</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>ล้าง</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>บันทึก</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>หยุดการบันทึก</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>ไม่ทำซ้ำ</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Universal Device Toolkit ต้องทำงานเพื่อให้มาโครทำงานได้</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>เปิดใช้งาน</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>คุณสามารถบันทึกชุดของการกดปุ่มและเรียกใช้โดยใช้แป้นตัวเลขบนแป้นพิมพ์ของคุณ</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>มาโคร</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>เล่นมาโคร</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>ขัดจังหวะหากมีการกดปุ่มอื่น</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>ซ่อน</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>ซ่อนทั้งหมด</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>อุปกรณ์</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>ยกเลิกการเลือกทั้งหมด</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>เลือกทั้งหมด</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>แป้นพิมพ์เท่านั้น</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>ปุ่มแป้นพิมพ์และปุ่มเมาส์</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>อินพุตทั้งหมด</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>ตัวเลือกการบันทึก</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>การบันทึกจะเริ่มใน 3 วินาที...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>กำลังบันทึก...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>กด ESC เพื่อหยุด</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>แสดงเฉพาะอุปกรณ์ที่เลือก</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>แสดงเฉพาะอุปกรณ์ที่ถอดได้</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>แสดงเฉพาะอุปกรณ์ที่เชื่อมต่อ</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>เปิดใช้ Command Line Interface ที่อนุญาตให้ควบคุมจากบรรทัดคำสั่ง</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>เพิ่ม CLI ลงใน PATH</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>เพิ่ม CLI ลงในตัวแปรสภาพแวดล้อม PATH ของผู้ใช้</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>อุณหภูมิ</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>เลือกหน่วยสำหรับเซ็นเซอร์อุณหภูมิ</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys กำลังทำงานในเบื้องหลัง</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone กำลังทำงานในเบื้องหลัง</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage และ/หรือ ImController กำลังทำงานในเบื้องหลัง</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>แสดงการแจ้งเตือนบนหน้าจอทั้งหมดที่เชื่อมต่อกับอุปกรณ์ของคุณ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>การแจ้งเตือนบนหน้าจอทั้งหมด</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>ตรวจสอบ</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>กำลังตรวจสอบอัปเดต...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>ตรวจสอบอัปเดต</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>อัปเดต</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>การตรวจสอบอัปเดตถูกปิดใช้งานสำหรับเซสชันนี้</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ถูกเริ่มต้นด้วย {0} การตรวจสอบอัปเดตอัตโนมัติและด้วยตนเอง รวมถึงการตั้งค่าอัปเดตด้านล่าง จะถูกปิดใช้งานจนกว่าคุณจะเริ่มต้นใหม่โดยไม่มีอาร์กิวเมนต์การเริ่มต้นนั้น</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>ถึงขีดจำกัดอัตรา API แล้ว โปรดลองอีกครั้งในภายหลัง</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>ไม่สามารถตรวจสอบอัปเดตได้</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>มีบางอย่างผิดพลาด โปรดลองอีกครั้งในภายหลัง</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>ไม่พบอัปเดต</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>ตรวจสอบอัปเดตโดยอัตโนมัติ</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>ที่เก็บอัปเดต</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>กำหนดค่าที่เก็บ GitHub ที่จะตรวจสอบอัปเดต เว้นว่างไว้เพื่อใช้ค่าเริ่มต้น</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>เจ้าของที่เก็บ</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>เช่น SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>ชื่อที่เก็บ</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>เช่น UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>ไม่พบแคตตาล็อกอัปเดต</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>ลองรับอัปเดตจากแหล่งอื่น</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>มีบางอย่างผิดพลาด</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>ตรวจสอบว่าการเชื่อมต่ออินเทอร์เน็ตของคุณทำงานอยู่หรือไม่</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>เล่นเสียง</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>รองรับรูปแบบเพลงทั่วไป เช่น wav หรือ mp3</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>การดำเนินการด่วน</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>เรียกใช้การดำเนินการด่วนที่บันทึกไว้</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>การแจ้งเตือนอยู่ด้านบนเสมอ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>วางการแจ้งเตือนไว้ด้านบนเสมอ
+จะไม่ส่งผลต่อหน้าต่างเต็มหน้าจออื่น ๆ แต่คุณจะไม่สามารถคลิกที่การแจ้งเตือนได้</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>แนะนำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>หยุดทั้งหมดชั่วคราว</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>รายละเอียดการกระทำ</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>รายละเอียดการใช้งานทางเทคนิค</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>ประเภทการใช้งาน:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>เลือก {0} จาก {1} การกระทำ</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>ขนาดการล้างข้อมูลโดยประมาณ: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>คลิกสแกนเพื่อคำนวณขนาดรวม</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>กำลังทำงาน: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>กำลังถอนการติดตั้งแอปที่เลือก...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>มุมมองกะทัดรัด</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>การตกแต่งระบบ</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>การตกแต่ง Windows</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>ปรับแต่งลักษณะที่ปรากฏและพฤติกรรมของ Windows</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>เอฟเฟกต์</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>ปรับแต่งเอฟเฟกต์ภาพ</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>ความโปร่งใส</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>ขยายทั้งหมด</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>ย่อทั้งหมด</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>เพิ่มพื้นที่ว่าง {0} ใน {1} วินาที</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>กำลังดำเนินการ {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>การดำเนินการถูกยกเลิก</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>รายละเอียดข้อผิดพลาด: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>แสดงดาวน์โหลดที่ซ่อนไว้</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>แสดงดาวน์โหลดที่ซ่อนไว้</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>เลือกภาษา</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>อุปกรณ์นี้จะเริ่มในโหมดพื้นฐาน การควบคุมเฉพาะฮาร์ดแวร์จะถูกซ่อนไว้จนกว่าจะมีแพ็คอุปกรณ์ที่เข้ากันได้</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>แพ็คอุปกรณ์: โหมดพื้นฐาน</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit ตรวจพบแพ็คอุปกรณ์ที่ตรงกัน ยืนยันตอนนี้เพื่อให้แอปเตรียมคุณสมบัติเฉพาะฮาร์ดแวร์</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>แพ็คอุปกรณ์: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>กำลังเตรียมการตั้งค่าอุปกรณ์...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>ไม่ได้เชื่อมต่อ</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>ซิงโครไนซ์โซน</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>ใช้ฟังก์ชันการล้างข้อมูลรีจิสทรีในตัวของ Windows</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (ล้างแคช DNS)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (รีเซ็ตสแต็กโปรโตคอล Winsock)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (รีเซ็ตสแต็กโปรโตคอล TCP/IP)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>ส่วนขยายปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>ติดตั้งและจัดการปลั๊กอินเพื่อขยายฟังก์ชันการทำงาน</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>ติดตั้ง</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>ติดตั้งแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>ไม่สามารถถอนการติดตั้ง</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>การตั้งค่าปลั๊กอิน</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>ชื่อปลั๊กอิน</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>คำอธิบายปลั๊กอิน</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>ปลั๊กอินนี้ไม่มีการตั้งค่าที่กำหนดค่าได้</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>ไม่พบปลั๊กอิน: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>ข้อผิดพลาด</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>ผู้เขียน: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>รูปแบบอินเทอร์เฟซการกำหนดค่าปลั๊กอินไม่ถูกต้อง</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดในการโหลดการตั้งค่าปลั๊กอิน: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>ค้นหาปลั๊กอิน...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>ทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>ติดตั้งแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>ยังไม่ได้ติดตั้ง</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>ไม่มีปลั๊กอินที่ใช้งานได้</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>ร้านปลั๊กอินว่างเปล่าในขณะนี้ โปรดติดตามการอัปเดตปลั๊กอินในอนาคต</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>กำหนดค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>ถอนการติดตั้ง</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>ภาษา:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>ใช้ค่าเริ่มต้นของแอปพลิเคชัน</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>พบปลั๊กอิน {0} รายการ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>นำเข้าจำนวนมาก</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>นำเข้าปลั๊กอินจากไฟล์ ZIP ในเครื่อง</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>นำเข้าจากไฟล์</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>เลือกไฟล์ปลั๊กอิน (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>นำเข้าปลั๊กอิน {0} รายการสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>นำเข้าปลั๊กอิน {0} รายการสำเร็จและพร้อมใช้งาน</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>การนำเข้าจำนวนมากล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>ไม่สามารถนำเข้าปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>กำลังนำเข้าปลั๊กอิน...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>กำลังนำเข้า {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>กำลังประมวลผล {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอินสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอินสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>การติดตั้งล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>ไม่สามารถติดตั้งปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>ถอนการติดตั้งปลั๊กอินสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>ถอนการติดตั้งปลั๊กอินสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>การถอนการติดตั้งล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>ไม่สามารถถอนการติดตั้งปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>เปิดปลั๊กอินล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>ไม่สามารถเปิดปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>ไม่สามารถเปิดปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>ยังไม่ได้ติดตั้งปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>ยังไม่ได้ติดตั้งปลั๊กอินและไม่สามารถเปิดได้</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>ต้องใช้เวอร์ชันโฮสต์ขั้นต่ำ {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>ปลั๊กอินจะถูกลบอย่างถาวร</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>ปลั๊กอินจะถูกลบอย่างถาวร การกระทำนี้ไม่สามารถยกเลิกได้</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>การอัปเดตล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>การอัปเดตปลั๊กอินล้มเหลว โปรดตรวจสอบการเชื่อมต่อเครือข่ายและลองอีกครั้งในภายหลัง</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>การอัปเดตสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>อัปเดตปลั๊กอินสำเร็จ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>กำลังอัปเดตปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>กำลังดาวน์โหลดและอัปเดตปลั๊กอิน...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>อัปเดตทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>เรียกใช้ปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>เริ่มปลั๊กอินแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>ถอนการติดตั้งปลั๊กอินแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>ปลั๊กอินจะถูกลบเมื่อปิดโปรแกรม</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>การลบล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดในการลบปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>การกำหนดค่าล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอินแล้วแต่ยังไม่ได้โหลด โปรดลองรีสตาร์ทแอปพลิเคชัน</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>ไม่มีการกำหนดค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>ปลั๊กอินไม่มีตัวเลือกการกำหนดค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>ไม่รองรับการกำหนดค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>ปลั๊กอินไม่รองรับการกำหนดค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>รีเซ็ตสถานะปลั๊กอินแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>ล้างสถานะการติดตั้งปลั๊กอินทั้งหมดแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>การอัปเดตจำนวนมากเสร็จสมบูรณ์</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>ประมวลผลปลั๊กอินทั้งหมดแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>กำลังเตรียมดาวน์โหลด...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>ในเครื่อง</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>มีเวอร์ชันใหม่</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>เวอร์ชัน: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>วันที่วางจำหน่าย: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>มีอะไรใหม่:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>รายละเอียด</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>คู่มือการใช้งาน</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>แสดงรายละเอียด</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>ซ่อนรายละเอียด</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>พร้อมใช้งาน</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>รีเฟรชรายการปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>ไม่พบปลั๊กอินที่ตรงกับการค้นหาของคุณ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>อัปเดตปลั๊กอินที่มีทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>ติดตั้งทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอินที่มีทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>กำลังติดตั้งทั้งหมด...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>กำลังติดตั้งปลั๊กอิน {0} รายการ...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>การติดตั้งจำนวนมากเสร็จสมบูรณ์</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอิน {0} รายการแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>การติดตั้งจำนวนมากล้มเหลว</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>ไม่สามารถติดตั้งปลั๊กอินได้: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>กำลังอัปเดตทั้งหมด...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>กำลังอัปเดต...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>เปิดโฟลเดอร์</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>คัดลอก ID ปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>ไม่พบโฟลเดอร์</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>ไดเรกทอรีปลั๊กอินยังไม่มีอยู่</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>คัดลอกแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>คัดลอก ID ปลั๊กอิน &apos;{0}&apos; ไปยังคลิปบอร์ดแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>ดาวน์โหลดเสร็จสมบูรณ์</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>กำลังดาวน์โหลด...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>กำลังดาวน์โหลด... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>ไม่มีเครื่องมือที่ใช้งานได้ โปรดเพิ่มเครื่องมือในโฟลเดอร์เครื่องมือในไดเรกทอรีแอปพลิเคชัน</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>เครื่องมือจะปรากฏที่นี่เมื่อมีให้ใช้งานในไดเรกทอรีเครื่องมือ</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>รุ่น</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>การใช้พลังงาน</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>ชาร์จ</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>สุขภาพ</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>อัตรา</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>อัตราต่ำสุด</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>อัตราสูงสุด</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>รอบ</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>ความจุ</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>ความจุเต็ม</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>ออกแบบ</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>วันที่</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>ความถี่คอร์ / หน่วยความจำ</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>แรงดันไฟฟ้าคอร์</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>ช่วงแรงดันไฟฟ้า</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>แถบด้านข้าง</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>ระบบ</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>ช่วงอัตรา</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>ดับเบิลคลิกเพื่อแสดงหรือซ่อนข้อมูลเซ็นเซอร์โดยละเอียด</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>โปรดเลือกตัวเลือกการล้างข้อมูลอย่างน้อยหนึ่งรายการ</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>เริ่มทั้งหมด</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>เช่น 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>เช่น C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>โปรดเลือกอย่างน้อยหนึ่งรายการเพื่อล้าง</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>บังคับใช้การเรนเดอร์ด้วยซอฟต์แวร์</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>ใช้การเรนเดอร์ด้วยซอฟต์แวร์เมื่อตรวจพบ Remote Desktop หรือจอแสดงผลแบบ headless แนะนำให้รีสตาร์ท</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>ตัวติดตั้งออกด้วยรหัส {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>โดย {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>เพิ่มประสิทธิภาพ</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>เปิดด่วน</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>อัปเดต</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>กำลังตรวจสอบความพร้อมใช้งานของปลั๊กอิน...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>พร้อมติดตั้ง</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>มีปลั๊กอินเพิ่มเติมอีก {0} รายการในฟีดปัจจุบัน</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>ติดตั้งแล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>ชีพจรร้าน</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>ปลั๊กอินทั้งหมด</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>ปลั๊กอินที่ตรวจพบทั้งหมดเป็นเวอร์ชันล่าสุดอยู่แล้ว</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>เป็นเวอร์ชันล่าสุด</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>มีอัปเดต</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>พร้อมอัปเดต</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>มีการอัปเดตปลั๊กอิน {0} รายการพร้อมติดตั้ง</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>กำลังรอข้อมูลเมตาของปลั๊กอิน</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>กำลังโหลดข้อมูลเมตา</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>ปรับแต่งภาษา หน่วยอุณหภูมิ ธีม และสีหลัก</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>ลักษณะที่ปรากฏ</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>แอปพลิเคชัน</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>ไม่สามารถใช้ {0}: {1}</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>รูปแบบธีม</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>เลือกค่าที่ตั้งล่วงหน้าของรูปแบบภาพสำหรับแอป โหมดธีมและสีหลักยังคงมีผลอยู่</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอิน {0} แล้ว ใช้เปิดเพื่อเรียกใช้จุดเข้าใช้งานที่มีอยู่</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอิน {0} แล้ว และเปิดในการปรับแต่งระบบ</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>ติดตั้งแล้ว แต่ไม่มีจุดเข้าใช้งาน</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอิน {0} แล้ว แต่ไม่สามารถโหลด UI รันไทม์ได้ รีสตาร์ทแอปหรือติดตั้งปลั๊กอินใหม่</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>ติดตั้งปลั๊กอิน {0} แล้ว แต่ไม่มีจุดเข้าใช้งานสำหรับผู้ใช้ ปลั๊กอินอาจมีเพียงบริการเบื้องหลังหรือข้อมูล manifest</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>การวิเคราะห์ไฟล์ขนาดใหญ่</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>เลือกไฟล์ที่คุณต้องการลบ จะแสดงเฉพาะไฟล์ที่ตรงกับตัวกรอง</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>กรองไฟล์ที่ใหญ่กว่า:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>กำหนดเอง...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>เลือก</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>ชื่อไฟล์</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>ขนาด</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>เส้นทาง</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>ยืนยันการเลือก</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>เลือกแล้ว: {0} ไฟล์ ({1})</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>พัดลม</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>อุณหภูมิดิสก์ 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>อุณหภูมิดิสก์ 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>ความถี่ E-Core</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>เวลาเฟรม</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>เกม</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>พัดลม</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>อุณหภูมิ</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>การใช้งาน</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>พัดลม PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>ความถี่ P-Core</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>แถบ</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>แผง</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>แสดงหรือซ่อน OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>สีพื้นหลัง</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>สีหมวดหมู่</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>รัศมีมุม</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>ด้านล่าง</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>ด้านบน</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>สีวิกฤต</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>ขนาดตัวอักษร</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>สีป้ายชื่อ</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>ความทึบ</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>สีค่า</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>สีคำเตือน</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>ล็อกตำแหน่ง</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>รูปแบบโอเวอร์เลย์</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>ช่วงเวลาการรีเฟรช</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>ช่วงเวลาการรีเฟรชเซ็นเซอร์</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>รีเซ็ตตำแหน่ง</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>เกณฑ์การ snap</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>ลักษณะที่ปรากฏ</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>ทั่วไป</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>เซ็นเซอร์</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>เกณฑ์</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>วิกฤต</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>เส้นแดง FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>อัตราเฟรมขั้นต่ำที่ยอมรับได้ ต่ำกว่านี้ สีจะเปลี่ยนเป็นวิกฤต</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>ส่วนต่าง FPS ต่ำ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>ความแตกต่างสูงสุดระหว่าง FPS เฉลี่ยและ 1% ต่ำ เกินค่านี้ ตัวนับจะเปลี่ยนเป็นวิกฤต</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>ประสิทธิภาพ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>อุณหภูมิ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>การใช้งาน</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>คำเตือน</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>การตั้งค่า OSD</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>กำลังรอการติดตั้ง (ปลั๊กอินอื่นกำลังดาวน์โหลด)...</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>อุณหภูมิ PCH</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิคอร์</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>อุณหภูมิ VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>การใช้ VRAM</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>กำลังโหลด...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>อุณหภูมิบอร์ด</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>เมนบอร์ด</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>ไม่มีข้อมูล</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>ไม่ทราบแบตเตอรี่</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>ไม่ทราบ CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>ไม่ทราบ GPU</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>เปิดใช้การสำรวจฮาร์ดแวร์ขั้นสูงเพื่อตรวจสอบอุณหภูมิ ความถี่ และขีดจำกัดพลังงานโดยละเอียด</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>คุณต้องติดตั้ง PawnIO ก่อนจึงจะใช้เซ็นเซอร์ฮาร์ดแวร์ได้!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>เซ็นเซอร์ฮาร์ดแวร์</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>ไม่สามารถดาวน์โหลดชุดภาษาได้ ตรวจสอบการเชื่อมต่อเครือข่าย พร็อกซี หรือการตั้งค่า TLS แล้วลองอีกครั้ง</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>จอแสดงผล</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Smart Keys</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>โอเวอร์เลย์ลอยตัวที่แสดงข้อมูลเซ็นเซอร์สด</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>เปิดใช้งาน OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+</root>

@@ -163,7 +163,7 @@
 
                     <TextBlock
                         Focusable="True"
-                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
+                        Style="{StaticResource AppSectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.AutomationPage_QuickActions_Title}" />
 
                     <TextBlock

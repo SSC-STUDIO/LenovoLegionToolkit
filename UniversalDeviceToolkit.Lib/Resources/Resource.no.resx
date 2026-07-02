@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -58,21 +58,20 @@
   </resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="AccentColorSource_Custom" xml:space="preserve">
+  </resheader>  <data name="AccentColorSource_Custom" xml:space="preserve">
     <value>Egendefinert</value>
   </data>
   <data name="AccentColorSource_System" xml:space="preserve">
-    <value>System </value>
+    <value>System</value>
   </data>
   <data name="AlwaysOnUSBState_Off" xml:space="preserve">
     <value>Av</value>
   </data>
   <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
-    <value>På, alltid</value>
+    <value>P氓, alltid</value>
   </data>
   <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
-    <value>På, når du sover</value>
+    <value>P氓, n氓r du sover</value>
   </data>
   <data name="AutorunState_Disabled" xml:space="preserve">
     <value>Deaktivert</value>
@@ -97,7 +96,7 @@
     <comment>Informs the user that Flip to Start is or will be turned off.</comment>
   </data>
   <data name="FlipToStartState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that Flip to Start is or will be turned on.</comment>
   </data>
   <data name="FnLockState_Off" xml:space="preserve">
@@ -105,21 +104,21 @@
     <comment>Informs the user that Fn Lock is or will be turned off.</comment>
   </data>
   <data name="FnLockState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that Fn Lock is or will be turned on.</comment>
   </data>
   <data name="GPUController_PoweredOff" xml:space="preserve">
-    <value>slått av</value>
+    <value>sl氓tt av</value>
   </data>
   <data name="GPUController_PoweredOn" xml:space="preserve">
-    <value>slått på</value>
+    <value>sl氓tt p氓</value>
   </data>
   <data name="HDRState_Off" xml:space="preserve">
     <value>Av</value>
     <comment>Informs the user that HDR is or will be turned off.</comment>
   </data>
   <data name="HDRState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
@@ -139,7 +138,7 @@
     <comment>Informs the user that the microphone is or will be turned off.</comment>
   </data>
   <data name="MicrophoneState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that the microphone is or will be turned on.</comment>
   </data>
   <data name="NotificationPosition_BottomCenter" xml:space="preserve">
@@ -149,32 +148,32 @@
     <value>Nederst til venstre</value>
   </data>
   <data name="NotificationPosition_BottomRight" xml:space="preserve">
-    <value>Bunn høyre</value>
+    <value>Bunn h酶yre</value>
   </data>
   <data name="NotificationPosition_Center" xml:space="preserve">
     <value>Sentrum</value>
   </data>
   <data name="NotificationPosition_CenterLeft" xml:space="preserve">
-    <value>Venstrestilt </value>
+    <value>Venstrestilt</value>
   </data>
   <data name="NotificationPosition_CenterRight" xml:space="preserve">
-    <value>Senter høyre</value>
+    <value>Senter h酶yre</value>
   </data>
   <data name="NotificationPosition_TopCenter" xml:space="preserve">
-    <value>Øverst i midten</value>
+    <value>脴verst i midten</value>
   </data>
   <data name="NotificationPosition_TopLeft" xml:space="preserve">
-    <value>Øverst til venstre</value>
+    <value>脴verst til venstre</value>
   </data>
   <data name="NotificationPosition_TopRight" xml:space="preserve">
-    <value>Øverst til høyre</value>
+    <value>脴verst til h酶yre</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
     <value>Av</value>
     <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
   </data>
   <data name="OverdriveState_Off" xml:space="preserve">
@@ -182,7 +181,7 @@
     <comment>Informs the user that Overdrive is or will be turned off.</comment>
   </data>
   <data name="OverdriveState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that Overdrive is or will be turned on.</comment>
   </data>
   <data name="PowerModeState_Balance" xml:space="preserve">
@@ -192,7 +191,7 @@
     <value>Egendefinert</value>
   </data>
   <data name="PowerModeState_Performance" xml:space="preserve">
-    <value>Produktbeskrivelse</value>
+    <value>Ytelse</value>
   </data>
   <data name="PowerModeState_Quiet" xml:space="preserve">
     <value>Stille</value>
@@ -210,7 +209,7 @@
     <value>Saktest</value>
   </data>
   <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
-    <value>Høy</value>
+    <value>H酶y</value>
   </data>
   <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
     <value>Lav</value>
@@ -225,25 +224,25 @@
     <value>Statisk</value>
   </data>
   <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
-    <value>Bølge venstre</value>
+    <value>B酶lge venstre</value>
   </data>
   <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
-    <value>Bølge til høyre</value>
+    <value>B酶lge til h酶yre</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
     <value>Av</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
-    <value>Forhåndsinnstilling 1:</value>
+    <value>Forh氓ndsinnstilling 1:</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
-    <value>Forhåndsinnstilling 3</value>
+    <value>Forh氓ndsinnstilling 3</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
-    <value>Forhåndsinnstilling 2:</value>
+    <value>Forh氓ndsinnstilling 2:</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
-    <value>Høy</value>
+    <value>H酶y</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
     <value>Lav</value>
@@ -264,10 +263,10 @@
     <value>Mot klokken</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
-    <value>Venstre til høyre</value>
+    <value>Venstre til h酶yre</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
-    <value>Høyre til venstre</value>
+    <value>H酶yre til venstre</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
     <value>Topp til bunn</value>
@@ -279,7 +278,7 @@
     <value>Lydsprett</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
-    <value>Lydbølge</value>
+    <value>Lydb酶lge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
     <value>Aurora Sync</value>
@@ -291,7 +290,7 @@
     <value>Fargepuls</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
-    <value>Fargebølge</value>
+    <value>Fargeb酶lge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
     <value>Regn</value>
@@ -300,10 +299,10 @@
     <value>Regnbueskrue</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
-    <value>Regnbuebølge</value>
+    <value>Regnbueb酶lge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
-    <value>Bølge</value>
+    <value>B酶lge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
     <value>Glatt</value>
@@ -321,13 +320,13 @@
     <value>Rask</value>
   </data>
   <data name="Theme_Dark" xml:space="preserve">
-    <value>Mørk</value>
+    <value>M酶rk</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
     <value>Lys</value>
   </data>
   <data name="Theme_System" xml:space="preserve">
-    <value>System </value>
+    <value>System</value>
   </data>
   <data name="WindowBackdropStyle_Windows" xml:space="preserve">
     <value>Windows</value>
@@ -340,11 +339,11 @@
     <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
   </data>
   <data name="TouchpadLockState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
   </data>
   <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
-    <value>Høy</value>
+    <value>H酶y</value>
   </data>
   <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
     <value>Lav</value>
@@ -357,17 +356,17 @@
     <comment>Informs the user that WinLock is or will be turned on.</comment>
   </data>
   <data name="WinKeyState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
     <comment>Informs the user that WinLock is or will be turned on.</comment>
   </data>
   <data name="PortsBacklightState_Off" xml:space="preserve">
     <value>Av</value>
   </data>
   <data name="PortsBacklightState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
   </data>
   <data name="PanelLogoBacklightState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
   </data>
   <data name="PanelLogoBacklightState_Off" xml:space="preserve">
     <value>Av</value>
@@ -376,16 +375,16 @@
     <value>Av</value>
   </data>
   <data name="InstantBootState_AcAdapter" xml:space="preserve">
-    <value>Strømadapter</value>
+    <value>Str酶madapter</value>
   </data>
   <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
-    <value>USB-strømforsyning</value>
+    <value>USB-str酶mforsyning</value>
   </data>
   <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
     <value>AC og USB PD</value>
   </data>
   <data name="NotificationDuration_Long" xml:space="preserve">
-    <value>Lengdegrad</value>
+    <value>Lang</value>
   </data>
   <data name="NotificationDuration_Normal" xml:space="preserve">
     <value>Normal</value>
@@ -397,13 +396,13 @@
     <value>Skift</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>@ action: button Windows( Super) key</value>
+    <value>Ctrl</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
     <value>Alt</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
-    <value>På</value>
+    <value>P氓</value>
   </data>
   <data name="BatteryNightChargeState_Off" xml:space="preserve">
     <value>Av</value>
@@ -412,19 +411,19 @@
     <value>Demp</value>
   </data>
   <data name="SpeakerState_Unmute" xml:space="preserve">
-    <value>Slå av demping</value>
+    <value>Sl氓 av demping</value>
   </data>
   <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
     <value>Deaktivert</value>
   </data>
   <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
-    <value>Windows strømmodus</value>
+    <value>Windows str酶mmodus</value>
   </data>
   <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
-    <value>Windows strømabonnement</value>
+    <value>Windows str酶mabonnement</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
-    <value>Forhåndsinnstilling 4</value>
+    <value>Forh氓ndsinnstilling 4</value>
   </data>
   <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
     <value>Daglig</value>
@@ -433,7 +432,7 @@
     <value>Hver time</value>
   </data>
   <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
-    <value>Månedlig</value>
+    <value>M氓nedlig</value>
   </data>
   <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
     <value>Hver 3. Time</value>
@@ -444,4 +443,141 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Ukentlig</value>
   </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve"><value>Kunne ikke deserialisere effekter</value><comment>Exception message for effect deserialization failure</comment></data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve"><value>Nedlastet ressurs mislyktes SHA256-validering. Forventet {0}, fikk {1}.</value><comment>Exception message format for SHA256 hash mismatch during resource download</comment></data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve"><value>Feil ved 氓pning av tjenesteadministrator</value><comment>Exception message for service manager open failure</comment></data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve"><value>IoCContainer er allerede initialisert</value><comment>Exception message when IoC is initialized twice</comment></data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve"><value>Ingen st酶ttet kontroller funnet</value><comment>Exception message when no supported controller is available</comment></data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve"><value>Innstillingssti g氓r ut av tillatt katalog: {0}</value><comment>Exception message format when settings path is outside allowed directory</comment></data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve"><value>Integritetssjekk for oppdateringspakke mislyktes: ingen SHA256-hash tilgjengelig for oppdatering {0}. Integritetssjekk er n酶dvendig for sikkerhet.</value><comment>Exception message format when no SHA256 hash is available for update</comment></data>
+  <data name="OsdState_Hidden" xml:space="preserve"><value>Skjul</value></data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve"><value>Klarte ikke 氓 registrere endringer p氓 oppgave {0} i {1} [type={2}]</value><comment>Exception message format for task registration failure</comment></data>
+  <data name="HardwareSensorsState_On" xml:space="preserve"><value>P氓</value></data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve"><value>CPU-vifte</value></data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve"><value>Oppdaget farlig m酶nster i argumenter for {0}</value><comment>Exception message format for dangerous arg patterns</comment></data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve"><value>E-Core-klokke</value></data>
+  <data name="Exception_DangerousArguments" xml:space="preserve"><value>Argumenter inneholder farlige tegn</value><comment>Exception message for command injection detection</comment></data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve"><value>Enhetspakke inneholder en Windows-stil sti-skilletegn: {0}</value><comment>Exception message format for backslash in device pack path</comment></data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve"><value>Ugyldig innstillingsfilnavn: {0}</value><comment>Exception message format for invalid settings filename</comment></data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve"><value>Veksle</value></data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve"><value>Enhetspakke inneholder en usikker sti: {0}</value><comment>Exception message format for path traversal in device pack</comment></data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve"><value>Ugyldig milj酶variabel: {0}</value><comment>Exception message format for invalid env var name</comment></data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve"><value>Mottok udefinert verdi: {0}</value><comment>Exception message format for unexpected enum value</comment></data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve"><value>Ust酶ttet str酶mmodus {0}</value><comment>Exception message format for unsupported power mode</comment></data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve"><value>Tabelldata kan ikke v忙re tomme</value><comment>Exception message for empty table data</comment></data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve"><value>Gjeldende stil</value></data>
+  <data name="OsdItem_Power" xml:space="preserve"><value>Str酶m</value></data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve"><value>WMI-klasse eller namespace er ikke tilgjengelig [scope={0}, query={1}]</value><comment>Exception message format when WMI class/namespace is unavailable</comment></data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve"><value>Disk 2-temperatur</value></data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve"><value>DeviceIoControl mislyktes med feil: {0}</value><comment>Exception message format for IO control error</comment></data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve"><value>M氓 v忙re lesbar</value><comment>Exception message for non-readable stream</comment></data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve"><value>VRAM-utnyttelse</value></data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve"><value>Profilen vil ikke bli brukt uten tilkoblet AC-adapter (full effekt).</value></data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve"><value>Kall mislyktes: {0} [scope={1}, query={2}, methodName={3}]</value><comment>Exception message format for WMI call failure</comment></data>
+  <data name="Exception_BrightnessRange" xml:space="preserve"><value>Lysstyrke m氓 v忙re mellom 0 og 9</value><comment>Exception message for invalid brightness value</comment></data>
+  <data name="Exception_FanTableLength" xml:space="preserve"><value>Viftetabelllengde m氓 v忙re 10</value><comment>Exception message for invalid fan table length</comment></data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve"><value>Kommando kan ikke v忙re tom.</value><comment>Exception message for empty command parameter</comment></data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve"><value>Gjeldende prosess filnavn kan ikke v忙re null</value><comment>Exception message when process file name is null</comment></data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve"><value>Enhetspakke-leverand酶r samsvarer ikke. Forventet &apos;{0}&apos;, fikk &apos;{1}&apos;.</value><comment>Exception message format for vendor mismatch</comment></data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve"><value>Ikke st酶ttet.</value></data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve"><value>Enhetspakke-ID samsvarer ikke. Forventet &apos;{0}&apos;, fikk &apos;{1}&apos;.</value><comment>Exception message format for ID mismatch</comment></data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve"><value>Av</value></data>
+  <data name="Exception_InvalidState" xml:space="preserve"><value>Ugyldig tilstand</value><comment>Exception message for invalid enum/state value</comment></data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve"><value>Kan ikke lese variabel {0} fra UEFI</value><comment>Exception message format for UEFI read failure</comment></data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve"><value>VRAM-temperatur</value></data>
+  <data name="OsdState_Toggle" xml:space="preserve"><value>Veksle tilstand</value></data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve"><value>Klarte ikke 氓 deserialisere JSON</value><comment>Exception message for JSON deserialization failure</comment></data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve"><value>Kunne ikke starte Explorer.</value><comment>Exception message for Explorer restart failure</comment></data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve"><value>Geek</value></data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve"><value>Ikke initialisert.</value></data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve"><value>Ingen God Mode-forh氓ndsinnstilling kunne opprettes.</value><comment>Exception message when no preset can be created</comment></data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve"><value>P氓</value></data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve"><value>Profilfil ble ikke funnet.</value><comment>Exception message for missing profile file</comment></data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve"><value>Explorer avsluttet ikke i tide.</value><comment>Exception message for Explorer shutdown timeout</comment></data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve"><value>WMI-funksjonsverdi er utilgjengelig for {0}.</value><comment>Exception message format for WMI read failure</comment></data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve"><value>RGB-tastatur st酶ttes ikke</value><comment>Exception message when RGB keyboard hardware is not present</comment></data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve"><value>Klarte ikke 氓 lese innstilling {0}</value><comment>Exception message format when registry read fails</comment></data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve"><value>Enhetspakke &apos;{0}&apos; mangler SHA256-metadata.</value><comment>Exception message format for missing SHA256</comment></data>
+  <data name="OsdItem_Fps" xml:space="preserve"><value>FPS</value></data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve"><value>Enhetsegenskap er ikke GUID</value><comment>Exception message for non-GUID device property</comment></data>
+  <data name="Exception_MainModuleNull" xml:space="preserve"><value>Hovedmodul kan ikke v忙re null</value><comment>Exception message when process main module is null</comment></data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve"><value>Disk 1-temperatur</value></data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve"><value>P-Core-klokke</value></data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve"><value>Ingen st酶ttet versjon funnet</value><comment>Exception message when no supported God Mode version is found</comment></data>
+  <data name="OsdItem_Fan" xml:space="preserve"><value>Vifte</value></data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve"><value>Av</value></data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve"><value>Enhetspakke inneholder ust酶ttet filtype: {0}</value><comment>Exception message format for disallowed file type in device pack</comment></data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve"><value>URL for oppsettsfil ble ikke funnet</value><comment>Exception message when update download URL is missing</comment></data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve"><value>Tagnavn kan ikke v忙re null eller tomt</value><comment>Exception message for null or empty version tag</comment></data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve"><value>Kan ikke skrive variabel {0} til UEFI</value><comment>Exception message format for UEFI write failure</comment></data>
+  <data name="Exception_WmiNoResults" xml:space="preserve"><value>Ingen resultater i sp酶rring</value><comment>Exception message when WMI query returns no results</comment></data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve"><value>Ingen st酶ttet funksjon funnet</value><comment>Exception message when no feature implementation is available</comment></data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve"><value>Integritetssjekk for oppdateringspakke mislyktes. Forventet SHA256: {0}, beregnet: {1}</value><comment>Exception message format for update SHA256 hash mismatch</comment></data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve"><value>Systemvifte</value></data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve"><value>Klarte ikke 氓 deserialisere profil.</value><comment>Exception message for profile deserialization failure</comment></data>
+  <data name="OsdItem_FrameTime" xml:space="preserve"><value>Bildetid</value></data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve"><value>Ugyldig handlingsn酶kkel</value><comment>Exception message for invalid optimization action key</comment></data>
+  <data name="Exception_ProfileRange" xml:space="preserve"><value>Profil m氓 v忙re mellom 0 og 6</value><comment>Exception message for invalid profile value</comment></data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve"><value>Ingen tilgjengelige oppdateringer</value><comment>Exception message when no updates found</comment></data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve"><value>Minne-temperatur</value></data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve"><value>Str酶mmodusbytte st酶ttes ikke p氓 denne enheten.</value><comment>Exception message for unsupported power mode feature</comment></data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve"><value>Hovedkort-temperatur</value></data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve"><value>Enhetspakke &apos;{0}&apos; manifest er tomt.</value><comment>Exception message format for empty manifest</comment></data>
+  <data name="Exception_UnknownHive" xml:space="preserve"><value>Ukjent hive.</value><comment>Exception message for unknown registry hive</comment></data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve"><value>Klarte ikke 氓 hente farge &quot;{0}&quot;</value><comment>Exception message format when uxtheme color lookup fails</comment></data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve"><value>Explorer startet ikke p氓 nytt i tide.</value><comment>Exception message for Explorer restart timeout</comment></data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve"><value>Ugyldig milj酶variabelverdi: {0}</value><comment>Exception message format for invalid env var value</comment></data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve"><value>Temperaturarray m氓 ha n酶yaktig 10 elementer</value><comment>Exception message for invalid temperature array size</comment></data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve"><value>Innebygd skjerm ble ikke funnet</value><comment>Exception message when integrated display is unavailable</comment></data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve"><value>Midnatt neon</value></data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve"><value>Kommando mislyktes i sikkerhetsvalidering: {0}</value><comment>Exception message format for command security failure</comment></data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve"><value>Intelligent kj酶ling</value></data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve"><value>Lesing mislyktes: {0} [scope={1}, query={2}]</value><comment>Exception message format for WMI read failure</comment></data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve"><value>Klarte ikke 氓 verifisere at {0}-tilstand ble satt til {1}.</value><comment>Exception message format for driver state verification failure</comment></data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve"><value>GPU-vifte</value></data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve"><value>PowerShell-argumenter inneholder farlige m酶nstre</value><comment>Exception message for PowerShell injection</comment></data>
+  <data name="OsdItem_Utilization" xml:space="preserve"><value>Utnyttelse</value></data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve"><value>Skog-teknologi</value></data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve"><value>Kall mislyktes: {0}. [scope={1}, query={2}, methodName={3}]</value><comment>Exception message format for WMI call failure (with trailing period)</comment></data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve"><value>Batterisparing</value></data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve"><value>Offisiell stil</value></data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve"><value>Ukjent batteritilstand: {0}</value><comment>Exception message format for unrecognized battery state</comment></data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve"><value>Kan ikke analysere versjon fra tagnavn: &apos;{0}&apos;. Forventet format: &apos;3.0.1&apos;</value><comment>Exception message format for unparseable version string</comment></data>
+  <data name="Exception_OpenServiceError" xml:space="preserve"><value>Feil ved 氓pning av tjeneste</value><comment>Exception message for service open failure</comment></data>
+  <data name="PowerModeState_Extreme" xml:space="preserve"><value>Ekstrem</value></data>
+  <data name="OsdItem_Frequency" xml:space="preserve"><value>Frekvens</value></data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve"><value>Ekstrem ytelse</value></data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve"><value>Kan ikke angi UEFI-rettigheter</value><comment>Exception message for UEFI privilege failure</comment></data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve"><value>Ressurskatalog er tom.</value><comment>Exception message for empty resource catalog</comment></data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve"><value>Sletting av systemstier er ikke tillatt</value><comment>Exception message for protected path deletion</comment></data>
+  <data name="OsdItem_Temperature" xml:space="preserve"><value>Temperatur</value></data>
+  <data name="OsdItem_LowFps" xml:space="preserve"><value>1% Low</value></data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve"><value>IoCContainer m氓 initialiseres f酶rst [type={0}]</value><comment>Exception message format when resolving before initialization</comment></data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve"><value>Enhetspakke &apos;{0}&apos; inneholder ikke {1}.</value><comment>Exception message format for missing manifest file</comment></data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve"><value>Forskyvning og antall overskrider array-grenser</value><comment>Exception message for array bounds violation</comment></data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve"><value>Klarte ikke 氓 hente handle for driver: {0}</value><comment>Exception message format for driver handle failure</comment></data>
+  <data name="Exception_DriverHandleError" xml:space="preserve"><value>Feil ved henting av driver-handle: {0}</value><comment>Exception message format for driver handle error</comment></data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve"><value>Ingen God Mode-forh氓ndsinnstilling er tilgjengelig.</value><comment>Exception message when no preset is available</comment></data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve"><value>Enhetsegenskap er ikke streng</value><comment>Exception message for non-string device property</comment></data>
+  <data name="Exception_InvalidFileName" xml:space="preserve"><value>Ugyldig filnavn</value><comment>Exception message for invalid file name parameter</comment></data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve"><value>Kan ikke administrere RGB-tastatur med Vantage aktivert</value><comment>Exception message when Lenovo Vantage conflicts</comment></data>
+  <data name="Exception_HandleInvalid" xml:space="preserve"><value>handle er ugyldig</value><comment>Exception message for invalid handle</comment></data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve"><value>Str酶mmodus &apos;{0}&apos; er utilgjengelig uten AC-adapter.</value><comment>Exception message format for AC-restricted power mode</comment></data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve"><value>DeviceIoControl returnerte 0, siste feil: {0}</value><comment>Exception message format for driver IO control failure</comment></data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve"><value>Kj酶rbar fil er ikke i tillatelseslisten: {0}</value><comment>Exception message format for disallowed executable</comment></data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve"><value>N酶kkel {0} kunne ikke 氓pnes</value><comment>Exception message format for registry key open failure</comment></data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve"><value>Ugyldig format-type</value><comment>Exception message for unexpected format type</comment></data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve"><value>Gjeldende prosess filversjon kan ikke v忙re null</value><comment>Exception message when process file version is null</comment></data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve"><value>Enhetspakke &apos;{0}&apos; er ikke tilgjengelig i den elektroniske ressurskatalogen.</value><comment>Exception message format for unavailable device pack</comment></data>
+  <data name="Exception_DriverCommandError" xml:space="preserve"><value>Feil ved sending av driverkommando: controlCode={0}</value><comment>Exception message format for driver command error</comment></data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve"><value>Interaktive skall-kj酶rbare filer krever argumenter ved venting p氓 avslutning</value><comment>Exception message for shell without arguments</comment></data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve"><value>Jokertegnsletting er begrenset</value><comment>Exception message for wildcard deletion block</comment></data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve"><value>Sletting av kritiske registern酶kler er ikke tillatt</value><comment>Exception message for protected registry key deletion</comment></data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve"><value>Filkontrollsum stemmer ikke</value><comment>Exception message for CRC mismatch</comment></data>
+  <data name="OsdState_Show" xml:space="preserve"><value>Vis</value></data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve"><value>M氓 v忙re skrivbar</value><comment>Exception message for non-writable stream</comment></data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve"><value>Enhetspakke &apos;{0}&apos; har en tom nedlastings-URL.</value><comment>Exception message format for empty download URL</comment></data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve"><value>Forh氓ndsinnstilling med ID {0} ble ikke funnet</value><comment>Exception message format for missing God Mode preset</comment></data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve"><value>Gjeldende brukerverdi er null</value><comment>Exception message when Windows identity is null</comment></data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve"><value>Enhetshandle er ikke tilgjengelig</value><comment>Exception message when device handle is null</comment></data>
 </root>

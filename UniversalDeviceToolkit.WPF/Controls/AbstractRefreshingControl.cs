@@ -23,6 +23,13 @@ public abstract class AbstractRefreshingControl : UserControl
 
         Loaded += RefreshingControl_Loaded;
         IsVisibleChanged += RefreshingControl_IsVisibleChanged;
+        Unloaded += AbstractRefreshingControl_Unloaded;
+    }
+
+    private void AbstractRefreshingControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= RefreshingControl_Loaded;
+        IsVisibleChanged -= RefreshingControl_IsVisibleChanged;
     }
 
     private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)

@@ -51,18 +51,28 @@ public class AbstractDriverFeatureTests
 
         public TestDriverState CurrentState { get; private set; } = states.Length > 0 ? states[0] : TestDriverState.Off;
 
-        public override Task<TestDriverState> GetStateAsync()
+        public override Task<TestDriverState> GetStateAsync(CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_states.Count > 0)
                 CurrentState = _states.Dequeue();
 
             return Task.FromResult(CurrentState);
         }
 
-        protected override Task<TestDriverState> FromInternalAsync(uint state) => Task.FromResult((TestDriverState)state);
+        protected override Task<TestDriverState> FromInternalAsync(uint state, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult((TestDriverState)state);
+        }
 
         protected override uint GetInBufferValue() => 0;
 
-        protected override Task<uint[]> ToInternalAsync(TestDriverState state) => Task.FromResult(Array.Empty<uint>());
+        protected override Task<uint[]> ToInternalAsync(TestDriverState state, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(Array.Empty<uint>());
+        }
     }
 }

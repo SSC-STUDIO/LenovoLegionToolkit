@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>Тохируулсан</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>Систем</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>Үргэлж асаалттай</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>Унтах үед асаалттай</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>Идэвхгүй</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>Идэвхжүүлсэн</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>Саатуулж идэвхжүүлсэн</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>Хамгаалалт</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>Хэвийн</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>Хурдан цэнэглэлт</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид Flip to Start-ыг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид Flip to Start-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид Fn Lock-ыг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид Fn Lock-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид HDR-ыг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид HDR-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>Эрлийз</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>Эрлийз</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>Эрлийз-Автомат</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>Эрлийз-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид микрофоныг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид микрофоныг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>Доод төв</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>Доод зүүн</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>Доод баруун</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>Төв</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>Төвийн зүүн</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>Төвийн баруун</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>Дээд төв</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>Дээд зүүн</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>Дээд баруун</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид Нэг түвшний цагаан гэрэлтүүлгийг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид Нэг түвшний цагаан гэрэлтүүлгийг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид Overdrive-ыг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид Overdrive-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>Тэнцвэр</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Маш хүчтэй</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>Тохируулсан</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>Гүйцэтгэл</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>Чимээгүй</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>Хурдан</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>Хамгийн хурдан</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>Удаан</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>Хамгийн удаан</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Өндөр</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Бага</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>Амьсгал</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>Зөөлөн</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>Статик</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>Зүүн долгион</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>Баруун долгион</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>Пресет 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>Пресет 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>Пресет 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Өндөр</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Бага</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>Дунд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>Доошаас дээш</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>Цагийн зүүний дагуу</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>Цагийн зүүний эсрэг</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>Зүүнээс баруун</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>Баруунаас зүүн</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>Дээдээс доош</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>Үргэлж</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>Аудио сэлгэлт</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>Аудио долгион</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora синк</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>Өнгө өөрчлөлт</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>Өнгөний пульс</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>Өнгөний долгион</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>Бороо</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>Солонгын шураг</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>Солонгын долгион</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>Долгион</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>Зөөлөн</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>Бичих</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>Удаан</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>Дунд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>Хурдан</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Харанхуй</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Гэрэл</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>Систем</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид Touchpad Lock-ыг унтраасан эсвэл унтраах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид Touchpad Lock-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>Өндөр</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>Бага</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+    <comment>Хэрэглэгчид WinLock-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+    <comment>Хэрэглэгчид WinLock-ыг асаасан эсвэл асаах гэж байгааг мэдэгдэнэ.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>Цахилгаан адаптер</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB Power Delivery</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>Цахилгаан ба USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>Урт</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>Хэвийн</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>Богино</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Дууг хаах</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Дуу нээх</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Цахилгаан адаптер (бүтэн хүчдэл) холбогдоогүй тохиолдолд профайл хэрэглэгдэхгүй.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Эхлүүлээгүй байна.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Дэмжигдэхгүй.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU-ийн сэнс</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU-ийн сэнс</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Системийн сэнс</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Сэлгэх</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Батарей хэмнэлт</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Ухаалаг хөргөлт</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Маш өндөр гүйцэтгэл</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Гийк</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Идэвхгүй</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows-ын цахилгааны горим</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows-ын цахилгааны төлөвлөгөө</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Пресет 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Өдөр бүр</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>Цаг тутамд</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Сар бүр</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>3 цаг тутамд</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>12 цаг тутамд</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Долоо хоног бүр</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Одоогийн хэв маяг</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Албан ёсны Cool</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Шөнө дундын неон</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Ойн технологи</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Асаалттай</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Диск 1-ийн температур</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Диск 2-ийн температур</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core давтамж</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Сэнс</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Фрэймын хугацаа</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Давтамж</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% нам</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Санах ойн температур</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Эх хавтангийн температур</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Тэжээл</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core давтамж</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Температур</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Ашиглалт</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM-ийн температур</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM-ийн ашиглалт</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Нуух</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Харуулах</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Төлөв сэлгэх</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Буруу төлөв</value>
+    <comment>Буруу enum/төлөв утгын exception мессеж</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Буруу файлын нэр</value>
+    <comment>Файлын нэр параметрийн буруу байдлын exception мессеж</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Аргументууд нь аюултай тэмдэгт агуулж байна</value>
+    <comment>Тушаалын injection илрүүлэлтийн exception мессеж</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Гарахыг хүлээх үед интерактив shell-ийн гүйцэтгэх файл нь аргумент шаарддаг</value>
+    <comment>Аргументгүй shell-ийн exception мессеж</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell-ийн аргументууд аюултай загвар агуулж байна</value>
+    <comment>PowerShell injection-ийн exception мессеж</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Тодорхойгүй hive.</value>
+    <comment>Тодорхойгүй бүртгэлийн hive-ийн exception мессеж</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Шинэчлэл байхгүй</value>
+    <comment>Шинэчлэл олдоогүй үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>Setup файлын URL-ыг олж чадсангүй</value>
+    <comment>Шинэчлэл татах URL дутуу үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB гар дэмжигдэхгүй</value>
+    <comment>RGB гарын техник хангамж байхгүй үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Lenovo Vantage идэвхтэй үед RGB гарыг удирдах боломжгүй</value>
+    <comment>Lenovo Vantage зөрчилдөх үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Энэ төхөөрөмж дээр цахилгааны горим солих боломжгүй.</value>
+    <comment>Дэмжигдэхгүй цахилгааны горимын exception мессеж</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI эрх тохируулах боломжгүй</value>
+    <comment>UEFI эрхийн бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Explorer-ыг эхлүүлж чадсангүй.</value>
+    <comment>Explorer дахин эхлүүлэхэд гарсан бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer цаг хугацаанд нь дахин эхлээгүй.</value>
+    <comment>Explorer дахин эхлүүлэх хугацаа хэтэрсний exception мессеж</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer цаг хугацаанд нь гараагүй.</value>
+    <comment>Explorer унтраах хугацаа хэтэрсний exception мессеж</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Буруу үйлдлийн түлхүүр</value>
+    <comment>Буруу оновчлолын үйлдлийн түлхүүрийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Тушаал хоосон эсвэл null байж болохгүй.</value>
+    <comment>Хоосон тушаал параметрийн exception мессеж</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Системийн замуудыг устгахыг зөвшөөрөхгүй</value>
+    <comment>Хамгаалагдсан зам устгахыг exception мессеж</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Wildcard устгал хязгаарлагдсан</value>
+    <comment>Wildcard устгалыг блоклосны exception мессеж</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Чухал бүртгэлийн түлхүүрүүдийг устгахыг зөвшөөрөхгүй</value>
+    <comment>Хамгаалагдсан бүртгэлийн түлхүүр устгахыг exception мессеж</comment>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Одоогийн хэрэглэгчийн утга null байна</value>
+    <comment>Windows identity null үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>handle буруу байна</value>
+    <comment>Буруу handle-ийн exception мессеж</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSON-ыг задлан кодлох амжилтгүй</value>
+    <comment>JSON задлан кодлох бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Буруу орчны хувьсагч: {0}</value>
+    <comment>Буруу орчны хувьсагч нэрийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Буруу орчны хувьсагчийн утга: {0}</value>
+    <comment>Буруу орчны хувьсагч утгын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Дэмжигдэх функц олдсонгүй</value>
+    <comment>Функцийн хэрэгжилт байхгүй үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Суулгагдсан дэлгэц олдсонгүй</value>
+    <comment>Интеграл дэлгэц байхгүй үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Профайлыг задлан кодлох амжилтгүй.</value>
+    <comment>Профайл задлан кодлох бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Гэрэлтүүлэг 0-ээс 9-ийн хооронд байх ёстой</value>
+    <comment>Буруу гэрэлтүүлгийн утгын exception мессеж</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Профайл 0-ээс 6-ийн хооронд байх ёстой</value>
+    <comment>Буруу профайлын утгын exception мессеж</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Хүснэгтийн өгөгдөл хоосон байж болохгүй</value>
+    <comment>Хоосон хүснэгтийн өгөгдлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Температурын массив яг 10 элементтэй байх ёстой</value>
+    <comment>Буруу температурын массивын хэмжээсийн exception мессеж</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Файлын шалгах нийлбэр таарахгүй байна</value>
+    <comment>CRC таарахгүй байгаа exception мессеж</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Төхөөрөмжийн шинж чанар GUID биш байна</value>
+    <comment>GUID биш төхөөрөмжийн шинж чанарын exception мессеж</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Төхөөрөмжийн шинж чанар тэмдэгт мөр биш байна</value>
+    <comment>Тэмдэгт мөр биш төхөөрөмжийн шинж чанарын exception мессеж</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Офсет ба тоолуур массивын хил хязгаараас хэтэрсэн</value>
+    <comment>Массивын хил хязгаарын зөрчлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Профайлын файл олдсонгүй.</value>
+    <comment>Профайлын файл дутуу exception мессеж</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Үйлчилгээ нээхэд алдаа</value>
+    <comment>Үйлчилгээ нээх бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Үйлчилгээний менежер нээхэд алдаа</value>
+    <comment>Үйлчилгээний менежер нээх бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Нөөцийн каталог хоосон байна.</value>
+    <comment>Хоосон нөөцийн каталогийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Эффектүүдийг задлан кодлож чадсангүй</value>
+    <comment>Эффект задлан кодлох бүтэлгүйтлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>UEFI-аас {0} хувьсагчийг уншиж чадсангүй</value>
+    <comment>UEFI уншихад гарсан бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>UEFI руу {0} хувьсагчийг бичиж чадсангүй</value>
+    <comment>UEFI бичихэд гарсан бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>{0}-ийн WMI функцийн утга боломжгүй.</value>
+    <comment>WMI уншихад гарсан бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Тодорхойгүй утга хүлээн авсан: {0}</value>
+    <comment>Гэнэтийн enum утгын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Дэмжигдэхгүй цахилгааны горим {0}</value>
+    <comment>Дэмжигдэхгүй цахилгааны горимын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>Цахилгаан адаптергүйгээр '{0}' цахилгааны горим боломжгүй.</value>
+    <comment>AC шаардлагатай цахилгааны горимын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Тушаал аюулгүй байдлын шалгалтад бүтэлгүйтсэн: {0}</value>
+    <comment>Тушаалын аюулгүй байдлын бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Гүйцэтгэх файл зөвшөөрлийн жагсаалтад байхгүй: {0}</value>
+    <comment>Зөвшөөрөгдөөгүй гүйцэтгэх файлын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>{0}-ийн аргументуудад аюултай загвар илэрсэн</value>
+    <comment>Аюултай аргумент загваруудын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>Төхөөрөмжийн багцад дэмжигдэхгүй файлын төрөл байна: {0}</value>
+    <comment>Төхөөрөмжийн багцад зөвшөөрөгдөөгүй файлын төрлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>Төхөөрөмжийн багцад аюулгүй бус зам байна: {0}</value>
+    <comment>Төхөөрөмжийн багцад зам хөндлөнгийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>Төхөөрөмжийн багцад Windows хэв маягийн зам тусгаарлагч байна: {0}</value>
+    <comment>Төхөөрөмжийн багцын замд backslash-ийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>Онлайн нөөцийн каталогт '{0}' төхөөрөмжийн багц байхгүй.</value>
+    <comment>Боломжгүй төхөөрөмжийн багцын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>'{0}' төхөөрөмжийн багцад {1} байхгүй.</value>
+    <comment>Манифест файл дутуугийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>'{0}' төхөөрөмжийн багцын манифест хоосон байна.</value>
+    <comment>Хоосон манифестын exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Төхөөрөмжийн багцын ID таарахгүй. Хүлээгдэж буй '{0}', олдсон '{1}'.</value>
+    <comment>ID таарахгүй байгаа exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Төхөөрөмжийн багцын нийлүүлэгч таарахгүй. Хүлээгдэж буй '{0}', олдсон '{1}'.</value>
+    <comment>Нийлүүлэгч таарахгүй байгаа exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>'{0}' төхөөрөмжийн багцын татах URL хоосон байна.</value>
+    <comment>Хоосон татах URL-ийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>'{0}' төхөөрөмжийн багцад SHA256 мета өгөгдөл байхгүй.</value>
+    <comment>SHA256 дутуу exception мессеж формат</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Тодорхойгүй батарейн төлөв: {0}</value>
+    <comment>Танигдаагүй батарейн төлөвийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} төлөв {1} гэж тохируулагдсан эсэхийг шалгаж чадсангүй.</value>
+    <comment>Драйвер төлөв шалгалтын бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl 0-ыг буцаасан, сүүлийн алдаа: {0}</value>
+    <comment>Драйверийн IO хяналтын бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>{0} түлхүүрийг нээж чадсангүй</value>
+    <comment>Бүртгэлийн түлхүүр нээх бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Уншигдах боломжтой байх ёстой</value>
+    <comment>Уншигдах боломжгүй стримийн exception мессеж</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Бичигдэх боломжтой байх ёстой</value>
+    <comment>Бичигдэх боломжгүй стримийн exception мессеж</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Төхөөрөмжийн handle боломжгүй</value>
+    <comment>Төхөөрөмжийн handle null үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Үндсэн модуль null байж болохгүй</value>
+    <comment>Процессын үндсэн модуль null үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Одоогийн процессийн файлын нэр null байж болохгүй</value>
+    <comment>Процессийн файлын нэр null үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Одоогийн процессийн файлын хувилбар null байж болохгүй</value>
+    <comment>Процессийн файлын хувилбар null үеийн exception мессеж</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Татаж авсан нөөц SHA256 баталгаажуулалтад бүтэлгүйтсэн. Хүлээгдэж буй {0}, олдсон {1}.</value>
+    <comment>Нөөц татах явцад SHA256 hash таарахгүй байгаа exception мессеж формат</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer аль хэдийн эхлүүлсэн</value>
+    <comment>IoC-ыг хоёр удаа эхлүүлсэн exception мессеж</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer-ыг эхлээд эхлүүлсэн байх ёстой [type={0}]</value>
+    <comment>Эхлүүлэхээс өмнө шийдэж байгаа exception мессеж формат</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Сэнсний хүснэгтийн урт 10 байх ёстой</value>
+    <comment>Буруу сэнсний хүснэгтийн уртын exception мессеж</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Tag нэр null эсвэл хоосон байж болохгүй</value>
+    <comment>Null эсвэл хоосон хувилбарын tag-ийн exception мессеж</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Tag нэрээс хувилбарыг задлан кодлож чадсангүй: '{0}'. Хүлээгдэж буй формат: '3.0.1'</value>
+    <comment>Задлан кодлох боломжгүй хувилбарын тэмдэгт мөрийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>{0} ID-тай пресет олдсонгүй</value>
+    <comment>God Mode пресет дутуу exception мессеж формат</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>God Mode пресет үүсгэж чадсангүй.</value>
+    <comment>Пресет үүсгэх боломжгүй exception мессеж</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>God Mode пресет боломжгүй байна.</value>
+    <comment>Пресет боломжгүй exception мессеж</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Дэмжигдэх хувилбар олдсонгүй</value>
+    <comment>Дэмжигдэх God Mode хувилбар олдоогүй exception мессеж</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Дэмжигдэх хянагч олдсонгүй</value>
+    <comment>Дэмжигдэх хянагч боломжгүй exception мессеж</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Буруу тохиргооны файлын нэр: {0}</value>
+    <comment>Буруу тохиргооны файлын нэрийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Тохиргооны зам зөвшөөрөгдсөн лавлахаас гарсан: {0}</value>
+    <comment>Тохиргооны зам зөвшөөрөгдсөн лавлахаас гадуур байгаа exception мессеж формат</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>{1}-ийн {0} даалгавар дээр өөрчлөлт бүртгэж чадсангүй [type={2}]</value>
+    <comment>Даалгавар бүртгэлийн бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} тохиргоог уншиж чадсангүй</value>
+    <comment>Бүртгэл уншихад бүтэлгүйтсэн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>"{0}" өнгийг авч чадсангүй</value>
+    <comment>uxtheme өнгө хайж чадаагүй exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>{0} драйверийн handle-ыг авах амжилтгүй</value>
+    <comment>Драйверийн handle авах бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Драйверийн handle авахад алдаа: {0}</value>
+    <comment>Драйверийн handle алдааны exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl дараахь алдаатай бүтэлгүйтсэн: {0}</value>
+    <comment>IO хяналтын алдааны exception мессеж формат</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Драйверт тушаал илгээхэд алдаа: controlCode={0}</value>
+    <comment>Драйверийн тушаалын алдааны exception мессеж формат</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI класс эсвэл нэрийн орчин зай боломжгүй [scope={0}, query={1}]</value>
+    <comment>WMI класс/нэрийн орчин зай боломжгүй exception мессеж формат</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Уншихад бүтэлгүйтсэн: {0} [scope={1}, query={2}]</value>
+    <comment>WMI уншихад бүтэлгүйтсэн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Дуудлага бүтэлгүйтсэн: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>WMI дуудлагын бүтэлгүйтлийн exception мессеж формат</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Дуудлага бүтэлгүйтсэн: {0}. [scope={1}, query={2}, methodName={3}]</value>
+    <comment>WMI дуудлагын бүтэлгүйтлийн exception мессеж формат (төгсгөлийн цэгтэй)</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Асуулгад үр дүн байхгүй</value>
+    <comment>WMI асуулга үр дүнгүй exception мессеж</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Форматласан төрөл буруу</value>
+    <comment>Гэнэтийн форматын төрлийн exception мессеж</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Шинэчлэлийн багцын бүрэн бүтэн байдлын шалгалт бүтэлгүйтсэн: {0} шинэчлэлд SHA256 hash байхгүй. Аюулгүй байдлын үүднээс бүрэн бүтэн байдлын шалгалт шаардлагатай.</value>
+    <comment>Шинэчлэлд SHA256 hash байхгүй exception мессеж формат</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Шинэчлэлийн багцын бүрэн бүтэн байдлын шалгалт бүтэлгүйтсэн. Хүлээгдэж буй SHA256: {0}, тооцоолсон: {1}</value>
+    <comment>Шинэчлэлийн SHA256 hash таарахгүй байгаа exception мессеж формат</comment>
+  </data>
+</root>

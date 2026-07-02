@@ -1,0 +1,3882 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>ගොඩනැගීම</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>GitHub හි නවතම නිකුතුව</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>සබැඳි</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>GitHub හි ව්‍යාපෘති වෙබ් අඩවිය</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>තෙවන පාර්ශවීය පුස්තකාල</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>ගැන</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>පරිවර්තන ප්‍රජාව විසින් සපයනු ලැබේ.</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>අනුවාදය</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>එකතු කරන්න</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>නව එකක් එකතු කරන්න</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එක ක්‍රියාවිරහිත, නිදා වෙමින් හෝ හයිබර්නේට් කරමින් ඇති විට USB උපාංග ආරෝපණය කරන්න.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>සැමවිටම USB මත</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එක ක්‍රියාවිරහිත, නිදා වෙමින් හෝ හයිබර්නේට් කරමින් ඇති විට USB උපාංග ආරෝපණය කරන්න.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>සැමවිටම USB මත</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>යොදන්න</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>යොදා වසන්න</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>ස්වයංක්‍රීය ක්‍රියා ක්‍රියාත්මක වීමට Universal Device Toolkit ධාවනය විය යුතුය.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>සක්‍රිය කරන්න</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>ක්‍රියා කිසිවක් නිර්වචනය කර නැත. නව ක්‍රියාවක් නිර්මාණය කිරීමට "නව එකක් එකතු කරන්න" ක්ලික් කරන්න.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>සක්‍රිය කළහොත්, මෙම ක්‍රියා ස්වයංක්‍රීයව ධාවනය වේ. තත්ත්වය වෙනස් වන හැම විටම සියලු ක්‍රියා ඉහළ සිට පහළට ඇගයීමට ලක් කෙරේ.
+වර්තමාන තත්ත්වයට ගැළපෙන ක්‍රියා පමණක් ධාවනය වේ.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>ක්‍රියා</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>නම...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>නව එකක් එකතු කරන්න</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියා කිසිවක් නිර්වචනය කර නැත. නව ඉක්මන් ක්‍රියාවක් නිර්මාණය කිරීමට "නව එකක් එකතු කරන්න" ක්ලික් කරන්න.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියා ට්‍රේ නිරූපකයේ දකුණු-ක්ලික් මෙනුවේ ලබා ගත හැක.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියා</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>නම...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>නම වෙනස් කරන්න</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>සියලු වෙනස්කම් ආපසු හැරවිණි!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>ආපසු හැරවිණි</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>වෙනස්කම් සාර්ථකව සුරකින ලදි!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>සුරකින ලදි</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>ස්වයංකරණය</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>පියවර එකතු කරන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>වින්‍යාස කරන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>සුවිශේෂී</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>මෙම ක්‍රියාව ධාවනය වන විට තවත් ක්‍රියා ක්‍රියාත්මක නොකරන්න.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>දැන් ධාවනය කරන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>දෝෂ සමඟ සම්පූර්ණ විය.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>දැන් ධාවනය කරන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>සාර්ථකව සම්පූර්ණ විය!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>දැන් ධාවනය කරන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>ධාවනය වෙමින්...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} පියවර</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} පියවරවල්</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>යෙදුම්</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>උදේ හිරු උදා වන විට</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>සවස හිරු බසින විට</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>{0:D2}:{1:D2} ට</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>බල මාදිලිය</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>නම් නොකළ</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>සමහර ක්‍රීඩා ධාවනය වන විට ස්වයංක්‍රීයව අනාවරණ කර ගනිමින් CPU සහ GPU කාර්ය සාධනය සකසයි. උෂ්ණත්වය සහ පංකා ශබ්දය ඉහළ යා හැක.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>AI එන්ජිම සක්‍රිය කරන්න</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>සමතුලිත මාදිලි සැකසුම්</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>බැටරිය ආරෝපණය කරන ආකාරය තෝරන්න.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>බැටරි මාදිලිය</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>බැටරිය ආරෝපණය කරන ආකාරය තෝරන්න.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>බැටරි මාදිලිය</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>සම්බන්ධ කර ඇත, ආරෝපණය වෙමින්...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>සම්බන්ධ කර ඇත, ආරෝපණය නොවේ</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>බැටරියේ වර්තමාන උෂ්ණත්වය.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>බැටරි උෂ්ණත්වය</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>බැටරියේ වර්තමාන ධාරිතාව.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>වර්තමාන ධාරිතාව</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>ආරෝපණ/විසර්ජන චක්‍ර ගණන.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>චක්‍ර ගණන</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>නිර්මාණය කළ පරිදි බැටරි ධාරිතාව.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>නිර්මාණ ධාරිතාව</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>බැටරිය ආරෝපණය (+) හෝ විසර්ජන (-) වන අනුපාතය.</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>බැටරිය ආරෝපණය (+) හෝ විසර්ජන (-) වන අවම අනුපාතය.</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>අවම විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>බැටරිය ආරෝපණය (+) හෝ විසර්ජන (-) වන උපරිම අනුපාතය.</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>උපරිම විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>ඉතිරි ඇස්තමේන්තුගත කාලය: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>කාලය ඇස්තමේන්තු කරමින්...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>පළමු භාවිත දිනය</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>බැටරිය පළමු වරට භාවිතා කළේ කවදාද.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>සම්පූර්ණයෙන් ආරෝපණය කළ විට බැටරි ධාරිතාව.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>සම්පූර්ණ ආරෝපණ ධාරිතාව</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>බැටරියේ උපරිම ආරෝපණ ධාරිතාව.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>බැටරි සෞඛ්‍යය</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>අඩු වොට් ආරෝපකය සම්බන්ධ කර ඇත</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>බැටරිය නිෂ්පාදනය කළේ කවදාද.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>නිෂ්පාදන දිනය</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එක අවසන් වරට AC බලයට සම්බන්ධ කළ දා සිට ගත වූ කාලය.
+නිදා වෙමින් හෝ ක්‍රියාවිරහිතව ආරෝපණය කළේ නම් මෙම කාලය නිවැරදි නොවිය හැක.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>බැටරිය මත මෙතැන් සිට</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>බැටරි</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>අවලංගු කරන්න</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>වසන්න</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>නිල්</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>කොළ</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>රතු</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>ඔබේ පරිගණකයේ භාවිතය සහ බල තත්ත්වයන් මත පදනම්ව GPU ක්‍රියාකාරී මාදිලිය තෝරන්න.
+මාදිලි මාරු කිරීමට නැවත ආරම්භ කිරීමක් අවශ්‍ය විය හැක.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>{0} වෙත වෙනස් කිරීමට නැවත ආරම්භ කිරීමක් අවශ්‍යයි. ඔබට දැන් නැවත ආරම්භ කිරීමට අවශ්‍යද?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>නැවත ආරම්භ කිරීම අවශ්‍යයි</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>GPU ක්‍රියා මාදිලිය</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියා</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>දිගටම</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>සියල්ල පිටපත් කරන්න</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>ග්‍රැෆික්ස්</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>වෙනත්</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>බලය</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>මුල් පිටුව</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>අනවශ්‍ය ලෙස ක්‍රියාකාරී නම් discrete GPU අක්‍රිය කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් හෝ හයිබ්‍රිඩ් මාදිලිය ක්‍රියාකාරී නොවී ඇත්නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU අක්‍රිය කරන්න</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>ඊළඟ පියවර ධාවනය කිරීමට පෙර ප්‍රමාදයක් එකතු කරන්න.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>ප්‍රමාදය</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>මකන්න</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS අනුවාදය</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>පෙළ ක්ලිප්බෝඩ් වෙත පිටපත් කෙරිණි.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" ක්ලිප්බෝඩ් වෙත පිටපත් කෙරිණි.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>පිටපත් කෙරිණි!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>උපාංගය</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>දෘඪාංග</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>මවුපිට</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>චැසි</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>මතකය</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Lenovo සහාය</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>යන්ත්‍ර වර්ගය</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>නිෂ්පාදකයා</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>ආකෘතිය</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>අනුක්‍රමික අංකය</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>ඔබේ උපාංගය ගැන</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>අවසන් දිනය</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>ආරම්භක දිනය</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>වගකීම් සහතිකය</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ක්‍රියාකාරී</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>අක්‍රිය කරන්න</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>යෙදුම් මරන්න</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>අනවශ්‍ය ලෙස ක්‍රියාකාරී නම් discrete GPU අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>nVidia GPU වෙත මොනිටරයක් සම්බන්ධ කර ඇත.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>ක්‍රියාවලි නොමැත</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>කාර්ය සාධන තත්ත්වය</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>නොදනී</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>ක්‍රියාවලි</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>GPU නැවත ආරම්භ කරන්න</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>Discrete GPU</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ දීප්තිය වෙනස් කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>සංදර්ශක දීප්තිය</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>සංස්කරණය</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Fn+R කෙටිමඟ භාවිතා කරන විට ඔබට භාවිතා කිරීමට අවශ්‍ය නැති නැවුම් කිරීමේ අනුපාත තෝරන්න එපා.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>ලැප්ටොප් සංදර්ශකය ක්‍රියාත්මක බව සහතික කරන්න. ක්‍රියාවිරහිත සංදර්ශකයක් සඳහා Universal Device Toolkit නැවුම් කිරීමේ අනුපාත පූරණය කළ නොහැක.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාත හමු නොවීය</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාත බැහැර කරන්න</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>පිටවන්න</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>අපනයනය කරන්න</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>බැටරිය මත ඇති විට integrated GPU පමණක් භාවිතා කරන්න, AC ඇඩැප්ටරය සම්බන්ධ විට integrated සහ discrete GPU දෙකම භාවිතා කරන්න. ප්‍රමිතියෙන් බැහැර ඇඩැප්ටරයක් සම්බන්ධ විට, පද්ධතිය Hybrid-iGPU පමණක් මාදිලියට මාරු වේ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>හයිබ්‍රිඩ්-ස්වයංක්‍රීය මාදිලිය</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>මෙම මාදිලියට සහ ඉන් පිටතට මාරු වීමට නැවත ආරම්භ කිරීමක් අවශ්‍යයි.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>discrete GPU පමණක් භාවිතා කරන්න. මෙම මාදිලිය හොඳම ග්‍රැෆික්ස් කාර්ය සාධනය සපයයි, නමුත් බල පරිභෝජනය වැඩි කරයි.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU මාදිලිය</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>integrated සහ discrete GPU දෙකම සක්‍රිය කර ඇත. පද්ධතිය ඒවායේ අවශ්‍යතා මත පදනම්ව ස්වයංක්‍රීයව ඒවා අතර මාරු වේ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>හයිබ්‍රිඩ් මාදිලිය</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>discrete GPU ක්‍රියා නොකරන විට මෙම මාදිලිය පමණක් බලනට පත්වේ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>integrated GPU පමණක් භාවිතා කරන්න. මෙම මාදිලිය බල පරිභෝජනය සහ ශබ්දය අවම කරයි.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Hybrid-iGPU පමණක් මාදිලිය</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>GPU ක්‍රියා මාදිලි ගැන</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>CPU සංවේදකය</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>පංකා වේගය</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>වසාව විවෘත කළ විට ලැප්ටොප් එක ක්‍රියාත්මක කරන්න.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>ආරම්භ කිරීමට පෙරළන්න</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>වසාව විවෘත කළ විට ලැප්ටොප් එක ක්‍රියාත්මක කරන්න.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>ආරම්භ කිරීමට පෙරළන්න</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Fn යතුර අල්ලා නොගෙන F1-F12 යතුරුවල ද්වීතියික කාර්යයන් භාවිතා කරන්න.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn අගුළු</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Fn යතුර අල්ලා නොගෙන F1-F12 යතුරුවල ද්වීතියික කාර්යයන් භාවිතා කරන්න.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn අගුළු</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>අවවාදය!
+සමහර ලැප්ටොප් ඒවා දක්වන අගයන්ට වඩා අඩු අගයන් පිළිගනු ඇත, නමුත් ප්‍රවේසමෙන් කටයුතු කරන්න. මෙම විකල්පය පුදුම සහගත හැසිරීම් වලට තුඩු දිය හැක. ඔබ කරන්නේ කුමක්ද යන්න ඔබට විශ්වාස නැත්නම්, මෙය 0 ලෙස තබන්න.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>අවම ඕෆ්සෙට්</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>අවවාදය!
+සමහර ලැප්ටොප් ඒවා දක්වන අගයන්ට වඩා ඉහළ අගයන් පිළිගනු ඇත, නමුත් ප්‍රවේසමෙන් කටයුතු කරන්න. මෙම විකල්පය පුදුම සහගත හැසිරීම් වලට තුඩු දිය හැක. ඔබ කරන්නේ කුමක්ද යන්න ඔබට විශ්වාස නැත්නම්, මෙය 0 ලෙස තබන්න.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>උපරිම ඕෆ්සෙට්</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>ඔබ ඇත්තටම කරන්නේ කුමක්ද යන්න ඔබට විශ්වාස නැතහොත් පහත විකල්ප වෙනස් නොකරන්න.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>උසස්</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>දිගු කාලීන බල සීමාව (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>දිගු කාලීන බල සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>කෙටි කාලීන බල සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU උෂ්ණත්ව සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>සැකසුම් යෙදිය නොහැක</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>සැකසුම පූරණය කළ නොහැක.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>පංකා වේගය එක් උෂ්ණත්ව සංවේදකයකින් තීරණය නොවේ. එය CPU, GPU සහ හීට්සින්ක් උෂ්ණත්වය අතර ඉහළම සංවේදකය අනුව වේගය ඉහළ නංවන හෝ පහත හෙළනු ඇත. නිශ්චිත අගයන් සෑම පියවරක් මත මවුසය තබන විට දිස්වනු ඇත.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>පංකා වක්‍රය</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>අවවාදය!
+මෙම විකල්පය දිගු කාලයක් භාවිතා කිරීම පංකා දිරායාමට සහ ඒවායේ ආයු කාලය අඩු වීමට තුඩු දෙනු ඇත.
+බැරෑරුම් ලෙස, මෙම විකල්පය ගැන ප්‍රවේසමෙන් කටයුතු කරන්න!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>උපරිම පංකා වේගය</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>පංකා</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>වින්‍යාස කළ හැකි TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>ගතික බූස්ට්</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>GPU උෂ්ණත්ව සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>අභිරුචි මාදිලි සැකසුම්</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ ඉහළ ගතික පරාසය (HDR) සක්‍රිය කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ ඉහළ ගතික පරාසය (HDR) සක්‍රිය කරන්න.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>HDR භාවිතය Windows සැකසුම් මගින් අවහිර කර ඇත.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>ආනයනය කරන්න</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>මෙම උපාංගය Universal Device Toolkit සමඟ අනුකූල නැත.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>ඔබේ උපාංගයට අවශ්‍ය පද්ධති සංරචක (LenovoGameZoneData) නොමැති විය හැක.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>දිගටම කරගෙන යාමට "හරි" ක්ලික් කළහොත්:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- මෘදුකාංගය සීමා කළ මාදිලියේ ධාවනය වේ</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- සමහර විශේෂාංග අක්‍රිය වේ (පාලන පුවරුව, ස්වයංකරණය, මැක්‍රෝ)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- අනෙකුත් මූලික විශේෂාංග තවමත් ලබා ගත හැක</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>උපාංග තොරතුරු:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>විකුණුම්කරු:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>ආකෘතිය:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>යන්ත්‍ර වර්ගය:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>දිගටම කරගෙන යාමට "හරි" ක්ලික් කරන්න, නැතහොත් පිටවීමට "අවලංගු කරන්න" ක්ලික් කරන්න.</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>අනුකූල යතුරු පුවරු කිසිවක් හමු නොවීය</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Lenovo Vantage හෝ එහි සේවා ධාවනය වන විට යතුරු පුවරු පසුබිම් ආලෝකය මෙහි පාලනය කළ නොහැක.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage හෝ එහි සේවා ධාවනය වෙමින්</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>ගැන</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>ක්‍රියා</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>බැටරි</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>පාලන පුවරුව</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>යතුරු පුවරුව</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>බාගැනීම්</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>පද්ධති ප්‍රශස්තකරණය</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>ප්ලගින දිගු</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>සංචලන අයිතම සැකසුම්</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>පැති තීරුවේ කුමන සංචලන අයිතම දිස්වේද යන්න වින්‍යාස කරන්න. පාලන පුවරුව සහ සැකසුම් සැමවිටම දිස්වනු ඇත.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>යතුරු පුවරු සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>බැටරි සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>ස්වයංකරණ සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>මැක්‍රෝ සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>පද්ධති ප්‍රශස්තකරණ සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>ප්ලගින දිගු සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>ගැන සංචලන අයිතමය පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>සංචලන අයිතම</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>පැති තීරුවේ කුමන සංචලන අයිතම දිස්වේද යන්න වින්‍යාස කරන්න</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>යාවත්කාලීනයක් ලබා ගත හැක!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>{0} යාවත්කාලීනයක් ලබා ගත හැක!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>පහළට ගෙනයන්න</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>ඉහළට ගෙනයන්න</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>නැහැ</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය සම්බන්ධ කර ඇත</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය සම්බන්ධ කර ඇත (අඩු වොට්)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය විසන්ධ කර ඇත</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>කැමරාව අක්‍රියයි</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>කැමරාව සක්‍රියයි</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock අක්‍රියයි</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock සක්‍රියයි</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock අක්‍රියයි</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock සක්‍රියයි</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>මයික්‍රොෆෝනය අක්‍රියයි</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>මයික්‍රොෆෝනය සක්‍රියයි</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock අක්‍රියයි</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock සක්‍රියයි</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>පසුබිම් ආලෝකය {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>දීප්තිය {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>පැතිකඩ {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>ටච්පෑඩ් අක්‍රියයි</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>ටච්පෑඩ් සක්‍රියයි</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>පසුබිම් ආලෝකය {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>කැමරාව</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock සහ Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>මයික්‍රෆෝන නිහඬ කිරීම වැනි Fn යතුරු ක්‍රියා සඳහා දැනුම්දීම අක්‍රිය කරයි.
+පූර්ණ තිර යෙදුම් සමඟ ගැටුම් ඇත්නම් මෙම විකල්පය සක්‍රිය කරන්න.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>දැනුම්දීම් පෙන්වන්න එපා</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>මයික්‍රොෆෝනය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>ස්ථානය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>බල මාදිලිය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාතය</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Smart Key</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>දැනුම්දීම්</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>ටච්පෑඩ් අගුළු</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>හරි</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>විවෘත කරන්න</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ ප්‍රතිචාර කාලය වැඩි දියුණු කරන්න.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ ප්‍රතිචාර කාලය වැඩි දියුණු කරන්න.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} බාගන්න ලදි!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>බාගැනීම සම්පූර්ණයි</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>යම් ගැටලුවක් ඇති විය</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>සේවාදායකය කේතය 404 ආපසු ලබා දුන්නේය.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>ගොනුව අතුරුදහන් වී ඇති බව පෙනේ</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>ඔබේ අන්තර්ජාල සම්බන්ධතාවය ක්‍රියාත්මක වෙමින් පවතිනවාදැයි පරීක්ෂා කරන්න.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>යම් ගැටලුවක් ඇති විය</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>යාවත්කාලීනයක් ලබා ගත හැක!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>මෙම ඇසුරුම අවුරුද්දකට වඩා පරණයි.</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>අනුවාදය</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>පහත දැක්වෙන්නේ ඔබේ ලැප්ටොප් එක සමඟ අනුකූල ලෙස සලකුණු කර ඇති මෘදුකාංග ඇසුරුම් ලැයිස්තුවයි.
+ඔබ නිවැරදි ඇසුරුම් ස්ථාපනය කරන බව සැමවිටම සහතික කරන්න.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>යන්ත්‍ර වර්ගය සහ OS නිවැරදිව සකසා ඇත්දැයි පරීක්ෂා කරන්න.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>යම් ගැටලුවක් ඇති විය</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>වර්ග කිරීම, ප්‍රතිඵල පෙරීම, ඇසුරුම් සඟවීම හෝ ලැයිස්තුව නැවුම් කිරීම බාගැනීම නවත්වනු ඇත. දිගටම කරගෙන යාමට අවශ්‍යද?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>බාගැනීම ප්‍රගතියේ</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>පෙරන්න...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>යන්ත්‍ර වර්ගය</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>මෙහෙයුම් පද්ධතිය</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>ප්‍රාථමික (නිර්දේශිත)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Lenovo Vantage ට සමානයි</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>ද්වීතියික</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Lenovo PC Support ට සමානයි</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>ප්‍රවර්ගය</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>දිනය</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>නම</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>මූලාශ්‍රය</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>බාගැනීම්</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>අලවන්න</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>කාර්ය සාධන මාදිලිය වෙනස් කරන්න.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>බල මාදිලිය</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>කාර්ය සාධන මාදිලිය වෙනස් කරන්න.
+කාර්ය සාධන මාදිලිය Fn+Q සමඟද වෙනස් කළ හැක.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>බල මාදිලිය</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය සම්බන්ධ නොවී තෝරාගත් බල මාදිලිය නිවැරදිව ක්‍රියා නොකරනු ඇත.</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>පෙරනිමි</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows බල සැලසුම්</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>ලබා ගත හැකි ධාවක ඇසුරුම් සඳහා පරිලෝකනය කරමින්, කරුණාකර රැඳී සිටින්න...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>ධාවක ඇසුරුම් සඳහා පරිලෝකනය කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>අනුකූල ධාවක බාගැනීම් ලැයිස්තුගත කිරීමට මූලාශ්‍රයක් තෝරන්න සහ පරිලෝකනය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>ධාවක බාගැනීම් හමු නොවීය</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>වෙනත් මූලාශ්‍රයක්, මෙහෙයුම් පද්ධතියක්, හෝ යන්ත්‍ර වර්ගයක් උත්සාහ කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>ගැළපෙන බාගැනීම් හමු නොවීය</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>පෙරහන, යාවත්කාලීන-පමණක් විකල්පය, හෝ සඟවා ඇති බාගැනීම් ලැයිස්තුව සකසන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>ධාවක පරිලෝකනය සම්පූර්ණ නොවීය</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>තෝරාගත් මූලාශ්‍රය සහ ජාල සම්බන්ධතාවය පරීක්ෂා කර නැවත පරිලෝකනය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>ජාල දෝෂයක් ඇති විය. ස්වයංක්‍රීයව නැවත උත්සාහ කරමින්...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>ධාවක ඇසුරුම් ලබා ගැනීමට නැවත උත්සාහ කරමින්...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>පිරිසිදු කිරීමේ තොරතුරු</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>පිරිසිදු කිරීමේ මෙහෙයුම් ප්‍රගතිය සහ ඇස්තමේන්තුගත ප්‍රමාණය බලන්න.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝක පෙරසිකස් සකසන්න.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>දීප්තිය</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>පෙරසිකස් 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>පෙරසිකස් 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>පෙරසිකස් 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>පෙරසිකස් 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>කලාතුරකින් 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>කලාතුරකින් 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>කලාතුරකින් 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>කලාතුරකින් 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>ප්‍රයෝගය</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>වේගය</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>නැවුම් කරන්න</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ නැවුම් කිරීමේ අනුපාතය වෙනස් කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාතය</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ නැවුම් කිරීමේ අනුපාතය වෙනස් කරන්න.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාතය</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>නම වෙනස් කරන්න</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>මම පසුව නැවත ආරම්භ කරමි</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>දැන් නැවත ආරම්භ කරන්න</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>ආපසු හරවන්න</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>තර්ක</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>ක්‍රියාත්මක කළ හැකි මාර්ගය</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>පිටපතක් හෝ වැඩසටහනක් ධාවනය කරන්න.
+පළමුව ඔබේ පිටපත නිවැරදිව ධාවනය වේ යැයි සහතික කරන්න.</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>ධාවනය කරන්න</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>සුරකින්න</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>සුරකිමින්...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>හරහා යාමට එක් හෝ වැඩි ඉක්මන් ක්‍රියා තෝරන්න</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියා කිසිවක් නිර්වචනය කර නැත.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>මෙම යෙදුම පෙන්වන්න</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>යෙදුමේ ඉස්මතු වර්ණය වෙනස් කරන්න.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>ඉස්මතු වර්ණය</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>පෙනුම</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>භාෂාව, උෂ්ණත්ව ඒකකය, තේමාව සහ ඉස්මතු වර්ණය අභිරුචිකරණය කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>ස්වයංක්‍රීය ධාවනය</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Windows වෙත පුරනය වූ විට ට්‍රේ වෙත අවම කළ ලෙස ආරම්භ කරන්න.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone නිවැරදිව අක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone අක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Legion Zone සහ එහි සේවාව අස්ථාපනය නොකර අක්‍රිය කරන්න.
+මෙම විකල්පය වෙනස් කිරීමෙන් පසු නැවත ආරම්භ කිරීම නිර්දේශ කෙරේ.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Legion Zone අක්‍රිය කරන්න</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys නිවැරදිව අක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys අක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys සහ එහි සේවාව අස්ථාපනය නොකර අක්‍රිය කරන්න.
+අක්‍රිය කළහොත්, මෙම යෙදුම Fn කෙටිමං හසුරුවනු ඇත.
+මෙම විකල්පය වෙනස් කිරීමෙන් පසු නැවත ආරම්භ කිරීම නිර්දේශ කෙරේ.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>පද්ධති ප්‍රශස්තකරණය</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>නිර්දේශිත කාර්ය සාධන සැකසුම් යොදන්න සහ තාවකාලික ගොනු පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>කාර්ය සාධන සහ සේවා සැකසුම් යොදන්න</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>කාර්ය සාධන ප්‍රශස්තකරණ යොදන ලදි.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>කාර්ය සාධන ප්‍රශස්තකරණ යෙදිය නොහැකි විය.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>පිරිසිදු කිරීම ධාවනය කරන්න</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>පිරිසිදු කිරීම සම්පූර්ණයි.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>පිරිසිදු කිරීම අසාර්ථක විය.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>මෙම ක්‍රියා පද්ධති සේවා සහ ගොනු වෙනස් කරයි. පරිපාලක වරප්‍රසාද අවශ්‍ය විය හැක.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>තෝරාගත් ක්‍රියා යොදන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>නිර්දේශිත තෝරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>තේරීම මකන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>පරිලෝකනය කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>පිරිසිදු කිරීමේ ක්‍රියා ධාවනය කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>ක්‍රියා {0} ක් තෝරා ඇත</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>තවම කිසිදු ක්‍රියාවක් තෝරා නැත.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>තෝරාගත් ක්‍රියා</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>අලංකාර කිරීම</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>ධාවක බාගැනීම</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>ආරක්ෂක තහවුරු කිරීම</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>පද්ධති පිරිසිදු කිරීම තාවකාලික ගොනු සහ කෑච සදාක් සදාක් ලෙස මකා දමනු ඇත. සාමාන්‍යයෙන් ආරක්ෂිත වුවත්, වැදගත් දත්තවල උපස්ථ ඇති බව සහතික කිරීම නිර්දේශ කෙරේ. ඔබට දිගටම කරගෙන යාමට අවශ්‍යද?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>දිගු</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>පද්ධති ප්‍රශස්තකරණ දිගු සහ මෙවලම් කළමනාකරණය කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>ලබා ගත හැකි දිගු නොමැත</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>පද්ධති ප්‍රශස්තකරණ ක්‍රියාකාරිත්වය ඉහළ නැංවීමට ප්ලගින දිගු පිටුවෙන් දිගු ස්ථාපනය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>ඉක්මනින් පැමිණේ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>දිගු වෙළඳපොළ අනාගත යාවත්කාලීනයකදී ලබා ගත හැකි වනු ඇත.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows ප්‍රශස්තකරණය</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>සියල්ල තෝරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>අභිරුචි පිරිසිදු කිරීමේ රීති</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>පිරිසිදු කිරීමේදී මකා දැමිය යුතු ෆෝල්ඩර සහ ගොනු දිගු තෝරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>රීතිය එකතු කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>සංස්කරණය</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>ඉවත් කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>සියල්ල මකන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>අභිරුචි පිරිසිදු කිරීමේ රීති වින්‍යාස කර නැත.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>උප ෆෝල්ඩර ඇතුළත් කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX කළමනාකරණය</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>සියලු පරිශීලකයින් සඳහා ඉවත් කිරීමට පෙර ස්ථාපනය කළ Microsoft Store යෙදුම් තෝරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>ඉවත් කිරීමට තෝරාගත් යෙදුම් නොමැත.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>තෝරාගත් යෙදුම් අස්ථාපනය කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>තෝරාගත් යෙදුම් ඉවත් කිරීමට කාල සටහන් කර ඇත.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>තෝරාගත් යෙදුම් ඉවත් කිරීම අසාර්ථක විය.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>යෙදුම් පූරණය කරමින්, කරුණාකර රැඳී සිටින්න...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>ප්ලගින පූරණය කරමින්...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>පූරණය කිරීම අසාර්ථක විය: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>ප්‍රකාශකයා: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>රෙජිස්ට්රි MRU/ඉතිහාස පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>ඉතිහාස මකන්න (Run MRU, RecentDocs, Open/Save කතාබහ, TypedPaths). මෙය පද්ධති-මට්ටමේ critical ඇතුළත් කිරීම් ඉවත් නොකරයි.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>ක්‍රියා</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>අභිරුචි පිරිසිදු කිරීමේ රීතිය</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>ෆෝල්ඩරය</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>දිගු</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>බහු දිගු කොමා වලින් වෙන් කරන්න (උදාහරණය: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>උප ෆෝල්ඩර ඇතුළත් කරන්න</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>ගවේෂණය කරන්න...</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>කරුණාකර ෆෝල්ඩරයක් තෝරන්න.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>කරුණාකර අවම වශයෙන් එක් ගොනු දිගුවක් ඇතුළත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>කරුණාකර අවම වශයෙන් එක් ක්‍රියාවක් තෝරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>තෝරාගත් ක්‍රියා සාර්ථකව සම්පූර්ණ විය.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>තෝරාගත් ක්‍රියා සම්පූර්ණ කිරීම අසාර්ථක විය.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer සහ අතුරුමුහුණත</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>පද්ධති අලංකාරකරණය</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>කාර්ය තීරුව, File Explorer සහ පරිශීලක අතුරුමුහුණත හැසිරීම සකසන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>කාර්ය සාධනය</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>පද්ධති කාර්ය සාධනය සහ ප්‍රතිචාරශීලීතා සැකසුම් සකසන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>සේවා</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>සම්පත් පරිභෝජනය කරන පසුබිම් සේවා අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>කෑච, තාවකාලික ගොනු සහ අනෙකුත් ඉතිරි දේ ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>කෑච පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>ගබඩා ඉඩ නිදහස් කිරීමට විවිධ යෙදුම් සහ පද්ධතියෙන් කෑච ගොනු පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>පද්ධති ගොනු පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>තාවකාලික ගොනු, ලොග්, ක්‍රෑෂ් ඩම්ප් ආදි පද්ධති ගොනු පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>පද්ධති සංරචක පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update කෑච, සංරචක ගබඩාව ආදි පද්ධති සංරචක ගොනු පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>කාර්ය සාධන පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>පෙරෆෙච් ගොනු ආදි පද්ධති කාර්ය සාධනයට බලපෑ හැකි ගොනු පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>අභිරුචි පිරිසිදු කිරීම</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>අභිරුචි රීති භාවිතා කර නිශ්චිත ගොනු සහ නාභිගත පිරිසිදු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>කාර්ය තීරුව සහ ආරම්භ මෙනු පිරිසැලැස්ම</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>සෙවුම් කොටුව සහ Task View බොත්තුව සඟවන්න, කාර්ය තීරුව කණ්ඩ කිරීම අක්‍රිය කරන්න සහ ට්‍රේ නිරූපක සැමවිටම පෙන්වන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>ආරම්භ මෙනුව අක්‍රිය කර Win යතුර සමඟ සෙවුම විවෘත කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>ආරම්භ මෙනුව සම්පූර්ණයෙන් අක්‍රිය කරන්න. Win යතුර ඔබන විට, එය ආරම්භ මෙනුව වෙනුවට සෙවුම විවෘත කරනු ඇත.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Explorer ප්‍රතිචාරශීලීතාවය වැඩි දියුණු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>මෙනු ප්‍රමාදය අඩු කරන්න, එල්ලා ඇති යෙදුම් වේගයෙන් වසන්න සහ This PC පෙරනිමියෙන් විවෘත කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>ගොනු දෘශ්‍යතා විකල්ප</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>File Explorer හි ගොනු දිගු සහ සැඟවුණු ගොනු පෙන්වන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Explorer යෝජනා අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>ක්ලවුඩ් අන්තර්ගත යෝජනා සහ නිර්දේශන බැනර අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Windows යතුර සෙවුම විවෘත කිරීමට වෙනස් කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>ආරම්භ මෙනුව වෙනුවට සෙවුම විවෘත කිරීමට Windows යතුර හැසිරීම වෙනස් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>මධ්‍යස්ථ නියමයනය ප්‍රශස්ත කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>ජාල තාල සීමා කිරීම ඉවත් කරන්න සහ පද්ධති ප්‍රතිචාරශීලීතා ප්‍රමාදය අඩු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>මතක කළමනාකරණය වැඩි දියුණු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>පද්ධති කෑච මතකයේ තබන්න සහ කර්නල් ධාවක පිටුම් කිරීම වළක්වන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>ඇක්‍රිලික් සහ දැනුම්දීම් මධ්‍යස්ථානය අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>ලොග් වීමේ ඇක්‍රිලික් ප්‍රයෝග ඉවත් කරන්න සහ Windows දැනුම්දීම් මධ්‍යස්ථානය සඟවන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>ටෙලිමෙට්‍රි සහ ඉඟි අඩු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>දැන්වීම් ID, Spotlight විශේෂාංග සහ ස්වයංක්‍රීය යෝජනා අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>ඉහළ කාර්ය සාධන සැලසුම බලහත් කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>ඉහළ කාර්ය සාධන බල යෝජනා ක්‍රමය සක්‍රිය කරන්න සහ හයිබර්නේෂන් අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>රෝග විනිශ්චය සේවා අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Connected User Experiences, Diagnostics Hub සහ Delivery Optimisation සේවා නවත්වන්න සහ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMain අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>පසුබිම් තැටි ක්‍රියාකාරකම් අඩු කිරීමට Superfetch/SysMain අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Windows Search සුචිගත කිරීම අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>සුචි යාවත්කාලීන වැළැක්වීමට Windows Search සේවාව නවත්වන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>දුරස්ථ රෙජිස්ට්‍රි අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>දුරස්ථ රෙජිස්ට්‍රි ප්‍රවේශය අක්‍රිය කරමින් පද්ධතිය සුරක්ෂිත කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>දෝෂ වාර්තා අක්‍රිය කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>ක්‍රෑෂ් දත්ත එකතු කිරීම සහ යැවීම නවත්වන්න Windows Error Reporting නවත්වන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>දුරස්ථ ඩෙස්ක්ටොප් කෑච මකන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Remote Desktop සේවාදායකය මගින් නිර්මාණය කළ කෑච් ගත කළ ගොනු ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Windows Update කෑච පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>බාගත් යාවත්කාලීන ගොනු සහ Delivery Optimisation කෑච මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>බ්‍රවුසර කෑච පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>විවිධ යෙදුම් මගින් ඉතිරි කර ඇති තාවකාලික ගොනු සහ ලොග් පිරිසිදු කරයි.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>යෙදුම් ඉතිරි</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Internet Explorer සහ Edge කෑච සහ cookie ගොනු ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>කුඩා රූ කෑච පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Explorer කුඩා රූ දත්ත ගබඩා සහ Direct3D ෂේඩර් කෑච මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NET ස්වදේශීය රූප මකන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>තැටි ඉඩ නැවත ලබා ගැනීමට කෑච් ගත .NET Native රූප ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>ලොග් සහ රෝග විනිශ්චය දත්ත ඉවත් කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>ඔබේ පද්ධති ධාවකයේ වැදගත් ඉඩක් ගනිමින් තිබිය හැකි විශාල ගොනු සඳහා පරිලෝකනය කරයි.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>විශාල ගොනු පරිලෝකනය</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>ඔබේ පද්ධතියේ විශාල ගොනු හඳුනාගෙන කළමනාකරණය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>විශාල ගොනු</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Windows ලොග්, දෝෂ වාර්තා සහ රෝග විනිශ්චය අනුඛ්‍යාන මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>ක්‍රෑෂ් ඩම්ප් මකන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>පද්ධති ක්‍රෑෂ් වලින් පසු ඉතිරි වූ මතක ඩම්ප් ගොනු ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Defender පරිලෝකන පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Windows Defender පරිලෝකන ඉතිහාසය සහ කෑච මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>තාවකාලික ගොනු පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Windows සහ පරිශීලක තාවකාලික නාභිගත හිස් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>ඇසුරුම් කළ Windows යෙදුම් ඉවත් කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>සියලු පරිශීලකයින් සඳහා තෝරාගත් පෙර ස්ථාපනය කළ UWP යෙදුම් අස්ථාපනය කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>ප්‍රතිචක්‍රීය බහාලුම හිස් කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>ප්‍රතිචක්‍රීය බහාලුමේ ගබඩා වූ මකාදැමූ ගොනු ඉවත් කරන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>පෙරෆෙච් දත්ත මකන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>නව අනුඛ්‍යාන නැවත ජනනය කිරීමට Windows පෙරෆෙච් දත්ත මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>අභිරුචි ගොනු පිරිසිදු කරන්න</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>තෝරාගත් ෆෝල්ඩර වලින් වින්‍යාස කළ දිගු වලට ගැළපෙන ගොනු මකන්න.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>සේවා සංරචක ගබඩාව</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>DISM පිරිසිදු කිරීම ධාවනය කර WinSxS තාවකාලික ගොනු මකන්න.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys අක්‍රිය කරන්න</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage සහ/හෝ ImController නිවැරදිව අක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage සහ/හෝ ImController අක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Lenovo Vantage සහ ImController අස්ථාපනය නොකර අක්‍රිය කරන්න.
+මෙම විකල්පය වෙනස් කිරීමෙන් පසු නැවත ආරම්භ කිරීම නිර්දේශ කෙරේ.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Lenovo Vantage සහ ImController අක්‍රිය කරන්න</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone නිවැරදිව සක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone සක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys නිවැරදිව සක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys යතුරු සක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage සහ/හෝ ImController නිවැරදිව සක්‍රිය කර නොමැති විය හැක</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage සහ/හෝ ImController සක්‍රිය කළ නොහැක</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Fn+R කෙටිමඟ වඩාත් ප්‍රයෝජනවත් කිරීමට, නැවුම් කිරීමේ අනුපාත බැහැර කළ හැක.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>නැවුම් කිරීමේ අනුපාත බැහැර කරන්න</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>භාෂාව තෝරන්න.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>භාෂාව ස්ථාපනය කරන්න</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>භාෂා ස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>භාෂා ඇසුරුම බාගත නොහැකි විය. ඔබේ ජාල සම්බන්ධතාවය, ප්‍රොක්සි, හෝ TLS සැකසුම් පරීක්ෂා කර නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>භාෂාව ස්ථාපනය කරමින්</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>භාෂා ඇසුරුම බාගනිමින්...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>නිස්සලහ කර ස්ථාපනය කරමින්...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>මෙම භාෂා ඇසුරුම ස්ථාපනය කිරීමට බාගැනීමේ බොත්තුව භාවිතා කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>භාෂාව ස්ථාපනය කර නැත</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>භාෂාව</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>භාෂාව අස්ථාපනය කරන්න</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>භාෂා අස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>භාෂාව අස්ථාපනය කරමින්</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>සැමවිටම ට්‍රේ වෙත අවම කරන්න. ට්‍රේ නිරූපකය මත දකුණු-ක්ලික් කිරීමෙන් වසන්න.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>වැසීමේදී අවම කරන්න</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>ආරම්භයේ දිස්වන අනුකූල නොවන උපාංග අවවාදය සඟවන්න.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>අනුකූල නොවන උපාංග අවවාදය අක්‍රිය කරන්න</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>කුමන දැනුම්දීම් පෙන්වන්නේද යන්න වින්‍යාස කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>දැනුම්දීම්</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows බල සැලසුම්</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Fn+F9 ද්වීතියික ඔබීමට ඉක්මන් ක්‍රියාව පවරන්න.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Smart Key ද්වීතියික ක්‍රියාව</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Fn+F9 තනි ඔබීමට ඉක්මන් ක්‍රියාව පවරන්න.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Smart Key ක්‍රියාව</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>ආලෝක තේමාව, අඳුරු තේමාව සකසන්න හෝ පද්ධති සැකසුම් අනුගමනය කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>තේමාව</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>පෙනුම</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>යෙදුම</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Smart Keys</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>සංදර්ශකය</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>යෙදුමේ පෙනුම, හැසිරීම සහ ක්‍රියාකාරිත්ව විකල්ප වින්‍යාස කරන්න.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකයේ දීප්තිය සකසන්න.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකයේ දීප්තිය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>ප්‍රයෝගය එකතු කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>පැතිකඩ යෙදිය නොහැක</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>ආලෝකකරණ පැතිකඩ යෙදිය නොහැකි විය.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>දීප්තිය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>සියලු කලාතුරකින් තේරීම ඉවත් කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>ප්‍රයෝග</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>පැතිකඩ අපනයනය කළ නොහැක</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>පැතිකඩ අපනයනය කළ නොහැක</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>පැතිකඩ ආනයනය කළ නොහැක</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>පැතිකඩ ආනයනය කළ නොහැක</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>කිසිදු ප්‍රයෝගයක් එකතු කර නැත.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>පෙරනිමියට යළි පිහිටුවන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>සියලු කලාතුරකින් තෝරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>යතුරු පුවරු පිරිසැලැස්ම මාරු කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>දිශාව</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>වර්ණය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>වර්ණ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>දිශාව</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>ප්‍රයෝගය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>මෙම ප්‍රයෝගය සම්පූර්ණ යතුරු පුවරුවට යොදනු ඇති අතර වෙනත් සියලු ප්‍රයෝග ප්‍රතිස්ථාපනය කරනු ඇත.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>වේගය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>ප්‍රයෝගය එකතු කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>ප්‍රයෝගය සංස්කරණය කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝක පැතිකඩ සකසන්න.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝක පැතිකඩ</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>සියලු යතුරු</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>කලාතුරකින් {0} ක්</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>උදේ හිරු උදා වීම</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>සවස හිරු බැසීම</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>කාලය</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>integrated සහ discrete GPU අතර මාරු වීමට ඉඩ දෙන්න.
+නැවත ආරම්භ කිරීමක් අවශ්‍යයි.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>හයිබ්‍රිඩ් මාදිලිය වෙනස් කිරීමට නැවත ආරම්භ කිරීමක් අවශ්‍යයි. ඔබට දැන් නැවත ආරම්භ කිරීමට අවශ්‍යද?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>නැවත ආරම්භ කිරීම අවශ්‍යයි</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>හයිබ්‍රිඩ් මාදිලිය</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>ටච්පෑඩ් අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>ටච්පෑඩ් අගුළු</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>ටච්පෑඩ් අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>ටච්පෑඩ් අගුළු</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>නැවත උත්සාහ කරන්න</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>අනපේක්ෂිත ව්‍යතිරේකයක් සිදු විය:
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>වාර්තාව මකන්න</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>ක්‍රෑෂ් වාර්තාවක් තැටියට සුරකින ලදි. ඔබට පහත වාර්තා විස්තර සමාලෝචනය කළ හැක. වාර්තා ස්වයංක්‍රීයව යවනු නොලැබේ.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>පෙර සැසියේදී යෙදුම ක්‍රෑෂ් විය</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>ක්‍රෑෂ් වාර්තාව විවෘත කිරීම අසාර්ථක විය: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>වාර්තාව විවෘත කරන්න</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>වසන්න</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>ක්‍රෑෂ් වාර්තාව මෙහි සුරකින ලදි: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>ක්‍රෑෂ් වාර්තාවක් අනාවරණ විය</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>ක්‍රෑෂ් වාර්තා විස්තර පූරණය කළ නොහැක.</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>නම් නොකළ</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>ඔබේ අවදානම මත දිගටම යාමට තෝරාගත හැක, නමුත් සමහර විශේෂාංග ලබා ගත නොහැකි හෝ නිවැරදිව ක්‍රියා නොකරන හැකි බව මතක තබා ගන්න.
+
+ඔබ දිගටම යාමට තෝරා ගන්නේ නම් ලොග් කිරීම ස්වයංක්‍රීයව සක්‍රිය කෙරේ.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>වැඩි තොරතුරු සඳහා GitHub හි ව්‍යාපෘති පිටුව පරීක්ෂා කරන්න.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>ලොග් ෆෝල්ඩරය</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>යන්ත්‍ර වර්ගය</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ඔබේ උපාංගය සමඟ පරීක්ෂා කර නැත.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>ඔබට ඕනෑම වේලාවක සැකසුම් තුළ මෙම අවවාදය අක්‍රිය කළ හැක.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>ආකෘතිය</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>සහාය නොදක්වන උපාංගය</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>විකුණුම්කරු</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>යාවත්කාලීන කරන්න</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>යාවත්කාලීනයක් ලබා ගත හැක</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>මොනවද අලුත්ද?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකයේ දීප්තිය සකසන්න.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>ඔබට Fn+Space සමඟ දීප්තිය වෙනස් කළ හැක</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් යතුරු පුවරුවේ Windows යතුර අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Windows Key Lock</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් යතුරු පුවරුවේ පමණක් ක්‍රියා කරයි.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Windows Key Lock</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>ඔව්</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>මයික්‍රොෆෝනය</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>අක්‍රිය විට, මයික්‍රොෆෝන නිහඬ කෙරේ.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>මයික්‍රොෆෝනය</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>අක්‍රිය විට, මයික්‍රොෆෝන නිහඬ කෙරේ.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>විභේදනය</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ විභේදනය වෙනස් කරන්න.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>විභේදනය</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ විභේදනය වෙනස් කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ පරිමාණය වෙනස් කරන්න.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකයේ පරිමාණය වෙනස් කරන්න.
+
+අවවාදය: අභ්‍යන්තර සංදර්ශකය ක්‍රියාවිරහිත නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>සංදර්ශකය</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>ඔබට Fn+Space සමඟ පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කළ හැක.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>ගැළපෙන බාගැනීම් හමු නොවීය</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>යාවත්කාලීන පමණක් පෙන්වන්න</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>පාලන පුවරුව අභිරුචිකරණය කරන්න</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>පූරණය කරන්න</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>කණ්ඩ ඇති කරන්න</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>නම</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>ඔබේ ලැප්ටොප් එකේ තත්ත්වය සහ වින්‍යාසය මත පදනම්ව සමහර විශේෂාංග පාලන පුවරුවේ දිස් නොවිය හැක.</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>අභිරුචිකරණය කරන්න</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>සංදර්ශක අක්‍රිය කරන්න</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>සියලු ලබා ගත හැකි සංදර්ශක අක්‍රිය කරන්න.
+මවුසය ගෙනයාම හෝ යතුරු පුවරුව ඔබීම සංදර්ශක අවදි කරනු ඇත.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>අක්‍රිය කරන්න</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>සංදර්ශක අක්‍රිය කරන්න</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>සියලු ලබා ගත හැකි සංදර්ශක අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>කණ්ඩ නම සංස්කරණය කරන්න</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>නම</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Legion ලාංඡනය සක්‍රියයි</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Legion ලාංඡනය අක්‍රියයි</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Ports පසුබිම් ආලෝකය සක්‍රියයි</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Ports පසුබිම් ආලෝකය අක්‍රියයි</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>නැවත ආරම්භ කිරීම අවශ්‍යයි</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>වසා දැමීම අවශ්‍යයි</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>නැවත ආරම්භ කිරීම නිර්දේශ කෙරේ</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>නිර්දේශිත</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>පෝලිමේ</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>බාගනිමින්</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>ස්ථාපනය කරමින්</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>සම්පූර්ණයි</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>ක්‍රියා නිර්වචනය හමු නොවීය</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>මෙම ක්‍රියාව සඳහා තාක්ෂණික ක්‍රියාත්මක කිරීමේ විස්තර නොමැත</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>පූරණය කිරීම අසාර්ථක විය</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>නොදනී</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>විධාන ක්‍රියාත්මක කිරීම</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>රෙජිස්ට්රි වෙනස් කිරීම</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>සේවා කළමනාකරණය</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>රෙජිස්ට්රි වෙනස් කිරීම + PowerShell පිටපත</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>රෙජිස්ට්රි පිරිසිදු කිරීම</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM විධානය</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>සුරකින්න සහ වසන්න</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>අභිරුචි මාදිලි පෙරසිකස්</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>අභිරුචි මාදිලි පෙරසිකස් සක්‍රිය කරන්න.
+අභිරුචි මාදිලිය සක්‍රිය විට පමණක් මෙම සැකසුම බලනට පත්වේ.</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>පෙරසිකස් නම</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>නම</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>ක්‍රියාකාරී පෙරසිකස්</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>යෙදුම් ෆෝල්ඩර</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>දත්ත</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>තාවකාලික</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>තනි සංදර්ශක දීප්තිය</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>සක්‍රිය විට, එකම දීප්ති මට්ටම වෙනස් කළ හැම විටම සියලු Windows බල සැලසුම් වලට යොදනු ලැබේ.</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>{0} යාවත්කාලීනයක් ලබා ගත හැක!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>උච්ච බල සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU sPPT බල සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>CPU මගින් ළඟා කළ හැකි අඛණ්ඩ බල පරිභෝජනය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>CPU මගින් කෙටි කාලයක් තුළ ළඟා කළ හැකි උච්ච බල පරිභෝජනය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>CPU මගින් ළඟා කළ හැකි උපරිම ක්ෂණික බල පරිභෝජනය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>CPU සහ GPU දෙකම සම්පූර්ණයෙන් භාවිතා කරන විට CPU මගින් ළඟා කළ හැකි උපරිම බල පරිභෝජනය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>CPU මගින් කුඩා ප්‍රමාදයක් සමඟ ළඟා කළ හැකි උච්ච බල පරිභෝජනය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>සංඛ්‍යාතය සහ බලය අඩු කිරීමට පෙර CPU මගින් ළඟා කළ හැකි උපරිම උෂ්ණත්වය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>CPU බල පරිභෝජනය මත පදනම්ව GPU වෙත වෙන් කළ හැකි අමතර උපරිම බලය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>මූලික බල පරිභෝජනයට ඉහළින් GPU වෙත වෙන් කළ හැකි අමතර බල ප්‍රමාණය.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>සංඛ්‍යාතය සහ බලය අඩු කිරීමට පෙර GPU මගින් ළඟා කළ හැකි උපරිම උෂ්ණත්වය.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>පෙරනිමි</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>කෙටි කාලීන බල සීමා කාල සීමාව</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>CPU හට Short Term Power Limit භාවිතයට සහ උපරිම කිරීමට අවසර දී ඇති කාල ප්‍රමාණය. Tau කල් ඉකුත් වූ විට, Long Term Power Limit භාවිතා වේ.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>AC හි සම්පූර්ණ ප්‍රොසෙසර බල ඉලක්කය</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPU මගින් GPU සඳහා ගතික බල පරිභෝජන ගැළපීම අරඹන ලක්ෂ්‍යය.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>නිර්මාණය කරන්න</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>පියවර එකතු කරන්න</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>ක්‍රියාව නිර්මාණය කරන්න</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>බල මාදිලිය</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>පෙරසිකස්</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>Discrete GPU</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>බල තත්ත්වය</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>බැටරි</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>මාදිලිය</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>අවම විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>උපරිම විසර්ජන අනුපාතය</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>භාවිත කාලය</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>යාවත්කාලීනයක් ලබා ගත හැක!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>නිරූපකය තෝරන්න</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>නිරූපකය වෙනස් කරන්න</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>බැටරි මට්ටම අඩුයි</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>වින්‍යාස කරන්න</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 Lower Power Model අනාවරණ විය</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows වාර්තා කරන්නේ මෙම ලැප්ටොප් එක Modern Standby සහාය දක්වන බවයි. සමතුලිත අත්තිවාරමට අමතර බල සැලසුම් භාවිතා කිරීම අනපේක්ෂිත හැසිරීම් වලට තුඩු දිය හැක.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>බල මාදිලිය වෙනස් වන විට යෙදීමට Windows බල සැලසුම් තෝරන්න.</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>බලය</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Windows Control Panel හි බල සැලසුම් විකල්ප</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>බලය කපා ඇත</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>යතුරු පුවරු පසුබිම් ආලෝක පැතිකඩ ආනයනය කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>වර්තමාන පැතිකඩට පසුබිම් ආලෝක වින්‍යාසය ආනයනය කර යොදන්න.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>මාර්ගය</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>{0} ට පසු</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>බහු ට්‍රිගර...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>GPU ඕවර් ක්ලොක් සැකසුම්</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>කෝර සංඛ්‍යාත ඕෆ්සෙට්</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>මතක සංඛ්‍යාත ඕෆ්සෙට්</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU ඕවර් ක්ලොක් කරන්න</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>discrete GPU ඕවර් ක්ලොක් කිරීමෙන් කාර්ය සාධනය වැඩි කරන්න.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU ඕවර් ක්ලොක් කරන්න</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>discrete GPU ඕවර් ක්ලොක් කිරීමෙන් කාර්ය සාධනය වැඩි කරන්න.
+
+අවවාදය: discrete GPU ලබා ගත නොහැකි නම් මෙම ක්‍රියාව නිවැරදිව ධාවනය නොවේ.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Ports පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එකේ පිටුපස ඇති ports වල පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Ports පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එකේ පිටුපස ඇති ports වල පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Panel logo පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එකේ වසාවේ පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Panel logo පසුබිම් ආලෝකය</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ලැප්ටොප් එකේ වසාවේ පසුබිම් ආලෝකය සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>උපරිම: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>ප්‍රයෝජනය</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>කෝර ඔරලෝසුව</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P කෝර ඔරලෝසුව</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E කෝර ඔරලෝසුව</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>පංකාව</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>මතක ඔරලෝසුව</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>මතක භාවිතය</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>මතක උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM භාවිතය</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>බෙදාගත් මතක භාවිතය</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU උණුසුම් ස්ථානය</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe තාලය</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>කෝර</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>මතකය</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>වේදිකාව</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>නැවුම් කිරීමේ පරතරය</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>ක්ෂණික ඇරඹුම</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>ආරෝපකයක් සම්බන්ධ විට ලැප්ටොප් එක ක්‍රියාත්මක කරන්න.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>ක්ෂණික ඇරඹුම</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>ආරෝපකයක් සම්බන්ධ විට ලැප්ටොප් එක ක්‍රියාත්මක කරන්න.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>බල මාදිලිය වෙනස් කළ නොහැක</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} බල මාදිලිය AC බලය නොමැතිව ලබා ගත නොහැක.</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>සංවේදක</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>GPU ක්‍රියා මාදිලිය වෙනස් කළ නොහැක</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>තත්පර කිහිපයකින් නැවත මාදිලිය වෙනස් කිරීමට උත්සාහ කරන්න, ඔබ අපේක්ෂිත ප්‍රතිඵලය නොදකින්නේ නම්.
+dGPU සම්පූර්ණයෙන් ප්‍රතිචාර නොදක්වන්නේ නම්, කරුණාකර ඔබේ ලැප්ටොප් එක නැවත ආරම්භ කරන්න.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU දැනට භාවිතයේ ඇත</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU භාවිතයේ නොමැති විට ස්වයංක්‍රීයව විසන්ධ වේ.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU දැනට භාවිතයේ ඇත හෝ ලැප්ටොප් බැටරි බලය මත නැත</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU භාවිතයේ නොමැති විට සහ ලැප්ටොප් බැටරි බලය මත ඇති විට ස්වයංක්‍රීයව විසන්ධ වේ.</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage හෝ එහි සේවා ධාවනය වන විට අභිරුචි මාදිලි සැකසුම් නිවැරදිව යොදනු නොලැබේ.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Legion Zone හෝ එහි සේවා ධාවනය වන විට අභිරුචි මාදිලි සැකසුම් නිවැරදිව යොදනු නොලැබේ.</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU සම්බන්ධයි</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU විසන්ධයි</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU ක්‍රියා මාදිලිය</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>ඔබේ පරිගණකයේ භාවිතය සහ බල තත්ත්වයන් මත පදනම්ව GPU ක්‍රියාකාරී මාදිලිය තෝරන්න.
+මාදිලි මාරු කිරීමට නැවත ආරම්භ කිරීමක් අවශ්‍ය විය හැක.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>හයිබ්‍රිඩ් මාදිලිය</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>integrated සහ discrete GPU අතර මාරු වීමට ඉඩ දෙන්න.
+නැවත ආරම්භ කිරීමක් අවශ්‍යයි.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>කාල සීමාව</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>යාවත්කාලීන</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU සිට CPU ගතික බූස්ට්</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>CPU භාවිතය මත පදනම්ව GPU වෙතින් CPU වෙත වෙන් කළ හැකි උපරිම අමතර බලය. අගය ඉහළ යන තරමට, CPU භාවිතා කරන යෙදුම්වල කාර්ය සාධනය වඩා හොඳයි.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>ඇරඹුම් ලාංඡනය</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>පද්ධති ඇරඹුමේදී දිස්වන ඇරඹුම් ලාංඡන රූපය අභිරුචිකරණය කරන්න.</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>ඇරඹුම් ලාංඡනය</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>පෙරනිමි ඇරඹුම් ලාංඡනය සකසා ඇත</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>අභිරුචි ඇරඹුම් ලාංඡනය සකසා ඇත</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>තත්ත්වය</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>පෙරනිමියට ආපසු</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>අභිරුචිකරණය කරන්න</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>ක්‍රියා</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>දැනුම්දීම් පෙළ</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>දැනුම්දීම පෙන්වන්න</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>පෙරසිකස්</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Smart Fn Lock</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Alt, Ctrl හෝ Shift යතුර ඔබන විට Fn Lock තාවකාලිකව අක්‍රිය වේ.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>අභිරුචි ඇරඹුම් ලාංඡනය නිශ්චිතව පික්සල් {0} ක් විය යුතුයි.
+සහාය දක්වන ආකෘති: {1}.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>රාත්‍රී බැටරි ආරෝපණය</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>සක්‍රිය විට, මෙම උපාංගය රාත්‍රී කාලයේ ප්ලග් කරන විට 80% දක්වා ආරෝපණය වන අතර උදේ ඔබ මෙම උපාංගය භාවිතා කරන වේලාවට 100% දක්වා ආරෝපණය සම්පූර්ණ කරයි.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>රාත්‍රී බැටරි ආරෝපණය</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>සක්‍රිය විට, මෙම උපාංගය රාත්‍රී කාලයේ ප්ලග් කරන විට 80% දක්වා ආරෝපණය වන අතර උදේ ඔබ මෙම උපාංගය භාවිතා කරන වේලාවට 100% දක්වා ආරෝපණය සම්පූර්ණ කරයි.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>වලංගු නොවන රූප ප්‍රමාණය.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>වලංගු නොවන රූප ආකෘතිය.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>EFI කොටස සවි කළ නොහැක.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>UEFI වරප්‍රසාදය සැකසිය නොහැක.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>EFI කොටසේ ප්‍රමාණවත් නිදහස් ඉඩ නොමැත.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>අභිරුචි ලාංඡනය සැකසිය නොහැක: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>පෙරනිමි ලාංඡනය සැකසිය නොහැක: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>පෙරනිමි ඇරඹුම් ලාංඡනය සකසා ඇත.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>අභිරුචි ඇරඹුම් ලාංඡනය සකසා ඇත.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>ජාල නම (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>වර්තමාන ජාල නම පිටපත් කරන්න</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>ඕනෑම Wi-Fi ජාලයක් සඳහා හිස් තබන්න.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>පංකා වේගය, බැටරි උෂ්ණත්වය ආදිය HWiNFO64 සමඟ බෙදාගන්න. මෙම විකල්පය වෙනස් කිරීමෙන් පසු HWiNFO64 නැවත ආරම්භ කිරීමට අවශ්‍ය විය හැක.</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>ඒකාබද්ධ කිරීම්</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>තොරතුරු</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>බාගැනීමේ ෆෝල්ඩරය</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>බාගැනීමේ ෆෝල්ඩරය විවෘත කරන්න</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>බාගන්න</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>ස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>අස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>ස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>ගොනුව හමු නොවීය, කරුණාකර පළමුව බාගන්න</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>ස්ථාපකය කේතය {0} සමඟ පිටවිය</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>ස්ථාපනය ආරම්භ විය</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>ස්ථාපකය ආරම්භ කරමින්: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>README විවෘත කරන්න</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>පෙරසිකස්</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>නැවුම් කරන්න</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>මකන්න</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>කාල පරතරය (මිනිත්තු)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>පද්ධතිය නැවත ආරම්භ වන විට බැටරි කොටසේ "බැටරිය මත මෙතැන් සිට" සඳහා කවුන්ටරය යළි පිහිටුවයි.</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>ආරම්භයේදී "බැටරිය මත මෙතැන් සිට" යළි පිහිටුවන්න</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi අක්‍රිය කරන්න</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi සක්‍රිය කරන්න</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>නිහඬව ධාවනය කරන්න</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>අවසන් වන තුරු රැඳී සිටින්න</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>console යෙදුම් ධාවනය කරන්න, console කවුළුවක් නිර්මාණය නොකර.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>වැඩසටහන හෝ පිටපත ක්‍රියාත්මක වීම අවසන් වන තුරු රැඳී සිටින්න</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>නිහඬ කළ විට, සියලු ක්‍රියාකාරී ශ්‍රව්‍ය ප්‍රතිදාන උපාංග නිහඬ කෙරේ.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>ස්පීකරය</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>ට්‍රේ වෙත අවම කරන්න</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>කාර්ය තීරුව වෙනුවට සැමවිටම ට්‍රේ වෙත අවම කරන්න.</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows බල මාදිලි</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Fn+Q සමඟ අභිරුචි මාදිලියට මාරු වන්න</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Fn+Q සමඟ අභිරුචි මාදිලියට ඉක්මනින් මාරු වීමට ඉඩ දෙන්න.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>බල මාදිලි සමමුහුගහනය</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>බල මාදිලි වෙනස් කරන විට Windows බල සැලසුම හෝ Windows බල මාදිලිය ස්වයංක්‍රීයව වෙනස් කරන්න.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows බල මාදිලි</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>බල මාදිලිය වෙනස් වන විට යෙදීමට Windows බල මාදිලිය තෝරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>උපාංග තොරතුරු කියවීමේදී දෝෂයක් ඇති විය.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>අනුකූලතා පරීක්ෂා දෝෂය</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>ආරම්භයේදී උපාංග තොරතුරු කියවීමට යෙදුම අසාර්ථක විය. කරුණාකර පහත දෝෂ විස්තර පරීක්ෂා කර අවශ්‍ය නම් ගැටලු නිරාරණ පියවර උත්සාහ කරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>ගැටලු නිරාරණ පියවර</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Windows Management Instrumentation (WMI) සේවාව ධාවනය වන බව සහතික කරන්න: සේවා (services.msc) විවෘත කර "Windows Management Instrumentation" ධාවනය වන බව පරීක්ෂා කරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>පද්ධති රෙජිස්ට්රි සහ WMI වෙත ප්‍රවේශ වීමට ප්‍රමාණවත් අවසර ඇති බව සහතික කිරීමට යෙදුම පරිපාලක ලෙස ධාවනය කරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>පද්ධති සම්පත් පරීක්ෂා කරන්න: වෙනත් සම්පත්-ගැඹුරු යෙදුම් වසන්න සහ නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>පහත "ලොග් විවෘත කරන්න" ක්ලික් කිරීමෙන් විස්තරාත්මක දෝෂ තොරතුරු සඳහා ලොග් ගොනුව සමාලෝචනය කරන්න.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>ලොග් ගොනුව විවෘත කරන්න</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>මැක්‍රෝ</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>මැක්‍රෝ</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>පුනරාවර්තනය</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>ප්‍රමාද නොසලන්න</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>මකන්න</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>පටිගත කරන්න</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>පටිගත කිරීම නවත්වන්න</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>පුනරාවර්තනය නොකරන්න</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>මැක්‍රෝ ක්‍රියා කිරීමට Universal Device Toolkit ධාවනය විය යුතුය.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>සක්‍රිය කරන්න</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>ඔබට යතුරු ඔබීම් මාලාවක් පටිගත කර ඔබේ යතුරු පුවරුවේ සංඛ්‍යා පෑඩ් එක භාවිතයෙන් ඒවා ක්‍රියාත්මක කළ හැක.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>මැක්‍රෝ</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>මැක්‍රෝ සක්‍රිය හෝ අක්‍රිය කරන්න.</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>වෙනත් යතුරක් ඔබුවහොත් අත්හරින්න</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>සඟවන්න</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>සියල්ල සඟවන්න</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>උපාංග</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>සියල්ල තේරීම ඉවත් කරන්න</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>සියල්ල තෝරන්න</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>යතුරු පුවරුව පමණක්</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>යතුරු පුවරු යතුරු සහ මවුසය බොත්තු</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>සියලු ආදාන</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>පටිගත කිරීමේ විකල්ප</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>තත්පර 3 කින් පටිගත කිරීම ආරම්භ වේ...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>පටිගත කරමින්...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>නැවැත්වීමට ESC ඔබන්න.</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>තෝරාගත් උපාංග පමණක් පෙන්වන්න</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>ඉවත් කළ හැකි උපාංග පමණක් පෙන්වන්න</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>සම්බන්ධ උපාංග පමණක් පෙන්වන්න</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>විධාන රේඛාවෙන් පාලනය කිරීමට ඉඩ දෙන Command Line Interface සක්‍රිය කරන්න.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>CLI PATH වෙත එකතු කරන්න</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>CLI පරිශීලකයාගේ PATH පරිසර විචල්‍යයට එකතු කරන්න.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>උෂ්ණත්වය</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>උෂ්ණත්ව සංවේදක සඳහා ඒකක තෝරන්න.</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys පසුබිමේ ධාවනය වෙමින්.</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone පසුබිමේ ධාවනය වෙමින්.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage සහ/හෝ ImController පසුබිමේ ධාවනය වෙමින්.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>ඔබේ උපාංගයට සම්බන්ධ සියලු තිරවල දැනුම්දීම් පෙන්වන්න.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>සියලු තිරවල දැනුම්දීම</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>පරීක්ෂා කරන්න</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>යාවත්කාලීන සඳහා පරීක්ෂා කරමින්...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>යාවත්කාලීන සඳහා පරීක්ෂා කරන්න</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>යාවත්කාලීන කරන්න</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>මෙම සැසිය සඳහා යාවත්කාලීන පරීක්ෂා අක්‍රිය කර ඇත</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit {0} සමඟ ආරම්භ කරන ලදි. එම ආරම්භ තර්කය නොමැතිව නැවත ආරම්භ කරන තුරු ස්වයංක්‍රීය සහ අත්පිටපත් යාවත්කාලීන පරීක්ෂා, මෙන්ම පහත යාවත්කාලීන සැකසුම් අක්‍රිය කර ඇත.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API අනුපාත සීමාව ළඟා විය, කරුණාකර පසුව නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>යාවත්කාලීන සඳහා පරීක්ෂා කිරීම අසාර්ථක විය</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>යම් ගැටලුවක් ඇති විය, කරුණාකර පසුව නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>යාවත්කාලීන හමු නොවීය</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>ස්වයංක්‍රීයව යාවත්කාලීන සඳහා පරීක්ෂා කරන්න</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>යාවත්කාලීන ගබඩාව</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>යාවත්කාලීන සඳහා පරීක්ෂා කිරීමට GitHub ගබඩාව වින්‍යාස කරන්න. පෙරනිමි භාවිතා කිරීමට හිස් තබන්න.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>ගබඩාවේ හිමිකරු</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>උදා: SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>ගබඩාවේ නම</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>උදා: UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>යාවත්කාලීන නාට්‍යාව හමු නොවීය</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>වෙනත් මූලාශ්‍රයෙන් යාවත්කාලීන ලබා ගැනීමට උත්සාහ කරන්න.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>යම් ගැටලුවක් ඇති විය</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>ඔබේ අන්තර්ජාල සම්බන්ධතාවය ක්‍රියාත්මක වෙමින් පවතිනවාදැයි පරීක්ෂා කරන්න.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>ශබ්දය ධාවනය කරන්න</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>wav හෝ mp3 වැනි සාමාන්‍ය සංගීත ආකෘති සහාය දක්වයි.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>ඉක්මන් ක්‍රියාව</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>සුරකින ලද ඉක්මන් ක්‍රියාවක් ධාවනය කරන්න.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>දැනුම්දීම සැමවිටම ඉහළින්</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>දැනුම්දීම සැමවිටම ඉහළින් තබන්න.
+එය අනෙකුත් පූර්ණ තිර කවුළු වලට බලපාන්නේ නැත, නමුත් ඔබට දැනුම්දීම් මත ක්ලික් කළ නොහැක.</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>නිර්දේශිත</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>සියල්ල විරාම කරන්න</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>ක්‍රියා විස්තර</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>තාක්ෂණික ක්‍රියාත්මක කිරීමේ විස්තර</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>ක්‍රියාත්මක කිරීමේ වර්ගය:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>වසන්න</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{1} න් ක්‍රියා {0} ක් තෝරා ඇත</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>ඇස්තමේන්තුගත පිරිසිදු කිරීමේ ප්‍රමාණය: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>සම්පූර්ණ ප්‍රමාණය ගණනය කිරීමට පරිලෝකනය ක්ලික් කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>ධාවනය කරමින්: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>තෝරාගත් යෙදුම් අස්ථාපනය කරමින්...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>සංයුක්ත දසුන</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>පද්ධති අලංකාරකරණය</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows අලංකාරකරණය</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Windows පෙනුම සහ හැසිරීම අභිරුචිකරණය කරන්න.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>ප්‍රයෝග</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>දෘශ්‍ය ප්‍රයෝග අභිරුචිකරණය කරන්න.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>විනිවිදභාවය</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>සියල්ල පුළුල් කරන්න</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>සියල්ල හැකිලීම කරන්න</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{1}තත්පර {0} කින් නිදහස් කෙරිණි</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>ක්‍රියාත්මක කරමින් {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>මෙහෙයුම අවලංගු කෙරිණි</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>දෝෂ විස්තර: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>සඟවා ඇති බාගැනීම් පෙන්වන්න</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>සඟවා ඇති බාගැනීම් පෙන්වන්න</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>භාෂාව තෝරන්න</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>මෙම උපාංගය මූලික මාදිලියේ ආරම්භ වේ. අනුකූල උපාංග ඇසුරුමක් ලබා ගත හැකි තුරු දෘඪාංග-නිශ්චිත පාලන සඟවා ඇත.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>උපාංග ඇසුරුම: මූලික මාදිලිය</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit ගැළපෙන උපාංග ඇසුරුමක් අනාවරණ කළේය. දෘඪාංග-නිශ්චිත විශේෂාංග යෙදුම මගින් සකස් කළ හැකි ආකාරයෙන් එය දැන් තහවුරු කරන්න.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>උපාංග ඇසුරුම: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>උපාංග සැකසුම සකසමින්...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>සම්බන්ධ නැත</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>කලාතුරකින් සමමුහුගහනය කරන්න</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Windows බිල්ට්-ඉන් රෙජිස්ට්රි පිරිසිදු කිරීමේ ක්‍රියාකාරිත්වය භාවිතා කරමින්</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (DNS කෑච හිස් කරන්න)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Winsock ප්‍රොටොකෝල තොගය යළි පිහිටුවන්න)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (TCP/IP ප්‍රොටොකෝල තොගය යළි පිහිටුවන්න)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>ප්ලගින දිගු</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>ක්‍රියාකාරිත්වය දිගු කිරීමට ප්ලගින ස්ථාපනය කර කළමනාකරණය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>සම්පූර්ණ ප්ලගින</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>ස්ථාපනය කළ</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>යාවත්කාලීන සූදානම්</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>ගබඩා ප්‍රතිචාරය</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>ප්ලගින ලබා ගැනීම පරීක්ෂා කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>ප්ලගින යාවත්කාලීන {0} ක් ස්ථාපනය කිරීමට සූදානම්.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>වර්තමාන සැපයුමේ අමතර ප්ලගින {0} ක් ලබා ගත හැක.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>ප්ලගින මෙටාදත්ත පූරණය වීම සඳහා බලා සිටිමින්.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>අනාවරණ කළ සියලු ප්ලගින දැනට යාවත්කාලීනයි.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>යාවත්කාලීන ලබා ගත හැක</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>ස්ථාපනය කිරීමට ලබා ගත හැක</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>මෙටාදත්ත පූරණය කරමින්</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>යාවත්කාලීනයි</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>{0} විසින්</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>ඉක්මනින් විවෘත කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>ප්‍රශස්ත කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>යාවත්කාලීන කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>ස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>ස්ථාපනය කළ</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>අස්ථාපනය කළ නොහැක</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>ප්ලගින සැකසුම්</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>ප්ලගින නම</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>ප්ලගින විස්තරය</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>මෙම ප්ලගිනයට වින්‍යාස කළ හැකි සැකසුම් නොමැත.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>වසන්න</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>ප්ලගිනය හමු නොවීය: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>දෝෂය</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>කර්තෘ: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>ප්ලගින වින්‍යාස අතුරුමුහුණත ආකෘතිය වැරදියි.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>ප්ලගින සැකසුම් පූරණය කිරීමේ දෝෂය: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>ප්ලගින සොයන්න...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>සියල්ල</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>ස්ථාපනය කළ</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>ස්ථාපනය කර නැත</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>ලබා ගත හැකි ප්ලගින නොමැත</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>ප්ලගින ගබඩාව දැනට හිස්ය. ඉදිරි ප්ලගින යාවත්කාලීන සඳහා අවධානයෙන් සිටින්න.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>වින්‍යාස කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>අස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>විවෘත කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>භාෂාව:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>යෙදුම් පෙරනිමි භාවිතා කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>ප්ලගින {0} ක් හමු විය</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>තොග ආනයනය</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>දේශීය ZIP ගොනු වලින් ප්ලගින ආනයනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>ගොනු වලින් ආනයනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>ප්ලගින ගොනු තෝරන්න (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>ප්ලගින {0} ක් සාර්ථකව ආනයනය කරන ලදි</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>ප්ලගින {0} ක් සාර්ථකව ආනයනය කර ඇති අතර ලබා ගත හැක</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>තොග ආනයනය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>ප්ලගින ආනයනය කිරීම අසාර්ථක විය: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>ප්ලගින ආනයනය කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} ආනයනය කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} සකසමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>ප්ලගිනය සාර්ථකව ස්ථාපනය කෙරිණි</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>ප්ලගිනය සාර්ථකව ස්ථාපනය කර ඇත</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>ස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>ප්ලගිනය ස්ථාපනය කිරීමට නොහැක: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>ප්ලගිනය සාර්ථකව අස්ථාපනය කෙරිණි</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>ප්ලගිනය සාර්ථකව අස්ථාපනය කර ඇත</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>අස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>ප්ලගිනය අස්ථාපනය කිරීමට නොහැක: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>ප්ලගිනය විවෘත කිරීම අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>ප්ලගිනය විවෘත කිරීමට නොහැක: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>ප්ලගිනය විවෘත කිරීමට නොහැක: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>ප්ලගිනය ස්ථාපනය කර නැත</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>ප්ලගිනය ස්ථාපනය කර නැත සහ විවෘත කළ නොහැක</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>අවම host අනුවාදය {0} අවශ්‍යයි</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>ප්ලගිනය සදාක් සදාක් ලෙස මකා දමනු ඇත</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>ප්ලගිනය සදාක් සදාක් ලෙස මකා දමනු ඇත. මෙම ක්‍රියාව අවලංගු කළ නොහැක.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>යාවත්කාලීනය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>ප්ලගින යාවත්කාලීනය අසාර්ථක විය, කරුණාකර ජාල සම්බන්ධතාවය පරීක්ෂා කර පසුව නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>යාවත්කාලීනය සාර්ථකයි</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>ප්ලගිනය සාර්ථකව යාවත්කාලීන කර ඇත</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>ප්ලගිනය යාවත්කාලීන කරමින්</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>ප්ලගිනය බාගත කර යාවත්කාලීන කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>සියල්ල යාවත්කාලීන කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>ප්ලගිනය ධාවනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>ප්ලගිනය ආරම්භ විය</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>ප්ලගිනය අස්ථාපනය කෙරිණි</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>වැඩසටහන වැසෙන විට ප්ලගිනය මකා දමනු ඇත.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>මැකීම අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>ප්ලගිනය මැකීමේදී දෝෂයක් ඇති විය</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>වින්‍යාසය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>ප්ලගිනය ස්ථාපනය කර ඇත නමුත් පූරණය කර නැත. කරුණාකර යෙදුම නැවත ආරම්භ කිරීමට උත්සාහ කරන්න.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>වින්‍යාසයක් නැත</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>ප්ලගිනයට කිසිදු වින්‍යාස විකල්පයක් නැත.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>වින්‍යාසය සහාය නොදක්වයි</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>ප්ලගිනය වින්‍යාසය සහාය නොදක්වයි.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>ප්ලගින තත්ත්වයන් යළි පිහිටුවන ලදි</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>සියලු ප්ලගින ස්ථාපන තත්ත්වයන් මකා දමා ඇත</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>තොග යාවත්කාලීනය සම්පූර්ණයි</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>සියලු ප්ලගින සකස් කර ඇත.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>බාගැනීම සකසමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>දේශීය</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>නව අනුවාදයක් ලබා ගත හැක</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>අනුවාදය:</value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>නිකුතු දිනය:</value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>මොනවද අලුත්ද:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>විස්තර</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>භාවිත මාර්ගෝපදේශය</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>විස්තර පෙන්වන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>විස්තර සඟවන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>ලබා ගත හැක</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>ප්ලගින ලැයිස්තුව නැවුම් කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>ඔබේ සෙවීමට ගැළපෙන ප්ලගින හමු නොවීය.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>ලබා ගත හැකි සියලු ප්ලගින යාවත්කාලීන කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>සියල්ල ස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>ලබා ගත හැකි සියලු ප්ලගින ස්ථාපනය කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>සියල්ල ස්ථාපනය කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>ප්ලගින {0} ක් ස්ථාපනය කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>තොග ස්ථාපනය සම්පූර්ණයි</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>ප්ලගින {0} ක් ස්ථාපනය කෙරිණි.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>තොග ස්ථාපනය අසාර්ථක විය</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>ප්ලගින ස්ථාපනය කිරීම අසාර්ථක විය: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>සියල්ල යාවත්කාලීන කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>යාවත්කාලීන කරමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>ෆෝල්ඩරය විවෘත කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>ප්ලගින ID පිටපත් කරන්න</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>ෆෝල්ඩරය හමු නොවීය</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>ප්ලගින නාභිගත තවම නොපවතී.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>පිටපත් කෙරිණි</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>ප්ලගින ID '{0}' ක්ලිප්බෝඩ් වෙත පිටපත් කෙරිණි.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>බාගැනීම සම්පූර්ණයි</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>බාගනිමින්...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>බාගනිමින්... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>ස්ථාපනය කිරීමට බලා සිටිමින් (වෙනත් ප්ලගිනයක් බාගනිමින්)...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>මෙවලම් නොමැත. කරුණාකර යෙදුම් නාභිගතයේ tools ෆෝල්ඩරයේ මෙවලම් එකතු කරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>මෙවලම් නාභිගතයේ ලබා ගත හැකි වූ පසු මෙවලම් මෙහි දිස්වනු ඇත.</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>ආකෘතිය</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>බල භාවිතය</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>ආරෝපණය</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>සෞඛ්‍යය</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>අනුපාතය</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>අවම අනුපාතය</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>උපරිම අනුපාතය</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>චක්‍ර</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>ධාරිතාව</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>සම්පූර්ණ ධාරිතාව</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>නිර්මාණය</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>දිනය</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>කෝර / මතක ඔරලෝසුව</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>කෝර වෝල්ටීයතාව</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>වෝල්ටීයතා පරාසය</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>පැති තීරුව</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>පද්ධතිය</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>අනුපාත පරාසය</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>සම්පූර්ණ සංවේදක තොරතුරු පෙන්වීමට හෝ සඟවීමට දෙවරක් ක්ලික් කරන්න.</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>පූරණය කරමින්...</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>නොදන්නා බැටරිය</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>නොදන්නා CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>නොදන්නා GPU</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>කරුණාකර අවම වශයෙන් එක් පිරිසිදු කිරීම් විකල්පයක් තෝරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>සියල්ල ආරම්භ කරන්න</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>උදා: 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>උදා: C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>කරුණාකර පිරිසිදු කිරීමට අවම වශයෙන් එක් අයිතමයක් තෝරන්න.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>{0} යෙදීම අසාර්ථක විය: {1}</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>විශාල ගොනු විශ්ලේෂණය</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>ඉවත් කිරීමට අවශ්‍ය ගොනු තෝරන්න. පෙරහනට ගැළපෙන ගොනු පමණක් පෙන්වනු ලැබේ.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>මෙයට වඩා විශාල ගොනු පෙරන්න:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>අභිරුචි...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>තෝරන්න</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>ගොනු නම</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>ප්‍රමාණය</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>මාර්ගය</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>තේරීම තහවුරු කරන්න</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>තෝරාගත්: ගොනු {0} ක් ({1})</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>මෘදුකාංග රෙන්ඩරිං බලහත් කරන්න</value></data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>දුරස්ථ ඩෙස්ක්ටොප් හෝ හිස් සංදර්ශකය අනාවරණ වූ විට මෘදුකාංග රෙන්ඩරිං භාවිතා කරන්න. නැවත ආරම්භ කිරීම නිර්දේශ කෙරේ.</value></data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>තේමා විලාසය</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>යෙදුම සඳහා දෘශ්‍ය විලාස පෙරසිකස් තෝරන්න. තේමා මාදිලිය සහ ඉස්මතු වර්ණය තවමත් ඉහළින් යොදනු ලැබේ.</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD පෙන්වන්න හෝ සඟවන්න</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>පසුබිම් වර්ණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>ප්‍රවර්ග වර්ණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>කෙළවර අරය</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>පහළ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>ඉහළ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Critical වර්ණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>අකුරු ප්‍රමාණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>ලේබල වර්ණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>පාරභාණ්ඩය</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>අගය වර්ණය</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>අවවාද වර්ණය</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>ස්ථානය අගුළු කරන්න</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>අතුරු විලාසය</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>නැවුම් කිරීමේ පරතරය</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>සංවේදක නැවුම් කිරීමේ පරතරය</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>ස්ථානය යළි පිහිටුවන්න</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>අල්ලා ගැනීමේ සීමාව</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>පෙනුම</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>සාමාන්‍ය</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>සංවේදක</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>සීමා</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Critical</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS Redline</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>අවම පිළිගත හැකි ෆ්‍රේම් අනුපාතය. මෙයට අඩු නම්, වර්ණය critical බවට පත්වේ.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>අඩු FPS ඩෙල්ටාව</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>සාමාන්‍ය FPS සහ 1% අඩු අතර උපරිම වෙනස. මෙයට වැඩි නම්, කවුන්ටරය critical බවට පත්වේ.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>කාර්ය සාධනය</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>භාවිතය</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>අවවාද</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD සැකසුම්</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>පංකාව</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>තැටි 1 උෂ්ණත්වය</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>තැටි 2 උෂ්ණත්වය</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core ඔරලෝසුව</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>ෆ්‍රේම් කාලය</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>ක්‍රීඩාව</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>පංකාව</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>උෂ්ණත්වය</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>ප්‍රයෝජනය</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH පංකාව</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core ඔරලෝසුව</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>තීරුව</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>පැනලය</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>මවුපිට උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>මවුපිට</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>සවිදු උෂ්ණත්ව, සංඛ්‍යාත සහ බල සීමා නිරීක්ෂණය කිරීමට උසස් දෘඪාංග පෝලිම් කිරීම සක්‍රිය කරන්න.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>දෘඪාංග සංවේදක භාවිතා කිරීමට ඔබ පළමුව PawnIO ස්ථාපනය කළ යුතුය!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>දෘඪාංග සංවේදක</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>සජීවී සංවේදක දත්ත පෙන්වන පාවෙන අතුරු මතුපිට.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD සක්‍රිය කරන්න</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>බලය</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>කෝර උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM උෂ්ණත්වය</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM ප්‍රයෝජනය</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>බලය</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH උෂ්ණත්වය</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>ප්ලගිනය {0} ස්ථාපනය කරන ලදි. එහි ලබා ගත හැකි ඇතුළත් කිරීමේ ලක්ෂ්‍යය ධාවනය කිරීමට විවෘත කරන්න භාවිතා කරන්න.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>ප්ලගිනය {0} ස්ථාපනය කර පද්ධති ප්‍රශස්තකරණයේදී විවෘත කරන ලදි.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>ස්ථාපනය කළ නමුත් ඇතුළත් කිරීමේ ලක්ෂ්‍යයක් නැත</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>ප්ලගිනය {0} ස්ථාපනය කරන ලද නමුත් එහි ධාවන කාල UI පූරණය කළ නොහැක. යෙදුම නැවත ආරම්භ කරන්න හෝ ප්ලගිනය නැවත ස්ථාපනය කරන්න.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>ප්ලගිනය {0} ස්ථාපනය කරන ලද නමුත් එය පරිශීලක-මුහුණ ඇතුළත් කිරීමේ ලක්ෂ්‍යයක් නොදක්වයි. එය පසුබිම් සේවා හෝ මැනිෆස්ට් දත්ත පමණක් සපයනු ඇත.</value>
+  </data>
+</root>

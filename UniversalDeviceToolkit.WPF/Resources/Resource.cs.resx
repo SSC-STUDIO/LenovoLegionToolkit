@@ -314,7 +314,7 @@ Tento čas nemusí být přesný, pokud byl notebook nabíjen ve spánku nebo ve
     <value>Zrušit</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°D</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Zavřít</value>
@@ -521,7 +521,7 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je displej notebooku vypnutý
     <value>O pracovních režimech GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>° F</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -663,7 +663,9 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
     <value>Výrobce:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model za??zen?:</value>
+    <value>
+    Model zařízení:
+  </value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
     <value>Typ stroje:</value>
@@ -1742,7 +1744,7 @@ Přepínání režimů může vyžadovat restart.</value>
 Kompaktní zobrazení</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occured when reading device information.</value>
+    <value>Při čtení informací o zařízení došlo k chybě.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
     <value>Procházet…</value>
@@ -2319,7 +2321,7 @@ Kompaktní zobrazení</value>
 
 
 <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance including right-click menu style.</value>
+    <value>Přizpůsobte vzhled Windows včetně stylu místní nabídky.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
     <value>Zkrášlování Windows</value>
@@ -2860,7 +2862,9 @@ Vyžaduje restart.</value>
     <value>Čištění registru</value>
   </data>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>P??kaz DISM</value>
+    <value>
+    Příkaz DISM
+  </value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>Doba používání</value>
@@ -2938,13 +2942,13 @@ Vyžaduje restart.</value>
     <value>Používá se vestavěná funkce čištění registru ve Windows</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (Vypr?zdnit mezipam?? DNS)</value>
+    <value>ipconfig /flushdns (Vyprázdnit mezipaměť DNS)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (Resetovat z?sobn?k protokolu Winsock)</value>
+    <value>netsh winsock reset (Resetovat zásobník protokolu Winsock)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (Resetovat z?sobn?k protokolu TCP/IP)</value>
+    <value>netsh int ip reset (Resetovat zásobník protokolu TCP/IP)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>Plugin Rozšíření</value>
@@ -3340,16 +3344,24 @@ Vyžaduje restart.</value>
     <value>Vyberte prosím alespoň jednu položku k úklidu.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>
+    Vynutit softwarové vykreslování
+  </value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>
+    Použije softwarové vykreslování, když je detekována vzdálená plocha nebo bezdisplejový režim. Doporučuje se restart.
+  </value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>
+    Instalační program skončil s kódem {0}
+  </value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>
+    Ve frontě
+  </value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
@@ -3367,85 +3379,133 @@ Vyžaduje restart.</value>
     <value>Update</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>
+    Kontroluje se dostupnost zásuvných modulů...
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>
+    K dispozici k instalaci
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>
+    V aktuálním kanálu je k dispozici {0} dalších zásuvných modulů.
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>
+    Nainstalováno
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>
+    Pulse obchodu
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>
+    Celkem zásuvných modulů
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>
+    Všechny zjištěné zásuvné moduly jsou aktuálně aktuální.
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>
+    Aktuální
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>
+    Dostupné aktualizace
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>
+    Aktualizace připraveny
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>
+    {0} aktualizací zásuvných modulů je připraveno k instalaci.
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>
+    Čekání na načtení metadat zásuvných modulů.
+  </value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>
+    Načítání metadat
+  </value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Přizpůsobte jazyk, jednotku teploty, motiv a barvu zvýraznění.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Appearance</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Aplikace</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>
+    Universal Device Toolkit byl spuštěn s {0}. Automatické i ruční kontroly aktualizací a níže uvedená nastavení aktualizací jsou zakázána, dokud aplikaci znovu nespustíte bez tohoto spouštěcího argumentu.
+  </value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>
+    Kontroly aktualizací jsou pro toto sezení zakázány
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>
+    Zkontrolujte vybraný zdroj a síťové připojení a poté spusťte vyhledávání znovu.
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>
+    Vyhledávání ovladačů nebylo dokončeno
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>
+    Upravte filtr, možnost „pouze aktualizace“ nebo seznam skrytých stažení.
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>
+    Nebyly nalezeny žádné odpovídající soubory ke stažení
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>
+    Zkuste jiný zdroj, operační systém nebo typ zařízení.
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>
+    Nebyly nalezeny žádné ovladače ke stažení
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>
+    Vyberte zdroj a spusťte vyhledávání, aby se zobrazil seznam dostupných stažení ovladačů.
+  </value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>
+    Vyhledat balíčky ovladačů
+  </value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>
+    Nepodařilo se použít {0}: {1}
+  </value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Zavřít</value>
@@ -3542,5 +3602,348 @@ Vyžaduje restart.</value>
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Sada zařízení: Základní režim</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Toto zařízení se spustí v základním režimu. Ovládací prvky specifické pro hardware budou skryty, dokud nebude k dispozici kompatibilní sada zařízení.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Sada zařízení: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit detekoval odpovídající sadu zařízení. Potvrďte ji nyní, aby aplikace mohla připravit funkce specifické pro hardware.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Příprava nastavení zařízení...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Potvrdit výběr</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Vyberte soubory, které chcete odebrat. Zobrazí se pouze soubory odpovídající filtru.</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Vlastní...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Filtrovat soubory větší než:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Název souboru</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Cesta</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Vybrat</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Velikost</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Vybráno: {0} souborů ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Analýza velkých souborů</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Ventilátor</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Teplota disku 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Teplota disku 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>Frekvence E-Core</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Doba snímku</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Hra</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Ventilátor</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Teplota</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Využití</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>Ventilátor PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>Frekvence P-Core</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Lišta</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Zobrazit nebo skrýt OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Barva pozadí</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Barva kategorie</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Poloměr rohů</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Dole</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Nahoře</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Barva kritického stavu</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Velikost písma</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Barva popisku</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Průhlednost</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Barva hodnoty</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Barva varování</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Zamknout pozici</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Styl překrytí</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Interval obnovování</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Interval obnovování senzorů</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Obnovit pozici</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Práh přichycování</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Vzhled</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Obecné</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Senzory</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Prahy</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritické</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>Limit FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Minimální přijatelná snímková frekvence. Pod touto hodnotou se barva změní na kritickou.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Delta nízkých FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Maximální rozdíl mezi průměrnými FPS a 1% nízkými. Nad touto hodnotou se čítač změní na kritický.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Výkon</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Teplota</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Využití</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Varování</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>Nastavení OSD</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Plugin {0} byl nainstalován, ale neposkytuje vstupní bod pro uživatele. Může poskytovat pouze služby na pozadí nebo data manifestu.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Nainstalováno, ale bez vstupního bodu</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Plugin {0} byl nainstalován, ale jeho runtime UI se nepodařilo načíst. Restartujte aplikaci nebo přeinstalujte plugin.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Čeká na instalaci (stahuje se jiný plugin)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Plugin {0} byl nainstalován a otevřen v Optimalizaci systému.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Plugin {0} byl nainstalován. Použijte Otevřít pro spuštění dostupného vstupního bodu.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>Teplota PCH</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Příkon</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Jádra</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Paměť</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platforma</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>Frekvence E-Core</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Příkon</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Teplota jádra</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>Hot spot GPU</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>Teplota VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>Propustnost PCIe</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>Využití VRAM</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Načítání...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Teplota paměti</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Využití paměti</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Teplota základní desky</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Základní deska</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Není k dispozici</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>Frekvence P-Core</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Využití sdílené paměti</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>Teplota SSD</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Neznámá baterie</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Neznámé CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Neznámé GPU</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>Teplota VRAM</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>Využití VRAM</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Povolte pokročilé dotazování hardwaru pro sledování podrobných teplot, frekvencí a limitů příkonu.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Pro použití hardwarových senzorů je nutné nejprve nainstalovat PawnIO!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Hardwarové senzory</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Jazykový balíček se nepodařilo stáhnout. Zkontrolujte síťové připojení, proxy nebo nastavení TLS a zkuste to znovu.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Displej</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Chytré klávesy</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Plovoucí překrytí zobrazující živá data ze senzorů.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Povolit OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -425,7 +425,7 @@
     <value>シフト</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>ctrl</value>
+    <value>Ctrl</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
     <value>代替</value>
@@ -472,7 +472,7 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>毎週</value>
   </data>
-<data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>オーディオバウンス</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>オーディオリップル</value></data><data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>オーロラ同期</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>カラーパルス</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>カラウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>レインボースクリュー</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>レインボーウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>リップル</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ウィンドウズ</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>maco</value></data>  <data name="ThemeStylePreset_Default" xml:space="preserve">
+<data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>オーディオバウンス</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>オーディオリップル</value></data><data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>オーロラ同期</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>カラーパルス</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>カラウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>レインボースクリュー</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>レインボーウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>リップル</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ウィンドウズ</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data>  <data name="ThemeStylePreset_Default" xml:space="preserve">
     <value>現在のスタイル</value>
   </data>
   <data name="ThemeStylePreset_Forest" xml:space="preserve">
@@ -483,5 +483,404 @@
   </data>
   <data name="ThemeStylePreset_Official" xml:space="preserve">
     <value>公式クール</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>エクストリーム</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>オン</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>ディスク1の温度</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>ディスク2の温度</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>Eコアのクロック</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>ファン</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>フレームタイム</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>周波数</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>メモリ温度</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>マザーボード温度</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>電力</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>Pコアのクロック</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>温度</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>使用率</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAMの温度</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAMの使用率</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>非表示</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>切り替え</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>ACアダプタ(フルワッテージ)が接続されていないとプロファイルを適用できません。</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>初期化されていません。</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>サポートされていません。</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPUファン</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPUファン</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>システムファン</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>オン</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>切り替え</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>バッテリー節約</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>インテリジェント冷却</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>エクストリームパフォーマンス</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>ギーク</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>無効な状態</value>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>無効なファイル名</value>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>引数に危険な文字が含まれています</value>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>終了を待機する対話型シェル実行ファイルには引数が必要です</value>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShellの引数に危険なパターンが含まれています</value>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>不明なハイブです。</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>利用可能な更新はありません</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>セットアップファイルのURLが見つかりません</value>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGBキーボードはサポートされていません</value>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Vantageが有効になっているため、RGBキーボードを管理できません</value>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>このデバイスでは電源モードの切り替えはサポートされていません。</value>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI権限を設定できません</value>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>エクスプローラーを起動できませんでした。</value>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>エクスプローラーが時間内に再起動しませんでした。</value>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>エクスプローラーが時間内に終了しませんでした。</value>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>無効なアクションキー</value>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>コマンドはnullまたは空にできません。</value>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>システムパスの削除は許可されていません</value>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>ワイルドカード削除は制限されています</value>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>重要なレジストリキーの削除は許可されていません</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>現在のユーザー値がnullです</value>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>ハンドルが無効です</value>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSONの逆シリアル化に失敗しました</value>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>無効な環境変数: {0}</value>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>無効な環境変数の値: {0}</value>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>サポートされている機能が見つかりません</value>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>内蔵ディスプレイが見つかりません</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>プロファイルの逆シリアル化に失敗しました。</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>明るさは0から9の範囲で指定してください</value>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>プロファイルは0から6の範囲で指定してください</value>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>テーブルデータを空にすることはできません</value>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>温度配列はちょうど10要素必要です</value>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>ファイルチェックサムの不一致</value>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>デバイスプロパティはGUIDではありません</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>デバイスプロパティは文字列ではありません</value>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>オフセットとカウントが配列の範囲を超えています</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>プロファイルファイルが見つかりません。</value>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>サービスオープンエラー</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>サービスマネージャーオープンエラー</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>リソースカタログが空です。</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>エフェクトを逆シリアル化できませんでした</value>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>UEFIから変数 {0} を読み取れません</value>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>UEFIに変数 {0} を書き込めません</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>{0} のWMI機能値が利用できません。</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>未定義の値を受信しました: {0}</value>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>サポートされていない電源モード {0}</value>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>電源モード '{0}' はACアダプタなしでは使用できません。</value>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>コマンドのセキュリティ検証に失敗しました: {0}</value>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>実行ファイルが許可リストにありません: {0}</value>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>{0} の引数に危険なパターンが検出されました</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>デバイスパックにサポートされていないファイル形式が含まれています: {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>デバイスパックに安全でないパスが含まれています: {0}</value>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>デバイスパックにWindows形式のパス区切り文字が含まれています: {0}</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>デバイスパック '{0}' はオンラインリソースカタログで利用できません。</value>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>デバイスパック '{0}' に {1} が含まれていません。</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>デバイスパック '{0}' のマニフェストが空です。</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>デバイスパックのIDが一致しません。'{0}' が必要ですが、'{1}' を受信しました。</value>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>デバイスパックのベンダーが一致しません。'{0}' が必要ですが、'{1}' を受信しました。</value>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>デバイスパック '{0}' のダウンロードURLが空です。</value>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>デバイスパック '{0}' にSHA256メタデータが欠落しています。</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>不明なバッテリー状態: {0}</value>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} の状態が {1} に設定されたことを検証できませんでした。</value>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControlが0を返しました、最後のエラー: {0}</value>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>キー {0} を開けません</value>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>読み取り可能である必要があります</value>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>書き込み可能である必要があります</value>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>デバイスハンドルが利用できません</value>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>メインモジュールをnullにできません</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>現在のプロセスのファイル名をnullにできません</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>現在のプロセスのファイルバージョンをnullにできません</value>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>ダウンロードしたリソースのSHA256検証に失敗しました。期待値: {0}、取得値: {1}。</value>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainerはすでに初期化されています</value>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainerを先に初期化する必要があります [type={0}]</value>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>ファンテーブルの長さは10である必要があります</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>タグ名をnullまたは空にできません</value>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>タグ名からバージョンを解析できません: '{0}'。期待される形式: '3.0.1'</value>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>ID {0} のプリセットが見つかりません</value>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>God Modeプリセットを作成できませんでした。</value>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>God Modeプリセットがありません。</value>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>サポートされているバージョンがありません</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>サポートされているコントローラーがありません</value>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>無効な設定ファイル名: {0}</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>設定パスが許可ディレクトリ外です: {0}</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>タスク {0} の変更を {1} に登録できませんでした [type={2}]</value>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} 設定を読み取れませんでした</value>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>色 "{0}" を取得できませんでした</value>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>ドライバーのハンドルを取得できませんでした: {0}</value>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>ドライバーハンドルの取得エラー: {0}</value>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControlがエラーで失敗しました: {0}</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>ドライバーコマンド送信エラー: controlCode={0}</value>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMIクラスまたは名前空間が利用できません [scope={0}, query={1}]</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>読み取り失敗: {0} [scope={1}, query={2}]</value>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>呼び出し失敗: {0} [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>呼び出し失敗: {0}。 [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>クエリに結果がありません</value>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>フォーマットの型が無効です</value>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>アップデートパッケージの整合性チェックに失敗しました: アップデート {0} のSHA256ハッシュが利用できません。整合性チェックはセキュリティ上必須です。</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>アップデートパッケージの整合性チェックに失敗しました。期待されるSHA256: {0}、計算値: {1}</value>
   </data>
 </root>

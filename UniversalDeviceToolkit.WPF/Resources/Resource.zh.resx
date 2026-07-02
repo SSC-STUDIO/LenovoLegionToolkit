@@ -1,6 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -472,7 +471,6 @@
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>显示器亮度</value>
   </data>
-
   <data name="Edit" xml:space="preserve">
     <value>编辑</value>
   </data>
@@ -722,7 +720,6 @@
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>控制台</value>
   </data>
-
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>键盘</value>
   </data>
@@ -735,7 +732,7 @@
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>设置</value>
   </data>
-<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
     <value>插件扩展</value>
   </data>
   <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
@@ -759,10 +756,9 @@
   <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏系统优化导航项</value>
   </data>
-<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏插件扩展导航项</value>
   </data>
-
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏关于导航项</value>
   </data>
@@ -936,7 +932,7 @@
   <data name="PackageControl_Version" xml:space="preserve">
     <value>版本</value>
   </data>
-<data name="PackageControl_Install" xml:space="preserve">
+  <data name="PackageControl_Install" xml:space="preserve">
     <value>安装</value>
   </data>
   <data name="PackageControl_Uninstall" xml:space="preserve">
@@ -1145,7 +1141,7 @@
   <data name="RestartLater" xml:space="preserve">
     <value>稍后自行重启</value>
   </data>
-<data name="RestartNow" xml:space="preserve">
+  <data name="RestartNow" xml:space="preserve">
     <value>立刻重启</value>
   </data>
   <data name="Revert" xml:space="preserve">
@@ -1687,7 +1683,7 @@
   <data name="PackageControl_Downloading" xml:space="preserve">
     <value>下载中</value>
   </data>
-<data name="PackageControl_Installing" xml:space="preserve">
+  <data name="PackageControl_Installing" xml:space="preserve">
     <value>安装中</value>
   </data>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
@@ -1791,7 +1787,7 @@
     <value>基于 CPU 的功耗，最大可以借用给 GPU 的额外功率。</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
-    <value>在基本功耗的基础上，可以分配给 GPU的额外功率量。 </value>
+    <value>在基本功耗的基础上，可以分配给 GPU的额外功率量。</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
     <value>在降频前，GPU 的温度限制。</value>
@@ -1982,7 +1978,6 @@
   <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
     <value>固态温度</value>
   </data>
-
   <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
     <value>显存占用</value>
   </data>
@@ -2599,7 +2594,7 @@
   <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
     <value>从插件扩展页面安装扩展以增强系统优化功能。</value>
   </data>
-<data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全选</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
@@ -2910,7 +2905,7 @@
     <value>为所有用户卸载部分预装 UWP 应用程序。</value>
 
   </data>
-<data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
     <value>清空回收站</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
@@ -2973,118 +2968,90 @@
   <data name="CollapseAll" xml:space="preserve">
     <value>折叠全部</value>
   </data>
-
-<data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>电池最大充电容量。</value>
   </data>
-
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
     <value>电池健康</value>
   </data>
-
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
     <value>电池充电（+）或放电（-）的最大速率。</value>
   </data>
-
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>最大充放电功率</value>
   </data>
-
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
     <value>电池充电（+）或放电（-）的最小速率。</value>
   </data>
-
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>最小充放电功率</value>
   </data>
-
   <data name="Compact" xml:space="preserve">
     <value>紧凑视图</value>
   </data>
-
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>系统美化</value>
   </data>
-
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
     <value>最大充放电功率</value>
   </data>
-
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>使用时间</value>
   </data>
-
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>最小充放电功率</value>
   </data>
-
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>调整 Windows 透明度效果。</value>
   </data>
-
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
     <value>视觉效果</value>
   </data>
-
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>启用透明度效果</value>
   </data>
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>自定义 Windows 外观和行为。</value>
   </data>
-
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
     <value>Windows 美化</value>
   </data>
-
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
     <value>加载失败：{0}</value>
   </data>
-
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
     <value>正在加载应用，请稍候...</value>
   </data>
-
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
     <value>发布者：{0}</value>
   </data>
-
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>已释放 {0}，用时 {1} 秒</value>
   </data>
-
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
     <value>清理常见的用户注册表历史记录（运行 MRU、最近文档、打开/保存对话框、已输入路径）。这不会删除系统关键条目。</value>
   </data>
-
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
     <value>注册表 MRU/历史记录清理</value>
   </data>
-
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
     <value>系统美化</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>正在执行 {0}%</value>
   </data>
-
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
     <value>操作已取消</value>
   </data>
-
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
     <value>错误详情: {0}</value>
   </data>
-
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>显示隐藏的下载</value>
   </data>
-
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
     <value>显示隐藏的下载</value>
   </data>
-
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
     <value>选择语言</value>
   </data>
@@ -3103,15 +3070,13 @@
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在准备设备设置...</value>
   </data>
-
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>未连接</value>
   </data>
-
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>同步区域</value>
   </data>
-<data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
     <value>使用 Windows 内置的注册表清理功能</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
@@ -3183,14 +3148,12 @@
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
     <value>更新</value>
   </data>
-
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
     <value>安装</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>已安装</value>
   </data>
-
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>无法卸载</value>
   </data>
@@ -3299,7 +3262,7 @@
   <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
     <value>插件需要先安装才能使用</value>
   </data>
-<data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>需要最低主机版本 {0}</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
@@ -3569,7 +3532,28 @@
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>应用 {0} 失败：{1}</value>
   </data>
-<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>强制软件渲染</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>检测到远程桌面或无显示器输出时使用软件渲染。建议重启。</value></data><data name="SettingsPage_ThemeStyle_Title" xml:space="preserve"><value>&#x4E3B;&#x9898;&#x98CE;&#x683C;</value></data><data name="SettingsPage_ThemeStyle_Description" xml:space="preserve"><value>&#x9009;&#x62E9;&#x5E94;&#x7528;&#x7684;&#x89C6;&#x89C9;&#x98CE;&#x683C;&#x9884;&#x8BBE;&#x3002;&#x4E3B;&#x9898;&#x6A21;&#x5F0F;&#x548C;&#x5F3A;&#x8C03;&#x8272;&#x4F1A;&#x7EE7;&#x7EED;&#x751F;&#x6548;&#x3002;</value></data>  <data name="CrashReportNotification_Close" xml:space="preserve">
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>即将推出</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>扩展商店将在未来更新中提供。</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>无法打开插件：{0}</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>强制软件渲染</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>检测到远程桌面或无显示器输出时使用软件渲染。建议重启。</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>主题风格</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>选择应用的视觉风格预设。主题模式和强调色会继续生效。</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>关闭</value>
   </data>
   <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
@@ -3859,5 +3843,50 @@
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>插件 {0} 已安装，但没有提供用户可见入口。它可能只提供后台服务或清单数据。</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>确认选择</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>选择要删除的文件。仅显示与筛选条件匹配的文件。</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>自定义...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>筛选大于以下大小的文件:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>已选择:{0} 个文件 ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>大文件分析</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>无法下载语言包。请检查网络连接、代理或 TLS 设置,然后重试。</value>
   </data>
 </root>

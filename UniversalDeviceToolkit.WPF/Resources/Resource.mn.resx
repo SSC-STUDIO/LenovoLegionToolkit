@@ -1,0 +1,3846 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>Бүтээц</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>GitHub дээрх хамгийн сүүлийн хувилбар</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>Холбоосууд</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>GitHub дээрх төслийн вэбсайт</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>Гуравдагч талын сангууд</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>Тухай</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Орчуулгыг нийгэмлэг хангасан.</value>
+    <comment>Энэ текстийг "&lt;хэл&gt; руу &lt;таны нэр&gt; орчуулсан" гэх мэтээр солино уу.</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>Хувилбар</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Нэмэх</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Шинэ нэмэх</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютер унтраалттай, унтаж эсвэл гибернаттай байхад USB төхөөрөмжүүдийг цэнэглэх.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>Үргэлж асаалттай USB</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютер унтраалттай, унтаж эсвэл гибернаттай байхад USB төхөөрөмжүүдийг цэнэглэх.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>Үргэлж асаалттай USB</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Хэрэглэх</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>Хэрэглээд хаах</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Автомат үйлдлүүд ажиллахын тулд Universal Device Toolkit ажиллаж байх шаардлагатай.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>Идэвхжүүлэх</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>Үйлдэл тодорхойлогдоогүй. Шинэ үйлдэл үүсгэхийн тулд "Шинэ нэмэх" дээр дарна уу.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>Хэрэв идэвхжүүлсэн бол эдгээр үйлдэл автоматаар ажиллана. Төлөв өөрчлөгдөх бүрд бүх үйлдлийг дээрээс доош үнэлнэ. Зөвхөн одоогийн төлөвт тохирсон үйлдлүүд ажиллана.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>Үйлдлүүд</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>Нэр...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>Шинэ нэмэх</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>Хурдан үйлдэл тодорхойлогдоогүй. Шинэ Хурдан үйлдэл үүсгэхийн тулд "Шинэ нэмэх" дээр дарна уу.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>Хурдан үйлдлүүд нь трэйн дүрсэн дээр хулганы баруун товчийг дарахад боломжтой.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>Хурдан үйлдлүүд</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>Нэр...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>Нэр өөрчлөх</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>Бүх өөрчлөлт буцаагдлаа!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>Буцаагдсан</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>Өөрчлөлт амжилттай хадгалагдлаа!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>Хадгалагдсан</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>Автоматжуулалт</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>Алхам нэмэх</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>Тохируулах</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Онцгой</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>Энэ үйлдэл ажиллахад цаашдын үйлдлүүдийг ажиллуулахгүй.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>Одоо ажиллуулах</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>Алдаатай дууслаа.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>Одоо ажиллуулах</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>Амжилттай дууслаа!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>Одоо ажиллуулах</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>Ажиллаж байна...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} алхам</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} алхам</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>Апп-ууд</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>Нар мандах үед</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>Нар жаргах үед</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>{0:D2}:{1:D2} цагт</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>Цахилгааны горим</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>Нэргүй</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>Зарим тоглоом ажиллаж байгааг автоматаар илрүүлж, CPU болон GPU-ийн гүйцэтгэлийг тохируулна. Температур ба сэнсний чимээ нэмэгдэж болно.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>AI хөдөлгүүрийг идэвхжүүлэх</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>Тэнцвэрийн горимын тохиргоо</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>Батарей хэрхэн цэнэглэхийг сонгоно уу.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>Батарейн горим</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>Батарей хэрхэн цэнэглэхийг сонгоно уу.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>Батарейн горим</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>Холбогдсон, цэнэглэж байна...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>Холбогдсон, цэнэглэхгүй байна</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>Батарейн одоогийн температур.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>Батарейн температур</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>Батарейн одоогийн багтаамж.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>Одоогийн багтаамж</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>Цэнэглэлт/разрядлах мөчлөгийн тоо.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>Мөчлөгийн тоо</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>Батарейн зориулалтын багтаамж.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>Зориулалтын багтаамж</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>Батарей цэнэглэх (+) эсвэл разрядлах (-) хурд.</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>Разрядын хурд</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Батарей цэнэглэх (+) эсвэл разрядлах (-) хамгийн бага хурд.</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Хамгийн бага разрядын хурд</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Батарей цэнэглэх (+) эсвэл разрядлах (-) хамгийн их хурд.</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Хамгийн их разрядын хурд</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>Үлдсэн тооцоолсон хугацаа: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>Хугацааг тооцоолж байна...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>Анх хэрэглэсэн огноо</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>Батарейг хэзээ анх хэрэглэсэн.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>Батарей бүрэн цэнэглэгдсэн үеийн багтаамж.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>Бүрэн цэнэглэлтийн багтаамж</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Батарейн хамгийн их цэнэглэлтийн багтаамж.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Батарейн эрүүл мэнд</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>Бага чадлын цэнэглэгч холбогдсон</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>Батарейг хэзээ үйлдвэрлэсэн.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>Үйлдвэрлэсэн огноо</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>Зөөврийн компьютер сүүлд цахилгаанд холбогдсоноос хойш хугацаа. Зөөврийн компьютер унтаж эсвэл унтраалттай байхад цэнэглэгдсэн бол энэ хугацаа нарийвчлалтай байж болзошгүй.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>Батарейгаар ажиллаж эхэлсэн</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>Батарей</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Цуцлах</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Хаах</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Хөх</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Ногоон</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Улаан</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>Компьютерийн хэрэглээ ба цахилгааны нөхцөлд үндэслэн GPU-ийн ажиллагааны горимыг сонгоно уу. Горим солиход дахин ачаалал шаардагдаж болно.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>{0} руу шилжихийн тулд дахин ачаалал шаардлагатай. Одоо дахин ачаалах уу?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Дахин ачаалал шаардлагатай</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>GPU-ийн ажиллагааны горим</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>Хурдан үйлдлүүд</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Үргэлжлүүлэх</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>Бүгдийг хуулах</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>График</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>Бусад</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>Тэжээл</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>Нүүр</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Шаардлагагүй идэвхтэй байгаа дискрет GPU-г идэвхгүй болгох. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай эсвэл Эрлийз горим идэвхгүй бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU-г идэвхгүй болгох</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>Дараагийн алхамыг ажиллуулахаас өмнө саатал нэмэх.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>Саатал</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Устгах</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS-ийн хувилбар</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>Текст clipboard руу хуулагдлаа.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" clipboard руу хуулагдлаа.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>Хуулагдлаа!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>Төхөөрөмж</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Техник хангамж</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Үндсэн хавтан</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Шасси</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Санах ой</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Lenovo дэмжлэг</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>Машины төрөл</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>Үйлдвэрлэгч</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>Загвар</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>Серийн дугаар</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>Таны төхөөрөмжийн тухай</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>Дуусах огноо</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>Эхлэх огноо</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>Баталгаа</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Идэвхтэй</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>Идэвхгүй болгох</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Идэвхгүй</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>Апп-уудыг устгах</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>Шаардлагагүй идэвхтэй байгаа дискрет GPU-г идэвхгүй болгох.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>nVidia GPU-д монитор холбогдсон байна.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>Процесс байхгүй</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>Гүйцэтгэлийн төлөв</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>Тодорхойгүй</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>Процессууд</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>GPU-г дахин эхлүүлэх</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>Дискрет GPU</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн гэрэлтүүлгийг өөрчлөх. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Дэлгэцийн гэрэлтүүлэг</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Засварлах</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Fn+R холбоосыг ашиглах үед хэрэглэхийг хүсэхгүй байгаа шинэчлэх хурдыг болиулах.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>Зөөврийн компьютерийн дэлгэц асаалттай эсэхийг шалгаарай. Universal Device Toolkit нь асаалттай бус дэлгэцийн шинэчлэх хурдыг ачааллах боломжгүй.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>Шинэчлэх хурд олдсонгүй</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>Шинэчлэх хурдыг оруулахгүй</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Гарах</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Экспортлох</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>Батарейгаар ажиллахад зөвхөн интеграл GPU-г, цахилгаан адаптер холбогдсон үед интеграл ба дискрет GPU-г хоёуланг нь ашиглана. Стандарт бус адаптер холбогдсон үед систем Эрлийз-iGPU Only горим руу шилжинэ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>Эрлийз-Автомат горим</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>Энэ горим руу болон энэ горимоос шилжихийн тулд дахин ачаалал шаардлагатай.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>Зөвхөн дискрет GPU-г ашиглана. Энэ горим нь хамгийн сайн график гүйцэтгэлийг өгдөг боловч цахилгааны зарцуулалтыг нэмэгдүүлнэ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU горим</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>Интеграл ба дискрет GPU хоёулаа идэвхтэй байна. Систем нь шаардлагад үндэслэн автоматаар хооронд нь шилжинэ.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>Эрлийз горим</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>Энэ горим нь зөвхөн дискрет GPU ажиллахгүй байхад хүчинтэй.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>Зөвхөн интеграл GPU-г ашиглана. Энэ горим нь цахилгааны зарцуулалт ба чимээг бууруулна.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Эрлийз-iGPU зөвхөн горим</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>GPU-ийн ажиллагааны горимуудын тухай</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>CPU мэдрэгч</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>Сэнсний хурд</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>р/мин</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>Тагийг нээх үед зөөврийн компьютерийг асаана.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>Тагийг нээх үед зөөврийн компьютерийг асаана.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Fn товчлуурыг барьж байхгүйгээр F1-F12 товчлууруудын хоёрдогч функцийг ашиглах.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Fn товчлуурыг барьж байхгүйгээр F1-F12 товчлууруудын хоёрдогч функцийг ашиглах.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>АНХААРУУЛГА! Зарим зөөврийн компьютерууд зааж өгснөөс доогуур утгыг хүлээн зөвшөөрч болох боловч болгоомжтой байна уу. Энэ сонголт урьдчилан таамаглашгүй ааштай болох магадлалтай. Юу хийж байгаагаа мэдэхгүй бол үүнийг 0-д үлдээнэ үү.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>Хамгийн бага офсет</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>АНХААРУУЛГА! Зарим зөөврийн компьютерууд зааж өгснөөс өндөр утгыг хүлээн зөвшөөрч болох боловч болгоомжтой байна уу. Энэ сонголт урьдчилан таамаглашгүй ааштай болох магадлалтай. Юу хийж байгаагаа мэдэхгүй бол үүнийг 0-д үлдээнэ үү.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>Хамгийн их офсет</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>Доорх сонголтуудыг юу хийж байгаагаа үнэн зөв мэдэхгүй л бол өөрчлөхгүй.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>Нарийвчилсан</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>Урт хугацааны цахилгааны хязгаар (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>Урт хугацааны цахилгааны хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>Богино хугацааны цахилгааны хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU температурын хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>Тохиргоог хэрэглэж чадсангүй</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>Тохиргоог ачааллаж чадсангүй.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>Сэнсний хурд нь зөвхөн нэг температурын мэдрэгчээр тодорхойлогдохгүй. Энэ нь CPU, GPU ба халаагчийн температурын хамгийн өндөр мэдрэгчийн дагуу хурдыг нэмэгдүүлж эсвэл буулгана. Яг утгууд нь хулганыг алхам дээр аваачихад харагдана.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>Сэнсний муруй</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>АНХААРУУЛГА! Энэ сонголтыг удаан хугацаагаар ашиглах нь сэнсний эдэлгээнд сөргөөр нөлөөлж, ашиглалтын хугацааг багасгана. Үнэхээр болгоомжтой байна уу!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>Сэнсний хамгийн их хурд</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>Сэнсүүд</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>Тохируулж болох TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Динамик Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>GPU температурын хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>Захиалгат горимын тохиргоо</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэц дээр өндөр динамик мужийг (HDR) идэвхжүүлэх. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэц дээр өндөр динамик мужийг (HDR) идэвхжүүлэх.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>HDR ашиглалтыг Windows-ын тохиргоо хориглодог.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Импортлох</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>Энэ төхөөрөмж нь Universal Device Toolkit-тэй нийцэхгүй байна.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Таны төхөөрөмж шаардлагатай системийн бүрэлдэхүүн хэсгүүд (LenovoGameZoneData) дутуу байж болно.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Хэрэв та үргэлжлүүлэхийн тулд "OK" дарвал:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Програм хангамж хязгаарлагдмал горимд ажиллана</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Зарим функцууд идэвхгүй болно (Хянах самбар, Автоматжуулалт, Макро)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Бусад үндсэн функцууд хэвээр байна</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Төхөөрөмжийн мэдээлэл:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Нийлүүлэгч:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Загвар:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Машины төрөл:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Үргэлжлүүлэхийн тулд "OK", гарахын тулд "Цуцлах" дээр дарна уу.</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>Нийцтэй гар олдсонгүй</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Lenovo Vantage эсвэл түүний үйлчилгээнүүд ажиллаж байхад гарын гэрэлтүүлгийг эндээс удирдах боломжгүй.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage эсвэл түүний үйлчилгээнүүд ажиллаж байна</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>Тухай</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>Үйлдлүүд</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>Батарей</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>Хянах самбар</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>Гар</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>Таталтууд</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Системийн оновчлол</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Загварын өргөтгөлүүд</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Навигацийн зүйлсийн тохиргоо</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Сайдбарт харуулах навигацийн зүйлсийг тохируулах. Хянах самбар ба Тохиргоо үргэлж харагдана.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Гарын навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Батарейн навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Автоматжуулалтын навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Макро навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Системийн оновчлолын навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Загварын өргөтгөлүүдийн навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Тухай навигацийн зүйлийг харуулах эсвэл нуух</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Навигацийн зүйлс</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Сайдбарт харуулах навигацийн зүйлсийг тохируулах</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>Шинэчлэл боломжтой!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>{0} шинэчлэл боломжтой!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Доош зөөх</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Дээш зөөх</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Үгүй</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>Цахилгаан адаптер холбогдсон</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>Цахилгаан адаптер холбогдсон (Бага чадал)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>Цахилгаан адаптер салгагдсан</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>Камер унтраалттай</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>Камер асаалттай</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock унтраалттай</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock асаалттай</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock унтраалттай</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock асаалттай</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>Микрофон унтраалттай</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>Микрофон асаалттай</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock унтраалттай</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock асаалттай</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>Гэрэлтүүлэг {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>Гэрэлтүүлэг {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>Профайл {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>Touchpad унтраалттай</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>Touchpad асаалттай</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>Гэрэлтүүлэг {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>Цахилгаан адаптер</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>Камер</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock ба Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>Микрофон хаах зэрэг Fn товчлуурын үйлдлүүдийн мэдэгдлийг идэвхгүй болгоно. Дэлгэц дүүрэн горимтой аппуудтай зөрчилдөж байвал энэ сонголтыг идэвхжүүлнэ үү.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>Мэдэгдэл харуулахгүй</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>Микрофон</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>Байрлал</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>Цахилгааны горим</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>Шинэчлэх хурд</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Ухаалаг түлхүүр</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>Мэдэгдлүүд</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>Touchpad Lock</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Нээх</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн хариу үйлдлийн хугацааг сайжруулах.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн хариу үйлдлийн хугацааг сайжруулах.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} татагдлаа!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>Таталт дууссан</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>Ямар нэг зүйл буруу боллоо</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>Сервер 404 код буцаасан.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>Файл алга болсон бололтой</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>Интернэтийн холболт ажиллаж байгаа эсэхийг шалгана уу.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>Ямар нэг зүйл буруу боллоо</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>Шинэчлэл боломжтой!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>Энэ багц нь нэг жилээс илүү хуучин байна.</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>Хувилбар</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>Доорх жагсаалт нь таны зөөврийн компьютертэй нийцтэй гэж тэмдэглэгдсэн програм хангамжийн багцуудын жагсаалт юм. Зөв багц суулгаж байгаагаа үргэлж шалгаарай.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Машины төрөл ба OS зөв тохируулагдсан эсэхийг шалгана уу.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>Ямар нэг зүйл буруу боллоо</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Эрэмбэлэлт, шүүлтүүрийн үр дүн, багцыг нуух эсвэл жагсаалтыг шинэчлэх нь таталтыг зогсооно. Үргэлжлүүлэх үү?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>Таталт явагдаж байна</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Шүүлтүүр...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>Машины төрөл</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>Үйлдлийн систем</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>Үндсэн (Санал болгосон)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Lenovo Vantage-тай ижил</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>Хоёрдогч</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Lenovo PC Support-тай ижил</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>Ангилал</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>Огноо</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>Нэр</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>Эх сурвалж</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>Таталтууд</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Буулгах</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Гүйцэтгэлийн горимыг өөрчлөх.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Цахилгааны горим</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>Гүйцэтгэлийн горимыг өөрчлөх. Гүйцэтгэлийн горимыг Fn+Q-ээр бас өөрчлөх боломжтой.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>Цахилгааны горим</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>Цахилгаан адаптер холбогдоогүй үед сонгосон цахилгааны горим зөв ажиллахгүй байж болно.</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>Өгөгдмөл</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows-ын цахилгааны төлөвлөгөө</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Боломжит драйверын багцуудыг шалгаж байна, түр хүлээнэ үү...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Драйверын багцуудыг шалгах</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Эх сурвалж сонгоод нийцтэй драйверын таталтуудыг жагсаалтад оруулахын тулд шалгана уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Драйверын таталт олдсонгүй</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Өөр эх сурвалж, үйлдлийн систем эсвэл машины төрөл сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Тохирох таталт олдсонгүй</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Шүүлтүүр, зөвхөн-шинэчлэл сонголт эсвэл нуусан таталтын жагсаалтыг тохируулна уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Драйвер шалгалт дуусаагүй</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Сонгосон эх сурвалж ба сүлжээний холболтыг шалгаад дахин шалгана уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Сүлжээний алдаа гарлаа. Автоматаар дахин оролдож байна...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Драйверын багцуудыг авахын тулд дахин оролдож байна...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Цэвэрлэгээний мэдээлэл</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Цэвэрлэгээний ажиллагааны явц ба тооцоолсон хэмжээг харах.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн пресетийг тохируулах.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>Гэрэлтүүлэг</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>Пресет 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>Пресет 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>Пресет 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>Пресет 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>Бүс 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>Бүс 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>Бүс 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>Бүс 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>Эффект</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>Хурд</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Шинэчлэх</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн шинэчлэх хурдыг өөрчлөх. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>Шинэчлэх хурд</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн шинэчлэх хурдыг өөрчлөх.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>Шинэчлэх хурд</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Нэр өөрчлөх</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>Би дараа дахин ачааллана</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>Одоо дахин ачаалах</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Буцаах</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>Аргументууд</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>Гүйцэтгэх файлын зам</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>Скрипт эсвэл програм ажиллуулах. Таны скрипт зөв ажиллаж байгааг эхлээд шалгаарай.</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>Ажиллуулах</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Хадгалах</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Хадгалж байна...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>Давтах нэг буюу хэд хэдэн хурдан үйлдлийг сонгоно уу</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>Хурдан үйлэл тодорхойлогдоогүй.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>Энэ аппийг харуулах</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>Аппийн акцент өнгийг өөрчлөх.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>Акцент өнгө</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Гадаад төрх</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Хэл, температурын нэгж, загвар ба акцент өнгийг тохируулах.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>Автоматаар ажиллуулах</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Windows-д нэвтрэх үед трэй руу багасгасан байдлаар эхлүүлэх.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone-ыг зөв идэвхгүй болгож чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone-ыг идэвхгүй болгож чадсангүй</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Legion Zone ба түүний үйлчилгээг устгалгүйгээр идэвхгүй болгох. Энэ сонголтыг өөрчилсний дараа дахин ачаалахыг зөвлөж байна.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Legion Zone-ыг идэвхгүй болгох</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys-ыг зөв идэвхгүй болгож чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys-ыг идэвхгүй болгож чадсангүй</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys ба түүний үйлчилгээг устгалгүйгээр идэвхгүй болгох. Хэрэв идэвхгүй болсон бол энэ апп Fn холбоосуудыг удирдана. Энэ сонголтыг өөрчилсний дараа дахин ачаалахыг зөвлөж байна.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Системийн оновчлол</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Санал болгож буй гүйцэтгэлийн тохируулгуудыг хэрэглэж, түр зуурын файлуудыг цэвэрлэх.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Гүйцэтгэл ба үйлчилгээний тохируулгуудыг хэрэглэх</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Гүйцэтгэлийн оновчлол хэрэглэгдлээ.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Гүйцэтгэлийн оновчлолыг хэрэглэж чадсангүй.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Цэвэрлэгээг ажиллуулах</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Цэвэрлэгээ дууссан.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Цэвэрлэгээ амжилтгүй боллоо.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Эдгээр үйлдлүүд нь системийн үйлчилгээ ба файлуудыг өөрчилдөг. Администраторын эрх шаардагдаж болно.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Сонгосон үйлдлүүдийг хэрэглэх</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Санал болгосныг сонгох</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Сонголтыг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Шалгах</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Цэвэрлэгээний үйлдлүүдийг ажиллуулах</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} үйлдэл сонгогдсон</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Үйлдэл хараахан сонгогдоогүй байна.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Сонгосон үйлдлүүд</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Гоо сайхан</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Драйверийн таталт</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Аюулгүй байдлын баталгаажуулалт</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Системийн цэвэрлэгээ нь түр зуурын файлууд ба кэшийг бүрмөсөн устгана. Ихэвчлэн аюулгүй боловч чухал өгөгдлийн нөөцлөлттэй эсэхийг шалгахыг зөвлөж байна. Үргэлжлүүлэх үү?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Өргөтгөлүүд</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Системийн оновчлолын өргөтгөлүүд ба хэрэгслүүдийг удирдах</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Өргөтгөл боломжгүй</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Системийн оновчлолын функцийг нэмэгдүүлэхийн тулд Загварын өргөтгөлүүдийн хуудаснаас өргөтгөлүүдийг суулгана уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Тун удахгүй</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Өргөтгөлийн зах зээл ирээдүйн шинэчлэлд боломжтой болно.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows оновчлол</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Бүгдийг сонгох</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Захиалгат цэвэрлэгээний дүрэм</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Цэвэрлэгээний явцад устгах хавтас ба файлын өргөтгөлүүдийг сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Дүрэм нэмэх</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Засварлах</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Арилгах</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Бүгдийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Захиалгат цэвэрлэгээний дүрэм тохируулаагүй байна.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Дэд хавтасуудыг оруулах</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX менежмент</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Бүх хэрэглэгчдэд устгах урьдчилан суулгасан Microsoft Store апп-уудыг сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Устгахаар сонгосон апп байхгүй.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Сонгосон аппуудыг устгах</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Сонгосон аппууд устгахаар товлогдлоо.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Сонгосон аппуудыг устгаж чадсангүй.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Аппуудыг ачааллаж байна, түр хүлээнэ үү...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Загваруудыг ачааллаж байна...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Ачааллаж чадсангүй: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Нийтлэгч: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Бүртгэлийн MRU/түүхийн цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Нийтлэг хэрэглэгчийн бүртгэлийн түүхүүдийг цэвэрлэх (Run MRU, RecentDocs, Open/Save диалогууд, TypedPaths). Энэ нь системийн чухал бичлэгүүдийг устгахгүй.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Үйлдлүүд</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Захиалгат цэвэрлэгээний дүрэм</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Хавтас</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Өргөтгөлүүд</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Олон өргөтгөлийг таслалаар тусгаарлана (жишээ: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Дэд хавтасуудыг оруулах</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Хайх...</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Хавтас сонгоно уу.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Ядаж нэг файлын өргөтгөл оруулна уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Ядаж нэг үйлдэл сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Сонгосон үйлдлүүд амжилттай дууслаа.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Сонгосон үйлдлүүдийг дуусгаж чадсангүй.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer ба интерфейс</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Системийн гоо сайхан</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Taskbar, File Explorer ба хэрэглэгчийн интерфейсийн аашийг тохируулах.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Гүйцэтгэл</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Системийн гүйцэтгэл ба хариу үйлдлийн тохиргоог тохируулах.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Үйлчилгээнүүд</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Нөөц зарцуулж буй дэвсгэр үйлчилгээнүүдийг идэвхгүй болгох.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Кэш, түр зуурын файл ба бусад үлдэгдлийг арилгах.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Кэшийн цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Хадгалалтын зай чөлөөлөхийн тулд янз бүрийн апп ба системийн кэш файлуудыг цэвэрлэх.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Системийн файлуудын цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Түр зуурын файл, лог, ослын dump зэрэг системийн файлуудыг цэвэрлэх.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Системийн бүрэлдэхүүн хэсгүүдийн цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update кэш, бүрэлдэхүүн хэсгийн дэлгүүр зэрэг системийн бүрэлдэхүүн хэсгийн файлуудыг цэвэрлэх.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Гүйцэтгэлийн цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Prefetch файл зэрэг системийн гүйцэтгэлд нөлөөлж болох файлуудыг цэвэрлэх.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Захиалгат цэвэрлэгээ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Захиалгат дүрмүүдийг ашиглан заасан файл ба лавлахуудыг цэвэрлэх.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Taskbar ба эхлэх цэсний зохион байгуулалт</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Хайлтын хайрцаг ба Task View товчлуурыг нууж, taskbar-ыг бүлэглэхийг идэвхгүй болгож, трэйн дүрсийг үргэлж харуулна.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Эхлэх цэсийг идэвхгүй болгож, Win товчлуураар хайлтыг нээх</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Эхлэх цэсийг бүрмөсөн идэвхгүй болгох. Win товчлуурыг дарвал эхлэх цэсний оронд хайлтыг нээнэ.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Explorer-ийн хариу үйлдлийг сайжруулах</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Цэсний саатлыг бууруулж, гацсан аппуудыг хурдан хааж, өгөгдмөлөөр This PC-г нээнэ.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Файлын харагдах байдлын сонголтууд</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>File Explorer-д файлын өргөтгөл ба нуугдсан файлуудыг харуулах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Explorer-ийн саналуудыг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Үүлэн контентын саналууд ба зөвлөмж баннеруудыг унтраах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Windows товчлуурыг хайлтыг нээхээр өөрчлөх</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Windows товчлуурын аашыг эхлэх цэсний оронд хайлтыг нээхээр өөрчлөх.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Мультимедиа товлолыг оновчлох</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Сүлжээний саатал зохицуулалтыг арилгаж, системийн хариу үйлдлийн latency-г бууруулах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Санах ойн менежментийг сайжруулах</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Системийн кэшийг санах ойд хадгалж, цөмт драйверуудыг хуудаслахаас зайлсхийх.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Акрил ба мэдэгдлийн төвийг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Нэвтрэлтийн үеийн акрил эффектийг арилгаж, Windows-ын мэдэгдлийн төвийг нууна.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Телеметр ба зөвлөгөөг бууруулах</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Зар сурталчилгааны ID, Spotlight функц ба автомат саналуудыг идэвхгүй болгох.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Өндөр гүйцэтгэлийн төлөвлөгөөг албадах</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Өндөр гүйцэтгэлийн цахилгааны схемийг идэвхжүүлж, гибернацийг идэвхгүй болгоно.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Оношилгооны үйлчилгээнүүдийг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Connected User Experiences, Diagnostics Hub ба Delivery Optimisation үйлчилгээнүүдийг зогсоож, идэвхгүй болгоно.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMain-ыг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Дэвсгэр дискний идэвхийг бууруулахын тулд Superfetch/SysMain-ыг унтраах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Windows Search индексийг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Индекс шинэчлэлтийг зогсоохын тулд Windows Search үйлчилгээг зогсооно.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Remote Registry-г идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Системийг холбогдох бүртгэлийн хандалтыг идэвхгүй болгож хамгаалах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Алдааны мэдээллийг идэвхгүй болгох</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Windows Error Reporting нь ослын өгөгдөл цуглуулж, илгээхийг зогсооно.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Remote Desktop кэшийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Remote Desktop клиентээр үүсгэсэн кэш файлуудыг арилгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Windows Update кэшийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Татаж авсан шинэчлэлийн файлууд ба Delivery Optimisation кэшийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Хөтчийн кэшийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Янз бүрийн аппуудаас үлдээсэн түр зуурын файл ба логийг цэвэрлэнэ.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Апп-ын үлдэгдэл</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Internet Explorer ба Edge-ийн кэш ба күүки файлуудыг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Thumbnail кэшийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Explorer-ийн thumbnail мэдээллийн сан ба Direct3D шейдер кэшийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NET натив дүрсүүдийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Дискний зай чөлөөлөхийн тулд кэшлэгдсэн .NET Native дүрсүүдийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Лог ба оношилгооны өгөгдлийг арилгах</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Системийн диск дээрх их хэмжээтэй файлуудыг шалгаж, их зай эзэлж болох файлуудыг илрүүлнэ.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Том файлуудын шалгалт</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Систем дээрх том файлуудыг илрүүлж, удирдах.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Том файлууд</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Windows-ын лог, алдааны мэдээ ба оношилгооны мөрүүдийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Ослын dump-уудыг устгах</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Системийн ослын дараа үлдсэн санах ойн dump файлуудыг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Defender-ийн шалгалтуудыг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Windows Defender-ийн шалгалтын түүх ба кэшийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Түр зуурын файлуудыг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Windows ба хэрэглэгчийн түр зуурын лавлахуудыг хоослох.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Багцалсан Windows апп-уудыг арилгах</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Сонгосон урьдчилан суулгасан UWP аппуудыг бүх хэрэглэгчдэд устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Хогын савыг хоослох</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Хогын савт хадгалагдсан устгасан файлуудыг арилгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Prefetch өгөгдлийг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Шинэ мөрүүдийг дахин үүсгэхийн тулд Windows-ын prefetch өгөгдлийг устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Захиалгат файлуудыг цэвэрлэх</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Тохируулсан өргөтгөлтэй таарсан файлуудыг сонгосон хавтаснаас устгах.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Үйлчилгээний бүрэлдэхүүн хэсгийн дэлгүүр</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>DISM цэвэрлэгээг ажиллуулж, WinSxS түр зуурын файлуудыг цэвэрлэнэ.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys-ыг идэвхгүй болгох</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage ба/эсвэл ImController-ыг зөв идэвхгүй болгож чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage ба/эсвэл ImController-ыг идэвхгүй болгож чадсангүй</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Lenovo Vantage ба ImController-ыг устгалгүйгээр идэвхгүй болгох. Энэ сонголтыг өөрчилсний дараа дахин ачаалахыг зөвлөж байна.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Lenovo Vantage ба ImController-ыг идэвхгүй болгох</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone-ыг зөв идэвхжүүлж чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone-ыг идэвхжүүлж чадсангүй</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys-ыг зөв идэвхжүүлж чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys-ыг идэвхжүүлж чадсангүй</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage ба/эсвэл ImController-ыг зөв идэвхжүүлж чадаагүй байж магадгүй</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage ба/эсвэл ImController-ыг идэвхжүүлж чадсангүй</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Fn+R холбоосыг илүү хэрэгтэй болгохын тулд шинэчлэх хурдыг оруулахгүй байж болно.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>Шинэчлэх хурдыг оруулахгүй</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>Хэлийг сонгоно уу.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Хэлийг суулгах</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Хэл суулгах амжилтгүй боллоо</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Хэлний багцыг татаж чадсангүй. Сүлжээний холболт, прокси эсвэл TLS тохиргоог шалгаад дахин оролдоно уу.</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Хэл суулгаж байна</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Хэлний багцыг татаж байна...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value> задлан суулгаж байна...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Энэ хэлний багцыг суулгахын тулд татах товчлуурыг ашиглана уу.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Хэл суугдаагүй</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>Хэл</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Хэлийг устгах</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Хэл устгах амжилтгүй боллоо</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Хэлийг устгаж байна</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>Үргэлж трэйд багасгах. Трэй дүрсэн дээр хулганы баруун товчоор хаах.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>Хаах үед багасгах</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Ачаалах үед гарч ирдэг нийцгүй төхөөрөмжийн анхааруулгыг нуух.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Нийцгүй төхөөрөмжийн анхааруулгыг идэвхгүй болгох</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>Ямар мэдэгдлүүдийг харуулахыг тохируулах.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>Мэдэгдлүүд</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows-ын цахилгааны төлөвлөгөө</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Хурдан үйлдлийг Fn+F9 давхар дархад оноох.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Ухаалаг түлхүүрийн хоёрдогч үйлдэл</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Хурдан үйлдлийг Fn+F9 нэг дархад оноох.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Ухаалаг түлхүүрийн үйлдэл</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>Гэрэл загвар, харанхуй загвар тохируулах эсвэл системийн тохиргоог дагах.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>Загвар</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Гадаад төрх</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Аппликейшн</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Ухаалаг түлхүүрүүд</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Дэлгэц</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Аппуйн гадаад төрх, ааш ба функциональ сонголтуудыг тохируулах.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн тод байдлыг тохируулах.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн тод байдал</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>Эффект нэмэх</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>Профайлыг хэрэглэж чадсангүй</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>Гэрэлтүүлгийн профайлыг хэрэглэж чадсангүй.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>Тод байдал</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>Бүх бүсийг сонголтоос гаргах</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>Эффектүүд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>Профайлыг экспортлож чадсангүй</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>Профайлыг экспортлож чадсангүй</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>Профайлыг импортлож чадсангүй</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>Профайлыг импортлож чадсангүй</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>Эффект нэмэгдээгүй.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>Өгөгдмөлд буцаах</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>Бүх бүсийг сонгох</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>Гарын зохион байгуулалтыг солих</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>Чиглэл</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>Өнгө</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>Өнгөнүүд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>Чиглэл</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>Эффект</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>Энэ эффектийг бүхэл гарт хэрэглэж, бусад бүх эффектийг орлуулах болно.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>Хурд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>Эффект нэмэх</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>Эффект засварлах</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн профайлыг тохируулах.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн профайл</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>Бүх товчлуур</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} бүс</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>Нар мандах</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>Нар жаргах</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>Цаг</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Интеграл ба дискрет GPU-ийн хооронд шилжихийг зөвшөөрөх. Дахин ачаалал шаардлагатай.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Эрлийз горимыг өөрчлөхийн тулд дахин ачаалал шаардлагатай. Одоо дахин ачаалах уу?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Дахин ачаалал шаардлагатай</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>Эрлийз горим</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Touchpad-ыг идэвхгүй болгох.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Touchpad Lock</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>Touchpad-ыг идэвхгүй болгох.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>Touchpad Lock</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Дахин оролдох</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Гэнэтийн алдаа гарлаа: {0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Тайлан устгах</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>Ослын тайлан дискэнд хадгалагдсан. Доорх тайлангийн дэлгэрэнгүйг харж болно. Тайлангууд автоматаар илгээгдэхгүй.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Өмнөх сесс дээр апп унасан</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Ослын тайланг нээж чадсангүй: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Тайлан нээх</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Хаах</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Ослын тайлан хадгалагдсан: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Ослын тайлан илрүүлэгдсэн</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Ослын тайлангийн дэлгэрэнгүйг ачааллаж чадсангүй.</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>Нэргүй</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>Та өөрийн эрсдэлдээ үргэлжлүүлэхийг сонгож болно, гэхдээ зарим функц боломжгүй эсвэл зөв ажиллахгүй байж болзошгүйг анхаараарай. Хэрэв та үргэлжлүүлэхийг сонговол лог автоматаар идэвхэлнэ.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Нэмэлт мэдээлэл авахын тулд GitHub дээрх төслийн хуудсыг шалгаарай.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>Логийн хавтас</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>Машины төрөл</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit нь таны төхөөрөмж дээр туршигдаагүй байна.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Та энэ анхааруулгыг Тохиргооноос хэзээд идэвхгүй болгож болно.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>Загвар</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>Дэмжигдэхгүй төхөөрөмж</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>Нийлүүлэгч</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Шинэчлэх</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>Шинэчлэл боломжтой</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>Шинэ юу байна?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн тод байдлыг тохируулах.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Fn+Space-ээр тод байдлыг өөрчлөх боломжтой</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан гар дээр Windows товчлуурыг идэвхгүй болгох.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Windows түлхүүрийн түгжээ</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>Зөвхөн суулгагдсан гар дээр ажиллана.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Windows түлхүүрийн түгжээ</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Тийм</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>Микрофон</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>Унтраалттай үед микрофонууд дуу хаагдсан байна.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>Микрофон</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>Унтраалттай үед микрофонууд дуу хаагдсан байна.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>Нягтаршил</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн нягтаршилыг өөрчлөх.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>Нягтаршил</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн нягтаршилыг өөрчлөх. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн масштабыг өөрчлөх.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>Суулгагдсан дэлгэцийн масштабыг өөрчлөх. АНХААРУУЛГА: Дотоод дэлгэц унтраалттай бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>Дэлгэц</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Fn+Space-ээр гэрэлтүүлгийг асаах эсвэл унтраах боломжтой.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлэг</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Гэрэлтүүлгийг асаах эсвэл унтраах.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>Тохирох таталт олдсонгүй</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>Зөвхөн шинэчлэлүүдийг харуулах</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>Хянах самбарыг тохируулах</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Ачаалах</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>Бүлэг үүсгэх</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>Нэр</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>Зарим функцууд нь таны зөөврийн компьютерийн төлөв ба тохиргооноос хамааран Хянах самбар дээр харагдахгүй байж болно.</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>Тохируулах</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>Дэлгэцүүдийг унтраах</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>Боломжит бүх дэлгэцийг унтраах. Хулганаа хөдөлгөх эсвэл гар дээр дарвал дэлгэц сэргэнэ.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>Унтраах</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>Дэлгэцүүдийг унтраах</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>Боломжит бүх дэлгэцийг унтраах.</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>Бүлгийн нэрийг засварлах</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>Нэр</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Legion лого асаалттай</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Legion лого унтраалттай</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Портын гэрэлтүүлэг асаалттай</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Портын гэрэлтүүлэг унтраалттай</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>Дахин ачаалал шаардлагатай</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>Унтраалт шаардлагатай</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>Дахин ачаалал зөвлөж байна</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Санал болгосон</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Дараалалд</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Татаж байна</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Суулгаж байна</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Дууссан</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Үйлдлийн тодорхойлолт олдсонгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Энэ үйлдэлд техникийн хэрэгжилтийн дэлгэрэнгүй мэдээлэл боломжгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Ачаалал амжилтгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Тодорхойгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Тушаал гүйцэтгэл</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Бүртгэлийн өөрчлөлт</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Үйлчилгээний менежмент</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Бүртгэлийн өөрчлөлт + PowerShell скрипт</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Бүртгэлийн цэвэрлэгээ</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM тушаал</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Хадгалаад хаах</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>Захиалгат горимын пресет</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>Захиалгат горимын пресетийг идэвхжүүлэх. Энэ тохиргоо нь зөвхөн Захиалгат горим идэвхтэй үед хүчинтэй.</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>Пресетийн нэр</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>Нэр</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>Идэвхтэй пресет</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>Аппийн хавтасууд</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>Өгөгдөл</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>Түр зуурын</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>Нэг дэлгэцийн гэрэлтүүлэг</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>Асаалттай үед гэрэлтүүлгийн түвшинг өөрчлөх бүрд ижил түвшин Windows-ын бүх цахилгааны төлөвлөгөөнд хэрэглэгдэнэ.</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>{0} шинэчлэл боломжтой!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>Оргил цахилгааны хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU sPPT цахилгааны хязгаар</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>CPU-д хүрч болох тасралтгүй цахилгааны зарцуулалт.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>Богино хугацаанд CPU-д хүрч болох оргил цахилгааны зарцуулалт.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>CPU-д хүрч болох хамгийн их агшин зуурын цахилгааны зарцуулалт.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>CPU ба GPU хоёулаа бүрэн ашиглагдаж байхад CPU-д хүрч болох хамгийн их цахилгааны зарцуулалт.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>Бага зэргийн сааталтай CPU-д хүрч болох оргил цахилгааны зарцуулалт.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>Давтамж ба цахилгаан буурахаас өмнө CPU-д хүрч болох хамгийн их температур.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>CPU-ийн цахилгааны зарцуулалтад үндэслэн GPU-д хуваарилагдах нэмэлт хамгийн их цахилгаан.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>Үндсэн цахилгааны зарцуулалтын дээр GPU-д хуваарилагдах нэмэлт цахилгааны хэмжээ.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>Давтамж ба цахилгаан буурахаас өмнө GPU-д хүрч болох хамгийн их температур.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Өгөгдмөл</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Богино хугацааны цахилгааны хязгаарын хугацаа</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>CPU-д богино хугацааны цахилгааны хязгаарыг ашиглах, нэмэгдүүлэхийг зөвшөөрсөн хугацаа. Tau дууссан тохиолдолд урт хугацааны цахилгааны хязгаарыг ашиглана.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>AC-д нийт процессорын цахилгааны зорилго</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPU нь GPU-ийн динамик цахилгааны зарцуулалтын тохируулгыг эхлүүлэх цэг.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Үүсгэх</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>Алхам нэмэх</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>Үйлдэл үүсгэх</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>Цахилгааны горим</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>Пресет</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>Дискрет GPU</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>Цахилгааны төлөв</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>Батарей</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>Горим</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>Разрядын хурд</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Хамгийн бага разрядын хурд</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Хамгийн их разрядын хурд</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Ашиглалтын хугацаа</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>Шинэчлэл боломжтой!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>Дүрс сонгох</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>Дүрс өөрчлөх</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>Батарейн түвшин бага</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>Тохируулах</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 Бага чадлын загвар илрүүлэгдсэн</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows нь энэ зөөврийн компьютер Modern Standby-г дэмждэг гэж мэдээлж байна. Тэнцвэртэйээс бусад цахилгааны төлөвлөгөөг ашиглах нь гэнэтийн ааштай болох магадлалтай.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Цахилгааны горим өөрчлөгдөх үед хэрэглэх Windows-ын цахилгааны төлөвлөгөөг сонгоно уу.</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>Тэжээл</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Windows-ын хянах самбар дахь цахилгааны төлөвлөгөөний сонголтууд</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Гарын гэрэлтүүлгийн профайлыг импортлох</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Одоогийн профайлд гэрэлтүүлгийн тохиргоог импортлож, хэрэглэх.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>Зам</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>{0} дараа</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>Олон триггер...</value>
+    <comment>Сонгосон үйлдлүүдийг гүйцэтгэхийн тулд олон триггер нэгтгэх боломжийг хэрэглэгчид олгоно.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>GPU оверклок тохиргоо</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Цөмийн давтамжийн офсет</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Санах ойн давтамжийн офсет</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU оверклок</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>Дискрет GPU-г оверклок хийж гүйцэтгэлийг нэмэгдүүлэх.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU оверклок</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Дискрет GPU-г оверклок хийж гүйцэтгэлийг нэмэгдүүлэх. АНХААРУУЛГА: Дискрет GPU боломжгүй бол энэ үйлдэл зөв ажиллахгүй.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Портын гэрэлтүүлэг</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютерийн ард байрлах портуудын гэрэлтүүлгийг асаах эсвэл унтраах.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Портын гэрэлтүүлэг</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютерийн ард байрлах портуудын гэрэлтүүлгийг асаах эсвэл унтраах.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Панел логогын гэрэлтүүлэг</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютерийн таг дээрх гэрэлтүүлгийг асаах эсвэл унтраах.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Панел логогын гэрэлтүүлэг</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Зөөврийн компьютерийн таг дээрх гэрэлтүүлгийг асаах эсвэл унтраах.</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>ГГц</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>МГц</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>Хамгийн их: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>Ашиглалт</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>Цөмийн давтамж</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P Core давтамж</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E Core давтамж</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>Температур</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>Сэнс</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>Санах ойн давтамж</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Санах ойн ашиглалт</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Санах ойн температур</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD температур</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM ашиглалт</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Хуваалцсан санах ойн ашиглалт</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM температур</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU халуун цэг</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe дамжуулалт</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Цөмүүд</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Санах ой</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Платформ</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>Шинэчлэх интервал</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>Шууд ачаалал</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>Цэнэглэгч холбогдсон үед зөөврийн компьютерийг асаах.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>Шууд ачаалал</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>Цэнэглэгч холбогдсон үед зөөврийн компьютерийг асаах.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>Цахилгааны горимыг өөрчлөх боломжгүй</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} цахилгааны горим нь AC цахилгаангүйгээр боломжгүй.</value>
+    <comment>Жишээ нь: "{Performance} цахилгааны горим нь AC цахилгаангүйгээр боломжгүй."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Мэдрэгчүүд</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>GPU-ийн ажиллагааны горимыг өөрчлөх боломжгүй</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Хэдхэн секундын дараа горимыг дахин өөрчлөхийг оролдоно уу, хүлээгдэж буй үр дүнг харж байхгүй бол. Хэрэв dGPU огт хариу үйлдэл үзүүлэхгүй бол зөөврийн компьютерээ дахин ачаална уу.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU одоогоор ашиглагдаж байна</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU нь ашиглагдахгүй үед автоматаар салгана.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU одоогоор ашиглагдаж байна эсвэл зөөврийн компьютер батарейгаар ажиллахгүй байна</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU нь ашиглагдахгүй бөгөөд зөөврийн компьютер батарейгаар ажиллаж байхад автоматаар салгана.</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage эсвэл түүний үйлчилгээнүүд ажиллаж байхад Захиалгат горимын тохиргоо зөв хэрэглэгдэхгүй.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Legion Zone эсвэл түүний үйлчилгээнүүд ажиллаж байхад Захиалгат горимын тохиргоо зөв хэрэглэгдэхгүй.</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU холбогдсон</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU салгагдсан</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU-ийн ажиллагааны горим</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Компьютерийн хэрэглээ ба цахилгааны нөхцөлд үндэслэн GPU-ийн ажиллагааны горимыг сонгоно уу. Горим солиход дахин ачаалал шаардагдаж болно.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Эрлийз горим</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Интеграл ба дискрет GPU-ийн хооронд шилжихийг зөвшөөрөх. Дахин ачаалал шаардлагатай.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>Үргэлжлэх хугацаа</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>Шинэчлэлүүд</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU-аас CPU-д динамик Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>CPU-ийн ашиглалтад үндэслэн GPU-аас CPU-д хуваарилагдах нэмэлт хамгийн их цахилгаан. Утга өндөр байх тусам CPU ашигладаг аппуудын гүйцэтгэл сайжирна.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>Ачаалах лого</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>Системийг эхлүүлэхэд харагдах Ачаалах лого зургийг тохируулах.</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>Ачаалах лого</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>Өгөгдмөл Ачаалах лого тохируулагдсан</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>Захиалгат Ачаалах лого тохируулагдсан</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>Төлөв</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>Өгөгдмөлд буцаах</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>Тохируулах</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>Үйлдлүүд</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>Мэдэгдлийн текст</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>Мэдэгдэл харуулах</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>Пресет</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Ухаалаг Fn Lock</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Alt, Ctrl эсвэл Shift товчлуур дарагдсан үед Fn Lock түр идэвхгүй болно.</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Унтраалттай</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>Захиалгат ачаалах лого нь яг {0} пиксел хэмжээтэй байх ёстой. Дэмжигдэх форматууд: {1}.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>Шөнөжийн батарей цэнэглэлт</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>Идэвхтэй үед энэ төхөөрөмж шөнө холбогдсон үед 80% хүртэл цэнэглэж, өглөө ашиглах хугацаанд 100% хүртэл цэнэглэнэ.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Шөнөжийн батарей цэнэглэлт</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>Идэвхтэй үед энэ төхөөрөмж шөнө холбогдсон үед 80% хүртэл цэнэглэж, өглөө ашиглах хугацаанд 100% хүртэл цэнэглэнэ.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>Буруу зургийн хэмжээ.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>Буруу зургийн формат.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>EFI хуваалтыг холбож чадсангүй.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>UEFI эрхийг тохируулж чадсангүй.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>EFI хуваалтад хангалттай чөлөөтэй зай байхгүй.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>Захиалгат лого тохируулж чадсангүй: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>Өгөгдмөл лого тохируулж чадсангүй: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>Өгөгдмөл ачаалах лого тохируулагдлаа.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>Захиалгат ачаалах лого тохируулагдлаа.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>Сүлжээний нэр (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Одоогийн сүлжээний нэрийг хуулах</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Аль ч Wi-Fi сүлжээнд хоосон үлдээнэ үү.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>HWiNFO64-тэй сэнсний хурд, батарейн температур зэргийг хуваалцах. Энэ сонголтыг өөрчилсний дараа HWiNFO64-г дахин эхлүүлэх шаардлагатай.</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>Интеграци</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Мэдээлэл</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>Татах хавтас</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>Татах хавтасыг нээх</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>Татах</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Суулгах</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Устгах</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Суулгалт амжилтгүй боллоо</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Файл олдсонгүй, эхлээд татаж авна уу</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Суулгагч {0} кодоор гарлаа</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Суулгалт эхэллээ</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Суулгагчийг эхлүүлж байна: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>README нээх</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>Пресет</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>Шинэчлэх</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>Устгах</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>Хугацаа (минут)</value>
+    <comment>Хоёр тогтмол үйлдэл идэвхэлсэн хоорон дахь минутын тоог илэрхийлэх бүхэл тоог оруулах, мөн хэрэглэгч үйлдлийг тохируулж дуусахад юу тохируулсныг мэдэгдэхэд ашигладаг.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Систем дахин ачаалагдах үед батарейн хэсэг дэх "Батарейгаар ажиллаж эхэлсэн" тоолуурыг дахин тохируулна.</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>Ачаалах үед "Батарейгаар ажиллаж эхэлсэн"-г дахин тохируулах</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi-г унтраах</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi-г асаах</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>Чимээгүй ажиллуулах</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>Дуустал хүлээх</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>Консол цонх үүсгэлгүйгээр консол аппуудыг гүйцэтгэх.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>Програм эсвэл скрипт гүйцэтгэл дуусах хүртэл хүлээх</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>Дуу хаагдсан үед бүх идэвхтэй аудио гаралтын төхөөрөмжүүд дуу хаагдсан байна.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>Чанга яригч</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>Трэйд багасгах</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>Таскбарын оронд үргэлж трэйд багасгах.</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows-ын цахилгааны горимууд</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Fn+Q-ээр Захиалгат горим руу шилжих</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Fn+Q-ээр Захиалгат горим руу хурдан шилжихийг зөвшөөрөх.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>Цахилгааны горимын синк</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>Цахилгааны горимуудыг өөрчлөх үед Windows-ын цахилгааны төлөвлөгөө эсвэл Windows-ын цахилгааны горимыг автоматаар өөрчлөх.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows-ын цахилгааны горимууд</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>Цахилгааны горим өөрчлөгдөх үед хэрэглэх Windows-ын цахилгааны горимыг сонгоно уу.</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Төхөөрөмжийн мэдээллийг уншихад алдаа гарлаа.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Нийцлийн шалгалтын алдаа</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Ачаалах үед апп нь төхөөрөмжийн мэдээллийг уншиж чадсангүй. Доорх алдааны дэлгэрэнгүйг шалгаад, шаардлагатай бол алдааг олж засварлах алхмуудыг туршина уу.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Алдааг олж засварлах алхмууд</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Windows Management Instrumentation (WMI) үйлчилгээ ажиллаж байгааг шалгана уу: Services (services.msc)-г нээж "Windows Management Instrumentation" ажиллаж байгааг шалгана уу.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Системийн бүртгэл ба WMI-д хандах хангалттай эрхтэй байхын тулд аппликейшныг Администратороор ажиллуулна уу.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Системийн нөөцийг шалгана уу: Бусад их нөөц шаарддаг аппуудыг хааж, дахин оролдоно уу.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Доорх "Лог нээх" дээр дарж лог файлаас алдааны дэлгэрэнгүй мэдээллийг шалгана уу.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Лог файл нээх</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>Макро</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>Макро</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>Давтах</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>Саатлуудыг үл тоомсорлох</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Цэвэрлэх</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>Бичих</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>Бичих зогсоох</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>Давтахгүй</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Макро ажиллахын тулд Universal Device Toolkit ажиллаж байх шаардлагатай.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>Идэвхжүүлэх</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>Та товчлуурын дараалтыг бичиж, гар дээрх тоон товчлуураар ашиглаж болно.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>Макро</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>Макро идэвхжүүлэх эсвэл идэвхгүй болгох.</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>Өөр товчлуур дарагдвал тасалдуулах</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Нуух</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>Бүгдийг нуух</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Төхөөрөмжүүд</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Бүгдийг сонголтоос гаргах</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Бүгдийг сонгох</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>Зөвхөн гар</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>Гарын товчлуур ба хулганы товчлуур</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>Бүх оролт</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>Бичлэгийн сонголтууд</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>Бичлэг 3 секундын дараа эхэлнэ...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>Бичиж байна...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>Зогсоохын тулд ESC дарна уу.</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Зөвхөн сонгосон төхөөрөмжүүдийг харуулах</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Зөвхөн авагдахуйц төхөөрөмжүүдийг харуулах</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Зөвхөн холбогдсон төхөөрөмжүүдийг харуулах</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Тушаалын мөрнөөс удирдах боломжийг олгох Command Line Interface-г идэвхжүүлэх.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>CLI-г PATH-д нэмэх</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>CLI-г хэрэглэгчийн PATH орчны хувьсагчид нэмэх.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>Температур</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>Температурын мэдрэгчдийн нэгжийг сонгоно уу.</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys нь дэвсгэрт ажиллаж байна.</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone нь дэвсгэрт ажиллаж байна.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage ба/эсвэл ImController нь дэвсгэрт ажиллаж байна.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Төхөөрөмжтэй холбогдсон бүх дэлгэц дээр мэдэгдэл харуулах.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Бүх дэлгэц дээр мэдэгдэл</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>Шалгах</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>Шинэчлэл шалгаж байна...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>Шинэчлэл шалгах</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>Шинэчлэх</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Энэ сесс дээр шинэчлэлийн шалгалт идэвхгүй</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit нь {0}-ээр эхэлсэн. Автомат ба гараар шинэчлэл шалгалт, мөн доорх шинэчлэлийн тохиргоо нь тухайн эхлүүлэх аргументгүйгээр дахин ачаалах хүртэл идэвхгүй болно.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API хурдны хязгаарт хүрсэн, дараа дахин оролдоно уу.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>Шинэчлэл шалгаж чадсангүй</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>Ямар нэг зүйл буруу боллоо, дараа дахин оролдоно уу.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>Шинэчлэл олдсонгүй</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>Шинэчлэлийг автоматаар шалгах</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Шинэчлэлийн репозитор</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Шинэчлэл шалгах GitHub репозиторыг тохируулах. Өгөгдмөл ашиглахын тулд хоосон үлдээнэ үү.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Репозиторын эзэмшигч</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>ж.нь., SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Репозиторын нэр</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>ж.нь., UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>Шинэчлэлийн каталог олдсонгүй</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>Өөр эх сурвалжаас шинэчлэл авахаар оролдоно уу.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Ямар нэг зүйл буруу боллоо</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Интернэтийн холболт ажиллаж байгаа эсэхийг шалгана уу.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Дуу тоглуулах</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>wav эсвэл mp3 зэрэг нийтлэг хөгжмийн форматуудыг дэмждэг.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Хурдан үйлдэл</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Хадгалагдсан хурдан үйлдлийг ажиллуулах.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Мэдэгдэл үргэлж дээд талд</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Мэдэгдлийг үргэлж дээд талд байлгах. Энэ нь бусад бүтэн дэлгэцийн цонхнуудад нөлөөлөхгүй боловч та мэдэгдэл дээр дарах боломжгүй болно.</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Санал болгосон</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Бүгдийг түр зогсоох</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Үйлдлийн дэлгэрэнгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Техникийн хэрэгжилтийн дэлгэрэнгүй</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Хэрэгжилтийн төрөл:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Хаах</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{1}-ээс {0} үйлдэл сонгогдсон</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Тооцоолсон цэвэрлэгээний хэмжээ: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Нийт хэмжээг тооцоолохын тулд Шалгах дээр дарна уу</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Ажиллаж байна: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Сонгосон аппуудыг устгаж байна...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Бага хэмжээний харагдац</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>Системийн гоо сайхан</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows гоо сайхан</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Windows-ын харагдац ба аашийг тохируулах.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Эффектүүд</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Дүрслэлийн эффектүүдийг тохируулах.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Тунгалаг байдал</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Бүгдийг дэлгэх</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Бүгдийг хураах</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{0} чөлөөлсөн, {1} секундэд</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>{0}% гүйцэтгэж байна</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Үйлдэл цуцлагдлаа</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Алдааны дэлгэрэнгүй: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Нуусан таталтуудыг харуулах</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Нуусан таталтуудыг харуулах</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Хэл сонгох</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Энэ төхөөрөмж үндсэн горимд эхэлнэ. Нийцтэй төхөөрөмжийн багц боломжтой болтол техник хангамж тусгай удирдлагууд нуугдсан байна.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Төхөөрөмжийн багц: Үндсэн горим</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit нь тохирох төхөөрөмжийн багцыг илрүүлсэн. Техник хангамж тусгай функцуудыг апп бэлдэж чадахуйц байхад одоо баталгаажуулна уу.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Төхөөрөмжийн багц: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Төхөөрөмжийн тохиргоог бэлдэж байна...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Холбогдоогүй</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Бүсүүдийг синк хийх</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Windows-ын суулгагдсан бүртгэлийн цэвэрлэгээний функцийг ашиглаж байна</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (DNS кэшийг цэвэрлэх)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Winsock протоколын стекийг дахин тохируулах)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (TCP/IP протоколын стекийг дахин тохируулах)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Загварын өргөтгөлүүд</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Функцийг нэмэгдүүлэхийн тулд загваруудыг суулгаж, удирдах</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Нийт загварууд</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Суулгагдсан</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Шинэчлэл бэлэн</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Дэлгүүрийн пульс</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Загварын боломжит байдлыг шалгаж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} загварын шинэчлэл(үүд) суулгахад бэлэн байна.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>Одоогийн фийд дээр {0} нэмэлт загвар боломжтой.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Загварын мета өгөгдөл ачаалахыг хүлээж байна.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>Бүх илрүүлсэн загвар одоогоор шинэчлэгдсэн байна.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Шинэчлэл боломжтой</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Суулгахад боломжтой</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Мета өгөгдөл ачааллаж байна</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Шинэчлэгдсэн</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>{0}-ийн бүтээл</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Хурдан нээх</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Оновчлох</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Шинэчлэх</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Суулгах</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Суулгагдсан</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Устгах боломжгүй</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Загварын тохиргоо</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Загварын нэр</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Загварын тайлбар</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>Энэ загварт тохируулах боломжтой тохиргоо байхгүй.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Хаах</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Загвар олдсонгүй: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Алдаа</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Тохиргоо</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Зохиогч: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Загварын тохиргооны интерфейсийн формат буруу байна.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Загварын тохиргоог ачааллахад алдаа гарлаа: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Загвар хайх...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>Бүгд</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Суулгагдсан</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Суугдаагүй</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>Загвар боломжгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>Загварын дэлгүүр одоогоор хоосон байна. Ирээдүйн загварын шинэчлэлүүдийг хүлээнэ үү.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Тохируулах</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Устгах</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Нээх</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Хэл:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Аппийн өгөгдмөлийг ашиглах</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>{0} загвар олдсон</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Бөөн импорт</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Загваруудыг дотоод ZIP файлуудаас импортлох</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Файлуудаас импортлох</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Загварын файлуудыг сонгох (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} загвар амжилттай импортлогдлоо</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} загвар амжилттай импортлогдож, боломжтой боллоо</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Бөөн импорт амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Загвар импортлож чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Загваруудыг импортлож байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0}-г импортлож байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0}-г боловсруулж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Загвар амжилттай суулгагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Загвар амжилттай суулгагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Суулгалт амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Загвар суулгаж чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Загвар амжилттай устгагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Загвар амжилттай устгагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Устгал амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Загвар устгаж чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Загвар нээж чадсангүй</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Загвар нээж чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Загвар нээж чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Загвар суугдаагүй</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Загвар суугдаагүй бөгөөд нээж чадахгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Хамгийн бага хост хувилбар {0} шаардлагатай</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Загвар бүрмөсөн устгагдах болно</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Загвар бүрмөсөн устгагдах болно. Энэ үйлдлийг буцаах боломжгүй.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>Шинэчлэл амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>Загварын шинэчлэл амжилтгүй боллоо, сүлжээний холболтыг шалгаад дараа дахин оролдоно уу.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>Шинэчлэл амжилттай</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>Загвар амжилттай шинэчлэгдлээ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>Загвар шинэчлэж байна</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>Загварыг татаж, шинэчилж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Бүгдийг шинэчлэх</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>Загвар ажиллуулах</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>Загвар эхэллээ</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>Загвар устгагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>Загвар нь програм хаагдах үед устгагдах болно.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>Устгал амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>Загвар устгахад алдаа гарлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>Тохиргоо амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>Загвар суулгагдсан боловч ачаалагдаагүй. Аппийг дахин эхлүүлэхийг оролдоно уу.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>Тохиргоо байхгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>Загварт тохиргооны сонголт байхгүй.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>Тохиргоо дэмжигдэхгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>Загвар нь тохиргоог дэмждэггүй.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>Загварын төлөвүүд дахин тохируулагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>Бүх загварын суулгалтын төлөв цэвэрлэгдлээ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Бөөн шинэчлэл дууссан</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>Бүх загвар боловсруулагдлаа.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Таталтыг бэлдэж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Дотоод</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>Шинэ хувилбар боломжтой</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Хувилбар: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Гарсан огноо: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>Шинэ юу байна:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Дэлгэрэнгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Хэрэглээний гарын авлага</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Дэлгэрэнгүйг харуулах</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Дэлгэрэнгүйг нуух</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Боломжтой</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Загварын жагсаалтыг шинэчлэх</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>Хайлтад тохирсон загвар олдсонгүй.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Боломжтой бүх загварыг шинэчлэх</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Бүгдийг суулгах</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Боломжтой бүх загварыг суулгах</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Бүгдийг суулгаж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>{0} загвар(ууд)-ыг суулгаж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Бөөн суулгалт дууссан</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} загвар(ууд) суулгагдлаа.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Бөөн суулгалт амжилтгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Загвар суулгаж чадсангүй: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Бүгдийг шинэчилж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Шинэчилж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Хавтас нээх</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Загварын ID-г хуулах</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Хавтас олдсонгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>Загварын лавлах одоогоор байхгүй байна.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Хуулагдлаа</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>Загварын ID '{0}' clipboard руу хуулагдлаа.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Таталт дууссан</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Татаж байна...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Татаж байна... {0:F1} / {1:F1} МБ ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Суулгахыг хүлээж байна (өөр загвар татаж байна)...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>Хэрэгсэл боломжгүй. Аппийн лавлах дахь tools хавтаст хэрэгслүүдийг нэмнэ үү.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Хэрэгсэл боломжтой болоход энд харагдах болно.</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Загвар</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Цахилгааны хэрэглээ</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Цэнэг</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Эрүүл мэнд</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Хурд</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Хамгийн бага хурд</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Хамгийн их хурд</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Мөчлөгүүд</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Багтаамж</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Бүрэн багтаамж</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Зураг төсөл</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Огноо</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Цөм / Санах ойн давтамж</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Цөмийн хүчдэл</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Хүчдэлийн хүрээ</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Сайдбар</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>Систем</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Хурдны хүрээ</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Дэлгэрэнгүй мэдрэгчийн мэдээллийг харуулах эсвэл нуухын тулд давхар дарна уу.</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Ачааллаж байна...</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Тодорхойгүй батарей</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Тодорхойгүй CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Тодорхойгүй GPU</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Ядаж нэг цэвэрлэгээний сонголтыг сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Бүгдийг эхлүүлэх</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>ж.нь., 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>ж.нь., C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Ядаж нэг цэвэрлэх зүйлийг сонгоно уу.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>{0} хэрэглэж чадсангүй: {1}</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Том файлуудын шинжилгээ</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Устгахыг хүсэж буй файлуудаа сонгоно уу. Зөвхөн шүүлтүүрт тохирсон файлууд харагдана.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Дараах хэмжээнээс том файлуудыг шүүх:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 ГБ</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 ГБ</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 ГБ</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 ТБ</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Тохируулсан...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Сонгох</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Файлын нэр</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Хэмжээ</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Зам</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Сонголтыг баталгаажуулах</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Сонгогдсон: {0} файл ({1})</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Програм хангамжийн дүрслэлийг албадах</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Алсын ширээний компьютер эсвэл толгойгүй дэлгэц илрүүлэхэд програм хангамжийн дүрслэлийг ашиглах. Дахин ачаалахыг зөвлөж байна.</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Загварын хэв маяг</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Аппийн дүрслэлийн хэв маягийн пресетийг сонгоно уу. Загварын горим ба акцент өнгө дээр нэмэлтээр хэрэглэнэ.</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>ГБ</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD-г харуулах эсвэл нуух</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Дэвсгэр өнгө</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Ангиллын өнгө</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Булангийн радиус</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Доод</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Дээд</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Чухал өнгө</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Фонтын хэмжээ</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Шошгоны өнгө</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Тунгалаг байдал</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Утгын өнгө</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Анхааруулгын өнгө</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Байрлалыг түгжих</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Давхаргын хэв маяг</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Шинэчлэх интервал</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Мэдрэгчийн шинэчлэх интервал</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Байрлалыг дахин тохируулах</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Наалдах босго</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Гадаад төрх</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Ерөнхий</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Мэдрэгчүүд</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Босго</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Чухал</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS улаан шугам</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Хамгийн бага хүлээн зөвшөөрөгдөх фрэймын хурд. Үүнээс доош үед өнгө нь чухал болно.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Бага FPS зөрүү</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Дундаж FPS ба 1% нам-ын хоорондох хамгийн их зөрүү. Үүнээс дээш үед тоолуур нь чухал болно.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Гүйцэтгэл</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Температур</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Ашиглалт</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Анхааруулга</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD тохиргоо</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Сэнс</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Диск 1-ийн температур</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Диск 2-ийн температур</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core давтамж</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Фрэймын хугацаа</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Тоглоом</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Сэнс</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Температур</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Ашиглалт</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH сэнс</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core давтамж</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Мөр</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Панел</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Хавтангийн температур</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Эх хавтан</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Дэлгэрэнгүй температур, давтамж, цахилгааны хязгаарыг хянахын тулд нарийвчилсан техник хангамжийн асуулгыг идэвхжүүлэх.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Техник хангамжийн мэдрэгч ашиглахын тулд эхлээд PawnIO-г суулгах хэрэгтэй!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Техник хангамжийн мэдрэгчүүд</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Шууд мэдрэгчийн өгөгдлийг харуулах хөвөгч давхарга.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD-г идэвхжүүлэх</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>Вт</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Тэжээл</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Цөмийн температур</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM температур</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM ашиглалт</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Тэжээл</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH температур</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Загвар {0} суулгагдлаа. Боломжтой орох цэгийг нээхийн тулд Нээх дээр дарна уу.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Загвар {0} суулгагдаж, Системийн оновчлол дээр нээгдлээ.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Суулгагдсан, гэхдээ орох цэг байхгүй</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Загвар {0} суулгагдлаа, гэхдээ түүний runtime UI-г ачааллаж чадсангүй. Аппийг дахин эхлүүлэх эсвэл загварыг дахин суулгана уу.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Загвар {0} суулгагдлаа, гэхдээ хэрэглэгчид зориулсан орох цэгийг ил болгодоггүй. Энэ нь зөвхөн дэвсгэр үйлчилгээ эсвэл манифестийн өгөгдөл өгч болно.</value>
+  </data>
+</root>

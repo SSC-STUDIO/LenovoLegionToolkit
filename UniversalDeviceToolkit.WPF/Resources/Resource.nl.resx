@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Beschrijving lenovo legion kit</value>
+    <value>Universal Device Toolkit</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Bouw</value>
@@ -105,7 +105,7 @@
     <value>USB Altijd Aan</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Beschrijving lenovo legion kit</value>
+    <value>Universal Device Toolkit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Toepassen</value>
@@ -317,7 +317,7 @@ Deze tijd is mogelijk niet nauwkeurig als de laptop is opgeladen tijdens het sla
     <value>Annuleren</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>-Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Sluiten</value>
@@ -524,7 +524,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Over GPU-werkstanden</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>-Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>De centrale processor</value>
@@ -536,7 +536,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Ventilatorsnelheid</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>van de Nationale Politieke Veiligheidsdienst -Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
+    <value>Grafische processor</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU # 2</value>
@@ -636,7 +636,7 @@ Serieus, wees voorzichtig met deze optie!</value>
     <value>GPU Temperatuur Limiet</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>van de Nationale Politieke Veiligheidsdienst -Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
+    <value>GPU-instellingen</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>Instellingen aangepaste modus</value>
@@ -971,8 +971,7 @@ U kunt van modus wisselen met Fn+Q.</value>
     <value>Windows Energiebeheerschema's</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Pas de voorinstelling van de achtergrondverlichting van het toetsenbord aan.
-</value>
+    <value>Pas de voorinstelling van de achtergrondverlichting van het toetsenbord aan.</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Toetsenbordverlichting</value>
@@ -1745,7 +1744,7 @@ WAARSCHUWING: Deze actie zal niet correct uitgevoerd worden als de externe video
     <value>Ventilatie</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>van de Nationale Politieke Veiligheidsdienst -Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
+    <value>GPU-temperatuur</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Geheugenfrequentie</value>
@@ -2026,7 +2025,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Laat de windows energiemodus toepassen wanneer de energiemodus verandert.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Fout opgetreden bij het lezen van de apparaat-informatie.</value>
+    <value>Er is een fout opgetreden bij het lezen van de apparaatgegevens.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>macro</value>
@@ -2958,7 +2957,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Installeren</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>Ge?nstalleerd</value>
+    <value>Geïnstalleerd</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Kan niet deïnstalleren</value>
@@ -3003,10 +3002,10 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Alles</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>Ge?nstalleerd</value>
+    <value>Geïnstalleerd</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Niet ge?nstalleerd</value>
+    <value>Niet geïnstalleerd</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Geen plugins beschikbaar</value>
@@ -3342,16 +3341,16 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Selecteer minimaal één item om op te ruimen.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Softwarematige weergave forceren</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Gebruik softwarematige weergave wanneer een extern bureaublad of headless beeldscherm wordt gedetecteerd. Herstart aanbevolen.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>Installatieprogramma is afgesloten met code {0}</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>In wachtrij</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
@@ -3369,85 +3368,85 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Update</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Plugin-beschikbaarheid controleren...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>Beschikbaar om te installeren</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>{0} extra plugin(s) zijn beschikbaar in de huidige feed.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>Geïnstalleerd</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
     <value>Store Pulse</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Totaal aantal plugins</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Alle gedetecteerde plugins zijn momenteel up-to-date.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Up-to-date</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Updates beschikbaar</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Updates klaar</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} plugin-update(s) zijn klaar om te installeren.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>Wachten op het laden van plugin-metadata.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Metadata laden</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Pas taal, temperatuureenheid, thema en accentkleur aan.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Weergave</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Applicatie</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit is gestart met {0}. Automatische en handmatige updatecontroles, en de update-instellingen hieronder, zijn uitgeschakeld totdat u opnieuw opstart zonder dat opstartargument.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>Updatecontroles zijn uitgeschakeld voor deze sessie</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>Controleer de geselecteerde bron en netwerkverbinding, en scan opnieuw.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>Stuurprogrammascan is niet voltooid</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>Pas het filter, de alleen-update optie of de lijst met verborgen downloads aan.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Geen overeenkomende downloads gevonden</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>Probeer een andere bron, besturingssysteem of machinetype.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>Geen stuurprogrammadownloads gevonden</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>Kies een bron en scan om compatibele stuurprogrammadownloads weer te geven.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Scannen naar stuurprogramma's</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>Toepassen van {0} mislukt: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Sluiten</value>
@@ -3544,5 +3543,347 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Apparaatpakket: basismodus</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Dit apparaat start in de basismodus. Hardwarespecifieke bedieningselementen zijn verborgen totdat een compatibel apparaatpakket beschikbaar is.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Apparaatpakket: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit heeft een overeenkomstig apparaatpakket gedetecteerd. Bevestig het nu zodat hardwarespecifieke functies door de app kunnen worden voorbereid.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Apparaatconfiguratie voorbereiden...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Selectie bevestigen</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Selecteer bestanden die u wilt verwijderen. Alleen bestanden die aan het filter voldoen, worden weergegeven.</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Aangepast...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Bestanden groter dan filteren:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Bestandsnaam</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Selecteren</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Grootte</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Geselecteerd: {0} bestanden ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Analyse grote bestanden</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Ventilator</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Schijf 1 temperatuur</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Schijf 2 temperatuur</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core klok</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Frametijd</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Ventilator</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Gebruik</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH-ventilator</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core klok</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Balk</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Paneel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD weergeven of verbergen</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Achtergrondkleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Categoriekleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Hoekradius</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Onder</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Boven</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kritieke kleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Lettergrootte</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Labelkleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Dekking</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Waardekleur</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Waarschuwingskleur</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Positie vergrendelen</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Overlaystijl</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Verversingsinterval</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Verversingsinterval van sensoren</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Positie resetten</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Drempel voor vastklikken</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Uiterlijk</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensoren</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Drempelwaarden</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritiek</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS-rodelijn</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>De minimaal aanvaardbare framerate. Hieronder wordt de kleur kritiek.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Lage FPS-delta</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Het maximale verschil tussen gemiddelde FPS en 1% Low. Boven deze waarde wordt de teller kritiek.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Prestatie</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Temperatuur</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Gebruik</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Waarschuwing</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD-instellingen</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Plugin {0} is geïnstalleerd, maar biedt geen toegangspunt voor gebruikers. Mogelijk levert deze alleen achtergrondservices of manifestgegevens.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Geïnstalleerd, maar geen toegangspunt</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Plugin {0} is geïnstalleerd, maar de runtime-UI kon niet worden geladen. Start de app opnieuw of installeer de plugin opnieuw.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Wachten op installatie (een andere plugin wordt gedownload)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Plugin {0} is geïnstalleerd en geopend in Systeemoptimalisatie.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Plugin {0} is geïnstalleerd. Gebruik Openen om het beschikbare toegangspunt te starten.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH-temperatuur</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Vermogen</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Cores</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Geheugen</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E Core-klok</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Vermogen</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Coretemp</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU-hotspot</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM-temp</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe-doorvoer</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM-gebruik</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Geheugentemperatuur</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Geheugengebruik</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Moederbordtemperatuur</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Moederbord</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>N.v.t.</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P Core-klok</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Gedeeld geheugengebruik</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD-temperatuur</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Onbekende batterij</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Onbekende CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Onbekende GPU</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM-temperatuur</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM-gebruik</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Schakel geavanceerde hardware-polling in om gedetailleerde temperaturen, frequenties en vermogenslimieten te bewaken.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Installeer eerst PawnIO om hardwaresensoren te kunnen gebruiken!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Hardwaresensoren</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Kan het taalpakket niet downloaden. Controleer uw netwerkverbinding, proxy of TLS-instellingen en probeer het opnieuw.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Beeldscherm</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Slimme toetsen</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Zwevende overlay die live sensorgegevens toont.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD inschakelen</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

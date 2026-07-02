@@ -52,7 +52,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DE",
@@ -84,7 +84,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "Dell Inc.",
                 MachineType = "0000",
@@ -116,7 +116,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "Dell Inc.",
                 MachineType = "0000",
@@ -149,7 +149,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DE",
@@ -184,7 +184,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DE",
@@ -219,7 +219,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DE",
@@ -258,7 +258,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DF",
@@ -298,7 +298,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DE",
@@ -333,7 +333,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DF",
@@ -363,7 +363,7 @@ public class PowerModeFeatureTests : UnitTestBase
 
         try
         {
-            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            SetMachineInformation(new MachineInformation
             {
                 Vendor = "LENOVO",
                 MachineType = "83DF",
@@ -397,10 +397,26 @@ public class PowerModeFeatureTests : UnitTestBase
         }
     }
 
+    private static void SetMachineInformation(MachineInformation machineInformation)
+    {
+        var lazy = new Lazy<Task<MachineInformation>>(() => Task.FromResult(machineInformation));
+        typeof(Compatibility).GetField("_machineInformationLazy", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, lazy);
+    }
+
     private static void ResetCompatibilityCache()
     {
         LenovoDeviceSupportProvider.Instance.SetInstalledCatalog(null);
-        typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
+        var lazyField = typeof(Compatibility).GetField("_machineInformationLazy", BindingFlags.NonPublic | BindingFlags.Static);
+        if (lazyField != null)
+        {
+            var method = typeof(Compatibility).GetMethod("GetMachineInformationInternalAsync", BindingFlags.NonPublic | BindingFlags.Static);
+            if (method != null)
+            {
+                var del = Delegate.CreateDelegate(typeof(Func<Task<MachineInformation>>), method);
+                var newLazy = Activator.CreateInstance(typeof(Lazy<Task<MachineInformation>>), [del, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication]);
+                lazyField.SetValue(null, newLazy);
+            }
+        }
         typeof(Compatibility).GetField("_isCompatible", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
     }
 
@@ -411,9 +427,9 @@ public class PowerModeFeatureTests : UnitTestBase
         null!,
         null!)
     {
-        internal override Task<PowerModeState> ReadStateCoreAsync() => readState();
+        internal override Task<PowerModeState> ReadStateCoreAsync(CancellationToken cancellationToken = default) => readState();
 
-        internal override Task<bool> IsWmiSupportedAsync() => Task.FromResult(wmiSupported);
+        internal override Task<bool> IsWmiSupportedAsync(CancellationToken cancellationToken = default) => Task.FromResult(wmiSupported);
     }
 }
 

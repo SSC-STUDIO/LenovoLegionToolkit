@@ -111,7 +111,7 @@
     <value>Uygula</value>
   </data>
   <data name="ApplyAndClose" xml:space="preserve">
-    <value>Uygula &amp; Kapat</value>
+    <value>Uygula &amp;amp; Kapat</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
     <value>Otomatik eylemlerin çalışması için Universal Device Toolkit çalışıyor olmalıdır.</value>
@@ -276,6 +276,18 @@ Yalnızca mevcut durumla eşleşen eylemler çalışacaktır.</value>
   <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
     <value>Deşarj oranı</value>
   </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Pil şarj edilme ( ), veya boşaltılma (-) için minimum hız.</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Minimum deşarj hızı</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Pil şarj edilme ( ), veya boşaltılma (-) için maksimum hız.</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Maksimum deşarj hızı</value>
+  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Tahmini kalan süre: {0}</value>
   </data>
@@ -293,6 +305,12 @@ Yalnızca mevcut durumla eşleşen eylemler çalışacaktır.</value>
   </data>
   <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
     <value>Tam şarj kapasitesi</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Pil maksimum şarj kapasitesi.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Pil sağlığı</value>
   </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Düşük voltajlı şarj cihazı bağlı</value>
@@ -317,7 +335,7 @@ Dizüstü bilgisayar uyurken veya kapalıyken şarj edildiyse bu süre doğru ol
     <value>İptal</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>Santigrat</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Kapat</value>
@@ -396,6 +414,18 @@ UYARI: Dahili ekran kapalıysa veya Hibrit modu etkin değilse bu eylem düzgün
   </data>
   <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
     <value>Cihaz</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Donanım</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Anakart</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Kasa</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Bellek</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
     <value>Lenovo Destek</value>
@@ -524,7 +554,7 @@ UYARI: Dahili ekran kapalıysa bu eylem düzgün çalışmayacaktır.</value>
     <value>GPU Çalışma Modları Hakkında</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>Fahrenhayt</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>İŞLEMCİ</value>
@@ -724,8 +754,47 @@ UYARI: Dahili ekran kapalıysa bu işlem doğru çalışmaz.</value>
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
     <value>İndirilenler</value>
   </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Sistem optimizasyonu</value>
+  </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Ayarlar</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Eklenti Uzantıları</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Gezinme Öğeleri Ayarları</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Yan panelde hangi gezinme öğelerinin gösterileceğini yapılandırın. Pano ve Ayarlar her zaman görünür olacaktır.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Klavye gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Pil gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Otomasyon gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Makro gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Sistem Optimizasyonu gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Eklenti Uzantıları gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Hakkında gezinme öğesini göster veya gizle</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Gezinme Öğeleri</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Yan panelde hangi gezinme öğelerinin görüntüleneceğini yapılandırın</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>Güncelleme mevcut!</value>
@@ -970,6 +1039,45 @@ Fn+Q ile modu değiştirebilirsiniz.</value>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
     <value>Windows Güç Planları</value>
   </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Mevcut sürücü paketleri taranıyor, lütfen bekleyin...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Sürücü paketlerini tara</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Uyumlu sürücü indirmelerini listelemek için bir kaynak seçin ve tarayın.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Sürücü indirme bulunamadı</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Farklı bir kaynak, işletim sistemi veya makine türü deneyin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Eşleşen indirme bulunamadı</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Filtreyi, yalnızca güncelleme seçeneğini veya gizli indirme listesini ayarlayın.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Sürücü taraması tamamlanmadı</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Seçili kaynağı ve ağ bağlantısını kontrol edin, ardından tekrar tarayın.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Ağ hatası oluştu. Otomatik olarak yeniden deneniyor...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Sürücü paketleri alınmaya çalışılıyor...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Temizlik Bilgisi</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Temizlik işlemi ilerleyişini ve tahmini boyutunu görüntüleyin.</value>
+  </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>Klavye ışıklarını ayarlayın.</value>
   </data>
@@ -1078,11 +1186,14 @@ UYARI: Yerleşik ekran kapalıysa bu eylem düzgün çalışmayacaktır.</value>
   <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
     <value>Renk</value>
   </data>
-  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
-    <value>Windows'ta oturum açtığınızda küçültülmüş halde başlatın.</value>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Windows'a giriş yaptığınızda simge durumuna küçültülmüş olarak başlat.</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Otomatik Çalıştırma</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Windows'ta oturum açtığınızda küçültülmüş halde başlatın.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone düzgün bir şekilde devre dışı bırakılmamış olabilir</value>
@@ -1107,6 +1218,447 @@ Bu seçeneği değiştirdikten sonra yeniden başlatma önerilir.</value>
     <value>Lenovo Hotkeys ve hizmetini kaldırmadan devre dışı bırakın.
 Devre dışı bırakılırsa, bu uygulama Fn kısayollarını idare edecektir
 Bu seçeneği değiştirdikten sonra yeniden başlatma önerilir.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Sistem optimizasyonu</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Önerilen performans iyileştirmelerini uygulayın ve geçici dosyaları temizleyin.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Performans ve servis iyileştirmelerini uygulayın</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Performans iyileştirmeleri uygulandı.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Performans iyileştirmeleri uygulanamadı.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Temizlik çalıştır</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Temizlik tamamlandı.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Temizlik başarısız oldu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Bu işlemler sistem servislerini ve dosyalarını değiştirebilir. Yönetici yetkileri gerekebilir.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Seçilen işlemleri uygula</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Önerilenleri seç</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Seçimi temizle</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Tara</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Temizlik işlemlerini çalıştır</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} öğe seçildi</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Henüz öğe seçilmedi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Seçilen öğeler</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Temizleme</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Güzelleştirme</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Sürücü İndir</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Güvenlik Onayı</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Sistem temizliği geçici dosyaları ve önbelleği kalıcı olarak silecektir. Genellikle güvenli olsa da, önemli verilerinizin yedeğine sahip olduğunuzdan emin olmanız önerilir. Devam etmek istiyor musunuz?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Eklentiler</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Sistem optimizasyonu eklentilerini ve araçlarını yönet</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Mevcut Eklenti Yok</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Sistem optimizasyon işlevselliğini artırmak için Eklenti Uzantıları sayfasından eklentiler yükleyin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Yakında</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Eklenti pazarı, gelecekteki bir güncellemeyle kullanıma sunulacaktır.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Sistem optimizasyonu</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Tümünü seç</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Özel temizlik kuralları</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Temizlik sırasında silinmesi gereken klasörleri ve dosya uzantılarını seçin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Kural ekle</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Tümünü temizle</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Hiçbir özel temizlik kuralı yapılandırılmamış.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Alt klasörleri dahil et</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX yönetimi</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Tüm kullanıcılar için kaldırılacak önceden yüklenmiş Microsoft Store uygulamalarını seçin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Kaldırılacak uygulama seçilmedi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Seçili uygulamaları kaldır</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Seçili uygulamalar kaldırma için planlandı.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Seçili uygulamalar kaldırılamadı.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Uygulamalar yükleniyor, lütfen bekleyin...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Eklentiler yükleniyor...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Yüklenemedi: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Yayıncı: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Kayıt MRU/geçmiş temizliği</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Ortak kullanıcı kayıt geçmişlerini temizle (Çalıştır MRU, RecentDocs, Aç/Kaydet diyalogları, Yazılan Yollar). Bu, sistem açısından kritik girişleri kaldırmaz.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Eylemler</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Özel temizlik kuralı</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Klasör</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Eklentiler</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Birden fazla uzantıyı virgülle ayırın (örnek: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Alt klasörleri dahil et</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Gözat…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Lütfen bir klasör seçin.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Lütfen en az bir dosya uzantısı girin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Lütfen en az bir işlem seçin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Seçilen işlemler başarıyla gerçekleştirildi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Seçilen işlemleri tamamlamak başarısız oldu.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Gezgin &amp;amp; arayüz</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Sistem güzelleştirmesi</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Görev çubuğu, Dosya Gezgini ve kullanıcı arayüzü davranışını ayarlayın.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Performans</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Sistem performansı ve yanıt verme ayarlarını ayarlayın.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Hizmetler</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Kaynak tüketen arka plan hizmetlerini devre dışı bırakın.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Önbellekleri, geçici dosyaları ve diğer artık dosyaları kaldırın.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Önbellek temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Depolama alanını boşaltmak için çeşitli uygulamaların ve sistemin önbellek dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Sistem dosyaları temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Geçici dosyalar, günlükler, çökme dökümleri vb. sistem dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Sistem bileşenleri temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update önbelleği, bileşen deposu vb. sistem bileşen dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Performans temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Prefetch dosyaları vb. sistem performansını etkileyebilecek dosyaları temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Özel temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Özel kurallar kullanarak belirtilen dosya ve dizinleri temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Görev çubuğu ve başlat menüsü düzeni</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Arama kutusunu ve Görev Görünümü düğmesini gizleyin, görev çubuğu gruplamayı devre dışı bırakın ve bildirim alanı simgelerini her zaman gösterin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Başlat menüsünü devre dışı bırakın ve aramayı Win tuşu ile açın</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Başlat menüsünü tamamen devre dışı bırakın. Win tuşuna bastığınızda, başlat menüsü yerine arama açılacaktır.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Gezginin yanıt verme hızını artırın</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Menü gecikmelerini azaltın, takılan uygulamaları daha hızlı kapatın ve Bu Bilgisayarı varsayılan olarak açın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Dosya görünürlüğü seçenekleri</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Dosya Gezgini'nde dosya uzantılarını ve gizli dosyaları gösterin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Gezgin önerilerini devre dışı bırakın</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Bulut içerik önerilerini ve öneri afişlerini kapatın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Windows tuşunu aramayı açacak şekilde değiştirin</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Windows tuşunun davranışını Başlat menüsünü açmak yerine aramayı açacak şekilde değiştirin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Multimedya zamanlamasını optimize edin</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Ağ yavaşlatmasını kaldırın ve sistem yanıt gecikmesini azaltın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Bellek yönetimini iyileştirin</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Sistem önbelleğini bellekte tutun ve çekirdek sürücülerinin sayfalamasından kaçının.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Akrilik ve bildirim merkezini devre dışı bırakın</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Oturum açarken akrilik efektleri kaldırın ve Windows bildirim merkezini gizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Telemetri ve ipuçlarını azaltın</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Reklam kimliğini, Spotlight özelliklerini ve otomatik önerileri devre dışı bırakın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Yüksek performans planını zorlayın</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Yüksek performans güç planını etkinleştirin ve uyku modunu devre dışı bırakın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Tanılama hizmetlerini devre dışı bırakın</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Bağlı Kullanıcı Deneyimleri, Tanılama Merkezi ve Teslim Optimizasyonu hizmetlerini durdurun ve devre dışı bırakın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMain'i Devre Dışı Bırak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Arka plan disk etkinliğini azaltmak için Superfetch/SysMain'i kapatın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Windows Arama dizinlemeyi devre dışı bırak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Dizin güncellemelerini önlemek için Windows Arama hizmetini durdurun.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Uzak Kayıt Defteri'yi devre dışı bırak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Uzak kayıt defteri erişimini devre dışı bırakarak sistemi güvence altına alın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Hata raporlamayı devre dışı bırak</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Windows Hata Raporlamanın çökme verilerini toplamasını ve göndermesini durdurun.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Uzak Masaüstü önbelleğini temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Uzak Masaüstü istemcisi tarafından oluşturulan önbellek dosyalarını kaldırın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Windows Update önbelleğini temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>İndirilen güncelleme dosyalarını ve Teslimat Optimizasyonu önbelleğini silin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Tarayıcı önbelleğini temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Çeşitli uygulamalar tarafından bırakılan geçici dosyaları ve günlükleri temizler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Uygulama Artıkları</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Internet Explorer ve Edge önbellek ve çerez dosyalarını kaldırın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Thumbnail önbelleklerini temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Explorer thumbnail veritabanlarını ve Direct3D shader önbelleğini sil.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NET yerel görüntüleri temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Disk alanını geri kazanmak için önbelleğe alınmış .NET Yerel görüntülerini kaldır.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Günlükleri ve tanılama verilerini kaldır</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Sistem sürücünüzde önemli alan kaplayabilecek büyük dosyaları tarar.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Büyük Dosya Tarama</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Sisteminizdeki büyük dosyaları belirleyin ve yönetin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Büyük Dosyalar</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Windows günlüklerini, hata raporlarını ve tanılama izlerini sil.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Kaza dökümlerini sil</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Sistem çökme sonrası kalan bellek döküm dosyalarını kaldır.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Defender taramalarını temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Windows Defender tarama geçmişini ve önbellekleri sil.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Geçici dosyaları temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Windows ve kullanıcı geçici dizinlerini boşalt.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Birlikte gelen Windows uygulamalarını kaldır</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Tüm kullanıcılar için seçili ön yüklü UWP uygulamalarını kaldırın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Geri Dönüşüm Kutusunu Boşalt</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Geri Dönüşüm Kutusunda saklanan silinmiş dosyaları kaldırın.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Ön yükleme verilerini temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Yeni izler oluşturmak için Windows ön yükleme verilerini silin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Özel dosyaları temizle</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Seçili klasörlerden yapılandırılmış uzantılarla eşleşen dosyaları silin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Servis bileşen deposu</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>DISM temizliği çalıştırın ve WinSxS geçici dosyalarını temizleyin.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Lenovo Hotkeys'i Devre Dışı Bırak</value>
@@ -1151,14 +1703,53 @@ Bu seçeneği değiştirdikten sonra yeniden başlatma önerilir.</value>
   <data name="SettingsPage_Language_Message" xml:space="preserve">
     <value>Dil seçin.</value>
   </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Dili yükle</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Dil yüklemesi başarısız</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Dil yükleniyor</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Dil paketi indiriliyor…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Ayıklanıyor ve yükleniyor…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>%{0}</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Bu dil paketini yüklemek için indirme düğmesini kullanın.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Dil yüklü değil</value>
+  </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
     <value>Dil</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Dili kaldır</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Dil kaldırma başarısız</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Dil kaldırılıyor</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
     <value>Her zaman görev çubuğu tepsisine küçültün. Tepsi simgesine sağ tıklayarak kapatın.</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>Kapatırken simge durumuna küçült</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Başlangıçta görünen uyumsuz cihaz uyarısını gizleyin.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Uyumsuz cihaz uyarısını devre dışı bırak</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>Hangi bildirimlerin gösterileceğini ayarlayın.</value>
@@ -1189,6 +1780,9 @@ Bu seçeneği değiştirdikten sonra yeniden başlatma önerilir.</value>
   </data>
   <data name="SettingsPage_Title" xml:space="preserve">
     <value>Ayarlar</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Uygulamanın görünüm, davranış ve işlevsellik seçeneklerini yapılandırın.</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>Klavye ışık seviyesini ayarlayın.</value>
@@ -1321,6 +1915,33 @@ Yeniden başlatma gerektirir.</value>
     <value>Beklenmeyen bir istisna oluştu:
 {0}</value>
   </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Raporu sil</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>Bir çökme raporu diske kaydedildi. Ayrıntıları aşağıda inceleyebilirsiniz. Raporlar otomatik gönderilmez.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Uygulama önceki oturumda çöktü</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Çökme raporu açılamadı: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Raporu aç</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Çökme raporu kaydedildi: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Çökme raporu algılandı</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Çökme raporu ayrıntıları yüklenemedi.</value>
+  </data>
   <data name="Unnamed" xml:space="preserve">
     <value>Adsız</value>
   </data>
@@ -1340,6 +1961,9 @@ Devam etmeyi seçerseniz, kayıt etme otomatik olarak etkinleştirilecektir.</va
   </data>
   <data name="UnsupportedWindow_Message" xml:space="preserve">
     <value>Universal Device Toolkit, cihazınızla test edilmemiştir.</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Bu uyarıyı istediğiniz zaman Ayarlar'dan devre dışı bırakabilirsiniz.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
     <value>Kalıp</value>
@@ -1508,8 +2132,53 @@ Fareyi hareket ettirmek veya klavyeye basmak ekranları uyandırır.</value>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
     <value>Yeniden başlatma önerilir</value>
   </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Önerilen</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Kuyrukta</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>İndiriliyor</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Yükleniyor</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Eylem tanımı bulunamadı</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Bu eylem için teknik uygulama ayrıntıları mevcut değil</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Yükleme başarısız</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Bilinmeyen</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Komut yürütme</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Kayıt defteri değişikliği</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Hizmet yönetimi</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Kayıt defteri değişikliği   PowerShell betiği</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Kayıt defteri temizliği</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM komutu</value>
+  </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Kaydet &amp; Kapat</value>
+    <value>Kaydet &amp;amp; Kapat</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
     <value>Özel Mod Ön Ayarı</value>
@@ -1622,6 +2291,15 @@ Bu ayarlar yalnızca Özel Mod etkinleştirildiğinde etkili olur.</value>
   </data>
   <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
     <value>Deşarj oranı</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Min boşalma hızı</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Maks boşalma hızı</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Kullanım süresi</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
     <value>Güncelleme mevcut!</value>
@@ -1737,6 +2415,12 @@ UYARI: Harici GPU mevcut değilse, bu işlem doğru çalışmaz.</value>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
     <value>Çekirdek Saati</value>
   </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P Core Saati</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E Core Saati</value>
+  </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
     <value>Sıcaklık</value>
   </data>
@@ -1748,6 +2432,39 @@ UYARI: Harici GPU mevcut değilse, bu işlem doğru çalışmaz.</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Bellek Saati</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Bellek Kullanımı</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Bellek Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM Kullanımı</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Paylaşılan Bellek Kullanımı</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU Sıcak Noktası</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe Çıkışı</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Çekirdekler</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Bellek</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
     <value>Yenileme aralığı</value>
@@ -1952,6 +2669,24 @@ Desteklenen biçimler: {1}.</value>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>İndir</value>
   </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Kurulum başarısız</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Dosya bulunamadı, lütfen önce indiriniz</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Kurulum başlatıldı</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Yükleyici başlatılıyor: {0}</value>
+  </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
     <value>BENİOKU'yu Aç</value>
   </data>
@@ -2027,6 +2762,30 @@ Desteklenen biçimler: {1}.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Cihaz bilgileri okunurken hata oluştu.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Uyumluluk Kontrol Hatası</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Uygulama, başlatma sırasında cihaz bilgilerini okuyamadı. Lütfen aşağıdaki hata detaylarını kontrol edin ve gerekirse sorun giderme adımlarını deneyin.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Sorun Giderme Adımları</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Windows Yönetim Araçları (WMI) servisinin çalıştığından emin olun: Hizmetler'i (services.msc) açın ve "Windows Yönetim Araçları" servisinin çalıştığını kontrol edin.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Uygulamayı Yönetici olarak çalıştırın, böylece sistem kayıt defterine ve WMI'ya erişim için yeterli izne sahip olun.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Sistem kaynaklarını kontrol edin: Diğer kaynak tüketen uygulamaları kapatın ve tekrar deneyin.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Detaylı hata bilgisi için log dosyasını inceleyin, aşağıda "Logu Aç" seçeneğine tıklayın.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Log Dosyasını Aç</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Makro</value>
@@ -2160,6 +2919,12 @@ Desteklenen biçimler: {1}.</value>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Güncelle</value>
   </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Güncelleme kontrolleri bu oturum için devre dışı</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit {0} ile başlatıldı. Otomatik ve manuel güncelleme kontrolleri ve aşağıdaki güncelleme ayarları, bu başlatma argümanı olmadan yeniden başlatana kadar devre dışıdır.</value>
+  </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>API oranı sınırına ulaşıldı, lütfen daha sonra tekrar deneyin.</value>
   </data>
@@ -2174,6 +2939,24 @@ Desteklenen biçimler: {1}.</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
     <value>Güncellemeleri otomatik olarak denetle</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Depoyu güncelle</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Güncellemeleri kontrol etmek için GitHub deposunu yapılandırın. Varsayılanı kullanmak için boş bırakın.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Depo Sahibi</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>örneğin, SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Depo Adı</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>örneğin, UniversalDeviceToolkit</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
     <value>Güncelleme kataloğu bulunamadı</value>
@@ -2209,244 +2992,23 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>Önerilen</value>
   </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Hepsini duraklat</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Eylem Detayları</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Teknik Uygulama Detayları</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Uygulama Türü:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>Seçilen {1} eylemleri için {0}</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
-    <value>Önbellek temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
-    <value>Depolama alanını boşaltmak için çeşitli uygulamaların ve sistemin önbellek dosyalarını temizleyin.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
-    <value>Sistem dosyaları temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
-    <value>Geçici dosyalar, günlükler, çökme dökümleri vb. sistem dosyalarını temizleyin.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
-    <value>Sistem bileşenleri temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
-    <value>Windows Update önbelleği, bileşen deposu vb. sistem bileşen dosyalarını temizleyin.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
-    <value>Performans temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
-    <value>Prefetch dosyaları vb. sistem performansını etkileyebilecek dosyaları temizleyin.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
-    <value>Özel temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
-    <value>Özel kurallar kullanarak belirtilen dosya ve dizinleri temizleyin.</value>
-  </data>
-  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} öğe seçildi</value>
-  </data>
-  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Henüz öğe seçilmedi.</value>
-  </data>
-  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Seçilen öğeler</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
-    <value>Temizleme</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
-    <value>Sistem optimizasyonu</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Pil maksimum şarj kapasitesi.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Pil sağlığı</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Pil şarj edilme ( ), veya boşaltılma (-) için maksimum hız.</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maksimum deşarj hızı</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Pil şarj edilme ( ), veya boşaltılma (-) için minimum hız.</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum deşarj hızı</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>LLTSEP12345
-Tümünü daralt</value>
-  </data>
-  <data name="Compact" xml:space="preserve">
-    <value>Kompakt görünüm</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Gözat…</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Lütfen en az bir dosya uzantısı girin.</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Lütfen bir klasör seçin.</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Birden fazla uzantıyı virgülle ayırın (örnek: tmp, log, bak)</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Eklentiler</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Klasör</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Alt klasörleri dahil et</value>
-  </data>
-  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Özel temizlik kuralı</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Tümünü genişlet</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
-  </data>
-  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>Sistem optimizasyonu</value>
-  </data>
-  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Başlangıçta görünen uyumsuz cihaz uyarısını gizleyin.</value>
-  </data>
-  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Uyumsuz cihaz uyarısını devre dışı bırak</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Temizlik çalıştır</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Temizlik başarısız oldu.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Temizlik tamamlandı.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Önerilen performans iyileştirmelerini uygulayın ve geçici dosyaları temizleyin.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Performans ve servis iyileştirmelerini uygulayın</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Performans iyileştirmeleri uygulanamadı.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performans iyileştirmeleri uygulandı.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>Sistem optimizasyonu</value>
-  </data>
-  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Maks boşalma hızı</value>
-  </data>
-  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min boşalma hızı</value>
-  </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance including right-click menu style.</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Güzelleştirme</value>
-  </data>
-  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>Bu uyarıyı istediğiniz zaman Ayarlar'dan devre dışı bırakabilirsiniz.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Eylemler</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Seçilen işlemleri uygula</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Seçilen işlemleri tamamlamak başarısız oldu.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Seçilen işlemler başarıyla gerçekleştirildi.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Tüm kullanıcılar için kaldırılacak önceden yüklenmiş Microsoft Store uygulamalarını seçin.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>Kaldırılacak uygulama seçilmedi.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX yönetimi</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Yüklenemedi: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Uygulamalar yükleniyor, lütfen bekleyin...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Yayıncı: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Seçilen uygulamalar kaldırılıyor...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Seçili uygulamaları kaldır</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Seçili uygulamalar kaldırılamadı.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Seçili uygulamalar kaldırma için planlandı.</value>
-  </data>
-
-
-  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>{1}'lerde {0} serbest bırakıldı</value>
-  </data>
-  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Seçimi temizle</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Kural ekle</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Tümünü temizle</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Temizlik sırasında silinmesi gereken klasörleri ve dosya uzantılarını seçin.</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Düzenle</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>Hiçbir özel temizlik kuralı yapılandırılmamış.</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Özel temizlik kuralları</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Alt klasörleri dahil et</value>
-  </data>
-  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Kaldır</value>
-  </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Lütfen en az bir işlem seçin.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Tahmini temizlik boyutu: {0}</value>
@@ -2454,242 +3016,41 @@ Tümünü daralt</value>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
-  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>Bu işlemler sistem servislerini ve dosyalarını değiştirebilir. Yönetici yetkileri gerekebilir.</value>
-  </data>
-  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Temizlik işlemlerini çalıştır</value>
-  </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Çalışıyor: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Tümünü seç</value>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Seçilen uygulamalar kaldırılıyor...</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Önerilenleri seç</value>
+  <data name="Compact" xml:space="preserve">
+    <value>Kompakt görünüm</value>
   </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Güzelleştirme</value>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>System beautification</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Tüm kullanıcılar için seçili ön yüklü UWP uygulamalarını kaldırın.</value>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows Güzelleştirme</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Birlikte gelen Windows uygulamalarını kaldır</value>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Customize Windows appearance including right-click menu style.</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Internet Explorer ve Edge önbellek ve çerez dosyalarını kaldırın.</value>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Visual effects</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Tarayıcı önbelleğini temizle</value>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Adjust Windows transparency effects.</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>DISM temizliği çalıştırın ve WinSxS geçici dosyalarını temizleyin.</value>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Enable transparency effects</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Servis bileşen deposu</value>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Tümünü genişlet</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Sistem çökme sonrası kalan bellek döküm dosyalarını kaldır.</value>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Tümünü daralt</value>
   </data>
-  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Kaza dökümlerini sil</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Seçili klasörlerden yapılandırılmış uzantılarla eşleşen dosyaları silin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Özel dosyaları temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Windows Defender tarama geçmişini ve önbellekleri sil.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Defender taramalarını temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Disk alanını geri kazanmak için önbelleğe alınmış .NET Yerel görüntülerini kaldır.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>.NET yerel görüntüleri temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Windows günlüklerini, hata raporlarını ve tanılama izlerini sil.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Günlükleri ve tanılama verilerini kaldır</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Yeni izler oluşturmak için Windows ön yükleme verilerini silin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Ön yükleme verilerini temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Geri Dönüşüm Kutusunda saklanan silinmiş dosyaları kaldırın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Geri Dönüşüm Kutusunu Boşalt</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Ortak kullanıcı kayıt geçmişlerini temizle (Çalıştır MRU, RecentDocs, Aç/Kaydet diyalogları, Yazılan Yollar). Bu, sistem açısından kritik girişleri kaldırmaz.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Kayıt MRU/geçmiş temizliği</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Uzak Masaüstü istemcisi tarafından oluşturulan önbellek dosyalarını kaldırın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Uzak Masaüstü önbelleğini temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Windows ve kullanıcı geçici dizinlerini boşalt.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Geçici dosyaları temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Explorer thumbnail veritabanlarını ve Direct3D shader önbelleğini sil.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Thumbnail önbelleklerini temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>İndirilen güncelleme dosyalarını ve Teslimat Optimizasyonu önbelleğini silin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Windows Update önbelleğini temizle</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Menü gecikmelerini azaltın, takılan uygulamaları daha hızlı kapatın ve Bu Bilgisayarı varsayılan olarak açın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Gezginin yanıt verme hızını artırın</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Başlat menüsünü tamamen devre dışı bırakın. Win tuşuna bastığınızda, başlat menüsü yerine arama açılacaktır.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Başlat menüsünü devre dışı bırakın ve aramayı Win tuşu ile açın</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Bulut içerik önerilerini ve öneri afişlerini kapatın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Gezgin önerilerini devre dışı bırakın</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Arama kutusunu ve Görev Görünümü düğmesini gizleyin, görev çubuğu gruplamayı devre dışı bırakın ve bildirim alanı simgelerini her zaman gösterin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Görev çubuğu ve başlat menüsü düzeni</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Dosya Gezgini'nde dosya uzantılarını ve gizli dosyaları gösterin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>Dosya görünürlüğü seçenekleri</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Sistem önbelleğini bellekte tutun ve çekirdek sürücülerinin sayfalamasından kaçının.</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Bellek yönetimini iyileştirin</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Ağ yavaşlatmasını kaldırın ve sistem yanıt gecikmesini azaltın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Multimedya zamanlamasını optimize edin</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Oturum açarken akrilik efektleri kaldırın ve Windows bildirim merkezini gizleyin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Akrilik ve bildirim merkezini devre dışı bırakın</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Yüksek performans güç planını etkinleştirin ve uyku modunu devre dışı bırakın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Yüksek performans planını zorlayın</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Reklam kimliğini, Spotlight özelliklerini ve otomatik önerileri devre dışı bırakın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Telemetri ve ipuçlarını azaltın</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Bağlı Kullanıcı Deneyimleri, Tanılama Merkezi ve Teslim Optimizasyonu hizmetlerini durdurun ve devre dışı bırakın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Tanılama hizmetlerini devre dışı bırakın</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Windows Hata Raporlamanın çökme verilerini toplamasını ve göndermesini durdurun.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Hata raporlamayı devre dışı bırak</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Uzak kayıt defteri erişimini devre dışı bırakarak sistemi güvence altına alın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Uzak Kayıt Defteri'yi devre dışı bırak</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Dizin güncellemelerini önlemek için Windows Arama hizmetini durdurun.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Windows Arama dizinlemeyi devre dışı bırak</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Arka plan disk etkinliğini azaltmak için Superfetch/SysMain'i kapatın.</value>
-  </data>
-  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>SysMain'i Devre Dışı Bırak</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Windows tuşunun davranışını Başlat menüsünü açmak yerine aramayı açacak şekilde değiştirin.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Windows tuşunu aramayı açacak şekilde değiştirin</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Önbellekleri, geçici dosyaları ve diğer artık dosyaları kaldırın.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Temizleme</value>
-  </data>
-  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Görev çubuğu, Dosya Gezgini ve kullanıcı arayüzü davranışını ayarlayın.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Gezgin &amp; arayüz</value>
-  </data>
-  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Sistem performansı ve yanıt verme ayarlarını ayarlayın.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performans</value>
-  </data>
-  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Kaynak tüketen arka plan hizmetlerini devre dışı bırakın.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Hizmetler</value>
-  </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Sistem güzelleştirmesi</value>
-  </data>
-  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Uygulama Türü:</value>
-  </data>
-  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Kapat</value>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{1}'lerde {0} serbest bırakıldı</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>{0}% yürütülüyor</value>
@@ -2709,281 +3070,38 @@ Tümünü daralt</value>
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
     <value>Dil seç</value>
   </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Bu cihaz temel modda başlayacak. Donanıma özgü kontroller, uyumlu bir cihaz paketi kullanılabilir olana kadar gizlenir.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Cihaz paketi: Temel mod</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit eşleşen bir cihaz paketi algıladı. Donanıma özgü özelliklerin uygulama tarafından hazırlanabilmesi için şimdi onaylayın.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Cihaz paketi: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Cihaz kurulumu hazırlanıyor...</value>
+  </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Bağlı değil</value>
   </data>
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Bölgeleri senkronize et</value>
   </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Eklenti kalıcı olarak silinecektir. Bu işlem geri alınamaz.</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
-    <value>Toplu içe aktarma</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
-    <value>Yerel ZIP dosyalarından eklentileri içe aktar</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
-    <value>Dosyadan içe aktar</value>
-  </data>
-  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
-    <value>Eklenti dosyalarını seç (.zip)</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
-    <value>{0} eklenti başarıyla içe aktarıldı</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
-    <value>{0} eklenti başarıyla içe aktarıldı ve kullanılabilir</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
-    <value>Toplu içe aktarma başarısız</value>
-  </data>
-  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
-    <value>Eklentiler içe aktarılamadı: {0}</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
-    <value>Eklentiler içe aktarılıyor...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>{0} içe aktarılıyor...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>{0} işleniyor...</value>
-  </data>
-  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
-    <value>Eklenti Uzantıları</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
-    <value>Gezinme Öğeleri Ayarları</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
-    <value>Yan panelde hangi gezinme öğelerinin gösterileceğini yapılandırın. Pano ve Ayarlar her zaman görünür olacaktır.</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
-    <value>Klavye gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Pil gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
-    <value>Otomasyon gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
-    <value>Makro gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
-    <value>Sistem Optimizasyonu gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
-    <value>Eklenti Uzantıları gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
-    <value>Hakkında gezinme öğesini göster veya gizle</value>
-  </data>
-  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
-    <value>Gezinme Öğeleri</value>
-  </data>
-  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
-    <value>Yan panelde hangi gezinme öğelerinin görüntüleneceğini yapılandırın</value>
-  </data>
-  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
-    <value>Mevcut sürücü paketleri taranıyor, lütfen bekleyin...</value>
-  </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Ağ hatası oluştu. Otomatik olarak yeniden deneniyor...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Sürücü paketleri alınmaya çalışılıyor...</value>
-  </data>
-  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
-    <value>Temizlik Bilgisi</value>
-  </data>
-  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
-    <value>Temizlik işlemi ilerleyişini ve tahmini boyutunu görüntüleyin.</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Windows'a giriş yaptığınızda simge durumuna küçültülmüş olarak başlat.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
-    <value>Tara</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
-    <value>Sürücü İndir</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Güvenlik Onayı</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Sistem temizliği geçici dosyaları ve önbelleği kalıcı olarak silecektir. Genellikle güvenli olsa da, önemli verilerinizin yedeğine sahip olduğunuzdan emin olmanız önerilir. Devam etmek istiyor musunuz?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Eklentiler</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Sistem optimizasyonu eklentilerini ve araçlarını yönet</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>Mevcut Eklenti Yok</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Sistem optimizasyon işlevselliğini artırmak için Eklenti Uzantıları sayfasından eklentiler yükleyin.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
-    <value>Yakında</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>Eklenti pazarı, gelecekteki bir güncellemeyle kullanıma sunulacaktır.</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Eklentiler yükleniyor...</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
-    <value>Çeşitli uygulamalar tarafından bırakılan geçici dosyaları ve günlükleri temizler.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
-    <value>Uygulama Artıkları</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Sistem sürücünüzde önemli alan kaplayabilecek büyük dosyaları tarar.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
-    <value>Büyük Dosya Tarama</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Sisteminizdeki büyük dosyaları belirleyin ve yönetin.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
-    <value>Büyük Dosyalar</value>
-  </data>
-  <data name="SettingsPage_Description" xml:space="preserve">
-    <value>Uygulamanın görünüm, davranış ve işlevsellik seçeneklerini yapılandırın.</value>
-  </data>
-  <data name="PackageControl_Recommended" xml:space="preserve">
-    <value>Önerilen</value>
-  </data>
-  <data name="PackageControl_Downloading" xml:space="preserve">
-    <value>İndiriliyor</value>
-  </data>
-  <data name="PackageControl_Installing" xml:space="preserve">
-    <value>Yükleniyor</value>
-  </data>
-  <data name="PackageControl_Completed" xml:space="preserve">
-    <value>Tamamlandı</value>
-  </data>
-  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
-    <value>Eylem tanımı bulunamadı</value>
-  </data>
-  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
-    <value>Bu eylem için teknik uygulama ayrıntıları mevcut değil</value>
-  </data>
-  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
-    <value>Yükleme başarısız</value>
-  </data>
-  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
-    <value>Bilinmeyen</value>
-  </data>
-  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
-    <value>Komut yürütme</value>
-  </data>
-  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
-    <value>Kayıt defteri değişikliği</value>
-  </data>
-  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
-    <value>Hizmet yönetimi</value>
-  </data>
-  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
-    <value>Kayıt defteri değişikliği   PowerShell betiği</value>
-  </data>
-  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
-    <value>Kayıt defteri temizliği</value>
-  </data>
-  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>DISM komutu</value>
-  </data>
-  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
-    <value>Kullanım süresi</value>
-  </data>
-  <data name="PackageControl_Install" xml:space="preserve">
-    <value>Yükle</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Kaldır</value>
-  </data>
-  <data name="PackageControl_InstallError_Title" xml:space="preserve">
-    <value>Kurulum başarısız</value>
-  </data>
-  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
-    <value>Dosya bulunamadı, lütfen önce indiriniz</value>
-  </data>
-  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
-    <value>Kurulum başlatıldı</value>
-  </data>
-  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
-    <value>Yükleyici başlatılıyor: {0}</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
-    <value>Uyumluluk Kontrol Hatası</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
-    <value>Uygulama, başlatma sırasında cihaz bilgilerini okuyamadı. Lütfen aşağıdaki hata detaylarını kontrol edin ve gerekirse sorun giderme adımlarını deneyin.</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
-    <value>Sorun Giderme Adımları</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Windows Yönetim Araçları (WMI) servisinin çalıştığından emin olun: Hizmetler'i (services.msc) açın ve "Windows Yönetim Araçları" servisinin çalıştığını kontrol edin.</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
-    <value>Uygulamayı Yönetici olarak çalıştırın, böylece sistem kayıt defterine ve WMI'ya erişim için yeterli izne sahip olun.</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
-    <value>Sistem kaynaklarını kontrol edin: Diğer kaynak tüketen uygulamaları kapatın ve tekrar deneyin.</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>Detaylı hata bilgisi için log dosyasını inceleyin, aşağıda "Logu Aç" seçeneğine tıklayın.</value>
-  </data>
-  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
-    <value>Log Dosyasını Aç</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
-    <value>Depoyu güncelle</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
-    <value>Güncellemeleri kontrol etmek için GitHub deposunu yapılandırın. Varsayılanı kullanmak için boş bırakın.</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
-    <value>Depo Sahibi</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
-    <value>örneğin, SSC-STUDIO</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
-    <value>Depo Adı</value>
-  </data>
-  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
-    <value>örneğin, UniversalDeviceToolkit</value>
-  </data>
-  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
-    <value>Hepsini duraklat</value>
-  </data>
-  <data name="ActionDetailsWindow_Title" xml:space="preserve">
-    <value>Eylem Detayları</value>
-  </data>
-  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
-    <value>Teknik Uygulama Detayları</value>
-  </data>
   <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
     <value>Windows yerleşik kayıt defteri temizleme işlevi kullanılıyor</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (DNS ?nbelle?ini temizler)</value>
+    <value>ipconfig /flushdns (DNS önbelleğini temizler)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (Winsock protokol y???n?n? s?f?rlar)</value>
+    <value>netsh winsock reset (Winsock protokol yığınını sıfırlar)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (TCP/IP protokol y???n?n? s?f?rlar)</value>
+    <value>netsh int ip reset (TCP/IP protokol yığınını sıfırlar)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>Eklenti Uzantıları</value>
@@ -2995,7 +3113,7 @@ Tümünü daralt</value>
     <value>Yükle</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>Y?kl?</value>
+    <value>Yüklü</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Kaldırılamıyor</value>
@@ -3040,10 +3158,10 @@ Tümünü daralt</value>
     <value>Tümü</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>Y?kl?</value>
+    <value>Yüklü</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Y?kl? de?il</value>
+    <value>Yüklü değil</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Kullanılabilir eklenti yok</value>
@@ -3068,6 +3186,39 @@ Tümünü daralt</value>
   </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>{0} eklentileri bulundu</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Toplu içe aktarma</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Yerel ZIP dosyalarından eklentileri içe aktar</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Dosyadan içe aktar</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Eklenti dosyalarını seç (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} eklenti başarıyla içe aktarıldı</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} eklenti başarıyla içe aktarıldı ve kullanılabilir</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Toplu içe aktarma başarısız</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Eklentiler içe aktarılamadı: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Eklentiler içe aktarılıyor...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} içe aktarılıyor...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} işleniyor...</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Eklenti başarıyla yüklendi</value>
@@ -3113,6 +3264,9 @@ Tümünü daralt</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Eklenti kalıcı olarak silinecek</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Eklenti kalıcı olarak silinecektir. Bu işlem geri alınamaz.</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>Güncelleme Başarısız</value>
@@ -3200,6 +3354,21 @@ Tümünü daralt</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Yenilikler:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Kullanım kılavuzu</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Ayrıntıları göster</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Ayrıntıları gizle</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Kullanılabilir</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Eklenti listelerini yenile</value>
@@ -3327,6 +3496,9 @@ Tümünü daralt</value>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Oran Aralığı</value>
   </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Ayrıntılı sensör bilgilerini göstermek veya gizlemek için çift tıklayın.</value>
+  </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
     <value>Lütfen en az bir temizlik seçeneği seçin.</value>
   </data>
@@ -3343,16 +3515,13 @@ Tümünü daralt</value>
     <value>Lütfen temizlemek için en az bir öğe seçin.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Yazılım işlemeyi zorla</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Uzak masaüstü veya başsız ekran algılandığında yazılım işlemeyi kullanın. Yeniden başlatılması önerilir.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
-  </data>
-  <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>Yükleyici {0} koduyla çıktı</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
@@ -3370,180 +3539,348 @@ Tümünü daralt</value>
     <value>Update</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Eklenti kullanılabilirliği kontrol ediliyor...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>Yüklenebilir</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>Geçerli kanalda {0} ek eklenti mevcut.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>Yüklü</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
     <value>Store Pulse</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Toplam Eklenti</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Tespit edilen tüm eklentiler güncel.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Güncel</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Güncellemeler mevcut</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Güncellemeler hazır</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} eklenti güncellemesi yüklenmeye hazır.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>Eklenti meta verileri yüklenmeyi bekliyor.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Meta veriler yükleniyor</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Dili, sıcaklık birimini, temayı ve vurgu rengini özelleştirin.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Görünüm</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
-  </data>
-  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
-  </data>
-  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
-  </data>
-  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Uygulama</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>Failed to apply {0}: {1}</value>
   </data>
-  <data name="CrashReportNotification_Close" xml:space="preserve">
-    <value>Kapat</value>
-  </data>
-  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
-    <value>Raporu sil</value>
-  </data>
-  <data name="CrashReportNotification_Description" xml:space="preserve">
-    <value>Bir çökme raporu diske kaydedildi. Ayrıntıları aşağıda inceleyebilirsiniz. Raporlar otomatik gönderilmez.</value>
-  </data>
-  <data name="CrashReportNotification_Message" xml:space="preserve">
-    <value>Uygulama önceki oturumda çöktü</value>
-  </data>
-  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
-    <value>Çökme raporu açılamadı: {0}</value>
-  </data>
-  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
-    <value>Raporu aç</value>
-  </data>
-  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
-    <value>Çökme raporu kaydedildi: {0}</value>
-  </data>
-  <data name="CrashReportNotification_Title" xml:space="preserve">
-    <value>Çökme raporu algılandı</value>
-  </data>
-  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
-    <value>Çökme raporu ayrıntıları yüklenemedi.</value>
-  </data>
-  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
-    <value>Anakart</value>
-  </data>
-  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
-    <value>Kasa</value>
-  </data>
-  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
-    <value>Donanım</value>
-  </data>
-  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
-    <value>Bellek</value>
-  </data>
-  <data name="PluginExtensionsPage_Available" xml:space="preserve">
-    <value>Kullanılabilir</value>
-  </data>
-  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
-    <value>Ayrıntıları gizle</value>
-  </data>
-  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
-    <value>Ayrıntılar</value>
-  </data>
-  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
-    <value>Ayrıntıları göster</value>
-  </data>
-  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
-    <value>Kullanım kılavuzu</value>
-  </data>
-  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
-    <value>Ayrıntılı sensör bilgilerini göstermek veya gizlemek için çift tıklayın.</value>
-  </data>
-  <data name="SettingsPage_Language_Install" xml:space="preserve">
-    <value>Dili yükle</value>
-  </data>
-  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
-    <value>Dil yüklemesi başarısız</value>
-  </data>
-  <data name="SettingsPage_Language_Installing" xml:space="preserve">
-    <value>Dil yükleniyor</value>
-  </data>
-  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
-    <value>Bu dil paketini yüklemek için indirme düğmesini kullanın.</value>
-  </data>
-  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
-    <value>Dil yüklü değil</value>
-  </data>
-  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
-    <value>Dili kaldır</value>
-  </data>
-  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
-    <value>Dil kaldırma başarısız</value>
-  </data>
-  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
-    <value>Dil kaldırılıyor</value>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Tema stili</value>
   </data>
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
     <value>Uygulamanın görsel stil ön ayarını seçin. Tema modu ve vurgu rengi geçerliliğini korur.</value>
   </data>
-  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
-    <value>Tema stili</value>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>{0} eklentisi yüklendi. Kullanılabilir giriş noktasını başlatmak için Aç'ı kullanın.</value>
   </data>
-  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
-    <value>Ayıklanıyor ve yükleniyor…</value>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>{0} eklentisi yüklendi ve Sistem Optimizasyonu'nda açıldı.</value>
   </data>
-  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
-    <value>Dil paketi indiriliyor…</value>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Yüklendi, ancak giriş noktası yok</value>
   </data>
-  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
-    <value>{0}%</value>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>{0} eklentisi yüklendi, ancak çalışma zamanı kullanıcı arayüzü yüklenemedi. Uygulamayı yeniden başlatın veya eklentiyi yeniden yükleyin.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>{0} eklentisi yüklendi, ancak kullanıcıya yönelik bir giriş noktası sunmuyor. Yalnızca arka plan hizmetleri veya manifesto verileri sağlıyor olabilir.</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Büyük Dosya Analizi</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Kaldırmak istediğiniz dosyaları seçin. Yalnızca filtreyle eşleşen dosyalar gösterilir.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Şu boyuttan büyük dosyaları filtrele:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Özel...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Seç</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Dosya adı</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Yol</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Seçimi onayla</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Seçildi: {0} dosya ({1})</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Fan</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Disk 1 Sıcaklığı</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Disk 2 Sıcaklığı</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core Saati</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Kare Süresi</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Oyun</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Fan</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Sıcaklık</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Kullanım</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH Fanı</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core Saati</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Çubuk</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD'yi göster veya gizle</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Arka plan rengi</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Kategori rengi</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Köşe yarıçapı</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Üst</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kritik renk</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Yazı tipi boyutu</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Etiket rengi</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Değer rengi</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Uyarı rengi</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Konumu kilitle</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Katman stili</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Yenileme aralığı</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Sensör yenileme aralığı</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Konumu sıfırla</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Yapışma eşiği</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensörler</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Eşikler</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritik</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS Kırmızı Çizgisi</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Kabul edilebilir en düşük kare hızı. Bunun altında renk kritik olur.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Düşük FPS Farkı</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Ortalama FPS ile 1% Low arasındaki maksimum fark. Bunun üzerinde sayaç kritik renge döner.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Performans</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Sıcaklık</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Kullanım</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Uyarı</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD Ayarları</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Yükleme bekleniyor (başka bir eklenti indiriliyor)...</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Güç</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Güç</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Çekirdek Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM Kullanımı</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Yükleniyor...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Anakart Sıcaklığı</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Anakart</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Yok</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Bilinmeyen pil</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Bilinmeyen CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Bilinmeyen GPU</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Ayrıntılı sıcaklıkları, frekansları ve güç limitlerini izlemek için gelişmiş donanım yoklamayı etkinleştirin.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Donanım sensörlerini kullanmak için önce PawnIO'yu yüklemelisiniz!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Donanım Sensörleri</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Dil paketi indirilemedi. Ağ bağlantınızı, proxy'nizi veya TLS ayarlarınızı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Ekran</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Akıllı Tuşlar</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Canlı sensör verilerini gösteren kayan katman.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD'yi etkinleştir</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

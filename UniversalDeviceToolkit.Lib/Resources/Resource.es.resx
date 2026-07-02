@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -507,5 +507,502 @@
   </data>
   <data name="ThemeStylePreset_Official" xml:space="preserve">
     <value>Oficial frío</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>No hay actualizaciones disponibles</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>La propiedad del dispositivo no es un GUID</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>No se puede leer la variable {0} de UEFI</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Ahorro de batería</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>No hay resultados en la consulta</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Los argumentos contienen caracteres peligrosos</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>El perfil debe estar entre 0 y 6</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Variable de entorno no válida: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>No se pueden establecer los privilegios UEFI</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>No se pudo crear ningún preajuste de God Mode.</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>El comando no puede ser nulo o estar vacío.</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Nombre de archivo de configuración no válido: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>No se pudo leer la configuración {0}</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Utilización</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Estado de batería desconocido: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>No se pudo iniciar el Explorador.</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>No se puede escribir la variable {0} en UEFI</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Los datos de la tabla no pueden estar vacíos</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Error de llamada: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>Los argumentos de PowerShell contienen patrones peligrosos</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>El desplazamiento y el recuento superan los límites de la matriz</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Temperatura del disco 2</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>No se pudo encontrar la URL del archivo de instalación</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>La suma de comprobación del archivo no coincide</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>Temperatura de VRAM</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>El nombre de la etiqueta no puede ser nulo ni estar vacío</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>La longitud de la tabla del ventilador debe ser 10</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>La eliminación con comodines está restringida</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>Faltan los metadatos SHA256 en el paquete de dispositivos '{0}'.</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl falló con error: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Frecuencia</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Archivo de perfil no encontrado.</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>El perfil no se aplicará sin el adaptador de CA (potencia completa) conectado.</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>El paquete de dispositivos '{0}' no está disponible en el catálogo de recursos en línea.</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>No se pudo obtener el color &quot;{0}&quot;</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>El manifiesto del paquete de dispositivos '{0}' está vacío.</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>No se pudo verificar que el estado {0} se estableciera en {1}.</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Debe ser escribible</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>No se pudo obtener el handle del controlador: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>Ventilador de CPU</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Error al enviar el comando del controlador: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Encendido</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>El brillo debe estar entre 0 y 9</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>El paquete de dispositivos contiene una ruta no segura: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>No se encontró una versión compatible</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Apagado</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>No se pudieron deserializar los efectos</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>No se permite la eliminación de rutas del sistema</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Nombre de archivo no válido</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>El paquete de dispositivos contiene un separador de ruta de estilo Windows: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Error en la verificación de integridad del paquete de actualización: no hay hash SHA256 disponible para la actualización {0}. Se requiere verificación de integridad por seguridad.</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Temperatura de la placa base</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Incompatibilidad de ID del paquete de dispositivos. Se esperaba '{0}', se obtuvo '{1}'.</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>Preajuste con ID {0} no encontrado</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>Utilización de VRAM</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Error al registrar cambios en la tarea {0} en {1} [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>el handle no es válido</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Valor de variable de entorno no válido: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>No se encontró la pantalla integrada</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Subárbol desconocido.</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>El recurso descargado no pasó la validación SHA256. Se esperaba {0}, se obtuvo {1}.</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geek</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>Ventilador de GPU</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>El catálogo de recursos está vacío.</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>El comando no pasó la validación de seguridad: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Debe ser legible</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Estado no válido</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Error al obtener el handle del controlador: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Mostrar</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Apagado</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>La propiedad del dispositivo no es una cadena</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>No se puede administrar el teclado RGB con Vantage habilitado</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>No se encontró ninguna función compatible</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Potencia</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>No se encontró un controlador compatible</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Error al deserializar JSON</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>La matriz de temperatura debe tener exactamente 10 elementos</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Incompatibilidad de proveedor del paquete de dispositivos. Se esperaba '{0}', se obtuvo '{1}'.</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>No compatible.</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Error al abrir el Administrador de servicios</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Los ejecutables de shell interactivo requieren argumentos al esperar la salida</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>No se puede analizar la versión del nombre de la etiqueta: '{0}'. Formato esperado: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>No se permite la eliminación de claves de registro críticas</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>El paquete de dispositivos '{0}' no contiene {1}.</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Alternar</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Enfriamiento inteligente</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Error de lectura: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Clave de acción no válida</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>Reloj P-Core</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Encendido</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Error al deserializar el perfil.</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Error al abrir el servicio</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Error de llamada: {0}. [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>Reloj E-Core</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>El valor de la función WMI no está disponible para {0}.</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>Clase o espacio de nombres WMI no disponible [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Alternar estado</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Extremo</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>No inicializado.</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>El valor del usuario actual es nulo</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Modo de energía no compatible {0}</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>El handle del dispositivo no está disponible</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Tipo de formato no válido</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Temperatura de la memoria</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>El paquete de dispositivos contiene un tipo de archivo no compatible: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>Teclado RGB no compatible</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Ejecutable no en la lista permitida: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Rendimiento extremo</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>La versión del archivo del proceso actual no puede ser nula</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Tiempo de fotograma</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>La ruta de configuración escapa del directorio permitido: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>El módulo principal no puede ser nulo</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>El cambio de modo de energía no es compatible con este dispositivo.</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Patrón peligroso detectado en los argumentos de {0}</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>No hay ningún preajuste de God Mode disponible.</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>No se pudo abrir la clave {0}</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>El paquete de dispositivos '{0}' tiene una URL de descarga vacía.</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>El modo de energía '{0}' no está disponible sin adaptador de CA.</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Ventilador</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Error en la verificación de integridad del paquete de actualización. SHA256 esperado: {0}, calculado: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Temperatura</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Temperatura del disco 1</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Valor no definido recibido: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer ya inicializado</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>El Explorador no se cerró a tiempo.</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl devolvió 0, último error: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>El Explorador no se reinició a tiempo.</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Ventilador del sistema</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>El nombre de archivo del proceso actual no puede ser nulo</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer debe inicializarse primero [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
   </data>
 </root>

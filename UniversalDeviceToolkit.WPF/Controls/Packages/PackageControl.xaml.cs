@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.Utils;
@@ -281,7 +282,7 @@ public partial class PackageControl : IProgress<float>
                 _downloadButton.Click -= DownloadButton_Click;
                 _downloadButton.Click += InstallButton_Click;
 
-                _downloadButton.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
+                _downloadButton.Icon = CreateActionIcon(SymbolRegular.Play24);
                 _downloadButton.ToolTip = Resource.PackageControl_Install;
             }
             else
@@ -294,7 +295,7 @@ public partial class PackageControl : IProgress<float>
                 _downloadButton.Click -= DownloadButton_Click; // 先移除，避免重复绑定
                 _downloadButton.Click += DownloadButton_Click;
 
-                _downloadButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowDownload24 };
+                _downloadButton.Icon = CreateActionIcon(SymbolRegular.ArrowDownload24);
                 _downloadButton.ToolTip = Resource.PackageControl_Download;
             }
         }
@@ -304,6 +305,13 @@ public partial class PackageControl : IProgress<float>
                 Log.Instance.Trace($"Failed to check download button state.", ex);
         }
     }
+
+    private static SymbolIcon CreateActionIcon(SymbolRegular symbol) => new()
+    {
+        Symbol = symbol,
+        Foreground = Application.Current.TryFindResource("TextFillColorPrimaryBrush") as Brush
+            ?? Brushes.White,
+    };
 
     private void PackageControl_Unloaded(object sender, RoutedEventArgs e)
     {

@@ -6,6 +6,7 @@ using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
+using LenovoLegionToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -63,7 +64,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task GetDataAsync_ShouldReturnCachedData_WhenCacheIsValid()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new MockSensorsController(gpuController);
 
         var data1 = await controller.GetDataAsync();
@@ -81,7 +82,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task GetDataAsync_ShouldUpdateCache_WhenCacheExpires()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new MockSensorsController(gpuController);
 
         var data1 = await controller.GetDataAsync();
@@ -97,7 +98,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task CacheAccess_ShouldBeThreadSafe()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new MockSensorsController(gpuController);
 
         var tasks = new List<Task<SensorsData>>();
@@ -113,7 +114,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task FanSpeedsAsync_ShouldReturnFromCache_WhenCacheIsValid()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new MockSensorsController(gpuController);
 
         await controller.GetDataAsync();
@@ -126,7 +127,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task GetDataAsync_WhenGpuReadFails_ShouldStillReturnCpuData()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new PartialFailureSensorsController(gpuController);
 
         var data = await controller.GetDataAsync();
@@ -142,7 +143,7 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task GetDataAsync_DetailedCall_ShouldBypassRecentSummaryCache()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new DetailedCacheBypassSensorsController(gpuController);
 
         var summary = await controller.GetDataAsync(false);

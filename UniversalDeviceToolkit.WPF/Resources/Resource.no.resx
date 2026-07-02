@@ -60,19 +60,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion-verktøysett</value>
+    <value>Lenovo Legion-verkt酶ysett</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Bygg</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
-    <value>Siste utgivelse på GitHub</value>
+    <value>Siste utgivelse p氓 GitHub</value>
   </data>
   <data name="AboutPage_Links" xml:space="preserve">
     <value>Koblinger</value>
   </data>
   <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
-    <value>Prosjektnettsted på GitHub</value>
+    <value>Prosjektnettsted p氓 GitHub</value>
   </data>
   <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
     <value>Tredjepartsbiblioteker</value>
@@ -94,53 +94,53 @@
     <value>Legg til ny</value>
   </data>
   <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
-    <value>Lad USB-enheter når den bærbare PC-en er slått av, sover eller er i dvale.</value>
+    <value>Lad USB-enheter n氓r den b忙rbare PC-en er sl氓tt av, sover eller er i dvale.</value>
   </data>
   <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
-    <value>Alltid på</value>
+    <value>Alltid p氓</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
-    <value>Lad USB-enheter når den bærbare PC-en er slått av, sover eller er i dvale.</value>
+    <value>Lad USB-enheter n氓r den b忙rbare PC-en er sl氓tt av, sover eller er i dvale.</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
-    <value>Alltid på</value>
+    <value>Alltid p氓</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion-verktøysett</value>
+    <value>Lenovo Legion-verkt酶ysett</value>
   </data>
   <data name="Apply" xml:space="preserve">
-    <value>Søk</value>
+    <value>S酶k</value>
   </data>
   <data name="ApplyAndClose" xml:space="preserve">
-    <value>Legg til og lukk</value>
+    <value>Bruk og lukk</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
-    <value>Universal Device Toolkit må kjøre for at automatiske handlinger skal fungere.</value>
+    <value>Universal Device Toolkit m氓 kj酶re for at automatiske handlinger skal fungere.</value>
   </data>
   <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
     <value>Aktiver</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>Ingen handlinger er definert. Klikk på Legg til ny for å opprette en ny handling.</value>
+    <value>Ingen handlinger er definert. Klikk p氓 Legg til ny for 氓 opprette en ny handling.</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
-    <value>Hvis aktivert, kjøres denne handlingen automatisk. Når tilstanden endres, evalueres alle handlinger fra topp til bunn.
-Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
+    <value>Hvis aktivert, kj酶res denne handlingen automatisk. N氓r tilstanden endres, evalueres alle handlinger fra topp til bunn.
+Bare handlinger som samsvarer med gjeldende status, kj酶res.</value>
   </data>
   <data name="AutomationPage_Actions_Title" xml:space="preserve">
     <value>Handlinger</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
-    <value>Navn …</value>
+    <value>Navn...</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
     <value>Legg til ny</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>Ingen hurtighandlinger er definert. Klikk på Legg til ny for å opprette en ny hurtighandling.</value>
+    <value>Ingen hurtighandlinger er definert. Klikk p氓 Legg til ny for 氓 opprette en ny hurtighandling.</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
-    <value>Hurtighandlinger er tilgjengelige i høyreklikkmenyen til skuffikonet.</value>
+    <value>Hurtighandlinger er tilgjengelige i h酶yreklikkmenyen til skuffikonet.</value>
   </data>
   <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
     <value>Snarveier</value>
@@ -176,25 +176,25 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>Eksklusiv</value>
   </data>
   <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
-    <value>Ikke utfør flere handlinger når denne handlingen kjøres.</value>
+    <value>Ikke utf酶r flere handlinger n氓r denne handlingen kj酶res.</value>
   </data>
   <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
-    <value>Kjør nå</value>
+    <value>Kj酶r n氓</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
-    <value>Fullført med feil.</value>
+    <value>Fullf酶rt med feil.</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
-    <value>Kjør nå</value>
+    <value>Kj酶r n氓</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
-    <value>] fullført.</value>
+    <value>Fullf酶rt!</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
-    <value>Kjør nå</value>
+    <value>Kj酶r n氓</value>
   </data>
   <data name="AutomationPipelineControl_Running" xml:space="preserve">
-    <value>Kjører</value>
+    <value>Kj酶rer</value>
   </data>
   <data name="AutomationPipelineControl_Step" xml:space="preserve">
     <value>{0} trinn</value>
@@ -212,16 +212,16 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>Ved solnedgang</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
-    <value>Kl. __PH0 __:{1:D2}</value>
+    <value>Kl. {0:D2}:{1:D2}</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
-    <value>Strømmodus</value>
+    <value>Str酶mmodus</value>
   </data>
   <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
     <value>Uten navn</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>Registrerer automatisk når enkelte spill kjører, og justerer CPU- og GPU-ytelsen. Temperaturer og viftestøy kan øke.</value>
+    <value>Registrerer automatisk n氓r enkelte spill kj酶rer, og justerer CPU- og GPU-ytelsen. Temperaturer og viftest酶y kan 酶ke.</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
     <value>Aktiver AI-motor</value>
@@ -248,7 +248,7 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>Tilkoblet, ikke lading</value>
   </data>
   <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Nåværende temperatur på batteriet.</value>
+    <value>N氓v忙rende temperatur p氓 batteriet.</value>
   </data>
   <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
     <value>Batteritemperatur</value>
@@ -257,7 +257,7 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>gjeldende batterikapasitet,</value>
   </data>
   <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Nåværende kapasitet</value>
+    <value>N氓v忙rende kapasitet</value>
   </data>
   <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
     <value>Antall ladings-/utladningssykluser.</value>
@@ -290,19 +290,19 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>Maksimal utslippshastighet</value>
   </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
-    <value>Estimert gjenværende tid: {0}</value>
+    <value>Estimert gjenv忙rende tid: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Beregner tid...</value>
   </data>
   <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>Første gangs bruk</value>
+    <value>F酶rste gangs bruk</value>
   </data>
   <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>Når ble batteriet brukt første gang.</value>
+    <value>N氓r ble batteriet brukt f酶rste gang.</value>
   </data>
   <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Batterikapasitet når det er fulladet.</value>
+    <value>Batterikapasitet n氓r det er fulladet.</value>
   </data>
   <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
     <value>Full ladekapasitet</value>
@@ -317,17 +317,17 @@ Bare handlinger som samsvarer med gjeldende status, kjøres.</value>
     <value>Lader med lavt wattforbruk tilkoblet</value>
   </data>
   <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>Når ble batteriet produsert.</value>
+    <value>N氓r ble batteriet produsert.</value>
   </data>
   <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
     <value>Produksjonsdato</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Tid siden den bærbare PC-en sist var koblet til vekselstrøm.
-Denne gangen er det kanskje ikke nøyaktig hvis den bærbare PC-en ble ladet når den sov eller var slått av.</value>
+    <value>Tid siden den b忙rbare PC-en sist var koblet til vekselstr酶m.
+Denne gangen er det kanskje ikke n酶yaktig hvis den b忙rbare PC-en ble ladet n氓r den sov eller var sl氓tt av.</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>På batteri siden</value>
+    <value>P氓 batteri siden</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Batteri</value>
@@ -336,29 +336,29 @@ Denne gangen er det kanskje ikke nøyaktig hvis den bærbare PC-en ble ladet nå
     <value>Avbryt</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>掳C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Lukk</value>
   </data>
   <data name="Color_Blue" xml:space="preserve">
-    <value>Blå</value>
+    <value>Bl氓</value>
   </data>
   <data name="Color_Green" xml:space="preserve">
-    <value>Grønn</value>
+    <value>Gr酶nn</value>
   </data>
   <data name="Color_Red" xml:space="preserve">
-    <value>Rødt</value>
+    <value>R酶dt</value>
   </data>
   <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
-    <value>Velg GPU-driftsmodus basert på datamaskinens bruks- og strømforhold.
+    <value>Velg GPU-driftsmodus basert p氓 datamaskinens bruks- og str酶mforhold.
 Brytermoduser kan kreve omstart.</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Endring til {0} krever omstart. Vil du starte på nytt nå?</value>
+    <value>Endring til {0} krever omstart. Vil du starte p氓 nytt n氓?</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
-    <value>Ny oppstart er påkrevd</value>
+    <value>Ny oppstart er p氓krevd</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>Arbeidsmodus</value>
@@ -373,7 +373,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Kopier alle</value>
   </data>
   <data name="DashboardPage_Graphics_Title" xml:space="preserve">
-    <value>Grafikk </value>
+    <value>Grafikk</value>
   </data>
   <data name="DashboardPage_Other_Title" xml:space="preserve">
     <value>Annet</value>
@@ -385,15 +385,15 @@ Brytermoduser kan kreve omstart.</value>
     <value>Hjem</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Deaktiver diskret GPU hvis den er aktiv unødvendig.
+    <value>Deaktiver diskret GPU hvis den er aktiv un酶dvendig.
 
-ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er av eller hybridmodus ikke er aktiv.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶res riktig hvis det interne displayet er av eller hybridmodus ikke er aktiv.</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
     <value>Deaktiver GPU</value>
   </data>
   <data name="DelayAutomationStepControl_Message" xml:space="preserve">
-    <value>Legg til forsinkelse før du kjører neste trinn.</value>
+    <value>Legg til forsinkelse f酶r du kj酶rer neste trinn.</value>
   </data>
   <data name="DelayAutomationStepControl_Title" xml:space="preserve">
     <value>Forsinkelse</value>
@@ -417,7 +417,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Enhet</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
-    <value>Lenovos kundestøtte</value>
+    <value>Lenovos kundest酶tte</value>
   </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
     <value>Maskintype</value>
@@ -447,7 +447,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Aktiv</value>
   </data>
   <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
-    <value> </value>
+    <value>Deaktiver</value>
   </data>
   <data name="Inactive" xml:space="preserve">
     <value>Inaktiv</value>
@@ -456,7 +456,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Drep apper</value>
   </data>
   <data name="DiscreteGPUControl_Message" xml:space="preserve">
-    <value>Deaktiver diskret GPU, hvis den er aktiv unødvendig.</value>
+    <value>Deaktiver diskret GPU, hvis den er aktiv un酶dvendig.</value>
   </data>
   <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
     <value>En skjerm er koblet til nVidia GPU.</value>
@@ -474,28 +474,28 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Prosesser</value>
   </data>
   <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
-    <value>Start GPU på nytt</value>
+    <value>Start GPU p氓 nytt</value>
   </data>
   <data name="DiscreteGPUControl_Title" xml:space="preserve">
     <value>Diskret GPU</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Endre lysstyrken på den innebygde skjermen.
+    <value>Endre lysstyrken p氓 den innebygde skjermen.
 
-ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er av.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶res riktig hvis det interne displayet er av.</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Lysstyrke på skjerm</value>
+    <value>Lysstyrke p氓 skjerm</value>
   </data>
 
   <data name="Edit" xml:space="preserve">
     <value>Rediger</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
-    <value>Fjern avmerkingen for oppdateringsfrekvenser som du ikke vil bruke når Fn+ R-snarvei brukes.</value>
+    <value>Fjern avmerkingen for oppdateringsfrekvenser som du ikke vil bruke n氓r Fn+ R-snarvei brukes.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Kontroller at skjermen på den bærbare datamaskinen er slått på. Universal Device Toolkit kan ikke laste inn oppdateringsfrekvenser for en skjerm som ikke er på.</value>
+    <value>Kontroller at skjermen p氓 den b忙rbare datamaskinen er sl氓tt p氓. Universal Device Toolkit kan ikke laste inn oppdateringsfrekvenser for en skjerm som ikke er p氓.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
     <value>Ingen oppdateringspriser funnet</value>
@@ -510,7 +510,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Eksporter</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>Bruk bare integrert GPU når den er på batteri, og både integrert og atskilt GPU når strømadapteren er tilkoblet. Når en ikke-standard adapter er koblet til, bytter systemet til Hybrid-iGPU Only Mode.</value>
+    <value>Bruk bare integrert GPU n氓r den er p氓 batteri, og b氓de integrert og atskilt GPU n氓r str酶madapteren er tilkoblet. N氓r en ikke-standard adapter er koblet til, bytter systemet til Hybrid-iGPU Only Mode.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
     <value>Hybrid-Auto-modus</value>
@@ -519,22 +519,22 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Bytte til og fra denne modusen krever omstart.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
-    <value>Bruk bare diskret GPU. Denne modusen gir best grafikkytelse, men øker strømforbruket.</value>
+    <value>Bruk bare diskret GPU. Denne modusen gir best grafikkytelse, men 酶ker str酶mforbruket.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
     <value>dGPU-modus</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
-    <value>Både integrert og atskilt GPU er aktivert. Systemet vil automatisk bytte mellom dem basert på behovene.</value>
+    <value>B氓de integrert og atskilt GPU er aktivert. Systemet vil automatisk bytte mellom dem basert p氓 behovene.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
     <value>Hybridmodus</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
-    <value>Denne modusen trer bare i kraft når diskret GPU ikke fungerer.</value>
+    <value>Denne modusen trer bare i kraft n氓r diskret GPU ikke fungerer.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
-    <value>Bruk bare integrert GPU. Denne modusen minimerer strømforbruk og støy.</value>
+    <value>Bruk bare integrert GPU. Denne modusen minimerer str酶mforbruk og st酶y.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
     <value>Kun hybrid-iGPU-modus</value>
@@ -543,7 +543,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Om GPU-arbeidsmoduser</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>° F</value>
+    <value>掳F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -564,54 +564,54 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>RPM</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå på den bærbare PC-en når du åpner lokket.</value>
+    <value>Sl氓 p氓 den b忙rbare PC-en n氓r du 氓pner lokket.</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
     <value>Vend til start</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
-    <value>Slå på den bærbare PC-en når du åpner lokket.</value>
+    <value>Sl氓 p氓 den b忙rbare PC-en n氓r du 氓pner lokket.</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
     <value>Vend til start</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Bruk sekundære funksjoner til F1-F12-tastene uten å holde inne Fn-tasten.</value>
+    <value>Bruk sekund忙re funksjoner til F1-F12-tastene uten 氓 holde inne Fn-tasten.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn-lås</value>
+    <value>Fn-l氓s</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
-    <value>Bruk sekundære funksjoner til F1-F12-tastene uten å holde inne Fn-tasten.</value>
+    <value>Bruk sekund忙re funksjoner til F1-F12-tastene uten 氓 holde inne Fn-tasten.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn-lås</value>
+    <value>Fn-l氓s</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
     <value>Advarsel!
-Noen bærbare datamaskiner kan godta lavere verdier enn de angir, men vær forsiktig. Dette alternativet kan føre til uforutsigbar oppførsel. Hvis du ikke er sikker på hva du gjør, la dette stå på 0.</value>
+Noen b忙rbare datamaskiner kan godta lavere verdier enn de angir, men v忙r forsiktig. Dette alternativet kan f酶re til uforutsigbar oppf酶rsel. Hvis du ikke er sikker p氓 hva du gj酶r, la dette st氓 p氓 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>Minimal offset</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
     <value>Advarsel!
-Noen bærbare PC-er godtar høyere verdier enn de angir, men vær forsiktig. Dette alternativet kan føre til uforutsigbar oppførsel. Hvis du ikke er sikker på hva du gjør, la dette stå på 0.</value>
+Noen b忙rbare PC-er godtar h酶yere verdier enn de angir, men v忙r forsiktig. Dette alternativet kan f酶re til uforutsigbar oppf酶rsel. Hvis du ikke er sikker p氓 hva du gj酶r, la dette st氓 p氓 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Maksimal offset</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>Ikke endre alternativene nedenfor med mindre du virkelig vet hva du gjør.</value>
+    <value>Ikke endre alternativene nedenfor med mindre du virkelig vet hva du gj酶r.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
     <value>Avansert</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
-    <value>Langsiktig strømgrense (kryssbelastning)</value>
+    <value>Langsiktig str酶mgrense (kryssbelastning)</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
-    <value>Langsiktig strømgrense</value>
+    <value>Langsiktig str酶mgrense</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
     <value>Kortsiktig effektgrense</value>
@@ -629,7 +629,7 @@ Noen bærbare PC-er godtar høyere verdier enn de angir, men vær forsiktig. Det
     <value>Kunne ikke laste inn innstillingen.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>Viftehastigheten er ikke strengt bestemt av en temperatursensor. Den vil øke eller senke hastigheten per den høyeste sensoren mellom CPU, GPU og kjøleribbe. Nøyaktige verdier vises når du holder musepekeren over hvert trinn.</value>
+    <value>Viftehastigheten er ikke strengt bestemt av en temperatursensor. Den vil 酶ke eller senke hastigheten per den h酶yeste sensoren mellom CPU, GPU og kj酶leribbe. N酶yaktige verdier vises n氓r du holder musepekeren over hvert trinn.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
     <value>Viftekurve</value>
@@ -637,7 +637,7 @@ Noen bærbare PC-er godtar høyere verdier enn de angir, men vær forsiktig. Det
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
     <value>Advarsel!
 Langvarig bruk av dette alternativet vil redusere viftenes levetid.
-Seriøst, vær forsiktig med dette alternativet!</value>
+Seri酶st, v忙r forsiktig med dette alternativet!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
     <value>Maksimal viftehastighet</value>
@@ -661,15 +661,15 @@ Seriøst, vær forsiktig med dette alternativet!</value>
     <value>Innstillinger for egendefinert mod</value>
   </data>
   <data name="HDRAutomationStepControl_Message" xml:space="preserve">
-    <value>Aktiver HDR (High Dynamic Range) på den innebygde skjermen.
+    <value>Aktiver HDR (High Dynamic Range) p氓 den innebygde skjermen.
 
-ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er av.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶res riktig hvis det interne displayet er av.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
     <value>HDRName</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
-    <value>Aktiver HDR (High Dynamic Range) på den innebygde skjermen.</value>
+    <value>Aktiver HDR (High Dynamic Range) p氓 den innebygde skjermen.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
     <value>HDRName</value>
@@ -684,25 +684,25 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Denne enheten er ikke kompatibel med Universal Device Toolkit.</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Det kan hende at enheten mangler nødvendige systemkomponenter (LenovoGameZoneData).</value>
+    <value>Det kan hende at enheten mangler n酶dvendige systemkomponenter (LenovoGameZoneData).</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>Hvis du klikker OK for å fortsette:</value>
+    <value>Hvis du klikker OK for 氓 fortsette:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- Programvaren vil kjøre i begrenset modus</value>
+    <value>- Programvaren vil kj酶re i begrenset modus</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
     <value>- Noen funksjoner vil bli deaktivert (Dashbord, Automatisering, Makroer)</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Andre grunnleggende funksjoner vil fortsatt være tilgjengelige</value>
+    <value>- Andre grunnleggende funksjoner vil fortsatt v忙re tilgjengelige</value>
   </data>
   <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
     <value>Enhetsinformasjon:</value>
   </data>
   <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Leverandør:</value>
+    <value>Leverand酶r:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
     <value>Modell:</value>
@@ -711,7 +711,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Maskintype:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Klikk "OK" for å fortsette, eller "Avbryt" for å avslutte.</value>
+    <value>Klikk "OK" for 氓 fortsette, eller "Avbryt" for 氓 avslutte.</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Ingen kompatible tastaturer funnet</value>
@@ -720,10 +720,10 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Tastaturbelysning</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Tastaturbelysning kan ikke styres her når Lenovo Vantage eller dens tjenester kjører.</value>
+    <value>Tastaturbelysning kan ikke styres her n氓r Lenovo Vantage eller dens tjenester kj酶rer.</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage eller dens tjenester kjører</value>
+    <value>Lenovo Vantage eller dens tjenester kj酶rer</value>
   </data>
   <data name="MainWindow_NavigationItem_About" xml:space="preserve">
     <value>Om</value>
@@ -757,7 +757,7 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Innstillinger for navigasjonselementer</value>
   </data>
   <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
-    <value>Konfigurer hvilke navigasjonselementer som vises i sidepanelet. Dashbord og Innstillinger vil alltid være synlige.</value>
+    <value>Konfigurer hvilke navigasjonselementer som vises i sidepanelet. Dashbord og Innstillinger vil alltid v忙re synlige.</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Vis eller skjul navigasjonselementet for Tastatur</value>
@@ -803,43 +803,43 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Nei</value>
   </data>
   <data name="Notification_ACAdapterConnected" xml:space="preserve">
-    <value>Strømadapter tilkoblet</value>
+    <value>Str酶madapter tilkoblet</value>
   </data>
   <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
-    <value>Strømadapter tilkoblet (Lav effekt)</value>
+    <value>Str酶madapter tilkoblet (Lav effekt)</value>
   </data>
   <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
-    <value>Strømadapter frakoblet</value>
+    <value>Str酶madapter frakoblet</value>
   </data>
   <data name="Notification_CameraOff" xml:space="preserve">
     <value>Kamera av</value>
   </data>
   <data name="Notification_CameraOn" xml:space="preserve">
-    <value>Kamera på</value>
+    <value>Kamera p氓</value>
   </data>
   <data name="Notification_CapsLockOff" xml:space="preserve">
     <value>Caps Lock av</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock på</value>
+    <value>Caps Lock p氓</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
     <value>Fn Lock av</value>
   </data>
   <data name="Notification_FnLockOn" xml:space="preserve">
-    <value>Fn Lock på</value>
+    <value>Fn Lock p氓</value>
   </data>
   <data name="Notification_MicrophoneOff" xml:space="preserve">
     <value>Mikrofon av</value>
   </data>
   <data name="Notification_MicrophoneOn" xml:space="preserve">
-    <value>Mikrofon på</value>
+    <value>Mikrofon p氓</value>
   </data>
   <data name="Notification_NumLockOff" xml:space="preserve">
     <value>Num Lock av</value>
   </data>
   <data name="Notification_NumLockOn" xml:space="preserve">
-    <value>Num Lock på</value>
+    <value>Num Lock p氓</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
     <value>Bakgrunnsbelysning {0}</value>
@@ -854,13 +854,13 @@ ADVARSEL: Denne handlingen vil ikke kjøres riktig hvis det interne displayet er
     <value>Pekplate av</value>
   </data>
   <data name="Notification_TouchpadOn" xml:space="preserve">
-    <value>Pekplate på</value>
+    <value>Pekplate p氓</value>
   </data>
   <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
     <value>Bakgrunnsbelysning {0}</value>
   </data>
   <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
-    <value>Strømadapter</value>
+    <value>Str酶madapter</value>
   </data>
   <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
     <value>Kamera</value>
@@ -876,7 +876,7 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>Ikke vis varsler</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn-lås</value>
+    <value>Fn-l氓s</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>Tastaturbelysning</value>
@@ -888,7 +888,7 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>Posisjon</value>
   </data>
   <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
-    <value>Strømmodus</value>
+    <value>Str酶mmodus</value>
   </data>
   <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
     <value>Oppdateringsfrekvens</value>
@@ -900,13 +900,13 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>Varsler</value>
   </data>
   <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
-    <value>Pekplatelås</value>
+    <value>Pekplatel氓s</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Åpne</value>
+    <value>脜pne</value>
   </data>
   <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
     <value>Forbedre responstiden til den innebygde skjermen.</value>
@@ -924,7 +924,7 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>{0} lastet ned!</value>
   </data>
   <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
-    <value>Nedlasting fullført</value>
+    <value>Nedlasting fullf酶rt</value>
   </data>
   <data name="PackageControl_GeneralError_Title" xml:space="preserve">
     <value>Noe gikk galt</value>
@@ -933,7 +933,7 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>Serveren returnerte kode 404.</value>
   </data>
   <data name="PackageControl_Http404Error_Title" xml:space="preserve">
-    <value>Filen ser ut til å være borte</value>
+    <value>Filen ser ut til 氓 v忙re borte</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
     <value>Sjekk om internettilkoblingen din fungerer.</value>
@@ -945,14 +945,14 @@ Aktiver dette alternativet hvis du har konflikter med fullskjermprogrammer.</val
     <value>Oppdatering tilgjengelig!</value>
   </data>
   <data name="PackageControl_OldPackageWarning" xml:space="preserve">
-    <value>Denne pakken er mer enn ett år gammel.</value>
+    <value>Denne pakken er mer enn ett 氓r gammel.</value>
   </data>
   <data name="PackageControl_Version" xml:space="preserve">
     <value>Versjon</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>Nedenfor er en liste over programvarepakker som er merket som kompatible med din bærbare datamaskin.
-Sørg alltid for at du installerer riktige pakker.</value>
+    <value>Nedenfor er en liste over programvarepakker som er merket som kompatible med din b忙rbare datamaskin.
+S酶rg alltid for at du installerer riktige pakker.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
     <value>Sjekk om maskintype og operativsystem er satt riktig.</value>
@@ -964,7 +964,7 @@ Sørg alltid for at du installerer riktige pakker.</value>
     <value>Endring av sortering, filtrering av resultater, skjuling av pakker eller oppdatering av listen vil stoppe nedlastingen. Vil du fortsette?</value>
   </data>
   <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
-    <value>Nedlasting pågår</value>
+    <value>Nedlasting p氓g氓r</value>
   </data>
   <data name="Filter" xml:space="preserve">
     <value>Filter...</value>
@@ -976,13 +976,13 @@ Sørg alltid for at du installerer riktige pakker.</value>
     <value>Operativsystem</value>
   </data>
   <data name="PackagesPage_PrimarySource" xml:space="preserve">
-    <value>Primær (Anbefalt)</value>
+    <value>Prim忙r (Anbefalt)</value>
   </data>
   <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
     <value>Samme som Lenovo Vantage</value>
   </data>
   <data name="PackagesPage_SecondarySource" xml:space="preserve">
-    <value>Sekundær</value>
+    <value>Sekund忙r</value>
   </data>
   <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
     <value>Samme som Lenovo PC Support</value>
@@ -1009,44 +1009,44 @@ Sørg alltid for at du installerer riktige pakker.</value>
     <value>Endre ytelsesmodus.</value>
   </data>
   <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Strømmodus</value>
+    <value>Str酶mmodus</value>
   </data>
   <data name="PowerModeControl_Message" xml:space="preserve">
     <value>Endre ytelsesmodus.
-Ytelsesmodus kan også endres med Fn+Q.</value>
+Ytelsesmodus kan ogs氓 endres med Fn+Q.</value>
   </data>
   <data name="PowerModeControl_Settings" xml:space="preserve">
     <value>Innstillinger</value>
   </data>
   <data name="PowerModeControl_Title" xml:space="preserve">
-    <value>Strømmodus</value>
+    <value>Str酶mmodus</value>
   </data>
   <data name="PowerModeControl_Warning" xml:space="preserve">
-    <value>Valgt strømmodus kan ikke fungere korrekt uten at AC-adapter er tilkoblet.</value>
+    <value>Valgt str酶mmodus kan ikke fungere korrekt uten at AC-adapter er tilkoblet.</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
     <value>Standard</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Windows strømplaner</value>
+    <value>Windows str酶mplaner</value>
   </data>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
-    <value>Søker etter tilgjengelige driverpakker, vennligst vent...</value>
+    <value>S酶ker etter tilgjengelige driverpakker, vennligst vent...</value>
   </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Nettverksfeil oppstod. Prøver automatisk på nytt...</value>
+    <value>Nettverksfeil oppstod. Pr酶ver automatisk p氓 nytt...</value>
   </data>
   <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Prøver å hente driverpakker på nytt...</value>
+    <value>Pr酶ver 氓 hente driverpakker p氓 nytt...</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Oppryddingsinformasjon</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
-    <value>Vis fremdrift for oppryddingsoperasjon og estimert størrelse.</value>
+    <value>Vis fremdrift for oppryddingsoperasjon og estimert st酶rrelse.</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Juster forhåndsinnstilling for tastaturbaklys.</value>
+    <value>Juster forh氓ndsinnstilling for tastaturbaklys.</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Tastaturbaklys</value>
@@ -1055,16 +1055,16 @@ Ytelsesmodus kan også endres med Fn+Q.</value>
     <value>Lysstyrke</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
-    <value>Forhåndsinnstilling 1:</value>
+    <value>Forh氓ndsinnstilling 1:</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
-    <value>Forhåndsinnstilling 2:</value>
+    <value>Forh氓ndsinnstilling 2:</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
-    <value>Forhåndsinnstilling 3</value>
+    <value>Forh氓ndsinnstilling 3</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
-    <value>Forhåndsinnstilling 4</value>
+    <value>Forh氓ndsinnstilling 4</value>
   </data>
   <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
     <value>Av</value>
@@ -1096,7 +1096,7 @@ Ytelsesmodus kan også endres med Fn+Q.</value>
   <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
     <value>Endre oppdateringsfrekvens for innebygd skjerm.
 
-ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶re korrekt hvis intern skjerm er av.</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
     <value>Oppdateringsfrekvens</value>
@@ -1111,10 +1111,10 @@ ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</va
     <value>Gi nytt navn</value>
   </data>
   <data name="RestartLater" xml:space="preserve">
-    <value>Jeg starter på nytt senere</value>
+    <value>Jeg starter p氓 nytt senere</value>
   </data>
   <data name="RestartNow" xml:space="preserve">
-    <value>Start på nytt nå</value>
+    <value>Start p氓 nytt n氓</value>
   </data>
   <data name="Revert" xml:space="preserve">
     <value>Tilbakestill</value>
@@ -1123,14 +1123,14 @@ ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</va
     <value>Argumenter</value>
   </data>
   <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
-    <value>Kjørbars sti</value>
+    <value>Kj酶rbars sti</value>
   </data>
   <data name="RunAutomationStepControl_Message" xml:space="preserve">
-    <value>Kjør et script eller et program.
-Sørg for at ditt script kjører korrekt først.</value>
+    <value>Kj酶r et script eller et program.
+S酶rg for at ditt script kj酶rer korrekt f酶rst.</value>
   </data>
   <data name="RunAutomationStepControl_Title" xml:space="preserve">
-    <value>Kjør</value>
+    <value>Kj酶r</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Lagre</value>
@@ -1139,7 +1139,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Lagrer...</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
-    <value>Velg én eller flere hurtighandlinger å bla gjennom</value>
+    <value>Velg 茅n eller flere hurtighandlinger 氓 bla gjennom</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
     <value>Ingen hurtighandlinger definert.</value>
@@ -1154,13 +1154,13 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Accentfarge</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Start minimert til systemkurven når du logger inn på Windows.</value>
+    <value>Start minimert til systemkurven n氓r du logger inn p氓 Windows.</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Autostart</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
-    <value>Start minimert til systemkurven når du logger på Windows.</value>
+    <value>Start minimert til systemkurven n氓r du logger p氓 Windows.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone kan hende ikke ble deaktivert korrekt</value>
@@ -1169,7 +1169,8 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Kunne ikke deaktivere Legion Zone</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>Deaktiver Legion Zone og tjenesten uten å avinstallere den.\nOmstart anbefales etter endring av dette alternativet.</value>
+    <value>Deaktiver Legion Zone og tjenesten uten 氓 avinstallere den.
+Omstart anbefales etter endring av dette alternativet.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
     <value>Deaktiver Legion Zone</value>
@@ -1181,7 +1182,9 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Kunne ikke deaktivere Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>Deaktiver Lenovo Hotkeys og tjenesten uten å avinstallere den.\nHvis deaktivert, vil denne appen håndtere Fn-snarveier.\nOmstart anbefales etter endring av dette alternativet.</value>
+    <value>Deaktiver Lenovo Hotkeys og tjenesten uten 氓 avinstallere den.
+Hvis deaktivert, vil denne appen h氓ndtere Fn-snarveier.
+Omstart anbefales etter endring av dette alternativet.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>Systemoptimalisering</value>
@@ -1199,16 +1202,16 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Kunne ikke bruke ytelsesoptimaliseringer.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Kjør opprydding</value>
+    <value>Kj酶r opprydding</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Opprydding fullført.</value>
+    <value>Opprydding fullf酶rt.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Opprydding mislyktes.</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>Disse handlingene endrer systemtjenester og filer. Administratorrettigheter kan være nødvendige.</value>
+    <value>Disse handlingene endrer systemtjenester og filer. Administratorrettigheter kan v忙re n酶dvendige.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
     <value>Bruk valgte handlinger</value>
@@ -1223,13 +1226,13 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Skann</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Kjør oppryddingshandlinger</value>
+    <value>Kj酶r oppryddingshandlinger</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} handlinger valgt</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Ingen handlinger valgt ennå.</value>
+    <value>Ingen handlinger valgt enn氓.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
     <value>Valgte handlinger</value>
@@ -1247,25 +1250,25 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Sikkerhetsbekreftelse</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Systemopprydding vil slette midlertidige filer og buffer permanent. Selv om det vanligvis er trygt, anbefales det å sikre at du har sikkerhetskopier av viktige data. Vil du fortsette?</value>
+    <value>Systemopprydding vil slette midlertidige filer og buffer permanent. Selv om det vanligvis er trygt, anbefales det 氓 sikre at du har sikkerhetskopier av viktige data. Vil du fortsette?</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
     <value>Utvidelser</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Administrer utvidelser og verktøy for systemoptimalisering</value>
+    <value>Administrer utvidelser og verkt酶y for systemoptimalisering</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
     <value>Ingen utvidelser tilgjengelig</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Installer utvidelser fra utvidelsessiden for å forbedre systemoptimaliseringsfunksjonaliteten.</value>
+    <value>Installer utvidelser fra utvidelsessiden for 氓 forbedre systemoptimaliseringsfunksjonaliteten.</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Kommer snart</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>Utvidelsesmarkedsplassen vil være tilgjengelig i en fremtidig oppdatering.</value>
+    <value>Utvidelsesmarkedsplassen vil v忙re tilgjengelig i en fremtidig oppdatering.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows-optimalisering</value>
@@ -1301,7 +1304,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>AppX-administrasjon</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Velg forhåndsinstallerte Microsoft Store-apper å fjerne for alle brukere.</value>
+    <value>Velg forh氓ndsinstallerte Microsoft Store-apper 氓 fjerne for alle brukere.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
     <value>Ingen apper valgt for fjerning.</value>
@@ -1331,7 +1334,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Register MRU-/historikkopprydding</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Tøm vanlige brukerregisterlogger (Kjør MRU, Nylige dokumenter, Åpne/Lagre-dialoger, Inntastede stier). Dette fjerner ikke systemkritiske oppføringer.</value>
+    <value>T酶m vanlige brukerregisterlogger (Kj酶r MRU, Nylige dokumenter, 脜pne/Lagre-dialoger, Inntastede stier). Dette fjerner ikke systemkritiske oppf酶ringer.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>Handlinger</value>
@@ -1358,16 +1361,16 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Velg en mappe.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Skriv inn minst én filutvidelse.</value>
+    <value>Skriv inn minst 茅n filutvidelse.</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Velg minst én handling.</value>
+    <value>Velg minst 茅n handling.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Valgte handlinger ble fullført.</value>
+    <value>Valgte handlinger ble fullf酶rt.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Kunne ikke fullføre valgte handlinger.</value>
+    <value>Kunne ikke fullf酶re valgte handlinger.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Utforsker og grensesnitt</value>
@@ -1378,10 +1381,10 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Systemoppgradering</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Juster oppgavelinje, Filutforsker og brukergrensesnittets oppførsel.</value>
+    <value>Juster oppgavelinje, Filutforsker og brukergrensesnittets oppf酶rsel.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Produktbeskrivelse</value>
+    <value>Ytelse</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
     <value>Juster systemytelse og innstillinger for responsivitet.</value>
@@ -1402,7 +1405,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Bufferopprydding</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
-    <value>Rydd opp i bufferfiler fra ulike applikasjoner og systemet for å frigjøre lagringsplass.</value>
+    <value>Rydd opp i bufferfiler fra ulike applikasjoner og systemet for 氓 frigj酶re lagringsplass.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
     <value>Opprydding av systemfiler</value>
@@ -1420,7 +1423,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Ytelsesopprydding</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
-    <value>Rydd opp i filer som kan påvirke systemytelsen, for eksempel prefetch-filer osv.</value>
+    <value>Rydd opp i filer som kan p氓virke systemytelsen, for eksempel prefetch-filer osv.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
     <value>Egendefinert opprydding</value>
@@ -1432,19 +1435,19 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Oppgavelinje og startmeny-layout</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Skjul søkeboksen og Oppgavevisning-knappen, deaktiver oppgavelinjegruppering og vis alltid systemkurvikoner.</value>
+    <value>Skjul s酶keboksen og Oppgavevisning-knappen, deaktiver oppgavelinjegruppering og vis alltid systemkurvikoner.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Deaktiver startmeny og åpne søk med Win-tasten</value>
+    <value>Deaktiver startmeny og 氓pne s酶k med Win-tasten</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Deaktiver startmenyen fullstendig. Når du trykker Win-tasten, åpnes søk i stedet for startmenyen.</value>
+    <value>Deaktiver startmenyen fullstendig. N氓r du trykker Win-tasten, 氓pnes s酶k i stedet for startmenyen.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
     <value>Forbedre Explorer-responsivitet</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduser menyforsinkelser, lukk hengte apper raskere og åpne Denne PC-en som standard.</value>
+    <value>Reduser menyforsinkelser, lukk hengte apper raskere og 氓pne Denne PC-en som standard.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>Filvisningsalternativer</value>
@@ -1456,13 +1459,13 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Deaktiver Explorer-forslag</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Slå av skyinnholdsforslag og anbefalingsbannere.</value>
+    <value>Sl氓 av skyinnholdsforslag og anbefalingsbannere.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Endre Windows-tasten til å åpne søk</value>
+    <value>Endre Windows-tasten til 氓 氓pne s酶k</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Endre Windows-tastens oppførsel til å åpne søk i stedet for startmenyen.</value>
+    <value>Endre Windows-tastens oppf酶rsel til 氓 氓pne s酶k i stedet for startmenyen.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>Optimaliser multimedieplanlegging</value>
@@ -1471,10 +1474,10 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Fjern nettverksbegrensning og reduser systemresponstid.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Forbedre minnehåndtering</value>
+    <value>Forbedre minneh氓ndtering</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Hold systembuffer i minnet og unngå sideveksling av kjerne-drivere.</value>
+    <value>Hold systembuffer i minnet og unng氓 sideveksling av kjerne-drivere.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
     <value>Deaktiver akryl og varslingssenter</value>
@@ -1489,10 +1492,10 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Deaktiver annonse-ID, Spotlight-funksjoner og automatiske forslag.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Tving høy ytelsesplan</value>
+    <value>Tving h酶y ytelsesplan</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Aktiver strømplanen for høy ytelse og deaktiver dvalemodus.</value>
+    <value>Aktiver str酶mplanen for h酶y ytelse og deaktiver dvalemodus.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
     <value>Deaktiver diagnose-tjenester</value>
@@ -1504,40 +1507,40 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Deaktiver SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Slå av Superfetch/SysMain for å redusere bakgrunnsdiskaktivitet.</value>
+    <value>Sl氓 av Superfetch/SysMain for 氓 redusere bakgrunnsdiskaktivitet.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
     <value>Deaktiver Windows Search-indeksering</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stopp Windows Search-tjenesten for å forhindre indeksoppdateringer.</value>
+    <value>Stopp Windows Search-tjenesten for 氓 forhindre indeksoppdateringer.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
     <value>Deaktiver Remote Registry</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Sikre systemet ved å deaktivere ekstern registertilgang.</value>
+    <value>Sikre systemet ved 氓 deaktivere ekstern registertilgang.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
     <value>Deaktiver feilrapportering</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stopp Windows Error Reporting fra å samle inn og sende krasjdata.</value>
+    <value>Stopp Windows Error Reporting fra 氓 samle inn og sende krasjdata.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Tøm Remote Desktop-buffer</value>
+    <value>T酶m Remote Desktop-buffer</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
     <value>Fjern bufrede filer opprettet av Remote Desktop-klienten.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Tøm Windows Update-buffer</value>
+    <value>T酶m Windows Update-buffer</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
     <value>Slett nedlastede oppdateringsfiler og Delivery Optimisation-buffer.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Tøm nettleserbuffer</value>
+    <value>T酶m nettleserbuffer</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Rydder opp midlertidige filer og logger etterlatt av ulike applikasjoner.</value>
@@ -1555,22 +1558,22 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Slett Explorer miniatyrbilde-databaser og Direct3D shader-buffer.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Tøm .NET native images</value>
+    <value>T酶m .NET native images</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Fjern bufrede .NET Native images for å frigjøre diskplass.</value>
+    <value>Fjern bufrede .NET Native images for 氓 frigj酶re diskplass.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
     <value>Fjern logger og diagnose-data</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Søker etter store filer på systemdisken som kan ta opp betydelig plass.</value>
+    <value>S酶ker etter store filer p氓 systemdisken som kan ta opp betydelig plass.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
-    <value>Søk etter store filer</value>
+    <value>S酶k etter store filer</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Identifiser og administrer store filer på systemet.</value>
+    <value>Identifiser og administrer store filer p氓 systemet.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>Store filer</value>
@@ -1594,25 +1597,25 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Rens midlertidige filer</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Tøm Windows og bruker midlertidige mapper.</value>
+    <value>T酶m Windows og bruker midlertidige mapper.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Fjern forhåndsinstallerte Windows apper</value>
+    <value>Fjern forh氓ndsinstallerte Windows apper</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Avinstaller valgte forhåndsinstallerte UWP-applikasjoner for alle brukere.</value>
+    <value>Avinstaller valgte forh氓ndsinstallerte UWP-applikasjoner for alle brukere.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Tøm papirkurv</value>
+    <value>T酶m papirkurv</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
     <value>Fjern slettede filer lagret i papirkurven.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Tøm prefetch-data</value>
+    <value>T酶m prefetch-data</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Slett Windows prefetch-data for å generere nye spor.</value>
+    <value>Slett Windows prefetch-data for 氓 generere nye spor.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
     <value>Rens egendefinerte filer</value>
@@ -1624,7 +1627,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Service component store</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Kjør DISM opprydding og tøm WinSxS midlertidige filer.</value>
+    <value>Kj酶r DISM opprydding og t酶m WinSxS midlertidige filer.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Deaktiver Lenovo Hotkeys</value>
@@ -1636,7 +1639,7 @@ Sørg for at ditt script kjører korrekt først.</value>
     <value>Kunne ikke deaktivere Lenovo Vantage og/eller ImController</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Deaktiver Lenovo Vantage og ImController uten å avinstallere dem.
+    <value>Deaktiver Lenovo Vantage og ImController uten 氓 avinstallere dem.
 Omstart anbefales etter endring av dette alternativet.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
@@ -1661,19 +1664,19 @@ Omstart anbefales etter endring av dette alternativet.</value>
     <value>Kunne ikke aktivere Lenovo Vantage og/eller ImController</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>Du kan ekskludere oppdateringsfrekvenser for å gjøre Fn+R hurtigvalg mer nyttig.</value>
+    <value>Du kan ekskludere oppdateringsfrekvenser for 氓 gj酶re Fn+R hurtigvalg mer nyttig.</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
     <value>Ekskluder oppdateringspriser</value>
   </data>
   <data name="SettingsPage_Language_Message" xml:space="preserve">
-    <value>Velg språk.</value>
+    <value>Velg spr氓k.</value>
   </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
-    <value>Språk</value>
+    <value>Spr氓k</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>Alltid minimer til systemkurven. Lukk med høyreklikk på systemkurv-ikon.</value>
+    <value>Alltid minimer til systemkurven. Lukk med h酶yreklikk p氓 systemkurv-ikon.</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>Minimer ved lukking</value>
@@ -1691,13 +1694,13 @@ Omstart anbefales etter endring av dette alternativet.</value>
     <value>Varsler</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
-    <value>Windows strømplaner</value>
+    <value>Windows str酶mplaner</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
     <value>Tildel hurtigvalg til Fn+F9 dobbelttrykk.</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
-    <value>Smart Key sekundær handling</value>
+    <value>Smart Key sekund忙r handling</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
     <value>Tilordne hurtighandling til Fn+F9 enkle trykk.</value>
@@ -1706,7 +1709,7 @@ Omstart anbefales etter endring av dette alternativet.</value>
     <value>Smarttast-handling</value>
   </data>
   <data name="SettingsPage_Theme_Description" xml:space="preserve">
-    <value>Angi lyst tema, mørkt tema eller følg systeminnstillinger.</value>
+    <value>Angi lyst tema, m酶rkt tema eller f酶lg systeminnstillinger.</value>
   </data>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
     <value>Tema</value>
@@ -1715,7 +1718,7 @@ Omstart anbefales etter endring av dette alternativet.</value>
     <value>Innstillinger</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
-    <value>Konfigurer utseende, oppførsel og funksjonsalternativer for applikasjonen.</value>
+    <value>Konfigurer utseende, oppf酶rsel og funksjonsalternativer for applikasjonen.</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>Juster tastaturbakgrunnslysstyrke.</value>
@@ -1784,7 +1787,7 @@ Omstart anbefales etter endring av dette alternativet.</value>
     <value>Effekt</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>Denne effekten vil bli brukt på hele tastaturet og vil erstatte alle andre effekter.</value>
+    <value>Denne effekten vil bli brukt p氓 hele tastaturet og vil erstatte alle andre effekter.</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
     <value>Hastighet</value>
@@ -1821,28 +1824,28 @@ Omstart anbefales etter endring av dette alternativet.</value>
 Krever omstart.</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Endring av hybridmodus krever omstart. Vil du starte på nytt nå?</value>
+    <value>Endring av hybridmodus krever omstart. Vil du starte p氓 nytt n氓?</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
-    <value>Ny oppstart er påkrevd</value>
+    <value>Ny oppstart er p氓krevd</value>
   </data>
   <data name="ToggleHybridModeControl_Title" xml:space="preserve">
     <value>Hybridmodus</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Deaktiver berøringsplate.</value>
+    <value>Deaktiver ber酶ringsplate.</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Berøringsplås</value>
+    <value>Ber酶ringspl氓s</value>
   </data>
   <data name="TouchpadLockControl_Message" xml:space="preserve">
-    <value>Deaktiver berøringsplate.</value>
+    <value>Deaktiver ber酶ringsplate.</value>
   </data>
   <data name="TouchpadLockControl_Title" xml:space="preserve">
-    <value>Berøringsplås</value>
+    <value>Ber酶ringspl氓s</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
-    <value>Prøv igjen</value>
+    <value>Pr酶v igjen</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
     <value>Uventet unntak oppstod:
@@ -1852,12 +1855,12 @@ Krever omstart.</value>
     <value>Uten navn</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
-    <value>Du kan velge å fortsette på egen risiko, men husk at noen funksjoner kanskje ikke er tilgjengelige og/eller ikke fungerer som de skal.
+    <value>Du kan velge 氓 fortsette p氓 egen risiko, men husk at noen funksjoner kanskje ikke er tilgjengelige og/eller ikke fungerer som de skal.
 
-Logging vil bli aktivert automatisk hvis du velger å fortsette.</value>
+Logging vil bli aktivert automatisk hvis du velger 氓 fortsette.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
-    <value>Sjekk prosjektsiden på GitHub for mer informasjon.</value>
+    <value>Sjekk prosjektsiden p氓 GitHub for mer informasjon.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
     <value>Loggmappe</value>
@@ -1869,16 +1872,16 @@ Logging vil bli aktivert automatisk hvis du velger å fortsette.</value>
     <value>Universal Device Toolkit har ikke blitt testet med din enhet.</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>Du kan deaktivere denne advarselen når som helst i Innstillinger.</value>
+    <value>Du kan deaktivere denne advarselen n氓r som helst i Innstillinger.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
     <value>Modell</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
-    <value>Enheten støttes ikke</value>
+    <value>Enheten st酶ttes ikke</value>
   </data>
   <data name="UnsupportedWindow_Vendor" xml:space="preserve">
-    <value>Leverandør</value>
+    <value>Leverand酶r</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Oppdater</value>
@@ -1902,16 +1905,16 @@ Logging vil bli aktivert automatisk hvis du velger å fortsette.</value>
     <value>Tastaturbelysning</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Deaktiver Windows-tasten på innebygget tastatur.</value>
+    <value>Deaktiver Windows-tasten p氓 innebygget tastatur.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows-tastelås</value>
+    <value>Windows-tastel氓s</value>
   </data>
   <data name="WinKeyControl_Message" xml:space="preserve">
-    <value>Fungerer kun på innebygget tastatur.</value>
+    <value>Fungerer kun p氓 innebygget tastatur.</value>
   </data>
   <data name="WinKeyControl_Title" xml:space="preserve">
-    <value>Windows-tastelås</value>
+    <value>Windows-tastel氓s</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ja</value>
@@ -1920,41 +1923,41 @@ Logging vil bli aktivert automatisk hvis du velger å fortsette.</value>
     <value>Mikrofon</value>
   </data>
   <data name="MicrophoneControl_Message" xml:space="preserve">
-    <value>Når av, vil mikrofoner være dempet.</value>
+    <value>N氓r av, vil mikrofoner v忙re dempet.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
     <value>Mikrofon</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
-    <value>Når av, vil mikrofoner være dempet.</value>
+    <value>N氓r av, vil mikrofoner v忙re dempet.</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
-    <value>Oppløsning</value>
+    <value>Oppl酶sning</value>
   </data>
   <data name="ResolutionControl_Message" xml:space="preserve">
-    <value>Endre oppløsning på innebygget skjerm.</value>
+    <value>Endre oppl酶sning p氓 innebygget skjerm.</value>
   </data>
   <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
-    <value>Oppløsning</value>
+    <value>Oppl酶sning</value>
   </data>
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
-    <value>Endre oppløsning på innebygget skjerm.
+    <value>Endre oppl酶sning p氓 innebygget skjerm.
 
-ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶re korrekt hvis intern skjerm er av.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
-    <value>Endre skalering på innebygget skjerm.</value>
+    <value>Endre skalering p氓 innebygget skjerm.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
-    <value>Endre skalering på innebygget skjerm.
+    <value>Endre skalering p氓 innebygget skjerm.
 
-ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</value>
+ADVARSEL: Denne handlingen vil ikke kj酶re korrekt hvis intern skjerm er av.</value>
   </data>
   <data name="DashboardPage_Display_Title" xml:space="preserve">
     <value>Skjerm</value>
@@ -1963,13 +1966,13 @@ ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</va
     <value>Tastaturbelysning</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>Du kan slå belysning på eller av med Fn+Space.</value>
+    <value>Du kan sl氓 belysning p氓 eller av med Fn+Space.</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Tastaturbelysning</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå belysning på eller av.</value>
+    <value>Sl氓 belysning p氓 eller av.</value>
   </data>
   <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
     <value>Ingen matchende nedlastinger funnet</value>
@@ -1990,26 +1993,26 @@ ADVARSEL: Denne handlingen vil ikke kjøre korrekt hvis intern skjerm er av.</va
     <value>Navn</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
-    <value>Noen funksjoner kan ikke vises på Dashboard avhengig av status og konfigurasjon av din laptop.</value>
+    <value>Noen funksjoner kan ikke vises p氓 Dashboard avhengig av status og konfigurasjon av din laptop.</value>
   </data>
   <data name="DashboardPage_Customize" xml:space="preserve">
     <value>Tilpass</value>
   </data>
   <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
-    <value>Slå av skjermer</value>
+    <value>Sl氓 av skjermer</value>
   </data>
   <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
-    <value>Slå av alle tilgjengelige skjermer.
-Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
+    <value>Sl氓 av alle tilgjengelige skjermer.
+Bevegelse av musen eller trykking p氓 tastaturet vil vekke skjermer.</value>
   </data>
   <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
-    <value>Slå av</value>
+    <value>Sl氓 av</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
-    <value>Slå av skjermer</value>
+    <value>Sl氓 av skjermer</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå av alle tilgjengelige skjermer.</value>
+    <value>Sl氓 av alle tilgjengelige skjermer.</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
     <value>Rediger gruppenavn</value>
@@ -2018,19 +2021,19 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Navn</value>
   </data>
   <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
-    <value>Legion-logo på</value>
+    <value>Legion-logo p氓</value>
   </data>
   <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
     <value>Legion-logo av</value>
   </data>
   <data name="Notification_PortLightingOn" xml:space="preserve">
-    <value>Portbelysning på</value>
+    <value>Portbelysning p氓</value>
   </data>
   <data name="Notification_PortLightingOff" xml:space="preserve">
     <value>Portbelysning av</value>
   </data>
   <data name="PackageControl_RebootRequired" xml:space="preserve">
-    <value>Ny oppstart er påkrevd</value>
+    <value>Ny oppstart er p氓krevd</value>
   </data>
   <data name="PackageControl_ShutdownRequired" xml:space="preserve">
     <value>Avstenging kreves</value>
@@ -2048,7 +2051,7 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Installerer</value>
   </data>
   <data name="PackageControl_Completed" xml:space="preserve">
-    <value>Fullført</value>
+    <value>Fullf酶rt</value>
   </data>
   <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
     <value>Handlingsdefinisjon ikke funnet</value>
@@ -2063,13 +2066,13 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Ukjent</value>
   </data>
   <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
-    <value>Kommandokjøring</value>
+    <value>Kommandokj酶ring</value>
   </data>
   <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
     <value>Registerendring</value>
   </data>
   <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
-    <value>Tjenestehåndtering</value>
+    <value>Tjenesteh氓ndtering</value>
   </data>
   <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
     <value>Registerendring + PowerShell-skript</value>
@@ -2084,19 +2087,20 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Lagre og lukk</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
-    <value>Egendefinert modus-forhåndsinnstilling</value>
+    <value>Egendefinert modus-forh氓ndsinnstilling</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
-    <value>Aktiver forhåndsinnstilling for egendefinert modus.\nDenne innstillingen trer bare i kraft når egendefinert modus er aktivert.</value>
+    <value>Aktiver forh氓ndsinnstilling for egendefinert modus.
+Denne innstillingen trer bare i kraft n氓r egendefinert modus er aktivert.</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
-    <value>Navn på forhåndsinnstilling</value>
+    <value>Navn p氓 forh氓ndsinnstilling</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
     <value>Navn</value>
   </data>
   <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
-    <value>Aktiv forhåndsinnstilling</value>
+    <value>Aktiv forh氓ndsinnstilling</value>
   </data>
   <data name="AboutPage_ApplicationFolders" xml:space="preserve">
     <value>Programmapper</value>
@@ -2111,58 +2115,58 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Enkel skjermlysstyrke</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>Når på, vil samme lysstyrkenivå bli brukt på alle Windows-strømplaner hver gang du endrer det.</value>
+    <value>N氓r p氓, vil samme lysstyrkeniv氓 bli brukt p氓 alle Windows-str酶mplaner hver gang du endrer det.</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
     <value>Oppdatering {0} tilgjengelig!</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
-    <value>Toppstrømgrense</value>
+    <value>Toppstr酶mgrense</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
-    <value>APU sPPT-strømgrense</value>
+    <value>APU sPPT-str酶mgrense</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
-    <value>Det kontinuerlige strømforbruket som kan nås av CPU.</value>
+    <value>Det kontinuerlige str酶mforbruket som kan n氓s av CPU.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
-    <value>Toppstrømforbruket som kan nås av CPU innen kort tid.</value>
+    <value>Toppstr酶mforbruket som kan n氓s av CPU innen kort tid.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
-    <value>Det maksimale øyeblikksstrømforbruket som kan nås av CPU.</value>
+    <value>Det maksimale 酶yeblikksstr酶mforbruket som kan n氓s av CPU.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
-    <value>Det maksimale strømforbruket som kan nås av CPU når både CPU og GPU er fullt utnyttet.</value>
+    <value>Det maksimale str酶mforbruket som kan n氓s av CPU n氓r b氓de CPU og GPU er fullt utnyttet.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
-    <value>Toppstrømforbruket som kan nås av CPU med en liten forsinkelse.</value>
+    <value>Toppstr酶mforbruket som kan n氓s av CPU med en liten forsinkelse.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
-    <value>Den maksimale temperaturen som kan nås av CPU før frekvens og strøm reduseres.</value>
+    <value>Den maksimale temperaturen som kan n氓s av CPU f酶r frekvens og str酶m reduseres.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
-    <value>Den tilleggsstrømmen som kan tildeles GPU basert på strømforbruket til CPU.</value>
+    <value>Den tilleggsstr酶mmen som kan tildeles GPU basert p氓 str酶mforbruket til CPU.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
-    <value>Den tilleggsmengden strøm som kan tildeles GPU i tillegg til basisstrømforbruk.</value>
+    <value>Den tilleggsmengden str酶m som kan tildeles GPU i tillegg til basisstr酶mforbruk.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
-    <value>Den maksimale temperaturen som kan nås av GPU før frekvens og strøm reduseres.</value>
+    <value>Den maksimale temperaturen som kan n氓s av GPU f酶r frekvens og str酶m reduseres.</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Standard</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
-    <value>Varighet for kortvarig strømgrense</value>
+    <value>Varighet for kortvarig str酶mgrense</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
-    <value>Tiden CPU tillates å booste og bruke kortvarig strømgrense. Når Tau utløper, brukes langvarig strømgrense.</value>
+    <value>Tiden CPU tillates 氓 booste og bruke kortvarig str酶mgrense. N氓r Tau utl酶per, brukes langvarig str酶mgrense.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
-    <value>Total prosessorstrømmål i AC</value>
+    <value>Total prosessorstr酶mm氓l i AC</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
-    <value>Punktet der CPU utløser dynamisk strømforbruksjustering for GPU.</value>
+    <value>Punktet der CPU utl酶ser dynamisk str酶mforbruksjustering for GPU.</value>
   </data>
   <data name="Create" xml:space="preserve">
     <value>Opprett</value>
@@ -2174,16 +2178,16 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Opprett handling</value>
   </data>
   <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
-    <value>Strømmodus</value>
+    <value>Str酶mmodus</value>
   </data>
   <data name="StatusTrayPopup_Preset" xml:space="preserve">
-    <value>Forhåndsinnstilling</value>
+    <value>Forh氓ndsinnstilling</value>
   </data>
   <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
     <value>Diskret GPU</value>
   </data>
   <data name="StatusTrayPopup_PowerState" xml:space="preserve">
-    <value>Strømtilstand</value>
+    <value>Str酶mtilstand</value>
   </data>
   <data name="StatusTrayPopup_Battery" xml:space="preserve">
     <value>Batteri</value>
@@ -2213,28 +2217,28 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Endre ikon</value>
   </data>
   <data name="BatteryPage_LowLevel" xml:space="preserve">
-    <value>Batterinivå lavt</value>
+    <value>Batteriniv氓 lavt</value>
   </data>
   <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
     <value>Konfigurer</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
-    <value>S0 strømsparemodus oppdaget</value>
+    <value>S0 str酶msparemodus oppdaget</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Windows rapporterer at denne bærbare støtter Modern Standby. Bruk av strømplaner annet enn Balansert kan forårsake uventet oppførsel.</value>
+    <value>Windows rapporterer at denne b忙rbare st酶tter Modern Standby. Bruk av str酶mplaner annet enn Balansert kan for氓rsake uventet oppf酶rsel.</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Velg Windows-strømplaner som skal brukes når strømmodus endres.</value>
+    <value>Velg Windows-str酶mplaner som skal brukes n氓r str酶mmodus endres.</value>
   </data>
   <data name="SettingsPage_Power_Title" xml:space="preserve">
     <value>Effekt</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Alternativer for strømplaner i Windows-kontrollpanelet</value>
+    <value>Alternativer for str酶mplaner i Windows-kontrollpanelet</value>
   </data>
   <data name="PoweredOff" xml:space="preserve">
-    <value>slått av</value>
+    <value>sl氓tt av</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
     <value>Importer tastaturbelysningsprofil</value>
@@ -2249,7 +2253,7 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Etter {0}</value>
   </data>
   <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>Flere utløsere...</value>
+    <value>Flere utl酶sere...</value>
     <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
@@ -2265,13 +2269,13 @@ Bevegelse av musen eller trykking på tastaturet vil vekke skjermer.</value>
     <value>Overklokking av GPU</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
-    <value>Øk ytelsen ved å overklokke den dedikerte GPU-en.</value>
+    <value>脴k ytelsen ved 氓 overklokke den dedikerte GPU-en.</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
     <value>Overklokking av GPU</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Øk ytelsen ved å overklokke den dedikerte GPU-en.
+    <value>脴k ytelsen ved 氓 overklokke den dedikerte GPU-en.
 
 ADVARSEL: Denne handlingen vil ikke fungere riktig hvis den dedikerte GPU-en ikke er tilgjengelig.</value>
   </data>
@@ -2279,25 +2283,25 @@ ADVARSEL: Denne handlingen vil ikke fungere riktig hvis den dedikerte GPU-en ikk
     <value>Portbelysning</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Slå på eller av belysningen på portene på baksiden av den bærbare.</value>
+    <value>Sl氓 p氓 eller av belysningen p氓 portene p氓 baksiden av den b忙rbare.</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Portbelysning</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå på eller av belysningen på portene på baksiden av den bærbare.</value>
+    <value>Sl氓 p氓 eller av belysningen p氓 portene p氓 baksiden av den b忙rbare.</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
     <value>Panellogobelysning</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Slå på eller av belysningen på lokket til den bærbare.</value>
+    <value>Sl氓 p氓 eller av belysningen p氓 lokket til den b忙rbare.</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Panellogobelysning</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå på eller av belysningen på lokket til den bærbare.</value>
+    <value>Sl氓 p氓 eller av belysningen p氓 lokket til den b忙rbare.</value>
   </data>
   <data name="GHz" xml:space="preserve">
     <value>GHz</value>
@@ -2333,22 +2337,22 @@ ADVARSEL: Denne handlingen vil ikke fungere riktig hvis den dedikerte GPU-en ikk
     <value>Oppdateringsintervall</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Øyeblikkelig oppstart</value>
+    <value>脴yeblikkelig oppstart</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Slå på den bærbare når en lader er tilkoblet.</value>
+    <value>Sl氓 p氓 den b忙rbare n氓r en lader er tilkoblet.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Øyeblikkelig oppstart</value>
+    <value>脴yeblikkelig oppstart</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Slå på den bærbare når en lader er tilkoblet.</value>
+    <value>Sl氓 p氓 den b忙rbare n氓r en lader er tilkoblet.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Kan ikke endre strømmodus</value>
+    <value>Kan ikke endre str酶mmodus</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} strømmodus er ikke tilgjengelig uten nettstrøm.</value>
+    <value>{0} str酶mmodus er ikke tilgjengelig uten nettstr酶m.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
@@ -2358,26 +2362,26 @@ ADVARSEL: Denne handlingen vil ikke fungere riktig hvis den dedikerte GPU-en ikk
     <value>Kunne ikke endre GPU-arbeidsmodus</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Prøv å endre modusen igjen om noen sekunder hvis du ikke ser forventet resultat.
-Hvis dGPU ikke svarer i det hele tatt, vennligst start den bærbare på nytt.</value>
+    <value>Pr酶v 氓 endre modusen igjen om noen sekunder hvis du ikke ser forventet resultat.
+Hvis dGPU ikke svarer i det hele tatt, vennligst start den b忙rbare p氓 nytt.</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU er i bruk for øyeblikket</value>
+    <value>dGPU er i bruk for 酶yeblikket</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU kobles fra automatisk når den ikke er i bruk.</value>
+    <value>dGPU kobles fra automatisk n氓r den ikke er i bruk.</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU er i bruk for øyeblikket, eller den bærbare bruker ikke batteristrøm</value>
+    <value>dGPU er i bruk for 酶yeblikket, eller den b忙rbare bruker ikke batteristr酶m</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU kobles fra automatisk når den ikke er i bruk og den bærbare bruker batteristrøm.</value>
+    <value>dGPU kobles fra automatisk n氓r den ikke er i bruk og den b忙rbare bruker batteristr酶m.</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Tilpassede modusinnstillinger vil ikke bli brukt riktig når Lenovo Vantage eller tjenestene kjører.</value>
+    <value>Tilpassede modusinnstillinger vil ikke bli brukt riktig n氓r Lenovo Vantage eller tjenestene kj酶rer.</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Tilpassede modusinnstillinger vil ikke bli brukt riktig når Legion Zone eller tjenestene kjører.</value>
+    <value>Tilpassede modusinnstillinger vil ikke bli brukt riktig n氓r Legion Zone eller tjenestene kj酶rer.</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
     <value>dGPU tilkoblet</value>
@@ -2389,14 +2393,15 @@ Hvis dGPU ikke svarer i det hele tatt, vennligst start den bærbare på nytt.</v
     <value>Arbeidsmodus</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Velg GPU-driftsmodus basert på datamaskinens bruks- og strømforhold.
+    <value>Velg GPU-driftsmodus basert p氓 datamaskinens bruks- og str酶mforhold.
 Brytermoduser kan kreve omstart.</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
     <value>Hybridmodus</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Tillat bytting mellom integrert og diskret GPU.\nKrever omstart.</value>
+    <value>Tillat bytting mellom integrert og diskret GPU.
+Krever omstart.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
     <value>Varighet</value>
@@ -2408,7 +2413,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>GPU til CPU Dynamic Boost</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>Dette er maksimal ekstra strøm som kan tildeles CPU fra GPU basert på CPU-bruk. Jo høyere verdi, jo bedre ytelse for programmer som bruker CPU.</value>
+    <value>Dette er maksimal ekstra str酶m som kan tildeles CPU fra GPU basert p氓 CPU-bruk. Jo h酶yere verdi, jo bedre ytelse for programmer som bruker CPU.</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
     <value>Oppstartslogo</value>
@@ -2444,34 +2449,35 @@ Brytermoduser kan kreve omstart.</value>
     <value>Vis varsling</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Forhåndsinnstilling</value>
+    <value>Forh氓ndsinnstilling</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
     <value>Smart Fn Lock</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock vil bli midlertidig deaktivert når Alt, Ctrl eller Shift-tasten trykkes ned.</value>
+    <value>Fn Lock vil bli midlertidig deaktivert n氓r Alt, Ctrl eller Shift-tasten trykkes ned.</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>Av</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Tilpasset oppstartslogo må være nøyaktig {0} piksler stor.\nStøttede formater er: {1}.</value>
+    <value>Tilpasset oppstartslogo m氓 v忙re n酶yaktig {0} piksler stor.
+St酶ttede formater er: {1}.</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
     <value>Nattlading av batteri</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>Når aktivert, vil denne enheten lade til 80% når den er koblet til strøm over natten og fullføre ladingen til 100% innen du bruker enheten om morgenen.</value>
+    <value>N氓r aktivert, vil denne enheten lade til 80% n氓r den er koblet til str酶m over natten og fullf酶re ladingen til 100% innen du bruker enheten om morgenen.</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
     <value>Nattlading av batteri</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>Når aktivert, vil denne enheten lade til 80% når den er koblet til strøm over natten og fullføre ladingen til 100% innen du bruker enheten om morgenen.</value>
+    <value>N氓r aktivert, vil denne enheten lade til 80% n氓r den er koblet til str酶m over natten og fullf酶re ladingen til 100% innen du bruker enheten om morgenen.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Ugyldig bildestørrelse.</value>
+    <value>Ugyldig bildest酶rrelse.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
     <value>Ugyldig bildeformat.</value>
@@ -2483,7 +2489,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Kan ikke angi UEFI-rettighet.</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Ikke nok ledig plass på EFI-partisjonen.</value>
+    <value>Ikke nok ledig plass p氓 EFI-partisjonen.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
     <value>Kunne ikke angi tilpasset logo: {0}</value>
@@ -2504,13 +2510,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>Kopier gjeldende nettverksnavn</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>La stå tomt for alle Wi-Fi-nettverk.</value>
+    <value>La st氓 tomt for alle Wi-Fi-nettverk.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
     <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Del viftehastighet, batteritemperatur osv. med HWiNFO64. Du må kanskje starte HWiNFO64 på nytt etter å ha endret dette alternativet.</value>
+    <value>Del viftehastighet, batteritemperatur osv. med HWiNFO64. Du m氓 kanskje starte HWiNFO64 p氓 nytt etter 氓 ha endret dette alternativet.</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
     <value>Integrasjoner</value>
@@ -2525,7 +2531,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Nedlastingsmappe</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
-    <value>Åpne nedlastingsmappe</value>
+    <value>脜pne nedlastingsmappe</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Last ned</value>
@@ -2540,7 +2546,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Installasjon mislyktes</value>
   </data>
   <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
-    <value>Filen ble ikke funnet, vennligst last ned først</value>
+    <value>Filen ble ikke funnet, vennligst last ned f酶rst</value>
   </data>
   <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
     <value>Installasjon startet</value>
@@ -2549,10 +2555,10 @@ Brytermoduser kan kreve omstart.</value>
     <value>Starter installasjonsprogram: {0}</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Åpne README</value>
+    <value>脜pne README</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Forhåndsinnstilling</value>
+    <value>Forh氓ndsinnstilling</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
     <value>Oppdater</value>
@@ -2565,34 +2571,34 @@ Brytermoduser kan kreve omstart.</value>
     <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Tilbakestiller telleren for "På batteri siden" i batteriseksjonen når systemet startes på nytt.</value>
+    <value>Tilbakestiller telleren for "P氓 batteri siden" i batteriseksjonen n氓r systemet startes p氓 nytt.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Tilbakestill "På batteri siden" ved oppstart</value>
+    <value>Tilbakestill "P氓 batteri siden" ved oppstart</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Slå av Wi-Fi</value>
+    <value>Sl氓 av Wi-Fi</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Slå på Wi-Fi</value>
+    <value>Sl氓 p氓 Wi-Fi</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Kjør i bakgrunnen</value>
+    <value>Kj酶r i bakgrunnen</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
     <value>Vent til ferdig</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Kjør konsollapplikasjoner uten å opprette et konsollvindu.</value>
+    <value>Kj酶r konsollapplikasjoner uten 氓 opprette et konsollvindu.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Vent til programmet eller skriptet er ferdig kjørt</value>
+    <value>Vent til programmet eller skriptet er ferdig kj酶rt</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>Når dempet, dempes alle aktive lydenheter.</value>
+    <value>N氓r dempet, dempes alle aktive lydenheter.</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Høyttaler</value>
+    <value>H酶yttaler</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
     <value>Minimer til systemfeltet</value>
@@ -2601,7 +2607,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Alltid minimer til systemfeltet i stedet for oppgavelinjen.</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Windows-strømmoduser</value>
+    <value>Windows-str酶mmoduser</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
     <value>Bytt til egendefinert modus med Fn+Q</value>
@@ -2610,16 +2616,16 @@ Brytermoduser kan kreve omstart.</value>
     <value>Tillat rask bytting til egendefinert modus med Fn+Q.</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
-    <value>Strømmodus-synkronisering</value>
+    <value>Str酶mmodus-synkronisering</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Endre automatisk Windows-strømplan eller Windows-strømmodus når strømmoduser endres.</value>
+    <value>Endre automatisk Windows-str酶mplan eller Windows-str酶mmodus n氓r str酶mmoduser endres.</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Windows-strømmoduser</value>
+    <value>Windows-str酶mmoduser</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Velg Windows-strømmodus som skal brukes når strømmodus endres.</value>
+    <value>Velg Windows-str酶mmodus som skal brukes n氓r str酶mmodus endres.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Det oppstod en feil ved lesing av enhetsinformasjon.</value>
@@ -2628,25 +2634,25 @@ Brytermoduser kan kreve omstart.</value>
     <value>Feil ved kompatibilitetskontroll</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
-    <value>Applikasjonen klarte ikke å lese enhetsinformasjon under oppstart. Vennligst sjekk feildetaljene nedenfor og prøv feilsøkingstrinnene hvis nødvendig.</value>
+    <value>Applikasjonen klarte ikke 氓 lese enhetsinformasjon under oppstart. Vennligst sjekk feildetaljene nedenfor og pr酶v feils酶kingstrinnene hvis n酶dvendig.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
-    <value>Feilsøkingstrinn</value>
+    <value>Feils酶kingstrinn</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Sørg for at Windows Management Instrumentation (WMI)-tjenesten kjører: Åpne Tjenester (services.msc) og sjekk at "Windows Management Instrumentation" kjører.</value>
+    <value>S酶rg for at Windows Management Instrumentation (WMI)-tjenesten kj酶rer: 脜pne Tjenester (services.msc) og sjekk at "Windows Management Instrumentation" kj酶rer.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
-    <value>Kjør applikasjonen som administrator for å sikre tilstrekkelige tillatelser for å få tilgang til systemregisteret og WMI.</value>
+    <value>Kj酶r applikasjonen som administrator for 氓 sikre tilstrekkelige tillatelser for 氓 f氓 tilgang til systemregisteret og WMI.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
-    <value>Sjekk systemressurser: Lukk andre ressurskrevende applikasjoner og prøv igjen.</value>
+    <value>Sjekk systemressurser: Lukk andre ressurskrevende applikasjoner og pr酶v igjen.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>Se gjennom loggfilen for detaljert feilinformasjon ved å klikke på "Åpne logg" nedenfor.</value>
+    <value>Se gjennom loggfilen for detaljert feilinformasjon ved 氓 klikke p氓 "脜pne logg" nedenfor.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
-    <value>Åpne loggfil</value>
+    <value>脜pne loggfil</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Makro</value>
@@ -2661,7 +2667,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Ignorer forsinkelser</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Tøm</value>
+    <value>T酶m</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
     <value>Ta opp</value>
@@ -2673,13 +2679,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>Ikke gjenta</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Universal Device Toolkit må kjøre for at makroer skal fungere.</value>
+    <value>Universal Device Toolkit m氓 kj酶re for at makroer skal fungere.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
     <value>Aktiver</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>Du kan ta opp en serie tastetrykk og aktivere dem ved å bruke talltastaturet på tastaturet ditt.</value>
+    <value>Du kan ta opp en serie tastetrykk og aktivere dem ved 氓 bruke talltastaturet p氓 tastaturet ditt.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
     <value>Makro</value>
@@ -2724,7 +2730,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Tar opp...</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
-    <value>Trykk ESC for å stoppe.</value>
+    <value>Trykk ESC for 氓 stoppe.</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
     <value>Vis kun valgte enheter</value>
@@ -2745,7 +2751,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Legg CLI til PATH</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Legg CLI til brukerens PATH-miljøvariabel.</value>
+    <value>Legg CLI til brukerens PATH-milj酶variabel.</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
     <value>Temperatur</value>
@@ -2754,19 +2760,19 @@ Brytermoduser kan kreve omstart.</value>
     <value>Velg enheter for temperatur Sensorer.</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys kjører i bakgrunnen.</value>
+    <value>Lenovo Hotkeys kj酶rer i bakgrunnen.</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone kjører i bakgrunnen.</value>
+    <value>Legion Zone kj酶rer i bakgrunnen.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage og/eller ImController kjører i bakgrunnen.</value>
+    <value>Lenovo Vantage og/eller ImController kj酶rer i bakgrunnen.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Vis varsling på alle skjermer tilkoblet enheten din.</value>
+    <value>Vis varsling p氓 alle skjermer tilkoblet enheten din.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
-    <value>Varsling på alle skjermer</value>
+    <value>Varsling p氓 alle skjermer</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
     <value>Sjekk</value>
@@ -2781,13 +2787,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdater</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API-rategrense nådd, vennligst prøv igjen senere.</value>
+    <value>API-rategrense n氓dd, vennligst pr酶v igjen senere.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
     <value>Kunne ikke sjekke etter oppdateringer</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Noe gikk galt, vennligst prøv igjen senere.</value>
+    <value>Noe gikk galt, vennligst pr酶v igjen senere.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
     <value>Ingen oppdateringer funnet</value>
@@ -2799,7 +2805,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdateringslager</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
-    <value>Konfigurer GitHub-lageret for å sjekke etter oppdateringer. La stå tomt for å bruke standard.</value>
+    <value>Konfigurer GitHub-lageret for 氓 sjekke etter oppdateringer. La st氓 tomt for 氓 bruke standard.</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
     <value>Lagereier</value>
@@ -2817,7 +2823,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdateringskatalog ikke funnet</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Prøv å hente oppdateringer fra den andre kilden.</value>
+    <value>Pr酶v 氓 hente oppdateringer fra den andre kilden.</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Noe gikk galt</value>
@@ -2829,19 +2835,20 @@ Brytermoduser kan kreve omstart.</value>
     <value>Spill lyd</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Vanlige musikkformater som wav eller mp3 støttes.</value>
+    <value>Vanlige musikkformater som wav eller mp3 st酶ttes.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
     <value>Hurtighandling</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Kjør en lagret hurtighandling.</value>
+    <value>Kj酶r en lagret hurtighandling.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Varsling alltid øverst</value>
+    <value>Varsling alltid 酶verst</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Legg alltid varsling øverst.\nDet påvirker ikke andre fullskjermvinduer, men du vil ikke kunne klikke på varslingene.</value>
+    <value>Legg alltid varsling 酶verst.
+Det p氓virker ikke andre fullskjermvinduer, men du vil ikke kunne klikke p氓 varslingene.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>Anbefalt</value>
@@ -2865,13 +2872,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>{0} av {1} handlinger valgt</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimert opprenskingsstørrelse: {0}</value>
+    <value>Estimert opprenskingsst酶rrelse: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
-    <value>Klikk Skann for å beregne total størrelse</value>
+    <value>Klikk Skann for 氓 beregne total st酶rrelse</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Kjører: {0}</value>
+    <value>Kj酶rer: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>Avinstallerer valgte apper...</value>
@@ -2888,7 +2895,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Windows-forbedring</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Tilpass Windows-utseende og -oppførsel.</value>
+    <value>Tilpass Windows-utseende og -oppf酶rsel.</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
     <value>Effekter</value>
@@ -2903,14 +2910,14 @@ Brytermoduser kan kreve omstart.</value>
     <value>Utvid alle</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Slå sammen alle</value>
+    <value>Sl氓 sammen alle</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Frigjorde {0} på {1}s</value>
+    <value>Frigjorde {0} p氓 {1}s</value>
 
   </data>
 <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Utfører {0}%</value>
+    <value>Utf酶rer {0}%</value>
   </data>
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
     <value>Operasjon avbrutt</value>
@@ -2925,7 +2932,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Vis skjulte nedlastinger</value>
   </data>
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Velg språk</value>
+    <value>Velg spr氓k</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Ikke tilkoblet</value>
@@ -2937,7 +2944,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Bruker Windows innebygde registerrenskningsfunksjonalitet</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (Tøm DNS-buffer)</value>
+    <value>ipconfig /flushdns (T酶m DNS-buffer)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
     <value>netsh winsock reset (Tilbakestill Winsock-protokollstabel)</value>
@@ -2949,7 +2956,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Utvidelsesprogrammer</value>
   </data>
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
-    <value>Installer og administrer utvidelser for å utvide funksjonalitet</value>
+    <value>Installer og administrer utvidelser for 氓 utvide funksjonalitet</value>
   </data>
 
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
@@ -2966,7 +2973,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Innstillinger for utvidelse</value>
   </data>
   <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
-    <value>Navn på utvidelse</value>
+    <value>Navn p氓 utvidelse</value>
   </data>
   <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
     <value>Beskrivelse av utvidelse</value>
@@ -2996,7 +3003,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Feil ved lasting av utvidelsesinnstillinger: {0}</value>
   </data>
   <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
-    <value>Søk etter utvidelser...</value>
+    <value>S酶k etter utvidelser...</value>
   </data>
   <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
     <value>Alle</value>
@@ -3011,7 +3018,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Ingen utvidelser tilgjengelig</value>
   </data>
   <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
-    <value>Utvidelsesbutikken er for øyeblikket tom. Følg med for fremtidige oppdateringer av utvidelser.</value>
+    <value>Utvidelsesbutikken er for 酶yeblikket tom. F酶lg med for fremtidige oppdateringer av utvidelser.</value>
   </data>
   <data name="PluginExtensionsPage_Configure" xml:space="preserve">
     <value>Konfigurer</value>
@@ -3020,10 +3027,10 @@ Brytermoduser kan kreve omstart.</value>
     <value>Avinstaller</value>
   </data>
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
-    <value>Åpne</value>
+    <value>脜pne</value>
   </data>
   <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Språk:</value>
+    <value>Spr氓k:</value>
   </data>
   <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
     <value>Bruk applikasjonens standard</value>
@@ -3089,19 +3096,19 @@ Brytermoduser kan kreve omstart.</value>
     <value>Kunne ikke avinstallere utvidelse: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
-    <value>Kunne ikke åpne utvidelse</value>
+    <value>Kunne ikke 氓pne utvidelse</value>
   </data>
     <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
-    <value>Kunne ikke åpne utvidelse: {0}</value>
+    <value>Kunne ikke 氓pne utvidelse: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
-    <value>Kunne ikke åpne utvidelse: {0}</value>
+    <value>Kunne ikke 氓pne utvidelse: {0}</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
     <value>Utvidelse ikke installert</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
-    <value>Utvidelsen er ikke installert og kan ikke åpnes</value>
+    <value>Utvidelsen er ikke installert og kan ikke 氓pnes</value>
   </data>
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>Minimum versjon {0} kreves</value>
@@ -3116,7 +3123,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdatering feilet</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
-    <value>Oppdatering av utvidelse feilet, sjekk nettverkstilkoblingen og prøv igjen senere.</value>
+    <value>Oppdatering av utvidelse feilet, sjekk nettverkstilkoblingen og pr酶v igjen senere.</value>
   </data>
   <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
     <value>Oppdatering vellykket</value>
@@ -3134,7 +3141,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdater alle</value>
   </data>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
-    <value>Kjør utvidelse</value>
+    <value>Kj酶r utvidelse</value>
   </data>
   <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
     <value>Utvidelse startet</value>
@@ -3143,7 +3150,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Utvidelse avinstallert</value>
   </data>
   <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Utvidelsen vil bli slettet når programmet lukkes.</value>
+    <value>Utvidelsen vil bli slettet n氓r programmet lukkes.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Sletting feilet</value>
@@ -3155,7 +3162,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Konfigurasjon feilet</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Utvidelsen er installert men ikke lastet. Prøv å starte programmet på nytt.</value>
+    <value>Utvidelsen er installert men ikke lastet. Pr酶v 氓 starte programmet p氓 nytt.</value>
   </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>Ingen konfigurasjon</value>
@@ -3164,10 +3171,10 @@ Brytermoduser kan kreve omstart.</value>
     <value>Utvidelsen har ingen konfigurasjonsalternativer.</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Konfigurasjon støttes ikke</value>
+    <value>Konfigurasjon st酶ttes ikke</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Utvidelsen støtter ikke konfigurasjon.</value>
+    <value>Utvidelsen st酶tter ikke konfigurasjon.</value>
   </data>
   <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
     <value>Utvidelsestilstander nullstilt</value>
@@ -3176,7 +3183,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Alle installasjonstilstander for utvidelser er nullstilt</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
-    <value>Masseoppdatering fullført</value>
+    <value>Masseoppdatering fullf酶rt</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
     <value>Alle utvidelser er behandlet.</value>
@@ -3191,10 +3198,10 @@ Brytermoduser kan kreve omstart.</value>
     <value>Ny versjon tilgjengelig</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Versjon: </value>
+    <value>Versjon:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Utgivelsesdato: </value>
+    <value>Utgivelsesdato:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Nyheter:</value>
@@ -3203,7 +3210,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdater utvidelsesliste</value>
   </data>
   <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
-    <value>Ingen utvidelser funnet som samsvarer med søket.</value>
+    <value>Ingen utvidelser funnet som samsvarer med s酶ket.</value>
   </data>
   <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
     <value>Oppdater alle tilgjengelige plugins</value>
@@ -3221,7 +3228,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Installer {0} plugin(s)...</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
-    <value>Masseinstallasjon fullført</value>
+    <value>Masseinstallasjon fullf酶rt</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
     <value>Installerte {0} plugin(s).</value>
@@ -3230,7 +3237,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Masseinstallasjon mislyktes</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
-    <value>Klarte ikke å installere plugins: {0}</value>
+    <value>Klarte ikke 氓 installere plugins: {0}</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
     <value>Oppdaterer alle...</value>
@@ -3239,7 +3246,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Oppdaterer...</value>
   </data>
   <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
-    <value>Åpne mappe</value>
+    <value>脜pne mappe</value>
   </data>
   <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
     <value>Kopier Plugin-ID</value>
@@ -3248,7 +3255,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Mappe ikke funnet</value>
   </data>
   <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
-    <value>Plugin-mappen eksisterer ikke ennå.</value>
+    <value>Plugin-mappen eksisterer ikke enn氓.</value>
   </data>
   <data name="PluginExtensionsPage_Copied" xml:space="preserve">
     <value>Kopiert</value>
@@ -3257,7 +3264,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Plugin-ID '{0}' kopiert til utklippstavle.</value>
   </data>
   <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
-    <value>Nedlasting fullført</value>
+    <value>Nedlasting fullf酶rt</value>
   </data>
   <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
     <value>Laster ned...</value>
@@ -3266,16 +3273,16 @@ Brytermoduser kan kreve omstart.</value>
     <value>Laster ned... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>Ingen verktøy tilgjengelig. Legg til verktøy i verktøy-mappen i programkatalogen.</value>
+    <value>Ingen verkt酶y tilgjengelig. Legg til verkt酶y i verkt酶y-mappen i programkatalogen.</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Verktøy vil vises her når de er tilgjengelige i verktøy-katalogen.</value>
+    <value>Verkt酶y vil vises her n氓r de er tilgjengelige i verkt酶y-katalogen.</value>
   </data>
   <data name="SensorsControl_Model" xml:space="preserve">
     <value>Modell</value>
   </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
-    <value>Strømforbruk</value>
+    <value>Str酶mforbruk</value>
   </data>
   <data name="SensorsControl_Charge" xml:space="preserve">
     <value>Lading</value>
@@ -3314,16 +3321,16 @@ Brytermoduser kan kreve omstart.</value>
     <value>Kjernespenning</value>
   </data>
   <data name="SensorsControl_VoltageRange" xml:space="preserve">
-    <value>Spenningsområde</value>
+    <value>Spenningsomr氓de</value>
   </data>
   <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
     <value>Sidefelt</value>
   </data>
   <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
-    <value>System </value>
+    <value>System</value>
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
-    <value>Hastighetsområde</value>
+    <value>Hastighetsomr氓de</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
     <value>Vennligst velg minst ett oppryddingsalternativ.</value>
@@ -3338,13 +3345,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>f.eks. C:\Drivers</value>
   </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
-    <value>Velg minst ett element å rydde opp.</value>
+    <value>Velg minst ett element 氓 rydde opp.</value>
   </data>
-<data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>Force software rendering</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value></data>  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
     <value>Installasjonsprogrammet avsluttet med kode {0}</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>I kø</value>
+    <value>I k酶</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>av {0}</value>
@@ -3353,7 +3360,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Optimaliser</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Rask åpning</value>
+    <value>Rask 氓pning</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Innstillinger</value>
@@ -3380,7 +3387,7 @@ Brytermoduser kan kreve omstart.</value>
     <value>Totalt antall tilleggsprogrammer</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>Alle oppdagede tilleggsprogrammer er nå oppdaterte.</value>
+    <value>Alle oppdagede tilleggsprogrammer er n氓 oppdaterte.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
     <value>Oppdatert</value>
@@ -3395,13 +3402,13 @@ Brytermoduser kan kreve omstart.</value>
     <value>{0} tilleggsprogram-oppdatering(er) er klare for installering.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Venter på at metadata for tilleggsprogram lastes.</value>
+    <value>Venter p氓 at metadata for tilleggsprogram lastes.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>Laster metadata</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Tilpass språk, temperaturenhet, tema og accentfarge.</value>
+    <value>Tilpass spr氓k, temperaturenhet, tema og accentfarge.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Utseende</value>
@@ -3410,16 +3417,16 @@ Brytermoduser kan kreve omstart.</value>
     <value>Applikasjon</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit ble startet med {0}. Automatiske og manuelle oppdateringssjekk, pluss oppdateringsinnstillingene nedenfor, er deaktivert til du starter på nytt uten det oppstartsargumentet.</value>
+    <value>Universal Device Toolkit ble startet med {0}. Automatiske og manuelle oppdateringssjekk, pluss oppdateringsinnstillingene nedenfor, er deaktivert til du starter p氓 nytt uten det oppstartsargumentet.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Oppdateringssjekk er deaktivert for denne økten</value>
+    <value>Oppdateringssjekk er deaktivert for denne 酶kten</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Kontroller valgt kilde og nettverkstilkobling, og søk igjen.</value>
+    <value>Kontroller valgt kilde og nettverkstilkobling, og s酶k igjen.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driversøk ble ikke fullført</value>
+    <value>Drivers酶k ble ikke fullf酶rt</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
     <value>Juster filteret, oppdateringsvalg eller liste over skjulte nedlastinger.</value>
@@ -3428,18 +3435,463 @@ Brytermoduser kan kreve omstart.</value>
     <value>Ingen matchende nedlastinger funnet</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Prøv en annen kilde, operativsystem eller maskintype.</value>
+    <value>Pr酶v en annen kilde, operativsystem eller maskintype.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
     <value>Ingen drivernedlastinger funnet</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Velg en kilde og søk for å vise kompatible drivernedlastinger.</value>
+    <value>Velg en kilde og s酶k for 氓 vise kompatible drivernedlastinger.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Søk etter driverpakker</value>
+    <value>S酶k etter driverpakker</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Klarte ikke å bruke {0}: {1}</value>
+    <value>Klarte ikke 氓 bruke {0}: {1}</value>
+  </data>
+
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Enhetspakke: Grunnleggende modus</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Denne enheten starter i grunnleggende modus. Maskinvarespesifikke kontroller er skjult til en kompatibel enhetspakke er tilgjengelig.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Enhetspakke: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit oppdaget en matchende enhetspakke. Bekreft den n氓 slik at appen kan forberede maskinvarespesifikke funksjoner.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Forbereder enhetsoppsett...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Bekreft valg</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Velg filene du vil fjerne. Bare filer som samsvarer med filteret vises.</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Egendefinert...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Filtrer filer st酶rre enn:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Filnavn</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Sti</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Velg</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>St酶rrelse</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Valgt: {0} filer ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Analyse av store filer</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Vifte</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Disk 1-temperatur</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Disk 2-temperatur</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core klokke</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Bildetid</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Spill</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Vifte</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Temperatur</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Bruk</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH-vifte</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core klokke</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Linje</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Vis eller skjul OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Bakgrunnsfarge</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Kategorifarge</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Hj酶rneradius</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Bunn</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Topp</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kritisk farge</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Skriftst酶rrelse</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Etikettfarge</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Opasitet</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Verdifarge</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Advarselsfarge</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>L氓s posisjon</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Overleggsstil</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Oppdateringsintervall</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Sensor oppdateringsintervall</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Tilbakestill posisjon</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Justeringsterskel</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Utseende</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Generelt</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensorer</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Terskler</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritisk</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS-grense</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Den minste akseptable bildefrekvensen. Under dette blir fargen kritisk.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Lav FPS-delta</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Den maksimale forskjellen mellom gjennomsnittlig FPS og 1% lav. Over dette blir telleren kritisk.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Ytelse</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Temperatur</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Bruk</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Advarsel</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD-innstillinger</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Plugin {0} ble installert, men eksponerer ikke et brukerrettet inngangspunkt. Den kan bare tilby bakgrunnstjenester eller manifestdata.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Installert, men uten inngangspunkt</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Plugin {0} ble installert, men runtime-grensesnittet kunne ikke lastes. Start appen p氓 nytt eller installer pluginen p氓 nytt.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Venter p氓 氓 installere (en annen plugin lastes ned)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Plugin {0} ble installert og 氓pnet i Systemoptimalisering.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Plugin {0} ble installert. Bruk 脜pne for 氓 starte det tilgjengelige inngangspunktet.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH-temperatur</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Effekt</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Kjerner</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Minne</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Plattform</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E-Core klokke</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Effekt</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Kjernetemp.</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU Hot Spot</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM-temp.</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe-gjennomstr酶mning</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM-bruk</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Laster...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Minne temperatur</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Minnebruk</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Hovedkorttemp.</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Hovedkort</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>I/T</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P-Core klokke</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Delt minnebruk</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD-temperatur</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Ukjent batteri</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Ukjent CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Ukjent GPU</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM-temperatur</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM-bruk</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Aktiver avansert maskinvarepolling for 氓 overv氓ke detaljerte temperaturer, frekvenser og str酶mgrenser.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Du m氓 installere PawnIO f酶rst for 氓 bruke maskinvaresensorer!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Maskinvaresensorer</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Kunne ikke laste ned spr氓kpakken. Sjekk nettverkstilkoblingen, proxyen eller TLS-innstillingene, og pr酶v igjen.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Skjerm</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Smarttaster</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Flytende overlegg som viser sanntids sensordata.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Aktiver OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Lukk</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Slett rapport</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>En krasjrapport er lagret p氓 disk. Du kan se gjennom den senere eller slette den hvis du ikke trenger den lenger.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Applikasjonen krasjet under forrige 酶kt</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Kunne ikke 氓pne krasjrapport: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>脜pne rapport</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Krasjrapport lagret til: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Krasjrapport oppdaget</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Kan ikke laste detaljer for krasjrapport.</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Hovedkort</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Kabinett</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Maskinvare</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Minne</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Tilgjengelig</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Skjul detaljer</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Detaljer</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Vis detaljer</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Bruksveiledning</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Dobbeltklikk for 氓 vise eller skjule detaljert sensorinformasjon</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Installer spr氓k</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Spr氓kinstallasjon mislyktes</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Installerer spr氓k</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Pakker ut og installerer...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Laster ned spr氓kpakke...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Bruk nedlastingsknappen for 氓 installere dette spr氓ket.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Spr氓k ikke installert</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Avinstaller spr氓k</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Spr氓kavinstallering mislyktes</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Avinstallerer spr氓k</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Velg forh氓ndsinnstilt visuell stil for appen. Temamodus styrer hvordan farger kombineres.</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Temastil</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Tving programvaregjengivelse</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Bruk programvaregjengivelse n氓r eksternt skrivebord eller hodel酶s skjerm oppdages. Omstart anbefales.</value>
   </data>
 </root>

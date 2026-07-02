@@ -1,0 +1,3877 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>Ffolderi'r Rhaglen</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>Adeiladu</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>Y rhyddhad diweddaraf ar GitHub</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>Dolenni</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>Gwefan y prosiect ar GitHub</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>Dros dro</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>Llyfrgelloedd trydydd parti</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>Amdanom</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Cyfieithiadau gan y gymuned.</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>Dileu</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Defnyddio swyddogaeth glanhau cofrestrfa adeiledig Windows</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Cau</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Gweithredu gorchymyn</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>Gorchymyn DISM</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Math o Weithrediad:</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Methodd llwytho</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (Fflyshio storfa DNS)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (Ailosod stac protocol TCP/IP)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Ailosod stac protocol Winsock)</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Nid yw manylion gweithredu technegol ar gael ar gyfer y weithred hon</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Heb ganfod diffiniad y weithred</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Addasu cofrestrfa + sgript PowerShell</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Glanhau cofrestrfa</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Addasu cofrestrfa</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Rheoli gwasanaethau</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Manylion Gweithredu Technegol</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Manylion y Weithred</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Anhysbys</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Gweithredol</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Ychwanegu</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>Ychwanegu cam</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Ychwanegu newydd</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>Gwefru dyfeisiau USB, pan fydd y gliniadur i ffwrdd, yn cysgu neu ar hibernate.</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>USB yn wastad ymlaen</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>Gwefru dyfeisiau USB, pan fydd y gliniadur i ffwrdd, yn cysgu neu ar hibernate.</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>USB yn wastad ymlaen</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Gweithredu</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>Apply &amp; Close</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>Rhaid i Universal Device Toolkit fod yn rhedeg i weithredoedd awtomatig weithio.</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>Galluogi</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>Dim Gweithredoedd wedi'u diffinio. Cliciwch "Ychwanegu newydd" i greu Gweithred newydd.</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>Os yw wedi'i alluogi, bydd y gweithredoedd hyn yn rhedeg yn awtomatig. Pan fydd y wladwriaeth yn newid, bydd yr holl weithredoedd yn cael eu gwerthuso o'r brig i'r gwaelod.
+Dim ond gweithredoedd sy'n cyd-fynd â'r wladwriaeth bresennol fydd yn rhedeg.</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>Gweithredoedd</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>Enw...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>Ychwanegu newydd</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>Newid eicon</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>Dim Gweithredoedd Cyflym wedi'u diffinio. Cliciwch "Ychwanegu newydd" i greu Gweithred Cyflym newydd.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>Mae gweithredoedd cyflym ar gael yn y ddewislen clicio-dde ar eicon y sianiad.</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>Gweithredoedd Cyflym</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>Enw...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>Ailenwi</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>Mae'r holl newidiadau wedi'u dadwneud!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>Wedi dadwneud</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>Cadwyd y newidiadau yn llwyddiannus!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>Wedi cadw</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>Awtomeiddio</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>Ychwanegu cam</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>Ffurfweddu</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Eithrio</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>Peidiwch â gweithredu gweithredoedd pellach pan fydd y weithred hon yn rhedeg.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>Rhedeg nawr</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>Wedi cwblhau gyda gwallau.</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>Rhedeg nawr</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>Wedi cwblhau'n llwyddiannus!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>Rhedeg nawr</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>Yn rhedeg...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>Cam {0}</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} cam</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>Ar ôl {0}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>Apiau</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>Wedi codiad haul</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>Wedi machlud haul</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>Am {0:D2}:{1:D2}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>Modd Pŵer</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>Rhagosodiad</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>Dienw</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>Ffurfweddu</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>Yn canfod yn awtomatig pan fydd gemau penodol yn rhedeg ac yn addasu perfformiad y CPU a'r GPU. Efallai y bydd tymheredd a sŵn y ffanau'n cynyddu.</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>Galluogi Peiriant AI</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>Gosodiadau Modd Cydbwysedd</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Gwybodaeth am y Ddyfais:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Math y Peiriant:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Cliciwch "Iawn" i barhau, neu "Canslo" i adael.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Gwerthwr:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Bydd rhai nodweddion yn cael eu hanalluogi (Dangosfwrdd, Awtomeiddio, Macros)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Os ydych chi'n clicio "Iawn" i barhau:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Efallai bod eich dyfais yn colli cydrannau system gofynnol (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Bydd nodweddion sylfaenol eraill yn dal ar gael</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Bydd y meddalwedd yn rhedeg mewn modd cyfyngedig</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>Dewiswch sut mae'r batri'n cael ei wefru.</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>Modd Batri</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>Dewiswch sut mae'r batri'n cael ei wefru.</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>Modd Batri</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>Pan fydd wedi'i alluogi, bydd y ddyfais hon yn gwefru i 80% pan fydd wedi'i phlygio i mewn dros nos ac yn gorffen gwefru i 100% erbyn yr amser y byddwch yn defnyddio'r ddyfais yn y bore.</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Gwefru Batri Dros Nos</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>Pan fydd wedi'i alluogi, bydd y ddyfais hon yn gwefru i 80% pan fydd wedi'i phlygio i mewn dros nos ac yn gorffen gwefru i 100% erbyn yr amser y byddwch yn defnyddio'r ddyfais yn y bore.</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>Gwefru Batri Dros Nos</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>Wedi cysylltu, yn gwefru...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>Wedi cysylltu, ddim yn gwefru</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>Uchafswm capasiti gwefr y batri.</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>Iechyd y batri</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>Tymheredd presennol y batri.</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>Tymheredd y batri</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>Capasiti presennol y batri.</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>Capasiti presennol</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>Nifer y cylchoedd gwefru/rhyddhau.</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>Cyfrif cylchoedd</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>Capasiti'r batri fel y'i cynlluniwyd.</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>Capasiti wedi'i gynllunio</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>Cyfradd y mae'r batri'n cael ei wefru (+), neu ei ryddhau (-).</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>Cyfradd rhyddhau</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>Amser amcangyfrifedig sy'n weddill: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>Amcangyfrif amser...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>Dyddiad defnyddio cyntaf</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>Pryd y cafodd y batri ei ddefnyddio gyntaf.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>Capasiti'r batri pan fydd wedi'i wefru'n llawn.</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>Capasiti gwefr llawn</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>Lefel batri yn isel</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>Gwefrydd pŵer isel wedi cysylltu</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>Pryd y gwnaethpwyd y batri.</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>Dyddiad gweithgynhyrchu</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>Uchafswm cyfradd y mae'r batri'n cael ei wefru (+), neu ei ryddhau (-).</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>Uchafswm cyfradd rhyddhau</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>Isafswm cyfradd y mae'r batri'n cael ei wefru (+), neu ei ryddhau (-).</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>Isafswm cyfradd rhyddhau</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>Amser ers i'r gliniadur gael ei gysylltu â phŵer AC ddiwethaf.
+Efallai na fydd yr amser hwn yn gywir, os gwefrwyd y gliniadur wrth iddo gysgu neu fod i ffwrdd.</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>Ar fatri ers</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>Batri</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>Mae Logo Cychwyn Personol wedi'i osod</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>Addasu</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>Mae'r Logo Cychwyn Rhagosodedig wedi'i osod</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>Rhaid i'r logo cychwyn personol fod yn union {0} picsel.
+Y fformatau a gefnogir yw: {1}.</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>Methwyd gosod y logo personol: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>Logo cychwyn personol wedi'i osod.</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>Methwyd gosod y logo rhagosodedig: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>Logo cychwyn rhagosodedig wedi'i osod.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>Methu mowntio'r rhaniad EFI.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>Methu gosod breintiau UEFI.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>Fformat delwedd annilys.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>Maint delwedd annilys.</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>Dim digon o le rhydd ar y rhaniad EFI.</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>Statws</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>Logo Cychwyn</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Canslo</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clirio</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cau</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Cwympo'r cyfan</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Glas</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Gwyrdd</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Coch</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Dewiswch y modd gweithredu GPU yn seiliedig ar ddefnydd ac amodau pwer eich cyfrifiadur. Sylwch y bydd angen ailddechrau i newid i fodd hybrid.</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Modd Gweithredu GPU</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>Dewiswch y modd gweithredu GPU yn seiliedig ar ddefnydd ac amodau pwer eich cyfrifiadur. Sylwch y bydd angen ailddechrau i newid i fodd hybrid.</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Mae newid i {0} yn gofyn am ailddechrau. Ydych chi eisiau ailddechrau nawr?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Ailddechrau gofynnol</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>Modd Gweithredu GPU</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Golwg cryno</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>Methodd y rhaglen â darllen gwybodaeth y ddyfais wrth gychwyn. Gwiriwch fanylion y gwall isod a rhowch gynnig ar y camau datrys problemau os oes angen.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Agor Ffeil Log</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Sicrhewch fod y gwasanaeth Windows Management Instrumentation (WMI) yn rhedeg: Agorwch Wasanaethau (services.msc) a gwiriwch fod "Windows Management Instrumentation" yn rhedeg.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Rhedeg y rhaglen fel Gweinyddwr i sicrhau bod gennych ddigon o hawliau i gael mynediad i gofrestrfa'r system a WMI.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Gwiriwch adnoddau'r system: Cau rhaglenni eraill sy'n defnyddio llawer o adnoddau a rhowch gynnig eto.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Adolygwch y ffeil log am wybodaeth fanwl am wall trwy glicio "Agor Log" isod.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Gwall Gwirio Cydnawsedd</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Camau Datrys Problemau</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Digwyddodd gwall wrth ddarllen gwybodaeth y ddyfais.</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>Gweithredoedd Cyflym</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Parhau</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>Copïwyd y testun i'r clipfwrdd.</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>Copïwyd "{0}" i'r clipfwrdd.</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>Wedi copïo!</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>Copïo'r cyfan</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Cau</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Dileu Adroddiad</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>Mae adroddiad wedi'i gadw ar y ddisg. Gallwch adolygu manylion yr adroddiad isod.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>Mae'r rhaglen wedi chwalu yn ysesiwn blaenorol</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Methwyd ag agor yr adroddiad torri: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Agor Adroddiad</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Adroddiad torri wedi'i gadw i: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Adroddiad Torri wedi'i Ganfod</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Methu llwytho manylion yr adroddiad torri.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Creu</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>Creu Gweithred</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Pori...</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Rhowch o leiaf un estyniad ffeil os gwelwch yn dda.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Dewiswch ffolder os gwelwch yn dda.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Gwahanwch estyniadau lluosog gydag atalnodau (enghraifft: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Estyniadau</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Ffolder</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Cynnwys is-ffolderi</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Rheol glanhau personol</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU wedi cysylltu</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU wedi datgysylltu</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>Addasu</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>Arddangosfa</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>Graffeg</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>Arall</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>Pŵer</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>Cartref</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Analluogi'r GPU ar wahân os yw'n weithredol yn ddiangen.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir, os yw'r arddangosfa fewnol i ffwrdd neu os nad yw'r modd Hybrid yn weithredol.</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Analluogi GPU</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Rhagosodiad</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>Ychwanegu oedi cyn rhedeg y cam nesaf.</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>Oedi</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Dileu</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Dad-ddewis y cyfan</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Heb gysylltu</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Dangos dyfeisiau cysylltiedig yn unig</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Dangos dyfeisiau symudadwy yn unig</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Dangos dyfeisiau a ddewiswyd yn unig</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>Prif fwrdd</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>Fersiwn BIOS</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>Siassis</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>Dyfais</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>Caledwedd</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Cefnogaeth Lenovo</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>Math y Peiriant</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>Gweithgynhyrchydd</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>Cof</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>Adnewyddu</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>Rhif cyfresol</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>Am eich dyfais</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>Dyddiad gorffen</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>Dyddiad dechrau</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>Gwarant</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Dyfeisiau</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Pecyn dyfais: Modd sylfaenol</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Bydd y ddyfais hon yn cychwyn mewn modd sylfaenol. Mae rheolaethau penodol i'r caledwedd wedi'u cuddio nes bod pecyn dyfais cydnaws ar gael.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Pecyn dyfais: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Canfyddodd Universal Device Toolkit becyn dyfais cyfatebol. Cadarnhewch ef nawr fel y gall y rhaglen baratoi nodweddion penodol i'r caledwedd.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Wrthi'n paratoi gosodiad y ddyfais...</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>Analluogi</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>Terfynu apiau</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>Analluogi'r GPU ar wahân, os yw'n weithredol yn ddiangen.</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>Mae monitor wedi'i gysylltu â GPU nVidia.</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>Dim prosesau</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>Cyflwr perfformiad</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>Anhysbys</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>Prosesau</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>Ailddechrau'r GPU</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU ar wahân</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Newid disgleirdeb yr arddangosfa adeiledig.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir, os yw'r arddangosfa fewnol i ffwrdd.</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Disgleirdeb arddangosfa</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>Newid graddfa'r arddangosfa adeiledig.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir, os yw'r arddangosfa fewnol i ffwrdd.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>Newid graddfa'r arddangosfa adeiledig.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Golygu</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>Enw</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>Golygu enw'r grŵp</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>Enw</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>Creu grŵp</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>Efallai na fydd rhai nodweddion yn ymddangos ar y Dangosfwrdd yn dibynnu ar gyflwr a chyfluniad eich gliniadur.</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>Addasu'r Dangosfwrdd</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Dad-diciwch gyfraddau adnewyddu nad ydych am eu defnyddio pan ddefnyddir y llwybr byr Fn+R.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>Sicrhewch fod arddangosfa'r gliniadur ymlaen. Ni all Universal Device Toolkit lwytho cyfraddau adnewyddu ar gyfer arddangosfa nad yw ymlaen.</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>Heb ganfod Cyfraddau Adnewyddu</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>Eithrio Cyfraddau Adnewyddu</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Gadael</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Ehangu'r cyfan</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Allforio</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>Defnyddiwch y GPU integredig yn unig ar fatri a'r GPU integredig a'r GPU ar wahân pan fydd yr addasydd AC wedi'i gysylltu. Pan fydd addasydd nad yw'n safonol wedi'i gysylltu, bydd y system yn newid i Fodd Hybrid-iGPU Only.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>Modd Hybrid-Awto</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>Mae newid i ac o'r modd hwn yn gofyn am ailddechrau.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>Defnyddiwch y GPU ar wahân yn unig. Mae'r modd hwn yn darparu'r perfformiad graffeg gorau, ond yn cynyddu'r defnydd o bŵer.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>Modd dGPU</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>Mae'r GPU integredig a'r GPU ar wahân wedi'u galluogi. Bydd y system yn newid yn awtomatig rhyngddynt yn seiliedig ar ei hanghenion.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>Modd Hybrid</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>Dim ond pan nad yw'r GPU ar wahân yn gweithio y bydd y modd hwn yn dod i rym.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>Defnyddiwch y GPU integredig yn unig. Mae'r modd hwn yn lleihau'r defnydd o bŵer a sŵn.</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>Modd Hybrid-iGPU Only</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>Am Foddau Gweithredu'r GPU</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>Synhwyrydd CPU</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>Cyflymder Ffan</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Hidlo...</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>Troi'r gliniadur ymlaen pan fyddwch yn agor y caead.</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Troi i Ddechrau</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>Troi'r gliniadur ymlaen pan fyddwch yn agor y caead.</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Troi i Ddechrau</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Defnyddio swyddogaethau eilaidd yr allweddi F1-F12 heb ddal yr allwedd Fn.</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Cloi Fn</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Defnyddio swyddogaethau eilaidd yr allweddi F1-F12 heb ddal yr allwedd Fn.</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Cloi Fn</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>Gweithredu rhagosodiad Modd Personol.
+Dim ond pan fydd Modd Personol wedi'i alluogi y bydd y gosodiadau hyn yn dod i rym.</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>Rhagosodiad Modd Personol</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>Rhagosodiad gweithredol</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>RHYBUDD!
+Efallai y bydd rhai gliniaduron yn derbyn gwerthoedd uwch nag y maent yn eu nodi, ond byddwch yn ofalus. Gall yr opsiwn hwn arwain at ymddygiad anrhagweladwy. Os nad ydych yn siŵr beth rydych yn ei wneud, gadewch hyn ar 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>Uchafswm gwrthbwysiad</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>Peidiwch â newid yr opsiynau isod oni bai eich bod yn gwybod yn iawn beth rydych yn ei wneud.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>RHYBUDD!
+Efallai y bydd rhai gliniaduron yn derbyn gwerthoedd is nag y maent yn eu nodi, ond byddwch yn ofalus. Gall yr opsiwn hwn arwain at ymddygiad anrhagweladwy. Os nad ydych yn siŵr beth rydych yn ei wneud, gadewch hyn ar 0.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>Isafswm gwrthbwysiad</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>Uwch</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>Terfyn Pŵer sPPT APU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>Y defnydd pŵer brig y gall y CPU ei gyrraedd gydag oedi bach.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>Terfyn Pŵer Tymor Hir (Croes-lwytho)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>Y defnydd pŵer uchaf y gall y CPU ei gyrraedd pan fydd y CPU a'r GPU ill dau yn cael eu defnyddio'n llawn.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>Terfyn Pŵer Tymor Hir</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>Y defnydd pŵer parhaus y gall y CPU ei gyrraedd.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Hyd Terfyn Pŵer Tymor Byr</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>Y faint o amser y caniateir i'r CPU ffrwd a defnyddio terfyn pwer tymor byr ar gyfer cyflymder uchel.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>Terfyn Pŵer Brig</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>Y defnydd pŵer ar unwaith uchaf y gall y CPU ei gyrraedd.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>Terfyn Pŵer Tymor Byr</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>Y defnydd pŵer brig y gall y CPU ei gyrraedd o fewn cyfnod byr o amser.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>Terfyn Tymheredd y CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>Y tymheredd uchaf y gall y CPU ei gyrraedd cyn lleihau amlder a phŵer.</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>Enw</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>Enw'r rhagosodiad</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>Methu gweithredu'r gosodiadau</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>Methu llwytho'r gosodiad.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>Nid yw cyflymder y ffan yn cael ei bennu'n llym gan un synhwyrydd tymheredd. Bydd yn codi neu'n gostwng cyflymder yn ôl y synhwyrydd uchaf rhwng tymheredd y CPU, y GPU a'r Heatsink. Bydd gwerthoedd union yn ymddangos pan fyddwch yn hofran y llygoden dros bob cam.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>Cromlin y ffan</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>RHYBUDD!
+Bydd defnydd hirfaith o'r opsiwn hwn yn dirywio'r ffanau gan leihau eu hoes.
+Mewn difrif, byddwch yn ofalus gyda'r opsiwn hwn!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>Uchafswm cyflymder ffan</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>Ffanau</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>TGP y gellir ei ffurfweddu</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>Y swm ychwanegol o bŵer y gellir ei ddyrannu i'r GPU ar ben y defnydd pŵer sylfaenol.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>Hwb Deinamig</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>Y pŵer ychwanegol uchaf y gellir ei ddyrannu i'r GPU yn seiliedig ar ddefnydd pŵer y CPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>Terfyn Tymheredd y GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>Y tymheredd uchaf y gall y GPU ei gyrraedd cyn lleihau amlder a phŵer.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>Hwb Deinamig GPU i CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>Dyma'r pŵer ychwanegol uchaf y gellir ei ddyrannu i'r CPU o'r GPU yn seiliedig ar ddefnydd y CPU. Po uchaf y gwerth, gorau yw perfformiad y rhaglenni sy'n defnyddio'r CPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>Targed Cyfanswm Pŵer Prosesu yn AC</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>Y pwynt lle mae'r CPU yn ysgogi addasiad defnydd pŵer deinamig ar gyfer y GPU.</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Ni fydd gosodiadau Modd Personol yn cael eu cymhwyso'n gywir pan fydd Legion Zone neu ei wasanaethau'n rhedeg.</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>Gosodiadau Modd Personol</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Ni fydd gosodiadau Modd Personol yn cael eu cymhwyso'n gywir pan fydd Lenovo Vantage neu ei wasanaethau'n rhedeg.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>Galluogi ystod ddeinamig uchel (HDR) ar yr arddangosfa adeiledig.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir os yw'r arddangosfa fewnol i ffwrdd.</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>Galluogi ystod ddeinamig uchel (HDR) ar yr arddangosfa adeiledig.</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>Mae defnydd HDR wedi'i rwystro gan osodiadau Windows.</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Cuddio</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>Cuddio'r cyfan</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Rhowch gynnig ar newid y modd eto mewn ychydig o eiliadau, os nad ydych yn gweld y canlyniad disgwyliedig.
+Os nad yw dGPU'n ymateb o gwbl, ailddechrau'ch gliniadur.</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>Bydd dGPU yn datgysylltu'n awtomatig pan nad yw mewn defnydd a phan fydd y gliniadur ar bŵer batri.</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>Bydd dGPU yn datgysylltu'n awtomatig pan nad yw mewn defnydd.</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>Methu newid Modd Gweithredu'r GPU</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>Mae dGPU ar hyn o bryd mewn defnydd neu nid yw'r gliniadur ar bŵer batri</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>Mae dGPU ar hyn o bryd mewn defnydd</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Mewnforio</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Anweithredol</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>Nid yw'r ddyfais hon yn gydnaws â Universal Device Toolkit.</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Gwybodaeth</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>Troi'r gliniadur ymlaen pan fydd gwefrydd yn cael ei gysylltu.</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>Cychwyn Instant</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>Troi'r gliniadur ymlaen pan fydd gwefrydd yn cael ei gysylltu.</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>Cychwyn Instant</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>Heb ganfod bysellfyrddau cydnaws</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>Goleuadau Cefn y Bysellfwrdd</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Ni ellir rheoli goleuadau cefn y bysellfwrdd yma pan fydd Lenovo Vantage neu ei wasanaethau'n rhedeg.</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Mae Lenovo Vantage neu ei wasanaethau'n rhedeg</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Dewiswch iaith</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Cadarnhau Dewis</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Dewiswch ffeiliau rydych eisiau tynnu. Dim ond ffeiliau sy'n cyd-fynd â'r hidlen sydd i'w gweld.</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Hidlo ffeiliau mwy na:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Personol...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Enw Ffeil</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Llwybr</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Dewis</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Maint</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Dewiswyd: {0} ffeil ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Dadansoddiad Ffeiliau Mawr</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Llwytho</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>Galluogi neu analluogi macros.</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>Macro</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>Rhaid i Universal Device Toolkit fod yn rhedeg i ffrwd_macros weithio.</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>Galluogi</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>Gallwch recordio cyfresau o wasediadau allwedd a'u galw gan ddefnyddio'r bylchau rhif ar eich allweddfoard.</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>Macro</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>Bydd y recording yn dechrau mewn 3 eiliad...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>Pwyswch ESC i stopio.</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>Yn recordio...</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>Peidio ag ailadrodd</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>Anwybyddu oedi</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>Toriad os pwyswyd allwedd arall</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>Allweddfoard yn unig</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>Bysys allweddfoard a botwm llygoden</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>Pob mewnbwn</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>Recordio</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>Opsiynau recordio</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>Ailadrodd</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>Stopio recordio</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>Wedi cyrraedd terfyn cyfradd yr API, rhowch gynnig eto yn nes ymlaen.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>Methodd gwirio am ddiweddariadau</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>Aeth rhywbeth o'i le, rhowch gynnig eto yn nes ymlaen.</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>Heb ganfod diweddariadau</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Mae Legion Zone yn rhedeg yn y cefndir.</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>Amdanom</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>Gweithredoedd</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>Batri</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>Dangosfwrdd</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>Bysellfwrdd</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>Macro</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>Lawrlwythiadau</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Estyniadau Ategyon</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>Harddu'r System</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Optimeiddio'r system</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>Mae diweddariad ar gael!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>Mae diweddariad {0} ar gael!</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Mae Allweddi Lenovo yn rhedeg yn y cefndir.</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Mae Lenovo Vantage a/neu ImController yn rhedeg yn y cefndir.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>Pan fo ar ddewis, bydd meicroffonau wedi'u tawelu.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>Meicroffon</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>Pan fo ar ddewis, bydd meicroffonau wedi'u tawelu.</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>Meicroffon</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Symud i lawr</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Symud i fyny</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>Sbardunau lluosog...</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Ffurfio pa eitemau llywio sydd i'w gweld yn y bar ochr. Mae Dashboard a Settings bob amser yn weladwy.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio About</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio Automation</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio Battery</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio Keyboard</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio Macro</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio Plugin Extensions</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Dangos neu guddio yr eitem llywio System Optimization</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Gosodiadau Eitemau Llywio</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Na</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>Testun Hysbysiad</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>Dangos hysbysiad</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>Addasydd AC wedi cysylltu</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>Addasydd AC wedi cysylltu (Pŵer isel)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>Addasydd AC wedi datgysylltu</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>Camera i ffwrdd</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>Camera ymlaen</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock i ffwrdd</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock ymlaen</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Cloi Fn i ffwrdd</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Cloi Fn ymlaen</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>Meicroffon i ffwrdd</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>Meicroffon ymlaen</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock i ffwrdd</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock ymlaen</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Logo Legion i ffwrdd</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Logo Legion ymlaen</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>Goleuadau porthladdoedd i ffwrdd</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>Goleuadau porthladdoedd ymlaen</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>Goleuad cefn {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>Disgleirdeb {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>Proffil {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>Touchpad i ffwrdd</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>Touchpad ymlaen</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>Mae diweddariad {0} ar gael!</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>Goleuad cefn {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>Addasydd AC</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>Gweithredoedd</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock a Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>Analluogi hysbysiadau ar gyfer gweithredoedd allweddi Fn fel mudo meicroffon.
+Galluogwch yr opsiwn hwn os oes gennych wrthdaro â rhaglenni sgrin lawn.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>Peidio â dangos hysbysiadau</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Cloi Fn</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>Goleuadau Cefn y Bysellfwrdd</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>Meicroffon</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Rhoi'r hysbysiad ar y brig bob amser.
+Ni fydd yn effeithio ar ffenestri sgrin lawn eraill, ond ni fyddwch yn gallu clicio ar yr hysbysiadau.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Hysbysiad ar y brig bob amser</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>Hyd</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Dangos hysbysiad ar bob sgrin wedi'i gysylltu â'ch dyfais.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Hysbysiad ar bob sgrin</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>Lleoliad</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>Modd Pŵer</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>Cyfradd Adnewyddu</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>Allwedd Glyfar</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>Hysbysiadau</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>Cloi Touchpad</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>Diweddariadau</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Iawn</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>I ffwrdd</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Troi'r goleuadau cefn ymlaen neu i ffwrdd.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Goleuadau cefn y bysellfwrdd</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Gallwch droi'r goleuadau cefn ymlaen neu i ffwrdd gyda Fn+Space.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Goleuadau cefn y bysellfwrdd</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Agor</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Dangos neu guddio'r OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Lliw Cefndir</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Lliw Categori</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Radius Cornel</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Gwaelod</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Brig</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Lliw Critigol</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Maint Ffont</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Lliw Label</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Tryloywder</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Lliw Gwerth</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Lliw Rhybudd</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Cloi Lleoliad</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Arddull Gorgludo</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Cyfnod Adnewyddu</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Cyfnod adnewyddu sensorau</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Ailosod Lleoliad</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Trothwy Snapio</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Golwg</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Cyffredinol</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Sensorau</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Ffyrdd</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Critigol</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>Ffin FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Y cyfradd ffurfiau isaf derbyniol. Islaw hyn, mae'r lliw yn troi'n critigol.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Delta FPS Isel</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Y gwahaniaeth mwyaf rhwng FPS cyfartal ac 1% Isaf. Uwchlaw hyn, mae'r cyfrifydd yn dangos gwall.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Perfformiad</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Tymheredd</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Defnydd</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Rhybudd</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>Gosodiadau OSD</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Oergell</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Tymheredd Ddisc 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Tymheredd Ddisc 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>Cloc E-Core</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Amser Ffrâm</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Oergell</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Gêm</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Tymheredd</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Defnydd</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>Oergell PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>Cloc P-Core</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Bar</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>Gwella amser ymateb yr arddangosfa adeiledig.</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>Gwella amser ymateb yr arddangosfa adeiledig.</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>Over Drive</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>Cynyddu perfformiad trwy or-glocio'r GPU ar wahân.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir, os nad yw'r GPU ar wahân ar gael.</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>Gor-glocio'r GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>Cynyddu perfformiad trwy or-glocio'r GPU ar wahân.</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>Gor-glocio'r GPU</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Gwrthbwysiad Amlder Craidd</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Gwrthbwysiad Amlder Cof</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Wedi cwblhau</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>Lawrlwytho</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>Lawrlwythwyd {0}!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>Wedi cwblhau lawrlwytho</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Yn lawrlwytho</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>Aeth rhywbeth o'i le</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>Dychwelodd y gweinydd god 404.</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>Ymddengys fod y ffeil wedi mynd</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>Gwiriwch a yw eich cysylltiad rhyngrwyd yn gweithio.</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>Aeth rhywbeth o'i le</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Gosod</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Gorffennodd y gosodwr gyda chod {0}</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>Heb ganfod y ffeil, lawrlwythwch yn gyntaf</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Methodd y gosod</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Wrthi'n dechrau'r gosodydd: {0}</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Dechreuwyd y gosod</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Yn gosod</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>Mae diweddariad ar gael!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>Mae'r pecyn hwn dros flwydd oed.</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>Agor README</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Mewn ciw</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>Argymhellir ailddechrau</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>Ailddechrau gofynnol</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Argymhellir</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>Diffodd gofynnol</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Dad-osod</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>Fersiwn</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>Isod mae rhestr o becynnau meddalwedd sydd wedi'u marcio fel rhai cydnaws â'ch gliniadur.
+Sicrhewch bob amser eich bod yn gosod pecynnau cywir.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Gwiriwch a yw'r Math o Beiriant a'r OS wedi'u gosod yn gywir.</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>Aeth rhywbeth o'i le</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Bydd newid trefnu, hidlo canlyniadau, cuddio pecynnau neu adnewyddu'r rhestr yn atal y lawrlwythiad. Ydych chi eisiau parhau?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>Wrthi'n lawrlwytho</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>Ffolder lawrlwytho</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>e.e. C:\Drivers</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Gwiriwch a yw eich cysylltiad rhyngrwyd yn gweithio.</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Aeth rhywbeth o'i le</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>Math y Peiriant</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>e.e. 82JQ</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>Heb ganfod lawrlwythiadau cyfatebol</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>Dangos diweddariadau yn unig</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>Agor ffolder Lawrlwytho</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>System Weithredu</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>Cynradd (Argymhellir)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Yr un fath â Lenovo Vantage</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>Eilaidd</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Yr un fath â Chefnogaeth PC Lenovo</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Dangos lawrlwythiadau cudd</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>Categori</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>Dyddiad</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>Enw</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>Ffynhonnell</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>Lawrlwythiadau</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>Ceisiwch gael diweddariadau o'r ffynhonnell arall.</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>Heb ganfod catalog diweddariadau</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Trowch y golau cefn ar gae yr opiniadur ymlaen neu i ffwrdd.</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Golau cefn logo panel</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>Trowch y golau cefn ar gae yr opiniadur ymlaen neu i ffwrdd.</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>Golau cefn logo panel</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Gludo</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>Cyfnod (munudau)</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>Cefnogir fformatau cerddoriaeth cyffredin fel wav neu mp3.</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Chwarae sain</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>gan {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>Ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Mewnforio Swmp</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Methodd y mewnforio swmp</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Methwyd mewnforio ategyon: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>Mewnforiwyd {0} ategy yn llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>Mae {0} ategy wedi'u mewnforio'n llwyddiannus ac ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Mewnforio ategyon o ffeiliau ZIP lleol</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Wedi Cwblhau Gosod Swmp</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>Gosodwyd {0} ategy.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Methodd Gosod Swmp</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Methwyd gosod ategyon: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Wedi Cwblhau Diweddariad Swmp</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>Mae'r holl ategyon wedi'u prosesu.</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Methu Dad-osod</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimeiddio</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Agor Cyflym</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Diweddaru</value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>Beth Sydd Newydd:</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>Cuddio manylion</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>Methodd y Ffurfweddu</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>Mae'r ategy wedi'i osod ond heb ei lwytho. Rhowch gynnig ar ailddechrau'r rhaglen.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>Ni Chefnogir Ffurfweddu</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>Nid yw'r ategy yn cefnogi ffurfweddu.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Ffurfweddu</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Wedi copïo</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>Copïwyd ID yr ategy '{0}' i'r clipfwrdd.</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Copïo ID yr Ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>Methodd y Dileu</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>Digwyddodd gwall wrth ddileu'r ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Gosod a rheoli ategyon i ymestyn swyddogaeth</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Manylion</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Wedi cwblhau lawrlwythiad</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Yn lawrlwytho...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Yn lawrlwytho... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>Mae'r siop ategyon yn wag ar hyn o bryd. Arhoswch am ddiweddariadau ategion yn y dyfodol.</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>Y Cyfan</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Wedi'i Gosod</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Heb ei Osod</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Heb Ganfod Ffolder</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>Nid yw cyfeiriadur yr ategyon yn bodoli eto.</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>Canfuwyd {0} ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Mewnforio o Ffeiliau</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Wrthi'n mewnforio ategyon...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>Wrthi'n prosesu {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>Wrthi'n mewnforio {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Gosod y Cyfan</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Gosod yr holl ategyon sydd ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Methodd y gosod</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Methu gosod yr ategy: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Gosod</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Wrthi'n aros i osod (ategy arall yn lawrlwytho)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Ategy wedi'i osod yn llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Mae'r ategy wedi'i osod yn llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Ategydd {0} wedi'i osod ac wedi'i agor yn Optimeiddio'r System.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Ategydd {0} wedi'i osod. Defnyddiwch Agor i lansio ei bwynt mynediad sydd ar gael.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Ategydd {0} wedi'i osod, ond nid yw'n amlygu pwynt mynediad sy'n wynebu'r defnyddiwr. Efallai ei fod ond yn darparu gwasanaethau cefndir neu ddata manifest.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Wedi'i osod, ond dim pwynt mynediad</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Ategydd {0} wedi'i osod, ond ni ellid llwytho ei UI amser rhedeg. Ailddechrau'r ap neu ail-osod yr ategy.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Wrthi'n Gosod y Cyfan...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>Wrthi'n gosod {0} ategy...</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Iaith:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Defnyddio Rhagosodiad y Rhaglen</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Yn llwytho ategyon...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Lleol</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Bar Ochr</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Mae angen fersiwn gynnal minimum {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>Fersiwn Newydd ar Gael</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>Dim Ffurfweddu</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>Nid oes gan yr ategy unrhyw opsiynau ffurfweddu.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>Dim ategyon ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>Heb ganfod ategyon yn cyd-fynd â'ch chwiliad.</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Agor</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Methodd agor yr ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Methu agor yr ategy: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Agor Ffolder</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Methu agor yr ategy: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Bydd yr ategy yn cael ei ddileu'n barhaol</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Bydd yr ategy yn cael ei ddileu'n barhaol. Ni ellir dadwneud y weithred hon.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Wedi'i osod</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Ategy heb ei osod</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Nid yw'r ategy wedi'i osod ac ni ellir ei agor</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>Wedi Ailosod Cyflyrau'r Ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>Mae'r holl gyflyrau gosod ategy wedi'u clirio</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>Ategy wedi'i Ddad-osod</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>Bydd yr ategy yn cael ei ddileu pan fydd y rhaglen yn cau.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Wrthi'n paratoi lawrlwythiad...</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Adnewyddu rhestr yr ategyon</value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Dyddiad Rhyddhau: </value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>Rhedeg yr Ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>Dechreuwyd yr ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Chwilio ategyon...</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Dewis ffeiliau ategy (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>Dangos manylion</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Wrthi'n gwirio argaeledd ategion...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Ar gael i'w gosod</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>Mae {0} ategy ychwanegol ar gael yn y ffrwd bresennol.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Wedi'i osod</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Puls y Siop</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Cyfanswm yr Ategyon</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>Mae'r holl ategyon a ganfuwyd yn gyfredol.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Cyfredol</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Diweddariadau ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Diweddariadau'n Barod</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>Mae {0} diweddariad ategy yn barod i'w gosod.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Wrthi'n aros i fetaddata'r ategion lwytho.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Wrthi'n llwytho metadata</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Estyniadau Ategyon</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Dad-osod</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Methodd y dad-osod</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Methu dad-osod yr ategy: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Ategy wedi'i ddad-osod yn llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Mae'r ategy wedi'i ddad-osod yn llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Diweddaru'r Cyfan</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Diweddaru'r holl ategyon sydd ar gael</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>Methodd y Diweddariad</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>Methodd diweddaru'r ategy, gwiriwch y cysylltiad rhwydwaith a rhowch gynnig eto yn nes ymlaen.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>Diweddariad Llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>Mae'r ategy wedi'i ddiweddaru'n llwyddiannus</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Wrthi'n diweddaru...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Wrthi'n Diweddaru'r Cyfan...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>Wrthi'n Diweddaru'r Ategy</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>Wrthi'n lawrlwytho a diweddaru'r ategy...</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Canllaw Defnydd</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Fersiwn: </value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Awdur: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Cau</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Mae fformat rhyngwyneb ffurfweddu'r ategy yn anghywir.</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Gwall</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Gwall wrth lwytho gosodiadau'r ategy: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>Nid oes gosodiadau y gellir eu ffurfweddu ar gyfer yr ategy hwn.</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Disgrifiad o'r Ategy</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Enw'r Ategy</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Heb ganfod yr ategy: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Gosodiadau Ategy</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Trowch y golau cefn ar y pyrth ar gefn yr opiniadur ymlaen neu i ffwrdd.</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Golau cefn pyrth</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Trowch y golau cefn ar y pyrth ar gefn yr opiniadur ymlaen neu i ffwrdd.</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>Golau cefn pyrth</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Newid y modd perfformiad.</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Modd Pŵer</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>Newid y modd perfformiad.
+Gellir newid y modd perfformiad hefyd gyda Fn+Q.</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>Modd Pŵer</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>Efallai na fydd y modd pŵer a ddewiswyd yn gweithio'n gywir heb addasydd AC wedi'i gysylltu.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>Nid yw modd pŵer {0} ar gael heb y cyflenwad pŵer AC.</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>Methu newid y Modd Pŵer</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Mae Windows yn adrodd bod y gliniadur hwn yn cefnogi Modern Standby. Gall defnyddio cynlluniau pŵer heblaw Cydbwysedd achosi ymddygiad annisgwyl.</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>Canfyddwyd Model Pŵer Is S0</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>Wedi'i Diffodd</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Rhedeg gweithred cyflym a gadwyd.</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Gweithred Cyflym</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Addasu rhagosodiad goleuadau cefn y bysellfwrdd.</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Goleuadau cefn y bysellfwrdd</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>Disgleirdeb</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>Rhagosodiad 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>Rhagosodiad 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>Rhagosodiad 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>Rhagosodiad 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>I ffwrdd</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Cydamseru parthau</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>Parth 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>Parth 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>Parth 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>Parth 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>Effaith</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>Cyflymder</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Adnewyddu</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>Newid cyfradd adnewyddu'r arddangosfa adeiledig.
+
+RHYBUDD: Ni fydd y weithred hon yn rhedeg yn gywir, os yw'r arddangosfa fewnol i ffwrdd.</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>Cyfradd adnewyddu</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>Newid cyfradd adnewyddu'r arddangosfa adeiledig.</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>Cyfradd adnewyddu</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Ailenwi</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>Newid datrysiad y sgrîn fewnol. RHYBUDD: Ni fydd y gweithrediad hwn yn rhedeg cywir gyda rhai appiau sydd â ffenestri mawr.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>Datrysiad</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>Newid datrysiad y sgrîn fewnol.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>Datrysiad</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>Byddaf yn ailddechrau yn nes ymlaen</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>Ailddechrau nawr</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Dadwneud</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>Dadwneud i'r rhagosodiad</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>Dadleuon</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>Llwybr Gweithredadwy</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>Rhedeg sgript neu raglen.
+Sicrhewch fod eich sgript yn rhedeg yn gywir yn gyntaf.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>Rhedeg yn dawel</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>Gweithredu rhaglenni consol, heb greu ffenestr consol.</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>Aros nes ei fod wedi gorffen</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>Aros nes bod y rhaglen neu'r sgript wedi gorffen gweithredu</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>Rhedeg</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Cadw</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>Save &amp; Close</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Yn cadw...</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Dewis y cyfan</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>Dewiswch un neu fwy o weithredoedd cyflym i gylchdroi drwyddynt</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>Dim Gweithredoedd Cyflym wedi'u diffinio.</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>Dangos yr ap hwn</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>Tymheredd PCH</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Pwer</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Capasiti</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Chwarter</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>Cloc Craidd</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Coredau</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Cof</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platfform</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Cylchoedd</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Dyddiad</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Dylunio</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Cliciwch ddwbl i ddangos neu guddio manylion sensor manwl.</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>Cloc E-Core</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>Oergell</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Capasiti Llawn</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Pwer</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Cloc Craidd / Cof</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Tymheredd Craidd</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>Hot Spot GPU</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>Tymheredd VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>Throughput PCIe</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>Defnydd VRAM</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Iechyd</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Yn llwytho...</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Cyfradd Uchaf</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>Uchafswm: {0}</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>Cloc Cof</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Tymheredd Cof</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Defnydd Cof</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Cyfradd Isaf</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Tymheredd Bwrdd</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Bwrdd Mam</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Amh</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>Cloc P-Core</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Defnydd Pwer</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Cyfradd</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Amrediad Cyfradd</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>Cyfnod adnewyddu</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Defnydd Cof Rhannu</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>Tymheredd SSD</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>Tymheredd</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Batri anhysbys</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>CPU anhysbys</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>GPU anhysbys</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>Defnydd</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Foltedd Craidd</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Amrediad Foltedd</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>Tymheredd VRAM</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>Defnydd VRAM</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>Newid lliw acen yr ap.</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>Lliw acen</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Addasu iaith, uned tymheredd, thema a lliw acen.</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Dechrau wedi'i leihau i'r sianiad pan fyddwch yn mewngofnodi i Windows.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Dechrau wedi'i leihau i'r sianiad pan fyddwch yn mewngofnodi i Windows.</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>Rhedeg yn awtomatig</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>Addasu delwedd y Logo Cychwyn, sy'n weladwy yn ystod cychwyn y system.</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>Logo Cychwyn</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>Ychwanegu CLI at newidyn amgylchedd PATH y defnyddiwr.</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>Ychwanegu CLI at PATH</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Galluogi'r Rhyngwyneb Llinell Gorchymyn sy'n caniatáu rheoli o'r llinell orchymyn.</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>Gwirio</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>Wrthi'n gwirio am ddiweddariadau...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>Gwirio am ddiweddariadau</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Ffurfweddu opsiynau ymddangosiad, ymddygiad a swyddogaeth yr ap.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Cuddio'r rhybudd dyfais anghydnaws sy'n ymddangos wrth gychwyn.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Analluogi rhybudd dyfais anghydnaws</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Legion Zone ei analluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Methu analluogi Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Analluogi Legion Zone a'i wasanaeth heb ei ddad-osod.
+Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Analluogi Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Allweddi Lenovo eu hanalluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Methu analluogi Allweddi Lenovo</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Analluogi Allweddi Lenovo a'i wasanaeth heb ei ddad-osod.
+Os caiff ei analluogi, bydd yr ap hwn yn rheoli llwybrau byr Fn.
+Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Analluogi Allweddi Lenovo</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Lenovo Vantage a/neu ImController eu hanalluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Methu analluogi Lenovo Vantage a/neu ImController</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Analluogi Lenovo Vantage ac ImController heb eu dad-osod.
+Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Analluogi Lenovo Vantage ac ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Legion Zone ei alluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Methu galluogi Legion Zone</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Allweddi Lenovo eu galluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Methu galluogi Allweddi Lenovo</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Efallai na chafodd Lenovo Vantage a/neu ImController eu galluogi'n gywir</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Methu galluogi Lenovo Vantage a/neu ImController</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Gallwch eithrio cyfraddau adnewyddu, i wneud y llwybr byr Fn+R yn fwy defnyddiol.</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>Eithrio Cyfraddau Adnewyddu</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Defnyddio rendro meddalwedd pan ganfyddir desg bell neu arddangosfa heb ben. Argymhellir ailddechrau.</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Gorfodi rendro meddalwedd</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>Rhannu cyflymder ffan, tymheredd batri, ac ati gyda HWiNFO64. Efallai y bydd angen i chi ailddechrau HWiNFO64 ar ôl newid yr opsiwn hwn.</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Galluogi polio caledwedd uwch i fonitro tymheredd, amleddau a therfynau pŵer manwl.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Mae angen i chi osod PawnIO yn gyntaf i ddefnyddio synwyryddion caledwedd!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Synwyryddion Caledwedd</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>Integreiddiadau</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Methwyd lawrlwytho'r pecyn iaith. Gwiriwch eich cysylltiad rhwydwaith, dirprwy, neu TNC.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Gosod iaith</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Methodd gosod yr iaith</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Wrthi'n gosod iaith</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Extracting and installing...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Downloading language pack...</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>Dewiswch iaith.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Defnyddiwch y botwm lawrlwytho i osod y pecyn iaith hwn.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Iaith heb ei gosod</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>Iaith</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Dad-osod iaith</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Methodd dad-osod yr iaith</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Wrthi'n dad-osod iaith</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>Bob amser yn lleihau i'r sianiad. Cau gyda chlicio-dde ar eicon y sianiad.</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>Lleihau ar gau</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>Bob amser yn lleihau i'r sianiad yn lle'r bar tasgau.</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>Lleihau i'r sianiad</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Ffurfio pa eitemau llywio sydd i'w gweld yn y bar ochr</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Eitemau Llywio</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Golwg</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Rhaglen</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Arddangos</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Allweddau Clyfar</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>Ffurfweddu pa hysbysiadau sy'n cael eu dangos.</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>Hysbysiadau</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>Ailosod "Ar fatri ers" wrth gychwyn</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Troshaen arnofiol sy'n dangos data synwyrydd byw.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Galluogi OSD</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>Newid yn awtomatig y Cynllun Pŵer Windows neu Fodd Pŵer Windows pan fydd Moddau Pŵer yn newid.</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>Cydamseru Modd Pŵer</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>Pŵer</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Bydd Cloi Fn yn cael ei analluogi dros dro pan fydd yr allwedd Alt, Ctrl neu Shift yn cael ei phwyso.</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>Cloi Fn Clyfar</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Neilltuo Gweithred Cyflym i wasg dwbl Fn+F9.</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Gweithred Eilaidd Allwedd Glyfar</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Neilltuo Gweithred Cyflym i wasg sengl Fn+F9.</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Gweithred Allwedd Glyfar</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>Pan fydd ymlaen, bydd yr un lefel disgleirdeb yn cael ei chymhwyso i bob cynllun pŵer Windows pan fyddwch yn ei newid.</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>Disgleirdeb Arddangosfa Sengl</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>Dewiswch unedau ar gyfer synwyryddion tymheredd.</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>Tymheredd</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Dewiswch yr arddull weledol ragosodedig ar gyfer yr ap. Mae'r modd thema a lliw accent yn dal i gymhwyso.</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Arddull thema</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>Gosod thema golau, thema dywyll neu ddilyn gosodiadau'r system.</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>Thema</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>Gosodiadau</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>Gwirio'n awtomatig am ddiweddariadau</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Dechreuwyd Universal Device Toolkit gyda {0}. Mae gwiriadau diweddariadau awtomatig a llaw, ynghyd â'r gosodiadau diweddaru isod, wedi'u hanalluogi nes y byddwch yn ailgychwyn heb y ddadl gychwyn honno.</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Mae gwiriadau diweddariadau wedi'u hanalluogi ar gyfer y sesiwn hon</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>Ffurfweddu'r ystorfa GitHub i wirio am ddiweddariadau. Gadewch yn wag i ddefnyddio'r rhagosodiad.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>Enw'r Ystorfa</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>e.e., UniversalDeviceToolkit</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>Perchennog yr Ystorfa</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>e.e., SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>Ystorfa diweddariadau</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>Diweddaru</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Rhedeg glanhau</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Methodd y glanhau.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Wedi cwblhau'r glanhau.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Gweithredu addasiadau perfformiad a argymhellir a glanhau ffeiliau dros dro.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Cymhwyso gwelliannau perfformiad a gwasanaeth</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Methu gweithredu'r optimeiddiadau perfformiad.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Gosodwyd yr optimeiddiadau perfformiad.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Optimeiddio'r system</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>Dewiswch Fodd Pŵer Windows i'w gymhwyso pan fydd Modd Pŵer yn newid.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Moddau Pŵer Windows</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Opsiynau Cynllun Pŵer yn Panel Rheoli Windows</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Dewiswch Gynlluniau Pŵer Windows i'w cymhwyso pan fydd Modd Pŵer yn newid.</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Cynlluniau Pŵer Windows</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Caniatáu newid cyflym i Fodd Personol gyda Fn+Q.</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Newid i Fodd Personol gyda Fn+Q</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>Pan fydd wedi'i mudo, bydd yr holl ddyfeisiau sain allbwn gweithredol yn cael eu mudo.</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>Siaradwr</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>Addasu disgleirdeb golau cefn allweddfoard.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>I ffwrdd</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>Disgleirdeb golau cefn allweddfoard</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>Ychwanegu effaith</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>Methwyd cymhwyso'r proffil golau.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>Methwyd cymhwyso'r proffil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>Disgleirdeb</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>Dadddewis pob parth</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>Effaith</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>Methwyd allforio'r proffil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>Methwyd allforio'r proffil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>Methwyd mewnforio'r proffil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>Methwyd mewnforio'r proffil</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>Dim effaith wedi'i hychwanegu.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>Rhagosodedig</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>Ailosod i'r rhagosodedig</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>Dewis pob parth</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>Newid cynllun allweddfoard</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>Cyfeiriad</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>Lliw</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>Lliwiau</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>Cyfeiriad</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>Effaith</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>Bydd yr effaith hon yn cael ei chymhwyso i'r allweddfoard cyfan ac yn disodli pob effaith arall.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>Cyflymder</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>Ychwanegu effaith</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>Golygu effaith</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Mewnforio a chymhwyso ffurfweddiad golau cefn i'r proffil cyfredol.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>Llwybr</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Mewnforio proffil golau cefn allweddfoard</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Addasu proffil golau cefn allweddfoard.</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>Proffil golau cefn allweddfoard</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>Pob allwedd</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} parth</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>Batri</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>Cyfradd rhyddhau</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>GPU ar wahân</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>Uchafswm cyfradd rhyddhau</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>Isafswm cyfradd rhyddhau</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>Modd</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>Modd Pŵer</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>Cyflwr Pŵer</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>Rhagosodiad</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>Mae diweddariad ar gael!</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>Amser defnydd</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>Dewis eicon</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Addasu effeithiau gweledol.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Effeithiau</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Tryloywder</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Addasu ymddangosiad ac ymddygiad Windows.</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Harddu Windows</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>Codiad haul</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>Machlud haul</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>Amser</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Caniatáu newid rhwng y GPU integredig a'r GPU ar wahân.
+Yn gofyn am ailddechrau.</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>Modd Hybrid</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Caniatáu newid rhwng y GPU integredig a'r GPU ar wahân.
+Yn gofyn am ailddechrau.</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Mae newid Modd Hybrid yn gofyn am ailddechrau. Ydych chi eisiau ailddechrau nawr?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>Ailddechrau gofynnol</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>Modd Hybrid</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Analluogi'r touchpad.</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Cloi Touchpad</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>Analluogi'r touchpad.</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>Cloi Touchpad</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Ceisio eto</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>Diffodd yr holl arddangosfeydd sydd ar gael.</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>Diffodd arddangosfeydd</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>Diffodd yr holl arddangosfeydd sydd ar gael.
+Bydd symud y llygoden neu bwyso'r bysellfwrdd yn deffro'r arddangosfeydd.</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>Diffodd arddangosfeydd</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>Diffodd</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Diffodd Wi-Fi</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Cychwyn Wi-Fi</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Digwyddodd eithriad annisgwyl:
+{0}</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>Dienw</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>Gallwch analluogi'r rhybudd hwn unrhyw bryd yn y Gosodiadau.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>Gallwch ddewis parhau ar eich menter eich hun, ond cofiwch y gallai rhai nodweddion fod ddim ar gael a/neu ddim yn gweithio'n iawn.
+
+Bydd logio'n cael ei alluogi'n awtomatig, os ydych chi'n dewis parhau.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Edrychwch ar dudalen y prosiect ar GitHub am ragor o wybodaeth.</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>Ffolder logiau</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>Math y Peiriant</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Nid yw Universal Device Toolkit wedi'i brofi gyda'ch dyfais.</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>Dyfais anghydnaws</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>Gwerthwr</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Diweddaru</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>Diweddariad ar gael</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>Beth sydd newydd?</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Addasu disgleirdeb goleuadau cefn y bysellfwrdd.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>Goleuadau cefn y bysellfwrdd</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Gallwch newid y disgleirdeb gyda Fn+Space</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>Goleuadau cefn y bysellfwrdd</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Copïo enw'r rhwydwaith presennol</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Gadewch yn wag ar gyfer unrhyw rwydwaith Wi-Fi.</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>Enw'r rhwydwaith (SSID)</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>Analluogi'r allwedd Windows ar y bysellfwrdd adeiledig.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Cloi Allwedd Windows</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>Dim ond ar y bysellfwrdd adeiledig y mae'n gweithio.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Cloi Allwedd Windows</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Gweithredoedd</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Gweithredu'r gweithredoedd a ddewiswyd</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Methwyd cwblhau'r gweithredoedd a ddewiswyd.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Cwblhawyd y gweithredoedd a ddewiswyd yn llwyddiannus.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Dewiswch apiau Microsoft Store rhagosodedig i'w tynnu ar gyfer pob defnyddiwr.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>Dim apiau wedi'u dewis i'w tynnu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>Rheoli AppX</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Methwyd llwytho: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Yn llwytho apiau, arhoswch...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Cyhoeddwr: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Yn dad-fuddsoddi apiau a ddewiswyd...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Dad-fuddsoddi apiau a ddewiswyd</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Methwyd tynnu'r apiau a ddewiswyd.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Apiau a ddewiswyd wedi'u trefnu i'w tynnu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>Gweld cynnydd y gweithrediad glanhau a maint amcangyfrifedig.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Gwybodaeth Glanhau</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>Rhyddhawyd {0} mewn {1} eiliad</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Dewiswch o leiaf un opsiwn glanhau.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>Bydd glanhau'r system yn dileu ffeiliau dros dro a storfa'n barhaol. Er bod hyn yn arferol yn ddiogel, rydym yn argymell bod yn ofalus.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Cadarnhad Diogelwch</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Clirio'r dewis</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Ychwanegu rheol</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Clirio'r cyfan</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Dewiswch ffolderi ac estyniadau ffeil y dylid eu dileu yn ystod y glanhau.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Golygu</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>Dim rheolau glanhau personol wedi'u ffurfweddu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Rheolau glanhau personol</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Cynnwys is-ffolderi</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Tynnu</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Gwiriwch y ffynhonnell a ddewiswyd a'r cysylltiad rhwydwaith, yna sganiwch eto.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Ni chwblhaodd y sgan gyrwyr</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Addaswch yr hidlydd, yr opsiwn diweddariadau-yn-unig, neu'r rhestr lawrlwythiadau cudd.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>Heb ganfod lawrlwythiadau cyfatebol</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Rhowch gynnig ar ffynhonnell, system weithredu, neu fath o beiriant gwahanol.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>Heb ganfod lawrlwythiadau gyrwyr</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Dewiswch ffynhonnell a sganiwch i restru lawrlwythiadau gyrwyr cydnaws.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Sganio am becynnau gyrwyr</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Dewiswch o leiaf un weithred os gwelwch yn dda.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Manylion gwall: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Maint glanhau amcangyfrifedig: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Cliciwch Sganio i gyfrifo'r maint cyffredinol</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Bydd y farchnad estyniadau ar gael yn y diwygiad dyfodol.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Yn dod yn fuan</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Rheoli estyniadau ac offer optimeiddio system</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>Mae'r gweithredoedd hyn yn addasu gwasanaethau a ffeiliau'r system. Efallai y bydd angen breintiau gweinyddwr.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Digwyddodd gwall rhwydwaith. Wrthi'n ailgeisio'n awtomatig...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>Dim Estyniadau ar Gael</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Gosodwch estyniadau o'r dudalen Estyniadau Ategyn i wella optimeiddio system</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>Dim offer ar gael. Ychwanegwch offer yn y ffolder offer yn y cyfeiriadur rhaglen.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Bydd offer yn ymddangos yma pan fyddant ar gael yn y cyfeiriadur offer.</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Gwrthodwyd y gweithrediad</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Methwyd cymhwyso {0}: {1}</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Oedi pob</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Wrthi'n ailgeisio cael pecynnau gyrwyr...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Yn rhedeg {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Rhedeg y gweithredoedd glanhau</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Yn rhedeg: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Sganio</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Wrthi'n sganio am becynnau gyrwyr ar gael, arhoswch...</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Dewis pob</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Dewis yr hyn a argymhellir</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} gweithred wedi'u dewis</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Dim gweithredoedd wedi'u dewis eto.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Gweithredoedd a ddewiswyd</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Dangos llwythiadau cudd</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Dechrau pob</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Harddu</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Glanhau</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Lawrlwytho Gyrwyr</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Estyniadau</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Optimeiddio Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Yn glanhau ffeiliau a logiau dros dro a adawyd gan amrywiol raglenni.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>Gweddillion Apiau</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Dad-osod rhaglenni UWP rhagosodedig a ddewiswyd ar gyfer pob defnyddiwr.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Tynnu apiau Windows bwndel</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Tynnu storfa cache a ffeiliau cwci Internet Explorer ac Edge.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Glanhau storfa cache y porwr</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>Rhedeg glanhau DISM a chlirio ffeiliau dros dro WinSxS.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Storfa gydrannau gwasanaeth</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Tynnu ffeiliau deunydd cof wedi'u gadael ar ôl i'r system chwalu.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Dileu deunyddiau cwymp</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Dileu ffeiliau sy'n cyd-fynd ag estyniadau wedi'u ffurfweddu o ffolderi a ddewiswyd.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Glanhau ffeiliau personol</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Dileu hanes a storfa cache sganiau Windows Defender.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Glanhau sganiadau Defender</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Tynnu delweddau Cynhenid .NET wedi'u storio i adennill lle disg.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>Clirio delweddau cynhenid .NET</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Sganio am ffeiliau mawr ar ddisg eich system a allai fod yn cymryd lle sylweddol.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Sgan Ffeiliau Mawr</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Dileu logiau Windows, adroddiadau gwall ac olrhain diagnostig.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Tynnu logiau a data diagnostig</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Dileu data rhag-llwyth Windows i ail-gynhyrchu olrhain newydd.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Clirio data rhag-llwyth</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Tynnu ffeiliau wedi'u dileu sy'n cael eu storio yn y Bin Ailgylchu.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Gwagio'r Bin Ailgylchu</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Clirio hanes cofrestrfa defnyddiwr cyffredin (Run MRU, RecentDocs, deialogau Agor/Cadw, TypedPaths). Nid yw hyn yn tynnu cofnodion hanfodol y system.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Glanhau cofrestrfa MRU/hanes</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Tynnu ffeiliau wedi'u storio mewn storfa cache gan gleient Remote Desktop.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Clirio storfa cache Remote Desktop</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Gwagio ffolderi dros dro Windows a'r defnyddiwr.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Glanhau ffeiliau dros dro</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Dileu cronfeydd data lluniau bach Explorer a storfa cache shader Direct3D.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Glanhau storfa cache lluniau bach</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Dileu ffeiliau diweddariadau wedi'u lawrlwytho a storfa cache Optimeiddio Cyflenwi.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Glanhau storfa cache Diweddariadau Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Lleihau oedi dewislen, cau apiau wedi'u hongian yn gyflymach ac agor y Cyfrifiadur hwn yn ddiofyn.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Gwella ymatebolrwydd Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Analluogi'r ddewislen dechrau yn llwyr. Pan fyddwch yn pwyso'r allwedd Win, bydd yn agor chwilio yn lle'r ddewislen dechrau.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Analluogi'r ddewislen dechrau ac agor chwilio gydag allwedd Win</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Diffodd cynnwys cwmwl awgrymiadau a baneri argymhellion.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Analluogi awgrymiadau Explorer</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Cuddio'r blwch chwilio a'r botwm Golwg Tasc, analluogi grwpio bar tasgau a dangos eiconau'r sianiad bob amser.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Cynllun y bar tasgau a'r ddewislen dechrau</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Dangos estyniadau ffeil a ffeiliau cudd yn File Explorer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>Opsiynau gwelededd ffeiliau</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Cadw storfa'r system yn y cof ac osgoi gyrwyr cnewyllyn rhydd.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Gwella rheoli cof</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Tynnu cyfyngu rhwydwaith a gostwng oedi ymatebolrwydd y system.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Optimeiddio amserlennu amlgyfrwng</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Tynnu effeithiau acrylig ar fewngofnodi a chuddio canolfan hysbysiadau Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Analluogi acrylig a chanolfan hysbysiadau</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Gweithredu'r cynllun pŵer perfformiad uchel ac analluogi hibernate.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Gorfodi cynllun perfformiad uchel</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Analluogi ID hysbysebu, nodweddion Spotlight ac awgrymiadau awtomatig.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Lleihau telemetreg ac awgrymiadau</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Argymhellir</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Stopio ac analluogi gwasanaethau Profiadau Defnyddiwr Cysylltiedig, Hub Diagnostig ac Optimeiddio Cyflenwi.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Analluogi gwasanaethau diagnostig</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Atal Adrodd Gwallau Windows rhag casglu ac anfon data cwymp.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Analluogi adrodd gwallau</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Diogelu'r system trwy analluogi mynediad cofrestrfa o bell.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Analluogi Cofrestrfa Bell</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Stopio gwasanaeth Chwilio Windows i atal diweddariadau mynegai.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Analluogi mynegeio Chwilio Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Diffodd Superfetch/SysMain i leihau gweithgaredd disg cefndir.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>Analluogi SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Addasu ymddygiad yr allwedd Windows i agor chwilio yn lle'r ddewislen dechrau.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Newid yr allwedd Windows i agor chwilio</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Glanhau ffeiliau storfa o amrywiol raglenni a'r system i ryddhau lle storio.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Glanhau Storfa</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Glanhau ffeiliau a ffolderi penodedig gan ddefnyddio rheolau personol.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Glanhau Personol</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Adnabod a rheoli ffeiliau mawr ar eich system.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Ffeiliau Mawr</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Glanhau ffeiliau a all effeithio ar berfformiad y system, fel ffeiliau rhag-llwyth, ac ati.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Glanhau Perfformiad</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Glanhau ffeiliau cydrannau'r system fel storfa cache Diweddariadau Windows, storfa cydrannau, ac ati.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Glanhau Cydrannau'r System</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Glanhau ffeiliau system fel ffeiliau dros dro, logiau, deunyddiau cwymp, ac ati.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Glanhau Ffeiliau System</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Tynnu storfa, ffeiliau dros dro ac adwaith arall.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Glanhau</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Tune'r bar tasgau, File Explorer ac ymddygiad y rhyngwyneb defnyddiwr.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer &amp; interface</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Addasu gosodiadau perfformiad ac ymatebolrwydd y system.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Perfformiad</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{0} o {1} gweithredoedd wedi'u dewis</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Analluogi gwasanaethau cefndir sy'n defnyddio adnoddau.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Gwasanaethau</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Dewiswch o leiaf un eitem i'w glanhau.</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>Harddu'r system</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Moddau Pwer Windows</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>Rhagosodiad</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Cynlluniau Pŵer Windows</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ie</value>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>Fersiwn</value>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Sensorau</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>Gosodiadau Overwatch GPU</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Ailosod y cyfrifydd ar gyfer "Ar fatri ers" yn yr adran fatri pan fydd y system yn ailgychwyn.</value>
+  </data>
+</root>

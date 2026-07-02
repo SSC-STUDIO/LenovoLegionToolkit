@@ -6,6 +6,11 @@
     <!-- Apply the canonical keyboard focus ring to all WPF-UI buttons. -->
     <Style BasedOn="{StaticResource {x:Type wpfui:Button}}" TargetType="wpfui:Button">
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value="0.85" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Compact Button Style -->
@@ -21,7 +26,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
     </Style>
 
     <!-- Primary Button Style -->
@@ -30,7 +35,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
         <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
@@ -41,7 +46,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthLarge}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeSubsection}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
     </Style>
 
 </ResourceDictionary>

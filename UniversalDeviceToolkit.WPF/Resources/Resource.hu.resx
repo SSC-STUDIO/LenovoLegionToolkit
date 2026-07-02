@@ -317,7 +317,7 @@ Ez az idő nem biztos, hogy pontos, ha a laptopot alvó vagy kikapcsolt állapot
     <value>Mégsem</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>° C</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Bezárás</value>
@@ -523,7 +523,7 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző 
     <value>A GPU-munkamódokról</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>° F</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>Processzor</value>
@@ -1718,10 +1718,10 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>Kapcsolja be vagy ki a laptop fedelén lévő háttérvilágítást.</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>-Ghazi</value>
+    <value>GHz</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>Hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé, hé</value>
+    <value>MHz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
     <value>Maximális: {0}</value>
@@ -2938,13 +2938,13 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>A Windows beépített rendszerleíró adatbázis-tisztító funkciójának használata</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (DNS-gyors?t?t?r ?r?t?se)</value>
+    <value>ipconfig /flushdns (DNS-gyorsítótár ürítése)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (Winsock protokollverem vissza?ll?t?sa)</value>
+    <value>netsh winsock reset (Winsock protokollverem visszaállítása)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (TCP/IP protokollverem vissza?ll?t?sa)</value>
+    <value>netsh int ip reset (TCP/IP protokollverem visszaállítása)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>Bővítménykiterjesztések</value>
@@ -2956,7 +2956,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Telepítés</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>Telep?tve</value>
+    <value>Telepítve</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Nem távolítható el</value>
@@ -3001,10 +3001,10 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Mind</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>Telep?tve</value>
+    <value>Telepítve</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Nincs telep?tve</value>
+    <value>Nincs telepítve</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Nincsenek elérhető bővítmények</value>
@@ -3340,112 +3340,112 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Kérjük, válasszon legalább egy elemet a tisztításhoz.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Szoftveres megjelenítés kényszerítése</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Szoftveres megjelenítést használ, ha távoli asztalt vagy fej nélküli megjelenítőt észlel. Újraindítás ajánlott.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>A telepítő a(z) {0} kilépési kóddal lépett ki</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>Sorban áll</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
+    <value>– {0}</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Optimalizálás</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Gyors megnyitás</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Beállítások</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Frissítés</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Bővítmények elérhetőségének ellenőrzése...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>Telepíthető</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>{0} további bővítmény érhető el az aktuális feedben.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>Telepítve</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>Bolt pulzusa</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Összes bővítmény</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Minden észlelt bővítmény naprakész.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Naprakész</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Elérhető frissítések</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Frissítések készen állnak</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} bővítményfrissítés áll készen a telepítésre.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>Várakozás a bővítmények metaadatainak betöltésére.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Metaadatok betöltése</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Testreszabhatja a nyelvet, a hőmérsékleti egységet, a témát és a kiemelőszínt.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Megjelenés</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Alkalmazás</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Az Universal Device Toolkit a következő indítási argumentummal indult: {0}. Az automatikus és a kézi frissítés-ellenőrzés, valamint az alábbi frissítési beállítások le vannak tiltva, amíg újra nem indítja az alkalmazást ezen indítási argumentum nélkül.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>A frissítés-ellenőrzés le van tiltva ebben a munkamenetben</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>Ellenőrizze a kiválasztott forrást és a hálózati kapcsolatot, majd futtassa újra a keresést.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>Az illesztőprogram-keresés nem fejeződött be</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>Módosítsa a szűrőt, a csak frissítés opciót vagy a rejtett letöltések listáját.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Nem találhatók megfelelő letöltések</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>Próbálkozzon másik forrással, operációs rendszerrel vagy géptípussal.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>Nem találhatók illesztőprogram-letöltések</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>Válasszon forrást, és indítson keresést a kompatibilis illesztőprogram-letöltések listázásához.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Illesztőprogram-csomagok keresése</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>Nem sikerült alkalmazni a(z) {0} elemet: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Bezárás</value>
@@ -3542,5 +3542,348 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Eszközcsomag: Alap mód</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Ez az eszköz alap módban fog indulni. A hardverspecifikus vezérlők rejtve maradnak, amíg nem áll rendelkezésre kompatibilis eszközcsomag.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Eszközcsomag: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Az Universal Device Toolkit egyező eszközcsomagot észlelt. Erősítse meg most, hogy az alkalmazás előkészíthesse a hardverspecifikus funkciókat.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Eszközbeállítás előkészítése...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Kiválasztás megerősítése</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Válassza ki az eltávolítani kívánt fájlokat. Csak a szűrőnek megfelelő fájlok jelennek meg.</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Egyéni...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Nagyobb fájlok szűrése mint:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Fájlnév</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Útvonal</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Kiválasztás</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Kiválasztva: {0} fájl ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Nagy fájlok elemzése</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Ventilátor</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>1. lemez hőmérséklete</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>2. lemez hőmérséklete</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core órajel</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Képkocka idő</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Játék</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Ventilátor</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Hőmérséklet</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Kihasználtság</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH ventilátor</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core órajel</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Sáv</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Háttérszín</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Kategória szín</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Sarok sugara</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Lent</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Fent</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Kritikus szín</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Betűméret</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Címke szín</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Átlátszóság</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Érték szín</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Figyelmeztetés szín</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Pozíció zárolása</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Átfedés stílus</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Frissítési időköz</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Szenzor frissítési időköze</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Pozíció visszaállítása</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Illesztési küszöb</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Megjelenés</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Érzékelők</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Küszöbértékek</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Kritikus</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS határ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>A minimálisan elfogadható képkockasebesség. Ez alatt a szín kritikusra vált.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Alacsony FPS delta</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Az átlagos FPS és az 1% alacsony közötti maximális eltérés. E felett a számláló kritikusra vált.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Teljesítmény</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Hőmérséklet</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Kihasználtság</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD beállítások</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>A(z) {0} bővítmény telepítve lett, de nem biztosít felhasználói belépési pontot. Csak háttérszolgáltatásokat vagy manifest adatokat nyújthat.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Telepítve, de nincs belépési pont</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>A(z) {0} bővítmény telepítve lett, de a futtató felületét nem sikerült betölteni. Indítsa újra az alkalmazást vagy telepítse újra a bővítményt.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Telepítésre vár (egy másik bővítmény töltődik)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>A(z) {0} bővítmény telepítve lett és megnyílt a Rendszeroptimalizálásban.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>A(z) {0} bővítmény telepítve lett. Használja a Megnyitás opciót az elérhető belépési pont indításához.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Fogyasztás</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Magok</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Memória</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E-Core órajel</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Fogyasztás</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Mag hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU Hot Spot</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe átvitel</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM kihasználtság</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Betöltés...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Memória hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Memória használat</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Alaplap hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Alaplap</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Nem elérhető</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P-Core órajel</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Megosztott memória használat</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Ismeretlen akkumulátor</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>Ismeretlen CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>Ismeretlen GPU</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM hőmérséklet</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM használat</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Engedélyezze a fejlett hardver-lekérdezést a részletes hőmérsékletek, frekvenciák és teljesítménykorlátok figyeléséhez.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>A hardveres szenzorok használatához először telepítenie kell a PawnIO-t!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Hardveres szenzorok</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>A nyelvi csomag letöltése sikertelen. Ellenőrizze a hálózati kapcsolatot, a proxyt vagy a TLS beállításokat, majd próbálja újra.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Kijelző</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Intelligens billentyűk</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Lebegő átfedés, amely élő szenzoradatokat mutat.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD engedélyezése</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

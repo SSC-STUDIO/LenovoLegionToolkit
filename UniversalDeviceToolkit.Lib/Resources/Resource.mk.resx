@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>Прилагодено</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>Систем</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>Вклучено, секогаш</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>Вклучено, при спиење</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>Оневозможено</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>Овозможено</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>Овозможено, одложено</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>Заштита</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>Нормално</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>Брзо полнење</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека Flip to Start е или ќе биде исклучен.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека Flip to Start е или ќе биде вклучен.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека Fn Lock е или ќе биде исклучен.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека Fn Lock е или ќе биде вклучен.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>Исклучен</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>Вклучен</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека HDR е или ќе биде исклучен.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека HDR е или ќе биде вклучен.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>Хибрид</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>Хибрид-Автоматски</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>Хибрид-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека микрофонот е или ќе биде исклучен.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека микрофонот е или ќе биде вклучен.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>Долу центар</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>Долу лево</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>Долу десно</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>Центар</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>Центар лево</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>Центар десно</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>Горе центар</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>Горе лево</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>Горе десно</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека осветлувањето на тастатурата со едно ниво е или ќе биде исклучено.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека осветлувањето на тастатурата со едно ниво е или ќе биде вклучено.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека Overdrive е или ќе биде исклучен.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека Overdrive е или ќе биде вклучен.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>Баланс</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>Прилагодено</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>Перформанси</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>Тивко</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>Брзо</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>Најбрзо</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>Бавно</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>Најбавно</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Високо</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Ниско</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>Дишење</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>Мазно</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>Статично</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>Бран лево</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>Бран десно</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>Профил 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>Профил 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>Профил 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Високо</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Ниско</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>Средно</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>Од долу нагоре</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>Со часовник</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>Против часовник</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>Од лево кон десно</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>Од десно кон лево</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>Од горе надолу</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>Секогаш</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>Аудио одѕив</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>Аудио бран</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora синхронизација</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>Промена на боја</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>Пулс на боја</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>Боен бран</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>Дожд</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>Виножито завртка</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>Виножито бран</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>Бран</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>Мазно</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>Бавно</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>Средно</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>Брзо</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Темно</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Светло</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>Систем</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека заклучувањето на тачпад е или ќе биде исклучено.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека заклучувањето на тачпад е или ќе биде вклучено.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>Високо</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>Ниско</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+    <comment>Го информира корисникот дека WinLock е или ќе биде вклучен.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>Вклучено</value>
+    <comment>Го информира корисникот дека WinLock е или ќе биде вклучен.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>Вклучено</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>Вклучено</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC адаптер</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB напојување</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC и USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>Долго</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>Нормално</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>Кратко</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Вклучено</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Тивко</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Звучно</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Оневозможено</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows режим на напојување</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows план за напојување</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Профил 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Дневно</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>На секој час</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Месечно</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>На секои 3 часа</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>На секои 12 часа</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Неделно</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Тековен стил</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Официјален кул</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Полноќен неон</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Шумска технологија</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Нема достапни ажурирања</value>
+    <comment>Порака за исклучок кога не се пронајдени ажурирања</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Својството на уредот не е GUID</value>
+    <comment>Порака за исклучок за својство на уредот кое не е GUID</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>Не може да се прочита променливата {0} од UEFI</value>
+    <comment>Формат на порака за исклучок при неуспешно читање на UEFI</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Заштита на батерија</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Нема резултати во пребарувањето</value>
+    <comment>Порака за исклучок кога WMI пребарувањето не враќа резултати</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Аргументите содржат опасни знаци</value>
+    <comment>Порака за исклучок за откривање на инјекција на команди</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Профилот мора да биде помеѓу 0 и 6</value>
+    <comment>Порака за исклучок за неважечка вредност на профил</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Неважечка променлива на околината: {0}</value>
+    <comment>Формат на порака за исклучок за неважечко име на променлива</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>Не може да се постават UEFI привилегиите</value>
+    <comment>Порака за исклучок при неуспешно поставување на UEFI привилегии</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Не може да се создаде профил за God Mode.</value>
+    <comment>Порака за исклучок кога не може да се создаде профил</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Командата не може да биде празна.</value>
+    <comment>Порака за исклучок за празен параметар на команда</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Неважечко име на датотека за поставки: {0}</value>
+    <comment>Формат на порака за исклучок за неважечко име на датотека</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>Не можеше да се прочита поставката {0}</value>
+    <comment>Формат на порака за исклучок при неуспешно читање од регистар</comment>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Искористеност</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Непозната состојба на батерија: {0}</value>
+    <comment>Формат на порака за исклучок за непозната состојба на батерија</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Неуспешно стартување на Explorer.</value>
+    <comment>Порака за исклучок при неуспешно рестартирање на Explorer</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>Не може да се запише променливата {0} во UEFI</value>
+    <comment>Формат на порака за исклучок при неуспешно запишување во UEFI</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Податоците на табелата не може да бидат празни</value>
+    <comment>Порака за исклучок за празни податоци на табела</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Повикот не успеа: {0} [опсег={1}, пребарување={2}, methodName={3}]</value>
+    <comment>Формат на порака за исклучок при неуспешен WMI повик</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell аргументите содржат опасни обрасци</value>
+    <comment>Порака за исклучок за инјекција на PowerShell</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Поместувањето и бројот ги надминуваат границите на низата</value>
+    <comment>Порака за исклучок за прекршување на границите на низата</comment>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Температура на диск 2</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>URL-то на датотеката за инсталација не може да се пронајде</value>
+    <comment>Порака за исклучок кога недостасува URL за преземање на ажурирање</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Несооѓање на контролниот збир на датотеката</value>
+    <comment>Порака за исклучок за несооѓање на CRC</comment>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>Температура на VRAM</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Името на ознаката не може да биде празно</value>
+    <comment>Порака за исклучок за празна ознака на верзија</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Должината на табелата на вентилаторот мора да биде 10</value>
+    <comment>Порака за исклучок за неважечка должина на табела</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Бришењето со џокер знаци е ограничено</value>
+    <comment>Порака за исклучок за блокирано бришење со џокер знаци</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>Пакетот на уредот '{0}' нема SHA256 метаподатоци.</value>
+    <comment>Формат на порака за исклучок за недостасување на SHA256</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl не успеа со грешка: {0}</value>
+    <comment>Формат на порака за исклучок за грешка при IO контрола</comment>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Фреквенција</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Датотеката за профил не е пронајдена.</value>
+    <comment>Порака за исклучок за недостасување на датотека за профил</comment>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Профилот нема да се примени без поврзан AC адаптер (целосна моќност).</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>Пакетот на уредот '{0}' не е достапен во онлајн каталогот на ресурси.</value>
+    <comment>Формат на порака за исклучок за недостапен пакет на уред</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>Не можеше да се добие бојата &quot;{0}&quot;</value>
+    <comment>Формат на порака за исклучок при неуспешно барање на боја од uxtheme</comment>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>Манифестот на пакетот на уредот '{0}' е празен.</value>
+    <comment>Формат на порака за исклучок за празен манифест</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>Неуспешна потврда дека состојбата {0} е поставена на {1}.</value>
+    <comment>Формат на порака за исклучок при неуспешна потврда на состојба на драјвер</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Мора да биде запислив</value>
+    <comment>Порака за исклучок за незапислив тек</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Неуспешно добивање на справување за драјверот: {0}</value>
+    <comment>Формат на порака за исклучок при неуспешно справување со драјвер</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU вентилатор</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Грешка при испраќање на командата на драјверот: controlCode={0}</value>
+    <comment>Формат на порака за исклучок за грешка во командата на драјвер</comment>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Вклучено</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Светлината мора да биде помеѓу 0 и 9</value>
+    <comment>Порака за исклучок за неважечка вредност на светлина</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>Пакетот на уредот содржи небезбедна патека: {0}</value>
+    <comment>Формат на порака за исклучок за преминување на патека во пакет</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Не е пронајдена поддржана верзија</value>
+    <comment>Порака за исклучок кога не е пронајдена поддржана верзија на God Mode</comment>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Не можеше да се десеријализираат ефектите</value>
+    <comment>Порака за искlsruок при неуспешна десеријализација на ефекти</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Бришењето на системски патеки не е дозволено</value>
+    <comment>Порака за исклучок за заштитени патеки за бришење</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Неважечко име на датотека</value>
+    <comment>Порака за исклучок за неважечко име на датотека</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>Пакетот на уредот содржи разделувач на патеки во стил на Windows: {0}</value>
+    <comment>Формат на порака за исклучок за backslash во патека на пакет</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Проверката на интегритетот на пакетот за ажурирање не успеа: нема SHA256 хеш достапен за ажурирањето {0}. Проверката на интегритетот е задолжителна за безбедност.</value>
+    <comment>Формат на порака за исклучок кога нема SHA256 хеш достапен за ажурирање</comment>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Температура на матична плоча</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Несооѓање на ID на пакетот на уредот. Очекувано '{0}', добиено '{1}'.</value>
+    <comment>Формат на порака за исклучок за несооѓање на ID</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>Профилот со ID {0} не е пронајден</value>
+    <comment>Формат на порака за исклучок за недостасување на профил</comment>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Скриј</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>Искористеност на VRAM</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Неуспешно регистрација на промени на задачата {0} во {1} [тип={2}]</value>
+    <comment>Формат на порака за исклучок при неуспешна регистрација на задача</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>Справувањето е неважечко</value>
+    <comment>Порака за исклучок за неважечко справување</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Неважечка вредност на променлива на околината: {0}</value>
+    <comment>Формат на порака за исклучок за неважечка вредност</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Вградениот екран не е пронајден</value>
+    <comment>Порака за исклучок кога не е достапен вградениот екран</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Непозната колонија.</value>
+    <comment>Порака за исклучок за непозната колонија од регистар</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Преземениот ресурс не ја помина SHA256 валидацијата. Очекувано {0}, добиено {1}.</value>
+    <comment>Формат на порака за исклучок за несооѓање на SHA256 хеш при преземање</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Гик</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU вентилатор</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Каталогот на ресурси е празен.</value>
+    <comment>Порака за исклучок за празен каталог на ресурси</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Командата не ја помина безбедносната валидација: {0}</value>
+    <comment>Формат на порака за исклучок при неуспешна безбедносна валидација</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Мора да биде читлив</value>
+    <comment>Порака за исклучок за нечитлив тек</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Неважечка состојба</value>
+    <comment>Порака за исклучок за неважечка вредност на состојба/енумерација</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Грешка при добивање справување на драјверот: {0}</value>
+    <comment>Формат на порака за исклучок при грешка во справувањето со драјвер</comment>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Прикажи</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Исклучено</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Својството на уредот не е низа</value>
+    <comment>Порака за исклучок за својство на уредот кое не е низа</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Не може да се управува RGB тастатурата со овозможена Vantage</value>
+    <comment>Порака за исклучок при конфликт со Lenovo Vantage</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Не е пронајдена поддржана функција</value>
+    <comment>Порака за исклучок кога не е достапна имплементација на функција</comment>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Напојување</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Не е пронајден поддржан контролор</value>
+    <comment>Порака за исклучок кога не е достапен поддржан контролор</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Неуспешна десеријализација на JSON</value>
+    <comment>Порака за исклучок при неуспешна десеријализација на JSON</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Низата на температура мора да има точно 10 елементи</value>
+    <comment>Порака за исклучок за неважечка големина на низа на температура</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Несооѓање на добавувачот на пакетот на уредот. Очекувано '{0}', добиено '{1}'.</value>
+    <comment>Формат на порака за исклучок за несооѓање на добавувач</comment>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Не е поддржано.</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Грешка при отворање на менаџерот на сервиси</value>
+    <comment>Порака за исклучок при неуспешно отворање на менаџер на сервиси</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Интерактивните извршувања на обвивката бараат аргументи кога чекаат за излез</value>
+    <comment>Порака за исклучок за обвивка без аргументи</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Не може да се парсира верзијата од името на ознаката: '{0}'. Очекуван формат: '3.0.1'</value>
+    <comment>Формат на порака за исклучок за неразбирлив формат на верзија</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Бришењето на критични клучеви од регистарот не е дозволено</value>
+    <comment>Порака за исклучок за заштитени клучеви од регистарот за бришење</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>Пакетот на уредот '{0}' не содржи {1}.</value>
+    <comment>Формат на порака за исклучок за недостасување на манифест</comment>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Прекинувач</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Интелигентно ладење</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Читањето не успеа: {0} [опсег={1}, пребарување={2}]</value>
+    <comment>Формат на порака за исклучок при неуспешно WMI читање</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Неважечко акциско копче</value>
+    <comment>Порака за исклучок за неважечко акциско копче за оптимизација</comment>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core такт</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Вклучено</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Неуспешна десеријализација на профилот.</value>
+    <comment>Порака за исклучок при неуспешна десеријализација на профил</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Грешка при отворање на сервисот</value>
+    <comment>Порака за исклучок при неуспешно отворање на сервис</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Повикот не успеа: {0}. [опсег={1}, пребарување={2}, methodName={3}]</value>
+    <comment>Формат на порака за исклучок при неуспешен WMI повик (со точка на крајот)</comment>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core такт</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>Вредноста на WMI функцијата не е достапна за {0}.</value>
+    <comment>Формат на порака за исклучок при неуспешно WMI читање</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI класата или името на просторот не е достапно [опсег={0}, пребарување={1}]</value>
+    <comment>Формат на порака за исклучок кога WMI класата/просторот не е достапен</comment>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Прекинувач на состојба</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Екстремно</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Не е иницијализирано.</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Вредноста на тековниот корисник е null</value>
+    <comment>Порака за исклучок кога Windows идентитетот е null</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Неподдржан режим на напојување {0}</value>
+    <comment>Формат на порака за исклучок за неподдржан режим</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Справувањето на уредот не е достапно</value>
+    <comment>Порака за исклучок кога справувањето на уредот е null</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Неважечки тип на форматирано</value>
+    <comment>Порака за исклучок за неочекуван тип на формат</comment>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Температура на меморија</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>Пакетот на уредот содржи неподдржан тип на датотека: {0}</value>
+    <comment>Формат на порака за исклучок за забранет тип на датотека во пакет</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB тастатурата не е поддржана</value>
+    <comment>Порака за исклучок кога хардверот на RGB тастатурата не е присутен</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Извршната датотека не е во листата на дозволени: {0}</value>
+    <comment>Формат на порака за исклучок за забранета извршна датотека</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Екстремни перформанси</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Верзијата на датотеката на тековниот процес не може да биде null</value>
+    <comment>Порака за исклучок кога верзијата на датотеката на процесот е null</comment>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Време на рамка</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Патеката за поставки излегува од дозволената папка: {0}</value>
+    <comment>Формат на порака за исклучок кога патеката за поставки е надвор од дозволената папка</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Главниот модул не може да биде null</value>
+    <comment>Порака за исклучок кога главниот модул на процесот е null</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Менувањето на режимот на напојување не е поддржано на овој уред.</value>
+    <comment>Порака за исклучок за неподдржана функција на режим</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Откриен е опасен образец во аргументите за {0}</value>
+    <comment>Формат на порака за исклучок за опасни обрасци во аргументи</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>Нема достапен профил за God Mode.</value>
+    <comment>Порака за исклучок кога нема достапен профил</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>Клучот {0} не можеше да се отвори</value>
+    <comment>Формат на порака за исклучок при неуспешно отворање на клуч</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>Пакетот на уредот '{0}' има празно URL за преземање.</value>
+    <comment>Формат на порака за исклучок за празно URL за преземање</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>Режимот '{0}' не е достапен без AC адаптер.</value>
+    <comment>Формат на порака за исклучок за режим ограничен со AC</comment>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Вентилатор</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Проверката на интегритетот на пакетот за ажурирање не успеа. Очекуван SHA256: {0}, Изчислен: {1}</value>
+    <comment>Формат на порака за исклучок за несооѓање на SHA256 хеш</comment>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Температура</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Температура на диск 1</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Добиена е недефинирана вредност: {0}</value>
+    <comment>Формат на порака за исклучок за неочекувана вредност</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer е веќе иницијализиран</value>
+    <comment>Порака за исклучок кога IoC е иницијализиран двапати</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer не излезе навреме.</value>
+    <comment>Порака за исклучок при истекување на време за исклучување</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl врати 0, последна грешка: {0}</value>
+    <comment>Формат на порака за исклучок при неуспешна IO контрола</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer не се рестартираше навреме.</value>
+    <comment>Порака за исклучок при истекување на време за рестартирање</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Системски вентилатор</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Името на датотеката на тековниот процес не може да биде null</value>
+    <comment>Порака за исклучок кога името на датотеката на процесот е null</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer мора да биде иницијализиран прво [тип={0}]</value>
+    <comment>Формат на порака за исклучок при резолуција пред иницијализација</comment>
+  </data>
+</root>

@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>Հատուկ</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>Համակարգ</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>Միացված, միշտ</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>Միացված, քնի ժամանակ</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>Միացված, ուշացված</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>Պահպանում</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>Սովորական</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>Արագ լիցքավորում</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Flip to Start-ը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Flip to Start-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Fn Lock-ը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Fn Lock-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ HDR-ը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ HDR-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>Հիբրիդային</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>Հիբրիդ-Ինքնաշխատ</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>Հիբրիդ-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ խոսափողը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ խոսափողը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>Ներքևի կենտրոն</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>Ներքևի ձախ</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>Ներքևի աջ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>Կենտրոն</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>Կենտրոնի ձախ</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>Կենտրոնի աջ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>Վերևի կենտրոն</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>Վերևի ձախ</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>Վերևի աջ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ մեկ մակարդակի սպիտակ ստեղնաշարի լուսավորությունը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ մեկ մակարդակի սպիտակ ստեղնաշարի լուսավորությունը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Overdrive-ը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Overdrive-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>Հավասարակշռված</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Ծայրահեղ</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>Հատուկ</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>Արտադրողականություն</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>Լուռ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>Արագ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>Ամենաարագ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>Դանդաղ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>Ամենադանդաղ</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Բարձր</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Ցածր</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>Շնչառություն</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>Հարթ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>Ստատիկ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>Ալիք դեպի ձախ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>Ալիք դեպի աջ</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>Նախապրոֆիլ 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>Նախապրոֆիլ 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>Նախապրոֆիլ 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Բարձր</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Ցածր</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>Միջին</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>Ներքևից վերև</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>Ուղիղ ժամացույցի սլաքի ուղղությամբ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>Հակառակ ժամացույցի սլաքի ուղղությամբ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>Ձախից աջ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>Աջից ձախ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>Վերևից ներքև</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>Միշտ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>Ձայնային ցատկ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>Ձայնային ալիք</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora համաժամեցում</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>Գույնի փոփոխություն</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>Գույնի պուլս</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>Գույնի ալիք</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>Անձրև</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>Ծիածանագույն պարույր</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>Ծիածանագույն ալիք</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>Ալիք</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>Հարթ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>Տիպ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>Դանդաղ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>Միջին</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>Արագ</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Մութ</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Բաց</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>Համակարգ</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Touchpad Lock-ը անջատված է կամ կլինի անջատված:</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ Touchpad Lock-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>Բարձր</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>Ցածր</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ WinLock-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>Միացված</value>
+    <comment>Տեղեկացնում է օգտատիրոջը, որ WinLock-ը միացված է կամ կլինի միացված:</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC ադապտեր</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB Power Delivery</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC և USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>Երկար</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>Սովորական</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>Կարճ</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Անձայն</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Միացնել ձայնը</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Պրոֆիլը չի կիրառվի առանց միացված AC ադապտերի (Լիարժեք հզորությամբ):</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Չի սկզբնավորված:</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Չի աջակցվում:</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU օդափոխիչ</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU օդափոխիչ</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Համակարգի օդափոխիչ</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Փոխանջատել</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Մարտկոցի խնայողություն</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Ինտելեկտուալ հովացում</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Ծայրահեղ արտադրողականություն</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Գիկ</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows-ի էներգիայի ռեժիմ</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows-ի էներգիայի պլան</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Նախապրոֆիլ 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Օրական</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>Ամեն ժամ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Ամսական</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>Ամեն 3 ժամը մեկ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>Ամեն 12 ժամը մեկ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Շաբաթական</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Ընթացիկ ոճ</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Պաշտոնական Cool</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Կեսգիշերային նեոն</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Անտառային տեխնոլոգիա</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Անջատված</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Միացված</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Սկավառակ 1-ի ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Սկավառակ 2-ի ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core հաճախականություն</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Օդափոխիչ</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Կադրի ժամանակ</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Հաճախականություն</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Ցածր</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Հիշողության ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Մայրական սալիկի ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Հզորություն</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core հաճախականություն</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Օգտագործում</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM-ի ջերմաստիճան</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM-ի օգտագործում</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Թաքցնել</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Ցուցադրել</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Փոխանջատել վիճակը</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Անվավեր վիճակ</value>
+    <comment>Բացառության հաղորդագրություն անվավեր enum/վիճակի արժեքի համար</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Անվավեր ֆայլի անուն</value>
+    <comment>Բացառության հաղորդագրություն անվավեր ֆայլի անվան պարամետրի համար</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Արգումենտները պարունակում են վտանգավոր նիշեր</value>
+    <comment>Բացառության հաղորդագրություն հրամանի ներարկման հայտնաբերման համար</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Ինտերակտիվ shell գործարկվող ֆայլերը պահանջում են արգումենտներ, երբ սպասվում է ելք</value>
+    <comment>Բացառության հաղորդագրություն արգումենտներ չունեցող shell-ի համար</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell-ի արգումենտները պարունակում են վտանգավոր օրինաչափություններ</value>
+    <comment>Բացառության հաղորդագրություն PowerShell ներարկման համար</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Անհայտ hive:</value>
+    <comment>Բացառության հաղորդագրություն անհայտ ռեեստրի hive-ի համար</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Թարմացումներ չկան</value>
+    <comment>Բացառության հաղորդագրություն, երբ թարմացումներ չեն գտնվել</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>Տեղադրման ֆայլի URL-ը չհաջողվեց գտնել</value>
+    <comment>Բացառության հաղորդագրություն, երբ թարմացման ներբեռնման URL-ը բացակայում է</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB ստեղնաշարը չի աջակցվում</value>
+    <comment>Բացառության հաղորդագրություն, երբ RGB ստեղնաշարի սարքավորումը բացակայում է</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Հնարավոր չէ կառավարել RGB ստեղնաշարը, երբ Vantage-ը միացված է</value>
+    <comment>Բացառության հաղորդագրություն, երբ Lenovo Vantage-ը հակասում է</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Էներգիայի ռեժիմի փոխումը չի աջակցվում այս սարքում:</value>
+    <comment>Բացառության հաղորդագրություն չաջակցվող էներգիայի ռեժիմի հնարավորության համար</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>Հնարավոր չէ սահմանել UEFI արտոնությունները</value>
+    <comment>Բացառության հաղորդագրություն UEFI արտոնության ձախողման համար</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Չհաջողվեց մեկնարկել Explorer-ը:</value>
+    <comment>Բացառության հաղորդագրություն Explorer-ի վերագործարկման ձախողման համար</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer-ը ժամանակին չվերագործարկվեց:</value>
+    <comment>Բացառության հաղորդագրություն Explorer-ի վերագործարկման սպասման ժամկետի սպառման համար</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer-ը ժամանակին չավարտվեց:</value>
+    <comment>Բացառության հաղորդագրություն Explorer-ի անջատման սպասման ժամկետի սպառման համար</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Անվավեր գործողության բանալի</value>
+    <comment>Բացառության հաղորդագրություն օպտիմիզացիայի անվավեր գործողության բանալու համար</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Հրամանը չի կարող լինել null կամ դատարկ:</value>
+    <comment>Բացառության հաղորդագրություն դատարկ հրամանի պարամետրի համար</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Համակարգի ուղիների ջնջումը չի թույլատրվում</value>
+    <comment>Բացառության հաղորդագրություն պաշտպանված ուղու ջնջման համար</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Wildcard ջնջումը սահմանափակված է</value>
+    <comment>Բացառության հաղորդագրություն wildcard ջնջման արգելափակման համար</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Կարևոր ռեեստրի բանալիների ջնջումը չի թույլատրվում</value>
+    <comment>Բացառության հաղորդագրություն պաշտպանված ռեեստրի բանալու ջնջման համար</comment>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Ընթացիկ օգտատիրոջ արժեքը null է</value>
+    <comment>Բացառության հաղորդագրություն, երբ Windows-ի ինքնությունը null է</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>handle-ը անվավեր է</value>
+    <comment>Բացառության հաղորդագրություն անվավեր handle-ի համար</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Չհաջողվեց ապաշարահյութավորել JSON-ը</value>
+    <comment>Բացառության հաղորդագրություն JSON ապաշարահյութավորման ձախողման համար</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Անվավեր շրջակա միջավայրի փոփոխական՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ անվավեր env var անվան համար</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Անվավեր շրջակա միջավայրի փոփոխականի արժեք՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ անվավեր env var արժեքի համար</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Ոչ մի աջակցվող հնարավորություն չի գտնվել</value>
+    <comment>Բացառության հաղորդագրություն, երբ ոչ մի հնարավորության իրականացում հասանելի չէ</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Ներկառուցված էկրանը չի գտնվել</value>
+    <comment>Բացառության հաղորդագրություն, երբ ինտեգրված էկրանը հասանելի չէ</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Չհաջողվեց ապաշարահյութավորել պրոֆիլը:</value>
+    <comment>Բացառության հաղորդագրություն պրոֆիլի ապաշարահյութավորման ձախողման համար</comment>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Պայծառությունը պետք է լինի 0-ից 9 միջակայքում</value>
+    <comment>Բացառության հաղորդագրություն անվավեր պայծառության արժեքի համար</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Պրոֆիլը պետք է լինի 0-ից 6 միջակայքում</value>
+    <comment>Բացառության հաղորդագրություն անվավեր պրոֆիլի արժեքի համար</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Աղյուսակի տվյալները չեն կարող դատարկ լինել</value>
+    <comment>Բացառության հաղորդագրություն դատարկ աղյուսակի տվյալների համար</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Ջերմաստիճանի զանգվածը պետք է ունենա ճիշտ 10 տարր</value>
+    <comment>Բացառության հաղորդագրություն անվավեր ջերմաստիճանի զանգվածի չափի համար</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Ֆայլի ստուգիչ գումարի անհամապատասխանություն</value>
+    <comment>Բացառության հաղորդագրություն CRC անհամապատասխանության համար</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Սարքի հատկությունը GUID չէ</value>
+    <comment>Բացառության հաղորդագրություն ոչ GUID սարքի հատկության համար</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Սարքի հատկությունը տող չէ</value>
+    <comment>Բացառության հաղորդագրություն ոչ տող սարքի հատկության համար</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Օֆսեթը և քանակը գերազանցում են զանգվածի սահմանները</value>
+    <comment>Բացառության հաղորդագրություն զանգվածի սահմանների խախտման համար</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Պրոֆիլի ֆայլը չի գտնվել:</value>
+    <comment>Բացառության հաղորդագրություն բացակայող պրոֆիլի ֆայլի համար</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Ծառայության բացման սխալ</value>
+    <comment>Բացառության հաղորդագրություն ծառայության բացման ձախողման համար</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Ծառայությունների կառավարչի բացման սխալ</value>
+    <comment>Բացառության հաղորդագրություն ծառայությունների կառավարչի բացման ձախողման համար</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Ռեսուրսների կատալոգը դատարկ է:</value>
+    <comment>Բացառության հաղորդագրություն դատարկ ռեսուրսների կատալոգի համար</comment>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Չհաջողվեց ապաշարահյութավորել էֆեկտները</value>
+    <comment>Բացառության հաղորդագրություն էֆեկտների ապաշարահյութավորման ձախողման համար</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>Հնարավոր չէ կարդալ {0} փոփոխականը UEFI-ից</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ UEFI կարդալու ձախողման համար</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>Հնարավոր չէ գրել {0} փոփոխականը UEFI-ում</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ UEFI գրելու ձախողման համար</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>WMI հնարավորության արժեքը հասանելի չէ {0}-ի համար:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ WMI կարդալու ձախողման համար</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Ստացվել է չսահմանված արժեք՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ անսպասելի enum արժեքի համար</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Չաջակցվող էներգիայի ռեժիմ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ չաջակցվող էներգիայի ռեժիմի համար</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>«{0}» էներգիայի ռեժիմն առանց AC ադապտերի հասանելի չէ:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ AC-ով սահմանափակված էներգիայի ռեժիմի համար</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Հրամանը չհաջողվեց անցնել անվտանգության ստուգումը՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ հրամանի անվտանգության ձախողման համար</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Գործարկվող ֆայլը allowlist-ում չէ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ չթույլատրված գործարկվող ֆայլի համար</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Հայտնաբերվել է վտանգավոր օրինաչափություն {0}-ի արգումենտներում</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ վտանգավոր արգումենտների օրինաչափությունների համար</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>Սարքի փաթեթը պարունակում է չաջակցվող ֆայլի տիպ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ սարքի փաթեթում չթույլատրված ֆայլի տիպի համար</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>Սարքի փաթեթը պարունակում է անվտանգ չհանդիսացող ուղի՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ սարքի փաթեթում path traversal-ի համար</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>Սարքի փաթեթը պարունակում է Windows-ակերպ ուղու բաժանիչ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ սարքի փաթեթի ուղում backslash-ի համար</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>«{0}» սարքի փաթեթը հասանելի չէ առցանց ռեսուրսների կատալոգում:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ հասանելի չհանդիսացող սարքի փաթեթի համար</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>«{0}» սարքի փաթեթը չի պարունակում {1}:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ բացակայող manifest ֆայլի համար</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>«{0}» սարքի փաթեթի manifest-ը դատարկ է:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դատարկ manifest-ի համար</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Սարքի փաթեթի ID-ի անհամապատասխանություն: Սպասվում էր՝ «{0}», ստացվել է՝ «{1}»:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ ID անհամապատասխանության համար</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Սարքի փաթեթի վաճառողի անհամապատասխանություն: Սպասվում էր՝ «{0}», ստացվել է՝ «{1}»:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ վաճառողի անհամապատասխանության համար</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>«{0}» սարքի փաթեթն ունի դատարկ ներբեռնման URL:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դատարկ ներբեռնման URL-ի համար</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>«{0}» սարքի փաթեթից բացակայում է SHA256 մետատվյալը:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ բացակայող SHA256-ի համար</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Անհայտ մարտկոցի վիճակ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ չճանաչված մարտկոցի վիճակի համար</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>Չհաջողվեց հաստատել, որ {0} վիճակը սահմանվել է {1}-ի:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դրայվերի վիճակի ստուգման ձախողման համար</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl-ը վերադարձրել է 0, վերջին սխալ՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դրայվերի IO կառավարման ձախողման համար</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>{0} բանալին չհաջողվեց բացել</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ ռեեստրի բանալու բացման ձախողման համար</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Պետք է լինի ընթեռնելի</value>
+    <comment>Բացառության հաղորդագրություն ոչ ընթեռնելի հոսքի համար</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Պետք է լինի գրելի</value>
+    <comment>Բացառության հաղորդագրություն ոչ գրելի հոսքի համար</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Սարքի handle-ը հասանելի չէ</value>
+    <comment>Բացառության հաղորդագրություն, երբ սարքի handle-ը null է</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Հիմնական մոդուլը չի կարող լինել null</value>
+    <comment>Բացառության հաղորդագրություն, երբ պրոցեսի հիմնական մոդուլը null է</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Ընթացիկ պրոցեսի ֆայլի անունը չի կարող լինել null</value>
+    <comment>Բացառության հաղորդագրություն, երբ պրոցեսի ֆայլի անունը null է</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Ընթացիկ պրոցեսի ֆայլի տարբերակը չի կարող լինել null</value>
+    <comment>Բացառության հաղորդագրություն, երբ պրոցեսի ֆայլի տարբերակը null է</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Ներբեռնված ռեսուրսը չանցավ SHA256 ստուգումը: Սպասվում էր՝ {0}, ստացվել է՝ {1}:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ SHA256 hash-ի անհամապատասխանության համար ռեսուրսի ներբեռնման ընթացքում</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer-ը արդեն սկզբնավորված է</value>
+    <comment>Բացառության հաղորդագրություն, երբ IoC-ն սկզբնավորվում է երկրորդ անգամ</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer-ը պետք է նախ սկզբնավորվի [type={0}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ լուծումը կատարվում է սկզբնավորումից առաջ</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Օդափոխիչի աղյուսակի երկարությունը պետք է լինի 10</value>
+    <comment>Բացառության հաղորդագրություն անվավեր օդափոխիչի աղյուսակի երկարության համար</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Պիտակի անունը չի կարող լինել null կամ դատարկ</value>
+    <comment>Բացառության հաղորդագրություն null կամ դատարկ տարբերակի պիտակի համար</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Հնարավոր չէ վերլուծել տարբերակը պիտակի անվանից՝ «{0}»: Սպասվող ձևաչափ՝ «3.0.1»</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ չվերլուծվող տարբերակի տողի համար</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>{0} ID-ով նախապրոֆիլը չի գտնվել</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ բացակայող God Mode նախապրոֆիլի համար</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Ոչ մի God Mode նախապրոֆիլ չհաջողվեց ստեղծել:</value>
+    <comment>Բացառության հաղորդագրություն, երբ ոչ մի նախապրոֆիլ չի կարող ստեղծվել</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>God Mode նախապրոֆիլ հասանելի չէ:</value>
+    <comment>Բացառության հաղորդագրություն, երբ ոչ մի նախապրոֆիլ հասանելի չէ</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Ոչ մի աջակցվող տարբերակ չի գտնվել</value>
+    <comment>Բացառության հաղորդագրություն, երբ աջակցվող God Mode տարբերակ չի գտնվել</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Ոչ մի աջակցվող կառավարիչ չի գտնվել</value>
+    <comment>Բացառության հաղորդագրություն, երբ աջակցվող կառավարիչ հասանելի չէ</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Անվավեր կարգավորումների ֆայլի անուն՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ անվավեր կարգավորումների ֆայլի անվան համար</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Կարգավորումների ուղին դուրս է գալիս թույլատրված դիրեկտորիայից՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ կարգավորումների ուղին թույլատրված դիրեկտորիայից դուրս է</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Չհաջողվեց գրանցել {0} առաջադրանքի փոփոխությունները {1}-ում [type={2}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ առաջադրանքի գրանցման ձախողման համար</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>Չհաջողվեց կարդալ {0} կարգավորումը</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ ռեեստրի կարդալը ձախողվում է</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>Չհաջողվեց ստանալ «{0}» գույնը</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ uxtheme-ի գույնի որոնումը ձախողվում է</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Չհաջողվեց ստանալ handle {0} դրայվերի համար</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դրայվերի handle-ի ձախողման համար</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Սխալ դրայվերի handle-ը ստանալիս՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դրայվերի handle-ի սխալի համար</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl-ը ձախողվեց սխալով՝ {0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ IO կառավարման սխալի համար</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Սխալ դրայվերի հրամանը ուղարկելիս՝ controlCode={0}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ դրայվերի հրամանի սխալի համար</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI դասը կամ namespace-ը հասանելի չէ [scope={0}, query={1}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ WMI դասը/namespace-ը հասանելի չէ</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Կարդալը ձախողվեց՝ {0} [scope={1}, query={2}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ WMI կարդալու ձախողման համար</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Կանչը ձախողվեց՝ {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ WMI կանչի ձախողման համար</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Կանչը ձախողվեց՝ {0}: [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ WMI կանչի ձախողման համար (վերջի կետով)</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Հարցման արդյունքներ չկան</value>
+    <comment>Բացառության հաղորդագրություն, երբ WMI հարցումը արդյունքներ չի վերադարձնում</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Ձևաչափվածի անվավեր տիպ</value>
+    <comment>Բացառության հաղորդագրություն անսպասելի ձևաչափի տիպի համար</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Թարմացման փաթեթի ամբողջականության ստուգումը ձախողվեց՝ {0} թարմացման համար SHA256 hash հասանելի չէ: Անվտանգության համար ամբողջականության ստուգումը պարտադիր է:</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ, երբ թարմացման համար SHA256 hash հասանելի չէ</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Թարմացման փաթեթի ամբողջականության ստուգումը ձախողվեց: Սպասվող SHA256՝ {0}, Հաշվարկված՝ {1}</value>
+    <comment>Բացառության հաղորդագրության ձևաչափ թարմացման SHA256 hash-ի անհամապատասխանության համար</comment>
+  </data>
+</root>

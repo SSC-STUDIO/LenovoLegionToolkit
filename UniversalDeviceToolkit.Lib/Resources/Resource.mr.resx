@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>कस्टम</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>सिस्टम</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>चालू, नेआम्हीी</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>चालू, स्लीप के दौरान</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>अक्षम</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>सक्षम</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>सक्षम, विलंबित</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>संरक्षण</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>रैपिड चार्ज</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that Flip to Start is or will be turned off.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that Flip to Start is or will be turned on.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that Fn Lock is or will be turned off.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that Fn Lock is or will be turned on.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that HDR is or will be turned off.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that HDR is or will be turned on.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>हाइब्रिड</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>हाइब्रिड-ऑटो</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>हाइब्रिड-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that the microphone is or will be turned off.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that the microphone is or will be turned on.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>नीचे केंद्र</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>नीचे बाएँ</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>नीचे दाएँ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>केंद्र</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>केंद्र बाएँ</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>केंद्र दाएँ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>ऊपर केंद्र</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>ऊपर बाएँ</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>ऊपर दाएँ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that Overdrive is or will be turned off.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that Overdrive is or will be turned on.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>संतुलित</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>एक्सट्रीम</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>कस्टम</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>प्रदर्शन</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>शांत</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>तेज़</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>सबसे तेज़</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>धीमा</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>सबसे धीमा</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>उच्च</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>कम</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>साँस</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>सहज</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>स्थिर</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>बायीं तरफ लहर</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>दायीं तरफ लहर</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>प्रीसेट 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>प्रीसेट 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>प्रीसेट 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>उच्च</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>कम</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>मध्यम</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>नीचे से ऊपर</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>दक्षिणावर्त</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>वामावर्त</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>बाएँ से दाएँ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>दाएँ से बाएँ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>ऊपर से नीचे</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>नेआम्हीी</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>ऑडियो बाउंस</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>ऑडियो रिपल</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>ऑरोरा सिंक</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>रंग परिवर्तन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>रंग पल्स</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>रंग लहर</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>बारिश</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>इंद्रधनुष पेंच</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>इंद्रधनुष लहर</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>रिपल</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>सहज</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>टाइप</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>धीमा</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>मध्यम</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>तेज़</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>डार्क</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>लाइट</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>सिस्टम</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>उच्च</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>कम</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>बंद</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>चालू</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC एडाप्टर</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB पावर डिलीवरी</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC आणी USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>लंबा</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>छोटा</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>म्यूट</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>अनम्यूट</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>AC एडाप्टर (पूर्ण वाटेज) कनेक्ट केले बिना प्रोफ़ाइल लागू नाही होगी।</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>प्रारंभ नाही झाला।</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>समर्थित नाही।</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU पंखा</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU पंखा</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>सिस्टम पंखा</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>टॉगल</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>बैटरी बचत</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>बुद्धिमान कूलिंग</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>एक्सट्रीम प्रदर्शन</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>गीक</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>अक्षम</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows पावर मोड</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows पावर योजना</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>प्रीसेट 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>दैनिक</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>हर घंटे</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>मासिक</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>हर 3 घंटे मध्ये</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>हर 12 घंटे मध्ये</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>साप्ताहिक</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>वर्तमान शैली</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>आधिकारिक कूल</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>मिडनाइट नियॉन</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>फ़ॉरेस्ट टेक</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>डिस्क 1 तापमान</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>डिस्क 2 तापमान</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E लार क्लॉक</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>पंखा</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>फ्रेम समय</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>आवृत्ति</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% कम</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>मेमोरी तापमान</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>मदरबोर्ड तापमान</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>बिजली</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P लार क्लॉक</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>तापमान</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>उपयोग</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM तापमान</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM उपयोग</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>छिपाएँ</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>दिखाएँ</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>स्थिति टॉगल करा</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>अमान्य स्थिति</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>अमान्य फ़ाइल नाम</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>तर्लां मध्ये खतरनाक वर्ण आहेत</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>इंटरैक्टिव शेल निष्पादन योग्य ला बाहर निकलने की प्रतीक्षा मध्ये तर्लां की आवश्यकता होती आहे</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell तर्लां मध्ये खतरनाक पैटर्न आहेत</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>अज्ञात हाइव।</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>लाई अपडेट उपलब्ध नाही</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>सेटअप फ़ाइल URL नाही मिल सका</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB कीबोर्ड समर्थित नाही</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Vantage सक्षम होने पर RGB कीबोर्ड प्रबंधित नाही केला जा सकता</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>इस डिवाइस पर पावर मोड स्विचिंग समर्थित नाही आहे।</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI विशेषाधिकार सेट नाही केले जा सकते</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Explorer शुरू करने मध्ये विफल।</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer समय पर पुनरारंभ नाही झाला।</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer समय पर बाहर नाही निकला।</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>अमान्य क्रिया कुंजी</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>कमांड null या खाली नाही हो सकता।</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>सिस्टम पथों का हटाना अनुमत नाही आहे</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>वाइल्डकार्ड हटाना प्रतिबंधित आहे</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>महत्वपूर्ण रजिस्ट्री कुंजियों का हटाना अनुमत नाही आहे</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>वर्तमान उपयोगकर्ता मान null आहे</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>आहेतडल अमान्य आहे</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSON डीसिरियलाइज़ करने मध्ये विफल</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>अमान्य पर्यावरण चर: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>अमान्य पर्यावरण चर मान: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>लाई समर्थित सुविधा नाही मिली</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्ले नाही मिला</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>प्रोफ़ाइल डीसिरियलाइज़ करने मध्ये विफल।</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>चमक 0 आणी 9 के बीच होनी चाहिए</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>प्रोफ़ाइल 0 आणी 6 के बीच होनी चाहिए</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>तालिका डेटा खाली नाही हो सकता</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>तापमान सरणी मध्ये ठीक 10 तत्व होने चाहिए</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>फ़ाइल चेकसम बेमेल</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>डिवाइस प्रॉपर्टी GUID नाही आहे</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>डिवाइस प्रॉपर्टी स्ट्रिंग नाही आहे</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>ऑफ़सेट आणी गणना सरणी सीमा से अधिक आहेत</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>प्रोफ़ाइल फ़ाइल नाही मिली।</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>सेवा खोलने मध्ये त्रुटि</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>सेवा प्रबंधक खोलने मध्ये त्रुटि</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>संसाधन कैटलॉग खाली आहे।</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>प्रभाव डीसिरियलाइज़ नाही केले जा सके</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>UEFI से चर {0} नाही पढ़ा जा सका</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>UEFI पर चर {0} नाही लिखा जा सका</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>{0} साठी WMI सुविधा मान अनुपलब्ध आहे।</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>अपरिभाषित मान प्राप्त झाला: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>असमर्थित पावर मोड {0}</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>पावर मोड '{0}' AC एडाप्टर के बिना अनुपलब्ध आहे।</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>कमांड सुरक्षा सत्यापन विफल: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>निष्पादन योग्य अनुमति सूची मध्ये नाही आहे: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>{0} के तर्लां मध्ये खतरनाक पैटर्न का पता चला</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>डिवाइस पैक मध्ये असमर्थित फ़ाइल प्रकार आहे: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>डिवाइस पैक मध्ये असुरक्षित पथ आहे: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>डिवाइस पैक मध्ये Windows-शैली का पथ विभाजक आहे: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>डिवाइस पैक '{0}' ऑनलाइन संसाधन कैटलॉग मध्ये उपलब्ध नाही आहे।</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>डिवाइस पैक '{0}' मध्ये {1} नाही आहे।</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>डिवाइस पैक '{0}' मैनिफेस्ट खाली आहे।</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>डिवाइस पैक ID बेमेल। अपेक्षित '{0}', प्राप्त '{1}'।</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>डिवाइस पैक विक्रेता बेमेल। अपेक्षित '{0}', प्राप्त '{1}'।</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>डिवाइस पैक '{0}' का डाउनलोड URL खाली आहे।</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>डिवाइस पैक '{0}' मध्ये SHA256 मेटाडेटा गायब आहे।</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>अज्ञात बैटरी स्थिति: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} स्थिति {1} पर सेट होने का सत्यापन विफल।</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl ने 0 लौटाया, अंतिम त्रुटि: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>कुंजी {0} नाही खोली जा सकी</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>पठनीय होना चाहिए</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>लिखने योग्य होना चाहिए</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>डिवाइस आहेतडल उपलब्ध नाही आहे</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>मुख्य मॉड्यूल null नाही हो सकता</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>वर्तमान प्रक्रिया फ़ाइल नाम null नाही हो सकता</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>वर्तमान प्रक्रिया फ़ाइल संस्करण null नाही हो सकता</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>डाउनलोड केला गया संसाधन SHA256 सत्यापन विफल। अपेक्षित {0}, प्राप्त {1}।</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer आधी से प्रारंभ हो चुका आहे</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer ला आधी प्रारंभ केला जाना चाहिए [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>पंखा तालिका लंबाई 10 होनी चाहिए</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>टैग नाम null या खाली नाही हो सकता</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>टैग नाम '{0}' से संस्करण पार्स नाही केला जा सका। अपेक्षित प्रारूप: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>ID {0} वाला प्रीसेट नाही मिला</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>लाई गॉड मोड प्रीसेट नाही बनाया जा सका।</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>लाई गॉड मोड प्रीसेट उपलब्ध नाही आहे।</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>लाई समर्थित संस्करण नाही मिला</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>लाई समर्थित नियंत्रक नाही मिला</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>अमान्य सेटिंग्स फ़ाइल नाम: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>सेटिंग्स पथ अनुमत निर्देशिका से बाहर जाता आहे: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>{1} मध्ये कार्य {0} पर परिवर्तन पंजीकृत करने मध्ये विफल [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} सेटिंग नाही पढ़ी जा सकी</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>रंग &quot;{0}&quot; प्राप्त नाही केला जा सका</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>ड्राइवर साठी आहेतडल प्राप्त करने मध्ये विफल: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>ड्राइवर आहेतडल प्राप्त करने मध्ये त्रुटि: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl इस त्रुटि के साथ विफल: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>ड्राइवर कमांड भेजने मध्ये त्रुटि: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI क्लास या नेमस्पेस उपलब्ध नाही [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>रीड विफल: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>कॉल विफल: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>कॉल विफल: {0}। [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>क्वेरी मध्ये लाई परिणाम नाही</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>फ़ॉर्मेट केले गए का अमान्य प्रकार</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>अपडेट पैकेज अखंडता जाँच विफल: अपडेट {0} साठी लाई SHA256 आहेश उपलब्ध नाही। सुरक्षा साठी अखंडता जाँच आवश्यक आहे।</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>अपडेट पैकेज अखंडता जाँच विफल। अपेक्षित SHA256: {0}, गणना की गई: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+</root>

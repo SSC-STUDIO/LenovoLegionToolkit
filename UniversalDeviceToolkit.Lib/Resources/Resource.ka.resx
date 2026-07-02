@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>მორგებული</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>სისტემური</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>ჩართული, ყოველთვის</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>ჩართული, ძილის დროს</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>ჩართული, დაყოვნებით</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>შენახვა</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>ჩვეულებრივი</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>სწრაფი დატენვა</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>ჰიბრიდული</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>ჰიბრიდული-ავტო</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>ჰიბრიდული-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>ქვემოთ ცენტრში</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>ქვემოთ მარცხნივ</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>ქვემოთ მარჯვნივ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>ცენტრი</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>ცენტრის მარცხნივ</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>ცენტრის მარჯვნივ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>ზემოთ ცენტრში</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>ზემოთ მარცხნივ</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>ზემოთ მარჯვნივ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>დაბალანსებული</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>ექსტრემალური</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>მორგებული</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>შესრულება</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>ჩუმი</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>სწრაფი</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>ყველაზე სწრაფი</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>ნელი</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>ყველაზე ნელი</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>მაღალი</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>დაბალი</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>სუნთქვა</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>გლუვი</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>სტატიკური</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>ტალღა მარცხნივ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>ტალღა მარჯვნივ</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>პრესეტი 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>პრესეტი 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>პრესეტი 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>მაღალი</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>დაბალი</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>საშუალო</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>ქვემოდან ზემოთ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>საათის ისრის მიმართულებით</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>საათის ისრის საწინააღმდეგოდ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>მარცხნიდან მარჯვნივ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>მარჯვნიდან მარცხნივ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>ზემოდან ქვემოთ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>ყოველთვის</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>აუდიო არხუნვა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>აუდიო ტალღა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>ფერის შეცვლა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>ფერის პულსი</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>ფერის ტალღა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>წვიმა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>ცისარტყელის ხრახნა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>ცისარტყელის ტალღა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>ტალღა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>გლუვი</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>აკრეფა</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>ნელი</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>საშუალო</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>სწრაფი</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>ბნელი</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>ღია</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>სისტემური</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>მაღალი</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>დაბალი</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC ადაპტერი</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB Power Delivery</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC და USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>გრძელი</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>ჩვეულებრივი</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>მოკლე</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>დადუმება</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>ხმის ჩართვა</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>პროფილი არ გამოყენება AC ადაპტერის (სრული სიმძლავრე) მიერთების გარეშე.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>არ არის ინიციალიზებული.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>არ არის მხარდაჭერილი.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU-ის ვენტილატორი</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU-ის ვენტილატორი</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>სისტემის ვენტილატორი</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>გადართვა</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>ბატარეის დაზოგვა</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>ინტელექტუალური გაგრილება</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>ექსტრემალური შესრულება</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>გიკი</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows-ის კვების რეჟიმი</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows-ის კვების გეგმა</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>პრესეტი 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>ყოველდღე</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>ყოველ საათში</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>ყოველთვიურად</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>ყოველ 3 საათში</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>ყოველ 12 საათში</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>ყოველკვირეულად</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>მიმდინარე სტილი</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>ოფიციალური Cool</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>შუაღამის ნეონი</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>ტყის ტექნოლოგია</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>გამორთული</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>ჩართული</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>დისკი 1-ის ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>დისკი 2-ის ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core-ის სიხშირე</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>ვენტილატორი</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>კადრის დრო</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>სიხშირე</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% დაბალი</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>მეხსიერების ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>დედა დაფის ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>სიმძლავრე</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core-ის სიხშირე</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>გამოყენება</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM-ის ტემპერატურა</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM-ის გამოყენება</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>დამალვა</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>ჩვენება</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>მდგომარეობის გადართვა</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>არასწორი მდგომარეობა</value>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>არასწორი ფაილის სახელი</value>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>არგუმენტები შეიცავს საშიშ სიმბოლოებს</value>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>ინტერაქტიული Shell-ის შესრულებად ფაილებს გასვლის მოლოდინში არგუმენტები სჭირდება</value>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell-ის არგუმენტები შეიცავს საშიშ შაბლონებს</value>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>უცნობი Hive.</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>განახლებები არ არის ხელმისაწვდომი</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>დაყენების ფაილის URL ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB კლავიატურა მხარდაჭერილი არ არის</value>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>RGB კლავიატურის მართვა შეუძლებელია Vantage-ის ჩართვისას</value>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>კვების რეჟიმის გადართვა ამ მოწყობილობაზე მხარდაჭერილი არ არის.</value>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI-ის პრივილეგიების დაყენება შეუძლებელია</value>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Explorer-ის გაშვება ვერ მოხერხდა.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer-ი დროში ვერ გადატვირთულა.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer-ი დროში ვერ დაიხურა.</value>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>არასწორი მოქმედების გასაღები</value>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>ბრძანება არ შეიძლება იყოს ცარიელი.</value>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>სისტემური გზების წაშლა დაუშვებელია</value>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>ვაილდკარდით წაშლა შეზღუდულია</value>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>კრიტიკული რეესტრის გასაღებების წაშლა დაუშვებელია</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>მიმდინარე მომხმარებლის მნიშვნელობა ცარიელია</value>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>დესკრიპტორი არასწორია</value>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSON-ის დესერიალიზაცია ვერ მოხერხდა</value>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>არასწორი გარემოს ცვლადი: {0}</value>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>არასწორი გარემოს ცვლადის მნიშვნელობა: {0}</value>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>მხარდაჭერილი ფუნქცია ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>ჩაშენებული ეკრანი ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>პროფილის დესერიალიზაცია ვერ მოხერხდა.</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>სიკაშკაშე უნდა იყოს 0-დან 9-მდე</value>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>პროფილი უნდა იყოს 0-დან 6-მდე</value>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>ცხრილის მონაცემები არ შეიძლება იყოს ცარიელი</value>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>ტემპერატურის მასივი ზუსტად 10 ელემენტს უნდა შეიცავდეს</value>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>ფაილის საკონტროლო ჯამი არ ემთხვევა</value>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>მოწყობილობის თვისება GUID არ არის</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>მოწყობილობის თვისება სტრიქონი არ არის</value>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>შეცდომა და რაოდენობა მასივის საზღვრებს აჭარბებს</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>პროფილის ფაილი ვერ მოიძებნა.</value>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>სერვისის გახსნის შეცდომა</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>სერვისების მენეჯერის გახსნის შეცდომა</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>რესურსების კატალოგი ცარიელია.</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>ეფექტების დესერიალიზაცია ვერ მოხერხდა</value>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>ცვლადის {0} UEFI-დან წაკითხვა შეუძლებელია</value>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>ცვლადის {0} UEFI-ში ჩაწერა შეუძლებელია</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>WMI ფუნქციის მნიშვნელობა {0}-სთვის მიუწვდომელია.</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>მიღებულია განუსაზღვრელი მნიშვნელობა: {0}</value>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>მხარდაჭერილი არ არის კვების რეჟიმი {0}</value>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>კვების რეჟიმი '{0}' AC ადაპტერის გარეშე მიუწვდომელია.</value>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>ბრძანებამ უსაფრთხოების შემოწმება ვერ გაიარა: {0}</value>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>შესრულებადი ფაილი ნებადართულ სიაში არ არის: {0}</value>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>არგუმენტებში {0}-სთვის საშიში შაბლონი ნაპოვნია</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი შეიცავს მხარდაჭერილ არარის ფაილის ტიპს: {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი შეიცავს სახიფათო გზას: {0}</value>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი შეიცავს Windows-ის სტილის გზის გამყოფს: {0}</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი '{0}' ონლაინ რესურსების კატალოგში მიუწვდომელია.</value>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი '{0}' არ შეიცავს {1}-ს.</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>მოწყობილობის პაკეტის '{0}' მანიფესტი ცარიელია.</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>მოწყობილობის პაკეტის ID არ ემთხვევა. მოსალოდნელია '{0}', მიღებულია '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>მოწყობილობის პაკეტის მწარმოებელი არ ემთხვევა. მოსალოდნელია '{0}', მიღებულია '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>მოწყობილობის პაკეტი '{0}'-ს აქვს ცარიელი ჩამოტვირთვის URL.</value>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>მოწყობილობის პაკეტს '{0}' აკლია SHA256 მეტამონაცემები.</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>უცნობი ბატარეის მდგომარეობა: {0}</value>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} მდგომარეობის {1}-ზე დაყენების შემოწმება ვერ მოხერხდა.</value>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl-მა 0 დააბრუნა, ბოლო შეცდომა: {0}</value>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>გასაღების {0} გახსნა ვერ მოხერხდა</value>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>უნდა იყოს წაკითხვადი</value>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>უნდა იყოს ჩასაწერი</value>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>მოწყობილობის დესკრიპტორი მიუწვდომელია</value>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>მთავარი მოდული არ შეიძლება იყოს ცარიელი</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>მიმდინარე პროცესის ფაილის სახელი არ შეიძლება იყოს ცარიელი</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>მიმდინარე პროცესის ფაილის ვერსია არ შეიძლება იყოს ცარიელი</value>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>ჩამოტვირთულმა რესურსმა SHA256 შემოწმება ვერ გაიარა. მოსალოდნელია {0}, მიღებულია {1}.</value>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer უკვე ინიციალიზებულია</value>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer ჯერ უნდა იყოს ინიციალიზებული [type={0}]</value>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>ვენტილატორის ცხრილის სიგრძე უნდა იყოს 10</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>ტეგის სახელი არ შეიძლება იყოს ცარიელი</value>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>ვერსიის დამუშავება ვერ მოხერხდა ტეგის სახელიდან: '{0}'. მოსალოდნელი ფორმატი: '3.0.1'</value>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>პრესეტი ID-ით {0} ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>God Mode-ის პრესეტის შექმნა ვერ მოხერხდა.</value>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>God Mode-ის პრესეტი მიუწვდომელია.</value>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>მხარდაჭერილი ვერსია ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>მხარდაჭერილი კონტროლერი ვერ მოიძებნა</value>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>არასწორი პარამეტრების ფაილის სახელი: {0}</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>პარამეტრების გზა ნებადართულ დირექტორიას საზღვრებს სცილდება: {0}</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>ამოცანის {0} რეგისტრაცია {1}-ში ვერ მოხერხდა [type={2}]</value>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} პარამეტრის წაკითხვა ვერ მოხერხდა</value>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>ფერის "{0}" მიღება ვერ მოხერხდა</value>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>დრაივერისთვის დესკრიპტორის მიღება ვერ მოხერხდა: {0}</value>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>შეცდომა დრაივერის დესკრიპტორის მიღებისას: {0}</value>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl ვერ შესრულდა შეცდომით: {0}</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>შეცდომა დრაივერის ბრძანების გაგზავნისას: controlCode={0}</value>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI კლასი ან namespace მიუწვდომელია [scope={0}, query={1}]</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>წაკითხვა ვერ მოხერხდა: {0} [scope={1}, query={2}]</value>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>გამოძახება ვერ მოხერხდა: {0} [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>გამოძახება ვერ მოხერხდა: {0}. [scope={1}, query={2}, methodName={3}]</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>მოთხოვნაში შედეგები არ არის</value>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>ფორმატირებულის არასწორი ტიპი</value>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>განახლების პაკეტის მთლიანობის შემოწმება ვერ მოხერხდა: {0} განახლებისთვის SHA256 ჰეში მიუწვდომელია. უსაფრთხოებისთვის მთლიანობის შემოწმება სავალდებულოა.</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>განახლების პაკეტის მთლიანობის შემოწმება ვერ მოხერხდა. მოსალოდნელი SHA256: {0}, გამოთვლილი: {1}</value>
+  </data>
+</root>

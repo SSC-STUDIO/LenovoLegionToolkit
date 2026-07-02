@@ -11,14 +11,15 @@ internal static class DpiAwareTypography
 
     private static readonly IReadOnlyDictionary<string, double> BaseFontSizes = new Dictionary<string, double>
     {
-        ["FontSizeSmallBody"] = 11d,
-        ["FontSizeCaption"] = 12d,
-        ["FontSizeBody"] = 13d,
-        ["FontSizePageDescription"] = 14d,
-        ["FontSizeSubsection"] = 16d,
-        ["FontSizeSection"] = 18d,
-        ["FontSizeDisplaySection"] = 24d,
-        ["FontSizePageTitle"] = 28d,
+        ["FontSizeSmallBody"] = 13d,
+        ["FontSizeCaption"] = 14d,
+        ["FontSizeBody"] = 15d,
+        ["FontSizeTitleBarDeviceInfo"] = 16d,
+        ["FontSizePageDescription"] = 16d,
+        ["FontSizeSubsection"] = 17d,
+        ["FontSizeSection"] = 19d,
+        ["FontSizeDisplaySection"] = 25d,
+        ["FontSizePageTitle"] = 29d,
     };
 
     public static double GetFontScaleForDpi(double dpiScale)
@@ -26,7 +27,8 @@ internal static class DpiAwareTypography
         if (double.IsNaN(dpiScale) || double.IsInfinity(dpiScale) || dpiScale <= 0)
             return 1d;
 
-        return Math.Clamp(1d / Math.Sqrt(dpiScale), 0.78d, 1.04d);
+        // WPF already scales layout for DPI; only apply a light correction so text stays readable on 125–200% displays.
+        return Math.Clamp(1d / Math.Sqrt(dpiScale), 0.92d, 1.04d);
     }
 
     public static void Apply(Window window)

@@ -1,0 +1,3889 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>ግንባታ</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>የቅርብ ጊዜ ስሪት በGitHub</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>አገናኞች</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>የፕሮጀክት ድር ጣቢያ በGitHub</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>የሶስተኛ ወገን ቤተመጽሐፍቶች</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>ስለ</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>ትርጉሞች በማህበረሰቡ የቀረቡ።</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>ስሪት</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>ጨምር</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>አዲስ ጨምር</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>ላፕቶፑ ጠፍቶ፣ ሲተኛ ወይም ሲቆይ ሲቆይ የUSB መሣሪያዎችን ሙላ።</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>ሁልጊዜ USB ላይ</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>ላፕቶፑ ጠፍቶ፣ ሲተኛ ወይም ሲቆይ ሲቆይ የUSB መሣሪያዎችን ሙላ።</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>ሁልጊዜ USB ላይ</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>ተግብር</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>ተግብር እና ዝጋ</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>ራስ-ሰር ድርጊቶች እንዲሰሩ Universal Device Toolkit መሮጥ አለበት።</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>አንቃ</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>ምንም ድርጊቶች አልተገለጹም። \"አዲስ ጨምር\" የሚለውን ተጫን ለአዲስ ድርጊት።</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>ከተነቃ፣ እነዚህ ድርጊቶች በራስ-ሰር ይሮጣሉ። ሁኔታ ሲቀየር፣ ሁሉም ድርጊቶች ከላይ ወደ ታች ይገመገማሉ።
+አሁን ያለውን ሁኔታ የሚዛመዱ ድርጊቶች ብቻ ይሮጣሉ።</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>ድርጊቶች</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>ስም...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>አዲስ ጨምር</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>ምንም ፈጣን ድርጊቶች አልተገለጹም። \"አዲስ ጨምር\" የሚለውን ተጫን ለአዲስ ፈጣን ድርጊት።</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>ፈጣን ድርጊቶች በትሪ አርማ ላይ ያለውን ቀኝ ጠቅ ማዕከል ይገኛሉ።</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>ፈጣን ድርጊቶች</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>ስም...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>እንደገና ሰያም</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>ሁሉም ለውጦች ተመልሰዋል!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>ተመልሷል</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>ለውጦች በተሳካ ሁኔታ ተቀምጠዋል!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>ተቀምጧል</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>ራስ-ሰር</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>እርምጃ ጨምር</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>አዋቅ</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>ልዩ</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>ይህ ድርጊት ሲሮጥ ተጨማሪ ድርጊቶች እንዳይከናወኑ አትፍቀድ።</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>አሁን አሂድ</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>ከስህተቶች ጋር ተጠናቋል።</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>አሁን አሂድ</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>በተሳካ ሁኔታ ተጠናቋል!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>አሁን አሂድ</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>በመሮጥ ላይ...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} እርምጃ</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} እርምጃዎች</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>መተግበሪያዎች</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>በፀሐይ መውጣት</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>በፀሐይ መሽቆል</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>በ {0:D2}:{1:D2}</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>ያልተሰየመ</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>የተወሰኑ ጨዋታዎች ሲሮጡ በራስ-ሰር ያውቃል እና የCPU እና የGPU አፈጻጸምን ያሻሽላል። ሙቀት እና የማራገቢያ ድምፅ ሊጨምር ይችላል።</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>AI Engine አንቃ</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>የሚዛን ሁነታ ቅንብሮች</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>ባትሪው እንዴት እንደሚሞላ ይምረጡ።</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>የባትሪ ሁነታ</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>ባትሪው እንዴት እንደሚሞላ ይምረጡ።</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>የባትሪ ሁነታ</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>ተያይዟል፣ በመሙላት ላይ...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>ተያይዟል፣ አይሞላም</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>የአሁኑ የባትሪ ሙቀት።</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>የባትሪ ሙቀት</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>የአሁኑ የባትሪ አቅም።</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>የአሁኑ አቅም</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>የመሙላት/መርገፍ ዑደቶች ብዛት።</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>የዑደት ብዛት</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>ባትሪው እንደተነደፈ ያለው አቅም።</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>የንድፍ አቅም</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>ባትሪ የሚሞላበት (+)፣ ወይም የሚርገፍበት (-) ፍጥነት።</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>ባትሪ የሚሞላበት (+)፣ ወይም የሚርገፍበት (-) ዝቅተኛ ፍጥነት።</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>ዝቅተኛ የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>ባትሪ የሚሞላበት (+)፣ ወይም የሚርገፍበት (-) ከፍተኛ ፍጥነት።</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>ከፍተኛ የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>የቀረ የጊዜ ግምት፡ {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>ጊዜ በመገምት ላይ...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>የመጀመሪያ አጠቃቀም ቀን</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>ባትሪው መቼ እንደተጠቀመ።</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>ሙሉ ሲሞላ ያለው የባትሪ አቅም።</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>ሙሉ የመሙላት አቅም</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>ከፍተኛው የባትሪ መሙላት አቅም።</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>የባትሪ ጤና</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>ዝቅተኛ ዋት ባትሪ መሙያ ተያይዟል</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>ባትሪው መቼ እንደተመረተ።</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>የማምረት ቀን</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>ላፕቶፑ ለመጨረሻ ጊዜ ለAC ኃይል የተያያዘበት ጊዜ።
+ላፕቶፑ ሲተኛ ወይም ጠፍቶ ሲሞላ ይህ ጊዜ ትክክል ላይሆን ይችላል።</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>ከባትሪ ጀምሮ</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>ባትሪ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>ሰርዝ</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>ዝጋ</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>ሰማያዊ</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>አረንጓዴ</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>ቀይ</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>የGPU የስራ ሁነታን በኮምፒተርዎ አጠቃቀም እና የኃይል ሁኔታዎች ላይ በመመስረት ይምረጡ።
+ሁነታዎችን መቀየር እንደሚያስፈልግ ሊደርስ ይችላል።</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>ወደ {0} መቀየር እንደገና ማስጀመርን ይጠይቃል። አሁን ማስጀመር ይፈልጋሉ?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>እንደገና ማስጀመር ያስፈልጋል</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>የGPU የስራ ሁነታ</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>ፈጣን ድርጊቶች</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>ቀጥል</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>ሁሉንም ቅዳ</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>ግራፊክስ</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>ሌላ</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>ኃይል</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>መነሻ</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>የተለየ GPU ካልተያዘ አሰናክለህ አጥፋው።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የውስጥ ማሳያ ጠፍቶ ወይም የቀላቀለ ሁነታ ካልሆነ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU አሰናክል</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>ከሚቀጥለው እርምጃ በፊት መዘግየትን ጨምር።</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>መዘግየት</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>ሰርዝ</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>የBIOS ስሪት</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>ጽሑፍ ወደ ክሊፕቦርድ ተቀድቷል።</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>\"{0}\" ወደ ክሊፕቦርድ ተቀድቷል።</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>ተቀድቷል!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>መሣሪያ</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>ሃርድዌር</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>ዋና ሰሌዳ</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>ቻሲስ</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>ማህደረ ትውስታ</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>የLenovo ድጋፍ</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>የማሽን ዓይነት</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>አምራች</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>ሞዴል</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>ተከታታይ ቁጥር</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>ስለ መሣሪያዎ</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>የማብቂያ ቀን</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>የመጀመሪያ ቀን</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>ዋስትና</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>ንቁ</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>አሰናክል</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>ንቁ ያልሆነ</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>መተግበሪያዎችን ግድለው</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>የተለየ GPU ካልተያዘ አሰናክለህ አጥፋው።</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>ማሳያ ከnVidia GPU ጋር ተያይዟል።</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>ሂደቶች የሉም</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>የአፈጻጸም ሁነታ</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>ያልታወቀ</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>ሂደቶች</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>GPU ዳግም አስጀምር</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>የተለየ GPU</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያን ብርሃን ቀይር።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የውስጥ ማሳያ ጠፍቶ ካልሆነ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>የማሳያ ብርሃን</value>
+  </data>
+
+  <data name="Edit" xml:space="preserve">
+    <value>አስተካክል</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>የFn+R አህጽሮት ሲጠቀም ላይጠቀማቸው የማይፈልጉትን የማደስ ፍጥነቶች ምልክት አድርግ።</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>የላፕቶፕ ማሳያ እንደበራ ያረጋግጡ። Universal Device Toolkit ያላበረውን ማሳያ ላይ የማደስ ፍጥነቶችን ሊጭን አይችልም።</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>ምንም የማደስ ፍጥነቶች አልተገኙም</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>የማደስ ፍጥነቶችን አስወግድ</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>ውጣ</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>ላክ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>በባትሪ ላይ ሲሆን የተዋሃደ GPU ብቻ ይጠቀሙ፣ AC ሲገኝ ሁለቱም (የተዋሃደ እና የተለየ) GPU ይጠቀማሉ። መደበኛ ያልሆነ አድካሚ ሲገኝ፣ ስርዓቱ ወደ የቀላቀለ-iGPU ብቻ ሁነታ ይቀየራል።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>የቀላቀለ-ራስ-ሰር ሁነታ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>ወደዚህ ሁነታ መቀየር እና ከዚህ ሁነታ መውጣት እንደገና ማስጀመርን ይጠይቃል።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>የተለየ GPU ብቻ ይጠቀሙ። ይህ ሁነታ ምርጥ የግራፊክስ አፈጻጸምን ይሰጣል፣ ነገር ግን የኃይል ፍጆታን ይጨምራል።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU ሁነታ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>የተዋሃደው እና የተለየው GPU ሁለቱም ነቅተዋል። ስርዓቱ በፍላጎቱ ላይ በመመስረት በራሱ መካከላቸው ይቀይራል።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>የቀላቀለ ሁነታ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>ይህ ሁነታ የተለየ GPU ሲሠራ ብቻ ውጤታማ ነው።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>የተዋሃደ GPU ብቻ ይጠቀሙ። ይህ ሁነታ የኃይል ፍጆታን እና ጩኸትን ይቀንሳል።</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>የቀላቀለ-iGPU ብቻ ሁነታ</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>ስለ የGPU የስራ ሁነታዎች</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>የCPU ዳሳሽ</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>የአድናቂ ፍጥነት</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>ሽፋኑን ሲከፍቱ ላፕቶፑን አቀጣጥል።</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>በመክፈት ላይ ጀምር</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>ሽፋኑን ሲከፍቱ ላፕቶፑን አቀጣጥል።</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>በመክፈት ላይ ጀምር</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Fn ቁልፍን ሳይይዙ የF1-F12 ቁልፎችን ሁለተኛ ተግባራት ይጠቀሙ።</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn መቆለፊያ</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Fn ቁልፍን ሳይይዙ የF1-F12 ቁልፎችን ሁለተኛ ተግባራት ይጠቀሙ።</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn መቆለፊያ</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>ማስጠንቀቂያ!
+አንዳንድ ላፕቶፖች ካሳዩት ያነሰ እሴቶችን ሊቀበሉ ይችላሉ፣ ነገር ግን ይጠንቀቁ። ይህ አማራጭ ያልተጠበቀ ባህሪ ሊያስከትል ይችላል። ምን እየሠሩ እንደሆነ ካልረዱ ይህንን በ0 ይተዉት።</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>ዝቅተኛ ኦፍሴት</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>ማስጠንቀቂያ!
+አንዳንድ ላፕቶፖች ካሳዩት የበለጠ እሴቶችን ሊቀበሉ ይችላሉ፣ ነገር ግን ይጠንቀቁ። ይህ አማራጭ ያልተጠበቀ ባህሪ ሊያስከትል ይችላል። ምን እየሠሩ እንደሆነ ካልረዱ ይህንን በ0 ይተዉት።</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>ከፍተኛ ኦፍሴት</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>ካላወቱ እርግጠኛ ካልሆኑ ከሚከተሉት አማራጮች ላይ አይቀይሩ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>የላቀ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>የረዥም ጊዜ የኃይል ገደብ (መሻገር ጭነት)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>የረዥም ጊዜ የኃይል ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>የአጭር ጊዜ የኃይል ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>የCPU የሙቀት ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>ቅንብሮችን መተግበር አልተቻለም</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>ቅንብርን መጫን አልተቻለም።</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>የአድናቂ ፍጥነት በአንድ የሙቀት ዳሳሽ ብቻ አይወሰንም። ከCPU፣ GPU እና የሙቀት መቀየሪያ ሙቀት መካከል በከፍተኛው ዳሳሽ ላይ በመመስረት ፍጥነቱን ይጨምራል ወይም ይቀንሳል። ትክክለኛ እሴቶች በእያንዳንዱ እርምጃ ላይ የመንቀሳቀሻ ምልክት ሲያደርጉ ይታያሉ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>የአድናቂ ሰንሰለት</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>ማስጠንቀቂያ!
+ይህንን አማራጭ ለረዥም ጊዜ መጠቀም አድናቂዎችን ይቀንሳል እና ረጅም ዕድሜን ይቀንሳል።
+በእርግጥ በዚህ አማራጭ ላይ ይጠንቀቁ!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>ከፍተኛው የአድናቂ ፍጥነት</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>አድናቂዎች</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>የሚዋቀር TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>ተለዋዋጭ ማጎልመሻ</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>የGPU የሙቀት ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>የብጁ ሁነታ ቅንብሮች</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>በውስጥ ማሳያ ላይ ከፍተኛ ተለዋዋጭ ክልል (HDR) አንቃ።
+
+ማስጠንቀቂያ፡ የውስጥ ማሳያ ጠፍቶ ካልሆነ ይህ ድርጊት በትክክል አይሮጥም።</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>በውስጥ ማሳያ ላይ ከፍተኛ ተለዋዋጭ ክልል (HDR) አንቃ።</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>የHDR አጠቃቀም በWindows ቅንብሮች ታግዷል።</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>አስገባ</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>ይህ መሣሪያ ከUniversal Device Toolkit ጋር ተኳሃኝ አይደለም።</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>መሣሪያዎ የሚያስፈልጉትን የስርዓት ክፍሎች (LenovoGameZoneData) ሊያመልጥ ይችላል።</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>ለመቀጠል \"እሺ\" ካነኩ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- ሶፍትዌሩ በተዘላበሰ ሁነታ ይሮጣል</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- አንዳንድ ባህሪያት ይሰናከላሉ (ዳሽቦርድ፣ ራስ-ሰር፣ ማክሮዎች)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- ሌሎች መሰረታዊ ባህሪያት አሁንም ይገኛሉ</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>የመሣሪያ መረጃ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>አቅራቢ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>ሞዴል:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>የማሽን ዓይነት:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>ለመቀጠል \"እሺ\" የሚለውን ወይም ለመውጣት \"ሰርዝ\" የሚለውን ይጫኑ።</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>ተኳሃኝ የፊደል ጣቢያዎች አልተገኙም</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን ሲቆጣጠር Lenovo Vantage ወይም አገልግሎቶቹ ሲሮጡ እዚህ ሊቆጣጠር አይችልም።</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage ወይም አገልግሎቶቹ እየሮጡ ነው</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>ስለ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>ድርጊቶች</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>ባትሪ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>ዳሽቦርድ</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>የቁልፍ ሰሌዳ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>ውርዶች</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>የስርዓት ማሻሻያ</value>
+  </data>
+<data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>የተሰማሚ ተጨማሪዎች</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>የአሰሳ ንጽጽሮች ቅንብሮች</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>በጎን አሞሌ ውስጥ የትኞናቸው የአሰሳ ንጽጽሮች እንደሚታዩ ያዋቅሩ። ዳሽቦርድ እና ቅንብሮች ሁልጊዜ ይታያሉ።</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>የፊደል ጣቢያ የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>የባትሪ የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>የራስ-ሰር የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>የማክሮ የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>የስርዓት ማሻሻያ የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>የተሻሻሉ ተሰሪዎች (ፕለጊን) የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>የ\"ስለ\" የአሰሳ ንጽጽርን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>የአሰሳ ንጽጽሮች</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>በጎን አሞሌ ውስጥ የትኞናቸው የአሰሳ ንጽጽሮች እንደሚታዩ ያዋቅሩ</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>ማዘመኛ ይገኛል!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>ማዘመኛ {0} ይገኛል!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>ወደ ታች ንቀሳቀስ</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>ወደ ላይ ንቀሳቀስ</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>አይደለም</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>AC አድካሚ ተያይዟል</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>AC አድካሚ ተያይዟል (ዝቅተኛ ዋት)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>AC አድካሚ ተቋርጧል</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>ካሜራ ጠፋ</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>ካሜራ በርቷል</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock ጠፋ</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock በርቷል</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock ጠፋ</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock በርቷል</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>ማይክሮፎን ጠፋ</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>ማይክሮፎን በርቷል</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock ጠፋ</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock በርቷል</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>ኋላ ብርሃን {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>አቅም {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>መገለጫ {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>ተንከባቢ ጠፋ</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>ተንከባቢ በርቷል</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>ኋላ ብርሃን {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>የAC አስማማጭ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>ካሜራ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock እና Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>ለFn ቁልፍ ድርጊቶች ማስታወቂያዎችን ያሰናክላል፣ ለምሳሌ የማይክሮፎን ዝም ማለት።
+ከሙሉ ማያ ገጽ መተግበሪያዎች ጋር ግጭቶች ካሉዎ ይህንን አማራጭ አንቃ።</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>ማስታወቂያዎችን አታሳይ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>ማይክሮፎን</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>አቀማመጥ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>የማደስ ፍጥነት</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>ስማርት ቁልፍ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>ማስታወቂያዎች</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>የተንከባቢ መቆለፊያ</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>እሺ</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>ክፈት</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያን የምላሽ ጊዜ አሻሽል።</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>ከመጠን በላይ ማሽከርከር</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያን የምላሽ ጊዜ አሻሽል።</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>ከመጠን በላይ ማሽከርከር</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} ተወርዷል!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>ውርድ ተጠናቋል</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>የሆነ ስህተት ተከስቷል</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>አገልጋዩ ኮድ 404 መለሰ።</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>ፋይሉ ጠፍቶ ይመስላል</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>የበይነመረብ ግንኙነትዎ እየሰራ መሆኑን ያረጋግጡ።</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>የሆነ ስህተት ተከስቷል</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>ማዘመኛ ይገኛል!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>ይህ ጥቅል ከአንድ ዓመት በላይ ያረጀ ነው።</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>ስሪት</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>ከሚከተለው ዝርዝር ውስጥ ከላፕቶፕዎ ጋር ተኳሃኝ እንደሆኑ የተመለከቱ የሶፍትዌር ጥቅሎች ይገኛሉ።
+ልክ ያሉትን ጥቅሎች እየጫኑ መሆኑን ሁልጊዜ ያረጋግጡ።</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>የማሽን ዓይነት እና OS በትክክል እንደተዋቀሩ ያረጋግጡ።</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>የሆነ ስህተት ተከስቷል</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>መደርደርን መቀየር፣ ውጤቶችን ማጣራት፣ ጥቅሎችን መደበቅ ወይም ዝርዝሩን ማደስ ውርዱን ያቆማል። መቀጠል ይፈልጋሉ?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>ውርድ በሂደት ላይ</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>ማጣሪያ...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>የማሽን ዓይነት</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>የስራ ስርዓት</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>ዋና (የሚመከር)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>እንደ Lenovo Vantage ተመሳሳይ</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>ሁለተኛ</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>እንደ Lenovo PC Support ተመሳሳይ</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>ምድብ</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>ቀን</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>ስም</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>ምንጭ</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>ውርዶች</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>ለጥፍ</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>የአፈጻጸም ሁነታን ቀይር።</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>የአፈጻጸም ሁነታን ቀይር።
+የአፈጻጸም ሁነታ በFn+Q መቀየር ይቻላል።</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>ያልተመረጠው የኃይል ሁነታ ያለ AC አድካሚ በትክክል ላይሠራ ይችላል።</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>ነባሪ</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>የWindows የኃይል ዕቅዶች</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>የሚገኙ የመተላለፊያ ጥቅሎችን በመመርመር ላይ፣ እባክዎ ይጠብቁ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>የመተላለፊያ ጥቅሎችን ፈልግ</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>ተኳሃኝ የመተላለፊያ ውርዶችን ለዘርዘር ምንጭ ይምረጡ እና ይቃኙ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>ምንም የመተላለፊያ ውርዶች አልተገኙም</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>ሌላ ምንጭ፣ የስራ ስርዓት ወይም የማሽን ዓይነት ይሞክሩ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>ምንም ተዛማጅ ውርዶች አልተገኙም</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>ማጣሪያውን፣ የማዘመኛ ብቻ አማራጭን ወይም የተደበቁ ውርዶችን ዝርዝር ያስተካክሉ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>የመተላለፊያ ምርመራ አልተጠናቀቀም</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>የተመረጠውን ምንጭ እና የአውታረ መረብ ግንኙነት ያረጋግጡ፣ ከዚያ እንደገና ይቃኙ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>የአውታረ መረብ ስህተት ተከስቷል። በራስ-ሰር እየተሞከረ ነው...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>የመተላለፊያ ጥቅሎችን እንደገና በማምጣት ላይ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>የአጽዳት መረጃ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>የአጽዳት ድርጊት እድገት እና የተገመተ መጠን ይመልከቱ።</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን ቅድመ-ቅንብርን አስተካክል።</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>አቅም</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>ቅድመ-ቅንብር 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>ቅድመ-ቅንብር 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>ቅድመ-ቅንብር 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>ቅድመ-ቅንብር 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>ጠፍቷል</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>ዞን 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>ዞን 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>ዞን 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>ዞን 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>ውጤት</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>ፍጥነት</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>አንቀጽታ</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>አድስ</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ የማደስ ፍጥነት ቀይር።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የውስጥ ማሳያ ጠፍቶ ካልሆነ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>የማደስ መጠን</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ የማደስ ፍጥነት ቀይር።</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>የማደስ መጠን</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>እንደገና ሰያም</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>በኋላ እንደገና እጀምራለሁ</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>አሁን እንደገና ጀምር</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>ቀላቅል</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>ክርክሮች</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>የሚሰራ መንገድ</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>ስክሪፕት ወይም ፕሮግራም አሂድ።
+ስክሪፕትዎ በትክክል እንደሚሮጥ መጀመሪያ ያረጋግጡ።</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>አስኪያ</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>አስቀምጥ</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>በማስቀመጥ ላይ...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>በንዑር ለማስቀመጥ አንድ ወይም ብዙ ፈጣን ድርጊቶችን ይምረጡ</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>ምንም ፈጣን ድርጊቶች አልተገለጹም።</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>ይህን መተግበሪያ አሳይ</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>የመተግበሪያውን የቀለም አንጸባራቂ ቀይር።</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>የቀለም አንጸባራቂ</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>ወደ Windows ሲገቡ ወደ ትሪ በትንሹ ጀምር።</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>ቋንቋ፣ የሙቀት መለኪያ፣ ገጽታ እና የቀለም አንጸባራቂን አብጅ።</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>ራስ-ሂድ</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>ወደ Windows ሲገቡ ወደ ትሪ በትንሹ ጀምር።</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone በትክክል ላልተሰናከለ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone ማሰናከል አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Legion Zone እና አገልግሎቱን ሳይጫኑ አሰናክል።
+ይህንን አማራጭ ካለወጡ በኋላ እንደገና ማስጀመር ይመከራል።</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Legion Zone አሰናክል</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys በትክክል ላልተሰናከለ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys ማሰናከል አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys እና አገልግሎቱን ሳይጫኑ አሰናክል።
+ካልተነቃ፣ ይህ መተግበሪያ Fn አህጽሮቶችን ይቆጣጠራል።
+ይህንን አማራጭ ካለወጡ በኋላ እንደገና ማስጀመር ይመከራል።</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>የስርዓት ማሻሻያ</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>የሚመከሩ የአፈጻጸም ማሻሻያዎችን ተግብር እና ጊዜያዊ ፋይሎችን አጽዳ።</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>የአፈጻጸም እና የአገልግሎት ማሻሻያዎችን ተግብር</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>የአፈጻጸም ማሻሻያዎች ተተግብረዋል።</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>የአፈጻጸም ማሻሻያዎችን መተግበር አልተቻለም።</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>አጽዳ</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>አጽዳት ተጠናቋል።</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>አጽዳት አልተሳከም።</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>እነዚህ ድርጊቶች የስርዓት አገልግሎቶችን እና ፋይሎችን ያስተካክላሉ። የአስተዳዳሪ መብቶች ሊያስፈልጉ ይችላሉ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>የተመረጡትን ድርጊቶች ተግብር</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>የሚመከሩትን ምረጥ</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>ምርጫ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>ፈልግ</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>የአጽዳት ድርጊቶችን አሂድ</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} ድርጊቶች ተመርጠዋል</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>እስከ አሁን ምንም ድርጊቶች አልተመረጡም።</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>የተመረጡ ድርጊቶች</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>አጽዳት</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>ማስዋብ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>የመተላለፊያ ውርድ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>የደህንነት ማረጋገጫ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>የስርዓት አጽዳት ጊዜያዊ ፋይሎችን እና ካሽን በቋሚነት ይሰረዛል። ብዙ ጊዜ ደህንነቱ የተጠበቀ ቢሆንም፣ አስፈላጊ ውሂብዎ ምትኬ እንዳለዎ ማረጋገጥ ይመከራል። መቀጠል ይፈልጋሉ?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>ተሻሻዎች</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>የስርዓት ማሻሻያ ተሻሻዎችን እና መሣሪያዎችን ያስተዳድሩ</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>ምንም ተሻሻዎች አይገኙም</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>የስርዓት ማሻሻያ ተግባርን ለማሳደግ ከተሻሻሉ ተሰሪዎች ገጽ ተሻሻዎችን ይጫኑ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>በቅርቡ ይመጣል</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>የተሻሻዎች ገበያ በወደፊት ማዘመኛ ውስጥ ይገኛል።</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>የWindows ማሻሻያ</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>ሁሉንም ምረጥ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>የብጁ አጽዳት ህጎች</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>በአጽዳት ጊዜ የሚሰሩ አቃፊዎችን እና የፋይል ቅጥያዎችን ይምረጡ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>ህግ ጨምር</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>አስተካክል</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>አስወግድ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>ሁሉንም አጽዳ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>ምንም የብጁ አጽዳት ህጎች አልተዋቀሩም።</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>ንዑስ አቃፊዎችን ያካትቱ</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>የAppX አስተዳደር</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>ለሁሉም ተጠቃሚዎች ለማስወገድ ቅድመ-የተጫኑ የMicrosoft Store መተግበሪያዎችን ይምረጡ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>ምንም መተግበሪያዎች ለማስወገድ አልተመረጡም።</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>የተመረጡትን መተግበሪያዎች አራገፍ</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>የተመረጡት መተግበሪያዎች ለማስወገድ ቀጥታ ሆነዋል።</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>የተመረጡትን መተግበሪያዎች ማስወገድ አልተቻለም።</value>
+  </data>
+<data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>መተግበሪያዎችን በመጫን ላይ፣ እባክዎ ይጠብቁ...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>ፕለጊኖችን በመጫን ላይ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>መጫን አልተቻለም፡ {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>አታላፊ፡ {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>የሬጅስትሪ MRU/ታሪክ አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>የተለመዱ የተጠቃሚ ሬጅስትሪ ታሪኮችን አጽዳ (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths)። ይህ ስርዓት-አስፈላጊ ግቤቶችን አይሰርዝም።</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>ድርጊቶች</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>የብጁ አጽዳት ህግ</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>አቃፊ</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>ቅጥያዎች</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>ብዙ ቅጥያዎችን በኮማ ይለዩ (ለምሳሌ፡ tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>ንዑስ አቃፊዎችን ያካትቱ</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>እባክዎ አንድ አቃፊ ይምረጡ።</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>እባክዎ ቢያንስ አንድ የፋይል ቅጥያ ያስገቡ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>እባክዎ ቢያንስ አንድ ድርጊት ይምረጡ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>የተመረጡት ድርጊቶች በተሳካ ሁኔታ ተጠናቋል።</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>የተመረጡትን ድርጊቶች ማጠናቀቅ አልተቻለም።</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>ኤክስፕሎረር እና በይነገጽ</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>የስርዓት ማስዋብ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>የተግባር አሞጌ፣ የፋይል ኤክስፕሎረር እና የተጠቃሚ በይነገጽ ባህሪ አድርግ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>አፈፃፀም</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>የስርዓት አፈጻጸም እና ምላሽ ሰጭ ቅንብሮችን አስተካክል።</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>አገልግሎቶች</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>ሀብት የሚወስዱ የኋላ አገልግሎቶችን አሰናክል።</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>ካሽኖችን፣ ጊዜያዊ ፋይሎችን እና ሌሎች ቀሪዎችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>የካሽ አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>ለማከማቸ ቦታ ለመልቀቅ ካሽ ፋይሎችን ከተለያዩ መተግበሪያዎች እና ከስርዓቱ ያጽዱ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>የስርዓት ፋይሎች አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>ጊዜያዊ ፋይሎችን፣ ምዝግብ ማስታወሻዎችን፣ የመተላለፊያ ስብራት ፋይሎችን ያጽዱ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>የስርዓት ክፍሎች አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>የስርዓት ክፍሎች ፋይሎችን እንደ Windows Update ካሽ፣ የክፍሎች መደብ ያጽዱ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>የአፈጻጸም አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>እንደ prefetch ፋይሎች ያሉ የስርዓት አፈጻጸም ሊጎዱ የሚችሉ ፋይሎችን ያጽዱ።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>የብጁ አጽዳት</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>በብጁ ህጎች የተገለጹ ፋይሎችን እና አቃፊዎችን ያጽዱ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>የተግባር አሞጌ እና የጀምሪ ምናሌ አቀማመጥ</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>የፍለጋ ሳጥን እና የተግባር እይታ ቁልፍን ደብቅ፣ የተግባር አሞጌ ምደባን አሰናክል እና የትሪ አርማዎችን ሁልጊዜ አሳይ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>የጀምሪ ምናሌ አሰናክል እና ፍለጋ በWin ቁልፍ ክፈት</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>የጀምሪ ምናሌን ሙሉ በሙሉ አሰናክል። የWin ቁልፍን ሲጫኑ፣ የጀምሪ ምናሌን ይተካልና ፍለጋ ይከፍታል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>የExplorer ምላሽ አሻሽል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>የምናሌ መዘግየትን ቀንስ፣ የተዘጉ መተግበሪያዎችን በፍጥነት ዝጋ እና This PC በነባር ክፈት።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>የፋይል ታይነት አማራጮች</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>የፋይል ቅጥያዎችን እና የተደበቁ ፋይሎችን በFile Explorer ውስጥ አሳይ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>የExplorer ጥቆማዎችን አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>የደመና ይዘት ጥቆማዎችን እና የምክር ሰሌዳዎችን አጥፋ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>የWindows ቁልፍ ፍለጋ ለመክፈት ቀይር</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>የጀምሪ ምናሌን ይተካልና ፍለጋ ለመክፈት የWindows ቁልፍ ባህሪን ቀይር።</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>የሚዲያ መርሐግብር አሻሽል</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>የአውታረ መረብ እንቅስቃሴ መዘግየትን አስወግድ እና የስርዓት ምላሽ መዘግየትን ቀንስ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>የማህደረ ትውስታ አስተዳደር አሻሽል</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>የስርዓት ካሽን በማህደረ ትውስታ ውስጥ አቆይ እና የከርነል ሞገዶችን አለመጫንን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Acrylic እና የማስታወቂያ ማዕከልን አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>በመግቢያ ላይ ያሉትን acrylic ውጤቶች አስወግድ እና የWindows ማስታወቂያ ማዕከልን ደብቅ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>ቴሌሜትሪ እና ምክሮችን ቀንስ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>የማስታወቂያ ID፣ የSpotlight ባህሪያት እና ራስ-ሰር ጥቆማዎችን አሰናክል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>ከፍተኛ አፈጻጸም ዕቅድ አስገድድ</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>የከፍተኛ አፈጻጸም የኃይል ዕቅዥን አንቃ እና ማንከርን አሰናክል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>የምርመራ አገልግሎቶችን አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>የተገናኙ የተጠቃሚ ልምዶችን፣ የምርመራ ማዕከልን እና የአቅርቦት ማሻሻያ አገልግሎቶችን አቁም እና አሰናክል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMain አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>የኋላ ዲስክ እንቅስቃሴን ለመቀነስ Superfetch/SysMain አጥፋ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>የWindows Search ማውጫን አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>የማውጫ ዝመናዎችን ለመከላከል የWindows Search አገልግሎትን አቁም።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>የርቀት ሬጅስትሪ አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>የርቀት ሬጅስትሪ መዳረሻን በማሰናከል ስርዓቱን ደህንነቱ የተጠበቀ አድርገህ አቆየው።</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>የስህተት ሪፖርት ማድረግን አሰናክል</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>የWindows Error Reporting ከመረጃ መሰብሰብ እና ስብራት ውሂብ ከመላክ ያቆም።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>የርቀት ዴስክቶፕ ካሽ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>በርቀት ዴስክቶፕ ደንበኛ የተፈጠሩ የተከማቹ ፋይሎችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>የWindows Update ካሽ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>የተወረዱ ማዘመኛ ፋይሎችን እና የአቅርቦት ማሻሻያ ካሽ ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>የአሳሽ ካሽ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>በተለያዩ መተግበሪያዎች የተተዉ ጊዜያዊ ፋይሎችን እና ምዝግብ ማስታወሻዎችን ያጸዳል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>የመተግበሪያ ቀሪዎች</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>የInternet Explorer እና Edge ካሽ እና ኩኪ ፋይሎችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>የጥፍር ስብራት ካሽ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>የExplorer የጥፍር ስብራት የመረጃ ቋቶችን እና የDirect3D ሻዳ ካሽ ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NET ቤዛ ስብራቶችን አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>የዲስክ ቦታ ለመልቀቅ የተከማቹ .NET Native ስብራቶችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>ምዝግብ ማስታወሻዎችን እና የምርመራ ውሂብ አስወግድ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>በስርዓት ድራይቭዎ ላይ ብዙ ቦታ ሊወስዱ የሚችሉ ትልልቅ ፋይሎችን ያጠራል።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>የትልልቅ ፋይሎች ምርመራ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>በስርዓትዎ ላይ ያሉ ትልልቅ ፋይሎችን አግኝ እና አስተዳድር።</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>ትልልቅ ፋይሎች</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>የWindows ምዝግብ ማስታወሻዎችን፣ የስህተት ሪፖርቶችን እና የምርመራ መከታተሎችን ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>የስብራት ስብራቶችን ሰርዝ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>ከስርዓት ስብራቶች በኋላ የተተዉ የማህደረ ትውስታ ስብራት ፋይሎችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>የDefender ምርመራዎችን አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>የWindows Defender የምርመራ ታሪክ እና ካሽ ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>ጊዜያዊ ፋይሎችን አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>የWindows እና የተጠቃሚ ጊዜያዊ አቃፊዎችን ባዶ አድርግ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>የታሸጉ የWindows መተግበሪያዎችን አስወግድ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>ለሁሉም ተጠቃሚዎች የተመረጡ ቅድመ-የተጫኑ UWP መተግበሪያዎችን አራገፍ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>የቆሻሻ መጣያ ባዶ አድርግ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>በቆሻሻ መጣያ ውስጥ የተቀመጡ የተሰረዙ ፋይሎችን አስወግድ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>የPrefetch ውሂብ አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>አዲስ መከታተሎችን ለመፍጠር የWindows prefetch ውሂብ ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>የብጁ ፋይሎችን አጽዳ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>ከተመረጡ አቃፊዎች የተዋቀሩ ቅጥያዎችን የሚዛመዱ ፋይሎችን ሰርዝ።</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>የአገልግሎት ክፍሎች መደብ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>የDISM አጽዳት አሂድ እና የWinSxS ጊዜያዊ ፋይሎችን አጽዳ።</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys አሰናክል</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage እና/ወይም ImController በትክክል ላልተሰናከለ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage እና/ወይም ImController ማሰናከል አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Lenovo Vantage እና ImController ሳይጫኑ አሰናክል።
+ይህንን አማራጭ ካለወጡ በኋላ እንደገና ማስጀመር ይመከራል።</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Lenovo Vantage እና ImController አሰናክል</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone በትክክል ላልተነቃ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone ማንቃት አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys በትክክል ላልተነቃ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys Keys ማንቃት አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage እና/ወይም ImController በትክክል ላልተነቃ ሊሆን ይችላል</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage እና/ወይም ImController ማንቃት አልተቻለም</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>የFn+R አህጽሮትን የበለጠ ጠቃሚ ለማድረግ፣ የማደስ ፍጥነቶችን ማስወገድ ይችላሉ።</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>የማደስ ፍጥነቶችን አስወግድ</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>ቋንቋ ይምረጡ።</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>ቋንቋ ጫን</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>የቋንቋ መጫን አልተሳከም</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>የቋንቋ ጥቅልን ማውረድ አልተቻለም። የአውታረ መረብ ግንኙነትዎን፣ አማራጭን ወይም የTLS ቅንብሮችን ያረጋግጡ፣ ከዚያ እንደገና ይሞክሩ።</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>ቋንቋ በመጫን ላይ</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>Downloading language pack…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>Extracting and installing…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>ይህን የቋንቋ ጥቅል ለመጫን የውርድ ቁልፉን ይጠቀሙ።</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>ቋንቋ አልተጫነም</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>ቋንቋ</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>ቋንቋ አራገፍ</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>የቋንቋ ማራገፍ አልተሳከም</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>ቋንቋ በማራገፍ ላይ</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>ሁልጊዜ ወደ ትሪ ያሳጥሩ። በትሪ አርማ ላይ ቀኝ ጠቅ በማድረግ ይዝጉ።</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>በመዝጋት ላይ ያሳጥሩ</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>በመነሳት ላይ የሚታይ የየማይጣጣም መሣሪያ ማስጠንቀቂያን ደብቅ።</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>የየማይጣጣም መሣሪያ ማስጠንቀቂያን አሰናክል</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>የትኞናቸው ማስታወቂያዎች እንደሚታዩ ያዋቅሩ።</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>ማስታወቂያዎች</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>የWindows የኃይል ዕቅዶች</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>ለFn+F9 ድርብ ጊዜ መጫን ፈጣን ድርጊት መድብ።</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>የስማርት ቁልፍ ሁለተኛ ድርጊት</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>ለFn+F9 ነጠላ ጊዜ መጫን ፈጣን ድርጊት መድብ።</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>የስማርት ቁልፍ ድርጊት</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>የብርሃን ገጽታ፣ የጨለማ ገጽታ ወይም የስርዓት ቅንብሮችን ተከተል ያዘጋጁ።</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>ገጽታ</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>ገጽታ</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>መተግበሪያ</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>ስማርት ቁልፎች</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>ማሳያ</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>የመተግበሪያውን ገጽታ፣ ባህሪ እና ተግባራዊ አማራጮችን ያዋቅሩ።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን አቅምን አስተካክል።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>ጠፍቷል</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን አቅም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>ውጤት ጨምር</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>መገለጫን መተግበር አልተቻለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>የብርሃን መገለጫ ሊተገበር አልቻለም።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>አቅም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>ሁሉንም ዞኖች አትምረጥ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>ውጤቶች</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>መገለጫ ሊላክ አልቻለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>መገለጫ ሊላክ አልቻለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>መገለጫ ሊገባ አልቻለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>መገለጫ ሊገባ አልቻለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>ምንም ውጤቶች አልተጨመሩም።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>ወደ ነባር መልስ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>ሁሉንም ዞኖች ምረጥ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>የፊደል ጣቢያ አቀማመጥ ቀይር</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>አቅጣጫ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>ቀለም</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>ቀለሞች</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>አቅጣጫ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>ውጤት</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>ይህ ውጤት ለሙሉው ፊደል ጣቢያ ይተገበራል እና ሌሎች ሁሉንም ውጤቶች ይተካል።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>ፍጥነት</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>ውጤት ጨምር</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>ውጤት አስተካክል</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን መገለጫን አስተካክል።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን መገለጫ</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>ሁሉም ቁልፎች</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} ዞኖች</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>የፀሐይ መውጣት</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>የፀሐይ መሽቆል</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>ጊዜ</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>በተዋሃደ እና በተለየ GPU መካከል መቀየርን ይፍቀዱ።
+እንደገና ማስጀመርን ይጠይቃል።</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>የቀላቀለ ሁነታን መቀየር እንደገና ማስጀመርን ይጠይቃል። አሁን ማስጀመር ይፈልጋሉ?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>እንደገና ማስጀመር ያስፈልጋል</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>የቀላቀለ ሁነታ</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>የተንከባቢን አሰናክል።</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>የተንከባቢ መቆለፊያ</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>የተንከባቢን አሰናክል።</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>የተንከባቢ መቆለፊያ</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>እንደገና ሞክር</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>ያልተጠበቀ ልዩ ሁኔታ ተከስቷል፡
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>ሪፖርት ሰርዝ</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>የስብራት ሪፖርት ወደ ዲስክ ተቀምጧል። የሪፖርቱን ዝርዝር ከሚከተለው ይመልከቱ። ሪፖርቶች በራስ-ሰር አይላኩም።</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>መተግበሪያው ባለፈው ክፍል ጊዜ ላይ ስብራት ተከስቷል</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>የስብራት ሪፖርት መክፈት አልተቻለም፡ {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>ሪፖርት ክፈት</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>ዝጋ</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>የስብራት ሪፖርት የተቀመጠበት፡ {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>የስብራት ሪፖርት ተገኝቷል</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>የስብራት ሪፖርት ዝርዝሮችን መጫን አልተቻለም።</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>ያልተሰየመ</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>በራስዎ ኃላፊነት መቀጠል ይችላሉ፣ ነገር ግን አንዳንድ ባህሪያት ላይገኙ ወይም በትክክል ላይሰሩ ሊሆን እንደሚችል ያስታውሱ።
+
+ለመቀጠል ካልሄዱ ምዝግብ ማስታወሻ በራስ-ሰር ይነቃል።</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>ለተጨማሪ መረጃ የፕሮጀክት ገጽን በGitHub ይመልከቱ።</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>የምዝግብ ማስታወሻ አቃፊ</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>የማሽን ዓይነት</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit ከመሣሪያዎ ጋር አልተሞከረም።</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>ይህን ማስጠንቀቂያ በማንኛውም ጊዜ በቅንብሮች ውስጥ ማሰናከል ይችላሉ።</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>ሞዴል</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>ያልተደገፈ መሣሪያ</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>አቅራቢ</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>አዘምን</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>ማዘመኛ አለ</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>ምን አዲስ ነው?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን አቅምን አስተካክል።</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>አቅሙን በFn+Space መቀየር ይችላሉ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>በውስጥ የፊደል ጣቢያ ላይ የWindows ቁልፍን አሰናክል።</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>የWindows ቁልፍ መቆለፊያ</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>በውስጥ የፊደል ጣቢያ ላይ ብቻ ይሰራል።</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>የWindows ቁልፍ መቆለፊያ</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>አዎ</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>ማይክሮፎን</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>ሲጠፋ፣ ማይክሮፎኖች ዝም ይላሉ።</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>ማይክሮፎን</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>ሲጠፋ፣ ማይክሮፎኖች ዝም ይላሉ።</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>ጥራት</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ ጥራት ቀይር።</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>ጥራት</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ ጥራት ቀይር።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የውስጥ ማሳያ ጠፍቶ ካልሆነ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ ሚዛን ቀይር።</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>የውስጥ ማሳያ ሚዛን ቀይር።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የውስጥ ማሳያ ጠፍቶ ካልሆነ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>ማሳያ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>ኋላ ብርሃን በFn+Space ማብራትም ማጥፋትም ይችላሉ።</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ኋላ ብርሃን አብራ ወይም አጥፋ።</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>ምንም ተዛማጅ ውርዶች አልተገኙም</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>ማዘመኛዎችን ብቻ አሳይ</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>ዳሽቦርድ አብጅ</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>ጫን</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>ቡድን ፍጠር</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>ስም</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>አንዳንድ ባህሪያት በላፕቶፕዎ ሁኔታ እና ቅንብር ላይ በመመስረት በዳሽቦርድ ላይ ላይታዩ ይችላሉ።</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>አብጥር</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>ማሳያዎችን አጥፋ</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>ሁሉንም ያሉ ማሳያዎች አጥፋ።
+የመንቀሳቀሻውን ማንቀሳቀስ ወይም የፊደል ጣቢያ መጫን ማሳያዎችን ያስተነቅታል።</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>አጥፋ</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>ማሳያዎችን አጥፋ</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>ሁሉንም ያሉ ማሳያዎች አጥፋ።</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>የቡድን ስም አስተካክል</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>ስም</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>የLegion አርማ በርቷል</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>የLegion አርማ ጠፋል</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>የመቆጣጠሪያ ክፍል ኋላ ብርሃን በርቷል</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>የመቆጣጠሪያ ክፍል ኋላ ብርሃን ጠፋል</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>እንደገና ማስጀመር ያስፈልጋል</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>ማጥፋት ያስፈልጋል</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>እንደገና ማስጀመር ይመከራል</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>የሚመከር</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>ተራ ላይ</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>በማውረድ ላይ</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>በመጫን ላይ</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>ተጠናቋል</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>የድርጊት ትርጉም አልተገኘም</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>ለዚህ ድርጊት የቴክኒክ ትግበር ዝርዝሮች አይገኙም</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>መጫን አልተሳከም</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>ያልታወቀ</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>የትዕዛዝ አፈጻጸም</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>የሬጅስትሪ ማስተካከያ</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>የአገልግሎት አስተዳደር</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>የሬጅስትሪ ማስተካከያ + PowerShell ስክሪፕት</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>የሬጅስትሪ አጽዳት</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM ትዕዛዝ</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>አስቀምጥ እና ዝጋ</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>የብጁ ሁነታ ቅድመ-ቅንብር</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>የብጁ ሁነታ ቅድመ-ቅንብርን አንቃ።
+ይህ ቅንብር የብጁ ሁነታ ሲነቃ ብቻ ውጤታማ ነው።</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>የቅድመ-ቅንብር ስም</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>ስም</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>ንቁ ቅድመ-ቅንብር</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>የመተግበሪያ አቃፊዎች</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>ውሂብ</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>ጊዜያዊ</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>የብርሃን ማሳያ ብርሃን</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>ሲነቃ፣ ሁልጊዜ ብርሃን ሲቀይሩ ተመሳሳይ የብርሃን ደረጃ ለሁሉም የWindows የኃይል ዕቅዶች ይተገበራል።</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>ማዘመኛ {0} ይገኛል!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>ከፍተኛው የኃይል ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>የAPU sPPT የኃይል ገደብ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>በCPU ሊደርስ የሚችል የቀጣይ የኃይል ፍጆታ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>በአጭር ጊዜ ውስጥ በCPU ሊደርስ የሚችል ከፍተኛው የኃይል ፍጆታ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>በCPU ሊደርስ የሚችል ከፍተኛው የእንቅስቃሴ ጊዜ የኃይል ፍጆታ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>ሁለቱም CPU እና GPU ሙሉ በሙሉ ሲጠቀሙ በCPU ሊደርስ የሚችል ከፍተኛው የኃይል ፍጆታ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>በትንሽ መዘግየት በCPU ሊደርስ የሚችል ከፍተኛው የኃይል ፍጆታ።</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>ድግግሞሽ እና ኃይል ከመቀነሱ በፊት በCPU ሊደርስ የሚችል ከፍተኛው ሙቀት።</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>በCPU የኃይል ፍጆታ ላይ በመመስረት ለGPU ሊመደብ የሚችል ተጨማሪ ከፍተኛ ኃይል።</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>ከመሰረታዊ የኃይል ፍጆታ በላይ ለGPU ሊመደብ የሚችል ተጨማሪ የኃይል መጠን።</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>ድግግሞሽ እና ኃይል ከመቀነሱ በፊት በGPU ሊደርስ የሚችል ከፍተኛው ሙቀት።</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>ነባሪ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>የአጭር ጊዜ የኃይል ገደብ ቆይታ</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>የShort Term Power Limit ለመጠቀም CPU ሊጠቀም የሚችልበት የጊዜ መጠን። የTau ጊዜ ሲያልቅ፣ Long Term Power Limit ይጠቀማል።</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>ጠቅላላ የፕሮሰሰር ኃይል ዒላማ በAC</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPU ለGPU ተለዋዋጭ የኃይል ፍጆታ ማስተካከያን የሚያነሳው ነጥብ።</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>ፍጠር</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>እርምጃ ጨምር</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>ድርጊት ፍጠር</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>ቅድመ-ቅንብር</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>የተለየ GPU</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>የኃይል ሁነታ</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>ባትሪ</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>ሁነታ</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>ዝቅተኛ የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>ከፍተኛ የመርገፍ ፍጥነት</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>የአጠቃቀም ጊዜ</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>ማዘመኛ ይገኛል!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>አርማ ምረጥ</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>አርማ ለውጥ</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>የባትሪ ደረጃ ዝቅተኛ ነው</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>አዋቅ</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 ዝቅተኛ የኃይል ሞዴል ተገኝቷል</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows ይህ ላፕቶፕ Modern Standby እንደሚደግፍ ያሳያል። የሚዛን ያልሆኑ የኃይል ዕቅዶችን መጠቀም ያልተጠበቀ ባህሪ ሊያስከትል ይችላል።</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>የኃይል ሁነታ ሲቀየር ለመተግበር የWindows የኃይል ዕቅዶችን ይምረጡ።</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>ኃይል</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>የኃይል ዕቅዥ አማራጮች በWindows መቆጣጠሪያ ፓነል</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>ጠፍቷል</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>የፊደል ጣቢያ ኋላ ብርሃን መገለጫ ከውጭ አስገባ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>ወደ አሁኑ መገለጫ የኋላ ብርሃን ማዋቀር ከውጭ አስገባ እና ተግብር።</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>መንገድ</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>ከ {0} በኋላ</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>ብዙ መነሳቶች...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>የGPU ማጎልመያ ቅንብሮች</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>የኮር ድግግሞሽ ኦፍሴት</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>የማህደረ ትውስታ ድግግሞሽ ኦፍሴት</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU አጎልም</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>የተለየ GPU ማጎልመያ በአፈጻጸም ይጨምራል።</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU አጎልም</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>የተለየ GPU ማጎልመያ በአፈጻጸም ይጨምራል።
+
+ማስጠንቀቂያ፡ ይህ ድርጊት የተለየ GPU ሊገኝ ካልቻለ በትክክል አይሮጥም።</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>የመቆጣጠሪያ ክፍል ኋላ ብርሃን</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>በላፕቶፑ ኋላ ላይ ያሉትን የመቆጣጠሪያ ክፍሎች ኋላ ብርሃን አብራ ወይም አጥፋ።</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>የመቆጣጠሪያ ክፍል ኋላ ብርሃን</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>በላፕቶፑ ኋላ ላይ ያሉትን የመቆጣጠሪያ ክፍሎች ኋላ ብርሃን አብራ ወይም አጥፋ።</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>የፓነል አርማ ኋላ ብርሃን</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>በላፕቶፑ ሽፋን ላይ ያለውን ኋላ ብርሃን አብራ ወይም አጥፋ።</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>የፓነል አርማ ኋላ ብርሃን</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>በላፕቶፑ ሽፋን ላይ ያለውን ኋላ ብርሃን አብራ ወይም አጥፋ።</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>MHz</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>ከፍተኛ፡ {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>የኮር ሰዓት</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>የP ኮር ሰዓት</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>የE ኮር ሰዓት</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>ሙቀት</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>ማራገቢያ</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>የማህደረ ትውስታ ሰዓት</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>የማህደረ ትውስታ አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>የማስታወሻ ሙቀት</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>የSSD ሙቀት</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>የVRAM አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>የተጋራ ማህደረ ትውስታ አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>የVRAM ሙቀት</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>የGPU ሞቅ ቦታ</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>የPCIe ምላሽ</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>ኮሮች</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>ማህደረ ትውስታ</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>መድረክ</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>የማደስ ጊዜ</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>ፈጣን ጅማሬ</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>መሙያ ሲገኝ ላፕቶፑን አቀጣጥል።</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>ፈጣን ጅማሬ</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>መሙያ ሲገኝ ላፕቶፑን አቀጣጥል።</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>የኃይል ሁነታ መቀየር አይቻልም</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} የኃይል ሁነታ ያለ AC ኃይል አይገኝም።</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>ዳሳሾች</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>የGPU የስራ ሁነታን መቀየር አልተቻለም</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>የሚጠበቀውን ውጤት ካላዩ ጥቂት ሰከንዶች ቆይታ እንደገና ሁነታውን ለመቀየር ይሞክሩ።
+dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ።</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU በአሁኑ ጊዜ በመጠቀም ላይ ነው</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU ሲያልቅ በራስ-ሰር ይንቀሳቀሳል።</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU በአሁኑ ጊዜ በመጠቀም ላይ ወይም ላፕቶፑ በባትሪ ኃይል ላይ አይደለም</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU ሲያልቅ እና ላፕቶፑ በባትሪ ኃይል ላይ ሲሆን በራስ-ሰር ይንቀሳቀሳል።</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage ወይም አገልግሎቶቹ ሲሮጡ የብጁ ሁነታ ቅንብሮች በትክክል አይተገበሩም።</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Legion Zone ወይም አገልግሎቶቹ ሲሮጡ የብጁ ሁነታ ቅንብሮች በትክክል አይተገበሩም።</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU ተያይዟል</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU ተቋርጧል</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>የGPU የስራ ሁነታ</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>የGPU የስራ ሁነታን በኮምፒተርዎ አጠቃቀም እና የኃይል ሁኔታዎች ላይ በመመስረት ይምረጡ።
+ሁነታዎችን መቀየር እንደሚያስፈልግ ሊደርስ ይችላል።</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>የቀላቀለ ሁነታ</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>በተዋሃደ እና በተለየ GPU መካከል መቀየርን ይፍቀዱ።
+እንደገና ማስጀመርን ይጠይቃል።</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>ጊዜ ርዝመት</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>ማዘመኛዎች</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>ከGPU ወደ CPU ተለዋዋጭ ማጎልመሻ</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>ይህ ከCPU አጠቃቀም ጋር በመመስረት ከGPU ለCPU ሊመደብ የሚችል ከፍተኛው ተጨማሪ ኃይል ነው። እሴቱ ሁል ጊዜ ከፍ ያለ፣ CPUን የሚጠቀሙ መተግበሪያዎች አፈጻጸም የተሻለ ይሆናል።</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>የመነሻ አርማ</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>በስርዓት ጅማሬ ጊዜ የሚታይ የመነሻ አርማ ምስል አብጅ።</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>የመነሻ አርማ</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>ነባሪ የመነሻ አርማ ተቀምጧል</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>የብጁ የመነሻ አርማ ተቀምጧል</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>ሁኔታ</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>ወደ ነባር መልስ</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>አብጥር</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>ድርጊቶች</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>የማስታወቂያ ጽሑፍ</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>ማስታወቂያ አሳይ</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>ቅድመ-ቅንብር</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>ስማርት Fn Lock</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Alt፣ Ctrl ወይም Shift ሲጫኑ Fn Lock ለጊዜው ይሰናከላል።</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>ጠፍቷል</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>የብጁ የመነሻ አርማ በትክክል {0} ፒክሰል መሆን አለበት።
+የሚደገፉ ቅርጸቶች፡ {1}።</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>የሌሊት ባትሪ መሙላት</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>ሲነቃ፣ ይህ መሣሪያ በሌሊት ሲገኝ እስከ 80% ይሞላል እና ማለዳ ላይ ሲጠቀሙበት 100% ይጠናቀቃል።</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>የሌሊት ባትሪ መሙላት</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>ሲነቃ፣ ይህ መሣሪያ በሌሊት ሲገኝ እስከ 80% ይሞላል እና ማለዳ ላይ ሲጠቀሙበት 100% ይጠናቀቃል።</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>ልክ ያልሆነ የምስል መጠን።</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>ልክ ያልሆነ የምስል ቅርጸት።</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>EFI ክፍልን ማያያዝ አልተቻለም።</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>UEFI ልዩ መብት ማዘጋጀት አልተቻለም።</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>በEFI ክፍል ላይ በቂ ነፃ ቦታ የለም።</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>የብጁ አርማ ማዘጋጀት አልተቻለም፡ {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>ነባሪ አርማ ማዘጋጀት አልተቻለም፡ {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>ነባሪ የመነሻ አርማ ተቀምጧል።</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>የብጁ የመነሻ አርማ ተቀምጧል።</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>የአውታረ መረብ ስም (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>የአሁኑን የአውታረ መረብ ስም ቅዳ</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>ለማንኛውም Wi-Fi አውታረ መረብ ባዶ ይተዉት።</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>የአድናቂ ፍጥነትን፣ የባትሪ ሙቀትን ወዘተ ከHWiNFO64 ጋር አጋራ። ይህንን አማራጭ ካለወጡ በኋላ HWiNFO64 እንደገና ማስጀመር ሊያስፈልግ ይችላል።</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>ውህደቶች</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>መረጃ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>የውርድ አቃፊ</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>የውርድ አቃፊ ክፈት</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>አውርድ</value>
+  </data>
+<data name="PackageControl_Install" xml:space="preserve">
+    <value>ጫን</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>አራግፍ</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>መጫን አልተሳካም</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>ፋይል አልተገኘም፣ እባክዎ መጀመሪያ ያውርዱ</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>የመጫን ፕሮግራም ኮድ {0} ይዞ ወጥቷል</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>መጫን ተጀምሯል</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>የመጫን ፕሮግራም በመጀመር ላይ፡ {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>README ክፈት</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>ቅድመ-ቅንብር</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>አድስ</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>ሰርዝ</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>ጊዜ (ደቂቃ)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>ሲራራ ሲሆን በባትሪ ክፍል ውስጥ \"ከባትሪ ጀምሮ\" የሚለውን ቆጣሪ ዳግም ያስጀምራል።</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>በመነሳት ላይ \"ከባትሪ ጀምሮ\" ዳግም አስጀምር</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi አጥፋ</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi አብራ</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>በዝምታ አሂድ</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>እስከ ሲጠናቀቅ ድረስ ተጠብቅ</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>የኮንሶል መተግበሪያዎችን ያለ ኮንሶል መስኮት አሂድ።</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>ፕሮግራሙ ወይም ስክሪፕቱ እስኪጠናቀቅ ድረስ ተጠብቅ</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>ሲዘም ሲሆን፣ ሁሉም ንቁ የድምፅ ውጤት መሣሪያዎች ዝም ይላሉ።</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>ድምፅ ማውጫ</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>ወደ ትሪ አሳጥር</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>ሁልጊዜ ወደ ትሪ ከመሆን ይልቅ ወደ ተግባር አሞጌ አሳጥር።</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>የWindows የኃይል ሁነታዎች</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>በFn+Q ወደ ብጁ ሁነታ ቀይር</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>በFn+Q ወደ ብጁ ሁነታ በፍጥነት መቀየርን ይፍቀዱ።</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>የኃይል ሁነታ ማመሳረያ</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>የኃይል ሁነታዎችን ሲቀይሩ የWindows የኃይል ዕቅዥ ወይም የWindows የኃይል ሁነታ በራስ-ሰር ይቀይራል።</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>የWindows የኃይል ሁነታዎች</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>የኃይል ሁነታ ሲቀየር ለመተግበር የWindows የኃይል ሁነታን ይምረጡ።</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>የመሣሪያ መረጃን በማንበብ ላይ ስህተት ተከስቷል።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>የተኳሃኝነት ምልክት ስህተት</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>መተግበሪያው በመነሳት ላይ የመሣሪያ መረጃን ማንበብ አልቻለም። እባክዎ ከሚከተሉት የስህተት ዝርዝሮች ውስጥ ይመልከቱ እና አስፈላጊ ከሆነ የችግር መፍቻ እርምጃዎችን ይሞክሩ።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>የችግር መፍቻ እርምጃዎች</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>የWindows Management Instrumentation (WMI) አገልግሎት እየሮጠ መሆኑን ያረጋግጡ: አገልግሎቶችን (services.msc) ይክፈቱ እና \"Windows Management Instrumentation\" እየሮጠ መሆኑን ያረጋግጡ።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>የስርዓት ሬጅስትሪ እና WMI ላይ ለመድረስ በቂ ፈቃድ ለማረጋገጥ መተግበሪያውን እንደ አስተዳዳሪ ያሂዱ።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>የስርዓት ምንጮችን ይመርምሩ: ሌሎች ብዙ ሀብት የሚጠቀሙ መተግበሪያዎችን ይዝጉ እና እንደገና ይሞክሩ።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>ከሚከተለው \"መዝገብ ክፈት\" የሚለውን በመጫን ለዝርዝር የስህተት መረጃ የመዝገብ ፋይልን ይመልከቱ።</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>የመዝገብ ፋይል ክፈት</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>ማክሮ</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>ማክሮ</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>ድግግም</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>መዘግየቶችን ችላ በለው</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>አጽዳ</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>ቀስቅስ</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>ቅርጸት አቁም</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>አትድግም</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>ማክሮዎች እንዲሰሩ Universal Device Toolkit መሮጥ አለበት።</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>አንቃ</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>በፊደል ጣቢያዎ ላይ ያለውን የቁጥር ፓድ በመጠቀም ተከታታይ የቁልፍ ጫኖችን መቅዳት እና መጠቀም ይችላሉ።</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>ማክሮ</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>ማክሮዎችን አንቃ ወይም አሰናክል።</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>ሌላ ቁልፍ ከተጫነ አቋርጥ</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>ደብቅ</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>ሁሉንም ደብቅ</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>መሣሪያዎች</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>ሁሉንም አትምረጥ</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>ሁሉንም ምረጥ</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>የፊደል ጣቢያ ብቻ</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>የፊደል ጣቢያ ቁልፎች እና የመንቀሳቀሻ ቁልፎች</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>ሁሉም ግብዓቶች</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>የቅርጸት አማራጮች</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>ቅርጸት በ3 ሰከንዶች ውስጥ ይጀምራል...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>በመቅዳት ላይ...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>ለማቆም ESC ይጫኑ።</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>የተመረጡትን መሣሪያዎች ብቻ አሳይ</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>የሚነቀዱ መሣሪያዎችን ብቻ አሳይ</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>የተያያዙ መሣሪያዎችን ብቻ አሳይ</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>ከትዕዛዝ መስመር ለመቆጣጠር CLI ን አንቃ።</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>CLI ን ወደ PATH ጨምር</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>CLI ን ወደ ተጠቃሚው PATH የአካባቢ ተለዋዋጭ ጨምር።</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>ሙቀት</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>ለሙቀት ዳሳሾች መለኪያዎችን ይምረጡ።</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys በኋላ ላይ ይሮጣል።</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone በኋላ ላይ ይሮጣል።</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage ወይም ImController በኋላ ላይ ይሮጣል።</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>ለመሣሪያዎ ለተገናኙ ሁሉም ማያ ገጾች ላይ ማስታወቂያ አሳይ።</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>በሁሉም ማያ ገጾች ላይ ማስታወቂያ</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>ፈትን</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>ማዘመኛዎች በመመርመር ላይ...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>ማዘመኛዎችን ፈትን</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>አዘምን</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>ማዘመኛ ምርመራዎች ለዚህ ክፍለ ጊዜ ተሰናክለዋል</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit በ{0} ተጀምሯል። እስከ ያለ ማስጀመሪያ ክርክር ድረስ ራስ-ሰር እና በእጅ የማዘመኛ ምርመራዎች፣ ከዚያም ያሉት የማዘመኛ ቅንብሮች ይሰናከላሉ።</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API የመጠን ገደብ ተደርሷል፣ እባክህ በኋላ እንደገና ሞክር።</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>ማዘመኛዎችን መመርመር አልተሳከም</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>የሆነ ስህተት፣ እባክህ በኋላ እንደገና ሞክር።</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>ምንም ማዘመኛ አልተገኘም</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>ማዘመኛዎችን በራስ-ሰር ፈትን</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>የማዘመኛ ምንጭ</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>ማዘመኛዎችን ለመመርመር የGitHub ማከማቻን አዋቅር። ነባሪ ለመጠቀም ባዶ ይተዉት።</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>የማከማቻ ባለቤት</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>ለምሳሌ፣ SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>የማከማቻ ስም</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>ለምሳሌ፣ UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>የማዘመኛ ካታሎግ አልተገኘም</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>ከሌላው ምንጭ ማዘመኛዎችን ለማግኘት ይሞክሩ።</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>የሆነ ስህተት ተከስቷል</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>የበይነመረብ ግንኙነትዎ እየሰራ መሆኑን ያረጋግጡ።</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>ድምፅ አጫን</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>እንደ wav ወይም mp3 ያሉ የተለመዱ የሙዚቃ ቅርጸቶች ይደገፋሉ።</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>ፈጣን ድርጊት</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>የተቀመጠ ፈጣን ድርጊት አሂድ።</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>ማስታወቂያ ሁልጊዜ ከላይ</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>ማስታወቂያውን ሁልጊዜ በላይ አቁም።
+ሌሎች ሙሉ ማያ ገጽ መስኮች ላይ ተጽዳ አይጎዳም፣ ነገር ግን ማስታወቂያዎቹን መጫን አይችሉም።</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>የሚመከር</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>ሁሉንም አቁም</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>የድርጊት ዝርዝሮች</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>የቴክኒክ አፈፃፀም ዝርዝሮች</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>የአፈፃፀም ዓይነት:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>ዝጋ</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>ከ{1} ድርጊቶች {0} ተመርጠዋል</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>የተገመተ የማጽዳት መጠን: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>ጠቅላላ መጠን ለማስላት ምርመራ ይጫኑ</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>በመሮጥ ላይ: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>የተመረጡትን መተግበሪያዎች በማራገፍ ላይ...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>አጭር እይታ</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>የስርዓት ማስዋብ</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>የWindows ማስዋብ</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>የWindows ገጽታ እና ባህሪ አብጅ።</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>ውጤቶች</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>የእይታ ውጤቶችን አብጅ።</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>ግልጽነት</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>ሁሉንም ዘርጋ</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>ሁሉንም ሰብስብ</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+
+    <value>{1}ሰ ውስጥ {0} ተለቅቷል</value>
+
+  </data>
+<data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>{0}% በመፈፀም ላይ</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>ስራ ተሰርዟል</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>የስህተት ዝርዝሮች: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>የተደበቁ ማውረዶችን አሳይ</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>የተደበቁ ማውረዶችን አሳይ</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>ቋንቋ ምረጥ</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>ይህ መሣሪያ በመሰረታዊ ሁነታ ይጀምራል። እስከ ተኳሃኝ የመሣሪያ ጥቅል ድረስ የሃርድዌር-ተኮር መቆጣጠሪያዎች ይደበዋል።</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>የመሣሪያ ጥቅል: መሰረታዊ ሁነታ</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit ተዛማጅ የመሣሪያ ጥቅልን አገኘ። የሃርድዌር-ተኮር ባህሪያት በመተግበሪያው እንዲዘጋጁ አሁን ያረጋግጡ።</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>የመሣሪያ ጥቅል: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>የመሣሪያ ማዋቀር በማዘጋጀት ላይ...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>አልተገናኝም</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>ዞኖችን አመሳስል</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>የተገነባውን የWindows የሬጅስትሪ ማጽዳት ተግባራዊነት በመጠቀም</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (የDNS ካሽ አጽዳ)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (የWinsock ፕሮቶኮል ስታክ ዳግም አስጀምር)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (የTCP/IP ፕሮቶኮል ስታክ ዳግም አስጀምር)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>የተሰማሚ ተጨማሪዎች</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>ተግባራዊነትን ለማስፋት ተሰማሚዎችን ጫንና አስተዳድር</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>ጠቅላላ ተሰማሚዎች</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>ተጭነዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>ማዘመኛዎች ዝግጁ ናቸው</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>የመደብር ምት</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>የተሰማሚ መገኘትን በመመርመር ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} የተሰማሚ ማዘመኛ(ዎች) ለመጫን ዝግጁ ናቸው።</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>በአሁኑ feed ውስጥ {0} ተጨማሪ ተሰማሚ(ዎች) ይገኛሉ።</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>የተሰማሚ ሜታዳታ እስከ መጫን በመጠባበቅ ላይ።</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>ሁሉም የተገኙ ተሰማሚዎች በአሁኑ ጊዜ ወቅላዊ ናቸው።</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>ማዘመኛዎች ይገኛሉ</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>ለመጫን ይገኛል</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>ሜታዳታ በመጫን ላይ</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>ወቅላዊ</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>በ{0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>ፈጣን ክፈት</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>አሻሽል</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>አዘምን</value>
+  </data>
+
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>ጫን</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>ተጭነዋል</value>
+  </data>
+
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>ማራገፍ አይቻልም</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>የተሰማሚ ቅንብሮች</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>የተሰማሚ ስም</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>የተሰማሚ መግለጫ</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>ይህ ተሰማሚ ምንም ሊዋቀሩ የሚችሉ ቅንብሮች የሉትም።</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>ዝጋ</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>ተሰማሚ አልተገኘም: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>ስህተት</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>ቅንብሮች</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>ደራሲ፡ {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>የተሰማሚ ማዋቀር በይነገጽ ቅርጸት ልክ ያልሆነ ነው።</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>የተሰማሚ ቅንብሮችን መጫን ላይ ስህተት: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>ተሰማሚዎችን ፈልግ...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>ሁሉም</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>ተጭነዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>አልተጫነም</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>ምንም ተሰማሚዎች አይገኙም</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>የተሰማሚ መደብር በአሁኑ ጊዜ ባዶ ነው። ለወደፊት የተሰማሚ ማዘመኛዎች ተጠባበቅ።</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>አዋቅ</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>አራግፍ</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>ክፈት</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>ቋንቋ:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>የመተግበሪያ ነባሪ ተጠቀም</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>{0} ተሰማሚዎች ተገኝተዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>በጅምላ አስገባ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>ተሰማሚዎችን ከአካባቢ ZIP ፋይሎች አስገባ</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>ከፋይሎች አስገባ</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>የተሰማሚ ፋይሎችን ምረጥ (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} ተሰማሚዎች በተሳካ ሁኔታ ተገብተዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} ተሰማሚዎች በተሳካ ሁኔታ ተገብተዋልና ይገኛሉ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>በጅምላ ማስገባት አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>ተሰማሚዎችን ማስገባት አልተሳካም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>ተሰማሚዎች በማስገባት ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} በማስገባት ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} በማስኬድ ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>ተሰማሚ በተሳካ ሁኔታ ተጭኗል</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>ተሰማሚ በተሳካ ሁኔታ ተጭኗል</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>መጫን አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>ተሰማሚ መጫን አይቻልም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>ተሰማሚ በተሳካ ሁኔታ ተነስቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>ተሰማሚ በተሳካ ሁኔታ ተነስቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>ማራገፍ አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>ተሰማሚ ማራገፍ አይቻልም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>ተሰማሚ መክፈት አልተሳካም</value>
+  </data>
+    <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>ተሰማሚ መክፈት አይቻልም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>ተሰማሚ መክፈት አይቻልም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>ፕለጊን አልተጫነም</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>ተሰማሚ አልተጫነምና ሊከፈት አይችልም</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>ቢያንስ የአስተናጋጅ ስሪት {0} ያስፈልጋል</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>ተሰማሚ ለሁልጊዜ ይሰረዝበታል</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>ተሰማሚ ለሁልጊዜ ይሰረዝበታል። ይህ ድርጊት ሊቀለበስ አይችልም።</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>ማዘመኛ አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>የተሰማሚ ማዘመኛ አልተሳካም፣ እባክህ የአውታረ መረብ ግንኙነትን ይመርምሩና በኋላ እንደገና ይሞክሩ።</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>ማዘመኛ ተሳክቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>ተሰማሚ በተሳካ ሁኔታ ተዘምኗል</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>ተሰማሚ በማዘመን ላይ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>ተሰማሚ በማውረድና በማዘመን ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>ሁሉንም አዘምን</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>ተሰማሚ አሂድ</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>ተሰማሚ ተጀምቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>ተሰማሚ ተነስቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>ፕሮግራሙ ሲዘጋ ተሰማሚ ይሰረዛል።</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>መሰረዝ አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>ተሰማሚን በማስወገድ ላይ ስህተት ተፈጥሯል</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>ማዋቀር አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>ተሰማሚ ተጭኖ ነገር ግን አልተጫነም። እባክህ መተግበሪያውን እንደገና ለማስጀመር ይሞክሩ።</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>ምንም ማዋቀር የለም</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>ተሰማሚ ምንም የማዋቀር አማራጮች የሉትም።</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>ማዋቀር አይደገገም</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>ተሰማሚ ማዋቀርን አይደግፍም።</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>የተሰማሚ ሁኔታዎች ዳግም ተቀናዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>ሁሉም የተሰማሚ መጫን ሁኔታዎች ተጽድተዋል</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>የጅምላ ማዘመኛ ተጠናቋል</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>ሁሉም ተሰማሚዎች ተከናውነዋል።</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>ማውረድ በማዘጋጀት ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>አካባቢ</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>አዲስ ስሪት አለ</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>ስሪት፡ </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>የመለቀቅ ቀን፡ </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>ምን አዲስ ነው:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>ዝርዝሮች</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>የአጠቃቀም መመሪያ</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>ዝርዝሮችን አሳይ</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>ዝርዝሮችን ደብቅ</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>ይገኛል</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>የተሰማሚ ዝርዝርን አድስ</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>ምንም ተሰማሚዎች ከፍተሻዎ ጋር አልተዛመዱም።</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>ሁሉንም ያሉ ተሰማሚዎች አዘምን</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>ሁሉንም ጫን</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>ሁሉንም ያሉ ተሰማሚዎች ጫን</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>ሁሉንም በማስጫን ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>{0} ተሰማሚ(ዎች) በማስጫን ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>የጅምላ መጫን ተጠናቋል</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} ተሰማሚ(ዎች) ተጭነዋል።</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>የጅምላ መጫን አልተሳካም</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>ተሰማሚዎችን መጫን አልተሳካም: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>ሁሉንም በማዘመን ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>በማዘመን ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>አቃፊ ክፈት</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>የተሰማሚ መለያ ቅዳ</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>አቃፊ አልተገኘም</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>የተሰማሚ ማውጣቂያ እስከ ዛሬ የለም።</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>ተቀድቷል</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>የተሰማሚ መለያ &apos;{0}&apos; ወደ ክሊፕቦርድ ተቀድቷል።</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>ማውረድ ተጠናቋል</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>በማውረድ ላይ...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>በማውረድ ላይ... {0:F1} / {1:F1} ሜጋ ባይት ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>ለመጫን በመጠባበቅ ላይ (ሌላ ተሰማሚ በማውረድ ላይ ነው)...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>ምንም መሣሪያዎች አይገኙም። እባክህ መሣሪያዎችን በመተግበሪያው ማውጣቂያ ውስጥ ወደሚገኘው tools folder ጨምር።</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>መሣሪያዎች በመሣሪያዎች ማውጣቂያ ውስጥ ከተገኙ በኋላ እዚህ ይታያሉ።</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>ሞዴል</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>የኃይል አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>ሙላት</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>ጤና</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>መጠን</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>አነስተኛ መጠን</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>ከፍተኛ መጠን</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>ዑደቶች</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>አቅም</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>ሙሉ አቅም</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>ዲዛይን</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>ቀን</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>ኮር / የማስታወሻ ሰዓት</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>የኮር ቮልቴጅ</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>የቮልቴጅ ክልል</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>ጎን አሞጌ</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>ስርዓት</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>የመጠን ክልል</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>ዝርዝራዊ የዳሳሽ መረጃን ለማሳየት ወይም ለመደበቅ ሁለቴ ይጫኑ።</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>በመጫን ላይ...</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>አይተገኝም</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>ያልታወቀ ባትሪ</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>ያልታወቀ CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>ያልታወቀ GPU</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>እባክህ ቢያንስ አንድ የማጽዳት አማራጭ ምረጥ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>ሁሉንም ጀምር</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>ለምሳሌ 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>ለምሳሌ C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>እባክህ ለማጽዳት ቢያንስ አንድ ንጽጽር ምረጥ።</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>{0} መተግብር አልተሳከም: {1}</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>የትልቅ ፋይሎች ትንተና</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>ማስወገድ የሚፈልጉትን ፋይሎች ምረጥ። ማጣሪያውን የሚዛመዱ ፋይሎች ብቻ ይታያሉ።</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>ከሚከተለው የሚበላሹ ፋይሎችን ማጣሪያ:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 ጊጋ ባይት</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 ጊጋ ባይት</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 ጊጋ ባይት</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 ቴራ ባይት</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>ብጁ...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>ምረጥ</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>የፋይል ስም</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>መጠን</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>መንገድ</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>ምርጫን አረጋግጥ</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>ተመርጠዋል: {0} ፋይሎች ({1})</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>የሶፍትዌር ማሳየትን አስገድድ</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>የርቀት ዴስክቶፕ ወይም የስም-አልባ ማሳያ ሲገኝ የሶፍትዌር ማሳየትን ተጠቀም። እንደገና ማስጀመር ይመከራል።</value></data>  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>የገጽታ ስታይል</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>ለመተግበሪያው የእይታ ስታይል ቅድመ-ቅንብር ምረጥ። የገጽታ ሁነታና አንሺ ቀለም አሁንም ይተገበራሉ።</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>ጊጋ ባይት</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD ን አሳይ ወይም ደብቅ</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>የኋላ ቀለም</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>የምድብ ቀለም</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>የማዕዘን ራዲየስ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>ታች</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>ላይ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>ከባድ ቀለም</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>የቁምፊ መጠን</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>የመለያ ቀለም</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>ግልጽነት</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>የእሴት ቀለም</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>የማስጠንቀቂያ ቀለም</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>አቀማመጥ ቆለፍ</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>የሽፋን ስታይል</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>የማደስ ጊዜ ክፍተት</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>የዳሳሽ ማደስ ጊዜ ክፍተት</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>አቀማመጥ ዳግም አስጀምር</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>የመቆጣጠር ገደብ</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>ገጽታ</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>አጠቃላይ</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>ዳሳሾች</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>ገደቦች</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>ከባድ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS ቀይ መስመር</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>ቢያንስ ተቀባይነት ያለው የፍሬም መጠን። ከዚህ በታች ቀለሙ ከባድ ይሆናል።</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>ዝቅተኛ FPS ልዩነት</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>ከአማካይ FPSና 1% ዝቅተኛ መካከል ያለ ከፍተኛ ልዩነት። ከዚህ በላይ ቆጠራው ከባድ ይሆናል።</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>አፈፃፀም</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>ሙቀት</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>አጠቃቀም</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>ማስጠንቀቂያ</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD ቅንብሮች</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>ማራገቢያ</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>የዲስክ 1 ሙቀት</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>የዲስክ 2 ሙቀት</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-Core ሰዓት</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>የፍሬም ጊዜ</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>ጨዋታ</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>ማራገቢያ</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>ሙቀት</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>አጠቃቀም</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH ማራገቢያ</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-Core ሰዓት</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>አሞሌ</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>ፓነል</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>የሰሌዳ ሙቀት</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>እናት ሰሌዳ</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>ዝርዝራዊ የሙቀት፣ ድግግሞሽና የኃይል ገደቦችን ለመከታተል የላቀ የሃርድዌር ማወቅን አንቃ።</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>የሃርድዌር ዳሳሾችን ለመጠቀም መጀመሪያ PawnIO መጫን ያስፈልግዎታል!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>የሃርድዌር ዳሳሾች</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>የቀጥታ የዳሳሽ መረጃን የሚያሳይ ተንሳፋፊ ሽፋን።</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD አንቃ</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>ኃይል</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>የኮር ሙቀት</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>የVRAM ሙቀት</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>የVRAM አጠቃቀም</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>ኃይል</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>የPCH ሙቀት</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>ተሰማሚ {0} ተጭኗል። ያለውን የመግቢያ ነጥብ ለመክፈት ክፈት ይጠቀሙ።</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>ተሰማሚ {0} ተጭኖ በስርዓት ማሻሻያ ውስጥ ተከፍቷል።</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>ተጭኖ፣ ነገር ግን የመግቢያ ነጥብ የለም</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>ተሰማሚ {0} ተጭኖ፣ ነገር ግን የሩንታይም UI ሊጫን አልቻለም። መተግበሪያውን ዳግም ያስጀምሩ ወይም ተሰማሚውን እንደገና ይጫኑ።</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>ተሰማሚ {0} ተጭኖ፣ ነገር ግን ለተጠቃሚ የሚታይ የመግቢያ ነጥብ አይገልጽም። ምናልባት የኋላ አገልግሎቶችን ወይም የmanifest ዳታን ብቻ ሊያቀርብ ይችላል።</value>
+  </data>
+</root>

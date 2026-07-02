@@ -68,7 +68,7 @@ public static partial class Compatibility
         ("Legion", LegionSeries.Legion_Legacy)
     ];
 
-    private static readonly Lazy<Task<MachineInformation>> _machineInformationLazy = new(GetMachineInformationInternalAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+    private static Lazy<Task<MachineInformation>> _machineInformationLazy = new(GetMachineInformationInternalAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     private static bool? _isCompatible;
 
     public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();

@@ -43,6 +43,10 @@ public class ThemeManager
         _settings = settings;
 
         _listener.Changed += (_, _) => Application.Current.Dispatcher.BeginInvoke(Apply);
+
+        // IoC AutoActivate resolves this before any window is shown; apply saved theme immediately
+        // so App.xaml's hard-coded Dark defaults do not flash on light/system mode.
+        Apply();
     }
 
     public void Apply()
@@ -175,12 +179,28 @@ public class ThemeManager
     private void ApplySurfaceResources()
     {
         var isDark = IsDarkMode();
-        var navigationBackground = TryGetBrushColor("ApplicationBackgroundBrush") ??
-                                   (isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246));
+        var defaultSurface = isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246);
 
-        SetBrush("AppSurfaceBackgroundBrush", isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246));
+        // Navigation and content surface must share one background or the shell seam shows in light mode
+        // (WPF-UI ApplicationBackgroundBrush is pure white while the content surface uses #F6F6F6).
+        Color surfaceBackground;
+        if (isDark)
+        {
+            surfaceBackground = TryGetBrushColor("ApplicationBackgroundBrush") ?? defaultSurface;
+        }
+        else if (_settings.Store.ThemeStylePreset != ThemeStylePreset.Default
+                 && TryGetBrushColor("ApplicationBackgroundBrush") is { } presetBackground)
+        {
+            surfaceBackground = presetBackground;
+        }
+        else
+        {
+            surfaceBackground = defaultSurface;
+        }
+
+        SetBrush("AppSurfaceBackgroundBrush", surfaceBackground);
         SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
-        SetBrush("AppNavigationBackgroundBrush", navigationBackground);
+        SetBrush("AppNavigationBackgroundBrush", surfaceBackground);
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)

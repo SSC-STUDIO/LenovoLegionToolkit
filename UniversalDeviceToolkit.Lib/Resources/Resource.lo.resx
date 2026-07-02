@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>ກຳນົດເອງ</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>ລະບົບ</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>ເປີດ, ສະເໝີ</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>ເປີດ, ເມື່ອນອນ</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>ປິດໃຊ້ງານ</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>ເປີດໃຊ້ງານ</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>ເປີດໃຊ້ງານ, ຊ້າ</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>ປະຢັດພະລັງງານ</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>ປົກກະຕິ</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>ສາກໄວ</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that Flip to Start is or will be turned off.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that Flip to Start is or will be turned on.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that Fn Lock is or will be turned off.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that Fn Lock is or will be turned on.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>ປິດພະລັງງານ</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>ເປີດພະລັງງານ</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that HDR is or will be turned off.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that HDR is or will be turned on.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>ປະສົມ</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>ປະສົມ-ອັດຕະໂນມັດ</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>ປະສົມ-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that the microphone is or will be turned off.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that the microphone is or will be turned on.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>ກາງລຸ່ມ</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>ຊ້າຍລຸ່ມ</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>ຂວາລຸ່ມ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>ກາງ</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>ຊ້າຍກາງ</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>ຂວາກາງ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>ກາງເທິງ</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>ຊ້າຍເທິງ</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>ຂວາເທິງ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that Overdrive is or will be turned off.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that Overdrive is or will be turned on.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>ສົມດຸນ</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>ກຳນົດເອງ</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>ປະສິດທິພາບ</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>ສະງົບ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>ໄວ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>ໄວທີ່ສຸດ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>ຊ້າ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>ຊ້າທີ່ສຸດ</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ສູງ</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ຕ່ຳ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>ຫາຍໃຈ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>ລຽບ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>ຄົງທີ່</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>ແຜ່ນນ້ຳຊ້າຍ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>ແຜ່ນນ້ຳຂວາ</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>ຕັ້ງຄ່າລ່ວງໜ້າ 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>ຕັ້ງຄ່າລ່ວງໜ້າ 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>ຕັ້ງຄ່າລ່ວງໜ້າ 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ສູງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ຕ່ຳ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>ກາງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>ຈາກລຸ່ມຂຶ້ນເທິງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>ຕາມເຂັມໂມງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>ກົງກັນຂ້າມເຂັມໂມງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>ຈາກຊ້າຍໄປຂວາ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>ຈາກຂວາໄປຊ້າຍ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>ຈາກເທິງລົງລຸ່ມ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>ສະເໝີ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>ສຽງຕີກັບ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>ສຽງກະແສ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>ປ່ຽນສີ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>ສີເຕັ້ນ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>ແຜ່ນສີ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>ຝົນ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>ສີຮຸ້ງມ້ວນ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>ແຜ່ນສີຮຸ້ງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>ກະແສ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>ລຽບ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>ພິມ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>ຊ້າ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>ກາງ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>ໄວ</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>ມືດ</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>ສະອາດ</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>ລະບົບ</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>ສູງ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>ຕ່ຳ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>ແອັດແອເຊັດເຕີ</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>ການຈ່າຍພະລັງງານ USB</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>ແອັດແອ ແລະ USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>ຍາວ</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>ປົກກະຕິ</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>ສັ້ນ</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>ປິດສຽງ</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>ເປີດສຽງ</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>ປິດໃຊ້ງານ</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>ໂຫຼດພະລັງງານ Windows</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>ແຜນພະລັງງານ Windows</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>ຕັ້ງຄ່າລ່ວງໜ້າ 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>ລາຍວັນ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>ທຸກຊົ່ວໂມງ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>ລາຍເດືອນ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>ທຸກ 3 ຊົ່ວໂມງ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>ທຸກ 12 ຊົ່ວໂມງ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>ລາຍອາທິດ</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>ສະໄໝປັດຈຸບັນ</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>ທາງການເຢັນ</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>ກາງຄືນນີອອນ</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>ປ່າເຕັກ</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>ບໍ່ມີການອັບເດດທີ່ມີຢູ່</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>ຄຸນສະມັດອຸປະກອນບໍ່ແມ່ນ GUID</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>ບໍ່ສາມາດອ່ານຕົວແປ {0} ຈາກ UEFI</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>ປະຢັດພະລັງງານ</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>ບໍ່ມີຜົນລັບໃນການສອບຖາມ</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>ຂໍ້ມູນປ້ອນມີຕົວອ່ານທີ່ເປັນອັນຕະລາຍ</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>ໂປຣໄຟລ໌ຕ້ອງຢູ່ລະຫວ່າງ 0 ແລະ 6</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>ຕົວແປສະພາບແວດລ້ອມບໍ່ຖືກຕ້ອງ: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>ບໍ່ສາມາດຕັ້ງຄ່າສິດທິ UEFI</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>ບໍ່ສາມາດສ້າງຕັ້ງຄ່າລ່ວງໜ້າ God Mode ໄດ້.</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>ບັນຊາບໍ່ສາມາດເປັນ null ຫຼື ວ່າງ.</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>ຊື່ໄຟລ໌ການຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>ບໍ່ສາມາດອ່ານການຕັ້ງຄ່າ {0}</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>ການນຳໃຊ້</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>ສະພາບແບັດເຕີຣີທີ່ບໍ່ຮູ້: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການເລີ່ມຕົນ Explorer.</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>ບໍ່ສາມາດຂຽນຕົວແປ {0} ໄປ UEFI</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>ຂໍ້ມູນຕາຕະລາງບໍ່ສາມາດເປັນວ່າງ</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>ການເອີ້ນລົ້ມເຫລວ: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>ຂໍ້ມູນປ້ອນ PowerShell ມີຮູບແບບທີ່ເປັນອັນຕະລາຍ</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Offset ແລະ count ເກີນຂອບເຂດແບ່ງສ່ວນ</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>ອຸນຫະພູມດິດ 2</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>ບໍ່ພົບ URL ໄຟລ໌ຕິດຕັ້ງ</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>ການກວດສອບໄຟລ໌ບໍ່ກົງກັນ</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>ອຸນຫະພູມ VRAM</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>ຊື່ແທັກບໍ່ສາມາດເປັນ null ຫຼື ວ່າງ</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>ຄວາມຍາວຕາຕະລາງພັດລົມຕ້ອງເປັນ 10</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>ການລຶບຕົວອ້າງຖືກຈຳກັດ</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>ແພັກອຸປະກອນ '{0}' ບໍ່ມີ metadata SHA256.</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl ລົ້ມເຫລວດ້ວຍຂໍ້ຜິດພາດ: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>ຄວາມຖີ່</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>ບໍ່ພົບໄຟລ໌ໂປຣໄຟລ໌.</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>ໂປຣໄຟລ໌ຈະບໍ່ນຳໃຊ້ຖ້າບໍ່ຕໍ່ເຊື່ອແອັດແອເຊັດເຕີ (ພະລັງງານເຕັມ).</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>ແພັກອຸປະກອນ '{0}' ບໍ່ມີຢູ່ໃນຄາດຕະໂກຍົນຊັບພະຍາກອນອອນລາຍ.</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>ບໍ່ສາມາດຮັບສີ &quot;{0}&quot;</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>ແພັກອຸປະກອນ '{0}' manifest ແມ່ນວ່າງ.</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການຢັ້ງຢືນວ່າສະພາບ {0} ແມ່ນຕັ້ງເປັນ {1}.</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>ຕ້ອງສາມາດຂຽນໄດ້</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການຮັບ handle ສຳລັບໄດເວີ: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>ພັດລົມ CPU</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>ຂໍ້ຜິດພາດໃນການສົ່ງບັນຊາໄດເວີ: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>ຄວາມສະຫວ່າງຕ້ອງຢູ່ລະຫວ່າງ 0 ແລະ 9</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>ແພັກອຸປະກອນມີທາງເດີນທີ່ບໍ່ປອດໄພ: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>ບໍ່ພົບເວີຊັນທີ່ຮອງຮັບ</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>ບໍ່ສາມາດຖອດລະຫັດເອັບເຟັກໄດ້</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>ບໍ່ອະນຸຍາດໃຫ້ລຶບທາງເດີນລະບົບ</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>ຊື່ໄຟລ໌ບໍ່ຖືກຕ້ອງ</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>ແພັກອຸປະກອນມີຕົວແບ່ງທາງເດີນປະເພດ Windows: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>ການກວດສອບຄວາມປອດໄພແພັກອັບເດດລົ້ມເຫລວ: ບໍ່ມີ hash SHA256 ສຳລັບການອັບເດດ {0}. ການກວດສອບຄວາມປອດໄພແມ່ນຈຳເປັນ.</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>ອຸນຫະພູມແຜນລະບົບ</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>ລະຫັດແພັກອຸປະກອນບໍ່ກົງກັນ. ຄາດວ່າ '{0}', ໄດ້ '{1}'.</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>ບໍ່ພົບຕັ້ງຄ່າລ່ວງໜ້າທີ່ມີລະຫັດ {0}</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>ເຊື່ອງ</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>ການນຳໃຊ້ VRAM</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການລົງທະບຽນການປ່ຽນແປງໃນວຽກ {0} ໃນ {1} [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>handle ບໍ່ຖືກຕ້ອງ</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>ຄ່າຕົວແປສະພາບແວດລ້ອມບໍ່ຖືກຕ້ອງ: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>ບໍ່ພົບກະດູກສະແດງພາຍໃນ</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Hive ທີ່ບໍ່ຮູ້.</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>ຊັບພະຍາກອນທີ່ດາວໂຫຼດລົ້ມເຫລວການຢັ້ງຢືນ SHA256. ຄາດວ່າ {0}, ໄດ້ {1}.</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>ຊ່ຽວຊານ</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>ພັດລົມ GPU</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>ຄາດຕະໂກຍົນຊັບພະຍາກອນວ່າງ.</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>ບັນຊາລົ້ມເຫລວການຢັ້ງຢືນຄວາມປອດໄພ: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>ຕ້ອງສາມາດອ່ານໄດ້</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>ສະພາບບໍ່ຖືກຕ້ອງ</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>ຂໍ້ຜິດພາດໃນການຮັບ handle ໄດເວີ: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>ສະແດງ</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>ປິດ</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>ຄຸນສະມັດອຸປະກອນບໍ່ແມ່ນສະລັດ</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>ບໍ່ສາມາດຄຸ້ມຄອງ keyboard RGB ໃນຂະນະທີ່ Vantage ເປີດໃຊ້ງານ</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>ບໍ່ພົບຄຸນສະມັດທີ່ຮອງຮັບ</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>ພະລັງງານ</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>ບໍ່ພົບຕົວຄວບຄຸມທີ່ຮອງຮັບ</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການຖອດລະຫັດ JSON</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>ແບ່ງສ່ວນອຸນຫະພູມຕ້ອງມີ 10 ລາຍການ</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>ຜູ້ຂາຍແພັກອຸປະກອນບໍ່ກົງກັນ. ຄາດວ່າ '{0}', ໄດ້ '{1}'.</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>ບໍ່ຮອງຮັບ.</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>ຂໍ້ຜິດພາດໃນການເປີດຕົວຄວບຄຸມບໍລິການ</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>ແອັດແອເຊັນ shell ແບບໂຕ້ຕິບຕ້ອງການຂໍ້ມູນປ້ອນເມື່ອລໍຖ້າການອອກ</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>ບໍ່ສາມາດວິເຄາະເວີຊັນຈາກຊື່ແທັກ: '{0}'. ຮູບແບບທີ່ຄາດວ່າ: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>ບໍ່ອະນຸຍາດໃຫ້ລຶບລະຫັດແບ່ງສ່ວນລະບົບທີ່ສຳຄັນ</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>ແພັກອຸປະກອນ '{0}' ບໍ່ມີ {1}.</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>ສະຫຼັບ</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>ເຍັນລະບົບສະຫຼາດ</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>ການອ່ານລົ້ມເຫລວ: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>ລະຫັດການກະທຳບໍ່ຖືກຕ້ອງ</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>ໂມງ P-Core</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>ເປີດ</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>ລົ້ມເຫລວໃນການຖອດລະຫັດໂປຣໄຟລ໌.</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>ຂໍ້ຜິດພາດໃນການເປີດບໍລິການ</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>ການເອີ້ນລົ້ມເຫລວ: {0}. [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>ໂມງ E-Core</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>ຄ່າຄຸນສະມັດ WMI ບໍ່ມີຢູ່ສຳລັບ {0}.</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>ຫຼື namespace WMI ບໍ່ມີຢູ່ [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>ສະຫຼັບສະພາບ</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>ສຸດຂົງ</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>ຍັງບໍ່ໄດ້ເລີ່ມຕົນ.</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>ຄ່າຜູ້ໃຊ້ປັດຈຸບັນເປັນ null</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>ໂຫຼດພະລັງງານ {0} ບໍ່ຮອງຮັບ</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>handle ອຸປະກອນບໍ່ມີຢູ່</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>ປະເພດຂອງ formatted ບໍ່ຖືກຕ້ອງ</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>ອຸນຫະພູມໜ່ວຍຄວາມຈຳ</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>ແພັກອຸປະກອນມີປະເພດໄຟລ໌ທີ່ບໍ່ຮອງຮັບ: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>Keyboard RGB ບໍ່ຮອງຮັບ</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>ແອັດແອເຊັນບໍ່ຢູ່ໃນລາຍຊື້ທີ່ອະນຸຍາດ: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>ປະສິດທິພາບສຸດຂົງ</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>ເວີຊັນໄຟລ໌ຂະບວນການປັດຈຸບັນບໍ່ສາມາດເປັນ null</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>ເວລາເຟຣມ</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>ທາງເດີນການຕັ້ງຄ່າອອກຈາກໄດເຣັກທີ່ອະນຸຍາດ: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>ໂມດູນຫຼັກບໍ່ສາມາດເປັນ null</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>ການສະຫຼັບໂຫຼດພະລັງງານບໍ່ຮອງຮັບໃນອຸປະກອນນີ້.</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>ພົບຮູບແບບທີ່ເປັນອັນຕະລາຍໃນຂໍ້ມູນປ້ອນສຳລັບ {0}</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>ບໍ່ມີຕັ້ງຄ່າລ່ວງໜ້າ God Mode ທີ່ມີຢູ່.</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>ລະຫັດ {0} ບໍ່ສາມາດເປີດໄດ້</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>ແພັກອຸປະກອນ '{0}' ມີ URL ດາວໂຫຼດວ່າງ.</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>ໂຫຼດພະລັງງານ '{0}' ບໍ່ມີຢູ່ຖ້າບໍ່ຕໍ່ເຊື່ອແອັດແອເຊັດເຕີ.</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>ພັດລົມ</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>ການກວດສອບຄວາມປອດໄພແພັກອັບເດດລົ້ມເຫລວ. SHA256 ທີ່ຄາດວ່າ: {0}, ຄິດໄດ້: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>ອຸນຫະພູມ</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>ອຸນຫະພູມດິດ 1</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>ໄດ້ຮັບຄ່າທີ່ບໍ່ລະບຸ: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer ເລີ່ມຕົນແລ້ວ</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer ບໍ່ໄດ້ອອກຕາມເວລາ.</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl ຕອບກັບ 0, ຂໍ້ຜິດພາດສຸດທ້າຍ: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer ບໍ່ໄດ້ເລີ່ມຕົນໃໝ່ຕາມເວລາ.</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>ພັດລົມລະບົບ</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>ຊື່ໄຟລ໌ຂະບວນການປັດຈຸບັນບໍ່ສາມາດເປັນ null</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer ຕ້ອງເລີ່ມຕົນກ່ອນ [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+</root>

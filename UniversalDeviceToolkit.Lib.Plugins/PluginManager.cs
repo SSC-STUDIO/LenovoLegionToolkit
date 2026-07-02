@@ -24,6 +24,8 @@ public class PluginManager : IPluginManager
     private readonly PluginLifecycleStateMachine _stateMachine = new();
     private readonly Dictionary<string, PluginState> _pluginStates = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _stateLock = new();
+    private readonly HashSet<string> _rejectedAssemblyPaths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _rejectedAssemblyLock = new();
     private ResolveEventHandler? _assemblyResolveHandler;
     private bool _disposed;
 
@@ -304,6 +306,13 @@ public class PluginManager : IPluginManager
         try
         {
             var normalizedCandidatePath = Path.GetFullPath(candidatePath);
+
+            lock (_rejectedAssemblyLock)
+            {
+                if (_rejectedAssemblyPaths.Contains(normalizedCandidatePath))
+                    return null;
+            }
+
             var normalizedPluginsDirectory = Path.GetFullPath(pluginsDirectory);
 
             if (!IsPathWithinDirectory(normalizedCandidatePath, normalizedPluginsDirectory))
@@ -334,6 +343,9 @@ public class PluginManager : IPluginManager
             var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
             if (!signatureResult.IsValid)
             {
+                lock (_rejectedAssemblyLock)
+                    _rejectedAssemblyPaths.Add(normalizedCandidatePath);
+
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Rejected {context} due to invalid signature. [path={normalizedCandidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
                 return null;

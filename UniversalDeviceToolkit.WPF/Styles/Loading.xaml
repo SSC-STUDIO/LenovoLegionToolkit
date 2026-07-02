@@ -27,7 +27,7 @@
 
     <Style x:Key="AppSkeletonBlockStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="Opacity" Value="0.85" />
         <Setter Property="ClipToBounds" Value="True" />
     </Style>
@@ -65,7 +65,7 @@
 
     <Style x:Key="AppSkeletonCardStyle" TargetType="Border">
         <Setter Property="Padding" Value="16" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
         <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -79,27 +79,27 @@
     <Style x:Key="AppSkeletonListItemIconStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
         <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="18" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <Style x:Key="AppSkeletonListItemSingleLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
         <Setter Property="Height" Value="12" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="AppSkeletonListItemPrimaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
         <Setter Property="Height" Value="14" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <Style x:Key="AppSkeletonListItemSecondaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
         <Setter Property="Height" Value="10" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
     </Style>

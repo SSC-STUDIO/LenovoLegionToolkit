@@ -138,10 +138,25 @@ public class WindowsOptimizationService
             throw ExceptionHelper.InvalidActionKey(nameof(actionKey));
 
         var actions = GetActionsByKey();
-        if (actions.TryGetValue(actionKey, out var action))
-        {
-            await action.ExecuteAsync(cancellationToken).ConfigureAwait(false);
-        }
+        if (!actions.TryGetValue(actionKey, out var action))
+            throw ExceptionHelper.OptimizationActionNotFound(actionKey);
+
+        await action.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task RevertActionAsync(string actionKey, CancellationToken cancellationToken)
+    {
+        if (!IsValidActionKey(actionKey))
+            throw ExceptionHelper.InvalidActionKey(nameof(actionKey));
+
+        var actions = GetActionsByKey();
+        if (!actions.TryGetValue(actionKey, out var action))
+            throw ExceptionHelper.OptimizationActionNotFound(actionKey);
+
+        if (action.RollbackAsync is null)
+            throw ExceptionHelper.OptimizationActionRollbackUnavailable(actionKey);
+
+        await action.RollbackAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<bool> IsActionAppliedAsync(string actionKey, CancellationToken cancellationToken)
@@ -469,7 +484,13 @@ public class WindowsOptimizationService
             var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
             await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
-            
+
+            if (process.ExitCode != 0)
+            {
+                var errorOutput = (await errorTask.ConfigureAwait(false)).Trim();
+                throw ExceptionHelper.CommandExitedNonZero(fileName, process.ExitCode, errorOutput);
+            }
+
             if (Log.Instance.IsTraceEnabled)
             {
                 Log.Instance.Trace($"Command executed successfully: {fileName}");

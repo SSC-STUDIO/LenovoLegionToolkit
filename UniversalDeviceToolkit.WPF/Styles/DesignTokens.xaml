@@ -9,25 +9,28 @@
     <Thickness x:Key="SpacingMD">16</Thickness>
     <Thickness x:Key="SpacingLG">24</Thickness>
     <Thickness x:Key="SpacingXL">32</Thickness>
+    <Thickness x:Key="ContentPaddingPage">24</Thickness>
 
     <!-- Corner Radius Tokens -->
-    <CornerRadius x:Key="CornerRadiusSM">4</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusMD">8</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusLG">12</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusXL">16</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSM">6</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMD">10</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLG">14</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusXL">18</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCard">16</CornerRadius>
     <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusContentSurfaceTop">12,0,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusContentSurfaceTop">16,0,0,0</CornerRadius>
 
     <!-- Font Size Tokens (for Button and other controls that need FontSize property) -->
     <!-- Note: Typography.xaml defines TextBlock styles with same font sizes for text content -->
-    <sys:Double x:Key="FontSizeSmallBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">11</sys:Double>
-    <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
-    <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
-    <sys:Double x:Key="FontSizePageDescription" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
-    <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
-    <sys:Double x:Key="FontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
-    <sys:Double x:Key="FontSizeDisplaySection" xmlns:sys="clr-namespace:System;assembly=mscorlib">24</sys:Double>
-    <sys:Double x:Key="FontSizePageTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">28</sys:Double>
+    <sys:Double x:Key="FontSizeSmallBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
+    <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
+    <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">15</sys:Double>
+    <sys:Double x:Key="FontSizeTitleBarDeviceInfo" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
+    <sys:Double x:Key="FontSizePageDescription" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
+    <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">17</sys:Double>
+    <sys:Double x:Key="FontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">19</sys:Double>
+    <sys:Double x:Key="FontSizeDisplaySection" xmlns:sys="clr-namespace:System;assembly=mscorlib">25</sys:Double>
+    <sys:Double x:Key="FontSizePageTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">29</sys:Double>
 
     <!-- Icon Size Tokens -->
     <sys:Double x:Key="IconSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>

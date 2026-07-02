@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Charts;
 
@@ -26,6 +27,11 @@ public class RadialGaugeControl : Control
     private TextBlock? _valueText;
     private TextBlock? _captionText;
     private double _renderedValue;
+    private DispatcherTimer? _animationTimer;
+    private DateTime _animStart;
+    private TimeSpan _animDuration;
+    private double _animFrom;
+    private double _animTo;
 
     static RadialGaugeControl()
     {
@@ -38,6 +44,11 @@ public class RadialGaugeControl : Control
     {
         Loaded += (_, _) => RedrawAll();
         SizeChanged += (_, _) => RedrawAll();
+        Unloaded += (_, _) =>
+        {
+            _animationTimer?.Stop();
+            _animationTimer = null;
+        };
     }
 
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
@@ -169,24 +180,32 @@ public class RadialGaugeControl : Control
 
     private void BeginAnimationManually(double from, double to)
     {
-        var start = DateTime.UtcNow;
-        var duration = TimeSpan.FromMilliseconds(AnimationMs);
+        _animationTimer?.Stop();
+        _animStart = DateTime.UtcNow;
+        _animDuration = TimeSpan.FromMilliseconds(AnimationMs);
+        _animFrom = from;
+        _animTo = to;
 
-        void OnRendering(object? sender, EventArgs e)
+        _animationTimer ??= new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        _animationTimer.Tick -= AnimationTick;
+        _animationTimer.Tick += AnimationTick;
+        _animationTimer.Start();
+    }
+
+    private void AnimationTick(object? sender, EventArgs e)
+    {
+        var elapsed = DateTime.UtcNow - _animStart;
+        var t = Math.Clamp(elapsed.TotalMilliseconds / _animDuration.TotalMilliseconds, 0.0, 1.0);
+        var eased = 1 - Math.Pow(1 - t, 3);
+        _renderedValue = _animFrom + (_animTo - _animFrom) * eased;
+        DrawValueArc();
+
+        if (t >= 1.0)
         {
-            var elapsed = DateTime.UtcNow - start;
-            var t = Math.Clamp(elapsed.TotalMilliseconds / duration.TotalMilliseconds, 0.0, 1.0);
-            // Cubic ease-out
-            var eased = 1 - Math.Pow(1 - t, 3);
-            _renderedValue = from + (to - from) * eased;
-            DrawValueArc();
-
-            if (t >= 1.0)
-                CompositionTarget.Rendering -= OnRendering;
+            _animationTimer?.Stop();
+            if (sender is DispatcherTimer timer)
+                timer.Tick -= AnimationTick;
         }
-
-        CompositionTarget.Rendering -= OnRendering;
-        CompositionTarget.Rendering += OnRendering;
     }
 
     private void RedrawAll()

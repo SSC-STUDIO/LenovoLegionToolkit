@@ -32,6 +32,16 @@ public abstract class UnitTestBase : IDisposable
 
     protected UnitTestBase()
     {
+        var culture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+        System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+        System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        try { UniversalDeviceToolkit.WPF.Resources.Resource.Culture = null; } catch {}
+        try { LenovoLegionToolkit.Lib.Resources.Resource.Culture = null; } catch {}
+        try { UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = null; } catch {}
+
         Setup();
     }
 

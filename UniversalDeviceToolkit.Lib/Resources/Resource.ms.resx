@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>Tersuai</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>Hidup, sentiasa</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>Hidup, apabila tidur</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>Dinyahdayakan</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>Didayakan</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>Didayakan, tertunda</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>Pemuliharaan</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>Pengecasan Pantas</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>Dimatikan</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>Dihidupkan</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>Hibrid</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>Hibrid-Auto</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>Hibrid-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>Tengah bawah</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>Kiri bawah</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>Kanan bawah</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>Tengah</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>Kiri tengah</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>Kanan tengah</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>Tengah atas</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>Kiri atas</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>Kanan atas</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>Seimbang</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Ekstrem</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>Tersuai</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>Prestasi</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>Senyap</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>Pantas</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>Terpantas</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>Perlahan</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>Terperlahan</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Tinggi</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Rendah</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>Pernafasan</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>Licin</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>Statik</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>Gelombang Kiri</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>Gelombang Kanan</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>Pratetap 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>Pratetap 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>Pratetap 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Tinggi</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Rendah</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>Sederhana</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>Bawah ke Atas</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>Mengikut Jam</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>Menentang Jam</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>Kiri ke Kanan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>Kanan ke Kiri</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>Atas ke Bawah</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>Sentiasa</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>Lantunan Audio</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>Ripple Audio</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Segerak Aurora</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>Pertukaran Warna</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>Denyar Warna</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>Gelombang Warna</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>Hujan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>Skru Pelangi</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>Gelombang Pelangi</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>Ripple</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>Licin</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>Taip</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>Perlahan</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>Sederhana</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>Pantas</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Gelap</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Terang</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>Tinggi</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>Rendah</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>Penyesuai AC</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>Penghantaran Kuasa USB</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC dan USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>Panjang</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>Pendek</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Senyap</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Tidak Senyap</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Profil tidak akan digunakan tanpa penyesuai AC (Kuasa penuh) disambungkan.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Tidak dimulakan.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Tidak disokong.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>Kipas CPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>Kipas GPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Kipas Sistem</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Togol</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Penjimatan Bateri</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Penyejukan Pintar</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Prestasi Ekstrem</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geeks</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Dinyahdayakan</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Mod Kuasa Windows</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Pelan Kuasa Windows</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Pratetap 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Harian</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>Setiap jam</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Bulanan</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>Setiap 3 jam</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>Setiap 12 jam</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Mingguan</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Gaya Semasa</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Rasmi Sejuk</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Neon Tengah Malam</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Teknologi Hutan</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Hidup</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Suhu Cakera 1</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Suhu Cakera 2</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>Jam E-Core</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Kipas</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Masa Bingkai</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Frekuensi</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Rendah</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Suhu Memori</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Suhu Papan Induk</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Kuasa</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>Jam P-Core</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Suhu</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Penggunaan</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>Suhu VRAM</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>Penggunaan VRAM</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Sembunyi</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Tunjuk</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Togol Keadaan</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Keadaan tidak sah</value>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Nama fail tidak sah</value>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Argumen mengandungi aksara berbahaya</value>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Pelaksana shell interaktif memerlukan argumen apabila menunggu keluar</value>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>Argumen PowerShell mengandungi corak berbahaya</value>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Hive tidak diketahui.</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Tiada kemas kini tersedia</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>URL fail persediaan tidak dapat dijumpai</value>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>Papan Kekunci RGB tidak disokong</value>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Tidak boleh mengurus papan kekunci RGB dengan Vantage didayakan</value>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Pertukaran mod kuasa tidak disokong pada peranti ini.</value>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>Tidak boleh menetapkan hak UEFI</value>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Gagal memulakan Explorer.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer tidak dimulakan semula dalam masa.</value>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer tidak keluar dalam masa.</value>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Kunci tindakan tidak sah</value>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Arahan tidak boleh null atau kosong.</value>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Pemadaman laluan sistem tidak dibenarkan</value>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Pemadaman wildcard dihadkan</value>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Pemadaman kunci pendaftaran kritikal tidak dibenarkan</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Nilai pengguna semasa adalah null</value>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>pemegang tidak sah</value>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Gagal menyahsiri JSON</value>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Pembolehubah persekitaran tidak sah: {0}</value>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Nilai pembolehubah persekitaran tidak sah: {0}</value>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Tiada ciri yang disokong dijumpai</value>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Paparan terbina dalam tidak dijumpai</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Gagal menyahsiri profil.</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Kecerahan mestilah antara 0 dan 9</value>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Profil mestilah antara 0 dan 6</value>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Data jadual tidak boleh kosong</value>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Tatasusunan suhu mesti mengandungi tepat 10 elemen</value>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Checksum fail tidak sepadan</value>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Sifat peranti bukan GUID</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Sifat peranti bukan rentetan</value>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Ofset dan kiraan melebihi had tatasusunan</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Fail profil tidak dijumpai.</value>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Ralat Buka Perkhidmatan</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Ralat Buka Pengurus Perkhidmatan</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Katalog sumber kosong.</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Tidak dapat menyahsiri kesan</value>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>Tidak boleh membaca pembolehubah {0} daripada UEFI</value>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>Tidak boleh menulis pembolehubah {0} ke UEFI</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>Nilai ciri WMI tidak tersedia untuk {0}.</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Nilai takrifan diterima: {0}</value>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Mod kuasa tidak disokong {0}</value>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>Mod kuasa '{0}' tidak tersedia tanpa penyesuai AC.</value>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Arahan gagal pengesahan keselamatan: {0}</value>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Pelaksana tidak dalam senarai benarkan: {0}</value>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Corak berbahaya dikesan dalam argumen untuk {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>Pek peranti mengandungi jenis fail yang tidak disokong: {0}</value>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>Pek peranti mengandungi laluan yang tidak selamat: {0}</value>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>Pek peranti mengandungi pemisah laluan gaya Windows: {0}</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>Pek peranti '{0}' tidak tersedia dalam katalog sumber dalam talian.</value>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>Pek peranti '{0}' tidak mengandungi {1}.</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>Manifes pek peranti '{0}' kosong.</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Ketidakpadanan id pek peranti. Dijangka '{0}', didapati '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Ketidakpadanan vendor pek peranti. Dijangka '{0}', didapati '{1}'.</value>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>Pek peranti '{0}' mempunyai URL muat turun kosong.</value>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>Pek peranti '{0}' kehilangan metadata SHA256.</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Keadaan bateri tidak diketahui: {0}</value>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>Gagal mengesahkan {0} keadaan ditetapkan kepada {1}.</value>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl memulangkan 0, ralat terakhir: {0}</value>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>Kunci {0} tidak dapat dibuka</value>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Mestilah boleh dibaca</value>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Mestilah boleh ditulis</value>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Pemegang peranti tidak tersedia</value>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Modul Utama tidak boleh null</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Nama fail proses semasa tidak boleh null</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Versi fail proses semasa tidak boleh null</value>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Sumber yang dimuat turun gagal pengesahan SHA256. Dijangka {0}, didapati {1}.</value>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer sudah dimulakan</value>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer mesti dimulakan dahulu [jenis={0}]</value>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Panjang jadual kipas mestilah 10</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Nama tag tidak boleh null atau kosong</value>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Tidak dapat menghurai versi daripada nama tag: '{0}'. Format dijangka: '3.0.1'</value>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>Pratetap dengan ID {0} tidak dijumpai</value>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Tiada pratetap God Mode boleh dicipta.</value>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>Tiada pratetap God Mode tersedia.</value>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Tiada versi yang disokong dijumpai</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Tiada pengawal yang disokong dijumpai</value>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Nama fail tetapan tidak sah: {0}</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Laluan tetapan melepasi direktori yang dibenarkan: {0}</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Gagal mendaftarkan perubahan pada tugas {0} dalam {1} [jenis={2}]</value>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>Tidak dapat membaca tetapan {0}</value>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>Tidak dapat mendapatkan warna "{0}"</value>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Gagal mendapatkan pemegang untuk pemandu: {0}</value>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Ralat mendapatkan pemegang pemandu: {0}</value>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl gagal dengan ralat: {0}</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Ralat menghantar arahan pemandu: controlCode={0}</value>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>Kelas atau ruang nama WMI tidak tersedia [skop={0}, pertanyaan={1}]</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Bacaan gagal: {0} [skop={1}, pertanyaan={2}]</value>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Panggilan gagal: {0} [skop={1}, pertanyaan={2}, namaKaedah={3}]</value>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Panggilan gagal: {0}. [skop={1}, pertanyaan={2}, namaKaedah={3}]</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Tiada keputusan dalam pertanyaan</value>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Jenis pemformatan tidak sah</value>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Pemeriksaan integriti pakej kemas kini gagal: tiada hash SHA256 tersedia untuk kemas kini {0}. Pemeriksaan integriti diperlukan untuk keselamatan.</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Pemeriksaan integriti pakej kemas kini gagal. SHA256 dijangka: {0}, Dihitung: {1}</value>
+  </data>
+</root>

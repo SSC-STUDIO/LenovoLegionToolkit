@@ -9385,6 +9385,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to The change could not be verified. Administrator privileges may be required..
+        /// </summary>
+        public static string WindowsOptimizationPage_Optimization_NotVerified {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Optimization_NotVerified", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait for the current optimization to finish..
+        /// </summary>
+        public static string WindowsOptimizationPage_Optimization_Busy_Wait {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Optimization_Busy_Wait", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Pause all.
         /// </summary>
         public static string WindowsOptimizationPage_PauseAll_Button {

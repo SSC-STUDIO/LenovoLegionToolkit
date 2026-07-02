@@ -2,6 +2,12 @@
 
 本文档详细介绍如何为 Universal Device Toolkit（原 Lenovo Legion Toolkit）开发插件。
 
+> **官方插件开发在独立仓库中进行**
+>
+> 贡献者应克隆并工作在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)，而非在本主仓库内创建插件项目。作者工作流请参阅该仓库的 [Docs/PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_DEVELOPMENT.md)。
+>
+> **本文档**聚焦于宿主侧接口契约、插件生命周期、以及插件 UI 应与主程序对齐的视觉规范；供理解宿主如何加载插件，也供在插件仓库中实现页面时对照宿主期望。
+
 ## 目录
 
 - [概述](#概述)
@@ -27,40 +33,41 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
 ### 插件类型
 
-| 类型 | 说明 | 可卸载 |
-|------|------|--------|
-| **功能插件** | 提供独立功能模块 | ✅ |
-| **系统插件** | 核心功能扩展，随主程序启动 | ❌ |
+
+| 类型       | 说明            | 可卸载 |
+| -------- | ------------- | --- |
+| **功能插件** | 提供独立功能模块      | ✅   |
+| **系统插件** | 核心功能扩展，随主程序启动 | ❌   |
+
 
 ---
 
 ## 快速开始
 
-### 1. 创建项目
+以下步骤在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中执行。不要在本主仓库添加 `ProjectReference` 到 `UniversalDeviceToolkit.Lib`；插件通过 `LenovoLegionToolkit.Plugins.SDK.dll` 引用宿主契约。
 
-创建一个新的 WPF 类库项目：
+### 1. 初始化插件
 
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
-    <RootNamespace>MyPlugin</RootNamespace>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="path\to\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
-  </ItemGroup>
-</Project>
+在插件仓库根目录使用脚手架命令（模板示例：`settings-only`、`feature-settings`、`runtime-optimization`）：
+
+```powershell
+.\llt-plugin.cmd init `
+  --template feature-settings `
+  --folder MyPlugin `
+  --id my-plugin `
+  --name "My Plugin"
 ```
+
+这会生成 `Plugins/MyPlugin/`、测试项目、`plugin.manifest.json`、兼容输出的 `plugin.json` 与资源文件。完整作者流程见插件仓库 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md)。
 
 ### 2. 创建插件类
 
-```csharp
-using LenovoLegionToolkit.Lib.Plugins;
+插件类继承 `LenovoLegionToolkit.Plugins.SDK.PluginBase`，并使用 `using LenovoLegionToolkit.Plugins.SDK;`。与官方插件一致的最小示例：
 
-namespace MyPlugin;
+```csharp
+using LenovoLegionToolkit.Plugins.SDK;
+
+namespace LenovoLegionToolkit.Plugins.MyPlugin;
 
 [Plugin(
     id: "my-plugin",
@@ -68,64 +75,75 @@ namespace MyPlugin;
     version: "1.0.0",
     description: "A sample plugin",
     author: "Your Name",
-    MinimumHostVersion = "3.6.0",
+    MinimumHostVersion = "3.6.1",
     Icon = "Apps24"
 )]
 public class MyPlugin : PluginBase
 {
     public override string Id => "my-plugin";
-    public override string Name => "My Plugin";
-    public override string Description => "A sample plugin";
+    public override string Name => MyPluginText.PluginName;
+    public override string Description => MyPluginText.PluginDescription;
     public override string Icon => "Apps24";
     public override bool IsSystemPlugin => false;
 
     public override object? GetFeatureExtension()
-    {
-        return new MyPluginFeaturePage();
-    }
+        => new MyPluginFeaturePage();
 
     public override object? GetSettingsPage()
-    {
-        return new MyPluginSettingsPage();
-    }
+        => new MyPluginSettingsPage();
 
-    public override void OnInstalled()
-    {
-        // 插件安装后的初始化
-    }
+    public override void OnShutdown() => Stop();
+    public override void Stop() { /* 停止后台服务 */ }
+}
 
-    public override void OnUninstalled()
-    {
-        // 插件卸载前的清理
-    }
+public sealed class MyPluginFeaturePage : IPluginPage
+{
+    public string PageTitle => MyPluginText.PageTitle;
+    public string? PageIcon => "Apps24";
+    public object CreatePage() => new MyFeatureControl();
+}
 
-    public override void OnShutdown()
-    {
-        // 应用关闭时的清理
-    }
-
-    public override void Stop()
-    {
-        // 停止后台服务
-    }
+public sealed class MyPluginSettingsPage : IPluginPage
+{
+    public string PageTitle => MyPluginText.SettingsPageTitle;
+    public string? PageIcon => "Settings24";
+    public object CreatePage() => new MySettingsControl();
 }
 ```
 
-### 3. 创建插件元数据
+仅设置页、无功能页的插件（如 `custom-mouse`）可令 `GetFeatureExtension()` 返回 `null`；仅功能页的插件可省略 `GetSettingsPage()`。
 
-创建 `Plugin.json` 文件：
+### 3. 插件元数据
+
+`**plugin.manifest.json` 是作者侧单一事实来源**；构建时会生成宿主兼容的 `plugin.json`。使用 `minHostVersion`（不是旧字段 `minLLTVersion`）：
 
 ```json
 {
+  "schemaVersion": 1,
   "id": "my-plugin",
   "name": "My Plugin",
   "version": "1.0.0",
-  "minLLTVersion": "3.6.0",
+  "minHostVersion": "3.6.1",
   "author": "Your Name",
+  "isSystemPlugin": false,
   "repository": "https://github.com/yourname/my-plugin",
-  "issues": "https://github.com/yourname/my-plugin/issues"
+  "issues": "https://github.com/yourname/my-plugin/issues",
+  "contributes": {
+    "featurePage": {
+      "class": "LenovoLegionToolkit.Plugins.MyPlugin.MyPluginFeaturePage",
+      "title": "My Plugin"
+    },
+    "settingsPage": {
+      "class": "LenovoLegionToolkit.Plugins.MyPlugin.MyPluginSettingsPage",
+      "title": "My Plugin Settings"
+    },
+    "runtime": null,
+    "optimizationActions": []
+  }
 }
 ```
+
+`[Plugin]` 特性中的 `MinimumHostVersion` 应与 `minHostVersion` 保持一致。
 
 ---
 
@@ -154,7 +172,7 @@ public interface IPlugin
 
 ### PluginBase 基类
 
-建议继承 `PluginBase` 基类：
+插件作者应继承 `LenovoLegionToolkit.Plugins.SDK.PluginBase`（下文为宿主侧等价的抽象基类定义；类型由 `LenovoLegionToolkit.Plugins.SDK.dll` 提供）：
 
 ```csharp
 public abstract class PluginBase : IPlugin
@@ -282,40 +300,66 @@ public class MyPluginSettingsPage : IPluginPage
 </UserControl>
 ```
 
+### 插件 UI 视觉规范
+
+官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `LenovoLegionToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
+
+```xml
+<UserControl.Resources>
+  <ResourceDictionary>
+    <ResourceDictionary.MergedDictionaries>
+      <ResourceDictionary Source="pack://application:,,,/LenovoLegionToolkit.Plugins.Shared;component/PluginUiResources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+  </ResourceDictionary>
+</UserControl.Resources>
+```
+
+**布局与样式约定**
+
+
+| 资源键                                                                          | 用途                |
+| ---------------------------------------------------------------------------- | ----------------- |
+| `PluginPageRootMargin`                                                       | 页根边距（`0,0,16,12`） |
+| `PluginHeroSurfaceStyle`                                                     | Hero / 概览条        |
+| `PluginCardContentStyle`                                                     | 标准内容卡片            |
+| `PluginMetricCardStyle`                                                      | 紧凑指标卡             |
+| `PluginPrimaryButtonStyle` / `PluginSecondaryButtonStyle`                    | WPF-UI 主/次按钮      |
+| `PluginSectionTitleStyle` / `PluginBodyTextStyle` / `PluginCaptionTextStyle` | 标题与正文层级           |
+| `PluginIconBadgeStyle` + `PluginIconOnAccentStyle`                           | Accent 图标徽章       |
+
+
+**编写注意**
+
+- 卡片间距 8px、圆角 8px，与主程序 `DesignTokens` 对齐。
+- 宿主已通过 `IPluginPage.PageTitle` 展示标题时，页面 Hero 不要再重复同文案。
+- `DataGrid` 等密集控件外包 `PluginCardContentStyle` 边框。
+- 视觉打磨时保留全部 `AutomationId`（Workbench / 主程序 UI 烟测依赖）。
+- 不要在插件 `.csproj` 中重复 `<Page Include>` 引用 `PluginUiResources.xaml`（Shared 项目已编译，重复会导致 NETSDK1022）。
+
+**本地视觉回归**（插件仓库）：
+
+```powershell
+make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
+```
+
+截图输出：`artifacts/workbench-visual/<plugin-id>-<theme>/`（`preview` / `settings` / `real-runtime`）。详见 [UniversalDeviceToolkit-Plugins — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/BUILD_SMOKE.md#visual-smoke-pluginworkbench)。
+
 ---
 
 ## 配置存储
 
-### 使用 ApplicationSettings
+### 外部插件（贡献者路径）
 
-```csharp
-public class MyPlugin : PluginBase
-{
-    private const string SettingsKey = "my-plugin-settings";
-    
-    public MyPluginSettings GetSettings()
-    {
-        var appSettings = IoCContainer.Resolve<ApplicationSettings>();
-        var json = appSettings.Store.GetCustomValue(SettingsKey);
-        return JsonSerializer.Deserialize<MyPluginSettings>(json) 
-            ?? new MyPluginSettings();
-    }
-    
-    public void SaveSettings(MyPluginSettings settings)
-    {
-        var appSettings = IoCContainer.Resolve<ApplicationSettings>();
-        var json = JsonSerializer.Serialize(settings);
-        appSettings.Store.SetCustomValue(SettingsKey, json);
-        appSettings.SynchronizeStore();
-    }
-}
+官方与第三方插件通常使用 **插件本地 JSON 持久化**，而非宿主 `ApplicationSettings`：
 
-public class MyPluginSettings
-{
-    public bool EnableFeature { get; set; } = true;
-    public string SelectedOption { get; set; } = "default";
-}
-```
+- `**PluginBase.Configuration`**（`IPluginConfiguration`）：SDK 提供的按插件作用域键值存储，默认落在宿主 app-data 下的插件配置目录；适合简单设置（参见 `network-acceleration` 的 `Configuration.SetValue` / `SaveAsync` 模式）。
+- **插件仓库 `Plugins/Shared` 中的 `SettingsManager` 等辅助类**：适合结构化设置模型与文件级 JSON 读写（各官方插件的 `*Settings` 类普遍采用此模式）。
+
+贡献者不应引用宿主内部的 `IoCContainer` 或 `ApplicationSettings`。
+
+### 宿主内建插件（非贡献者路径）
+
+极少数与主程序同进程编译的内建插件可能通过 `ApplicationSettings` 读写设置；这不是插件仓库的贡献路径，第三方作者请忽略。
 
 ---
 
@@ -422,12 +466,14 @@ public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
 
 ### 1. 命名规范
 
-| 项目 | 规范 | 示例 |
-|------|------|------|
-| 插件 ID | 小写字母、数字、连字符 | `my-plugin` |
-| 插件类 | `{Name}Plugin` | `MyPlugin` |
-| 页面类 | `{Name}Page` | `MyFeaturePage` |
-| 设置类 | `{Name}Settings` | `MyPluginSettings` |
+
+| 项目    | 规范               | 示例                 |
+| ----- | ---------------- | ------------------ |
+| 插件 ID | 小写字母、数字、连字符      | `my-plugin`        |
+| 插件类   | `{Name}Plugin`   | `MyPlugin`         |
+| 页面类   | `{Name}Page`     | `MyFeaturePage`    |
+| 设置类   | `{Name}Settings` | `MyPluginSettings` |
+
 
 ### 2. 资源管理
 
@@ -474,52 +520,65 @@ public override void OnInstalled()
 
 ### 4. 版本兼容性
 
+在 `plugin.manifest.json` 中声明 `minHostVersion`，并与 `[Plugin]` 特性的 `MinimumHostVersion` 保持一致：
+
+```json
+{
+  "minHostVersion": "3.6.1"
+}
+```
+
 ```csharp
 [Plugin(
     id: "my-plugin",
-    MinimumHostVersion = "3.6.0"  // 最低兼容版本
+    MinimumHostVersion = "3.6.1"  // 与 plugin.manifest.json 一致
 )]
-public class MyPlugin : PluginBase
-{
-    // 插件实现
-}
+public class MyPlugin : PluginBase { }
 ```
 
 ---
 
 ## 示例插件
 
-完整的示例插件请参考插件仓库：
+完整实现见 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 的 `Plugins/` 目录：
 
-- **CustomMouse**: 自定义鼠标指针插件
-- **NetworkAcceleration**: 网络加速插件
-- **ShellIntegration**: Shell 集成插件（系统插件）
 
-插件仓库地址：[UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
+| 插件 ID                    | 页面模型             | 说明                                                 |
+| ------------------------ | ---------------- | -------------------------------------------------- |
+| **custom-mouse**         | 设置页 + Windows 优化 | 无功能页（`GetFeatureExtension()` 为 `null`）；提供鼠标光标与优化动作 |
+| **network-acceleration** | 功能页 + 设置页        | 网络加速功能与独立设置界面                                      |
+| **shell-integration**    | 仅设置页（系统插件）       | `isSystemPlugin: true`，不可卸载；无功能页                   |
+| **vive-tool**            | 功能页 + 设置页        | ViVeTool 功能管理与设置                                   |
+
 
 ---
 
 ## 调试插件
 
-### 本地调试
+### 推荐：插件仓库工具链
 
-1. 构建插件项目
-2. 将输出文件复制到主程序的 `plugins` 目录：
-   - 开发环境：`Build/plugins/`
-   - 安装环境：`%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`
-3. 启动主程序进行调试
+日常开发与预览应在插件仓库使用 `llt-plugin.cmd` 与 **PluginWorkbench**（支持 System/Light/Dark、Feature/Settings/Optimization 视图、Preview / Real Runtime）：
 
-### 调试配置
-
-在 Visual Studio 中配置调试：
-
-```xml
-<!-- 在插件项目文件中添加 -->
-<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-  <StartAction>Program</StartAction>
-  <StartProgram>path\to\Universal Device Toolkit.exe</StartProgram>
-</PropertyGroup>
+```powershell
+.\llt-plugin.cmd build --plugin my-plugin
+.\llt-plugin.cmd preview --plugin my-plugin --theme system --view feature
+.\llt-plugin.cmd dev --plugin my-plugin --theme system --view settings
 ```
+
+视觉回归与 Workbench 烟测（插件仓库）：
+
+```powershell
+make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
+```
+
+### 备选：复制到宿主 plugins 目录
+
+调试宿主加载行为时，可将打包输出手动复制到主程序 `plugins` 目录：
+
+- 开发环境：`Build/plugins/`
+- 安装环境：`%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`
+
+优先使用 `.\llt-plugin.cmd package --plugin my-plugin --build-first` 生成 ZIP，再解压或复制到上述目录。
 
 ---
 
@@ -527,23 +586,29 @@ public class MyPlugin : PluginBase
 
 ### 打包
 
-1. 构建发布版本：`dotnet build -c Release`
-2. 创建 ZIP 压缩包，包含：
-   - 插件程序集 (.dll)
-   - 依赖程序集
-   - 资源文件
-   - Plugin.json
+在插件仓库：
+
+```powershell
+.\llt-plugin.cmd package --plugin my-plugin --build-first
+.\llt-plugin.cmd validate --plugin my-plugin --profile contributor
+```
+
+输出 ZIP 包含插件程序集、`LenovoLegionToolkit.Plugins.SDK.dll`、生成的 `plugin.json`、`plugin.manifest.json` 与资源文件。
 
 ### 提交到插件仓库
 
-1. Fork 插件仓库
-2. 在 `Plugins/` 目录下创建插件文件夹
-3. 提交 Pull Request
+1. Fork [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
+2. 使用 `llt-plugin.cmd init` 在 `Plugins/` 下创建插件，或扩展现有插件
+3. 通过 `validate` 与 `workbench-smoke` 后提交 Pull Request
 
 ---
 
 ## 相关文档
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) - 系统架构
-- [CONTRIBUTING.md](../CONTRIBUTING.md) - 贡献指南
+- [UniversalDeviceToolkit-Plugins — PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) - 插件作者快速开始
+- [UniversalDeviceToolkit-Plugins — PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_DEVELOPMENT.md) - 插件仓库完整开发指南
+- [UniversalDeviceToolkit-Plugins — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/BUILD_SMOKE.md) - 构建与视觉冒烟
+- [ARCHITECTURE.md](ARCHITECTURE.md) - 宿主系统架构
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - 主程序贡献指南
 - [AGENTS.md](../AGENTS.md) - 开发者指南
+

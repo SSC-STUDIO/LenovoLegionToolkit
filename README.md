@@ -1,7 +1,13 @@
+<img height="128" align="left" src="Assets/Logo.png" alt="Logo">
+
 # Universal Device Toolkit
 
 [![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
+
+> **Open source · No account · No telemetry**
+>
+> Legion owners can ditch Vantage and still get Fn+Q + RGB; other Windows PCs can use plugins in basic mode.
 
 ---
 
@@ -9,8 +15,6 @@
 * [简体中文版简介](README_zh-hans.md)
 
 ---
-
-<br />
 
 Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps Lenovo hardware control direct on supported machines and still remains useful on other PCs through basic mode. It runs without background services, uses very little memory and CPU, contains no telemetry, and is built around plugin extensions for device-specific workflows.
 
@@ -22,11 +26,31 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 > **What "Universal" means**
 > UDT is a Windows utility platform: **full hardware control** targets supported Lenovo Legion, LOQ, and IdeaPad Gaming machines; **basic mode** on other Lenovo models and non-Lenovo PCs still provides plugins, system optimization, themes, updates, and logs while hiding unsupported hardware toggles. The name reflects extensibility and basic-mode coverage, not a promise of Vantage-class control on every PC brand.
 
+### Why choose UDT?
+
+| | UDT | Lenovo Vantage |
+|---|:---:|:---:|
+| Background service | **None** | Required |
+| Telemetry / Lenovo account | **None** | Required |
+| Open source (GPL-3.0) | **Yes** | No |
+| Plugin extensions | **Yes** | Limited |
+| CLI & automation | **Yes** | No |
+| Useful on non-Lenovo PCs | **Basic mode** | No |
+
+**Who it's for**
+
+- Legion / LOQ owners who want to drop Vantage but keep Fn+Q, RGB, and dGPU controls
+- Anyone on Windows who just wants plugins and general tools (basic mode)
+- Tinkerers: `llt.exe` CLI, macros, GPL source you can actually read
+
+Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
+
 <img src="Assets/Screenshot_main.png" width="700" />
 
 &nbsp;
 
 # Table of Contents
+  - [Why choose UDT?](#why-choose-udt)
   - [Disclaimer](#disclaimer)
   - [Download](#download)
   - [Quick Start](#quick-start)
@@ -417,7 +441,7 @@ Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-
 
 ### Core Features
 
-- **Dynamic Loading**: Plugins are loaded at runtime from the `Build/plugins` directory
+- **Dynamic Loading**: Plugins load at runtime from the host `plugins` directory (development: `Build/plugins`; installed: `%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`)
 - **Online Plugin Repository**: Browse and install plugins from an online repository
 - **Dependency Management**: Automatic installation and checking of plugin dependencies
 - **UI Integration**: Plugins can provide custom UI pages and settings
@@ -434,9 +458,12 @@ Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-
 
 ### Available Plugins
 
-UDT currently provides the following plugins:
+Official plugins are published from [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins). The online catalog currently includes:
 
-- **ViVeTool Plugin**: Manage Windows feature flags, enable or disable experimental Windows features
+- **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
+- **Network Acceleration**: Network tuning with feature and settings pages
+- **Shell Integration**: Context menu and shell styling (system plugin)
+- **ViVeTool**: Manage Windows feature flags and experimental features
 
 ### Plugin Management UI
 
@@ -460,14 +487,16 @@ Plugins can be installed in two ways:
    - Click on a plugin to view details
    - Click "Install" to download and install automatically
 
-2. **Manual Installation**:
-   - Download the plugin DLL file
-   - Place it in the `Build/plugins` directory
-   - Restart UDT, or use the plugin manager UI to scan for new plugins
+2. **Manual Installation** (advanced):
+   - Download the plugin release ZIP from [UniversalDeviceToolkit-Plugins releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases) or build one with `llt-plugin.cmd package` in the plugin repository
+   - Extract the ZIP into the host plugins directory (each plugin in its own subfolder):
+     - Installed UDT: `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
+     - Local dev build: `Build\plugins\`
+   - Restart UDT, or use the Plugin Extensions page to refresh installed plugins
 
 ### Plugin Development
 
-For information on how to develop plugins for UDT, please refer to the plugin development documentation.
+Develop plugins in the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository. Start with its [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md). Host-side contracts and UI standards are documented in [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md).
 
 
 
@@ -733,6 +762,9 @@ Additional documentation is available in the `Docs/` directory:
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | System architecture, components, and data flow |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | Build, test, deployment, and release procedures |
 | [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | Plugin SDK and implementation guide |
+| [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | Release and social promotion copy (English) |
+| [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | Release and social promotion copy (Chinese) |
+| [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | Community posting playbook and submission tracker |
 | [SECURITY.md](Docs/SECURITY.md) | Security policy and best practices |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | Community guidelines and contribution standards |
 

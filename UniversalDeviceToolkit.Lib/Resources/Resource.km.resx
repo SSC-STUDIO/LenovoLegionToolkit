@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>ផ្ទាល់ខ្លួន</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>ប្រព័ន្ធ</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>បើក ជានិច្ច</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>បើក នៅពេលគេង</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>បានបិទ</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>បានបើក</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>បានបើក ពន្យឺត</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>សន្សំសំចៃ</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>ធម្មតា</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>សាកថ្មរហ័ស</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that Flip to Start is or will be turned off.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that Flip to Start is or will be turned on.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that Fn Lock is or will be turned off.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that Fn Lock is or will be turned on.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>បានបិទថាមវន្ត</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>បានបើកថាមវន្ត</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that HDR is or will be turned off.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that HDR is or will be turned on.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>បញ្ចូលគ្នា</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>បញ្ចូលគ្នា-ស្វ័យប្រវត្តិ</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>បញ្ចូលគ្នា-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that the microphone is or will be turned off.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that the microphone is or will be turned on.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>បាតកណ្តាល</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>បាតឆ្វេង</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>បាតស្តាំ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>កណ្តាល</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>កណ្តាលឆ្វេង</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>កណ្តាលស្តាំ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>កំពូលកណ្តាល</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>កំពូលឆ្វេង</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>កំពូលស្តាំ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that Overdrive is or will be turned off.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that Overdrive is or will be turned on.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>តុល្យភាព</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>ផ្ទាល់ខ្លួន</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>សមត្ថភាព</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>ស្ងប់ស្ងាត់</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>លឿន</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>លឿនបំផុត</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>យឺត</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>យឺតបំផុត</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ខ្ពស់</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ទាប</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>ដង្ហើម</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>រលោង</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>ថេរ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>រលកឆ្វេងទៅស្តាំ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>រលកស្តាំទៅឆ្វេង</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>ការកំណត់ជម្រើស ១</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>ការកំណត់ជម្រើស ៣</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>ការកំណត់ជម្រើស ២</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ខ្ពស់</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ទាប</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>មធ្យម</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>ពីបាតទៅកំពូល</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>តាមទ្រនិចនាឡិកា</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>ផ្ទុយពីទ្រនិចនាឡិកា</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>ពីឆ្វេងទៅស្តាំ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>ពីស្តាំទៅឆ្វេង</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>ពីកំពូលទៅបាត</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>ជានិច្ច</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>សំឡេងបោះពួយ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>សំឡេងរលក</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>ផ្លាស់ប្តូរពណ៌</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>ចង្វាក់ពណ៌</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>រលកពណ៌</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>ភ្លៀង</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>ឥន្រ្ទិយពណ៌</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>រលកឥន្រ្ទិយពណ៌</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>រលក</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>រលោង</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>វាយ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>យឺត</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>មធ្យម</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>លឿន</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>ងងឹត</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>ភ្លឺ</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>ប្រព័ន្ធ</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>ខ្ពស់</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>ទាប</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>បិទ</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>បើក</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>បើក</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>បើក</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>អាដាប៉្លីស AC</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>ការផ្តល់ថាមវន្ត USB</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC និង USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>វែង</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>ធម្មតា</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>ខ្លី</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>បើក</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>ស្ងប់ស្ងាត់</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>បើកសំឡេង</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>បានបិទ</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>របៀបថាមវន្ត Windows</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>ផែនការថាមវន្ត Windows</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>ការកំណត់ជម្រើស ៤</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>ប្រចាំថ្ងៃ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>រៀងរាល់ម៉ោង</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>ប្រចាំខែ</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>រៀងរាល់ ៣ ម៉ោង</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>រៀងរាល់ ១២ ម៉ោង</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>ប្រចាំសប្តាហ៍</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>រចនាបថបច្ចុប្បន្ន</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>ផ្លូវការ</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Neonយប់</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>បច្ចេកវិទ្យាព្រៃឈើ</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>មិនមានការអាប់ដេតទេ</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>លក្ខណៈសម្បត្តិឧបករណ៍មិនមែនជា GUID</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>មិនអាចអានអថេរ {0} ពី UEFI</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>សន្សំសំចៃថាមវន្ត</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>មិនមានលទ្ធផលក្នុងសំណួរ</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>អាគុយម៉ង់មានអត្តសញ្ញាណគ្រោះថ្នាក់</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>ទម្រង់ត្រូវនៅចន្លោះ ០ និង ៦</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>អថេរបរិស្ថានមិនត្រឹមត្រូវ៖ {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>មិនអាចកំណត់សិទ្ធិ UEFI</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>មិនអាចបង្កើតការកំណត់ជម្រើស God Mode បានទេ។</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>ពាក្យបញ្ជាមិនអាចទទេឬនៅទទេបាន។</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>ឈ្មោះឯកសារការកំណត់មិនត្រឹមត្រូវ៖ {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>មិនអាចអានការកំណត់ {0}</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>ការប្រើប្រាស់</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>ស្ថានភាពថ្មមិនស្គាល់៖ {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>បរាជ័យក្នុងការចាប់ផ្តើម Explorer។</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>មិនអាចសរសេរអថេរ {0} ទៅ UEFI</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>ទិន្នន័យតារាងមិនអាចទទេបាន</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>ការហៅបរាជ័យ៖ {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>អាគុយម៉ង់ PowerShell មានលំនាំគ្រោះថ្នាក់</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>ទីតាំងនិងចំនួនលើសពីដែនកំណត់អារេ</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>សីតុណ្ហភាពថាស ២</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>រកមិនឃើញ URL ឯកសាររៀបចំ</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Checksum ឯកសារមិនផ្គូរផ្គង់</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>សីតុណ្ហភាព VRAM</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>ឈ្មោះស្លាកមិនអាចទទេឬនៅទទេបាន</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>ប្រវែងតារាងខ្យល់ត្រូវតែ ១០</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>ការលុប Wildcard ត្រូវបានកំណត់</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍ '{0}' ខ្វះទិន្នន័យមេតា SHA256។</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl បរាជ័យជាមួយកំហុស៖ {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>ប្រេកង់</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>រកមិនឃើញឯកសារទម្រង់។</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>ទម្រង់នឹងមិនអនុវត្តទេប្រសិនបើមិនបានត្រួវតែអាដាប៉្លីស AC (ថាមវន្តពេញ)។</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍ '{0}' មិនមាននៅក្នុងកាតាឡុកធនធានអនឡាញ។</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>មិនអាចទទួលបានពណ៌ "{0}"</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% ទាប</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍ '{0}' manifest ទទេ។</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>បរាជ័យក្នុងការផ្ទៀងផ្ទាត់ស្ថានភាព {0} ត្រូវបានកំណត់ទៅ {1}។</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>ត្រូវតែអាចសរសេរបាន</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>បរាជ័យក្នុងការទទួល handle សម្រាប់កម្មវិធីបញ្ជា៖ {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>ខ្យល់ CPU</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>កំហុសក្នុងការផ្ញើពាក្យបញ្ជាកម្មវិធីបញ្ជា៖ controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>បើក</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>ពន្លឺត្រូវនៅចន្លោះ ០ និង ៩</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍មានផ្លូវមិនសុវត្ថិភាព៖ {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>រកមិនឃើញកំណែដែលគាំទ្រ</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>មិនអាចដោះស្រាយបែបផ្សង់</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>មិនអាចលុបផ្លូវប្រព័ន្ធបានទេ</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>ឈ្មោះឯកសារមិនត្រឹមត្រូវ</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍មានសញ្ញាផ្លូវបែប Windows៖ {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃកញ្ចប់អាប់ដេតបរាជ័យ៖ មិនមាន hash SHA256 សម្រាប់អាប់ដេត {0}។ ការផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវត្រូវបានទាមទារសម្រាប់សុវត្ថិភាព។</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>សីតុណ្ហភាពម៉ាស៊ីនមេ</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>លេខសម្គាល់កញ្ចប់ឧបករណ៍មិនផ្គូរផ្គង់។ រំពឹង '{0}' បាន '{1}'។</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>រកមិនឃើញការកំណត់ជម្រើសដែលមានលេខសម្គាល់ {0}</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>លាក់</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>ការប្រើប្រាស់ VRAM</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>បរាជ័យក្នុងការចុះឈ្មោះការផ្លាស់ប្តូរក្នុងការងារ {0} ក្នុង {1} [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>handle មិនត្រឹមត្រូវ</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>តម្លៃអថេរបរិស្ថានមិនត្រឹមត្រូវ៖ {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>រកមិនឃើញអេក្រង់ក្នុង</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Hive មិនស្គាល់។</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>ធនធានដែលបានទាញយកបរាជ័យក្នុងការផ្ទៀងផ្ទាត់ SHA256។ រំពឹង {0} បាន {1}។</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geek</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>ខ្យល់ GPU</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>កាតាឡុកធនធានទទេ។</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>ពាក្យបញ្ជាបរាជ័យក្នុងការផ្ទៀងផ្ទាត់សុវត្ថិភាព៖ {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>ត្រូវតែអាចអានបាន</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>ស្ថានភាពមិនត្រឹមត្រូវ</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>កំហុសក្នុងការទទួល handle កម្មវិធីបញ្ជា៖ {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>បង្ហាញ</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>លក្ខណៈសម្បត្តិឧបករណ៍មិនមែនជា string</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>មិនអាចគ្រប់គ្រងក្តារចុច RGB ជាមួយ Vantage បានទេ</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>រកមិនឃើញលក្ខណៈដែលគាំទ្រ</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>ថាមវន្ត</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>រកមិនឃើញឧបករណ៍បញ្ជាដែលគាំទ្រ</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>បរាជ័យក្នុងការដោះស្រាយ JSON</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>អារេសីតុណ្ហភាពត្រូវតែមាន ១០ ធាតុ</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>ក្រុមហ៊ុនផ្គត់ផ្គង់កញ្ចប់ឧបករណ៍មិនផ្គូរផ្គង់។ រំពឹង '{0}' បាន '{1}'។</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>មិនគាំទ្រ។</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>កំហុសក្នុងការបើកសេវាកម្មគ្រប់គ្រង</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Shell អន្តរកម្មត្រូវការអាគុយម៉ង់នៅពេលរង់ចាំការបញ្ចប់</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>មិនអាចញែកកំណែពីឈ្មោះស្លាក៖ '{0}'។ ទម្រង់រំពឹង៖ '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>មិនអាចលុបសោឈុតឃ្លីតិចចរាចរណ៍បានទេ</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍ '{0}' មិនមាន {1}។</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>ប្តូរ</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>បញ្ញាត្រជាក់</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>ការអានបរាជ័យ៖ {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>សោសកម្មមិនត្រឹមត្រូវ</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>នាឡិកា P-Core</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>បើក</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>បរាជ័យក្នុងការដោះស្រាយទម្រង់។</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>កំហុសក្នុងការបើកសេវាកម្ម</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>ការហៅបរាជ័យ៖ {0}។ [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>នាឡិកា E-Core</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>តម្លៃលក្ខណៈ WMI មិនអាចប្រើបានសម្រាប់ {0}។</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>ថ្នាក់ WMI ឬ namespace មិនអាចប្រើបាន [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>ប្តូរស្ថានភាព</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>ខ្លាំង</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>មិនទាន់ដំណើរការ។</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>តម្លៃអ្នកប្រើប្រាស់បច្ចុប្បន្នទទេ</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>របៀបថាមវន្ត {0} មិនគាំទ្រ</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Handle ឧបករណ៍មិនអាចប្រើបាន</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>ប្រភេទមិនត្រឹមត្រូវនៃ formatted</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>សីតុណ្ហភាពអង្គចងចាំ</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍មានប្រភេទឯកសារមិនគាំទ្រ៖ {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>ក្តារចុច RGB មិនគាំទ្រ</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>កម្មវិធីអនុវត្តមិននៅក្នុងបញ្ជីអនុញ្ញាត៖ {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>សមត្ថភាពខ្លាំង</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>កំណែឯកសារដំណើរការបច្ចុប្បន្នមិនអាចទទេបាន</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>ពេលវេលារូបភាព</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>ផ្លូវការកំណត់ចេញពីថតដែលអនុញ្ញាត៖ {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>ម៉ូឌុលមេមិនអាចទទេបាន</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>ការប្តូររបៀបថាមវន្តមិនគាំទ្រនៅលើឧបករណ៍នេះ។</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>រកឃើញលំនាំគ្រោះថ្នាក់ក្នុងអាគុយម៉ង់សម្រាប់ {0}</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>មិនមានការកំណត់ជម្រើស God Mode ទេ។</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>សោ {0} មិនអាចបើកបាន</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>កញ្ចប់ឧបករណ៍ '{0}' មាន URL ទាញយកទទេ។</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>របៀបថាមវន្ត '{0}' មិនអាចប្រើបានដោយគ្មានអាដាប៉្លីស AC។</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>ខ្យល់</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃកញ្ចប់អាប់ដេតបរាជ័យ។ រំពឹង SHA256៖ {0}, គណនាបាន៖ {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>សីតុណ្ហភាព</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>សីតុណ្ហភាពថាស ១</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>បានទទួលតម្លៃមិនកំណត់៖ {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer បានដំណើរការរួចហើយ</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer មិនបានចេញក្នុងពេលកំណត់។</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl ត្រឡប់ 0, កំហុសចុងក្រោយ៖ {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer មិនបានចាប់ផ្តើមឡើងវិញក្នុងពេលកំណត់។</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>ខ្យល់ប្រព័ន្ធ</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>ឈ្មោះឯកសារដំណើរការបច្ចុប្បន្នមិនអាចទទេបាន</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer ត្រូវតែដំណើរការសិន [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+</root>

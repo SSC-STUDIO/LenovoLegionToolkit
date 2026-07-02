@@ -38,8 +38,8 @@ public class MainWindowTests
 
     [Theory]
     [InlineData(1.0, 1.0)]
-    [InlineData(1.5, 0.82)]
-    [InlineData(2.0, 0.78)]
+    [InlineData(1.5, 0.92)]
+    [InlineData(2.0, 0.92)]
     public void DpiAwareTypography_ShouldReduceLogicalFontSizeAsDpiIncreases(
         double dpiScale,
         double expectedScale)

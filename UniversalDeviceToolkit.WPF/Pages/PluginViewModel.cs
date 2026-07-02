@@ -473,6 +473,11 @@ public string PluginId
                     OnPropertyChanged(nameof(ShouldShowConfigureButton));
                     OnPropertyChanged(nameof(SupportsOpenAction));
                     OnPropertyChanged(nameof(CapabilitySummary));
+                    OnPropertyChanged(nameof(SecondaryLineText));
+                    OnPropertyChanged(nameof(IsInstallProgressIndeterminate));
+                    OnPropertyChanged(nameof(ShouldShowDeterminateInstallFill));
+                    OnPropertyChanged(nameof(ShouldShowIndeterminateInstallFill));
+                    OnPropertyChanged(nameof(ShouldShowCardDescription));
                     OnPropertyChanged(nameof(ShouldShowStatusBadge));
                     OnPropertyChanged(nameof(StatusText));
                     UpdateInstallButtonText();
@@ -489,6 +494,10 @@ public string PluginId
                 {
                     _installProgress = value;
                     OnPropertyChanged(nameof(InstallProgress));
+                    OnPropertyChanged(nameof(SecondaryLineText));
+                    OnPropertyChanged(nameof(IsInstallProgressIndeterminate));
+                    OnPropertyChanged(nameof(ShouldShowDeterminateInstallFill));
+                    OnPropertyChanged(nameof(ShouldShowIndeterminateInstallFill));
                 }
             }
         }
@@ -502,10 +511,37 @@ public string PluginId
                 {
                     _installStatusText = value;
                     OnPropertyChanged(nameof(InstallStatusText));
+                    OnPropertyChanged(nameof(SecondaryLineText));
                     OnPropertyChanged(nameof(StatusText));
                 }
             }
         }
+
+        public string SecondaryLineText
+        {
+            get
+            {
+                if (!IsInstalling)
+                    return CapabilitySummary;
+
+                if (!string.IsNullOrWhiteSpace(InstallStatusText))
+                {
+                    return InstallProgress > 0
+                        ? $"{InstallStatusText}  ·  {InstallProgress:0}%"
+                        : InstallStatusText;
+                }
+
+                return Resource.PluginExtensionsPage_PreparingDownload;
+            }
+        }
+
+        public bool IsInstallProgressIndeterminate => IsInstalling && InstallProgress <= 0;
+
+        public bool ShouldShowDeterminateInstallFill => IsInstalling && InstallProgress > 0;
+
+        public bool ShouldShowIndeterminateInstallFill => IsInstalling && InstallProgress <= 0;
+
+        public bool ShouldShowCardDescription => !IsInstalling && !string.IsNullOrWhiteSpace(Description);
 
         public bool IsLocal
         {

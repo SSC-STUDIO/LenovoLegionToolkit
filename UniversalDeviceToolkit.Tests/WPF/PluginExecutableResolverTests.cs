@@ -182,7 +182,7 @@ public class PluginExecutableResolverTests : IDisposable
 
         method.Should().NotBeNull();
 
-        object?[] parameters = [pluginId, metadataFilePath, pluginsDirectory, null, null, false];
+        object?[] parameters = [pluginId, metadataFilePath, pluginsDirectory, null, null, true];
         var result = method!.Invoke(null, parameters);
 
         result.Should().BeOfType<bool>();

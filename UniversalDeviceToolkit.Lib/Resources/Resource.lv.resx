@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>Šī ir mana garā stīga</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>艩墨 ir mana gar膩 st墨ga</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime kodēts serializēts .NET Framework objekts]</value>
+        <value>[base64 mime kod膿ts serializ膿ts .NET Framework objekts]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime kodēta virkne, kas attēlo .NET Framework objekta baitu masīva formu]</value>
+        <value>[base64 mime kod膿ta virkne, kas att膿lo .NET Framework objekta baitu mas墨va formu]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -151,19 +151,19 @@
     <value>Ātrā Uzlāde</value>
   </data>
   <data name="FlipToStartState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that Flip to Start is or will be turned off.</comment>
   </data>
   <data name="FlipToStartState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that Flip to Start is or will be turned on.</comment>
   </data>
   <data name="FnLockState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that Fn Lock is or will be turned off.</comment>
   </data>
   <data name="FnLockState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that Fn Lock is or will be turned on.</comment>
   </data>
   <data name="GPUController_PoweredOff" xml:space="preserve">
@@ -173,11 +173,11 @@
     <value>Ieslēgts</value>
   </data>
   <data name="HDRState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that HDR is or will be turned off.</comment>
   </data>
   <data name="HDRState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
@@ -193,11 +193,11 @@
     <value>Hibrīds-iGPU</value>
   </data>
   <data name="MicrophoneState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that the microphone is or will be turned off.</comment>
   </data>
   <data name="MicrophoneState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that the microphone is or will be turned on.</comment>
   </data>
   <data name="NotificationPosition_BottomCenter" xml:space="preserve">
@@ -228,19 +228,19 @@
     <value>Augšā pa labi</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
   </data>
   <data name="OverdriveState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that Overdrive is or will be turned off.</comment>
   </data>
   <data name="OverdriveState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that Overdrive is or will be turned on.</comment>
   </data>
   <data name="PowerModeState_Balance" xml:space="preserve">
@@ -289,7 +289,7 @@
     <value>Vilnis pa Labi</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
     <value>Priekšiestatījums 1</value>
@@ -310,7 +310,7 @@
     <value>Vidējs</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
     <value>No Apakšas uz Augšu</value>
@@ -387,12 +387,18 @@
   <data name="Theme_System" xml:space="preserve">
     <value>Sistēma</value>
   </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Logi</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
   <data name="TouchpadLockState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
   </data>
   <data name="TouchpadLockState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
   </data>
   <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
@@ -402,30 +408,30 @@
     <value>Zems</value>
   </data>
   <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="WinKeyState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
     <comment>Informs the user that WinLock is or will be turned on.</comment>
   </data>
   <data name="WinKeyState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
     <comment>Informs the user that WinLock is or will be turned on.</comment>
   </data>
   <data name="PortsBacklightState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="PortsBacklightState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
   </data>
   <data name="PanelLogoBacklightState_On" xml:space="preserve">
-    <value>Iespējots</value>
+    <value>Ieslēgts</value>
   </data>
   <data name="PanelLogoBacklightState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="InstantBootState_Off" xml:space="preserve">
-    <value>Atspējots</value>
+    <value>Izslēgts</value>
   </data>
   <data name="InstantBootState_AcAdapter" xml:space="preserve">
     <value>Maiņstrāvas Adapteris</value>
@@ -440,21 +446,569 @@
     <value>Ilgi</value>
   </data>
   <data name="NotificationDuration_Normal" xml:space="preserve">
-    <value>Normāli</value>
+    <value>Normāls</value>
   </data>
   <data name="NotificationDuration_Short" xml:space="preserve">
     <value>Īsi</value>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Logi</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data><data name="ModifierKey_Shift" xml:space="preserve"><value>Maiņa</value></data><data name="ModifierKey_Ctrl" xml:space="preserve"><value>Ctrl</value></data><data name="ModifierKey_Alt" xml:space="preserve"><value>Alt</value></data><data name="BatteryNightChargeState_On" xml:space="preserve"><value>Iespējots</value></data><data name="BatteryNightChargeState_Off" xml:space="preserve"><value>Atspējots</value></data><data name="SpeakerState_Mute" xml:space="preserve"><value>Izslēgt skaņu</value></data><data name="SpeakerState_Unmute" xml:space="preserve"><value>Ieslēgt skaņu</value></data><data name="PowerModeMappingMode_Disabled" xml:space="preserve"><value>Atspējots</value></data><data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve"><value>Windows enerģijas režīms</value></data><data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve"><value>Windows enerģijas plāns</value></data><data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve"><value>Priekšiestatījums 4</value></data><data name="UpdateCheckFrequency_PerDay" xml:space="preserve"><value>Dienas</value></data><data name="UpdateCheckFrequency_PerHour" xml:space="preserve"><value>Katra stunda</value></data><data name="UpdateCheckFrequency_PerMonth" xml:space="preserve"><value>Mēneša</value></data><data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve"><value>Katra 3 stunda</value></data><data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve"><value>Katra 12 stunda</value></data><data name="UpdateCheckFrequency_PerWeek" xml:space="preserve"><value>Nedēļas</value></data>  <data name="ThemeStylePreset_Default" xml:space="preserve">
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Maiņa</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Ieslēgts</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>Izslēgts</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Izslēgt skaņu</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Ieslēgt skaņu</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Atspējots</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows enerģijas režīms</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows enerģijas plāns</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Priekšiestatījums 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Dienas</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>Katra stunda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Mēneša</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>Katra 3 stunda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>Katra 12 stunda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Nedēļas</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
     <value>Pašreizējais stils</value>
   </data>
-  <data name="ThemeStylePreset_Forest" xml:space="preserve">
-    <value>Meža tehnoloģija</value>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Oficiāli vēss</value>
   </data>
   <data name="ThemeStylePreset_Midnight" xml:space="preserve">
     <value>Pusnakts neons</value>
   </data>
-  <data name="ThemeStylePreset_Official" xml:space="preserve">
-    <value>Oficiāli vēss</value>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Meža tehnoloīija</value>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Nav pieejami atjauninājumi</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Ierīces īpašība nav GUID</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>Nevar nolasīt mainīgo {0} no UEFI</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Akumulatora taupīšana</value>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>Vaicājumā nav rezultātu</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Argumenti satur bīstamas rakstzīmes</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Profilam jābūt no 0 līdz 6</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Nederīgs vides mainīgais: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>Nevar iestatīt UEFI atļaujas</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Nevarēja izveidot nevienu God Mode sākotnējo iestatījumu.</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Komanda nevar būt tukša vai null.</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Nederīgs iestatījumu faila nosaukums: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>Nevarēja nolasīt {0} iestatījumu</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Izmantošana</value>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Nezināms akumulatora stāvoklis: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Neizdevās startēt Explorer.</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>Nevar ierakstīt mainīgo {0} UEFI</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Tabulas dati nevar būt tukši</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Zvans neizdevās: {0} [apjoms={1}, vaicājums={2}, metodesNosaukums={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell argumenti satur bīstamus modeļus</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Nobīde un skaits pārsniedz masīva robežas</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>2. diska temperatūra</value>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>Nevarēja atrast iestatīšanas faila URL</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Faila kontrolsummas neatbilstība</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM temperatūra</value>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Birka nosaukums nevar būt tukšs vai null</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Ventilatora tabulas garumam jābūt 10</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Aizstājējzīmju dzēšana ir ierobežota</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>IerīČu pakai &apos;{0}&apos; trūkst SHA256 metadatu.</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl neizdevās ar kļūdu: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Frekvence</value>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Profila fails nav atrasts.</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Profils netiks piemērots bez pieslēgta maiņstrāvas adaptera (pilnas jaudas).</value>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>IerīČu paka &apos;{0}&apos; nav pieejama tiešsaistes resursu katalogā.</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>Nevarēja iegūt krāsu &quot;{0}&quot;</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% zems</value>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>IerīČu pakas &apos;{0}&apos; manifests ir tukšs.</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>Neizdevās pārbaudīt, vai {0} stāvoklis tika iestatīts uz {1}.</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Jābūt rakstāmam</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Neizdevās iegūt draivera rokturi: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU ventilators</value>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Kļūda, sūtot draivera komandu: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Ieslēgts</value>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Spilgtumam jābūt no 0 līdz 9</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>IerīČu paka satur nedrošu ceļu: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Nav atrasta atbalstīta versija</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>Izslēgts</value>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Nevarēja atspiestot efektus</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Sistēmas ceļu dzēšana nav atļauta</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Nederīgs faila nosaukums</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>IerīČu paka satur Windows stila ceļā atdalītāju: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Atjauninājuma pakotnes integritātes pārbaude neizdevās: atjauninājumam {0} nav pieejams SHA256 jaucējkods. Integritātes pārbaude ir nepieciešama drošībai.</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Mātesplates temperatūra</value>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>IerīČu pakas ID neatbilstība. Paredzēts &apos;{0}&apos;, saņemts &apos;{1}&apos;.</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>Sākotnējais iestatījums ar ID {0} nav atrasts</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Paslēpt</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM izmantošana</value>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>Neizdevās reģistrēt izmaiņas uzdevumā {0} mapē {1} [tips={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>rokturis ir nederīgs</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Nederīga vides mainīgā vērtība: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>Iebūvētais displejs nav atrasts</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Nezināma hive.</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Lejupielādētais resurss neizturēja SHA256 validāciju. Paredzēts {0}, saņemts {1}.</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Džeiks</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU ventilators</value>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Resursu katalogs ir tukšs.</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Komanda neizturēja drošības validāciju: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>Jābūt lasāmam</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Nederīgs stāvoklis</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Kļūda, iegūstot draivera rokturi: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Rādīt</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Izslēgts</value>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Ierīces īpašība nav virkne</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Nevar pārvaldīt RGB tastatūru ar iespējotu Vantage</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Nav atrasta atbalstīta funkcija</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Jauda</value>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Nav atrasts atbalstīts kontrolieris</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>Neizdevās atspiestot JSON</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Temperatūras masīva elementu skaitam jābūt tieši 10</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>IerīČu pakas piegādātāja neatbilstība. Paredzēts &apos;{0}&apos;, saņemts &apos;{1}&apos;.</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Nav atbalstīts.</value>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Pakalpojumu pārvaldnieka atvēršanas kļūda</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Interaktīvās čaulas izpildāmajiem failiem ir nepieciešami argumenti, gaidot iziešanu</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Nevar parsēt versiju no birkas nosaukuma: &apos;{0}&apos;. Paredzētais formāts: &apos;3.0.1&apos;</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Kritisko reģistra atslēgu dzēšana nav atļauta</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>IerīČu paka &apos;{0}&apos; nesatur {1}.</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Pārslēgt</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Intelektuālā dzesēšana</value>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>Nolasīšana neizdevās: {0} [apjoms={1}, vaicājums={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Nederīga darbības atslēga</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-serdes takts</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Ieslēgts</value>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Neizdevās atspiestot profilu.</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Pakalpojuma atvēršanas kļūda</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Zvans neizdevās: {0}. [apjoms={1}, vaicājums={2}, metodesNosaukums={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-serdes takts</value>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>WMI funkcijas vērtība nav pieejama {0}.</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI klase vai nosaukumvieta nav pieejama [apjoms={0}, vaicājums={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Pārslēgt stāvokli</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Ekstrēmāls</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Nav inicializēts.</value>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Pašreizējā lietotāja vērtība ir null</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Neatbalstīts enerģijas režīms {0}</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Ierīces rokturis nav pieejams</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Nederīgs formatēšanas veids</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Atmiņas temperatūra</value>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>IerīČu paka satur neatbalstītu faila tipu: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB tastatūra nav atbalstīta</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Izpildāmais fails nav atļauto sarakstā: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Ekstrēmāla veiktspēja</value>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Pašreizējā procesa faila versija nevar būt null</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Kadra laiks</value>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Iestatījumu ceļš iziet no atļautās mapes: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Galvenais modulis nevar būt null</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Enerģijas režīma pārslēgšana nav atbalstīta šajā ierīcē.</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>Argumentos {0} atrasts bīstams modelis</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>Nav pieejams neviens God Mode sākotnējais iestatījums.</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>Atslēgu {0} nevarēja atvērt</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>IerīČu pakas &apos;{0}&apos; lejupielādes URL ir tukšs.</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>Enerģijas režīms &apos;{0}&apos; nav pieejams bez maiņstrāvas adaptera.</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Ventilators</value>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Atjauninājuma pakotnes integritātes pārbaude neizdevās. Paredzēts SHA256: {0}, aprēķināts: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Temperatūra</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>1. diska temperatūra</value>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Saņemta nenoteikta vērtība: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer jau ir inicializēts</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer laikus neizgāja.</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl atgrieza 0, pēdējā kļūda: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer laikus nesākās no jauna.</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Sistēmas ventilators</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Pašreizējā procesa faila nosaukums nevar būt null</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer vispirms jāinicializē [tips={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
   </data>
 </root>

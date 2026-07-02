@@ -15,6 +15,11 @@ public sealed class TrendSeries
     private int _count;
     private int _head;
 
+    // Cached rendering resources (invalidated when Color changes)
+    private Color _cachedColor;
+    private LinearGradientBrush? _cachedFill;
+    private Pen? _cachedLinePen;
+
     public TrendSeries(string key, int capacity)
     {
         Key = key;
@@ -24,7 +29,19 @@ public sealed class TrendSeries
     public string Key { get; }
 
     /// <summary>Stroke / fill color for this series.</summary>
-    public Color Color { get; set; }
+    public Color Color
+    {
+        get => _cachedColor;
+        set
+        {
+            if (_cachedColor == value && _cachedFill is not null)
+                return;
+
+            _cachedColor = value;
+            _cachedFill = null;
+            _cachedLinePen = null;
+        }
+    }
 
     /// <summary>
     /// Upper bound used to normalize this series into the 0..1 chart area. When null, the
@@ -72,6 +89,35 @@ public sealed class TrendSeries
             if (sample > max)
                 max = sample;
         return max;
+    }
+
+    public LinearGradientBrush GetOrCreateFill()
+    {
+        if (_cachedFill is not null)
+            return _cachedFill;
+
+        var fill = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(0, 1) };
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(0, _cachedColor.R, _cachedColor.G, _cachedColor.B), 1.0));
+        fill.Freeze();
+        _cachedFill = fill;
+        return fill;
+    }
+
+    public Pen GetOrCreateLinePen()
+    {
+        if (_cachedLinePen is not null)
+            return _cachedLinePen;
+
+        var pen = new Pen(new SolidColorBrush(_cachedColor), 2.0)
+        {
+            LineJoin = PenLineJoin.Round,
+            StartLineCap = PenLineCap.Round,
+            EndLineCap = PenLineCap.Round,
+        };
+        pen.Freeze();
+        _cachedLinePen = pen;
+        return pen;
     }
 }
 
@@ -169,13 +215,10 @@ public class TrendChartControl : FrameworkElement
         if (max <= 0)
             max = 1.0;
 
-        // Map samples across the full width using the buffer capacity so the line scrolls
-        // in from the right as data accumulates.
         var capacity = Math.Max(2, series.Capacity);
         var stepX = width / (capacity - 1);
         var startIndex = capacity - series.Count;
 
-        // Materialize the sample points once; both the smooth line and the area reuse them.
         var points = new List<Point>(series.Count);
         var i = 0;
         foreach (var sample in series.EnumerateOrdered())
@@ -197,7 +240,6 @@ public class TrendChartControl : FrameworkElement
             areaCtx.BeginFigure(new Point(points[0].X, height), true, true);
             areaCtx.LineTo(points[0], true, false);
 
-            // Catmull-Rom -> cubic Bezier smoothing for a polished, non-jagged trend line.
             for (var p = 0; p < points.Count - 1; p++)
             {
                 var p0 = points[Math.Max(0, p - 1)];
@@ -212,28 +254,13 @@ public class TrendChartControl : FrameworkElement
                 areaCtx.BezierTo(c1, c2, p2, true, false);
             }
 
-            // Close the area back down to the baseline so the fill is watertight.
             areaCtx.LineTo(new Point(points[^1].X, height), true, false);
         }
 
         lineGeometry.Freeze();
         areaGeometry.Freeze();
 
-        // Soft vertical fade beneath the line: series color at the top, transparent at the baseline.
-        var fill = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(0, 1) };
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, series.Color.R, series.Color.G, series.Color.B), 0.0));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(0, series.Color.R, series.Color.G, series.Color.B), 1.0));
-        fill.Freeze();
-
-        var linePen = new Pen(new SolidColorBrush(series.Color), 2.0)
-        {
-            LineJoin = PenLineJoin.Round,
-            StartLineCap = PenLineCap.Round,
-            EndLineCap = PenLineCap.Round,
-        };
-        linePen.Freeze();
-
-        dc.DrawGeometry(fill, null, areaGeometry);
-        dc.DrawGeometry(null, linePen, lineGeometry);
+        dc.DrawGeometry(series.GetOrCreateFill(), null, areaGeometry);
+        dc.DrawGeometry(null, series.GetOrCreateLinePen(), lineGeometry);
     }
 }

@@ -95,7 +95,17 @@ public partial class SettingsPage
     private async Task RefreshAsync()
     {
         // Initialize all controls first
-        _appearanceControl = new SettingsAppearanceControl();
+        try
+        {
+            _appearanceControl = new SettingsAppearanceControl();
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error("Failed to load appearance settings control.", ex);
+            _appearanceControl = null;
+            RemoveNavigationItem("Appearance");
+        }
+
         _applicationBehaviorControl = new SettingsApplicationBehaviorControl();
         _smartKeysControl = _supportsLenovoHardwareControls ? new SettingsSmartKeysControl() : null;
         _displayControl = _supportsLenovoHardwareControls ? new SettingsDisplayControl() : null;
@@ -112,12 +122,20 @@ public partial class SettingsPage
                 _displayControl.UpdateVisibilityBasedOnFnKeys(status);
         };
 
-        // Show first item immediately (Appearance control) - don't wait for loading
-        _contentControl.Content = _appearanceControl;
-        PlayTransitionAnimation();
-
-        // Priority load: refresh the first visible control (Appearance) immediately
-        await _appearanceControl.RefreshAsync();
+        // Show first available control immediately - don't wait for loading
+        if (_appearanceControl is not null)
+        {
+            _contentControl.Content = _appearanceControl;
+            PlayTransitionAnimation();
+            await _appearanceControl.RefreshAsync();
+        }
+        else
+        {
+            _contentControl.Content = _applicationBehaviorControl;
+            PlayTransitionAnimation();
+            SelectNavigationItem("Application");
+            await _applicationBehaviorControl.RefreshAsync();
+        }
 
         // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
         _ = RefreshRemainingControlsAsync();
@@ -201,6 +219,38 @@ public partial class SettingsPage
                     if (_integrationsControl != null)
                         await _integrationsControl.RefreshAsync();
                     break;
+            }
+        }
+    }
+
+    private void RemoveNavigationItem(string key)
+    {
+        if (_navigationListBox.ItemsSource is not IList<NavigationItem> items)
+            return;
+
+        for (var i = items.Count - 1; i >= 0; i--)
+        {
+            if (items[i].Key != key)
+                continue;
+
+            items.RemoveAt(i);
+            if (_navigationListBox.SelectedIndex >= items.Count)
+                _navigationListBox.SelectedIndex = Math.Max(0, items.Count - 1);
+            return;
+        }
+    }
+
+    private void SelectNavigationItem(string key)
+    {
+        if (_navigationListBox.ItemsSource is not IList<NavigationItem> items)
+            return;
+
+        for (var i = 0; i < items.Count; i++)
+        {
+            if (items[i].Key == key)
+            {
+                _navigationListBox.SelectedIndex = i;
+                return;
             }
         }
     }

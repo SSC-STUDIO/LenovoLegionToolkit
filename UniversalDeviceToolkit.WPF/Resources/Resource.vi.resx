@@ -1,51 +1,51 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
-              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:schema id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" ns1:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -335,7 +335,7 @@ Thời gian có thể không chính xác nếu laptop được sạc khi Ngủ h
     <value>Hủy</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>° C</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Đóng</value>
@@ -542,10 +542,10 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
     <value>Về các chế độ GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>° F</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>bộ xử lý trung tâm</value>
+    <value>CPU</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>Cảm biến CPU</value>
@@ -554,7 +554,7 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
     <value>Tốc độ quạt</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>cục bảo vệ chính trị quốc gia. xem ogpu</value>
+    <value>GPU</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU # 2</value>
@@ -601,7 +601,7 @@ Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên 
     <value>Độ dịch chuyển tối đa</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>KHÔNG THAY ĐỔI BẤT CỨ GIÁ TRỊ NÀO DƯỚI ĐÂY NẾU BẠN KHÔNG BIẾT CÔNG DỤNG CỦA CHÚNG!</value>
+    <value>Đừng thay đổi bất kỳ giá trị nào bên dưới nếu bạn không biết công dụng của chúng!</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
     <value>Nâng cao</value>
@@ -619,7 +619,7 @@ Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên 
     <value>Giới hạn nhiệt độ CPU</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>bộ xử lý trung tâm</value>
+    <value>CPU</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>Không thể áp dụng cài đặt</value>
@@ -654,7 +654,7 @@ THẬT CẨN THẬN KHI SỬ DỤNG LỰA CHỌN NÀY!!! KHÔNG NÊN SỬ DỤNG
     <value>Giới hạn nhiệt độ GPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>cục bảo vệ chính trị quốc gia. xem ogpu</value>
+    <value>GPU</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>Cài đặt Chế độ Tùy Chỉnh</value>
@@ -665,13 +665,13 @@ THẬT CẨN THẬN KHI SỬ DỤNG LỰA CHỌN NÀY!!! KHÔNG NÊN SỬ DỤNG
 CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>lò nung nóng trực tiếp</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Bật HDR (Dải tương phản động rộng) trên màn hình laptop.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>lò nung nóng trực tiếp</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>HDR không thể bật do cài đặt trong Windows.</value>
@@ -752,10 +752,10 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
     <value>Bản cập nhật {0} đã có sẵn!</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Di chuyển lên</value>
+    <value>Di chuyển xuống</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Di chuyển xuống</value>
+    <value>Di chuyển lên</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Không</value>
@@ -1752,7 +1752,7 @@ CẢNH BÁO: Hành động này có thể chạy không đúng nếu GPU rời k
     <value>Tối đa: {0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>bộ xử lý trung tâm</value>
+    <value>CPU</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
     <value>Mức sử dụng</value>
@@ -1767,7 +1767,7 @@ CẢNH BÁO: Hành động này có thể chạy không đúng nếu GPU rời k
     <value>Quạt</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>cục bảo vệ chính trị quốc gia. xem ogpu</value>
+    <value>GPU</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Đồng hồ bộ nhớ</value>
@@ -1952,7 +1952,7 @@ Các định dạng hỗ trợ: {1}.</value>
     <value>Bỏ trống cho bất kì mạng Wi-Fi nào.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>CTNHFFO64</value>
+    <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
     <value>Dùng chung dữ liệu tốc độ quạt, nhiệt độ pin,... với HWiNFO64. Bạn có thể cần phải khởi động lại HWiNFO64 sau khi thay đổi tùy chọn này.</value>
@@ -2897,7 +2897,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Dọn dẹp registry</value>
   </data>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>L?nh DISM</value>
+    <value>Lệnh DISM</value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>Thời gian sử dụng</value>
@@ -2975,13 +2975,13 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Sử dụng chức năng dọn dẹp registry tích hợp sẵn của Windows</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (X?a b? nh? ??m DNS)</value>
+    <value>ipconfig /flushdns (Xóa bộ nhớ đệm DNS)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (??t l?i ng?n x?p giao th?c Winsock)</value>
+    <value>netsh winsock reset (Đặt lại ngăn xếp giao thức Winsock)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (??t l?i ng?n x?p giao th?c TCP/IP)</value>
+    <value>netsh int ip reset (Đặt lại ngăn xếp giao thức TCP/IP)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>Tiện ích mở rộng Plugin</value>
@@ -2993,7 +2993,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>?? c?i ??t</value>
+    <value>Đã cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Không thể gỡ cài đặt</value>
@@ -3038,10 +3038,10 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Tất cả</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>?? c?i ??t</value>
+    <value>Đã cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Ch?a c?i ??t</value>
+    <value>Chưa cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Không có plugin nào có sẵn</value>
@@ -3341,16 +3341,16 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Vui lòng chọn ít nhất một mục để dọn dẹp.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Buộc dùng kết xuất phần mềm</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Sử dụng kết xuất phần mềm khi phát hiện máy tính từ xa hoặc màn hình không đầu. Nên khởi động lại.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>Trình cài đặt đã thoát với mã {0}</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>Đang chờ</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
@@ -3368,85 +3368,85 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Update</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Đang kiểm tra khả dụng của plugin...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>Có thể cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>{0} plugin bổ sung có sẵn trong nguồn cấp hiện tại.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>Đã cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
     <value>Store Pulse</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Tổng số plugin</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Tất cả các plugin được phát hiện hiện đã được cập nhật.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Đã cập nhật</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Có bản cập nhật</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Sẵn sàng cập nhật</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} bản cập nhật plugin đã sẵn sàng để cài đặt.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>Đang chờ tải thông tin plugin...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Đang tải thông tin</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>Tùy chỉnh ngôn ngữ, đơn vị nhiệt độ, chủ đề và màu nhấn.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Giao diện</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Ứng dụng</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit đã được khởi động với {0}. Việc kiểm tra cập nhật tự động và thủ công, cùng các cài đặt cập nhật bên dưới, sẽ bị tắt cho đến khi bạn khởi động lại mà không có đối số khởi động đó.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>Đã tắt kiểm tra cập nhật cho phiên này</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>Kiểm tra nguồn đã chọn và kết nối mạng, sau đó quét lại.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>Quét trình điều khiển chưa hoàn tất</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>Điều chỉnh bộ lọc, tùy chọn chỉ cập nhật hoặc danh sách tải xuống bị ẩn.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Không tìm thấy bản tải xuống phù hợp</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>Thử nguồn khác, hệ điều hành khác hoặc loại máy khác.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>Không tìm thấy bản tải xuống trình điều khiển nào</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>Chọn một nguồn và quét để liệt kê các bản tải xuống trình điều khiển tương thích.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Quét các gói trình điều khiển</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>Không thể áp dụng {0}: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Đóng</value>
@@ -3543,5 +3543,348 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
+  </data>
+
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>Gói thiết bị: Chế độ cơ bản</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>Thiết bị này sẽ khởi động ở chế độ cơ bản. Các điều khiển dành riêng cho phần cứng sẽ bị ẩn cho đến khi có gói thiết bị tương thích.</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>Gói thiết bị: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit đã phát hiện một gói thiết bị phù hợp. Hãy xác nhận ngay để ứng dụng có thể chuẩn bị các tính năng dành riêng cho phần cứng.</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>Đang chuẩn bị thiết lập thiết bị...</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>Xác nhận lựa chọn</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>Chọn các tệp bạn muốn xóa. Chỉ các tệp khớp với bộ lọc được hiển thị.</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>100 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>10 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>1 GB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>1 TB</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>Tùy chỉnh...</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>Lọc các tệp lớn hơn:</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>Tên tệp</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>Đường dẫn</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>Chọn</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>Kích thước</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>Đã chọn: {0} tệp ({1})</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>Phân tích tệp lớn</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>Quạt</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>Nhiệt độ ổ đĩa 1</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>Nhiệt độ ổ đĩa 2</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>Xung E-Core</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>Thời gian khung hình</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>Trò chơi</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>Quạt</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>Nhiệt độ</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>Sử dụng</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>Quạt PCH</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>Xung P-Core</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>Thanh</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>Bảng</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>Hiển thị hoặc ẩn OSD</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>Màu nền</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>Màu danh mục</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>Bán kính góc</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>Dưới</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>Trên</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>Màu nguy hiểm</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>Cỡ chữ</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>Màu nhãn</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>Độ mờ</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>Màu giá trị</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>Màu cảnh báo</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>Khóa vị trí</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>Kiểu lớp phủ</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>Khoảng thời gian làm mới</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>Khoảng thời gian làm mới cảm biến</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>Đặt lại vị trí</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>Ngưỡng căn chỉnh</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>Giao diện</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>Chung</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>Cảm biến</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>Ngưỡng</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>Nguy hiểm</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>Giới hạn FPS</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>Tốc độ khung hình tối thiểu có thể chấp nhận. Dưới mức này, màu chuyển sang nguy hiểm.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>Delta FPS thấp</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>Chênh lệch tối đa giữa FPS trung bình và 1% thấp. Trên mức này, bộ đếm chuyển sang nguy hiểm.</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>Hiệu năng</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>Nhiệt độ</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>Sử dụng</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>Cài đặt OSD</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>Plugin {0} đã được cài đặt, nhưng không cung cấp điểm truy cập cho người dùng. Có thể chỉ cung cấp dịch vụ nền hoặc dữ liệu manifest.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>Đã cài đặt, nhưng không có điểm truy cập</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>Plugin {0} đã được cài đặt, nhưng không thể tải giao diện runtime. Khởi động lại ứng dụng hoặc cài đặt lại plugin.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>Đang chờ cài đặt (plugin khác đang tải xuống)...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>Plugin {0} đã được cài đặt và mở trong Tối ưu hóa hệ thống.</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>Plugin {0} đã được cài đặt. Sử dụng Mở để khởi chạy điểm truy cập có sẵn.</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>Nhiệt độ PCH</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>Công suất</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>Lõi</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>Bộ nhớ</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>Nền tảng</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>Xung E-Core</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>Công suất</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>Nhiệt độ lõi</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>Hot Spot GPU</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>Nhiệt độ VRAM</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>Thông lượng PCIe</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>Sử dụng VRAM</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>Đang tải...</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>Nhiệt độ bộ nhớ</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>Sử dụng bộ nhớ</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>Nhiệt độ bo mạch chủ</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>Bo mạch chủ</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>Không khả dụng</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>Xung P-Core</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>Sử dụng bộ nhớ chia sẻ</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>Nhiệt độ SSD</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>Pin không xác định</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>CPU không xác định</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>GPU không xác định</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>Nhiệt độ VRAM</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>Sử dụng VRAM</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>Bật thăm dò phần cứng nâng cao để giám sát nhiệt độ, tần số và giới hạn công suất chi tiết.</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>Bạn cần cài đặt PawnIO trước để sử dụng cảm biến phần cứng!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>Cảm biến phần cứng</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>Không thể tải xuống gói ngôn ngữ. Kiểm tra kết nối mạng, proxy hoặc cài đặt TLS, sau đó thử lại.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Hiển thị</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Phím thông minh</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>Lớp phủ nổi hiển thị dữ liệu cảm biến theo thời gian thực.</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>Bật OSD</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>W</value>
   </data>
 </root>

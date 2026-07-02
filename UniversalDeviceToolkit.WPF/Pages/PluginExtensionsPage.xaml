@@ -14,6 +14,7 @@
         <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <utils:BooleanAndConverter x:Key="BooleanAndConverter" />
         <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter" />
+        <utils:PercentageToScaleConverter x:Key="PercentageToScaleConverter" />
 
         <Style x:Key="PluginListItemContainerStyle" TargetType="ListBoxItem">
             <Setter Property="AutomationProperties.AutomationId" Value="{Binding PluginId, StringFormat=PluginCard_{0}}" />
@@ -21,10 +22,11 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,0,0,2" />
+            <Setter Property="Margin" Value="0,0,0,4" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
@@ -35,17 +37,16 @@
         </Style>
 
         <Style x:Key="PluginCardBorderStyle" TargetType="Border">
-            <Setter Property="MinHeight" Value="104" />
+            <Setter Property="MinHeight" Value="84" />
             <Setter Property="Padding" Value="14" />
             <Setter Property="Margin" Value="0,0,0,6" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -58,12 +59,12 @@
         </Style>
 
         <Style x:Key="PluginIconStyle" TargetType="Border">
-            <Setter Property="Width" Value="48" />
-            <Setter Property="Height" Value="48" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Margin" Value="0,0,14,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,12,0" />
         </Style>
 
         <Style x:Key="InlineMetricStyle" TargetType="StackPanel">
@@ -73,64 +74,68 @@
         </Style>
 
         <Style x:Key="MetadataBadgeStyle" TargetType="Border">
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
             <Setter Property="Padding" Value="9,4" />
             <Setter Property="Margin" Value="0,0,6,6" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         </Style>
 
+        <Style x:Key="PluginCardSecondaryLineStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,4,0,0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+
         <Style x:Key="SkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
         </Style>
 
         <Style x:Key="DetailActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonCompact}">
-            <Setter Property="MinWidth" Value="108" />
+            <Setter Property="Width" Value="34" />
+            <Setter Property="MinWidth" Value="34" />
             <Setter Property="Height" Value="32" />
-            <Setter Property="Padding" Value="12,0" />
-            <Setter Property="Margin" Value="0,0,0,6" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Appearance" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="Appearance" Value="Secondary" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
         <Style x:Key="PluginStatusBadgeStyle" TargetType="Border">
             <Setter Property="Margin" Value="8,0,0,0" />
-            <Setter Property="Padding" Value="8,3" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="7,2" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style x:Key="DetailPrimaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
-            <Setter Property="Appearance" Value="Primary" />
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorBrush}" />
         </Style>
 
-        <Style x:Key="DetailSecondaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
-            <Setter Property="Appearance" Value="Transparent" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
-        </Style>
+        <Style x:Key="DetailSecondaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}" />
 
         <Style x:Key="DetailDangerActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
-            <Setter Property="Appearance" Value="Transparent" />
-            <Setter Property="Background" Value="{DynamicResource StatusCriticalBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource StatusCriticalBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
+        </Style>
+
+        <Style x:Key="PluginInstallProgressRingStyle" TargetType="wpfui:ProgressRing" BasedOn="{StaticResource AppLoadingRingCompactStyle}">
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="IsIndeterminate" Value="True" />
         </Style>
     </Page.Resources>
 
-    <Grid Margin="0,0,12,10" Style="{StaticResource AppPageEntranceAnimationStyle}">
+    <Grid Margin="0,0,12,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -156,7 +161,7 @@
         <Border Grid.Row="1"
                 Margin="0,0,0,8"
                 Padding="12,6"
-                CornerRadius="8"
+                CornerRadius="{StaticResource CornerRadiusCard}"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
@@ -317,8 +322,8 @@
                          ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource PluginCardBorderStyle}"
-                                    AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}">
+                            <Border AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}"
+                                    Style="{StaticResource PluginCardBorderStyle}">
                                 <Border.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="{x:Static resources:Resource.PluginExtensionsPage_OpenFolder}" Click="ContextMenu_OpenFolder_Click" Tag="{Binding PluginId}">
@@ -340,7 +345,13 @@
                                     </ContextMenu>
                                 </Border.ContextMenu>
 
-                                <Grid>
+                                <Grid ClipToBounds="True">
+                                    <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -348,16 +359,12 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Border Grid.Column="0"
-                                                Style="{StaticResource PluginIconStyle}"
-                                                Background="{Binding IconBackground}">
+                                    <Border Grid.Column="0"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource PluginIconStyle}"
+                                            Background="{Binding IconBackground}">
                                             <Grid>
                                                 <TextBlock Text="{Binding IconLetter}"
                                                            FontSize="16"
@@ -370,7 +377,7 @@
                                                         VerticalAlignment="Bottom"
                                                         Width="16"
                                                         Height="16"
-                                                        CornerRadius="8"
+                                                        CornerRadius="{StaticResource CornerRadiusCard}"
                                                         Margin="0,0,1,1"
                                                         BorderBrush="{DynamicResource ControlFillColorDefaultBrush}"
                                                         BorderThickness="2"
@@ -382,7 +389,10 @@
                                             </Grid>
                                         </Border>
 
-                                        <StackPanel Grid.Column="1" Margin="0,0,16,0" VerticalAlignment="Top">
+                                        <StackPanel Grid.Column="1"
+                                                    Grid.Row="0"
+                                                    Margin="0,0,12,0"
+                                                    VerticalAlignment="Center">
                                             <WrapPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name}"
                                                            FontSize="15"
@@ -392,14 +402,14 @@
                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 <TextBlock Text="{Binding Version}"
                                                            Margin="8,1,0,0"
-                                                           FontSize="13"
+                                                           FontSize="12"
                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding ShouldShowStatusBadge, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding StatusText}"
                                                                FontSize="11"
                                                                FontWeight="SemiBold"
-                                                               Foreground="{DynamicResource SystemAccentColorBrush}" />
+                                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -409,27 +419,20 @@
                                                 </Border>
                                             </WrapPanel>
 
-                                            <TextBlock Text="{Binding CapabilitySummary}"
-                                                       Margin="0,5,0,0"
-                                                       FontSize="12"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                                            <TextBlock Text="{Binding Description}"
-                                                       Margin="0,8,0,0"
-                                                       TextWrapping="Wrap"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       MaxHeight="54"
-                                                       ToolTip="{Binding Description}"
-                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            <TextBlock Text="{Binding SecondaryLineText}"
+                                                       Style="{StaticResource PluginCardSecondaryLineStyle}" />
                                         </StackPanel>
 
-                                        <StackPanel Grid.Column="2"
-                                                    Width="124"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Top">
+                                    <StackPanel Grid.Column="2"
+                                                Grid.Row="0"
+                                                Grid.RowSpan="4"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Margin="8,0,0,0">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             <wpfui:Button x:Name="PluginUpdateButton"
-                                                           Content="{Binding InstallButtonText}"
                                                            AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
                                                            Style="{StaticResource DetailPrimaryActionButtonStyle}"
                                                            Click="PluginInstallButton_Click"
@@ -437,59 +440,74 @@
                                                            ToolTip="{Binding InstallButtonText}"
                                                            Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <wpfui:Button.Icon>
-                                                    <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                                                    <wpfui:SymbolIcon Symbol="ArrowDownload24"
+                                                                      Foreground="{DynamicResource SystemAccentColorBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button Content="{Binding ConfigureButtonText}"
-                                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                                          ToolTip="{Binding ConfigureButtonText}">
+                                                          ToolTip="{Binding ConfigureButtonText}"
+                                                          Visibility="{Binding ShouldShowConfigureButton, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                          Click="PluginConfigureButton_Click"
+                                                          Tag="{Binding PluginId}">
                                                 <wpfui:Button.Icon>
-                                                    <wpfui:SymbolIcon Symbol="Settings24" />
+                                                    <wpfui:SymbolIcon Symbol="Settings24"
+                                                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 </wpfui:Button.Icon>
-                                                <wpfui:Button.Visibility>
-                                                    <Binding Path="ShouldShowConfigureButton" Converter="{StaticResource BooleanToVisibilityConverter}" />
-                                                </wpfui:Button.Visibility>
-                                                <wpfui:Button.Click>PluginConfigureButton_Click</wpfui:Button.Click>
-                                                <wpfui:Button.Tag>
-                                                    <Binding Path="PluginId" />
-                                                </wpfui:Button.Tag>
                                             </wpfui:Button>
 
-                                            <wpfui:Button Content="{Binding OpenButtonText}"
-                                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
                                                           Click="PluginOpenButton_Click"
                                                           Tag="{Binding PluginId}"
                                                           ToolTip="{Binding OpenButtonText}">
-                                                <wpfui:Button.Icon>
-                                                    <wpfui:SymbolIcon Symbol="Open24" />
-                                                </wpfui:Button.Icon>
                                                 <wpfui:Button.Visibility>
                                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
                                                         <Binding Path="ShouldShowInstalledActions" />
                                                         <Binding Path="SupportsOpenAction" />
                                                     </MultiBinding>
                                                 </wpfui:Button.Visibility>
+                                                <wpfui:Button.Icon>
+                                                    <wpfui:SymbolIcon Symbol="Open24"
+                                                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button Content="{Binding UninstallButtonText}"
-                                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
                                                           Style="{StaticResource DetailDangerActionButtonStyle}"
                                                           Visibility="{Binding ShouldShowInstalledActions, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginUninstallButton_Click"
                                                           Tag="{Binding PluginId}"
                                                           ToolTip="{Binding UninstallButtonText}">
                                                 <wpfui:Button.Icon>
-                                                    <wpfui:SymbolIcon Symbol="Delete24" />
+                                                    <wpfui:SymbolIcon Symbol="Delete24"
+                                                                      Foreground="{DynamicResource StatusCriticalTextBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
                                         </StackPanel>
-                                    </Grid>
 
-                                    <Grid Grid.Row="1"
-                                          Margin="62,10,0,0">
+                                        <wpfui:ProgressRing Style="{StaticResource PluginInstallProgressRingStyle}"
+                                                            IsIndeterminate="{Binding IsInstallProgressIndeterminate}"
+                                                            Progress="{Binding InstallProgress}"
+                                                            Visibility="{Binding IsInstalling, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="1"
+                                               Margin="0,6,12,0"
+                                               FontSize="12"
+                                               Text="{Binding Description}"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               MaxHeight="54"
+                                               ToolTip="{Binding Description}"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                               Visibility="{Binding ShouldShowCardDescription, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                    <Grid Grid.Row="2"
+                                          Grid.Column="1"
+                                          Margin="0,8,0,0">
                                         <wpfui:Button
                                             Padding="9,0"
                                             Height="28"
@@ -513,11 +531,13 @@
                                         </wpfui:Button>
                                     </Grid>
 
-                                    <StackPanel Grid.Row="2"
-                                                Margin="62,8,0,0"
+                                    <StackPanel Grid.Row="3"
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="2"
+                                                Margin="0,8,0,0"
                                                 Visibility="{Binding ShowExpandedDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Border Padding="12"
-                                                CornerRadius="6"
+                                                CornerRadius="{StaticResource CornerRadiusMD}"
                                                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                                                 BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                                                 BorderThickness="1">
@@ -568,19 +588,19 @@
                                             </StackPanel>
                                         </Border>
                                     </StackPanel>
+                                    </Grid>
 
-                                    <StackPanel Grid.Row="3"
-                                                Margin="62,10,0,0"
-                                                Visibility="{Binding IsInstalling, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="{Binding InstallStatusText}"
-                                                   FontSize="12"
-                                                   Foreground="{DynamicResource SystemAccentColorBrush}"
-                                                   Margin="0,0,0,6" />
-                                        <ProgressBar Value="{Binding InstallProgress}"
-                                                     Height="5"
-                                                     Maximum="100"
-                                                     Minimum="0" />
-                                    </StackPanel>
+                                    <Border Height="2"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Stretch"
+                                            Background="{DynamicResource SystemAccentColorBrush}"
+                                            Opacity="0.85"
+                                            RenderTransformOrigin="0,0.5"
+                                            Visibility="{Binding ShouldShowDeterminateInstallFill, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Border.RenderTransform>
+                                            <ScaleTransform ScaleX="{Binding InstallProgress, Converter={StaticResource PercentageToScaleConverter}}" ScaleY="1" />
+                                        </Border.RenderTransform>
+                                    </Border>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -607,7 +627,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="220" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="128" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
@@ -622,7 +642,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="194" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="116" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
@@ -637,7 +657,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="172" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="98" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />

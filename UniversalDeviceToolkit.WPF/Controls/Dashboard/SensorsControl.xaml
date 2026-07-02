@@ -63,14 +63,96 @@
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="ClipToBounds" Value="True" />
         </Style>
+
+        <Style x:Key="SkeletonTitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Width" Value="96" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,4,0,14" />
+        </Style>
+        <Style x:Key="SkeletonSubtitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="120" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,1,0,0" />
+        </Style>
+        <Style x:Key="SkeletonGaugeStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Height" Value="80" />
+            <Setter Property="CornerRadius" Value="40" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonLabelBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="60" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonBarBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
+        <Style x:Key="SkeletonValueBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="48" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonTrendPanelStyle" TargetType="Border" BasedOn="{StaticResource TrendPanelStyle}">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style x:Key="SkeletonTrendBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style x:Key="SkeletonLegendDotStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonLegendTextStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Width" Value="56" />
+            <Setter Property="Margin" Value="4,0,14,0" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
     </UserControl.Resources>
 
     <!-- PLACEHOLDER_BODY -->
-    <wpfui:CardControl
-        AutomationProperties.AutomationId="DashboardSensorsCard"
-        Background="{DynamicResource AppSurfaceCardBrush}"
-        Focusable="False"
-        PreviewMouseLeftButtonDown="CardControl_PreviewMouseLeftButtonDown">
+    <Grid>
+        <Grid.Resources>
+            <Storyboard x:Key="SkeletonFadeOutStoryboard">
+                <DoubleAnimation
+                    Storyboard.TargetName="_skeletonOverlay"
+                    Storyboard.TargetProperty="Opacity"
+                    From="1"
+                    To="0"
+                    Duration="0:0:0.45"
+                    EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                <ObjectAnimationUsingKeyFrames
+                    Storyboard.TargetName="_skeletonOverlay"
+                    Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.45" Value="{x:Static Visibility.Collapsed}" />
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </Grid.Resources>
+        <wpfui:CardControl
+            x:Name="_sensorsCard"
+            AutomationProperties.AutomationId="DashboardSensorsCard"
+            Background="{DynamicResource AppSurfaceCardBrush}"
+            Focusable="False"
+            PreviewMouseLeftButtonDown="CardControl_PreviewMouseLeftButtonDown">
         <wpfui:CardControl.Header>
             <UniformGrid x:Name="_sensorsGrid" Margin="8,10" Columns="3">
                 <!-- PLACEHOLDER_CPU -->
@@ -474,4 +556,161 @@
             </UniformGrid>
         </wpfui:CardControl.Header>
     </wpfui:CardControl>
+
+        <Grid
+            x:Name="_skeletonOverlay"
+            AutomationProperties.AutomationId="DashboardSensorsSkeleton"
+            Background="{DynamicResource AppSurfaceCardBrush}"
+            IsHitTestVisible="False">
+            <UniformGrid x:Name="_skeletonGrid" Margin="8,10" Columns="3">
+                <StackPanel x:Name="_skeletonCpuSection" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
+                        <Border x:Name="_skeletonCpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="_skeletonCpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonCpuTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
+                        <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonCpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    </WrapPanel>
+                </StackPanel>
+                <StackPanel x:Name="_skeletonBatterySection" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
+                        <Border x:Name="_skeletonBatterySubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="_skeletonBatteryGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonBatteryTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
+                        <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonBatteryLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    </WrapPanel>
+                </StackPanel>
+                <StackPanel x:Name="_skeletonGpuSection" Style="{StaticResource SensorSectionStyle}">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
+                        <Border x:Name="_skeletonGpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="_skeletonGpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonGpuTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
+                        <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonGpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    </WrapPanel>
+                </StackPanel>
+            </UniformGrid>
+        </Grid>
+    </Grid>
 </UserControl>

@@ -9,7 +9,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <wpfui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
             <custom:CardControl Margin="0,0,0,8">
                 <custom:CardControl.Header>
@@ -44,5 +44,5 @@
                     Click="CLIPathToggle_Click" />
             </custom:CardControl>
         </StackPanel>
-    </ScrollViewer>
+    </wpfui:DynamicScrollViewer>
 </UserControl>

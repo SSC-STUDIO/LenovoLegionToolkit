@@ -213,7 +213,7 @@ public class UpdateCheckerTests : TemporaryFileTestBase
 
     private static async Task InvokeValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient)
     {
-        var task = (Task)ValidateUpdatePackageAsyncMethod.Invoke(null, [filePath, update, httpClient, CancellationToken.None])!;
+        var task = (Task)ValidateUpdatePackageAsyncMethod.Invoke(null, [filePath, update, httpClient, CancellationToken.None, true])!;
         await task;
     }
 

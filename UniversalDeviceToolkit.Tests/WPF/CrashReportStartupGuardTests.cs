@@ -10,26 +10,26 @@ public sealed class CrashReportStartupGuardTests
     [Fact]
     public void Startup_ShouldShowPendingCrashReportsAfterMainWindow()
     {
-        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "App.xaml.cs");
-        var startupStart = source.IndexOf("private async void Application_Startup", System.StringComparison.Ordinal);
-        var startupEnd = source.IndexOf("private static async Task InitializePluginsAsync", System.StringComparison.Ordinal);
-        startupStart.Should().BeGreaterThanOrEqualTo(0);
-        startupEnd.Should().BeGreaterThan(startupStart);
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Startup", "StartupOrchestrator.cs");
+        var methodStart = source.IndexOf("private Task ShowMainWindowAsync()", System.StringComparison.Ordinal);
+        var methodEnd = source.IndexOf("private Task InitializeOsdAsync()", System.StringComparison.Ordinal);
+        methodStart.Should().BeGreaterThanOrEqualTo(0);
+        methodEnd.Should().BeGreaterThan(methodStart);
 
-        var startup = source[startupStart..startupEnd];
-        startup.Should().Contain("mainWindow.Show();");
-        startup.Should().Contain("Dispatcher.BeginInvoke(CheckPendingCrashReports, DispatcherPriority.Background);");
-        startup.IndexOf("mainWindow.Show();", System.StringComparison.Ordinal)
+        var method = source[methodStart..methodEnd];
+        method.Should().Contain("Show();");
+        method.Should().Contain("Dispatcher.BeginInvoke(App.CheckPendingCrashReports, DispatcherPriority.Background);");
+        method.IndexOf("Show();", System.StringComparison.Ordinal)
             .Should()
-            .BeLessThan(startup.IndexOf("Dispatcher.BeginInvoke(CheckPendingCrashReports, DispatcherPriority.Background);", System.StringComparison.Ordinal));
+            .BeLessThan(method.IndexOf("Dispatcher.BeginInvoke(App.CheckPendingCrashReports, DispatcherPriority.Background);", System.StringComparison.Ordinal));
     }
 
     [Fact]
     public void PendingCrashReportNotification_ShouldNotBlockOrStayTopmost()
     {
         var appSource = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "App.xaml.cs");
-        var checkMethodStart = appSource.IndexOf("private static void CheckPendingCrashReports()", System.StringComparison.Ordinal);
-        var nextMethodStart = appSource.IndexOf("private void StartBackgroundInitialization()", System.StringComparison.Ordinal);
+        var checkMethodStart = appSource.IndexOf("static void CheckPendingCrashReports()", System.StringComparison.Ordinal);
+        var nextMethodStart = appSource.IndexOf("void StartBackgroundInitialization()", System.StringComparison.Ordinal);
         checkMethodStart.Should().BeGreaterThanOrEqualTo(0);
         nextMethodStart.Should().BeGreaterThan(checkMethodStart);
 

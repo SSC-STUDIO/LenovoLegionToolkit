@@ -1,0 +1,3889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>निर्माण</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>GitHub मा नवीनतम रिलिज</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>लिङ्कहरू</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>GitHub मा परियोजनाको वेबसाइट</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>तेस्रो-पक्ष लाइब्रेरीहरू</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>बारेमा</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>समुदायद्वारा प्रदान गरिएका अनुवादहरू।</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>संस्करण</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>थप्नुहोस्</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>नयाँ थप्नुहोस्</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>ल्यापटप बन्द, स्लिपिङ वा हाइबरनेट भएको बेला USB उपकरणहरू चार्ज गर्नुहोस्।</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>सधैं चालू USB</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>ल्यापटप बन्द, स्लिपिङ वा हाइबरनेट भएको बेला USB उपकरणहरू चार्ज गर्नुहोस्।</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>सधैं चालू USB</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Universal Device Toolkit</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>लागू गर्नुहोस्</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>लागू गर्नुहोस् र बन्द गर्नुहोस्</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>स्वचालित कार्यहरू काम गर्न Universal Device Toolkit चालू हुनुपर्छ।</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>सक्षम गर्नुहोस्</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>कुनै कार्य परिभाषित गरिएको छैन। नयाँ कार्य सिर्जना गर्न "नयाँ थप्नुहोस्" मा क्लिक गर्नुहोस्।</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>यदि सक्षम गरिएको छ भने, यी कार्यहरू स्वचालित रूपमा चल्नेछन्। जब पनि अवस्था परिवर्तन हुन्छ, सबै कार्यहरू माथिबाट तल मूल्याङ्कन गरिनेछन्।
+हालको अवस्थासँग मिल्ने कार्यहरू मात्र चल्नेछन्।</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>कार्यहरू</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>नाम...</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>नयाँ थप्नुहोस्</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>कुनै द्रुत कार्य परिभाषित गरिएको छैन। नयाँ द्रुत कार्य सिर्जना गर्न "नयाँ थप्नुहोस्" मा क्लिक गर्नुहोस्।</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>द्रुत कार्यहरू ट्रे आइकनको दायाँ क्लिक मेनुमा उपलब्ध छन्।</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>द्रुत कार्यहरू</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>नाम...</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>नाम परिवर्तन गर्नुहोस्</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>सबै परिवर्तनहरू पूर्ववत गरियो!</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>फर्कियो</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>परिवर्तनहरू सफलतापूर्वक सुरक्षित गरियो!</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>सुरक्षित गरियो</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>स्वचालन</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>चरण थप्नुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>कन्फिगर गर्नुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>विशेष</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>यो कार्य चल्दा अन्य कार्यहरू कार्यान्वयन नगर्नुहोस्।</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>अहिले चलाउनुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>त्रुटिहरूसहित सम्पन्न भयो।</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>अहिले चलाउनुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>सफलतापूर्वक सम्पन्न भयो!</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>अहिले चलाउनुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>चल्दै...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>{0} चरण</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>{0} चरणहरू</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>अनुप्रयोगहरू</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>सूर्योदयमा</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>सूर्यास्तमा</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>{0:D2}:{1:D2} बजे</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>पावर मोड</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>नाम नभएको</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>निश्चित गेमहरू चलिरहेको स्वचालित रूपमा पत्ता लगाउँछ र CPU र GPU कार्यसम्पादन मिलाउँछ। तापक्रम र फ्यानको आवाज बढ्न सक्छ।</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>AI इन्जिन सक्षम गर्नुहोस्</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>सन्तुलन मोड सेटिङ्स</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>ब्याट्री कसरी चार्ज गर्ने छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>ब्याट्री मोड</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>ब्याट्री कसरी चार्ज गर्ने छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>ब्याट्री मोड</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>जडित, चार्ज हुँदै...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>जडित, चार्ज हुँदैन</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>ब्याट्रीको हालको तापक्रम।</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>ब्याट्रीको तापक्रम</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>ब्याट्रीको हालको क्षमता।</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>हालको क्षमता</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>चार्ज/डिस्चार्ज चक्रहरूको संख्या।</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>चक्र गणना</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>डिजाइन अनुसारको ब्याट्री क्षमता।</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>डिजाइन क्षमता</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>ब्याट्री चार्ज (+) वा डिस्चार्ज (-) हुने दर।</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>डिस्चार्ज दर</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>ब्याट्री न्यूनतम चार्ज (+) वा डिस्चार्ज (-) दर।</value>
+  </data>
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>न्यूनतम डिस्चार्ज दर</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>ब्याट्री अधिकतम चार्ज (+) वा डिस्चार्ज (-) दर।</value>
+  </data>
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>अधिकतम डिस्चार्ज दर</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>अनुमानित बाँकी समय: {0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>समय अनुमान गर्दै...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>पहिलो प्रयोग मिति</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>ब्याट्री पहिलो पटक कहिले प्रयोग गरिएको थियो।</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>पूर्ण चार्ज हुँदा ब्याट्रीको क्षमता।</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>पूर्ण चार्ज क्षमता</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>ब्याट्रीको अधिकतम चार्ज क्षमता।</value>
+  </data>
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>ब्याट्री स्वास्थ्य</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>कम वाटको चार्जर जडित</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>ब्याट्री कहिले निर्माण गरिएको थियो।</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>निर्माण मिति</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>ल्यापटप पछिल्लो पटक AC पावरमा जडित भएदेखिको समय।
+स्लिपिङ वा बन्द अवस्थामा ल्यापटप चार्ज भएमा यो समय सही नहुन सक्छ।</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>ब्याट्रीमा रहेको</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>ब्याट्री</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>रद्द गर्नुहोस्</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>बन्द गर्नुहोस्</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>नीलो</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>हरियो</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>रातो</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>तपाईंको कम्प्युटरको प्रयोग र पावर अवस्थाका आधारमा GPU सञ्चालन मोड छनोट गर्नुहोस्।
+मोड परिवर्तन गर्न रिस्टार्ट आवश्यक हुन सक्छ।</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>{0} मा परिवर्तन गर्न रिस्टार्ट आवश्यक छ। के तपाईं अहिले रिस्टार्ट गर्न चाहनुहुन्छ?</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>रिस्टार्ट आवश्यक</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>GPU कार्य मोड</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>द्रुत कार्यहरू</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>जारी राख्नुहोस्</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>सबै प्रतिलिपि गर्नुहोस्</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>ग्राफिक्स</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>अन्य</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>पावर</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>गृहपृष्ठ</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>यदि आवश्यक नभएमा विच्छेदनशील GPU असक्षम गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ वा हाइब्रिड मोड सक्रिय छैन भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU निष्क्रिय गर्नुहोस्</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>अर्को चरण चलाउनु अघि विलम्ब थप्नुहोस्।</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>ढिलाइ</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>मेटाउनुहोस्</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS संस्करण</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>पाठ क्लिपबोर्डमा प्रतिलिपि गरियो।</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" क्लिपबोर्डमा प्रतिलिपि गरियो।</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>प्रतिलिपि भयो!</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>उपकरण</value>
+  </data>
+  <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve">
+    <value>हार्डवेयर</value>
+  </data>
+  <data name="DeviceInformationWindow_BaseBoard_Title" xml:space="preserve">
+    <value>मदरबोर्ड</value>
+  </data>
+  <data name="DeviceInformationWindow_Chassis_Title" xml:space="preserve">
+    <value>च्यासिस</value>
+  </data>
+  <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
+    <value>मेमोरी</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>Lenovo समर्थन</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>मेसिन प्रकार</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>निर्माता</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>मोडेल</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>सिरियल नम्बर</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>तपाईंको उपकरणको बारेमा</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>अन्त्य मिति</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>सुरु मिति</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>वारेन्टी</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>सक्रिय</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>निष्क्रिय गर्नुहोस्</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>निष्क्रिय</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>अनुप्रयोगहरू बन्द गर्नुहोस्</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>यदि आवश्यक नभएमा, विच्छेद GPU अक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>nVidia GPU मा मनिटर जडित छ।</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>कुनै प्रक्रिया छैन</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>कार्यसम्पादन अवस्था</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>अज्ञात</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>प्रक्रियाहरू</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>GPU पुनः सुरु गर्नुहोस्</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>विच्छेदनशील GPU</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको चमक परिवर्तन गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>डिस्प्ले चमक</value>
+  </data>
+
+  <data name="Edit" xml:space="preserve">
+    <value>सम्पादन गर्नुहोस्</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>Fn+R सर्टकट प्रयोग गर्दा तपाईं प्रयोग गर्न नचाहनुहुने रिफ्रेस दरहरू अनचेक गर्नुहोस्।</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>ल्यापटप डिस्प्ले चालू छ भनी सुनिश्चित गर्नुहोस्। Universal Device Toolkit ले चालू नभएको डिस्प्लेको लागि रिफ्रेस दरहरू लोड गर्न सक्दैन।</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>कुनै रिफ्रेस दर फेला परेन</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>रिफ्रेस दरहरू बहिष्कृत गर्नुहोस्</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>बाहिर निस्कनुहोस्</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>निर्यात गर्नुहोस्</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>ब्याट्रीमा हुँदा एकीकृत GPU मात्र प्रयोग गर्नुहोस् र AC एडाप्टर जडित हुँदा एकीकृत र विच्छेदनशील दुवै GPU प्रयोग गर्नुहोस्। गैर-मानक एडाप्टर जडित हुँदा प्रणाली हाइब्रिड-iGPU मात्र मोडमा स्विच हुन्छ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>हाइब्रिड-अटो मोड</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>यो मोडमा र बाहिर स्विच गर्न रिस्टार्ट आवश्यक छ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>विच्छेदनशील GPU मात्र प्रयोग गर्नुहोस्। यो मोडले उत्कृष्ट ग्राफिक्स कार्यसम्पादन दिन्छ, तर पावर खपत बढाउँछ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>dGPU मोड</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>एकीकृत र विच्छेदनशील दुवै GPU सक्षम छन्। प्रणालीले आफ्नो आवश्यकता अनुसार स्वचालित रूपमा तिनीहरू बीच स्विच गर्नेछ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>हाइब्रिड मोड</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>यो मोड विच्छेदनशील GPU काम नगरिरहेको बेला मात्र लागू हुन्छ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>एकीकृत GPU मात्र प्रयोग गर्नुहोस्। यो मोडले पावर खपत र आवाज न्यूनतम गर्छ।</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>हाइब्रिड-iGPU मात्र मोड</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>GPU कार्य मोडहरूको बारेमा</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>CPU सेन्सर</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>फ्यान गति</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>GPU #२</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>लिड खोल्दा ल्यापटप चालू गर्नुहोस्।</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>लिड खोल्दा ल्यापटप चालू गर्नुहोस्।</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>Flip To Start</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>Fn कुञ्जी नसमाई F1-F12 कुञ्जीहरूको माध्यमिक प्रकार्यहरू प्रयोग गर्नुहोस्।</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>Fn कुञ्जी नसमाई F1-F12 कुञ्जीहरूको माध्यमिक प्रकार्यहरू प्रयोग गर्नुहोस्।</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>चेतावनी!
+केही ल्यापटपहरूले सङ्केत गरेको भन्दा कम मान स्वीकार गर्न सक्छन्, तर सावधान रहनुहोस्। यो विकल्पले अप्रत्याशित व्यवहार निम्त्याउन सक्छ। तपाईं के गरिरहनुभएको छ भन्नेमा निश्चित नभए 0 मा छोड्नुहोस्।</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>न्यूनतम अफसेट</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>चेतावनी!
+केही ल्यापटपहरूले सङ्केत गरेको भन्दा बढी मान स्वीकार गर्न सक्छन्, तर सावधान रहनुहोस्। यो विकल्पले अप्रत्याशित व्यवहार निम्त्याउन सक्छ। तपाईं के गरिरहनुभएको छ भन्नेमा निश्चित नभए 0 मा छोड्नुहोस्।</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>अधिकतम अफसेट</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>तपाईंले के गरिरहनुभएको छ भन्नेमा साँच्चै निश्चित नभएसम्म तलका विकल्पहरू परिवर्तन नगर्नुहोस्।</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>उन्नत</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>दीर्घकालीन पावर सीमा (क्रस लोडिङ)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>दीर्घकालीन पावर सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>अल्पकालीन पावर सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU तापक्रम सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>सेटिङ्स लागू गर्न सकिएन</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>सेटिङ लोड गर्न सकिएन।</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>फ्यान गति एक तापक्रम सेन्सरद्वारा कडाइका साथ निर्धारण हुँदैन। यसले CPU, GPU र Heatsink तापक्रम बीचको उच्चतम सेन्सर अनुसार गति बढाउने वा घटाउनेछ। प्रत्येक चरणमा माउस होभर गर्दा सटीक मानहरू देखिनेछन्।</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>फ्यान वक्र</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>चेतावनी!
+यस विकल्पको लामो समय प्रयोगले फ्यानहरूको दीर्घायु घटाउनेछ।
+गम्भीरतापूर्वक, यस विकल्पसँग सावधान रहनुहोस्!</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>अधिकतम फ्यान गति</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>फ्यानहरू</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>कन्फिगरयोग्य TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>गतिशील बुस्ट</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>GPU तापक्रम सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>अनुकूलन मोड सेटिङ्स</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेमा उच्च गतिशील दायरा (HDR) सक्षम गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेमा उच्च गतिशील दायरा (HDR) सक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>HDR प्रयोग Windows सेटिङ्सद्वारा रोकिएको छ।</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>आयात गर्नुहोस्</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>यो उपकरण Universal Device Toolkit सँग संगत छैन।</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>तपाईंको उपकरणमा आवश्यक प्रणाली कम्पोनेन्टहरू (LenovoGameZoneData) हराइरहेको हुन सक्छ।</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>जारी राख्न "ठीक छ" मा क्लिक गर्नुहोस्:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- सफ्टवेयर प्रतिबन्धित मोडमा चल्नेछ</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- केही सुविधाहरू असक्षम हुनेछन् (ड्यासबोर्ड, स्वचालन, म्याक्रोहरू)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- अन्य आधारभूत सुविधाहरू उपलब्ध रहनेछन्</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>उपकरण जानकारी:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>विक्रेता:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>मोडेल:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>मेसिन प्रकार:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>जारी राख्न "ठीक छ" मा क्लिक गर्नुहोस्, वा बाहिर निस्कन "रद्द गर्नुहोस्" मा क्लिक गर्नुहोस्।</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>कुनै संगत किबोर्ड फेला परेन</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>Lenovo Vantage वा यसको सेवाहरू चलिरहेको बेला किबोर्ड ब्याकलाइट यहाँ नियन्त्रण गर्न सकिँदैन।</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage वा यसको सेवाहरू चलिरहेका छन्</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>बारेमा</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>कार्यहरू</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>ब्याट्री</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>ड्यासबोर्ड</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>किबोर्ड</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>डाउनलोडहरू</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>प्रणाली अनुकूलन</value>
+  </data>
+<data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>प्लगइन एक्सटेन्सनहरू</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>नेभिगेसन वस्तु सेटिङ्स</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>साइडबारमा कुन नेभिगेसन वस्तुहरू देखाइनेछन् कन्फिगर गर्नुहोस्। ड्यासबोर्ड र सेटिङ्स सधैं देखिनेछन्।</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>किबोर्ड नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>ब्याट्री नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>स्वचालन नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>म्याक्रो नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>प्रणाली अनुकूलन नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>प्लगइन एक्सटेन्सनहरू नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>बारेमा नेभिगेसन वस्तु देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>नेभिगेसन वस्तुहरू</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>साइडबारमा कुन नेभिगेसन वस्तुहरू देखाइनेछन् कन्फिगर गर्नुहोस्</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>अद्यावधिक उपलब्ध छ!</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>अद्यावधिक {0} उपलब्ध छ!</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>तल सार्नुहोस्</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>माथि सार्नुहोस्</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>होइन</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>AC एडाप्टर जडित</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>AC एडाप्टर जडित (कम वाट)</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>AC एडाप्टर विच्छेद</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>क्यामेरा बन्द</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>क्यामेरा चालू</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock बन्द</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock चालू</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>Fn Lock बन्द</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>Fn Lock चालू</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>माइक्रोफोन बन्द</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>माइक्रोफोन चालू</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock बन्द</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock चालू</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>ब्याकलाइट {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>चमक {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>प्रोफाइल {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>टचप्याड बन्द</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>टचप्याड चालू</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>ब्याकलाइट {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>AC एडाप्टर</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>क्यामेरा</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock र Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>माइक्रोफोन म्यूट जस्तै Fn कुञ्जी कार्यहरूको लागि सूचना असक्षम गर्नुहोस्।
+यदि फुलस्क्रिन अनुप्रयोगहरूसँग द्वन्द्व छ भने यो विकल्प सक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>सूचनाहरू नदेखाउनुहोस्</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>Fn Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>माइक्रोफोन</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>पावर मोड</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>रिफ्रेस दर</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>स्मार्ट कुञ्जी</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>सूचनाहरू</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>टचप्याड लक</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>ठीक छ</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>खोल्नुहोस्</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको प्रतिक्रिया समय सुधार गर्नुहोस्।</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>ओभर ड्राइभ</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको प्रतिक्रिया समय सुधार गर्नुहोस्।</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>ओभर ड्राइभ</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>{0} डाउनलोड भयो!</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>डाउनलोड सम्पन्न</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>केही गलत भयो</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>सर्भरले 404 कोड फर्कायो।</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>फाइल हराएको जस्तो देखिन्छ</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>तपाईंको इन्टरनेट जडान चालू छ कि छैन जाँच गर्नुहोस्।</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>केही गलत भयो</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>अद्यावधिक उपलब्ध छ!</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>यो प्याकेज एक वर्षभन्दा पुरानो छ।</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>संस्करण</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>तल तपाईंको ल्यापटपसँग संगत भनी चिन्ह लगाइएका सफ्टवेयर प्याकेजहरूको सूची छ।
+तपाईंले सही प्याकेजहरू स्थापना गरिरहनुभएको छ भनी सधैं सुनिश्चित गर्नुहोस्।</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>मेसिन प्रकार र OS सही रूपमा सेट गरिएको छ कि छैन जाँच गर्नुहोस्।</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>केही गलत भयो</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>क्रमबद्ध, नतिजा फिल्टर, प्याकेज लुकाउने वा सूची रिफ्रेस गर्ने परिवर्तनले डाउनलोड रोक्नेछ। के तपाईं जारी राख्न चाहनुहुन्छ?</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>डाउनलोड भइरहेको छ</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>फिल्टर...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>मेसिन प्रकार</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>सञ्चालन प्रणाली</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>प्राथमिक (सिफारिस गरिएको)</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>Lenovo Vantage जस्तै</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>माध्यमिक</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>Lenovo PC Support जस्तै</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>कोटि</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>मिति</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>स्रोत</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>डाउनलोडहरू</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>टाँस्नुहोस्</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>कार्यसम्पादन मोड परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>पावर मोड</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>कार्यसम्पादन मोड परिवर्तन गर्नुहोस्।
+कार्यसम्पादन मोड Fn+Q बाट पनि परिवर्तन गर्न सकिन्छ।</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>पावर मोड</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>AC एडाप्टर जडित नभएमा चयन गरिएको पावर मोड सही रूपमा काम नगर्न सक्छ।</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>पूर्वनिर्धारित</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows पावर योजनाहरू</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>उपलब्ध ड्राइभर प्याकेजहरू स्क्यान हुँदैछ, कृपया पर्खनुहोस्...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>ड्राइभर प्याकेजहरू स्क्यान गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>संगत ड्राइभर डाउनलोडहरू सूचीबद्ध गर्न स्रोत छनोट गरी स्क्यान गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>कुनै ड्राइभर डाउनलोड फेला परेन</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>फरक स्रोत, सञ्चालन प्रणाली, वा मेसिन प्रकार प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>कुनै मिल्दो डाउनलोड फेला परेन</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>फिल्टर, अद्यावधिक-मात्र विकल्प, वा लुकेको-डाउनलोड सूची समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>ड्राइभर स्क्यान पूरा भएन</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>चयन गरिएको स्रोत र नेटवर्क जडान जाँच गरी फेरि स्क्यान गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>नेटवर्क त्रुटि भयो। स्वचालित रूपमा पुनः प्रयास हुँदैछ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>ड्राइभर प्याकेजहरू प्राप्त गर्न पुनः प्रयास हुँदैछ...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>सफाइ जानकारी</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>सफाइ कार्यको प्रगति र अनुमानित साइज हेर्नुहोस्।</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट प्रिसेट समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>चमक</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>प्रिसेट १</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>प्रिसेट २</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>प्रिसेट ३</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>प्रिसेट ४</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>बन्द</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>जोन १</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>जोन २</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>जोन ३</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>जोन ४</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>प्रभाव</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>गति</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>रिडमी</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>रिफ्रेस गर्नुहोस्</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको रिफ्रेस दर परिवर्तन गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>रिफ्रेस दर</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको रिफ्रेस दर परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>रिफ्रेस दर</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>नाम परिवर्तन गर्नुहोस्</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>म पछि पुनःसुरु गर्नेछु</value>
+  </data>
+  <data name="RestartNow" xml:space="preserve">
+    <value>अहिले रिस्टार्ट गर्नुहोस्</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>उल्टो</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>तर्कहरू</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>कार्यान्वयनयोग्य बाटो</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>स्क्रिप्ट वा कार्यक्रम चलाउनुहोस्।
+पहिले तपाईंको स्क्रिप्ट सही रूपमा चल्छ भनी सुनिश्चित गर्नुहोस्।</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>चलाउनुहोस्</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>बचत गर्नुहोस्</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>सुरक्षित गर्दै...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>साइकल गर्न एक वा बढी द्रुत कार्यहरू छनोट गर्नुहोस्</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>कुनै द्रुत कार्य परिभाषित गरिएको छैन।</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>यो अनुप्रयोग देखाउनुहोस्</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>अनुप्रयोगको उच्चारण रङ परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>उच्चारण रङ</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>भाषा, तापमान एकाइ, थिम र उच्चारण रङ अनुकूलित गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>स्वतः सुरु</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Windows मा साइन इन गर्दा ट्रेमा न्यूनतम गरी सुरु गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone सही रूपमा असक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone असक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>Legion Zone र यसको सेवा स्थापना रद्द नगरी असक्षम गर्नुहोस्।
+यो विकल्प परिवर्तन गरेपछि रिस्टार्ट सिफारिस गरिन्छ।</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>Legion Zone अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys सही रूपमा असक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys असक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys र यसको सेवा स्थापना रद्द नगरी असक्षम गर्नुहोस्।
+यदि असक्षम गरिएमा, यो अनुप्रयोगले Fn सर्टकटहरू ह्यान्डल गर्नेछ।
+यो विकल्प परिवर्तन गरेपछि रिस्टार्ट सिफारिस गरिन्छ।</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>प्रणाली अनुकूलन</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>सिफारिस गरिएका प्रदर्शन ट्वीकहरू लागू गर्नुहोस् र अस्थायी फाइलहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>प्रदर्शन र सेवा ट्वीकहरू लागू गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>कार्यसम्पादन अनुकूलन लागू गरियो।</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>कार्यसम्पादन अनुकूलन लागू गर्न सकिएन।</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>सफाई चलाउनुहोस्</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>सफाइ सम्पन्न भयो।</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>सफाइ असफल भयो।</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>यी कार्यहरूले प्रणाली सेवाहरू र फाइलहरू परिमार्जन गर्छन्। प्रशासक विशेषाधिकार आवश्यक हुन सक्छ।</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>चयन गरिएका कार्यहरू लागू गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>सिफारिस गरिएको छनोट गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>चयन खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>स्क्यान गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>सफाई कार्यहरू चलाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} कार्यहरू चयन गरियो</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>अहिलेसम्म कुनै कार्य चयन गरिएको छैन।</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>चयन गरिएका कार्यहरू</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>सफाइ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>सुन्दरता</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>ड्राइभर डाउनलोड</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>सुरक्षा पुष्टि</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>प्रणाली सफाइले अस्थायी फाइल र क्यास स्थायी रूपमा मेटाउनेछ। सामान्यतया सुरक्षित भए तापनि, महत्त्वपूर्ण डाटाको ब्याकअप सुनिश्चित गर्न सिफारिस गरिन्छ। के तपाईं जारी राख्न चाहनुहुन्छ?</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>एक्सटेन्सनहरू</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>प्रणाली अनुकूलन एक्सटेन्सन र उपकरणहरू व्यवस्थापन गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>कुनै एक्सटेन्सन उपलब्ध छैन</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>प्रणाली अनुकूलन कार्यक्षमता बढाउन प्लगइन एक्सटेन्सन पृष्ठबाट एक्सटेन्सनहरू स्थापना गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>चाँडै आउँदैछ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>एक्सटेन्सन मार्केटप्लेस भविष्यको अद्यावधिकमा उपलब्ध हुनेछ।</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows अनुकूलन</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>सबै चयन गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>अनुकूलन सफाइ नियमहरू</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>सफाइको क्रममा मेटाउनुपर्ने फोल्डर र फाइल एक्सटेन्सनहरू छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>नियम थप्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>सम्पादन गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>हटाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>सबै खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>कुनै अनुकूलन सफाइ नियम कन्फिगर गरिएको छैन।</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>उप-फोल्डरहरू समावेश गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX व्यवस्थापन</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>सबै प्रयोगकर्ताका लागि हटाउन पूर्व-स्थापित Microsoft Store अनुप्रयोगहरू छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>हटाउनका लागि कुनै अनुप्रयोग चयन गरिएको छैन।</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>चयन गरिएका एपहरू अस्थापना गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>चयन गरिएका अनुप्रयोगहरू हटाउनको लागि तालिकाबद्ध।</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>चयन गरिएका अनुप्रयोगहरू हटाउन असफल।</value>
+  </data>
+<data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>अनुप्रयोगहरू लोड हुँदैछन्, कृपया पर्खनुहोस्...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>प्लगइनहरू लोड हुँदैछन्...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>लोड असफल: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>प्रकाशक: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>रजिस्ट्री MRU/इतिहास सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>सामान्य प्रयोगकर्ता रजिस्ट्री इतिहासहरू (Run MRU, RecentDocs, Open/Save डायलग, TypedPaths) खाली गर्नुहोस्। यसले प्रणाली-महत्त्वपूर्ण प्रविष्टिहरू हटाउँदैन।</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>कार्यहरू</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>अनुकूलन सफाइ नियम</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>फोल्डर</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>एक्सटेन्सनहरू</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>धेरै एक्सटेन्सनहरूलाई अल्पविरामले अलग गर्नुहोस् (उदाहरण: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>उप-फोल्डरहरू समावेश गर्नुहोस्</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>ब्राउज गर्नुहोस्…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>कृपया फोल्डर छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>कृपया कम्तीमा एउटा फाइल एक्सटेन्सन प्रविष्ट गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>कृपया कम्तीमा एउटा कार्य चयन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>चयन गरिएका कार्यहरू सफलतापूर्वक सम्पन्न भयो।</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>चयन गरिएका कार्यहरू पूरा गर्न असफल।</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer &amp;amp; interface</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>प्रणाली सुन्दरता</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>टास्कबार, फाइल एक्सप्लोरर र प्रयोगकर्ता इन्टरफेस व्यवहार ट्यून गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>कार्यसम्पादन</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>प्रणाली कार्यसम्पादन र प्रतिक्रियाशीलता सेटिङ्स समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>सेवाहरू</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>स्रोत खपत गर्ने पृष्ठभूमि सेवाहरू असक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>क्यास, अस्थायी फाइलहरू र अन्य बाँकी कुराहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>क्यास सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>भण्डारण स्थान खाली गर्न विभिन्न अनुप्रयोग र प्रणालीबाट क्यास फाइलहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>प्रणाली फाइल सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>अस्थायी फाइल, लग, क्र्यास डम्प इत्यादि जस्ता प्रणाली फाइलहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>प्रणाली कम्पोनेन्ट सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update क्यास, कम्पोनेन्ट स्टोर इत्यादि जस्ता प्रणाली कम्पोनेन्ट फाइलहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>कार्यसम्पादन सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>प्रिफेच फाइल इत्यादि जस्ता प्रणाली कार्यसम्पादनलाई असर गर्न सक्ने फाइलहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>अनुकूलन सफाइ</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>अनुकूलन नियमहरू प्रयोग गरी निर्दिष्ट फाइल र डाइरेक्टरीहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>टास्कबार र सुरु मेनु लेआउट</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>खोज बाकस र टास्क भ्यु बटन लुकाउनुहोस्, टास्कबार समूहकरण असक्षम गर्नुहोस् र ट्रे आइकन सधैं देखाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>सुरु मेनु असक्षम गर्नुहोस् र Win कुञ्जीले खोज खोल्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>सुरु मेनु पूर्ण रूपमा असक्षम गर्नुहोस्। जब तपाईं Win कुञ्जी थिच्नुहुन्छ, यसले सुरु मेनुको सट्टा खोज खोल्नेछ।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>एक्सप्लोरर प्रतिक्रियाशीलता सुधार गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>मेनु ढिलाइ घटाउनुहोस्, अड्किएका अनुप्रयोगहरू छिटो बन्द गर्नुहोस् र पूर्वनिर्धारित रूपमा This PC खोल्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>फाइल दृश्यता विकल्पहरू</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>फाइल एक्सप्लोररमा फाइल एक्सटेन्सन र लुकेका फाइलहरू देखाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Explorer सुझावहरू अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>क्लाउड सामग्री सुझाव र सिफारिस ब्यानरहरू बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>खोज खोल्न Windows कुञ्जी परिवर्तन गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>सुरु मेनुको सट्टा खोज खोल्न Windows कुञ्जी व्यवहार परिमार्जन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>मल्टिमेडिया तालिका अनुकूलन गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>नेटवर्क थ्रोटलिङ हटाउनुहोस् र प्रणाली प्रतिक्रियाशीलता विलम्बता कम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>मेमोरी व्यवस्थापन सुधार गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>प्रणाली क्यास मेमोरीमा राख्नुहोस् र कर्नेल ड्राइभर पेजिङबाट जोगिनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>एक्रिलिक र सूचना केन्द्र अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>लगओनमा एक्रेलिक प्रभाव हटाउनुहोस् र Windows सूचना केन्द्र लुकाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>टेलिमेट्री र टिप्स घटाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>विज्ञापन ID, Spotlight सुविधाहरू र स्वचालित सुझावहरू असक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>उच्च कार्यसम्पादन योजना बलपूर्वक लागू गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>उच्च कार्यसम्पादन पावर योजना सक्रिय गर्नुहोस् र हाइबरनेसन असक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>निदान सेवाहरू अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Connected User Experiences, Diagnostics Hub र Delivery Optimisation सेवाहरू रोक्नुहोस् र असक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMain अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>पृष्ठभूमि डिस्क गतिविधि घटाउन Superfetch/SysMain बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Windows Search अनुक्रमणिका अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>अनुक्रमणिका अद्यावधिक रोक्न Windows Search सेवा रोक्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Remote Registry अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>रिमोट रजिस्ट्री पहुँच असक्षम गरी प्रणाली सुरक्षित गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>त्रुटि रिपोर्टिङ अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Windows Error Reporting बाट क्र्यास डाटा सङ्कलन र पठाउन रोक्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Remote Desktop क्यास खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Remote Desktop क्लाइन्टद्वारा सिर्जित क्यास फाइलहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Windows Update क्यास सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>डाउनलोड गरिएका अद्यावधिक फाइल र Delivery Optimisation क्यास मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>ब्राउजर क्यास सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>विभिन्न अनुप्रयोगहरूद्वारा छोडिएका अस्थायी फाइल र लगहरू सफा गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>अनुप्रयोग बाँकी</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Internet Explorer र Edge क्यास र कुकी फाइलहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>थम्बनेल क्यास सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>एक्सप्लोरर थम्बनेल डाटाबेस र Direct3D shader क्यास मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NET नेटिभ इमेज खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>डिस्क स्थान पुनः प्राप्त गर्न क्यास गरिएका .NET Native इमेज हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>लग र डायग्नोस्टिक डाटा हटाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>तपाईंको प्रणाली ड्राइभमा ठूला फाइलहरू स्क्यान गर्नुहोस् जसले उल्लेखनीय स्थान लिइरहेको हुन सक्छ।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>ठूला फाइल स्क्यान</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>तपाईंको प्रणालीमा ठूला फाइलहरू पहिचान र व्यवस्थापन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>ठूला फाइलहरू</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Windows लग, त्रुटि रिपोर्ट र डायग्नोस्टिक ट्रेस मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>क्र्यास डम्प मेटाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>प्रणाली क्र्यास पछि बाँकी मेमोरी डम्प फाइलहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Defender स्क्यान सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Windows Defender स्क्यान इतिहास र क्यास मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>अस्थायी फाइल सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Windows र प्रयोगकर्ता अस्थायी डाइरेक्टरी खाली गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>बन्डल Windows अनुप्रयोगहरू हटाउनुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>सबै प्रयोगकर्ताका लागि चयन गरिएका पूर्व-स्थापित UWP अनुप्रयोगहरू स्थापना रद्द गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>रिसाइकल बिन खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>रिसाइकल बिनमा भण्डारण गरिएका मेटिएका फाइलहरू हटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>प्रिफेच डाटा खाली गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>नयाँ ट्रेस पुनः उत्पन्न गर्न Windows प्रिफेच डाटा मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>अनुकूलन फाइल सफा गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>चयन गरिएका फोल्डरबाट कन्फिगर गरिएका एक्सटेन्सनसँग मिल्ने फाइलहरू मेटाउनुहोस्।</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>सेवा कम्पोनेन्ट स्टोर</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>DISM सफाइ चलाउनुहोस् र WinSxS अस्थायी फाइलहरू खाली गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage र/वा ImController सही रूपमा असक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage र/वा ImController असक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>Lenovo Vantage र ImController स्थापना रद्द नगरी असक्षम गर्नुहोस्।
+यो विकल्प परिवर्तन गरेपछि रिस्टार्ट सिफारिस गरिन्छ।</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>Lenovo Vantage र ImController अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone सही रूपमा सक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>Legion Zone सक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys सही रूपमा सक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Lenovo Hotkeys Keys सक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage र/वा ImController सही रूपमा सक्षम नहुन सक्छ</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>Lenovo Vantage र/वा ImController सक्षम गर्न सकिएन</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>Fn+R सर्टकट बढी उपयोगी बनाउन रिफ्रेस दरहरू बहिष्कृत गर्न सक्नुहुन्छ।</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>रिफ्रेस दरहरू बहिष्कृत गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>भाषा चयन गर्नुहोस्.</value>
+  </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>भाषा स्थापना गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>भाषा स्थापना असफल भयो</value>
+  </data>
+  <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
+    <value>भाषा प्याक डाउनलोड गर्न सकिएन। नेटवर्क जडान, प्रक्सी, वा TLS सेटिङ्स जाँच गरी फेरि प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>भाषा स्थापना हुँदैछ</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
+    <value>भाषा प्याक डाउनलोड हुँदैछ…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
+    <value>निकाल्दै र स्थापना गर्दै…</value>
+  </data>
+  <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>यो भाषा प्याक स्थापना गर्न डाउनलोड बटन प्रयोग गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>भाषा स्थापना भएको छैन</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>भाषा</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>भाषा अस्थापना गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>भाषा स्थापना रद्द असफल भयो</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>भाषा अस्थापना हुँदैछ</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>सधैं ट्रेमा न्यूनतम गर्नुहोस्। ट्रे आइकनमा दायाँ क्लिक गरेर बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>बन्द गर्दा न्यूनतम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>सुरुवातमा देखिने असंगत उपकरण चेतावनी लुकाउनुहोस्।</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>असंगत उपकरण चेतावनी अक्षम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>कुन सूचनाहरू देखाइन्छन् कन्फिगर गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>सूचनाहरू</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows पावर योजनाहरू</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>Fn+F9 दोहोरो थिच्नमा द्रुत कार्य तोक्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>स्मार्ट कुञ्जी माध्यमिक कार्य</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>Fn+F9 एकल थिच्नमा द्रुत कार्य तोक्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>स्मार्ट कुञ्जी कार्य</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>हल्का थिम, गाढा थिम सेट गर्नुहोस् वा प्रणाली सेटिङ्स पछ्याउनुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>थिम</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>स्वरूप</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>अनुप्रयोग</value>
+  </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>स्मार्ट कुञ्जीहरू</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>डिस्प्ले</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>अनुप्रयोगको स्वरूप, व्यवहार र कार्यक्षमता विकल्पहरू कन्फिगर गर्नुहोस्।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट चमक समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>बन्द</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट चमक</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>प्रभाव थप्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>प्रोफाइल लागू गर्न सकिएन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>लाइटिङ प्रोफाइल लागू गर्न सकिएन।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>चमक</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>सबै क्षेत्रहरू चयन रद्द गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>प्रभावहरू</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>प्रोफाइल निर्यात गर्न सकिएन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>प्रोफाइल निर्यात गर्न सकिएन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>प्रोफाइल आयात गर्न सकिएन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>प्रोफाइल आयात गर्न सकिएन</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>कुनै प्रभाव थपिएको छैन।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>पूर्वनिर्धारितमा रिसेट गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>सबै क्षेत्रहरू चयन गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>किबोर्ड लेआउट स्विच गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>दिशा</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>रङ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>रङहरू</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>दिशा</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>प्रभाव</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>यो प्रभाव पूरा किबोर्डमा लागू हुनेछ र अन्य सबै प्रभावहरू प्रतिस्थापन गर्नेछ।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>गति</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>प्रभाव थप्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>प्रभाव सम्पादन गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट प्रोफाइल समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट प्रोफाइल</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>सबै कुञ्जीहरू</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} जोनहरू</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>सूर्योदय</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>सूर्यास्त</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>समय</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>एकीकृत र विच्छेदनशील GPU बीच स्विच गर्न अनुमति दिनुहोस्।
+रिस्टार्ट आवश्यक छ।</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>हाइब्रिड मोड परिवर्तन गर्न रिस्टार्ट आवश्यक छ। के तपाईं अहिले रिस्टार्ट गर्न चाहनुहुन्छ?</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>रिस्टार्ट आवश्यक</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>हाइब्रिड मोड</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>टचप्याड अक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>टचप्याड लक</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>टचप्याड अक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>टचप्याड लक</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>फेरि प्रयास गर्नुहोस्</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>अप्रत्याशित अपवाद भयो:
+{0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>रिपोर्ट मेटाउनुहोस्</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>क्र्यास रिपोर्ट डिस्कमा सुरक्षित गरिएको छ। तपाईं तलको रिपोर्ट विवरण समीक्षा गर्न सक्नुहुन्छ। रिपोर्ट स्वचालित रूपमा पठाइँदैन।</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>अघिल्लो सत्रमा अनुप्रयोग क्र्यास भयो</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>क्र्यास रिपोर्ट खोल्न असफल: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>रिपोर्ट खोल्नुहोस्</value>
+  </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>बन्द गर्नुहोस्</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>क्र्यास रिपोर्ट यहाँ सुरक्षित: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>क्र्यास रिपोर्ट पत्ता लाग्यो</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>क्र्यास रिपोर्ट विवरण लोड गर्न असक्षम।</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>नाम नभएको</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>तपाईं आफ्नो जोखिममा जारी राख्न रोज्न सक्नुहुन्छ, तर केही सुविधाहरू उपलब्ध नहुन वा सही रूपमा काम नगर्न सक्छन् भन्ने ध्यानमा राख्नुहोस्।
+
+यदि तपाईं जारी राख्न रोज्नुहुन्छ भने लगिङ स्वचालित रूपमा सक्षम हुनेछ।</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>थप जानकारीको लागि GitHub मा परियोजना पृष्ठ हेर्नुहोस्।</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>लग फोल्डर</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>मेसिन प्रकार</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Universal Device Toolkit तपाईंको उपकरणसँग परीक्षण गरिएको छैन।</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>तपाईं सेटिङ्समा कुनै पनि बेला यो चेतावनी असक्षम गर्न सक्नुहुन्छ।</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>मोडेल</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>असमर्थित उपकरण</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>विक्रेता</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>अद्यावधिक गर्नुहोस्</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>अद्यावधिक उपलब्ध छ</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>नयाँ के छ?</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट चमक समायोजन गर्नुहोस्।</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Fn+Space सँग चमक परिवर्तन गर्न सक्नुहुन्छ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन किबोर्डमा Windows कुञ्जी असक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>Windows कुञ्जी लक</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन किबोर्डमा मात्र काम गर्छ।</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>Windows कुञ्जी लक</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>हो</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>माइक्रोफोन</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>बन्द हुँदा, माइक्रोफोनहरू म्यूट हुनेछन्।</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>माइक्रोफोन</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>बन्द हुँदा, माइक्रोफोनहरू म्यूट हुनेछन्।</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>रिजोल्युसन</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको रिजोल्युसन परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>रिजोल्युसन</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको रिजोल्युसन परिवर्तन गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको स्केल परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>बिल्ट-इन डिस्प्लेको स्केलिङ परिवर्तन गर्नुहोस्।
+
+चेतावनी: यदि आन्तरिक डिस्प्ले बन्द छ भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>डिस्प्ले</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>Fn+Space सँग ब्याकलाइट चालू वा बन्द गर्न सक्नुहुन्छ।</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ब्याकलाइट चालू वा बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>कुनै मिल्दो डाउनलोड फेला परेन</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>अद्यावधिक मात्र देखाउनुहोस्</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>ड्यासबोर्ड अनुकूलित गर्नुहोस्</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>लोड</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>समूह सिर्जना गर्नुहोस्</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>तपाईंको ल्यापटपको अवस्था र कन्फिगरेसनको आधारमा केही सुविधाहरू ड्यासबोर्डमा नदेखिन सक्छन्।</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>अनुकूलित गर्नुहोस्</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>डिस्प्ले बन्द गर्नुहोस्</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>सबै उपलब्ध डिस्प्ले बन्द गर्नुहोस्।
+माउस सार्ने वा किबोर्ड थिच्नेले डिस्प्ले ब्यूँझाउनेछ।</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>बन्द गर्नुहोस्</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>डिस्प्ले बन्द गर्नुहोस्</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>सबै उपलब्ध डिस्प्ले बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>समूह नाम सम्पादन गर्नुहोस्</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>Legion लोगो चालू</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>Legion लोगो बन्द</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>पोर्ट ब्याकलाइट चालू</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>पोर्ट ब्याकलाइट बन्द</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>रिस्टार्ट आवश्यक</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>शटडाउन आवश्यक</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>रिस्टार्ट सिफारिस गरिन्छ</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>सिफारिस गरिएको</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>लामोमा राखियो</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>डाउनलोड हुँदैछ</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>स्थापना हुँदैछ</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>सम्पन्न भयो</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>कार्य परिभाषा फेला परेन</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>यस कार्यको लागि प्राविधिक कार्यान्वयन विवरण उपलब्ध छैन</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>लोड असफल</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>अज्ञात</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>आदेश कार्यान्वयन</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>रजिस्ट्री परिमार्जन</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>सेवा व्यवस्थापन</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>रजिस्ट्री परिमार्जन + PowerShell स्क्रिप्ट</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>रजिस्ट्री सफाइ</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM आदेश</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>बचत गर्नुहोस् र बन्द गर्नुहोस्</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>अनुकूलन मोड प्रिसेट</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>अनुकूलन मोड प्रिसेट सक्रिय गर्नुहोस्।
+यो सेटिङ अनुकूलन मोड सक्षम भएको बेला मात्र लागू हुन्छ।</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>प्रिसेट नाम</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>सक्रिय प्रिसेट</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>अनुप्रयोग फोल्डरहरू</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>डाटा</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>अस्थायी</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>एकल डिस्प्ले चमक</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>चालू हुँदा, तपाईंले चमक परिवर्तन गर्दा सबै Windows पावर योजनामा उही चमक स्तर लागू हुनेछ।</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>अद्यावधिक {0} उपलब्ध छ!</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>पीक पावर सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU sPPT पावर सीमा</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>CPU ले पुग्न सक्ने निरन्तर पावर खपत।</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>छोटो समयमा CPU ले पुग्न सक्ने पीक पावर खपत।</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>CPU ले पुग्न सक्ने अधिकतम तात्कालिक पावर खपत।</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>CPU र GPU दुवै पूर्ण रूपमा प्रयोग हुँदा CPU ले पुग्न सक्ने अधिकतम पावर खपत।</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>सानो ढिलाइसहित CPU ले पुग्न सक्ने पीक पावर खपत।</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>फ्रिक्वेन्सी र पावर घटाउनु अघि CPU ले पुग्न सक्ने अधिकतम तापक्रम।</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>CPU को पावर खपतको आधारमा GPU मा आवंटित गर्न सकिने थप अधिकतम पावर।</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>आधार पावर खपतमाथि GPU मा आवंटित गर्न सकिने थप पावर।</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>फ्रिक्वेन्सी र पावर घटाउनु अघि GPU ले पुग्न सक्ने अधिकतम तापक्रम।</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>पूर्वनिर्धारित</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>अल्पकालीन पावर सीमा अवधि</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>CPU लाई बुस्ट गर्न र अल्पकालीन पावर सीमा प्रयोग गर्न अनुमति दिइएको समय। Tau समाप्त हुँदा दीर्घकालीन पावर सीमा प्रयोग गरिन्छ।</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>AC मा कुल प्रोसेसर पावर लक्ष्य</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPU ले GPU को लागि गतिशील पावर खपत समायोजन ट्रिगर गर्ने बिन्दु।</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>सिर्जना गर्नुहोस्</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>चरण थप्नुहोस्</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>कार्य सिर्जना गर्नुहोस्</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>पावर मोड</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>प्रिसेट</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>विच्छेदनशील GPU</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>पावर अवस्था</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>ब्याट्री</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>मोड</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>डिस्चार्ज दर</value>
+  </data>
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>न्यूनतम डिस्चार्ज दर</value>
+  </data>
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>अधिकतम डिस्चार्ज दर</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>प्रयोग समय</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>अद्यावधिक उपलब्ध छ!</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>आइकन चयन गर्नुहोस्</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>आइकन परिवर्तन गर्नुहोस्</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>ब्याट्री स्तर कम</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>कन्फिगर गर्नुहोस्</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 कम पावर मोडेल पत्ता लाग्यो</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows ले रिपोर्ट गर्छ कि यो ल्यापटपले Modern Standby समर्थन गर्छ। Balanced बाहेक अन्य पावर योजना प्रयोग गर्दा अप्रत्याशित व्यवहार हुन सक्छ।</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>पावर मोड परिवर्तन हुँदा लागू गर्न Windows पावर योजनाहरू छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>पावर</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Windows नियन्त्रण प्यानलमा पावर योजना विकल्पहरू</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>बन्द</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>किबोर्ड ब्याकलाइट प्रोफाइल आयात गर्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>ब्याकलाइट कन्फिगरेसन आयात गर्नुहोस् र हालको प्रोफाइलमा लागू गर्नुहोस्।</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>बाटो</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>{0} पछि</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>धेरै ट्रिगरहरू...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>GPU ओभरक्लक सेटिङ्स</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>कोर फ्रिक्वेन्सी अफसेट</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>मेमोरी फ्रिक्वेन्सी अफसेट</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>GPU ओभरक्लक गर्नुहोस्</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>विच्छेदनशील GPU ओभरक्लक गरी कार्यसम्पादन बढाउनुहोस्।</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU ओभरक्लक गर्नुहोस्</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>विच्छेदनशील GPU ओभरक्लक गरी कार्यसम्पादन बढाउनुहोस्।
+
+चेतावनी: यदि विच्छेदनशील GPU उपलब्ध छैन भने यो कार्य सही रूपमा चल्दैन।</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>पोर्ट ब्याकलाइट</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>ल्यापटपको पछाडिको पोर्टहरूको ब्याकलाइट चालू वा बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>पोर्ट ब्याकलाइट</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ल्यापटपको पछाडिको पोर्टहरूको ब्याकलाइट चालू वा बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>प्यानेल लोगो ब्याकलाइट</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>ल्यापटपको लिडमा ब्याकलाइट चालू वा बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>प्यानेल लोगो ब्याकलाइट</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>ल्यापटपको लिडमा ब्याकलाइट चालू वा बन्द गर्नुहोस्।</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>गिगाहर्ज</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>मेगाहर्ज</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>अधिकतम: {0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>प्रयोग</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>कोर क्लक</value>
+  </data>
+  <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
+    <value>P कोर क्लक</value>
+  </data>
+  <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
+    <value>E कोर क्लक</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>तापक्रम</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>फ्यान</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>मेमोरी क्लक</value>
+  </data>
+  <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
+    <value>मेमोरी प्रयोग</value>
+  </data>
+  <data name="SensorsControl_MemoryTemperature_Title" xml:space="preserve">
+    <value>मेमोरी तापक्रम</value>
+  </data>
+  <data name="SensorsControl_SsdTemperature_Title" xml:space="preserve">
+    <value>SSD तापक्रम</value>
+  </data>
+  <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
+    <value>VRAM प्रयोग</value>
+  </data>
+  <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
+    <value>साझा मेमोरी प्रयोग</value>
+  </data>
+  <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
+    <value>VRAM तापक्रम</value>
+  </data>
+  <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
+    <value>GPU हट स्पट</value>
+  </data>
+  <data name="SensorsControl_GpuPcieThroughput_Title" xml:space="preserve">
+    <value>PCIe थ्रुपुट</value>
+  </data>
+  <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
+    <value>कोरहरू</value>
+  </data>
+  <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
+    <value>मेमोरी</value>
+  </data>
+  <data name="SensorsControl_CpuPlatformPower_Label" xml:space="preserve">
+    <value>प्लेटफर्म</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>रिफ्रेस अन्तराल</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>तत्काल बुट</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>चार्जर जडित हुँदा ल्यापटप चालू गर्नुहोस्।</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>तत्काल बुट</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>चार्जर जडित हुँदा ल्यापटप चालू गर्नुहोस्।</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>पावर मोड परिवर्तन गर्न सकिँदैन</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} पावर मोड AC पावर बिना उपलब्ध छैन।</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>सेन्सरहरू</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>GPU कार्य मोड परिवर्तन गर्न सकिएन</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>यदि अपेक्षित नतिजा नदेखिए केही सेकेन्डमा फेरि मोड परिवर्तन गर्ने प्रयास गर्नुहोस्।
+यदि dGPU ले कुनै प्रतिक्रिया दिएन भने, कृपया ल्यापटप रिस्टार्ट गर्नुहोस्।</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>dGPU हाल प्रयोगमा छ</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>प्रयोग नहुँदा dGPU स्वचालित रूपमा विच्छेद हुनेछ।</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU हाल प्रयोगमा छ वा ल्यापटप ब्याट्री पावरमा छैन</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>प्रयोग नहुँदा र ल्यापटप ब्याट्री पावरमा हुँदा dGPU स्वचालित रूपमा विच्छेद हुनेछ।</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage वा यसको सेवाहरू चलिरहेको बेला अनुकूलन मोड सेटिङ्स सही रूपमा लागू हुने छैनन्।</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Legion Zone वा यसको सेवाहरू चलिरहेको बेला अनुकूलन मोड सेटिङ्स सही रूपमा लागू हुने छैनन्।</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>dGPU जडित</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>dGPU विच्छेद</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU कार्य मोड</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>तपाईंको कम्प्युटरको प्रयोग र पावर अवस्थाका आधारमा GPU सञ्चालन मोड छनोट गर्नुहोस्।
+मोड परिवर्तन गर्न रिस्टार्ट आवश्यक हुन सक्छ।</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>हाइब्रिड मोड</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>एकीकृत र विच्छेदनशील GPU बीच स्विच गर्न अनुमति दिनुहोस्।
+रिस्टार्ट आवश्यक छ।</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>अवधि</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>अद्यावधिकहरू</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU देखि CPU गतिशील बुस्ट</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>यो CPU प्रयोगको आधारमा GPU बाट CPU मा आवंटित गर्न सकिने अधिकतम थप पावर हो। मान जति उच्च, CPU प्रयोग गर्ने अनुप्रयोगहरूको कार्यसम्पादन त्यति राम्रो।</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>बुट लोगो</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>प्रणाली सुरुवातको क्रममा देखिने बुट लोगो तस्वीर अनुकूलित गर्नुहोस्।</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>बुट लोगो</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>पूर्वनिर्धारित बुट लोगो सेट गरिएको छ</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>अनुकूलन बुट लोगो सेट गरिएको छ</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>स्थिति</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>पूर्वनिर्धारितमा फर्कनुहोस्</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>अनुकूलित गर्नुहोस्</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>कार्यहरू</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>सूचना पाठ</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>सूचना देखाउनुहोस्</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>प्रिसेट</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>स्मार्ट Fn Lock</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>Alt, Ctrl वा Shift कुञ्जी थिच्दा Fn Lock अस्थायी रूपमा असक्षम हुनेछ।</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>बन्द</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>अनुकूलन बुट लोगो ठ्याक्कै {0} पिक्सेल ठूलो हुनुपर्छ।
+समर्थित ढाँचाहरू: {1}।</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>रातभरि ब्याट्री चार्जिङ</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>सक्षम गर्दा, यो उपकरण राति प्लग इन गर्दा ८०% सम्म चार्ज हुनेछ र बिहान तपाईंले प्रयोग गर्दा १००% सम्म चार्ज हुनेछ।</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>रातभरि ब्याट्री चार्जिङ</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>सक्षम गर्दा, यो उपकरण राति प्लग इन गर्दा ८०% सम्म चार्ज हुनेछ र बिहान तपाईंले प्रयोग गर्दा १००% सम्म चार्ज हुनेछ।</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>अवैध इमेज साइज।</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>अवैध इमेज ढाँचा।</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>EFI पार्टिशन माउन्ट गर्न सकिँदैन।</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>UEFI विशेषाधिकार सेट गर्न सकिँदैन।</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>EFI पार्टिशनमा पर्याप्त खाली स्थान छैन।</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>अनुकूलन लोगो सेट गर्न सकिएन: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>पूर्वनिर्धारित लोगो सेट गर्न सकिएन: {0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>पूर्वनिर्धारित बुट लोगो सेट गरियो।</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>अनुकूलन बुट लोगो सेट गरियो।</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>नेटवर्क नाम (SSID)</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>हालको नेटवर्क नाम प्रतिलिपि गर्नुहोस्</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>कुनै पनि Wi-Fi नेटवर्कको लागि खाली छोड्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>HWiNFO64 सँग फ्यान गति, ब्याट्री तापक्रम इत्यादि साझा गर्नुहोस्। यो विकल्प परिवर्तन गरेपछि HWiNFO64 रिस्टार्ट गर्नुपर्ने हुन सक्छ।</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>एकीकरणहरू</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>जानकारी</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>डाउनलोड फोल्डर</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>डाउनलोड फोल्डर खोल्नुहोस्</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>डाउनलोड गर्नुहोस्</value>
+  </data>
+<data name="PackageControl_Install" xml:space="preserve">
+    <value>स्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>अस्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>स्थापना असफल भयो</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>फाइल फेला परेन, कृपया पहिले डाउनलोड गर्नुहोस्</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>स्थापनाकर्ता कोड {0} सहित बाहिर निस्कियो</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>स्थापना सुरु भयो</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>स्थापनाकर्ता सुरु हुँदैछ: {0}</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>README खोल्नुहोस्</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>प्रिसेट</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>रिफ्रेस गर्नुहोस्</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>मेटाउनुहोस्</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>अवधि (मिनेट)</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>प्रणाली रिबुट हुँदा ब्याट्री खण्डमा "ब्याट्रीमा रहेको" को लागि काउन्टर रिसेट गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>सुरुवातमा "ब्याट्रीमा रहेको" रिसेट गर्नुहोस्</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi बन्द गर्नुहोस्</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>Wi-Fi चालू गर्नुहोस्</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>मौन रूपमा चलाउनुहोस्</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>समाप्त नभएसम्म पर्खनुहोस्</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>कन्सोल विन्डो सिर्जना नगरी कन्सोल अनुप्रयोगहरू कार्यान्वयन गर्नुहोस्।</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>कार्यक्रम वा स्क्रिप्ट कार्यान्वयन समाप्त नभएसम्म पर्खनुहोस्</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>म्यूट हुँदा, सबै सक्रिय अडियो आउटपुट उपकरणहरू म्यूट हुनेछन्।</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>स्पिकर</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>ट्रेमा न्यूनतम गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>टास्कबारको सट्टा सधैं ट्रेमा न्यूनतम गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows पावर मोडहरू</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Fn+Q सँग अनुकूलन मोडमा स्विच गर्नुहोस्</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Fn+Q सँग अनुकूलन मोडमा द्रुत स्विचिङ अनुमति दिनुहोस्।</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>पावर मोड सिङ्क्रोनाइजेसन</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>पावर मोड परिवर्तन गर्दा Windows पावर योजना वा Windows पावर मोड स्वचालित रूपमा परिवर्तन गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows पावर मोडहरू</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>पावर मोड परिवर्तन हुँदा लागू गर्न Windows पावर मोड छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>उपकरण जानकारी पढ्दा त्रुटि भयो।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>संगतता जाँच त्रुटि</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>सुरुवातको क्रममा अनुप्रयोगले उपकरण जानकारी पढ्न असफल भयो। कृपया तलको त्रुटि विवरण जाँच गर्नुहोस् र आवश्यक भएमा समस्या समाधान चरणहरू प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>समस्या समाधान चरणहरू</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Windows Management Instrumentation (WMI) सेवा चलिरहेको छ भनी सुनिश्चित गर्नुहोस्: Services (services.msc) खोल्नुहोस् र "Windows Management Instrumentation" चलिरहेको छ कि छैन जाँच गर्नुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>प्रणाली रजिस्ट्री र WMI पहुँच गर्न पर्याप्त अनुमति सुनिश्चित गर्न अनुप्रयोग Administrator को रूपमा चलाउनुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>प्रणाली स्रोत जाँच गर्नुहोस्: अन्य स्रोत-गहन अनुप्रयोगहरू बन्द गरी फेरि प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>तल "लग खोल्नुहोस्" मा क्लिक गरी विस्तृत त्रुटि जानकारीको लागि लग फाइल समीक्षा गर्नुहोस्।</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>लग फाइल खोल्नुहोस्</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>म्याक्रो</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>म्याक्रो</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>दोहोर्‍याउनुहोस्</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>विलम्बता बेवास्ता गर्नुहोस्</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>खाली गर्नुहोस्</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>रेकर्ड गर्नुहोस्</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>रेकर्ड रोक्नुहोस्</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>नदोहोर्‍याउनुहोस्</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>म्याक्रोहरू काम गर्न Universal Device Toolkit चालू हुनुपर्छ।</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>सक्षम गर्नुहोस्</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>तपाईं कुञ्जी थिच्ने श्रृंखला रेकर्ड गरी तपाईंको किबोर्डको नम्बर प्याड प्रयोग गरी तिनीहरूलाई आह्वान गर्न सक्नुहुन्छ।</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>म्याक्रो</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>म्याक्रोहरू सक्षम वा अक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>अर्को कुञ्जी थिचिएमा रोक्नुहोस्</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>लुकाउनुहोस्</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>सबै लुकाउनुहोस्</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>उपकरणहरू</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>सबै चयन रद्द गर्नुहोस्</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>सबै चयन गर्नुहोस्</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>किबोर्ड मात्र</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>किबोर्ड कुञ्जी र माउस बटनहरू</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>सबै इनपुटहरू</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>रेकर्डिङ विकल्पहरू</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>रेकर्डिङ ३ सेकेन्डमा सुरु हुनेछ...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>रेकर्डिङ...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>रोक्न ESC थिच्नुहोस्।</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>चयन गरिएका उपकरणहरू मात्र देखाउनुहोस्</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>हटाउनयोग्य उपकरणहरू मात्र देखाउनुहोस्</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>जडित उपकरणहरू मात्र देखाउनुहोस्</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>CLI</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>आदेश लाइनबाट नियन्त्रण अनुमति दिने आदेश लाइन इन्टरफेस सक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>CLI लाई PATH मा थप्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>प्रयोगकर्ताको PATH वातावरण चलमा CLI थप्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>तापक्रम</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>तापक्रम सेन्सरको लागि एकाइहरू छनोट गर्नुहोस्।</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys पृष्ठभूमिमा चलिरहेको छ।</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone पृष्ठभूमिमा चलिरहेको छ।</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage र/वा ImController पृष्ठभूमिमा चलिरहेको छ।</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>तपाईंको उपकरणमा जडित सबै स्क्रिनमा सूचना देखाउनुहोस्।</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>सबै स्क्रिनमा सूचना</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>जाँच</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>अद्यावधिक जाँच हुँदैछ...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>अद्यावधिक जाँच गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>अद्यावधिक गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>यो सत्रको लागि अद्यावधिक जाँच असक्षम गरिएको छ</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Universal Device Toolkit {0} सँग सुरु गरिएको थियो। स्वचालित र म्यानुअल अद्यावधिक जाँच, साथै तलको अद्यावधिक सेटिङ्स, तपाईंले त्यो सुरुवात तर्क बिना फेरि सुरु नगरेसम्म असक्षम छ।</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>API दर सीमा पुग्यो, कृपया पछि फेरि प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>अद्यावधिक जाँच असफल भयो</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>केही गलत भयो, कृपया पछि फेरि प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>कुनै अद्यावधिक फेला परेन</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>स्वचालित रूपमा अद्यावधिक जाँच गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>रिपोजिटरी अद्यावधिक गर्नुहोस्</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>अद्यावधिक जाँच गर्न GitHub रिपोजिटरी कन्फिगर गर्नुहोस्। पूर्वनिर्धारित प्रयोग गर्न खाली छोड्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>रिपोजिटरी मालिक</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>जस्तै, SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>रिपोजिटरी नाम</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>जस्तै, UniversalDeviceToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>अद्यावधिक सूची फेला परेन</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>अर्को स्रोतबाट अद्यावधिक प्राप्त गर्ने प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>केही गलत भयो</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>तपाईंको इन्टरनेट जडान चालू छ कि छैन जाँच गर्नुहोस्।</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>ध्वनि बजाउनुहोस्</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>wav वा mp3 जस्ता सामान्य सङ्गीत ढाँचाहरू समर्थित छन्।</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>द्रुत कार्य</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>सुरक्षित द्रुत कार्य चलाउनुहोस्।</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>सूचना सधैं शीर्षमा</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>सूचना सधैं शीर्षमा राख्नुहोस्।
+यसले अन्य फुलस्क्रिन विन्डोलाई असर गर्दैन, तर तपाईं सूचनामा क्लिक गर्न सक्नुहुन्न।</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>सिफारिस गरिएको</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>सबै रोक्नुहोस्</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>कार्य विवरण</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>प्राविधिक कार्यान्वयन विवरण</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>कार्यान्वयन प्रकार:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>बन्द गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{1} मध्ये {0} कार्य चयन गरियो</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>अनुमानित सफाइ साइज: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>कुल साइज गणना गर्न स्क्यानमा क्लिक गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>चल्दै: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>चयन गरिएका एपहरू अस्थापना हुँदैछन्...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>सङ्कुचित दृश्य</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>प्रणाली सुन्दरता</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows सुन्दरता</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Windows को स्वरूप र व्यवहार अनुकूलित गर्नुहोस्।</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>प्रभावहरू</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>दृश्य प्रभावहरू अनुकूलित गर्नुहोस्।</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>पारदर्शिता</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>सबै विस्तार गर्नुहोस्</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>सबै संकुचित गर्नुहोस्</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+
+    <value>{1}s मा {0} खाली भयो</value>
+
+  </data>
+<data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>{0}% कार्यान्वयन हुँदैछ</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>कार्य रद्द गरियो</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>त्रुटि विवरण: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>लुकेका डाउनलोड देखाउनुहोस्</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>लुकेका डाउनलोड देखाउनुहोस्</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>भाषा चयन गर्नुहोस्</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
+    <value>यो उपकरण आधारभूत मोडमा सुरु हुनेछ। संगत उपकरण प्याक उपलब्ध नभएसम्म हार्डवेयर-विशिष्ट नियन्त्रणहरू लुकेका छन्।</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
+    <value>उपकरण प्याक: आधारभूत मोड</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
+    <value>Universal Device Toolkit ले मिल्दो उपकरण प्याक पत्ता लगायो। हार्डवेयर-विशिष्ट सुविधाहरू अनुप्रयोगद्वारा तयार गर्न सकियोस् भनेर अहिले पुष्टि गर्नुहोस्।</value>
+  </data>
+  <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
+    <value>उपकरण प्याक: {0}</value>
+  </data>
+  <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
+    <value>उपकरण सेटअप तयार हुँदैछ...</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>जडित छैन</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>क्षेत्रहरू सिङ्क गर्नुहोस्</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Windows बिल्ट-इन रजिस्ट्री सफाइ कार्यक्षमता प्रयोग गर्दै</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (DNS क्यास फ्लस गर्नुहोस्)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Winsock प्रोटोकल स्ट्याक रिसेट गर्नुहोस्)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (TCP/IP प्रोटोकल स्ट्याक रिसेट गर्नुहोस्)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>प्लगइन एक्सटेन्सनहरू</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>कार्यक्षमता विस्तार गर्न प्लगइनहरू स्थापना र व्यवस्थापन गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>कुल प्लगइनहरू</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>स्थापित भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>अद्यावधिकहरू तयार छन्</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>स्टोर पल्स</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>प्लगइन उपलब्धता जाँच हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} प्लगइन अद्यावधिक स्थापना गर्न तयार छ।</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>हालको फिडमा {0} थप प्लगइन उपलब्ध छन्।</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>प्लगइन मेटाडेटा लोड हुन पर्खँदैछ।</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>सबै पत्ता लगाइएका प्लगइनहरू हाल अद्यावधिक छन्।</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>अद्यावधिकहरू उपलब्ध छन्</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>स्थापना गर्न उपलब्ध</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>मेटाडेटा लोड हुँदैछ</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>अद्यावधिक छ</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>{0} द्वारा</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>द्रुत खोल्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>अनुकूलन गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>अद्यावधिक गर्नुहोस्</value>
+  </data>
+
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>स्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>स्थापित भयो</value>
+  </data>
+
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>अस्थापना गर्न सकिँदैन</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>प्लगइन सेटिङ्स</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>प्लगइन नाम</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>प्लगइन विवरण</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>यो प्लगइनमा कन्फिगरयोग्य सेटिङ्स छैनन्।</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>बन्द गर्नुहोस्</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>प्लगइन फेला परेन: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>त्रुटि</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>सेटिङ्स</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>लेखक: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>प्लगइन कन्फिगरेसन इन्टरफेस ढाँचा गलत छ।</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>प्लगइन सेटिङ्स लोड गर्दा त्रुटि: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>प्लगइनहरू खोजी गर्नुहोस्...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>सबै</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>स्थापित भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>स्थापना भएको छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>कुनै प्लगइन उपलब्ध छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>प्लगइन स्टोर हाल खाली छ। भविष्यका प्लगइन अद्यावधिकको लागि पर्खनुहोस्।</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>कन्फिगर गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>अस्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>खोल्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>भाषा:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>अनुप्रयोग पूर्वनिर्धारित प्रयोग गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>{0} प्लगइनहरू फेला परे</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>थोक आयात</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>स्थानीय ZIP फाइलहरूबाट प्लगइनहरू आयात गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>फाइलहरूबाट आयात गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>प्लगइन फाइलहरू (.zip) छनोट गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} प्लगइनहरू सफलतापूर्वक आयात गरियो</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} प्लगइनहरू सफलतापूर्वक आयात गरिएका छन् र उपलब्ध छन्</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>थोक आयात असफल भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>प्लगइनहरू आयात गर्न असफल: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>प्लगइनहरू आयात हुँदैछन्...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} आयात हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} प्रशोधन हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>प्लगइन सफलतापूर्वक स्थापना भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>प्लगइन सफलतापूर्वक स्थापना भएको छ</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>स्थापना असफल भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>प्लगइन स्थापना गर्न असक्षम: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>प्लगइन सफलतापूर्वक स्थापना रद्द भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>प्लगइन सफलतापूर्वक स्थापना रद्द भएको छ</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>अस्थापना असफल भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>प्लगइन स्थापना रद्द गर्न असक्षम: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>प्लगइन खोल्न असफल</value>
+  </data>
+    <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>प्लगइन खोल्न असक्षम: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>प्लगइन खोल्न असक्षम: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>प्लगइन स्थापना भएको छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>प्लगइन स्थापना भएको छैन र खोल्न सकिँदैन</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>न्यूनतम होस्ट संस्करण {0} आवश्यक छ</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>प्लगइन स्थायी रूपमा मेटाइनेछ</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>प्लगइन स्थायी रूपमा मेटाइनेछ। यो कार्य पूर्ववत गर्न सकिँदैन।</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>अद्यावधिक असफल भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>प्लगइन अद्यावधिक असफल भयो, कृपया नेटवर्क जडान जाँच गरी पछि फेरि प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>अद्यावधिक सफल भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>प्लगइन सफलतापूर्वक अद्यावधिक भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>प्लगइन अद्यावधिक हुँदैछ</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>प्लगइन डाउनलोड र अद्यावधिक हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>सबै अद्यावधिक गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>प्लगइन चलाउनुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>प्लगइन सुरु भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>प्लगइन स्थापना रद्द</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>कार्यक्रम बन्द हुँदा प्लगइन मेटाइनेछ।</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>मेटाउन असफल</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>प्लगइन मेटाउँदा त्रुटि भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>कन्फिगरेसन असफल</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>प्लगइन स्थापना भएको छ तर लोड भएको छैन। कृपया अनुप्रयोग पुनः सुरु गर्ने प्रयास गर्नुहोस्।</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>कन्फिगरेसन छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>प्लगइनसँग कुनै कन्फिगरेसन विकल्प छैन।</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>कन्फिगरेसन समर्थित छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>प्लगइनले कन्फिगरेसन समर्थन गर्दैन।</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>प्लगइन अवस्था रिसेट</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>सबै प्लगइन स्थापना अवस्था खाली गरिएको छ</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>थोक अद्यावधिक सम्पन्न</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>सबै प्लगइनहरू प्रशोधन गरिएका छन्।</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>डाउनलोड तयार हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>स्थानीय</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>नयाँ संस्करण उपलब्ध</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>संस्करण: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>रिलिज मिति: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>नयाँ के छ:</value>
+  </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>प्रयोग गाइड</value>
+  </data>
+  <data name="PluginExtensionsPage_ShowDetails" xml:space="preserve">
+    <value>विवरणहरू देखाउनुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_CollapseDetails" xml:space="preserve">
+    <value>विवरणहरू लुकाउनुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_Available" xml:space="preserve">
+    <value>उपलब्ध</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>प्लगइन सूची रिफ्रेस गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>तपाईंको खोजसँग मिल्ने कुनै प्लगइन फेला परेन।</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>सबै उपलब्ध प्लगइनहरू अद्यावधिक गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>सबै स्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>सबै उपलब्ध प्लगइनहरू स्थापना गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>सबै स्थापना हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>{0} प्लगइन स्थापना हुँदैछन्...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>थोक स्थापना सम्पन्न</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>{0} प्लगइन स्थापना भयो।</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>थोक स्थापना असफल</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>प्लगइनहरू स्थापना गर्न असफल: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>सबै अद्यावधिक हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>अद्यावधिक हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>फोल्डर खोल्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>प्लगइन ID प्रतिलिपि गर्नुहोस्</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>फोल्डर फेला परेन</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>प्लगइन डाइरेक्टरी अझै अवस्थित छैन।</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>प्रतिलिपि भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>प्लगइन ID '{0}' क्लिपबोर्डमा प्रतिलिपि गरियो।</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>डाउनलोड सम्पन्न भयो</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>डाउनलोड हुँदैछ...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>डाउनलोड हुँदैछ... {0:F1} / {1:F1} एमबी ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
+    <value>स्थापना गर्न पर्खँदैछ (अर्को प्लगइन डाउनलोड हुँदैछ)...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>कुनै उपकरण उपलब्ध छैन। कृपया अनुप्रयोग डाइरेक्टरीको tools फोल्डरमा उपकरण थप्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>tools डाइरेक्टरीमा उपलब्ध भएपछि उपकरणहरू यहाँ देखिनेछन्।</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>मोडेल</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>पावर प्रयोग</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>चार्ज</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>स्वास्थ्य</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>दर</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>न्यूनतम दर</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>अधिकतम दर</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>चक्रहरू</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>क्षमता</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>पूर्ण क्षमता</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>डिजाइन</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>मिति</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>कोर / मेमोरी क्लक</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>कोर भोल्टेज</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>भोल्टेज दायरा</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>साइडबार</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>प्रणाली</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>दर दायरा</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>विस्तृत सेन्सर जानकारी देखाउन वा लुकाउन डबल-क्लिक गर्नुहोस्।</value>
+  </data>
+  <data name="SensorsControl_Loading" xml:space="preserve">
+    <value>लोड हुँदैछ...</value>
+  </data>
+  <data name="SensorsControl_NotAvailable" xml:space="preserve">
+    <value>उपलब्ध छैन</value>
+  </data>
+  <data name="SensorsControl_UnknownBattery" xml:space="preserve">
+    <value>अज्ञात ब्याट्री</value>
+  </data>
+  <data name="SensorsControl_UnknownCpu" xml:space="preserve">
+    <value>अज्ञात CPU</value>
+  </data>
+  <data name="SensorsControl_UnknownGpu" xml:space="preserve">
+    <value>अज्ञात GPU</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>कृपया कम्तीमा एउटा सफाइ विकल्प चयन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>सबै सुरु गर्नुहोस्</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>जस्तै 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>जस्तै C:\Drivers</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>कृपया सफा गर्न कम्तीमा एउटा वस्तु चयन गर्नुहोस्।</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>{0} लागू गर्न असफल: {1}</value>
+  </data>
+  <data name="LargeFilesWindow_Title" xml:space="preserve">
+    <value>ठूला फाइल विश्लेषण</value>
+  </data>
+  <data name="LargeFilesWindow_Description" xml:space="preserve">
+    <value>तपाईं हटाउन चाहनुहुने फाइलहरू छनोट गर्नुहोस्। फिल्टरसँग मिल्ने फाइलहरू मात्र देखाइन्छन्।</value>
+  </data>
+  <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
+    <value>यसभन्दा ठूला फाइल फिल्टर गर्नुहोस्:</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
+    <value>१ जीबी</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_10GB" xml:space="preserve">
+    <value>१० जीबी</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_100GB" xml:space="preserve">
+    <value>१०० जीबी</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_1TB" xml:space="preserve">
+    <value>१ टीबी</value>
+  </data>
+  <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
+    <value>अनुकूलन...</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
+    <value>चयन गर्नुहोस्</value>
+  </data>
+  <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
+    <value>फाइल नाम</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
+    <value>साइज</value>
+  </data>
+  <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
+    <value>बाटो</value>
+  </data>
+  <data name="LargeFilesWindow_Confirm" xml:space="preserve">
+    <value>चयन पुष्टि गर्नुहोस्</value>
+  </data>
+  <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
+    <value>चयन गरियो: {0} फाइल ({1})</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>सफ्टवेयर रेन्डरिङ बलपूर्वक लागू गर्नुहोस्</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>रिमोट डेस्कटप वा हेडलेस डिस्प्ले पत्ता लाग्दा सफ्टवेयर रेन्डरिङ प्रयोग गर्नुहोस्। रिस्टार्ट सिफारिस गरिन्छ।</value></data>  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>थिम शैली</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>अनुप्रयोगको लागि दृश्य शैली प्रिसेट छनोट गर्नुहोस्। थिम मोड र उच्चारण रङ शीर्षमा अझै लागू हुन्छन्।</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>जीबी</value>
+  </data>
+  <data name="OsdAutomationStepControl_Message" xml:space="preserve">
+    <value>OSD देखाउनुहोस् वा लुकाउनुहोस्</value>
+  </data>
+  <data name="OsdAutomationStepControl_Title" xml:space="preserve">
+    <value>OSD</value>
+  </data>
+  <data name="OsdSettings_Appearance_BackgroundColor" xml:space="preserve">
+    <value>पृष्ठभूमि रङ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CategoryColor" xml:space="preserve">
+    <value>कोटि रङ</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadius" xml:space="preserve">
+    <value>कुना त्रिज्या</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusBottom" xml:space="preserve">
+    <value>तल</value>
+  </data>
+  <data name="OsdSettings_Appearance_CornerRadiusTop" xml:space="preserve">
+    <value>माथि</value>
+  </data>
+  <data name="OsdSettings_Appearance_CriticalColor" xml:space="preserve">
+    <value>गम्भीर रङ</value>
+  </data>
+  <data name="OsdSettings_Appearance_FontSize" xml:space="preserve">
+    <value>फन्ट साइज</value>
+  </data>
+  <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve">
+    <value>लेबल रङ</value>
+  </data>
+  <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
+    <value>अपारदर्शिता</value>
+  </data>
+  <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
+    <value>मान रङ</value>
+  </data>
+  <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve">
+    <value>चेतावनी रङ</value>
+  </data>
+  <data name="OsdSettings_General_LockPosition" xml:space="preserve">
+    <value>स्थान लक गर्नुहोस्</value>
+  </data>
+  <data name="OsdSettings_General_OverlayStyle" xml:space="preserve">
+    <value>ओभरले शैली</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval" xml:space="preserve">
+    <value>रिफ्रेस अन्तराल</value>
+  </data>
+  <data name="OsdSettings_General_RefreshInterval_Tooltip" xml:space="preserve">
+    <value>सेन्सर रिफ्रेस अन्तराल</value>
+  </data>
+  <data name="OsdSettings_General_ResetPosition" xml:space="preserve">
+    <value>स्थिति रिसेट गर्नुहोस्</value>
+  </data>
+  <data name="OsdSettings_General_SnapThreshold" xml:space="preserve">
+    <value>स्न्यापिङ थ्रेसहोल्ड</value>
+  </data>
+  <data name="OsdSettings_Tabs_Appearance" xml:space="preserve">
+    <value>स्वरूप</value>
+  </data>
+  <data name="OsdSettings_Tabs_General" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="OsdSettings_Tabs_SensorItems" xml:space="preserve">
+    <value>सेन्सरहरू</value>
+  </data>
+  <data name="OsdSettings_Tabs_Thresholds" xml:space="preserve">
+    <value>थ्रेसहोल्डहरू</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Critical" xml:space="preserve">
+    <value>गम्भीर</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline" xml:space="preserve">
+    <value>FPS रेडलाइन</value>
+  </data>
+  <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
+    <value>न्यूनतम स्वीकार्य फ्रेम दर। यसभन्दा कममा, रङ गम्भीर हुन्छ।</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
+    <value>कम FPS डेल्टा</value>
+  </data>
+  <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
+    <value>औसत FPS र १% कम बीचको अधिकतम भिन्नता। यसभन्दा माथि, काउन्टर गम्भीर हुन्छ।</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
+    <value>कार्यसम्पादन</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Temperature" xml:space="preserve">
+    <value>तापक्रम</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Usage" xml:space="preserve">
+    <value>प्रयोग</value>
+  </data>
+  <data name="OsdSettings_Thresholds_Warning" xml:space="preserve">
+    <value>चेतावनी</value>
+  </data>
+  <data name="OsdWindow_Title" xml:space="preserve">
+    <value>OSD सेटिङ्स</value>
+  </data>
+  <data name="Osd_Cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Osd_CPU_Fan" xml:space="preserve">
+    <value>फ्यान</value>
+  </data>
+  <data name="Osd_Disk_0_Temperature" xml:space="preserve">
+    <value>डिस्क १ तापक्रम</value>
+  </data>
+  <data name="Osd_Disk_1_Temperature" xml:space="preserve">
+    <value>डिस्क २ तापक्रम</value>
+  </data>
+  <data name="Osd_ECoreClock" xml:space="preserve">
+    <value>E-कोर क्लक</value>
+  </data>
+  <data name="Osd_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Osd_Frame_Time" xml:space="preserve">
+    <value>फ्रेम समय</value>
+  </data>
+  <data name="Osd_Game" xml:space="preserve">
+    <value>खेल</value>
+  </data>
+  <data name="Osd_Gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="Osd_GPU_Fan" xml:space="preserve">
+    <value>फ्यान</value>
+  </data>
+  <data name="Osd_Low_Fps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="Osd_Memory_Temperature" xml:space="preserve">
+    <value>तापक्रम</value>
+  </data>
+  <data name="Osd_Memory_Utilization" xml:space="preserve">
+    <value>प्रयोग</value>
+  </data>
+  <data name="Osd_Pch" xml:space="preserve">
+    <value>PCH</value>
+  </data>
+  <data name="Osd_PCH_Fan" xml:space="preserve">
+    <value>PCH फ्यान</value>
+  </data>
+  <data name="Osd_PCoreClock" xml:space="preserve">
+    <value>P-कोर क्लक</value>
+  </data>
+  <data name="Osd_Style_Bar" xml:space="preserve">
+    <value>पट्टी</value>
+  </data>
+  <data name="Osd_Style_Panel" xml:space="preserve">
+    <value>प्यानेल</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
+    <value>बोर्ड तापक्रम</value>
+  </data>
+  <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
+    <value>मदरबोर्ड</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
+    <value>विस्तृत तापक्रम, फ्रिक्वेन्सी र पावर सीमा निगरानी गर्न उन्नत हार्डवेयर पोलिङ सक्षम गर्नुहोस्।</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
+    <value>हार्डवेयर सेन्सर प्रयोग गर्न पहिले PawnIO स्थापना गर्नुपर्छ!</value>
+  </data>
+  <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
+    <value>हार्डवेयर सेन्सरहरू</value>
+  </data>
+  <data name="SettingsPage_Osd_Message" xml:space="preserve">
+    <value>लाइभ सेन्सर डाटा देखाउने फ्लोटिङ ओभरले।</value>
+  </data>
+  <data name="SettingsPage_Osd_Title" xml:space="preserve">
+    <value>OSD सक्षम गर्नुहोस्</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>वा</value>
+  </data>
+  <data name="SensorsControl_CPU_Power" xml:space="preserve">
+    <value>पावर</value>
+  </data>
+  <data name="SensorsControl_GpuCoreTemperature_Title" xml:space="preserve">
+    <value>कोर तापक्रम</value>
+  </data>
+  <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
+    <value>VRAM तापक्रम</value>
+  </data>
+  <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
+    <value>VRAM प्रयोग</value>
+  </data>
+  <data name="SensorsControl_GPU_Power" xml:space="preserve">
+    <value>पावर</value>
+  </data>
+  <data name="SensorsControl_Memory_Title" xml:space="preserve">
+    <value>RAM</value>
+  </data>
+  <data name="SensorItem_PchTemperature" xml:space="preserve">
+    <value>PCH तापक्रम</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
+    <value>प्लगइन {0} स्थापना भयो। उपलब्ध प्रवेश बिन्दु सुरु गर्न Open प्रयोग गर्नुहोस्।</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
+    <value>प्लगइन {0} स्थापना भयो र प्रणाली अनुकूलनमा खोलियो।</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
+    <value>स्थापित भयो, तर कुनै प्रवेश बिन्दु छैन</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
+    <value>प्लगइन {0} स्थापना भयो, तर यसको रनटाइम UI लोड गर्न सकिएन। अनुप्रयोग रिस्टार्ट गर्नुहोस् वा प्लगइन फेरि स्थापना गर्नुहोस्।</value>
+  </data>
+  <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
+    <value>प्लगइन {0} स्थापना भयो, तर यसले प्रयोगकर्ता-मुखी प्रवेश बिन्दु प्रदान गर्दैन। यसले पृष्ठभूमि सेवाहरू वा म्यानिफेस्ट डाटा मात्र प्रदान गर्न सक्छ।</value>
+  </data>
+</root>

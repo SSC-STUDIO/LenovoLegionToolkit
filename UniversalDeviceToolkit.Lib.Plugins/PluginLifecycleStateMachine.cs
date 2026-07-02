@@ -99,6 +99,7 @@ public sealed class PluginLifecycleStateMachine
         (PluginState.Disabled, PluginState.Enabled),
         (PluginState.Disabled, PluginState.Installed),
         (PluginState.Disabled, PluginState.NotInstalled),
+        (PluginState.Disabled, PluginState.Error),
 
         (PluginState.Error, PluginState.Installed),
         (PluginState.Error, PluginState.NotInstalled),
@@ -181,6 +182,9 @@ public sealed class PluginLifecycleStateMachine
     /// <returns><c>true</c> when the transition was applied.</returns>
     public bool TryTransition(string? pluginId, ref PluginState current, PluginState to)
     {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
         var result = ValidateAndLog(pluginId, current, to);
         if (!result.IsAllowed)
             return false;

@@ -58,6 +58,15 @@ public static class ExceptionHelper
     public static ArgumentException InvalidActionKey(string paramName) =>
         new(Resource.Exception_InvalidActionKey, paramName);
 
+    public static InvalidOperationException OptimizationActionNotFound(string actionKey) =>
+        new(string.Format(Resource.Exception_OptimizationActionNotFound, actionKey));
+
+    public static InvalidOperationException OptimizationActionRollbackUnavailable(string actionKey) =>
+        new(string.Format(Resource.Exception_OptimizationActionRollbackUnavailable, actionKey));
+
+    public static InvalidOperationException CommandExitedNonZero(string command, int exitCode, string errorOutput) =>
+        new(string.Format(Resource.Exception_CommandExitedNonZero, command, exitCode, errorOutput));
+
     public static ArgumentException CommandCannotBeEmpty(string paramName) =>
         new(Resource.Exception_CommandCannotBeEmpty, paramName);
 

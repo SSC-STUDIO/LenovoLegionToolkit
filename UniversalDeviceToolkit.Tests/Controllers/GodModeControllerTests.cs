@@ -506,13 +506,13 @@ public class GodModeControllerTests : UnitTestBase
 
     private void BackupCompatibilityState()
     {
-        _originalMachineInformation = GetCompatibilityField("_machineInformation").GetValue(null);
+        _originalMachineInformation = GetCompatibilityField("_machineInformationLazy").GetValue(null);
         _originalIsCompatible = GetCompatibilityField("_isCompatible").GetValue(null);
     }
 
     private void RestoreCompatibilityState()
     {
-        GetCompatibilityField("_machineInformation").SetValue(null, _originalMachineInformation);
+        GetCompatibilityField("_machineInformationLazy").SetValue(null, _originalMachineInformation);
         GetCompatibilityField("_isCompatible").SetValue(null, _originalIsCompatible);
     }
 
@@ -533,7 +533,8 @@ public class GodModeControllerTests : UnitTestBase
             }
         };
 
-        GetCompatibilityField("_machineInformation").SetValue(null, machineInformation);
+        var lazy = new Lazy<Task<MachineInformation>>(() => Task.FromResult(machineInformation));
+        GetCompatibilityField("_machineInformationLazy").SetValue(null, lazy);
         GetCompatibilityField("_isCompatible").SetValue(null, true);
     }
 

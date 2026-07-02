@@ -1348,6 +1348,33 @@ namespace LenovoLegionToolkit.Lib.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Optimization action not found: {0}.
+        /// </summary>
+        public static string Exception_OptimizationActionNotFound {
+            get {
+                return ResourceManager.GetString("Exception_OptimizationActionNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Optimization action cannot be reverted: {0}.
+        /// </summary>
+        public static string Exception_OptimizationActionRollbackUnavailable {
+            get {
+                return ResourceManager.GetString("Exception_OptimizationActionRollbackUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Command '{0}' failed with exit code {1}. {2}.
+        /// </summary>
+        public static string Exception_CommandExitedNonZero {
+            get {
+                return ResourceManager.GetString("Exception_CommandExitedNonZero", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Command cannot be null or empty..
         /// </summary>
         public static string Exception_CommandCannotBeEmpty {

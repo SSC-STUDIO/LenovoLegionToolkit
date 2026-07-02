@@ -309,7 +309,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public void GenericSensorsController_ShouldBeAssignableToSensorsController()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var controller = new GenericSensorsController(gpuController);
 
         controller.Should().BeAssignableTo<ISensorsController>();
@@ -318,7 +318,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public async Task GenericSensorsController_GetDataAsync_ShouldNotThrowWhenVendorSensorsAreUnavailable()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         using var controller = new GenericSensorsController(gpuController);
 
         var act = () => controller.GetDataAsync();
@@ -329,7 +329,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public async Task GenericSensorsController_IsSupportedAsync_ShouldAllowFallbackOnSupportedMachines()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         using var controller = new TestableGenericSensorsController(gpuController, () => Task.FromResult(true));
 
         var supported = await controller.IsSupportedAsync();
@@ -340,7 +340,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public async Task GenericSensorsController_IsSupportedAsync_ShouldRetryWhenFirstSnapshotHasNoData()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         var delayProvider = new Mock<IDelayProvider>();
         delayProvider
             .Setup(provider => provider.Delay(It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
@@ -361,7 +361,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public async Task AbstractSensorsController_GetDataAsync_ShouldUseLibreHardwareMonitorFallbackForSummaryMetrics()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         using var controller = new FallbackSensorsController(
             gpuController,
             cpuUtilization: 37,
@@ -388,7 +388,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     [Fact]
     public async Task AbstractSensorsController_GetDataAsync_ShouldContinueCpuWattageFallbackWhenWmiReturnsZero()
     {
-        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
         using var controller = new CpuWattageFallbackSensorsController(
             gpuController,
             performanceCounterWattage: -1,

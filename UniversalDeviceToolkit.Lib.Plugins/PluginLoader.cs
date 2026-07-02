@@ -41,6 +41,7 @@ public class PluginLoader : IPluginLoader
     private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> DependencyResolutionContexts = new(StringComparer.OrdinalIgnoreCase);
     private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> PluginDependencyContexts = new(StringComparer.OrdinalIgnoreCase);
     private static readonly ConcurrentDictionary<string, PluginAssemblyLoadContext> PluginLoadContexts = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, byte> RejectedDependencyPaths = new(StringComparer.OrdinalIgnoreCase);
     private static readonly object DependencyResolverRegistrationLock = new();
     private static bool _dependencyResolverRegistered;
 
@@ -323,6 +324,10 @@ public class PluginLoader : IPluginLoader
             if (string.IsNullOrWhiteSpace(candidatePath) || !File.Exists(candidatePath))
                 return null;
 
+            var normalizedCandidatePath = Path.GetFullPath(candidatePath);
+            if (RejectedDependencyPaths.ContainsKey(normalizedCandidatePath))
+                return null;
+
             // Note: AssemblyResolve event handlers must return synchronously.
             // We use GetAwaiter().GetResult() here because the event signature requires a synchronous return.
             // This is a known limitation of AppDomain.AssemblyResolve - the alternative would be
@@ -331,6 +336,7 @@ public class PluginLoader : IPluginLoader
             var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
             if (!IsValidPluginDependencySignature(signatureResult, requestedAssemblyName, candidatePath))
             {
+                RejectedDependencyPaths.TryAdd(normalizedCandidatePath, 0);
                 Log.Instance.Warning($"Rejected plugin dependency due to invalid signature. [path={candidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
                 return null;
             }

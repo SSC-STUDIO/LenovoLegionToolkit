@@ -405,7 +405,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(key))
             return string.Empty;
 
-        var isPluginResourceScope = resourceAnchorType is not null || categoryResourceManager is not null;
         var resourceManager = ResolveResourceManager(resourceAnchorType) ?? categoryResourceManager;
         if (resourceManager is not null)
         {
@@ -414,10 +413,11 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                 return value;
         }
 
-        if (isPluginResourceScope)
-            return key;
+        var hostValue = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, string.Empty, ActiveCulture);
+        if (!string.IsNullOrWhiteSpace(hostValue))
+            return hostValue;
 
-        return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, key, ActiveCulture);
+        return key;
     }
 
     private static ResourceManager? ResolveResourceManager(Type? resourceAnchorType)
@@ -737,123 +737,100 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     private async Task HandleOptimizationActionChangeAsync(OptimizationActionViewModel actionVm)
     {
-        // Null check
-        if (actionVm == null)
+        if (actionVm is null)
             return;
 
-        if (IsBusy) return;
+        var desiredApplied = actionVm.IsSelected;
+
+        if (IsBusy)
+        {
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied).ConfigureAwait(false);
+            await ShowOptimizationSnackbarAsync(
+                T("WindowsOptimizationPage_Optimization_Busy_Wait", "Please wait for the current optimization to finish."),
+                SnackbarType.Warning).ConfigureAwait(false);
+            return;
+        }
 
         IsBusy = true;
         try
         {
-            // Execute the action immediately when clicked
-            await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+            if (desiredApplied)
+                await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+            else
+                await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
 
-            // Re-scan state to verify it was applied
             var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
 
-            // Ensure UI updates happen on UI thread
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+            if (isApplied != desiredApplied)
             {
-                await Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    _isRefreshingStates = true;
-                    try
-                    {
-                        actionVm.IsSelected = isApplied;
-                        UpdateSelectedActions();
-                        // Save selection state after applying
-                        SaveOptimizationSelection();
-                    }
-                    finally
-                    {
-                        _isRefreshingStates = false;
-                    }
-                });
+                await ShowOptimizationSnackbarAsync(
+                    string.Format(
+                        T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
+                        actionVm.Title,
+                        T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
+                    SnackbarType.Error).ConfigureAwait(false);
             }
-            else
-            {
-                _isRefreshingStates = true;
-                try
-                {
-                    actionVm.IsSelected = isApplied;
-                    UpdateSelectedActions();
-                    // Save selection state after applying
-                    SaveOptimizationSelection();
-                }
-                finally
-                {
-                    _isRefreshingStates = false;
-                }
-            }
+
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied).ConfigureAwait(false);
+            await RunOnUiAsync(SaveOptimizationSelection).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            // Log exception for debugging
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to handle optimization action change for {actionVm?.Key ?? "unknown"}", ex);
+                Log.Instance.Trace($"Failed to handle optimization action change for {actionVm.Key}", ex);
 
-            // Provide feedback to user
-            if (Application.Current?.Dispatcher != null)
-            {
-                await Application.Current.Dispatcher.BeginInvoke(() => SnackbarHelper.Show(
-                    Resource.SettingsPage_WindowsOptimization_Title,
-                    string.Format(T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"), actionVm?.Title ?? "Unknown", ex.Message),
-                    SnackbarType.Error));
-            }
+            await ShowOptimizationSnackbarAsync(
+                string.Format(
+                    T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
+                    actionVm.Title,
+                    ex.Message),
+                SnackbarType.Error).ConfigureAwait(false);
 
-            // Re-scan on error to ensure UI reflects actual state
-            var isApplied = actionVm is not null ? await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false) : false;
-            
-            // Ensure UI updates happen on UI thread
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-            {
-                await Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    _isRefreshingStates = true;
-                    try
-                    {
-                        if (actionVm is not null)
-                            actionVm.IsSelected = isApplied;
-                        UpdateSelectedActions();
-                        // Save selection state even on error (reflects actual state)
-                        SaveOptimizationSelection();
-                    }
-                    finally
-                    {
-                        _isRefreshingStates = false;
-                    }
-                });
-            }
-            else
-            {
-                _isRefreshingStates = true;
-                try
-                {
-                    if (actionVm is not null)
-                        actionVm.IsSelected = isApplied;
-                    UpdateSelectedActions();
-                    // Save selection state even on error (reflects actual state)
-                    SaveOptimizationSelection();
-                }
-                finally
-                {
-                    _isRefreshingStates = false;
-                }
-            }
+            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied).ConfigureAwait(false);
+            await RunOnUiAsync(SaveOptimizationSelection).ConfigureAwait(false);
         }
         finally
         {
-            // Ensure UI updates happen on UI thread
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-            {
-                await Application.Current.Dispatcher.BeginInvoke(() => IsBusy = false);
-            }
-            else
-            {
-                IsBusy = false;
-            }
+            await RunOnUiAsync(() => IsBusy = false).ConfigureAwait(false);
         }
+    }
+
+    private Task SetOptimizationActionSelectedOnUiAsync(OptimizationActionViewModel actionVm, bool isSelected)
+    {
+        return RunOnUiAsync(() =>
+        {
+            _isRefreshingStates = true;
+            try
+            {
+                actionVm.IsSelected = isSelected;
+                UpdateSelectedActions();
+            }
+            finally
+            {
+                _isRefreshingStates = false;
+            }
+        });
+    }
+
+    private Task ShowOptimizationSnackbarAsync(string message, SnackbarType type)
+    {
+        return RunOnUiAsync(() => SnackbarHelper.Show(
+            Resource.SettingsPage_WindowsOptimization_Title,
+            message,
+            type));
+    }
+
+    private Task RunOnUiAsync(Action action)
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher is null || dispatcher.CheckAccess())
+        {
+            action();
+            return Task.CompletedTask;
+        }
+
+        return dispatcher.InvokeAsync(action).Task;
     }
 
     public async Task ScanOptimizationStatesAsync()

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
 using Humanizer;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -79,6 +80,7 @@ public partial class SensorsControl
     private TextBlock? _gpuVoltageText;
     private TextBlock? _gpuVoltageRangeText;
     private bool _textBlockReferencesCached;
+    private readonly Dictionary<string, FrameworkElement?> _findNameCache = new(StringComparer.Ordinal);
 
     public SensorsControl()
     {
@@ -165,13 +167,19 @@ public partial class SensorsControl
         if (_sensorsGrid is not null && _sensorsGrid.Columns != 3)
             _sensorsGrid.Columns = 3;
 
+        if (_skeletonGrid is not null && _skeletonGrid.Columns != 3)
+            _skeletonGrid.Columns = 3;
+
         var mode = GetSensorSummaryLayoutMode(width);
+        var isCompact = mode == SensorSummaryLayoutMode.Compact;
+        var isWide = mode == SensorSummaryLayoutMode.Wide;
+
+        ApplySkeletonSummaryLayout(isCompact, isWide);
+
         if (mode == _sensorSummaryLayoutMode)
             return;
 
         _sensorSummaryLayoutMode = mode;
-        var isCompact = mode == SensorSummaryLayoutMode.Compact;
-        var isWide = mode == SensorSummaryLayoutMode.Wide;
 
         SetVisibility("_cpuModelName", !isCompact);
         SetVisibility("_batteryModelName", !isCompact);
@@ -205,6 +213,35 @@ public partial class SensorsControl
 
         if (!CanShowSensorDetails)
             CollapseDetailPanels();
+    }
+
+    private void ApplySkeletonSummaryLayout(bool isCompact, bool isWide)
+    {
+        SetVisibility("_skeletonCpuSubtitle", !isCompact);
+        SetVisibility("_skeletonBatterySubtitle", !isCompact);
+        SetVisibility("_skeletonGpuSubtitle", !isCompact);
+
+        SetVisibility("_skeletonCpuLegend", !isCompact);
+        SetVisibility("_skeletonBatteryLegend", !isCompact);
+        SetVisibility("_skeletonGpuLegend", !isCompact);
+
+        SetVisibility("_skeletonCpuTrendPanel", !isCompact);
+        SetVisibility("_skeletonBatteryTrendPanel", !isCompact);
+        SetVisibility("_skeletonGpuTrendPanel", !isCompact);
+
+        ApplySummaryGaugeSize(_skeletonCpuGauge, isCompact);
+        ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact);
+        ApplySummaryGaugeSize(_skeletonGpuGauge, isCompact);
+
+        ApplyTrendPanelHeight(_skeletonCpuTrendPanel, isWide);
+        ApplyTrendPanelHeight(_skeletonBatteryTrendPanel, isWide);
+        ApplyTrendPanelHeight(_skeletonGpuTrendPanel, isWide);
+    }
+
+    private void SetLiveSensorContentVisible(bool visible)
+    {
+        if (_sensorsCard is not null)
+            _sensorsCard.Opacity = visible ? 1 : 0;
     }
 
     private static void ApplySummaryGaugeSize(FrameworkElement? gauge, bool isCompact)
@@ -244,6 +281,51 @@ public partial class SensorsControl
         }
     }
 
+    private void HideSkeletonOverlay()
+    {
+        if (_skeletonOverlay is null)
+            return;
+
+        if (_skeletonOverlay.Visibility != Visibility.Visible)
+        {
+            SetLiveSensorContentVisible(true);
+            return;
+        }
+
+        SetLiveSensorContentVisible(true);
+
+        try
+        {
+            if (TryFindResource("SkeletonFadeOutStoryboard") is Storyboard storyboard)
+            {
+                storyboard.Begin(this);
+            }
+            else
+            {
+                _skeletonOverlay.Visibility = Visibility.Collapsed;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace($"HideSkeletonOverlay failed: {ex.Message}", ex);
+            _skeletonOverlay.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void ShowSkeletonOverlay()
+    {
+        if (_skeletonOverlay is null)
+            return;
+
+        ApplySkeletonSummaryLayout(
+            _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Compact,
+            _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Wide);
+
+        SetLiveSensorContentVisible(false);
+        _skeletonOverlay.Opacity = 1;
+        _skeletonOverlay.Visibility = Visibility.Visible;
+    }
+
     public Task RestartInitialSensorDataLoad()
     {
         lock (_initialSensorDataLoadLock)
@@ -252,6 +334,7 @@ public partial class SensorsControl
             {
                 _hasRenderedSensorData = true;
                 _firstSensorDataTaskCompletionSource.TrySetResult();
+                _ = Dispatcher.InvokeAsync(HideSkeletonOverlay);
                 return _firstSensorDataTaskCompletionSource.Task;
             }
 
@@ -259,6 +342,7 @@ public partial class SensorsControl
             if (_firstSensorDataTaskCompletionSource.Task.IsCompleted)
                 _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
 
+            _ = Dispatcher.InvokeAsync(ShowSkeletonOverlay);
             return _firstSensorDataTaskCompletionSource.Task;
         }
     }
@@ -421,7 +505,7 @@ public partial class SensorsControl
                 ?? _batteryGauge.RingBrush;
         }
 
-        if (FindName("_batteryStatusLabel") is TextBlock statusLabel)
+        if (FindNameCached("_batteryStatusLabel") is TextBlock statusLabel)
         {
             statusLabel.Text = GetBatteryStatusText(batteryInfo);
             statusLabel.Visibility = (batteryInfo.IsLowBattery || powerAdapterStatus == PowerAdapterStatus.ConnectedLowWattage)
@@ -434,7 +518,7 @@ public partial class SensorsControl
         SetVisibility("_lowWattageWarning", powerAdapterStatus == PowerAdapterStatus.ConnectedLowWattage);
 
         // Icon
-        if (FindName("_batteryIcon") is Wpf.Ui.Controls.SymbolIcon icon)
+        if (FindNameCached("_batteryIcon") is Wpf.Ui.Controls.SymbolIcon icon)
         {
             icon.Symbol = batteryInfo.IsCharging
                 ? SymbolRegular.BatteryCharge24
@@ -452,17 +536,17 @@ public partial class SensorsControl
         // This relies on the UI elements being present in the XAML
         // I will implement this assuming the UI structure I will create
         UpdateDetailText("_batteryHealthText", $"{info.BatteryHealth:0.00}%");
-        if (FindName("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar) healthBar.Value = info.BatteryHealth;
+        if (FindNameCached("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar) healthBar.Value = info.BatteryHealth;
 
-        if (FindName("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
-            FindName("_batteryTempText") is ContentControl tempLabel)
+        if (FindNameCached("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
+            FindNameCached("_batteryTempText") is ContentControl tempLabel)
         {
             var temperature = info.BatteryTemperatureC ?? -1;
             UpdateValue(tempBar, tempLabel, 60, temperature, GetTemperatureText(info.BatteryTemperatureC));
         }
 
-        if (FindName("_batteryRateBar") is System.Windows.Controls.Primitives.RangeBase rateBar &&
-            FindName("_batteryRateText") is ContentControl rateLabel)
+        if (FindNameCached("_batteryRateBar") is System.Windows.Controls.Primitives.RangeBase rateBar &&
+            FindNameCached("_batteryRateText") is ContentControl rateLabel)
         {
             var rateW = Math.Abs(info.DischargeRate / 1000.0);
             // Assuming 100W is max reasonable charge/discharge rate for bar scaling
@@ -499,11 +583,11 @@ public partial class SensorsControl
     {
         var displayText = text == "-" || !IsUsefulDetailValue(text) ? string.Empty : text;
 
-        if (FindName(name) is TextBlock tb) 
+        if (FindNameCached(name) is TextBlock tb) 
         {
             tb.Text = displayText;
         }
-        else if (FindName(name) is Label lbl) lbl.Content = displayText;
+        else if (FindNameCached(name) is Label lbl) lbl.Content = displayText;
 
         UpdateDetailContainerVisibility(name, displayText);
     }
@@ -536,13 +620,23 @@ public partial class SensorsControl
             _ => null
         };
 
-        if (detailElementName is not null && FindName(detailElementName) is FrameworkElement detailElement)
+        if (detailElementName is not null && FindNameCached(detailElementName) is FrameworkElement detailElement)
             detailElement.Visibility = string.IsNullOrWhiteSpace(displayText) ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void SetVisibility(string name, bool visible)
     {
-        if (FindName(name) is UIElement el) el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        if (FindNameCached(name) is UIElement el) el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private FrameworkElement? FindNameCached(string name)
+    {
+        if (_findNameCache.TryGetValue(name, out var cached))
+            return cached;
+
+        var element = FindName(name) as FrameworkElement;
+        _findNameCache[name] = element;
+        return element;
     }
 
     private static string GetBatteryStatusText(BatteryInformation batteryInfo)
@@ -655,14 +749,14 @@ public partial class SensorsControl
         if (_textBlockReferencesCached)
             return;
 
-        _cpuWattageText = FindName("_cpuWattage") as TextBlock;
-        _cpuTempRangeText = FindName("_cpuTempRange") as TextBlock;
-        _cpuVoltageText = FindName("_cpuVoltage") as TextBlock;
-        _cpuVoltageRangeText = FindName("_cpuVoltageRange") as TextBlock;
-        _gpuWattageText = FindName("_gpuWattage") as TextBlock;
-        _gpuTempRangeText = FindName("_gpuTempRange") as TextBlock;
-        _gpuVoltageText = FindName("_gpuVoltage") as TextBlock;
-        _gpuVoltageRangeText = FindName("_gpuVoltageRange") as TextBlock;
+        _cpuWattageText = FindNameCached("_cpuWattage") as TextBlock;
+        _cpuTempRangeText = FindNameCached("_cpuTempRange") as TextBlock;
+        _cpuVoltageText = FindNameCached("_cpuVoltage") as TextBlock;
+        _cpuVoltageRangeText = FindNameCached("_cpuVoltageRange") as TextBlock;
+        _gpuWattageText = FindNameCached("_gpuWattage") as TextBlock;
+        _gpuTempRangeText = FindNameCached("_gpuTempRange") as TextBlock;
+        _gpuVoltageText = FindNameCached("_gpuVoltage") as TextBlock;
+        _gpuVoltageRangeText = FindNameCached("_gpuVoltageRange") as TextBlock;
         _textBlockReferencesCached = true;
     }
 
@@ -1111,7 +1205,7 @@ public partial class SensorsControl
             || (_sensorRuntimeAvailable && (IsElementVisible("_cpuDetailsPanel") || IsElementVisible("_gpuDetailsPanel"))));
 
     private bool IsElementVisible(string name) =>
-        FindName(name) is FrameworkElement element && element.Visibility == Visibility.Visible;
+        FindNameCached(name) is FrameworkElement element && element.Visibility == Visibility.Visible;
 
     private async Task RefreshDetailedValuesAsync()
     {
@@ -1170,7 +1264,7 @@ public partial class SensorsControl
             CollapseDetailPanels();
         }
 
-        if (FindName("_batterySectionColumn") is FrameworkElement batterySection)
+        if (FindNameCached("_batterySectionColumn") is FrameworkElement batterySection)
             batterySection.Visibility = Visibility.Visible;
 
         Visibility = Visibility.Visible;
@@ -1200,6 +1294,7 @@ public partial class SensorsControl
             _hasRenderedSensorData = true;
             _firstSensorDataTaskCompletionSource.TrySetResult();
         }
+        _ = Dispatcher.InvokeAsync(HideSkeletonOverlay);
     }
 
     private static bool HasInitialSummarySensorData(SensorData data) =>
@@ -1562,7 +1657,7 @@ public partial class SensorsControl
 
     private void UpdateModelNameText(string elementName, string? modelName)
     {
-        if (FindName(elementName) is not TextBlock textBlock)
+        if (FindNameCached(elementName) is not TextBlock textBlock)
             return;
 
         var normalizedModelName = NormalizeModelName(modelName);

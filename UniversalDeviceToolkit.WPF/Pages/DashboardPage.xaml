@@ -42,46 +42,6 @@
                     Margin="0,16,16,0"
                     AutomationProperties.AutomationId="DashboardLoadingSkeleton"
                     AutomationProperties.Name="{x:Static resources:Resource.DashboardPage_Title}">
-                    <Border Style="{StaticResource DashboardSkeletonCardStyle}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="1" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="1" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <Border Width="118" Height="18" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,26,72,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,96,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,56,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,120,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                            </StackPanel>
-
-                            <Border Grid.Column="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
-
-                            <StackPanel Grid.Column="2">
-                                <Border Width="132" Height="18" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,26,68,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,110,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,82,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,128,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                            </StackPanel>
-
-                            <Border Grid.Column="3" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
-
-                            <StackPanel Grid.Column="4">
-                                <Border Width="108" Height="18" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,26,64,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,92,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,76,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                                <Border Height="6" Margin="0,16,116,0" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
                     <Grid x:Name="_skeletonGroupsGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -124,7 +124,7 @@
     <value>Sistema</value>
   </data>
   <data name="AlwaysOnUSBState_Off" xml:space="preserve">
-    <value>Òshik</value>
+    <value>O'chiq</value>
   </data>
   <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
     <value>Hámiyshe qosıwlı</value>
@@ -140,6 +140,12 @@
   </data>
   <data name="AutorunState_EnabledDelayed" xml:space="preserve">
     <value>Irkilis penen iske túsirilgen</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>Yoqiq</value>
   </data>
   <data name="BatteryState_Conservation" xml:space="preserve">
     <value>Saqlaw</value>
@@ -181,16 +187,28 @@
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
-    <value>Bólekli videokarta</value>
+    <value>dGPU</value>
   </data>
   <data name="HybridModeState_On" xml:space="preserve">
-    <value>Gibrid rejimi</value>
+    <value>Gitibar</value>
   </data>
   <data name="HybridModeState_OnAuto" xml:space="preserve">
-    <value>Gibrid-Avto</value>
+    <value>Gitibar-Avto</value>
   </data>
   <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
-    <value>Gibrid-iGPU</value>
+    <value>Gitibar-iGPU</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC adapter</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB quvvat yetkazish</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC va USB PD</value>
   </data>
   <data name="MicrophoneState_Off" xml:space="preserve">
     <value>Óshirilgen</value>
@@ -200,32 +218,50 @@
     <value>Janıq</value>
     <comment>Informs the user that the microphone is or will be turned on.</comment>
   </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>Uzoq</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>Oddiy</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>Qisqa</value>
+  </data>
   <data name="NotificationPosition_BottomCenter" xml:space="preserve">
-    <value>Tómende orayda</value>
+    <value>Pastki markaz</value>
   </data>
   <data name="NotificationPosition_BottomLeft" xml:space="preserve">
-    <value>Tómen shep</value>
+    <value>Pastki chap</value>
   </data>
   <data name="NotificationPosition_BottomRight" xml:space="preserve">
-    <value>Tómen oń</value>
+    <value>Pastki o'ng</value>
   </data>
   <data name="NotificationPosition_Center" xml:space="preserve">
-    <value>Oray</value>
+    <value>Markaz</value>
   </data>
   <data name="NotificationPosition_CenterLeft" xml:space="preserve">
-    <value>Orayda shepte</value>
+    <value>Markaziy chap</value>
   </data>
   <data name="NotificationPosition_CenterRight" xml:space="preserve">
-    <value>Orayda ońda</value>
+    <value>Markaziy o'ng</value>
   </data>
   <data name="NotificationPosition_TopCenter" xml:space="preserve">
-    <value>Joqarıda orayda</value>
+    <value>Yuqori markaz</value>
   </data>
   <data name="NotificationPosition_TopLeft" xml:space="preserve">
-    <value>Joqarıda shepte</value>
+    <value>Yuqori chap</value>
   </data>
   <data name="NotificationPosition_TopRight" xml:space="preserve">
-    <value>Joqarıda ońda</value>
+    <value>Yuqori o'ng</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
     <value>Óshirilgen</value>
@@ -243,149 +279,188 @@
     <value>Janıq</value>
     <comment>Informs the user that Overdrive is or will be turned on.</comment>
   </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>Yoqiq</value>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>Yoqiq</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>Óshirilgen</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows quvvat rejimi</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows quvvat rejasi</value>
+  </data>
   <data name="PowerModeState_Balance" xml:space="preserve">
-    <value>Teńlestirilgen</value>
+    <value>Muvozanat</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Ekstremal</value>
   </data>
   <data name="PowerModeState_GodMode" xml:space="preserve">
     <value>Arnawlı</value>
   </data>
   <data name="PowerModeState_Performance" xml:space="preserve">
-    <value>Maksimal ónimdarlıq</value>
+    <value>Unumdorlik</value>
   </data>
   <data name="PowerModeState_Quiet" xml:space="preserve">
-    <value>Tınısh rejim</value>
+    <value>Tinch</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>Yuqori</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>Past</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>Nafas</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>Yumshoq</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>Statik</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>Chapdan o'ngga to'lqin</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>O'ngdan chapga to'lqin</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>Shablon 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>Shablon 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>Shablon 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>Shablon 2</value>
   </data>
   <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
     <value>Tez</value>
   </data>
   <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
-    <value>Júdá tez</value>
+    <value>Eng tez</value>
   </data>
   <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
-    <value>Ásten</value>
+    <value>Sekin</value>
   </data>
   <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
-    <value>Júdá ásten</value>
-  </data>
-  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
-    <value>Joqarı</value>
-  </data>
-  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
-    <value>Pás</value>
-  </data>
-  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
-    <value>Nápes</value>
-  </data>
-  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
-    <value>Tegis</value>
-  </data>
-  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
-    <value>Háreketsiz</value>
-  </data>
-  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
-    <value>Tolqın shepke</value>
-  </data>
-  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
-    <value>Tolqın ońǵa</value>
-  </data>
-  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
-    <value>Óshik</value>
-  </data>
-  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
-    <value>Sazlawlar jıyındısı 1</value>
-  </data>
-  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
-    <value>Sazlawlar jıyındısı 3</value>
-  </data>
-  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
-    <value>Sazlawlar jıyındısı 2</value>
+    <value>Eng sekin</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
-    <value>Joqarı</value>
+    <value>Yuqori</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
-    <value>Pás</value>
+    <value>Past</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
-    <value>Ortasha</value>
+    <value>O'rta</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
-    <value>Óshik</value>
+    <value>O'chiq</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
-    <value>Tómennen joqarıǵa</value>
+    <value>Pastdan yuqoriga</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
-    <value>Saat jónelisi boyınsha</value>
+    <value>Soat yo'nalishida</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
-    <value>Saat jónelisine qarsı</value>
+    <value>Soat teskari yo'nalishida</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
-    <value>Shepten ońǵa</value>
+    <value>Chapdan o'ngga</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
-    <value>Ońnan shepke</value>
+    <value>O'ngdan chapga</value>
   </data>
   <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
-    <value>Joqarıdan tómenge</value>
+    <value>Yuqoridan pastga</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
-    <value>Hámiyshe</value>
+    <value>Doimiy</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
-    <value>Shawqım</value>
+    <value>Audio sakrash</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
-    <value>Dawıs tolqını</value>
+    <value>Audio to'lqin</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
-    <value>Aurora Sinx</value>
+    <value>Aurora sinxronizatsiya</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
-    <value>Reńdi ózgertiw</value>
+    <value>Rang o'zgarishi</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
-    <value>Reń pulsi</value>
+    <value>Rang urishi</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
-    <value>Reń tolqını</value>
+    <value>Rang to'lqini</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
-    <value>Jawın</value>
+    <value>Momaqaldiroq</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
-    <value>Reńli vint</value>
+    <value>Kamalak burishi</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
-    <value>Ayqulaq tolqın</value>
+    <value>Kamalak to'lqini</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
-    <value>Tolqın</value>
+    <value>To'lqin</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
-    <value>Tegis</value>
+    <value>Yumshoq</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
-    <value>Túri</value>
+    <value>Yozish</value>
   </data>
   <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
-    <value>Áste</value>
+    <value>Sekin</value>
   </data>
   <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
-    <value>Ortasha</value>
+    <value>O'rta</value>
   </data>
   <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
     <value>Tez</value>
   </data>
   <data name="Theme_Dark" xml:space="preserve">
-    <value>Qarańǵı</value>
+    <value>Qorong'u</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
-    <value>Jaqtı</value>
+    <value>Yorug'</value>
   </data>
   <data name="Theme_System" xml:space="preserve">
-    <value>Sistema teması</value>
+    <value>Tizim</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Joriy uslub</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>O'rmon texnologiyasi</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Tungi neon</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Rasmiy salqin</value>
   </data>
   <data name="TouchpadLockState_Off" xml:space="preserve">
     <value>Óshirilgen</value>
@@ -395,14 +470,38 @@
     <value>Janıq</value>
     <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
   </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>Kunlik</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>Har soatda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>Oylik</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>Har 3 soatda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>Har 12 soatda</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>Haftalik</value>
+  </data>
   <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
-    <value>Joqarı</value>
+    <value>Yuqori</value>
   </data>
   <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
-    <value>Pás</value>
+    <value>Past</value>
   </data>
   <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
-    <value>Óshirilgen</value>
+    <value>O'chiq</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
   </data>
   <data name="WinKeyState_Off" xml:space="preserve">
     <value>Óshirilgen</value>
@@ -412,64 +511,504 @@
     <value>Janıq</value>
     <comment>Informs the user that WinLock is or will be turned on.</comment>
   </data>
-  <data name="PortsBacklightState_Off" xml:space="preserve">
-    <value>Óshirilgen</value>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Profil AC adapter (to'liq quvvat) ulanmagan holda qo'llanilmaydi.</value>
   </data>
-  <data name="PortsBacklightState_On" xml:space="preserve">
-    <value>Janıq</value>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Boshlanmagan.</value>
   </data>
-  <data name="PanelLogoBacklightState_On" xml:space="preserve">
-    <value>Janıq</value>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Qo'llab quvvatlanmaydi.</value>
   </data>
-  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
-    <value>Óshirilgen</value>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU ventilyatori</value>
   </data>
-  <data name="InstantBootState_Off" xml:space="preserve">
-    <value>Óshirilgen</value>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU ventilyatori</value>
   </data>
-  <data name="InstantBootState_AcAdapter" xml:space="preserve">
-    <value>AC Adapteri</value>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>Tizim ventilyatori</value>
   </data>
-  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
-    <value>USB Quwat Jetkiziw</value>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>Yorqinlik 0 dan 9 gacha bo'lishi kerak</value>
+    <comment>Exception message for invalid brightness value</comment>
   </data>
-  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
-    <value>AC hám USB PD</value>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>O'rnatilgan displey topilmadi</value>
+    <comment>Exception message when integrated display is unavailable</comment>
   </data>
-  <data name="NotificationDuration_Long" xml:space="preserve">
-    <value>Uzaq</value>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Vantage yoqilganda RGB klaviaturani boshqarib bo'lmaydi</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
   </data>
-  <data name="NotificationDuration_Normal" xml:space="preserve">
-    <value>Ádettegidey</value>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>UEFI dan {0} o'zgaruvchisini o'qib bo'lmaydi</value>
+    <comment>Exception message format for UEFI read failure</comment>
   </data>
-  <data name="NotificationDuration_Short" xml:space="preserve">
-    <value>Qısqa</value>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI imtiyozlarini o'rnatib bo'lmaydi</value>
+    <comment>Exception message for UEFI privilege failure</comment>
   </data>
-  <data name="ModifierKey_Shift" xml:space="preserve">
-    <value>Kalit</value>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>UEFI ga {0} o'zgaruvchisini yozib bo'lmaydi</value>
+    <comment>Exception message format for UEFI write failure</comment>
   </data>
-  <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>Buyruq bo'sh bo'lmasligi kerak.</value>
+    <comment>Exception message for empty command parameter</comment>
   </data>
-  <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>Buyruq xavfsizlik tekshiruvidan o'tmadi: {0}</value>
+    <comment>Exception message format for command security failure</comment>
   </data>
-  <data name="BatteryNightChargeState_On" xml:space="preserve">
-    <value>Janıq</value>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>Efektlarni deserializatsiya qilib bo'lmadi</value>
+    <comment>Exception message for effect deserialization failure</comment>
   </data>
-  <data name="BatteryNightChargeState_Off" xml:space="preserve">
-    <value>Óshik</value>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>"{0}" rangini olib bo'lmadi</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data><data name="SpeakerState_Mute" xml:space="preserve"><value>O'chirish</value></data><data name="SpeakerState_Unmute" xml:space="preserve"><value>Qayta yoqish</value></data><data name="PowerModeMappingMode_Disabled" xml:space="preserve"><value>Óshirilgen</value></data><data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve"><value>Windows Quvvat Rejimi</value></data><data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve"><value>Windows Quvvat Rejasi</value></data><data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve"><value>Oldindan o‘rnatilgan 4</value></data><data name="UpdateCheckFrequency_PerDay" xml:space="preserve"><value>Har kuni</value></data><data name="UpdateCheckFrequency_PerHour" xml:space="preserve"><value>Har soatda</value></data><data name="UpdateCheckFrequency_PerMonth" xml:space="preserve"><value>Har oy</value></data><data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve"><value>Har 3 soatda</value></data><data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve"><value>Har 12 soatda</value></data><data name="UpdateCheckFrequency_PerWeek" xml:space="preserve"><value>Haftada bir</value></data>  <data name="ThemeStylePreset_Default" xml:space="preserve">
-    <value>Joriy uslub</value>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} sozlamasini o'qib bo'lmadi</value>
+    <comment>Exception message format when registry read fails</comment>
   </data>
-  <data name="ThemeStylePreset_Forest" xml:space="preserve">
-    <value>O'rmon texnologiyasi</value>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>Joriy jarayon fayl nomi null bo'lishi mumkin emas</value>
+    <comment>Exception message when process file name is null</comment>
   </data>
-  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
-    <value>Yarim tun neon</value>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>Joriy jarayon fayl versiyasi null bo'lishi mumkin emas</value>
+    <comment>Exception message when process file version is null</comment>
   </data>
-  <data name="ThemeStylePreset_Official" xml:space="preserve">
-    <value>Rasmiy salqin</value>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>Joriy foydalanuvchi qiymati null</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>Argumentlar xavfli belgilarni o'z ichiga oladi</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>{0} uchun argumentlarda xavfli naqsh aniqlandi</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Muhim reyestr kalitlarini o'chirishga ruxsat berilmaydi</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>Tizim yo'llarini o'chirishga ruxsat berilmaydi</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>Qurilma handle mavjud emas</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl 0 qaytardi, oxirgi xato: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl xato bilan muvaffaqiyatsiz tugadi: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>Qurilma paketi identifikatori mos kelmaydi. Kutilgan '{0}', olingan '{1}'.</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>'{0}' qurilma paketi manifesti bo'sh.</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>'{0}' qurilma paketi {1} ni o'z ichiga olmaydi.</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>'{0}' qurilma paketi onlayn resurs katalogida mavjud emas.</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>'{0}' qurilma paketida SHA256 metama'lumotlari yo'q.</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>Qurilma paketida qo'llab quvvatlanmaydigan fayl turi: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>Qurilma paketida xavfsiz bo'lmagan yo'l: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>'{0}' qurilma paketining yuklab olish URL manzili bo'sh.</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>Qurilma paketi sotuvchisi mos kelmaydi. Kutilgan '{0}', olingan '{1}'.</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>Qurilma paketida Windows uslubidagi yo'l ajratuvchi: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>Qurilma xususiyati GUID emas</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>Qurilma xususiyati satr emas</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>Drayver buyrug'ini yuborishda xato: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>Drayver handle olishda xato: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>Drayver uchun handle olib bo'lmadi: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer o'z vaqtida chiqmadi.</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer o'z vaqtida qayta boshlanmadi.</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSON ni deserializatsiya qilish muvaffaqiyatsiz tugadi</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>Profilni deserializatsiya qilish muvaffaqiyatsiz tugadi.</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>{1} dagi {0} vazifasidagi o'zgarishlarni ro'yxatdan o'tkazib bo'lmadi [turi={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Explorer ni ishga tushirish muvaffaqiyatsiz tugadi.</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} holati {1} ga o'rnatilganligini tasdiqlab bo'lmadi.</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>Ventilyator jadvali uzunligi 10 bo'lishi kerak</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>Fayl nazorat summasi mos kelmaydi</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>{0} identifikatorli shablon topilmadi</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>handle noto'g'ri</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>O'qilishi mumkin bo'lishi kerak</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>Yozilishi mumkin bo'lishi kerak</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>Interaktiv qobiq ijro etiladigan fayllar chiqishni kutishda argumentlarni talab qiladi</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>Noto'g'ri amal kaliti</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>Noto'g'ri muhit o'zgaruvchisi: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>Noto'g'ri muhit o'zgaruvchisi qiymati: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>Noto'g'ri fayl nomi</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>Noto'g'ri sozlamalar fayl nomi: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>Noto'g'ri holat</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>Noto'g'ri format turi</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer allaqachon boshlang'an</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer avval boshlanishi kerak [turi={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>{0} kalitini ochib bo'lmadi</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>Asosiy modul null bo'lishi mumkin emas</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>Hech qanday God Mode shabloni mavjud emas.</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>Hech qanday God Mode shabloni yaratib bo'lmadi.</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>Qo'llab quvvatlanadigan boshqaruvchi topilmadi</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>Qo'llab quvvatlanadigan funksiya topilmadi</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>Qo'llab quvvatlanadigan versiya topilmadi</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>Yangilanishlar mavjud emas</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>Ijro etiladigan fayl ruxsat berilganlar ro'yxatida emas: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>Siljish va son massiv chegaralaridan oshib ketadi</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>Xizmatni ochishda xato</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>Xizmat boshqaruvchisini ochishda xato</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>Profil fayli topilmadi.</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>Profil 0 dan 6 gacha bo'lishi kerak</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>Quvvat rejimini almashtirish ushbu qurilmada qo'llab quvvatlanmaydi.</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>'{0}' quvvat rejimi AC adaptersiz mavjud emas.</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell argumentlari xavfli naqshlarni o'z ichiga oladi</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB klaviatura qo'llab quvvatlanmaydi</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>Resurs katalogi bo'sh.</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>Sozlash fayli URL manzili topilmadi</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>Yuklangan resurs SHA256 tekshiruvidan o'tmadi. Kutilgan {0}, olingan {1}.</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>Sozlamalar yo'li ruxsat berilgan katalogdan chiqadi: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>Jadval ma'lumotlari bo'sh bo'lmasligi kerak</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>Teg nomi null yoki bo'sh bo'lmasligi kerak</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>Harorat massivida aniq 10 ta element bo'lishi kerak</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>Aniqlanmagan qiymat qabul qilindi: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>Noma'lum batareya holati: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>Noma'lum hive.</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>Teg nomidan versiyani tahlil qilib bo'lmadi: '{0}'. Kutilgan format: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>Yangilanish paketi yaxlitligini tekshirish muvaffaqiyatsiz tugadi: {0} yangilanishi uchun SHA256 xesh mavjud emas. Xavfsizlik uchun yaxlitlikni tekshirish talab qilinadi.</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>Yangilanish paketi yaxlitligini tekshirish muvaffaqiyatsiz tugadi. Kutilgan SHA256: {0}, hisoblangan: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>Qo'llab quvvatlanmaydigan quvvat rejimi {0}</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>Yulduzcha belgisi bilan o'chirish cheklangan</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>Chaqiruv muvaffaqiyatsiz tugadi: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>Chaqiruv muvaffaqiyatsiz tugadi: {0}. [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI klassi yoki nomlar fazosi mavjud emas [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>WMI funksiya qiymati {0} uchun mavjud emas.</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>So'rovda natijalar yo'q</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>O'qish muvaffaqiyatsiz tugadi: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>Yoqiq</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Almashtirish</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>O'chiq</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>Yoqiq</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Batareya tejash</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Aqlli sovutish</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Ekstremal unumdorlik</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geek</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>Disk 1 harorati</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>Disk 2 harorati</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core takt</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>Ventilyator</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>Kadr vaqti</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>Chastota</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% past</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>Xotira harorati</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>Ona plata harorati</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core takt</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>Quvvat</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>Harorat</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>Foydalanish</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM harorati</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM foydalanish</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>Yashirish</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>Ko'rsatish</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>Holatni almashtirish</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>Ovoz o'chirish</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>Ovoz yoqish</value>
   </data>
 </root>

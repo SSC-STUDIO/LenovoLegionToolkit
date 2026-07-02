@@ -628,3 +628,25 @@ screenshot.png
 .codex/
 .tools-wpfui-inspect/
 all_strings.txt
+
+# Local temporary translation scripts, logs, and reports
+*.py
+*.ps1
+*.bak
+*_report.json
+*_report.txt
+*keys*.txt
+*entries*.txt
+*_verify_report.txt
+*_qa_*.py
+*analyze*.txt
+*.json
+!*.json.json
+!xunit.runner.json
+!coverlet.runsettings
+!*.csproj
+!*.sln
+!*.config
+!*.resx
+_work/
+output/

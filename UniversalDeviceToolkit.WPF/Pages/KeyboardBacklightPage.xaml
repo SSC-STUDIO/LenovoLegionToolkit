@@ -19,7 +19,31 @@
                 Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
-            <controls:LoadableControl x:Name="_loader">
+            <controls:LoadableControl x:Name="_loader" ContentVisibilityWhileLoading="Collapsed">
+                <controls:LoadableControl.LoadingContent>
+                    <StackPanel
+                        Margin="0,0,8,0"
+                        AutomationProperties.AutomationId="KeyboardBacklightLoadingSkeleton">
+                        <Border Style="{StaticResource AppSkeletonCardStyle}" MinHeight="200" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Border Width="220" Height="18" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
+                                <Border Height="8" Margin="0,28,140,0" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
+                                <Border Height="8" Margin="0,16,96,0" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
+                                <Border Height="32" Margin="0,24,180,0" CornerRadius="{StaticResource CornerRadiusLG}" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Margin="0,1,12,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="180" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </controls:LoadableControl.LoadingContent>
                 <StackPanel x:Name="_content" Margin="0,0,8,0">
                 <TextBlock
                     x:Name="_noKeyboardsText"

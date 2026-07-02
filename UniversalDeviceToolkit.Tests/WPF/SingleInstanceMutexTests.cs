@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF;
+using UniversalDeviceToolkit.WPF.Startup;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
@@ -30,25 +31,25 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void EnsureSingleInstance_WhenMutexNotOwned_ShouldExit()
     {
-        var source = ReadAppSource();
-        var startup = ExtractMethodBody(source, "Application_Startup");
-        startup.Should().Contain("EnsureSingleInstance()");
-        startup.Should().Contain("ExitDuplicateInstance()");
+        var source = ReadOrchestratorSource();
+        var method = ExtractMethodBody(source, "Task<bool> EnsureSingleInstanceAsync");
+        method.Should().Contain("App.Current.EnsureSingleInstance()");
+        method.Should().Contain("App.ExitDuplicateInstance()");
     }
 
     [Fact]
     public void ExitDuplicateInstance_ShouldPrecedeEnsureSingleInstanceInStartup()
     {
-        var source = ReadAppSource();
-        var startup = ExtractMethodBody(source, "Application_Startup");
+        var source = ReadOrchestratorSource();
+        var method = ExtractMethodBody(source, "Task<bool> EnsureSingleInstanceAsync");
 
-        var callSite = "if (!EnsureSingleInstance())";
-        var exitCall = "ExitDuplicateInstance()";
+        var callSite = "if (!App.Current.EnsureSingleInstance())";
+        var exitCall = "App.ExitDuplicateInstance()";
 
-        startup.Should().Contain(callSite);
-        startup.IndexOf(callSite, StringComparison.Ordinal)
+        method.Should().Contain(callSite);
+        method.IndexOf(callSite, StringComparison.Ordinal)
             .Should()
-            .BeLessThan(startup.IndexOf(exitCall, StringComparison.Ordinal));
+            .BeLessThan(method.IndexOf(exitCall, StringComparison.Ordinal));
     }
 
     // ── Naming-convention tests ──────────────────────────────────────────
@@ -56,7 +57,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void MutexName_ShouldBeBasedOnAppIdentityCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.CompactName + \"_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -64,7 +65,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void EventName_ShouldBeBasedOnAppIdentityCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.CompactName + \"_Event_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -72,7 +73,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void AckEventName_ShouldBeBasedOnAppIdentityCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.CompactName + \"_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -80,7 +81,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void LegacyMutexName_ShouldUseLegacyCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.LegacyCompactName + \"_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -88,7 +89,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void LegacyEventName_ShouldUseLegacyCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.LegacyCompactName + \"_Event_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -96,7 +97,7 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void LegacyAckEventName_ShouldUseLegacyCompactName()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         var expected = "AppIdentity.LegacyCompactName + \"_AckEvent_6efcc882-924c-4cbc-8fec-f45c25696f98\"";
         source.Should().Contain(expected);
     }
@@ -104,15 +105,15 @@ public sealed class SingleInstanceMutexTests
     [Fact]
     public void RecoverySuffix_ShouldBeUnderscoreRecovery()
     {
-        var source = ReadAppSource();
+        var source = ReadGuardSource();
         source.Should().Contain("RECOVERY_SINGLE_INSTANCE_SUFFIX = \"_Recovery\"");
     }
 
     [Fact]
     public void Constants_AreResolvedThroughResolveSingleInstanceObjectName()
     {
-        var source = ReadAppSource();
-        var method = ExtractMethodBody(source, "EnsureSingleInstance");
+        var source = ReadGuardSource();
+        var method = ExtractMethodBody(source, "TryAcquire");
         method.Should().Contain("ResolveSingleInstanceObjectName(MUTEX_NAME)");
         method.Should().Contain("ResolveSingleInstanceObjectName(EVENT_NAME)");
         method.Should().Contain("ResolveSingleInstanceObjectName(ACK_EVENT_NAME)");
@@ -408,6 +409,32 @@ public sealed class SingleInstanceMutexTests
         throw new DirectoryNotFoundException($"Could not locate '{expectedRelativePath}'.");
     }
 
+    private static string ReadGuardSource()
+    {
+        var expectedRelativePath = Path.Combine("UniversalDeviceToolkit.WPF", "Startup", "SingleInstanceGuard.cs");
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate '{expectedRelativePath}'.");
+    }
+
+    private static string ReadOrchestratorSource()
+    {
+        var expectedRelativePath = Path.Combine("UniversalDeviceToolkit.WPF", "Startup", "StartupOrchestrator.cs");
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate '{expectedRelativePath}'.");
+    }
+
     private static IEnumerable<string> GetRepositoryRootCandidates()
     {
         var roots = new[]
@@ -455,7 +482,7 @@ public sealed class SingleInstanceMutexTests
 
     private static string InvokeResolveSingleInstanceObjectName(string baseName)
     {
-        var method = typeof(App).GetMethod("ResolveSingleInstanceObjectName",
+        var method = typeof(SingleInstanceGuard).GetMethod("ResolveSingleInstanceObjectName",
             BindingFlags.NonPublic | BindingFlags.Static);
 
         method.Should().NotBeNull("ResolveSingleInstanceObjectName should be accessible via reflection");

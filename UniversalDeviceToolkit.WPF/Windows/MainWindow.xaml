@@ -25,6 +25,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeTitleBarDeviceInfo}" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -65,7 +66,7 @@
                     VerticalAlignment="Center"
                     FlowDirection="LeftToRight"
                     Focusable="False"
-                    FontSize="14"
+                    FontSize="{DynamicResource FontSizeTitleBarDeviceInfo}"
                     FontWeight="SemiBold"
                     IsHitTestVisible="False"
                     Style="{StaticResource AppCaptionTextBlockStyle}"
@@ -82,12 +83,13 @@
                     WindowChrome.IsHitTestVisibleInChrome="True">
                     <wpfui:Button
                         x:Name="_openLogIndicator"
-                        Height="26"
+                        Height="28"
                         Margin="0,0,8,0"
                         Padding="8,2,8,2"
                         Appearance="Caution"
                         AutomationProperties.AutomationId="OpenLogIndicator"
                         Content="Log"
+                        FontSize="{DynamicResource FontSizeTitleBarDeviceInfo}"
                         Cursor="Hand"
                         Focusable="True"
                         VerticalAlignment="Center"
@@ -99,7 +101,7 @@
 
                     <wpfui:Button
                         x:Name="_deviceInfoIndicator"
-                        Height="26"
+                        Height="28"
                         MaxWidth="260"
                         Padding="8,2,8,2"
                         AutomationProperties.AutomationId="DeviceInfoIndicator"
@@ -115,8 +117,7 @@
                         Visibility="Collapsed">
                         <TextBlock
                             x:Name="_deviceInfoIndicatorText"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            TextTrimming="CharacterEllipsis" />
+                            Style="{StaticResource AppTitleBarDeviceInfoTextBlockStyle}" />
                     </wpfui:Button>
                 </StackPanel>
             </wpfui:TitleBar.TrailingContent>

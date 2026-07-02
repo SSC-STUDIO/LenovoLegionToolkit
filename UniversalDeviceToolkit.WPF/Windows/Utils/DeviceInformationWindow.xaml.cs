@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
@@ -131,25 +132,25 @@ public partial class DeviceInformationWindow
         hardware ??= HardwareInventory.Empty;
 
         var anyVisible = false;
-        anyVisible |= SetCardText(_cpuCard, _cpuLabel, FormatProcessors(hardware.Processors));
-        anyVisible |= SetCardText(_gpuCard, _gpuLabel, FormatVideoControllers(hardware.VideoControllers));
-        anyVisible |= SetCardText(_memoryCard, _memoryLabel, FormatMemory(hardware.Memory));
-        anyVisible |= SetCardText(_baseBoardCard, _baseBoardLabel, FormatBaseBoard(hardware.BaseBoard));
-        anyVisible |= SetCardText(_chassisCard, _chassisLabel, FormatChassis(hardware.Chassis));
+        anyVisible |= SetRowText(_cpuRow, _cpuLabel, FormatProcessors(hardware.Processors));
+        anyVisible |= SetRowText(_gpuRow, _gpuLabel, FormatVideoControllers(hardware.VideoControllers));
+        anyVisible |= SetRowText(_memoryRow, _memoryLabel, FormatMemory(hardware.Memory));
+        anyVisible |= SetRowText(_baseBoardRow, _baseBoardLabel, FormatBaseBoard(hardware.BaseBoard));
+        anyVisible |= SetRowText(_chassisRow, _chassisLabel, FormatChassis(hardware.Chassis));
 
         HasHardwareInfo = anyVisible;
     }
 
-    private static bool SetCardText(UIElement card, TextBlock label, string text)
+    private static bool SetRowText(UIElement row, TextBlock label, string text)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            card.Visibility = Visibility.Collapsed;
+            row.Visibility = Visibility.Collapsed;
             label.Text = "-";
             return false;
         }
 
-        card.Visibility = Visibility.Visible;
+        row.Visibility = Visibility.Visible;
         label.Text = text;
         return true;
     }
@@ -238,9 +239,22 @@ public partial class DeviceInformationWindow
         return $"{bytes / gibibyte:0.#} GiB";
     }
 
-    private async void DeviceCardControl_Click(object sender, RoutedEventArgs e)
+    private async void DeviceInfoRow_Click(object sender, MouseButtonEventArgs e)
     {
-        if (((sender as CardControl)?.Content as TextBlock)?.Text is not { } str)
+        if (sender is not Border { Child: Grid grid })
+            return;
+
+        TextBlock? valueText = null;
+        foreach (var child in grid.Children)
+        {
+            if (child is TextBlock textBlock && Grid.GetColumn(textBlock) == 1)
+            {
+                valueText = textBlock;
+                break;
+            }
+        }
+
+        if (valueText?.Text is not { } str || string.IsNullOrWhiteSpace(str) || str == "-")
             return;
 
         try

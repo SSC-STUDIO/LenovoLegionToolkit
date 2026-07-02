@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>අභිරුචි</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>පද්ධතිය</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>සැමවිටම සක්‍රිය</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>නිදා වෙන විට සක්‍රිය</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>ප්‍රමාද වශයෙන් සක්‍රිය</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>සංරක්ෂණය</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>සාමාන්‍ය</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>වේගවත් ආරෝපණය</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that Flip to Start is or will be turned off.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that Flip to Start is or will be turned on.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that Fn Lock is or will be turned off.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that Fn Lock is or will be turned on.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>බලය කපා ඇත</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>බලය ලබා ඇත</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that HDR is or will be turned off.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that HDR is or will be turned on.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>හයිබ්‍රිඩ්</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>හයිබ්‍රිඩ්-ස්වයංක්‍රීය</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>හයිබ්‍රිඩ්-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that the microphone is or will be turned off.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that the microphone is or will be turned on.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>පහළ මධ්‍යය</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>පහළ වම</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>පහළ දකුණ</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>මධ්‍යය</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>මධ්‍ය වම</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>මධ්‍ය දකුණ</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>ඉහළ මධ්‍යය</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>ඉහළ වම</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>ඉහළ දකුණ</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that Overdrive is or will be turned off.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that Overdrive is or will be turned on.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>සමතුලිත</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>අන්තිම</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>අභිරුචි</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>කාර්ය සාධනය</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>නිහඬ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>වේගවත්</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>වඩාත්ම වේගවත්</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>සෙමින්</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>වඩාත්ම සෙමින්</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ඉහළ</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>අඩු</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>හුස්ම</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>සුමට</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>ස්ථිතික</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>වමට රැඳෙන තරංගය</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>දකුණට රැඳෙන තරංගය</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>පෙරසිකස් 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>පෙරසිකස් 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>පෙරසිකස් 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>ඉහළ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>අඩු</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>මධ්‍යම</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>පහළ සිට ඉහළට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>දක්ෂිණාවර්ත</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>වාමාවර්ත</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>වම සිට දකුණට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>දකුණ සිට වමට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>ඉහළ සිට පහළට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>සැමවිටම</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>ශ්‍රව්‍ය උඩුයට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>ශ්‍රව්‍ය රැඳෙන තරංග</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>ඕරෝරා සමමුහුගහනය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>වර්ණ වෙනස් කිරීම</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>වර්ණ පල්ස්</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>වර්ණ තරංගය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>වැස්ස</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>වර්ණ දාම ඇණය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>වර්ණ දාම තරංගය</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>රැඳෙන තරංග</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>සුමට</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>ටයිප්</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>සෙමින්</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>මධ්‍යම</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>වේගවත්</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>අඳුරු</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>ආලෝකය</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>පද්ධතිය</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>ඉහළ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>අඩු</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB බල සැපයුම</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC සහ USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>දිගු</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>සාමාන්‍ය</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>කෙටි</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>නිහඬ කරන්න</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>නිහඬ ඉවත් කරන්න</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය (සම්පූර්ණ වොට් අගය) සම්බන්ධ නොවීමේ දී පැතිකඩ යොදනු නොලැබේ.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>ආරම්භ කර නැත.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>සහාය නොදක්වයි.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU පංකාව</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU පංකාව</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>පද්ධති පංකාව</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>ටොගල් කරන්න</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>බැටරි ඉතිරි කිරීම</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>බුද්ධිමය සිසිලනය</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>අන්තිම කාර්ය සාධනය</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>ගීක්</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>Windows බල මාදිලිය</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>Windows බල සැලසුම</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>පෙරසිකස් 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>දිනපතා</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>පැයකට</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>මාසිකව</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>පැය 3 කට</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>පැය 12 කට</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>සතිපතා</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>වර්තමාන විලාසය</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>නිල සිසිල</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>මධ්‍යම රාත්‍රී නියොන්</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>වනාන්තර තාක්ෂණය</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>අක්‍රිය</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>සක්‍රිය</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>තැටි 1 උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>තැටි 2 උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>E-Core ඔරලෝසුව</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>පංකාව</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>ෆ්‍රේම් කාලය</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>සංඛ්‍යාතය</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% අඩු</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>මතක උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>මවුපිට උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>බලය</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>P-Core ඔරලෝසුව</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>ප්‍රයෝජනය</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>VRAM උෂ්ණත්වය</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>VRAM ප්‍රයෝජනය</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>සඟවන්න</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>පෙන්වන්න</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>තත්ත්වය ටොගල් කරන්න</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>වලංගු නොවන තත්ත්වය</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>වලංගු නොවන ගොනු නම</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>තර්ක අනතුරුදායක අක්ෂර අඩංගු වේ</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>පිටවීම සඳහා බලා සිටීමේ දී අන්තර්ක්‍රියාත්මක shell ක්‍රියාත්මක කළ හැකි ගොනු සඳහා තර්ක අවශ්‍ය වේ</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>PowerShell තර්ක අනතුරුදායක රටා අඩංගු වේ</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>නොදන්නා hive.</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>යාවත්කාලීන නොමැත</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>සැකසුම් ගොනු URL හමු නොවීය</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>RGB යතුරු පුවරුව සහාය නොදක්වයි</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>Vantage සක්‍රියව ඇති විට RGB යතුරු පුවරුව කළමනාකරණය කළ නොහැක</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>මෙම උපාංගයේ බල මාදිලි මාරුව සහාය නොදක්වයි.</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>UEFI වරප්‍රසාද සැකසිය නොහැක</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>Explorer ආරම්භ කිරීම අසාර්ථක විය.</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer නියමිත කාලය තුළ නැවත ආරම්භ නොවීය.</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer නියමිත කාලය තුළ පිටවීම සිදු නොවීය.</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>වලංගු නොවන ක්‍රියා යතුර</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>විධානය ශුන්‍ය හෝ හිස් විය නොහැක.</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>පද්ධති මාර්ග මකා දැමීමට අවසර නැත</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>වයිල්ඩ් කාර්ඩ් මකා දැමීම සීමා කර ඇත</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>Critical රෙජිස්ට්රි යතුරු මකා දැමීමට අවසර නැත</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>වර්තමාන පරිශීලක අගය ශුන්‍යයි</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>හෑන්ඩලය වලංගු නැත</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>JSON ඩිසීරියලයිස් කිරීම අසාර්ථක විය</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>වලංගු නොවන පරිසර විචල්‍යය: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>වලංගු නොවන පරිසර විචල්‍ය අගය: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>සහාය දක්වන විශේෂාංගයක් හමු නොවීය</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>බිල්ට්-ඉන් සංදර්ශකය හමු නොවීය</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>පැතිකඩ ඩිසීරියලයිස් කිරීම අසාර්ථක විය.</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>දීප්තිය 0 සහ 9 අතර විය යුතුය</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>පැතිකඩ 0 සහ 6 අතර විය යුතුය</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>වගු දත්ත හිස් විය නොහැක</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>උෂ්ණත්ව අරාව හරියටම මූලද්‍රව්‍ය 10 ක් තිබිය යුතුය</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>ගොනු චෙක්සම් නොගැළපීම</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>උපාංග ගුණාංගය GUID එකක් නොවේ</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>උපාංග ගුණාංගය නූලක් නොවේ</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>ඕෆ්සෙට් සහ ගණන අරා සීමා ඉක්මවයි</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>පැතිකඩ ගොනුව හමු නොවීය.</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>සේවාව විවෘත කිරීමේ දෝෂය</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>සේවා කළමනාකරු විවෘත කිරීමේ දෝෂය</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>සම්පත් නාට්‍යාව හිස්.</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>ප්‍රයෝග ඩිසීරියලයිස් කළ නොහැක</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>UEFI වෙතින් {0} විචල්‍යය කියවිය නොහැක</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>UEFI වෙත {0} විචල්‍යය ලිවිය නොහැක</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>WMI විශේෂාංග අගය {0} සඳහා නොමැත.</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>නිර්වචන නොකළ අගයක් ලැබුණි: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>සහාය නොදක්වන බල මාදිලිය {0}</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>AC ඇඩැප්ටරය නොමැතිව '{0}' බල මාදිලිය ලබා ගත නොහැක.</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>විධානය ආරක්ෂක වලංගු කිරීම අසාර්ථක විය: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>ක්‍රියාත්මක කළ හැකි ගොනුව අවසර ලැයිස්තුවේ නැත: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>{0} සඳහා තර්කවල අනතුරුදායක රටාවක් අනාවරණ විය</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>උපාංග ඇසුරුම සහාය නොදක්වන ගොනු වර්ගයක් අඩංගු වේ: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>උපාංග ඇසුරුම අනාරක්ෂිත මාර්ගයක් අඩංගු වේ: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>උපාංග ඇසුරුම Windows මාර්ග වෙන් කිරීමක් අඩංගු වේ: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>'{0}' උපාංග ඇසුරුම මාර්ගජාල සම්පත් නාට්‍යාවේ නොමැත.</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>'{0}' උපාංග ඇසුරුම {1} අඩංගු නැත.</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>'{0}' උපාංග ඇසුරුම මැනිෆෙස්ට් හිස්.</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>උපාංග ඇසුරුම ID නොගැළපීම. අපේක්ෂිත '{0}', ලැබුණු '{1}'.</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>උපාංග ඇසුරුම විකුණුම්කරු නොගැළපීම. අපේක්ෂිත '{0}', ලැබුණු '{1}'.</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>'{0}' උපාංග ඇසුරුමයේ බාගැනීමේ URL හිස්.</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>'{0}' උපාංග ඇසුරුමයේ SHA256 මෙටාදත්ත නොමැත.</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>නොදන්නා බැටරි තත්ත්වය: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>{0} තත්ත්වය {1} ලෙස සකසා ඇති බව සත්‍යාපනය කිරීම අසාර්ථක විය.</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl 0 ආපසු ලබා දුන්නේය, අවසන් දෝෂය: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>{0} යතුර විවෘත කළ නොහැක</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>කියවිය හැකි විය යුතුය</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>ලිවිය හැකි විය යුතුය</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>උපාංග හෑන්ඩලය ලබා ගත නොහැක</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>ප්‍රධාන මොඩියුලය ශුන්‍ය විය නොහැක</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>වර්තමාන ක්‍රියාවලි ගොනු නම ශුන්‍ය විය නොහැක</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>වර්තමාන ක්‍රියාවලි ගොනු අනුවාදය ශුන්‍ය විය නොහැක</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>බාගත් සම්පත SHA256 වලංගු කිරීම අසාර්ථක විය. අපේක්ෂිත {0}, ලැබුණු {1}.</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer දැනටමත් ආරම්භ කර ඇත</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>IoCContainer පළමුව ආරම්භ කළ යුතුය [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>පංකා වගු දිග 10 විය යුතුය</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>ටැග් නම ශුන්‍ය හෝ හිස් විය නොහැක</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>ටැග් නමෙන් අනුවාදය විග්‍රහ කිරීමට නොහැක: '{0}'. අපේක්ෂිත ආකෘතිය: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>{0} ID සහිත පෙරසිකස් හමු නොවීය</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>නිර්මාණය කළ හැකි අභිරුචි මාදිලි පෙරසිකස් නොමැත.</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>ලබා ගත හැකි අභිරුචි මාදිලි පෙරසිකස් නොමැත.</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>සහාය දක්වන අනුවාදයක් හමු නොවීය</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>සහාය දක්වන පාලකයක් හමු නොවීය</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>වලංගු නොවන සැකසුම් ගොනු නම: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>සැකසුම් මාර්ගය අවසර දී ඇති නාභිගත වෙතින් පිටවේ: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>{1} හි කාර්යය {0} මත වෙනස්කම් ලියාපදිංචි කිරීම අසාර්ථක විය [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>{0} සැකසුම කියවිය නොහැක</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>"{0}" වර්ණය ලබා ගත නොහැක</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>ධාවකය සඳහා හෑන්ඩලය ලබා ගැනීම අසාර්ථක විය: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>ධාවක හෑන්ඩලය ලබා ගැනීමේ දෝෂය: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl දෝෂයක් සමඟ අසාර්ථක විය: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>ධාවක විධානය යැවීමේ දෝෂය: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>WMI පන්තිය හෝ නාම අවකාශය ලබා ගත නොහැක [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>කියවීම අසාර්ථක විය: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>ඇමතුම අසාර්ථක විය: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>ඇමතුම අසාර්ථක විය: {0}. [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>විමසුමේ ප්‍රතිඵල නොමැත</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>ආකෘතිගත කළ වර්ගය වලංගු නැත</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>යාවත්කාලීන ඇසුරුම අඛණ්ඩතා පරීක්ෂාව අසාර්ථක විය: යාවත්කාලීන {0} සඳහා SHA256 හැෂ් එකක් නොමැත. ආරක්ෂාව සඳහා අඛණ්ඩතා පරීක්ෂාව අවශ්‍ය වේ.</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>යාවත්කාලීන ඇසුරුම අඛණ්ඩතා පරීක්ෂාව අසාර්ථක විය. අපේක්ෂිත SHA256: {0}, ගණනය කළ: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+</root>

@@ -9,7 +9,7 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.DeviceInformationWindow_Title}"
-    Width="500"
+    Width="600"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Loaded="DeviceInformationWindow_Loaded"
@@ -21,6 +21,27 @@
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style x:Key="DeviceInfoRowBorderStyle" TargetType="Border">
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="DeviceInfoLabelTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppCaptionTextBlockStyle}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            </Style>
+            <Style x:Key="DeviceInfoValueTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppBodyTextBlockStyle}">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="TextAlignment" Value="Right" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -35,141 +56,167 @@
 
         <Grid
             Grid.Row="0"
-            Height="24"
+            Height="28"
             Margin="12,8,12,8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
             <TextBlock
-                Grid.Column="0"
                 VerticalAlignment="Center"
-                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
+                Style="{StaticResource AppBodyTextBlockStyle}"
+                FontWeight="SemiBold"
                 Text="{x:Static resources:Resource.DeviceInformationWindow_Title}" />
-
         </Grid>
 
         <wpfui:DynamicScrollViewer
             x:Name="_contentScrollViewer"
             Grid.Row="1"
             VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="16,0,16,12">
+            <StackPanel Margin="12,0,12,12">
 
                 <TextBlock
-                    Margin="0,16,0,24"
+                    Margin="0,8,0,10"
                     Focusable="True"
-                    Style="{StaticResource AppPageTitleTextBlockStyle}"
+                    Style="{StaticResource AppSectionTitleTextBlockStyle}"
                     Text="{x:Static resources:Resource.DeviceInformationWindow_Device_Title}" />
 
-                <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
+                <custom:CardControl Margin="0,0,0,12" Padding="0">
                     <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Manufacturer_Title}" />
+                        <StackPanel>
+                        <Border Style="{StaticResource DeviceInfoRowBorderStyle}" MouseLeftButtonUp="DeviceInfoRow_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.75*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_Manufacturer_Title}" />
+                                <TextBlock x:Name="_manufacturerLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource DeviceInfoRowBorderStyle}" MouseLeftButtonUp="DeviceInfoRow_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.75*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_Model_Title}" />
+                                <TextBlock x:Name="_modelLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource DeviceInfoRowBorderStyle}" MouseLeftButtonUp="DeviceInfoRow_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.75*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_MachineType_Title}" />
+                                <TextBlock x:Name="_mtmLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource DeviceInfoRowBorderStyle}" MouseLeftButtonUp="DeviceInfoRow_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.75*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_SerialNumber_Title}" />
+                                <TextBlock x:Name="_serialNumberLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Padding="14,10" MouseLeftButtonUp="DeviceInfoRow_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.75*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_BiosVersion_Title}" />
+                                <TextBlock x:Name="_biosLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                            </Grid>
+                        </Border>
+                        </StackPanel>
                     </custom:CardControl.Header>
-                    <TextBlock x:Name="_manufacturerLabel" Focusable="True" />
-                </custom:CardControl>
-
-                <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Model_Title}" />
-                    </custom:CardControl.Header>
-                    <TextBlock x:Name="_modelLabel" Focusable="True" />
-                </custom:CardControl>
-
-                <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_MachineType_Title}" />
-                    </custom:CardControl.Header>
-                    <TextBlock x:Name="_mtmLabel" Focusable="True" />
-                </custom:CardControl>
-                <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_SerialNumber_Title}" />
-                    </custom:CardControl.Header>
-                    <TextBlock x:Name="_serialNumberLabel" Focusable="True" />
-                </custom:CardControl>
-
-                <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_BiosVersion_Title}" />
-                    </custom:CardControl.Header>
-                    <TextBlock x:Name="_biosLabel" Focusable="True" />
                 </custom:CardControl>
 
                 <StackPanel x:Name="_hardwareInfo" Visibility="{Binding HasHardwareInfo, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
                     <TextBlock
-                        Margin="0,16,0,24"
+                        Margin="0,0,0,10"
                         Focusable="True"
-                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
+                        Style="{StaticResource AppSectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.DeviceInformationWindow_Hardware_Title}" />
 
-                    <custom:CardControl
-                        x:Name="_cpuCard"
-                        Margin="0,0,0,8"
-                        Click="DeviceCardControl_Click">
+                    <custom:CardControl Margin="0,0,0,12" Padding="0">
                         <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.FanCurveControl_CPU}" />
+                            <StackPanel>
+                            <Border
+                                x:Name="_cpuRow"
+                                Style="{StaticResource DeviceInfoRowBorderStyle}"
+                                MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.FanCurveControl_CPU}" />
+                                    <TextBlock x:Name="_cpuLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                x:Name="_gpuRow"
+                                Style="{StaticResource DeviceInfoRowBorderStyle}"
+                                MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.FanCurveControl_GPU}" />
+                                    <TextBlock x:Name="_gpuLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                x:Name="_memoryRow"
+                                Style="{StaticResource DeviceInfoRowBorderStyle}"
+                                MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_Memory_Title}" />
+                                    <TextBlock x:Name="_memoryLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                x:Name="_baseBoardRow"
+                                Style="{StaticResource DeviceInfoRowBorderStyle}"
+                                MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_BaseBoard_Title}" />
+                                    <TextBlock x:Name="_baseBoardLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                x:Name="_chassisRow"
+                                Padding="14,10"
+                                MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_Chassis_Title}" />
+                                    <TextBlock x:Name="_chassisLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                            </StackPanel>
                         </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_cpuLabel"
-                            Focusable="True"
-                            TextWrapping="Wrap" />
-                    </custom:CardControl>
-
-                    <custom:CardControl
-                        x:Name="_gpuCard"
-                        Margin="0,0,0,8"
-                        Click="DeviceCardControl_Click">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.FanCurveControl_GPU}" />
-                        </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_gpuLabel"
-                            Focusable="True"
-                            TextWrapping="Wrap" />
-                    </custom:CardControl>
-
-                    <custom:CardControl
-                        x:Name="_memoryCard"
-                        Margin="0,0,0,8"
-                        Click="DeviceCardControl_Click">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Memory_Title}" />
-                        </custom:CardControl.Header>
-                        <TextBlock x:Name="_memoryLabel" Focusable="True" />
-                    </custom:CardControl>
-
-                    <custom:CardControl
-                        x:Name="_baseBoardCard"
-                        Margin="0,0,0,8"
-                        Click="DeviceCardControl_Click">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_BaseBoard_Title}" />
-                        </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_baseBoardLabel"
-                            Focusable="True"
-                            TextWrapping="Wrap" />
-                    </custom:CardControl>
-
-                    <custom:CardControl
-                        x:Name="_chassisCard"
-                        Margin="0,0,0,8"
-                        Click="DeviceCardControl_Click">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_Chassis_Title}" />
-                        </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_chassisLabel"
-                            Focusable="True"
-                            TextWrapping="Wrap" />
                     </custom:CardControl>
                 </StackPanel>
 
                 <StackPanel x:Name="_warrantyInfo" Visibility="{Binding HasWarrantyInfo, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
-                    <Grid Margin="0,16,0,24">
-
+                    <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -178,7 +225,7 @@
                         <TextBlock
                             Grid.Column="0"
                             Focusable="True"
-                            Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
+                            Style="{StaticResource AppSectionTitleTextBlockStyle}"
                             Text="{x:Static resources:Resource.DeviceInformationWindow_Warranty_Title}" />
                         <wpfui:Button
                             x:Name="_refreshWarrantyButton"
@@ -189,30 +236,36 @@
                             ToolTip="{x:Static resources:Resource.DeviceInformationWindow_Refresh}" />
                     </Grid>
 
-                    <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl Margin="0,0,0,8" Padding="0">
                         <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_WarrantyStartDate_Title}" />
+                            <StackPanel>
+                            <Border Style="{StaticResource DeviceInfoRowBorderStyle}" MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_WarrantyStartDate_Title}" />
+                                    <TextBlock x:Name="_warrantyStartLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" Text="-" />
+                                </Grid>
+                            </Border>
+                            <Border Padding="14,10" MouseLeftButtonUp="DeviceInfoRow_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.75*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource DeviceInfoLabelTextStyle}" Text="{x:Static resources:Resource.DeviceInformationWindow_WarrantyEndDate_Title}" />
+                                    <TextBlock x:Name="_warrantyEndLabel" Grid.Column="1" Style="{StaticResource DeviceInfoValueTextStyle}" Text="-" />
+                                </Grid>
+                            </Border>
+                            </StackPanel>
                         </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_warrantyStartLabel"
-                            Focusable="True"
-                            Text="-" />
                     </custom:CardControl>
-
-                    <custom:CardControl Margin="0,0,0,8">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.DeviceInformationWindow_WarrantyEndDate_Title}" />
-                        </custom:CardControl.Header>
-                        <TextBlock
-                            x:Name="_warrantyEndLabel"
-                            Focusable="True"
-                            Text="-" />
-                    </custom:CardControl>
-
 
                     <custom:CardAction
                         x:Name="_warrantyLinkCardAction"
-                        Margin="0,8,0,8"
+                        Margin="0,0,0,8"
                         Click="WarrantyLinkCardAction_OnClick"
                         Content="{x:Static resources:Resource.DeviceInformationWindow_LenovoSupport}"
                         Icon="Open24"

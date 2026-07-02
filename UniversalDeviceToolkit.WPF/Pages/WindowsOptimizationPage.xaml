@@ -156,7 +156,7 @@
         <Style x:Key="DriverSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
     </Page.Resources>
 
-        <Grid Style="{StaticResource AppPageEntranceAnimationStyle}">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -690,14 +690,10 @@
                                                         Grid.Column="1"
                                                         Margin="14,0,14,0"
                                                         VerticalAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        Content="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
                                                         Checked="DriverOnlyShowUpdatesCheckBox_OnChecked"
-                                                        Unchecked="DriverOnlyShowUpdatesCheckBox_OnChecked">
-	                                                        <TextBlock
-	                                                            MaxWidth="220"
-	                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-	                                                            Text="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
-                                                            TextTrimming="CharacterEllipsis" />
-                                                    </CheckBox>
+                                                        Unchecked="DriverOnlyShowUpdatesCheckBox_OnChecked" />
 
                                                     <ComboBox
                                                         x:Name="_driverSortingComboBox"

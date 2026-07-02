@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccentColorSource_Custom" xml:space="preserve">
+    <value>กำหนดเอง</value>
+  </data>
+  <data name="AccentColorSource_System" xml:space="preserve">
+    <value>ระบบ</value>
+  </data>
+  <data name="AlwaysOnUSBState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnAlways" xml:space="preserve">
+    <value>เปิดตลอดเวลา</value>
+  </data>
+  <data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve">
+    <value>เปิดเมื่ออยู่ในโหมดสลีป</value>
+  </data>
+  <data name="AutorunState_Disabled" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="AutorunState_Enabled" xml:space="preserve">
+    <value>เปิดใช้งาน</value>
+  </data>
+  <data name="AutorunState_EnabledDelayed" xml:space="preserve">
+    <value>เปิดใช้งานแบบหน่วงเวลา</value>
+  </data>
+  <data name="BatteryState_Conservation" xml:space="preserve">
+    <value>โหมดอนุรักษ์</value>
+  </data>
+  <data name="BatteryState_Normal" xml:space="preserve">
+    <value>ปกติ</value>
+  </data>
+  <data name="BatteryState_RapidCharge" xml:space="preserve">
+    <value>ชาร์จเร็ว</value>
+  </data>
+  <data name="FlipToStartState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that Flip to Start is or will be turned off.</comment>
+  </data>
+  <data name="FlipToStartState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that Flip to Start is or will be turned on.</comment>
+  </data>
+  <data name="FnLockState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that Fn Lock is or will be turned off.</comment>
+  </data>
+  <data name="FnLockState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that Fn Lock is or will be turned on.</comment>
+  </data>
+  <data name="GPUController_PoweredOff" xml:space="preserve">
+    <value>ปิดเครื่อง</value>
+  </data>
+  <data name="GPUController_PoweredOn" xml:space="preserve">
+    <value>เปิดเครื่อง</value>
+  </data>
+  <data name="HDRState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that HDR is or will be turned off.</comment>
+  </data>
+  <data name="HDRState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that HDR is or will be turned on.</comment>
+  </data>
+  <data name="HybridModeState_Off" xml:space="preserve">
+    <value>dGPU</value>
+  </data>
+  <data name="HybridModeState_On" xml:space="preserve">
+    <value>ไฮบริด</value>
+  </data>
+  <data name="HybridModeState_OnAuto" xml:space="preserve">
+    <value>ไฮบริด-อัตโนมัติ</value>
+  </data>
+  <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
+    <value>ไฮบริด-iGPU</value>
+  </data>
+  <data name="MicrophoneState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that the microphone is or will be turned off.</comment>
+  </data>
+  <data name="MicrophoneState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that the microphone is or will be turned on.</comment>
+  </data>
+  <data name="NotificationPosition_BottomCenter" xml:space="preserve">
+    <value>กลางด้านล่าง</value>
+  </data>
+  <data name="NotificationPosition_BottomLeft" xml:space="preserve">
+    <value>ล่างซ้าย</value>
+  </data>
+  <data name="NotificationPosition_BottomRight" xml:space="preserve">
+    <value>ล่างขวา</value>
+  </data>
+  <data name="NotificationPosition_Center" xml:space="preserve">
+    <value>ตรงกลาง</value>
+  </data>
+  <data name="NotificationPosition_CenterLeft" xml:space="preserve">
+    <value>กลางซ้าย</value>
+  </data>
+  <data name="NotificationPosition_CenterRight" xml:space="preserve">
+    <value>กลางขวา</value>
+  </data>
+  <data name="NotificationPosition_TopCenter" xml:space="preserve">
+    <value>กลางด้านบน</value>
+  </data>
+  <data name="NotificationPosition_TopLeft" xml:space="preserve">
+    <value>บนซ้าย</value>
+  </data>
+  <data name="NotificationPosition_TopRight" xml:space="preserve">
+    <value>บนขวา</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned off.</comment>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that One Level White Keyboard Backlight is or will be turned on.</comment>
+  </data>
+  <data name="OverdriveState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that Overdrive is or will be turned off.</comment>
+  </data>
+  <data name="OverdriveState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that Overdrive is or will be turned on.</comment>
+  </data>
+  <data name="PowerModeState_Balance" xml:space="preserve">
+    <value>สมดุล</value>
+  </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>ขีดสุด</value>
+  </data>
+  <data name="PowerModeState_GodMode" xml:space="preserve">
+    <value>กำหนดเอง</value>
+  </data>
+  <data name="PowerModeState_Performance" xml:space="preserve">
+    <value>ประสิทธิภาพ</value>
+  </data>
+  <data name="PowerModeState_Quiet" xml:space="preserve">
+    <value>เงียบ</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve">
+    <value>เร็ว</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve">
+    <value>เร็วที่สุด</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve">
+    <value>ช้า</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve">
+    <value>ช้าที่สุด</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>สูง</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ต่ำ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve">
+    <value>หายใจ</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve">
+    <value>นุ่มนวล</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve">
+    <value>คงที่</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve">
+    <value>คลื่นซ้าย</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve">
+    <value>คลื่นขวา</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_One" xml:space="preserve">
+    <value>ค่าตั้งล่วงหน้า 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve">
+    <value>ค่าตั้งล่วงหน้า 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve">
+    <value>ค่าตั้งล่วงหน้า 2</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve">
+    <value>สูง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve">
+    <value>ต่ำ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve">
+    <value>ปานกลาง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve">
+    <value>ล่างขึ้นบน</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve">
+    <value>ตามเข็มนาฬิกา</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve">
+    <value>ทวนเข็มนาฬิกา</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve">
+    <value>ซ้ายไปขวา</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve">
+    <value>ขวาไปซ้าย</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve">
+    <value>บนลงล่าง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
+    <value>ตลอดเวลา</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>เสียงเด้ง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>เสียงระลอก</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>ซิงค์ออโรร่า</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve">
+    <value>เปลี่ยนสี</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>สีเต้น</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>คลื่นสี</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve">
+    <value>ฝน</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>สายรุ้งหมุน</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>คลื่นสายรุ้ง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>ระลอก</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
+    <value>นุ่มนวล</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve">
+    <value>พิมพ์</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve">
+    <value>ช้า</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve">
+    <value>ปานกลาง</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve">
+    <value>เร็ว</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>มืด</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>สว่าง</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>ระบบ</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
+  <data name="TouchpadLockState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>
+  </data>
+  <data name="TouchpadLockState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that Touchpad Lock is or will be turned on.</comment>
+  </data>
+  <data name="WhiteKeyboardBacklightState_High" xml:space="preserve">
+    <value>สูง</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Low" xml:space="preserve">
+    <value>ต่ำ</value>
+  </data>
+  <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="WinKeyState_Off" xml:space="preserve">
+    <value>ปิด</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="WinKeyState_On" xml:space="preserve">
+    <value>เปิด</value>
+    <comment>Informs the user that WinLock is or will be turned on.</comment>
+  </data>
+  <data name="PortsBacklightState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="PortsBacklightState_On" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="PanelLogoBacklightState_On" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="PanelLogoBacklightState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="InstantBootState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="InstantBootState_AcAdapter" xml:space="preserve">
+    <value>อะแดปเตอร์ AC</value>
+  </data>
+  <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
+    <value>USB Power Delivery</value>
+  </data>
+  <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
+    <value>AC และ USB PD</value>
+  </data>
+  <data name="NotificationDuration_Long" xml:space="preserve">
+    <value>ยาว</value>
+  </data>
+  <data name="NotificationDuration_Normal" xml:space="preserve">
+    <value>ปกติ</value>
+  </data>
+  <data name="NotificationDuration_Short" xml:space="preserve">
+    <value>สั้น</value>
+  </data>
+  <data name="ModifierKey_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="ModifierKey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="ModifierKey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BatteryNightChargeState_On" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="BatteryNightChargeState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="SpeakerState_Mute" xml:space="preserve">
+    <value>ปิดเสียง</value>
+  </data>
+  <data name="SpeakerState_Unmute" xml:space="preserve">
+    <value>เปิดเสียง</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>โปรไฟล์จะไม่ถูกนำไปใช้หากไม่ได้เชื่อมต่ออะแดปเตอร์ AC (วัตต์เต็ม)</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>ยังไม่ได้เริ่มต้น</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>ไม่รองรับ</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>พัดลม CPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>พัดลม GPU</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>พัดลมระบบ</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>สลับ</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>ประหยัดแบตเตอรี่</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>ระบายความร้อนอัจฉริยะ</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>ประสิทธิภาพขีดสุด</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>สายเทค</value>
+  </data>
+  <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve">
+    <value>โหมดพลังงาน Windows</value>
+  </data>
+  <data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve">
+    <value>แผนการใช้พลังงาน Windows</value>
+  </data>
+  <data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve">
+    <value>ค่าตั้งล่วงหน้า 4</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerDay" xml:space="preserve">
+    <value>ทุกวัน</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerHour" xml:space="preserve">
+    <value>ทุกชั่วโมง</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerMonth" xml:space="preserve">
+    <value>ทุกเดือน</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve">
+    <value>ทุก 3 ชั่วโมง</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve">
+    <value>ทุก 12 ชั่วโมง</value>
+  </data>
+  <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
+    <value>ทุกสัปดาห์</value>
+  </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>สไตล์ปัจจุบัน</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>ทางการสุดเท่</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>นีออนยามราตรี</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>เทคโนป่าเขียว</value>
+  </data>
+  <data name="HardwareSensorsState_Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="HardwareSensorsState_On" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="OsdItem_Disk1Temperature" xml:space="preserve">
+    <value>อุณหภูมิดิสก์ 1</value>
+  </data>
+  <data name="OsdItem_Disk2Temperature" xml:space="preserve">
+    <value>อุณหภูมิดิสก์ 2</value>
+  </data>
+  <data name="OsdItem_E_Core_Frequency" xml:space="preserve">
+    <value>ความเร็ว E-Core</value>
+  </data>
+  <data name="OsdItem_Fan" xml:space="preserve">
+    <value>พัดลม</value>
+  </data>
+  <data name="OsdItem_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="OsdItem_FrameTime" xml:space="preserve">
+    <value>เวลาเฟรม</value>
+  </data>
+  <data name="OsdItem_Frequency" xml:space="preserve">
+    <value>ความถี่</value>
+  </data>
+  <data name="OsdItem_LowFps" xml:space="preserve">
+    <value>1% Low</value>
+  </data>
+  <data name="OsdItem_MemoryTemperature" xml:space="preserve">
+    <value>อุณหภูมิหน่วยความจำ</value>
+  </data>
+  <data name="OsdItem_MotherboardTemperature" xml:space="preserve">
+    <value>อุณหภูมิเมนบอร์ด</value>
+  </data>
+  <data name="OsdItem_Power" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="OsdItem_P_Core_Frequency" xml:space="preserve">
+    <value>ความเร็ว P-Core</value>
+  </data>
+  <data name="OsdItem_Temperature" xml:space="preserve">
+    <value>อุณหภูมิ</value>
+  </data>
+  <data name="OsdItem_Utilization" xml:space="preserve">
+    <value>การใช้งาน</value>
+  </data>
+  <data name="OsdItem_VramTemperature" xml:space="preserve">
+    <value>อุณหภูมิ VRAM</value>
+  </data>
+  <data name="OsdItem_VramUtilization" xml:space="preserve">
+    <value>การใช้งาน VRAM</value>
+  </data>
+  <data name="OsdState_Hidden" xml:space="preserve">
+    <value>ซ่อน</value>
+  </data>
+  <data name="OsdState_Show" xml:space="preserve">
+    <value>แสดง</value>
+  </data>
+  <data name="OsdState_Toggle" xml:space="preserve">
+    <value>สลับสถานะ</value>
+  </data>
+  <data name="Exception_InvalidState" xml:space="preserve">
+    <value>สถานะไม่ถูกต้อง</value>
+    <comment>Exception message for invalid enum/state value</comment>
+  </data>
+  <data name="Exception_InvalidFileName" xml:space="preserve">
+    <value>ชื่อไฟล์ไม่ถูกต้อง</value>
+    <comment>Exception message for invalid file name parameter</comment>
+  </data>
+  <data name="Exception_DangerousArguments" xml:space="preserve">
+    <value>อาร์กิวเมนต์มีอักขระอันตราย</value>
+    <comment>Exception message for command injection detection</comment>
+  </data>
+  <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve">
+    <value>เชลล์แบบโต้ตอบต้องการอาร์กิวเมนต์เมื่อรอการออก</value>
+    <comment>Exception message for shell without arguments</comment>
+  </data>
+  <data name="Exception_PowerShellDangerousArgs" xml:space="preserve">
+    <value>อาร์กิวเมนต์ PowerShell มีรูปแบบอันตราย</value>
+    <comment>Exception message for PowerShell injection</comment>
+  </data>
+  <data name="Exception_UnknownHive" xml:space="preserve">
+    <value>ไม่รู้จัก hive</value>
+    <comment>Exception message for unknown registry hive</comment>
+  </data>
+  <data name="Exception_NoUpdatesAvailable" xml:space="preserve">
+    <value>ไม่มีการอัปเดต</value>
+    <comment>Exception message when no updates found</comment>
+  </data>
+  <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
+    <value>ไม่พบ URL ของไฟล์ติดตั้ง</value>
+    <comment>Exception message when update download URL is missing</comment>
+  </data>
+  <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
+    <value>ไม่รองรับคีย์บอร์ด RGB</value>
+    <comment>Exception message when RGB keyboard hardware is not present</comment>
+  </data>
+  <data name="Exception_CantManageWithVantage" xml:space="preserve">
+    <value>ไม่สามารถจัดการคีย์บอร์ด RGB ได้เมื่อเปิดใช้งาน Vantage</value>
+    <comment>Exception message when Lenovo Vantage conflicts</comment>
+  </data>
+  <data name="Exception_PowerModeNotSupported" xml:space="preserve">
+    <value>อุปกรณ์นี้ไม่รองรับการสลับโหมดพลังงาน</value>
+    <comment>Exception message for unsupported power mode feature</comment>
+  </data>
+  <data name="Exception_CannotSetUEFIPrivileges" xml:space="preserve">
+    <value>ไม่สามารถตั้งสิทธิ์ UEFI</value>
+    <comment>Exception message for UEFI privilege failure</comment>
+  </data>
+  <data name="Exception_FailedToStartExplorer" xml:space="preserve">
+    <value>ไม่สามารถเริ่ม Explorer</value>
+    <comment>Exception message for Explorer restart failure</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
+    <value>Explorer ไม่ได้รีสตาร์ททันเวลา</value>
+    <comment>Exception message for Explorer restart timeout</comment>
+  </data>
+  <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
+    <value>Explorer ไม่ได้ปิดทันเวลา</value>
+    <comment>Exception message for Explorer shutdown timeout</comment>
+  </data>
+  <data name="Exception_InvalidActionKey" xml:space="preserve">
+    <value>คีย์การดำเนินการไม่ถูกต้อง</value>
+    <comment>Exception message for invalid optimization action key</comment>
+  </data>
+  <data name="Exception_CommandCannotBeEmpty" xml:space="preserve">
+    <value>คำสั่งต้องไม่เป็นค่าว่าง</value>
+    <comment>Exception message for empty command parameter</comment>
+  </data>
+  <data name="Exception_DeletionSystemPathsNotAllowed" xml:space="preserve">
+    <value>ไม่อนุญาตให้ลบพาธของระบบ</value>
+    <comment>Exception message for protected path deletion</comment>
+  </data>
+  <data name="Exception_WildcardDeletionRestricted" xml:space="preserve">
+    <value>การลบแบบไวลด์การ์ดถูกจำกัด</value>
+    <comment>Exception message for wildcard deletion block</comment>
+  </data>
+  <data name="Exception_DeletionCriticalRegistryNotAllowed" xml:space="preserve">
+    <value>ไม่อนุญาตให้ลบคีย์รีจิสทรีที่สำคัญ</value>
+    <comment>Exception message for protected registry key deletion</comment>
+  </data>
+  <data name="Exception_CurrentUserValueNull" xml:space="preserve">
+    <value>ค่าผู้ใช้ปัจจุบันเป็นค่าว่าง</value>
+    <comment>Exception message when Windows identity is null</comment>
+  </data>
+  <data name="Exception_HandleInvalid" xml:space="preserve">
+    <value>แฮนเดิลไม่ถูกต้อง</value>
+    <comment>Exception message for invalid handle</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeJSON" xml:space="preserve">
+    <value>ไม่สามารถดีซีเรียลไลซ์ JSON</value>
+    <comment>Exception message for JSON deserialization failure</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariable" xml:space="preserve">
+    <value>ตัวแปรสภาพแวดล้อมไม่ถูกต้อง: {0}</value>
+    <comment>Exception message format for invalid env var name</comment>
+  </data>
+  <data name="Exception_InvalidEnvVariableValue" xml:space="preserve">
+    <value>ค่าตัวแปรสภาพแวดล้อมไม่ถูกต้อง: {0}</value>
+    <comment>Exception message format for invalid env var value</comment>
+  </data>
+  <data name="Exception_NoSupportedFeature" xml:space="preserve">
+    <value>ไม่พบฟีเจอร์ที่รองรับ</value>
+    <comment>Exception message when no feature implementation is available</comment>
+  </data>
+  <data name="Exception_BuiltInDisplayNotFound" xml:space="preserve">
+    <value>ไม่พบจอแสดงผลในตัว</value>
+    <comment>Exception message when integrated display is unavailable</comment>
+  </data>
+  <data name="Exception_FailedToDeserializeProfile" xml:space="preserve">
+    <value>ไม่สามารถดีซีเรียลไลซ์โปรไฟล์</value>
+    <comment>Exception message for profile deserialization failure</comment>
+  </data>
+  <data name="Exception_BrightnessRange" xml:space="preserve">
+    <value>ความสว่างต้องอยู่ระหว่าง 0 ถึง 9</value>
+    <comment>Exception message for invalid brightness value</comment>
+  </data>
+  <data name="Exception_ProfileRange" xml:space="preserve">
+    <value>โปรไฟล์ต้องอยู่ระหว่าง 0 ถึง 6</value>
+    <comment>Exception message for invalid profile value</comment>
+  </data>
+  <data name="Exception_TableDataCannotBeEmpty" xml:space="preserve">
+    <value>ข้อมูลตารางต้องไม่ว่าง</value>
+    <comment>Exception message for empty table data</comment>
+  </data>
+  <data name="Exception_TempArrayMustBe10" xml:space="preserve">
+    <value>อาเรย์อุณหภูมิต้องมี 10 องค์ประกอบ</value>
+    <comment>Exception message for invalid temperature array size</comment>
+  </data>
+  <data name="Exception_FileChecksumMismatch" xml:space="preserve">
+    <value>เช็คซัมไฟล์ไม่ตรงกัน</value>
+    <comment>Exception message for CRC mismatch</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotGUID" xml:space="preserve">
+    <value>คุณสมบัติอุปกรณ์ไม่ใช่ GUID</value>
+    <comment>Exception message for non-GUID device property</comment>
+  </data>
+  <data name="Exception_DevicePropertyNotString" xml:space="preserve">
+    <value>คุณสมบัติอุปกรณ์ไม่ใช่สตริง</value>
+    <comment>Exception message for non-string device property</comment>
+  </data>
+  <data name="Exception_OffsetCountExceedArray" xml:space="preserve">
+    <value>ค่าออฟเซตและจำนวนเกินขอบเขตของอาเรย์</value>
+    <comment>Exception message for array bounds violation</comment>
+  </data>
+  <data name="Exception_ProfileFileNotFound" xml:space="preserve">
+    <value>ไม่พบไฟล์โปรไฟล์</value>
+    <comment>Exception message for missing profile file</comment>
+  </data>
+  <data name="Exception_OpenServiceError" xml:space="preserve">
+    <value>ข้อผิดพลาดในการเปิดบริการ</value>
+    <comment>Exception message for service open failure</comment>
+  </data>
+  <data name="Exception_OpenServiceManagerError" xml:space="preserve">
+    <value>ข้อผิดพลาดในการเปิดตัวจัดการบริการ</value>
+    <comment>Exception message for service manager open failure</comment>
+  </data>
+  <data name="Exception_ResourceCatalogEmpty" xml:space="preserve">
+    <value>แคตตาล็อกทรัพยากรว่างเปล่า</value>
+    <comment>Exception message for empty resource catalog</comment>
+  </data>
+  <data name="Exception_CouldNotDeserializeEffects" xml:space="preserve">
+    <value>ไม่สามารถดีซีเรียลไลซ์เอฟเฟกต์ได้</value>
+    <comment>Exception message for effect deserialization failure</comment>
+  </data>
+  <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
+    <value>ไม่สามารถอ่านตัวแปร {0} จาก UEFI</value>
+    <comment>Exception message format for UEFI read failure</comment>
+  </data>
+  <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
+    <value>ไม่สามารถเขียนตัวแปร {0} ไปยัง UEFI</value>
+    <comment>Exception message format for UEFI write failure</comment>
+  </data>
+  <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
+    <value>ค่าคุณสมบัติ WMI ไม่พร้อมใช้งานสำหรับ {0}</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_UndefinedValueReceived" xml:space="preserve">
+    <value>ได้รับค่าที่ไม่ได้กำหนด: {0}</value>
+    <comment>Exception message format for unexpected enum value</comment>
+  </data>
+  <data name="Exception_UnsupportedPowerMode" xml:space="preserve">
+    <value>โหมดพลังงาน {0} ไม่รองรับ</value>
+    <comment>Exception message format for unsupported power mode</comment>
+  </data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
+    <value>โหมดพลังงาน '{0}' ไม่พร้อมใช้งานเมื่อไม่ได้เชื่อมต่ออะแดปเตอร์ AC</value>
+    <comment>Exception message format for AC-restricted power mode</comment>
+  </data>
+  <data name="Exception_CommandFailedSecurity" xml:space="preserve">
+    <value>คำสั่งล้มเหลวในการตรวจสอบความปลอดภัย: {0}</value>
+    <comment>Exception message format for command security failure</comment>
+  </data>
+  <data name="Exception_NotInAllowlist" xml:space="preserve">
+    <value>ไฟล์ปฏิบัติการไม่อยู่ในรายการที่อนุญาต: {0}</value>
+    <comment>Exception message format for disallowed executable</comment>
+  </data>
+  <data name="Exception_DangerousPatternInArgs" xml:space="preserve">
+    <value>ตรวจพบรูปแบบอันตรายในอาร์กิวเมนต์สำหรับ {0}</value>
+    <comment>Exception message format for dangerous arg patterns</comment>
+  </data>
+  <data name="Exception_DevicePackUnsupportedFileType" xml:space="preserve">
+    <value>แพ็คอุปกรณ์มีประเภทไฟล์ที่ไม่รองรับ: {0}</value>
+    <comment>Exception message format for disallowed file type in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackUnsafePath" xml:space="preserve">
+    <value>แพ็คอุปกรณ์มีพาธที่ไม่ปลอดภัย: {0}</value>
+    <comment>Exception message format for path traversal in device pack</comment>
+  </data>
+  <data name="Exception_DevicePackWindowsPathSep" xml:space="preserve">
+    <value>แพ็คอุปกรณ์มีตัวคั่นพาธแบบ Windows: {0}</value>
+    <comment>Exception message format for backslash in device pack path</comment>
+  </data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
+    <value>แพ็คอุปกรณ์ '{0}' ไม่พร้อมใช้งานในแคตตาล็อกทรัพยากรออนไลน์</value>
+    <comment>Exception message format for unavailable device pack</comment>
+  </data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve">
+    <value>แพ็คอุปกรณ์ '{0}' ไม่มี {1}</value>
+    <comment>Exception message format for missing manifest file</comment>
+  </data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
+    <value>ไฟล์แมนิเฟสต์ของแพ็คอุปกรณ์ '{0}' ว่างเปล่า</value>
+    <comment>Exception message format for empty manifest</comment>
+  </data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
+    <value>รหัสแพ็คอุปกรณ์ไม่ตรงกัน คาดหวัง '{0}' แต่ได้ '{1}'</value>
+    <comment>Exception message format for ID mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
+    <value>ผู้จัดจำหน่ายแพ็คอุปกรณ์ไม่ตรงกัน คาดหวัง '{0}' แต่ได้ '{1}'</value>
+    <comment>Exception message format for vendor mismatch</comment>
+  </data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
+    <value>แพ็คอุปกรณ์ '{0}' มี URL ดาวน์โหลดว่างเปล่า</value>
+    <comment>Exception message format for empty download URL</comment>
+  </data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
+    <value>แพ็คอุปกรณ์ '{0}' ขาดข้อมูลเมตา SHA256</value>
+    <comment>Exception message format for missing SHA256</comment>
+  </data>
+  <data name="Exception_UnknownBatteryState" xml:space="preserve">
+    <value>ไม่รู้จักสถานะแบตเตอรี่: {0}</value>
+    <comment>Exception message format for unrecognized battery state</comment>
+  </data>
+  <data name="Exception_FailedVerifyState" xml:space="preserve">
+    <value>ไม่สามารถตรวจสอบสถานะ {0} ที่ตั้งเป็น {1}</value>
+    <comment>Exception message format for driver state verification failure</comment>
+  </data>
+  <data name="Exception_DeviceIoControlError" xml:space="preserve">
+    <value>DeviceIoControl ส่งคืน 0 ข้อผิดพลาดล่าสุด: {0}</value>
+    <comment>Exception message format for driver IO control failure</comment>
+  </data>
+  <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve">
+    <value>ไม่สามารถเปิดคีย์ {0}</value>
+    <comment>Exception message format for registry key open failure</comment>
+  </data>
+  <data name="Exception_HasToBeReadable" xml:space="preserve">
+    <value>ต้องสามารถอ่านได้</value>
+    <comment>Exception message for non-readable stream</comment>
+  </data>
+  <data name="Exception_HasToBeWritable" xml:space="preserve">
+    <value>ต้องสามารถเขียนได้</value>
+    <comment>Exception message for non-writable stream</comment>
+  </data>
+  <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve">
+    <value>แฮนเดิลอุปกรณ์ไม่พร้อมใช้งาน</value>
+    <comment>Exception message when device handle is null</comment>
+  </data>
+  <data name="Exception_MainModuleNull" xml:space="preserve">
+    <value>โมดูลหลักต้องไม่เป็นค่าว่าง</value>
+    <comment>Exception message when process main module is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve">
+    <value>ชื่อไฟล์กระบวนการปัจจุบันต้องไม่เป็นค่าว่าง</value>
+    <comment>Exception message when process file name is null</comment>
+  </data>
+  <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve">
+    <value>เวอร์ชันไฟล์กระบวนการปัจจุบันต้องไม่เป็นค่าว่าง</value>
+    <comment>Exception message when process file version is null</comment>
+  </data>
+  <data name="Exception_SHA256ValidationFailed" xml:space="preserve">
+    <value>ทรัพยากรที่ดาวน์โหลดล้มเหลวในการตรวจสอบ SHA256 คาดหวัง {0} แต่ได้ {1}</value>
+    <comment>Exception message format for SHA256 hash mismatch during resource download</comment>
+  </data>
+  <data name="Exception_IoCAlreadyInitialized" xml:space="preserve">
+    <value>IoCContainer เริ่มต้นแล้ว</value>
+    <comment>Exception message when IoC is initialized twice</comment>
+  </data>
+  <data name="Exception_IoCMustBeInitialized" xml:space="preserve">
+    <value>ต้องเริ่มต้น IoCContainer ก่อน [type={0}]</value>
+    <comment>Exception message format when resolving before initialization</comment>
+  </data>
+  <data name="Exception_FanTableLength" xml:space="preserve">
+    <value>ความยาวตารางพัดลมต้องเป็น 10</value>
+    <comment>Exception message for invalid fan table length</comment>
+  </data>
+  <data name="Exception_TagNameNullOrEmpty" xml:space="preserve">
+    <value>ชื่อแท็กต้องไม่เป็นค่าว่าง</value>
+    <comment>Exception message for null or empty version tag</comment>
+  </data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
+    <value>ไม่สามารถแยกวิเคราะห์เวอร์ชันจากชื่อแท็ก: '{0}' รูปแบบที่คาดหวัง: '3.0.1'</value>
+    <comment>Exception message format for unparseable version string</comment>
+  </data>
+  <data name="Exception_GodModePresetNotFound" xml:space="preserve">
+    <value>ไม่พบค่าตั้งล่วงหน้าที่มี ID {0}</value>
+    <comment>Exception message format for missing God Mode preset</comment>
+  </data>
+  <data name="Exception_NoGodModePresetCreated" xml:space="preserve">
+    <value>ไม่สามารถสร้างค่าตั้งล่วงหน้าโหมดกำหนดเองได้</value>
+    <comment>Exception message when no preset can be created</comment>
+  </data>
+  <data name="Exception_NoGodModePresetAvailable" xml:space="preserve">
+    <value>ไม่มีค่าตั้งล่วงหน้าโหมดกำหนดเอง</value>
+    <comment>Exception message when no preset is available</comment>
+  </data>
+  <data name="Exception_NoSupportedVersionFound" xml:space="preserve">
+    <value>ไม่พบเวอร์ชันที่รองรับ</value>
+    <comment>Exception message when no supported God Mode version is found</comment>
+  </data>
+  <data name="Exception_NoSupportedControllerFound" xml:space="preserve">
+    <value>ไม่พบคอนโทรลเลอร์ที่รองรับ</value>
+    <comment>Exception message when no supported controller is available</comment>
+  </data>
+  <data name="Exception_InvalidSettingsFilename" xml:space="preserve">
+    <value>ชื่อไฟล์การตั้งค่าไม่ถูกต้อง: {0}</value>
+    <comment>Exception message format for invalid settings filename</comment>
+  </data>
+  <data name="Exception_SettingsPathEscapesAllowedDir" xml:space="preserve">
+    <value>พาธการตั้งค่าออกนอกไดเรกทอรีที่อนุญาต: {0}</value>
+    <comment>Exception message format when settings path is outside allowed directory</comment>
+  </data>
+  <data name="Exception_FailedToRegisterTask" xml:space="preserve">
+    <value>ไม่สามารถลงทะเบียนการเปลี่ยนแปลงในงาน {0} ใน {1} [type={2}]</value>
+    <comment>Exception message format for task registration failure</comment>
+  </data>
+  <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve">
+    <value>ไม่สามารถอ่านการตั้งค่า {0}</value>
+    <comment>Exception message format when registry read fails</comment>
+  </data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve">
+    <value>ไม่สามารถรับสี "{0}"</value>
+    <comment>Exception message format when uxtheme color lookup fails</comment>
+  </data>
+  <data name="Exception_DriverHandleFailed" xml:space="preserve">
+    <value>ไม่สามารถรับแฮนเดิลสำหรับไดรเวอร์: {0}</value>
+    <comment>Exception message format for driver handle failure</comment>
+  </data>
+  <data name="Exception_DriverHandleError" xml:space="preserve">
+    <value>ข้อผิดพลาดในการรับแฮนเดิลไดรเวอร์: {0}</value>
+    <comment>Exception message format for driver handle error</comment>
+  </data>
+  <data name="Exception_DeviceIoControlErrorWithCode" xml:space="preserve">
+    <value>DeviceIoControl ล้มเหลว: {0}</value>
+    <comment>Exception message format for IO control error</comment>
+  </data>
+  <data name="Exception_DriverCommandError" xml:space="preserve">
+    <value>ข้อผิดพลาดในการส่งคำสั่งไดรเวอร์: controlCode={0}</value>
+    <comment>Exception message format for driver command error</comment>
+  </data>
+  <data name="Exception_WmiClassNotAvailable" xml:space="preserve">
+    <value>คลาสหรือเนมสเปซ WMI ไม่พร้อมใช้งาน [scope={0}, query={1}]</value>
+    <comment>Exception message format when WMI class/namespace is unavailable</comment>
+  </data>
+  <data name="Exception_WmiReadFailed" xml:space="preserve">
+    <value>การอ่านล้มเหลว: {0} [scope={1}, query={2}]</value>
+    <comment>Exception message format for WMI read failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailed" xml:space="preserve">
+    <value>การเรียกล้มเหลว: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure</comment>
+  </data>
+  <data name="Exception_WmiCallFailedDot" xml:space="preserve">
+    <value>การเรียกล้มเหลว: {0} [scope={1}, query={2}, methodName={3}]</value>
+    <comment>Exception message format for WMI call failure (with trailing period)</comment>
+  </data>
+  <data name="Exception_WmiNoResults" xml:space="preserve">
+    <value>ไม่มีผลลัพธ์ในคิวรี</value>
+    <comment>Exception message when WMI query returns no results</comment>
+  </data>
+  <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve">
+    <value>ประเภทของการจัดรูปแบบไม่ถูกต้อง</value>
+    <comment>Exception message for unexpected format type</comment>
+  </data>
+  <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
+    <value>การตรวจสอบความสมบูรณ์ของแพ็คเกจอัปเดตล้มเหลว: ไม่มีแฮช SHA256 สำหรับการอัปเดต {0} การตรวจสอบความสมบูรณ์จำเป็นต่อความปลอดภัย</value>
+    <comment>Exception message format when no SHA256 hash is available for update</comment>
+  </data>
+  <data name="Exception_UpdateSHA256Mismatch" xml:space="preserve">
+    <value>การตรวจสอบความสมบูรณ์ของแพ็คเกจอัปเดตล้มเหลว SHA256 ที่คาดหวัง: {0} ที่คำนวณได้: {1}</value>
+    <comment>Exception message format for update SHA256 hash mismatch</comment>
+  </data>
+</root>
