@@ -328,7 +328,7 @@ Ovo vrijeme možda neće biti tačno ako je laptop bio napunjen dok je spavao il
     <value>Proizvođač</value>
   </data>
   <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
-    <value>Model ure?aja</value>
+    <value>Model uređaja</value>
   </data>
   <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
     <value>Serijski broj</value>
@@ -424,7 +424,7 @@ Ovo vrijeme možda neće biti tačno ako je laptop bio napunjen dok je spavao il
     <value>Proizvođač:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model ure?aja:</value>
+    <value>Model uređaja:</value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
     <value>Tip mašine:</value>
@@ -747,7 +747,7 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Universal Device Toolkit nije bio testiran sa vašim uređajem.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
-    <value>Model ure?aja</value>
+    <value>Model uređaja</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
     <value>Uređaj nije podržan</value>
@@ -2937,7 +2937,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Korištenje ugrađene Windows funkcionalnosti za čišćenje registra</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (O?isti DNS predmemoriju)</value>
+    <value>ipconfig /flushdns (Očisti DNS predmemoriju)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
     <value>netsh winsock reset (Resetuj Winsock protokolni stek)</value>
@@ -3270,7 +3270,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Alati će se ovdje pojaviti jednom kada budu dostupni u direktoriju tools.</value>
   </data>
   <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Model ure?aja</value>
+    <value>Model uređaja</value>
   </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Potrošnja energije</value>

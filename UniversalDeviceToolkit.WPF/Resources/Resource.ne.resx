@@ -579,25 +579,25 @@
     <value>लिड खोल्दा ल्यापटप चालू गर्नुहोस्।</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>फ्लिप टु स्टार्ट</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
     <value>लिड खोल्दा ल्यापटप चालू गर्नुहोस्।</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>फ्लिप टु स्टार्ट</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
     <value>Fn कुञ्जी नसमाई F1-F12 कुञ्जीहरूको माध्यमिक प्रकार्यहरू प्रयोग गर्नुहोस्।</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn लक</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
     <value>Fn कुञ्जी नसमाई F1-F12 कुञ्जीहरूको माध्यमिक प्रकार्यहरू प्रयोग गर्नुहोस्।</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn लक</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
     <value>चेतावनी!
@@ -888,7 +888,7 @@
     <value>सूचनाहरू नदेखाउनुहोस्</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn लक</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>किबोर्ड ब्याकलाइट</value>
@@ -1190,7 +1190,7 @@
     <value>उच्चारण रङ</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>उपस्थिति</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
     <value>भाषा, तापमान एकाइ, थिम र उच्चारण रङ अनुकूलित गर्नुहोस्।</value>
@@ -1412,7 +1412,7 @@
     <value>चयन गरिएका कार्यहरू पूरा गर्न असफल।</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp;amp; interface</value>
+    <value>Explorer &amp; interface</value>
   </data>
 
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">

@@ -336,7 +336,7 @@ Denne gangen er det kanskje ikke n酶yaktig hvis den b忙rbare PC-en ble ladet n
     <value>Avbryt</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>掳C</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Lukk</value>
@@ -543,7 +543,7 @@ ADVARSEL: Denne handlingen vil ikke kj酶res riktig hvis det interne displayet e
     <value>Om GPU-arbeidsmoduser</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>掳F</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>CPU</value>

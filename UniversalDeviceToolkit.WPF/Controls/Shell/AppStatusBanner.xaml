@@ -5,12 +5,15 @@
     xmlns:shell="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Shell"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Focusable="False"
+    Background="Transparent"
     Visibility="Collapsed">
     <Border
         x:Name="RootBorder"
         Margin="12,0,12,6"
         Padding="10,8"
         Background="{DynamicResource StatusWarningBackgroundBrush}"
+        BorderBrush="Transparent"
+        BorderThickness="0"
         CornerRadius="{StaticResource CornerRadiusMD}"
         SnapsToDevicePixels="True">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">

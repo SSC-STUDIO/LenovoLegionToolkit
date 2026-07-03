@@ -1208,13 +1208,13 @@
     <value>Онемогући Легион Зоне</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Леново Хоткеyс можда није исправно онемогућен</value>
+    <value>Леново Хоткејс можда није исправно онемогућен</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Леново Хоткеyс није могуће онемогућити</value>
+    <value>Леново Хоткејс није могуће онемогућити</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>Онемогући Леново Хоткеyс и његову услугу без деинсталирања.
+    <value>Онемогући Леново Хоткејс и његову услугу без деинсталирања.
 Ако је онемогућено, ова апликација ће управљати Фн пречицама.
 Поновно покретање се препоручује након промене ове опције.</value>
   </data>
@@ -1366,7 +1366,7 @@
     <value>Чишћење МРУ/историје регистра</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Обришите уобичајене историје регистра корисника (Рун МРУ, РецентДоцс, Опен/Саве дијалози, ТyпедПатхс). Ово не уклања системске критичне ставке.</value>
+    <value>Обришите уобичајене историје регистра корисника (Рун МРУ, РецентДоцс, Опен/Саве дијалози, ТипедПатхс). Ово не уклања системске критичне ставке.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>Радње</value>
@@ -1531,13 +1531,13 @@
     <value>Онемогући дијагностичке услуге</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Зауставите и онемогућите услуге Цоннецтед Усер Еxпериенцес, Диагностицс Хуб и Деливерy Оптимисатион.</value>
+    <value>Зауставите и онемогућите услуге Цоннецтед Усер Еxпериенцес, Диагностицс Хуб и Деливери Оптимизатион.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Онемогући СyсМаин</value>
+    <value>Онемогући СисМаин</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Искључите Суперфетцх/СyсМаин да бисте смањили позадинску активност диска.</value>
+    <value>Искључите Суперфетцх/СисМаин да бисте смањили позадинску активност диска.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
     <value>Онемогући индексирање Wиндоwс Сеарцх-а</value>
@@ -1567,7 +1567,7 @@
     <value>Очисти кеш Wиндоwс Упдате-а</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Обришите преузете фајлове ажурирања и кеш Деливерy Оптимисатион.</value>
+    <value>Обришите преузете фајлове ажурирања и кеш Деливери Оптимизатион.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
     <value>Очисти кеш прегледача</value>
@@ -1660,7 +1660,7 @@
     <value>Покрените ДИСМ чишћење и обришите WинСxС привремене фајлове.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
-    <value>Онемогући Леново Хоткеyс</value>
+    <value>Онемогући Леново Хоткејс</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
     <value>Леново Вантаге и/или ИмЦонтроллер можда нису исправно онемогућени</value>
@@ -1682,10 +1682,10 @@
     <value>Легион Зоне није могуће омогућити</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Леново Хоткеyс можда није исправно омогућен</value>
+    <value>Леново Хоткејс можда није исправно омогућен</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Леново Хоткеyс није могуће омогућити</value>
+    <value>Леново Хоткејс није могуће омогућити</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
     <value>Леново Вантаге и/или ИмЦонтроллер можда нису исправно омогућени</value>
@@ -2319,7 +2319,7 @@
     <value>Откривен С0 модел ниже снаге</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Wиндоwс пријављује да овај лаптоп подржава Модерн Стандбy. Коришћење планова напајања осим Балансираног може изазвати неочекивано понашање.</value>
+    <value>Wиндоwс пријављује да овај лаптоп подржава Модерн Стандбај. Коришћење планова напајања осим Балансираног може изазвати неочекивано понашање.</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
     <value>Изаберите Wиндоwс планове напајања за примену када се режим напајања промени.</value>
@@ -2892,7 +2892,7 @@
     <value>Изаберите јединице за температурне сензоре.</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Леново Хоткеyс ради у позадини.</value>
+    <value>Леново Хоткејс ради у позадини.</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
     <value>Легион Зоне ради у позадини.</value>
@@ -3865,7 +3865,7 @@
     <value>Хардверски сензори</value>
   </data>
   <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
-    <value>Пакет језика није могуће преузети. Проверите мрежну везу, проxy или ТЛС подешавања, а затим покушајте поново.</value>
+    <value>Пакет језика није могуће преузети. Проверите мрежну везу, прокси или ТЛС подешавања, а затим покушајте поново.</value>
   </data>
   <data name="SettingsPage_Navigation_Display" xml:space="preserve">
     <value>Екран</value>

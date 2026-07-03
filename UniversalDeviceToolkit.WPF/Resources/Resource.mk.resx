@@ -656,7 +656,7 @@
     <value>Вентилатори</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
-    <value>Конфигуриллив TGP</value>
+    <value>Конфигурилив TGP</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
     <value>Динамично засилување</value>
@@ -1030,7 +1030,7 @@
     <value>Режим на напојување</value>
   </data>
   <data name="PowerModeControl_Warning" xml:space="preserve">
-    <value>Изbrаниот режим на напојување можеби нема да работи правилно без поврзан AC адаптер.</value>
+    <value>Избраниот режим на напојување можеби нема да работи правилно без поврзан AC адаптер.</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
     <value>Стандардно</value>
@@ -1063,7 +1063,7 @@
     <value>Скенирањето за драјвери не е завршено</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Проверете го изbrаниот извор и мрежната врска, потоа скенирајте повторно.</value>
+    <value>Проверете го избраниот извор и мрежната врска, потоа скенирајте повторно.</value>
   </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
     <value>Се појави мрежна грешка. Автоматско повторување...</value>

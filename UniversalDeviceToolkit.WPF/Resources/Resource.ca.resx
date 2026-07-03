@@ -550,7 +550,7 @@
     <value>Vista compacta</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occured when reading device information.</value>
+    <value>S'ha produït un error en llegir la informació del dispositiu.</value>
   </data>
   <data name="ContextMenu_QuickActions" xml:space="preserve">
     <value>Accions ràpides</value>
@@ -871,7 +871,7 @@
     <value>Bloqueig Fn</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>Ghzname</value>
+    <value>GHz</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
     <value>Activa el mode personalitzat predefinit. 

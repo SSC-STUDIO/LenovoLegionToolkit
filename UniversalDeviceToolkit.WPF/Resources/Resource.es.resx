@@ -2977,7 +2977,7 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
     <value>Uso de la funcionalidad de limpieza de registros integrada en Windows</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (Vaciar cach? DNS)</value>
+    <value>ipconfig /flushdns (Vaciar caché DNS)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
     <value>netsh winsock reset (Restablecer pila del protocolo Winsock)</value>

@@ -751,10 +751,10 @@
     <value>Камерата е включена</value>
   </data>
   <data name="Notification_CapsLockOff" xml:space="preserve">
-    <value>Caps Lock е включен</value>
+    <value>Caps Lock е изключен</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock е изключен</value>
+    <value>Caps Lock е включен</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
     <value>Отключване на клваиша Fn</value>
@@ -832,7 +832,7 @@
     <value>Заключен тъчпад</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>Добави</value>
+    <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Отвори</value>
@@ -1105,7 +1105,7 @@
 Препоръчително е да рестартирате устройство си след промяна в настройката.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
-    <value>Декативирайте Lenovo Vantage и ImController</value>
+    <value>Деактивирайте Lenovo Vantage и ImController</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
     <value>Възможно е приложението Legion Zone да не е активирано правилно</value>
@@ -1183,7 +1183,7 @@
     <value>Яркост на подсветката на клавиатурата</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
-    <value>Доабви ефект</value>
+    <value>Добави ефект</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
     <value>Неуспешно прилагане на профил</value>
@@ -1933,7 +1933,7 @@
     <value>Изтрий</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
-    <value>Приод (минути)</value>
+    <value>Период (минути)</value>
     <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
@@ -2018,13 +2018,13 @@
     <value>Състояние на батерията</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Максимална скорост, с която батерията се зарежда ( ), или се разрежда (-).</value>
+    <value>Максимална скорост, с която батерията се зарежда (+), или се разрежда (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Максимална скорост на разреждане</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Минимална скорост, с която батерията се зарежда ( ), или се разрежда (-).</value>
+    <value>Минимална скорост, с която батерията се зарежда (+), или се разрежда (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Минимална скорост на разреждане</value>
@@ -2183,12 +2183,12 @@
     <value>Lenovo Vantage и/или ImController работят във фонов режим.</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Изключва известията за действия на Fn клавишите като заглушаване на микрофона. 
- Активирайте тази опция, ако имате конфликти с приложения на цял екран.</value>
+    <value>Изключва известията за действия на Fn клавишите като заглушаване на микрофона.
+  Активирайте тази опция, ако имате конфликти с приложения на цял екран.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Винаги поставяйте известието на върха. 
- Това няма да влияе на други прозорци на цял екран, но няма да можете да кликнете върху известията.</value>
+    <value>Винаги поставяйте известието на върха.
+  Това няма да влияе на други прозорци на цял екран, но няма да можете да кликнете върху известията.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
     <value>Известие винаги отгоре</value>
@@ -2346,8 +2346,8 @@
     <value>Украса на Windows</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Възникна неочаквано изключение: 
- {0}</value>
+    <value>Възникна неочаквано изключение:
+  {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
     <value>Можете да деактивирате това предупреждение по всяко време в Настройки.</value>

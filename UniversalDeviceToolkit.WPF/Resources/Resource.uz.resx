@@ -1078,7 +1078,7 @@ Bul varianttı ózgertkennen keyin, qayta iske túsiriw usınıs etiledi.</value
     <value>Legion Zonedi óshiriw</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Legion Hotkeys nadurıs óshirilgen bolıwı múmkin</value>
+    <value>Lenovo Hotkeys nadurıs óshirilgen bolıwı múmkin</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
     <value>Lenovo Hotkeysti óshiriw ámelge aspadı</value>
@@ -1689,7 +1689,7 @@ ESKERTIW: Diskret GPU ámeldegi bolmasa, bul ámel tuwrı atqarılmaydı.</value
     <value>Noutbuk qapqaǵındaǵı arqa jaqtılıqtı qosıń yamasa óshiriń.</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>GGs</value>
+    <value>GGts</value>
   </data>
   <data name="MHz" xml:space="preserve">
     <value>MGts</value>
@@ -2763,7 +2763,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Tozalash operatsiyasi jarayoni va taxminiy hajmini ko‘rish.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Windows-ga kirganingizda tray-da kichraytirilgan holda ishga tushirish.</value>
+    <value>Tashqi koʻrinish</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skanning</value>

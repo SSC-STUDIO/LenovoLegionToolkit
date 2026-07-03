@@ -489,7 +489,7 @@
     <value>GPU නැවත ආරම්භ කරන්න</value>
   </data>
   <data name="DiscreteGPUControl_Title" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>වෙනම GPU</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>බිල්ට්-ඉන් සංදර්ශකයේ දීප්තිය වෙනස් කරන්න.
@@ -885,7 +885,7 @@
     <value>දැනුම්දීම් පෙන්වන්න එපා</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn අගුල</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>යතුරු පුවරු පසුබිම් ආලෝකය</value>
@@ -903,7 +903,7 @@
     <value>නැවුම් කිරීමේ අනුපාතය</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>ස්මාර්ට් යතුර</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>දැනුම්දීම්</value>
@@ -921,13 +921,13 @@
     <value>බිල්ට්-ඉන් සංදර්ශකයේ ප්‍රතිචාර කාලය වැඩි දියුණු කරන්න.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>ඕවර් ඩ්‍රයිව්</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>බිල්ට්-ඉන් සංදර්ශකයේ ප්‍රතිචාර කාලය වැඩි දියුණු කරන්න.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>ඕවර් ඩ්‍රයිව්</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} බාගන්න ලදි!</value>
@@ -1103,16 +1103,16 @@
     <value>අක්‍රිය</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
-    <value>කලාතුරකින් 1</value>
+    <value>කලාපය 1</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
-    <value>කලාතුරකින් 2</value>
+    <value>කලාපය 2</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
-    <value>කලාතුරකින් 3</value>
+    <value>කලාපය 3</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
-    <value>කලාතුරකින් 4</value>
+    <value>කලාපය 4</value>
   </data>
   <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
     <value>ප්‍රයෝගය</value>
@@ -1121,7 +1121,7 @@
     <value>වේගය</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>විස්තරය</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>නැවුම් කරන්න</value>
@@ -1824,7 +1824,7 @@
     <value>දීප්තිය</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>සියලු කලාතුරකින් තේරීම ඉවත් කරන්න</value>
+    <value>සියලු කලාප තේරීම ඉවත් කරන්න</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
     <value>ප්‍රයෝග</value>
@@ -1848,7 +1848,7 @@
     <value>පෙරනිමියට යළි පිහිටුවන්න</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
-    <value>සියලු කලාතුරකින් තෝරන්න</value>
+    <value>සියලු කලාප තෝරන්න</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
     <value>යතුරු පුවරු පිරිසැලැස්ම මාරු කරන්න</value>
@@ -1890,7 +1890,7 @@
     <value>සියලු යතුරු</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
-    <value>කලාතුරකින් {0} ක්</value>
+    <value>කලාප {0} ක්</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
     <value>උදේ හිරු උදා වීම</value>

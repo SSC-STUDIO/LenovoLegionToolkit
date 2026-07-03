@@ -665,7 +665,7 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
     <value>
     Model zařízení:
-  </value>
+</value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
     <value>Typ stroje:</value>
@@ -812,7 +812,7 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
     <value>Zámek touchpadu</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OKO</value>
+    <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Otevřít</value>
@@ -1690,7 +1690,7 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
     <value>Výchozí logo při spouštění je nastaveno</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Vlastní logo při spuštění musí mít přesně {0} pixelů. 
+    <value>Vlastní logo při spuštění musí mít přesně {0} pixelů.
  Podporované formáty jsou: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
@@ -1740,8 +1740,7 @@ Přepínání režimů může vyžadovat restart.</value>
     <value>Pracovní režim GPU</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>LLTSEP12345
-Kompaktní zobrazení</value>
+    <value>Kompaktní zobrazení</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Při čtení informací o zařízení došlo k chybě.</value>
@@ -1807,14 +1806,14 @@ Kompaktní zobrazení</value>
     <value>GHz</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>VAROVÁNÍ! 
+    <value>VAROVÁNÍ!
  Některé notebooky mohou akceptovat vyšší hodnoty, než uvádějí, ale buďte opatrní. Tato volba může způsobit nepředvídatelné chování. Pokud si nejste jisti, co děláte, nechte to na 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Maximální posun</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>VAROVÁNÍ! 
+    <value>VAROVÁNÍ!
  Některé notebooky mohou akceptovat nižší hodnoty, než uvádějí, ale buďte opatrní. Tato volba může způsobit nepředvídatelné chování. Pokud si nejste jisti, co děláte, nechte to na 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
@@ -1839,7 +1838,7 @@ Kompaktní zobrazení</value>
     <value>Skrýt vše</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Zkuste změnit režim znovu za několik sekund, pokud nevidíte očekávaný výsledek. 
+    <value>Zkuste změnit režim znovu za několik sekund, pokud nevidíte očekávaný výsledek.
  Pokud dGPU vůbec nereaguje, restartujte prosím notebook.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
@@ -1981,11 +1980,11 @@ Kompaktní zobrazení</value>
     <value>Akce</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Zakáže oznámení pro akce kláves Fn, jako je ztlumení mikrofonu. 
+    <value>Zakáže oznámení pro akce kláves Fn, jako je ztlumení mikrofonu.
  Povolit tuto možnost, pokud máte konflikty s aplikacemi na celou obrazovku.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Vždy umístit oznámení na vrchol. 
+    <value>Vždy umístit oznámení na vrchol.
  To nebude ovlivňovat ostatní okna na celou obrazovku, ale nebudete moci kliknout na oznámení.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
@@ -2007,8 +2006,8 @@ Kompaktní zobrazení</value>
     <value>Vypnut</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Zvýšení výkonu přetaktováním dedikované GPU. 
-  
+    <value>Zvýšení výkonu přetaktováním dedikované GPU.
+
  UPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud dedikovaná GPU není k dispozici.</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
@@ -2192,7 +2191,7 @@ Kompaktní zobrazení</value>
     <value>Nepodařilo se deaktivovat Lenovo Vantage a/nebo ImController</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Deaktivujte Lenovo Vantage a ImController bez jejich odinstalace. 
+    <value>Deaktivujte Lenovo Vantage a ImController bez jejich odinstalace.
  Po změně této možnosti se doporučuje restart.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
@@ -2340,7 +2339,7 @@ Vyžaduje restart.</value>
     <value>Zapnout Wi-Fi</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Došlo k neočekávané výjimce: 
+    <value>Došlo k neočekávané výjimce:
  {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
@@ -2864,7 +2863,7 @@ Vyžaduje restart.</value>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
     <value>
     Příkaz DISM
-  </value>
+</value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>Doba používání</value>
@@ -3346,22 +3345,22 @@ Vyžaduje restart.</value>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>
     Vynutit softwarové vykreslování
-  </value>
+</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
     <value>
     Použije softwarové vykreslování, když je detekována vzdálená plocha nebo bezdisplejový režim. Doporučuje se restart.
-  </value>
+</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
     <value>
     Instalační program skončil s kódem {0}
-  </value>
+</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
     <value>
     Ve frontě
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
@@ -3381,67 +3380,67 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>
     Kontroluje se dostupnost zásuvných modulů...
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>
     K dispozici k instalaci
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
     <value>
     V aktuálním kanálu je k dispozici {0} dalších zásuvných modulů.
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
     <value>
     Nainstalováno
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
     <value>
     Pulse obchodu
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
     <value>
     Celkem zásuvných modulů
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
     <value>
     Všechny zjištěné zásuvné moduly jsou aktuálně aktuální.
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
     <value>
     Aktuální
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
     <value>
     Dostupné aktualizace
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
     <value>
     Aktualizace připraveny
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
     <value>
     {0} aktualizací zásuvných modulů je připraveno k instalaci.
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>
     Čekání na načtení metadat zásuvných modulů.
-  </value>
+</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>
     Načítání metadat
-  </value>
+</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
     <value>Přizpůsobte jazyk, jednotku teploty, motiv a barvu zvýraznění.</value>
@@ -3455,57 +3454,57 @@ Vyžaduje restart.</value>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
     <value>
     Universal Device Toolkit byl spuštěn s {0}. Automatické i ruční kontroly aktualizací a níže uvedená nastavení aktualizací jsou zakázána, dokud aplikaci znovu nespustíte bez tohoto spouštěcího argumentu.
-  </value>
+</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
     <value>
     Kontroly aktualizací jsou pro toto sezení zakázány
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
     <value>
     Zkontrolujte vybraný zdroj a síťové připojení a poté spusťte vyhledávání znovu.
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
     <value>
     Vyhledávání ovladačů nebylo dokončeno
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
     <value>
     Upravte filtr, možnost „pouze aktualizace“ nebo seznam skrytých stažení.
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
     <value>
     Nebyly nalezeny žádné odpovídající soubory ke stažení
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
     <value>
     Zkuste jiný zdroj, operační systém nebo typ zařízení.
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
     <value>
     Nebyly nalezeny žádné ovladače ke stažení
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
     <value>
     Vyberte zdroj a spusťte vyhledávání, aby se zobrazil seznam dostupných stažení ovladačů.
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
     <value>
     Vyhledat balíčky ovladačů
-  </value>
+</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>
     Nepodařilo se použít {0}: {1}
-  </value>
+</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Zavřít</value>

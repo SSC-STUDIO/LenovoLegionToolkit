@@ -515,7 +515,7 @@
   </data>
   <data name="Exception_FailedToStartExplorer" xml:space="preserve">
     <value>Није могуће покренути Explorer.</value>
-    <comment>Порука изузетка за неуспех покретања еxплорера</comment>
+    <comment>Порука изузетка за неуспех покретања експлорера</comment>
   </data>
   <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
     <value>Није могуће уписати променљиву {0} у УЕФИ</value>
@@ -587,7 +587,7 @@
   </data>
   <data name="Exception_CouldNotGetColor" xml:space="preserve">
     <value>Није могуће добити боју &quot;{0}&quot;</value>
-    <comment>Формат поруке изузетка када потрага за бојом уxтхеме не успе</comment>
+    <comment>Формат поруке изузетка када потрага за бојом уктхеме не успе</comment>
   </data>
   <data name="OsdItem_LowFps" xml:space="preserve">
     <value>1% ниско</value>
@@ -928,7 +928,7 @@
   </data>
   <data name="Exception_ExplorerDidNotExit" xml:space="preserve">
     <value>Explorer није изашао на време.</value>
-    <comment>Порука изузетка за истек времена гашења еxплорера</comment>
+    <comment>Порука изузетка за истек времена гашења експлорера</comment>
   </data>
   <data name="Exception_DeviceIoControlError" xml:space="preserve">
     <value>ДевицеИоЦонтрол је вратио 0, последња грешка: {0}</value>
@@ -936,7 +936,7 @@
   </data>
   <data name="Exception_ExplorerDidNotRestart" xml:space="preserve">
     <value>Explorer није поново покренут на време.</value>
-    <comment>Порука изузетка за истек времена покретања еxплорера</comment>
+    <comment>Порука изузетка за истек времена покретања експлорера</comment>
   </data>
   <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
     <value>Системски вентилатор</value>
