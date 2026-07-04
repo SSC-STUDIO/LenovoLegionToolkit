@@ -168,7 +168,11 @@ public class AIController(
 
     private async Task<bool> ShouldEnableAsync()
     {
-        if (await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false) != PowerAdapterStatus.Connected)
+        var powerTask = Power.IsPowerAdapterConnectedAsync();
+        var powerModeTask = powerModeFeature.GetStateAsync();
+        await Task.WhenAll(powerTask, powerModeTask).ConfigureAwait(false);
+
+        if (await powerTask.ConfigureAwait(false) != PowerAdapterStatus.Connected)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Power adapter not connected.");
@@ -176,7 +180,7 @@ public class AIController(
             return false;
         }
 
-        if (await powerModeFeature.GetStateAsync().ConfigureAwait(false) != PowerModeState.Balance)
+        if (await powerModeTask.ConfigureAwait(false) != PowerModeState.Balance)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Not in balanced mode.");
@@ -200,7 +204,11 @@ public class AIController(
 
     private async Task<bool> ShouldDisableAsync()
     {
-        if (await powerModeFeature.GetStateAsync().ConfigureAwait(false) != PowerModeState.Balance)
+        var powerModeTask = powerModeFeature.GetStateAsync();
+        var subModeTask = WMI.LenovoGameZoneData.GetIntelligentSubModeAsync();
+        await Task.WhenAll(powerModeTask, subModeTask).ConfigureAwait(false);
+
+        if (await powerModeTask.ConfigureAwait(false) != PowerModeState.Balance)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Not in balanced mode.");
@@ -208,7 +216,7 @@ public class AIController(
             return false;
         }
 
-        if (await WMI.LenovoGameZoneData.GetIntelligentSubModeAsync().ConfigureAwait(false) == 0)
+        if (await subModeTask.ConfigureAwait(false) == 0)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Not needed.");

@@ -44,7 +44,7 @@ internal class SmartKeyHelper
             if (e.SpecialKey != SpecialKey.FnF9)
                 return;
 
-            if (await _fnKeysDisabler.GetStatusAsync() == SoftwareStatus.Enabled)
+            if (await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Ignoring Fn+F9 FnKeys are enabled.");
@@ -54,7 +54,7 @@ internal class SmartKeyHelper
 
             if (_smartKeyDoublePressCancellationTokenSource is not null)
             {
-                await _smartKeyDoublePressCancellationTokenSource.CancelAsync();
+                await _smartKeyDoublePressCancellationTokenSource.CancelAsync().ConfigureAwait(false);
                 _smartKeyDoublePressCancellationTokenSource.Dispose();
             }
             _smartKeyDoublePressCancellationTokenSource = new CancellationTokenSource();
@@ -69,12 +69,12 @@ internal class SmartKeyHelper
 
                 if (diff < _smartKeyDoublePressInterval)
                 {
-                    await ProcessSpecialKey(true);
+                    await ProcessSpecialKey(true).ConfigureAwait(false);
                     return;
                 }
 
-                await Task.Delay(_smartKeyDoublePressInterval, token);
-                await ProcessSpecialKey(false);
+                await Task.Delay(_smartKeyDoublePressInterval, token).ConfigureAwait(false);
+                await ProcessSpecialKey(false).ConfigureAwait(false);
             }, token);
         }
         catch (Exception ex)

@@ -657,16 +657,6 @@ public class PluginRepositoryService : IDisposable
         }
         catch (OperationCanceledException)
         {
-            try
-            {
-                if (process is { HasExited: false })
-                    process.Kill(entireProcessTree: true);
-            }
-            catch
-            {
-                // Ignore cleanup failures for the native fallback.
-            }
-
             DeletePartialDownload(destinationPath);
 
             if (Log.Instance.IsTraceEnabled)
@@ -685,6 +675,18 @@ public class PluginRepositoryService : IDisposable
         }
         finally
         {
+            if (process is { HasExited: false })
+            {
+                try
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+                catch
+                {
+                    // Ignore cleanup failures for the native fallback.
+                }
+            }
+
             process?.Dispose();
         }
     }

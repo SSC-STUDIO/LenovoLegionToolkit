@@ -139,20 +139,27 @@ public class NotifyIcon : NativeWindow, IDisposable
             return;
 
         if (_showToolTipCancellationTokenSource is not null)
-            await _showToolTipCancellationTokenSource.CancelAsync();
+        {
+            try { await _showToolTipCancellationTokenSource.CancelAsync().ConfigureAwait(false); }
+            catch (ObjectDisposedException) { /* already disposed */ }
+
+            try { _showToolTipCancellationTokenSource.Dispose(); }
+            catch (ObjectDisposedException) { /* already disposed */ }
+        }
+
         _showToolTipCancellationTokenSource = new();
 
         var token = _showToolTipCancellationTokenSource.Token;
 
         try
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(500), token);
+            await Task.Delay(TimeSpan.FromMilliseconds(500), token).ConfigureAwait(false);
 
             if (ContextMenu is not null && ContextMenu.IsOpen)
                 return;
 
             _currentToolTipWindow?.Close();
-            _currentToolTipWindow = await _toolTipWindow();
+            _currentToolTipWindow = await _toolTipWindow().ConfigureAwait(false);
 
             token.ThrowIfCancellationRequested();
 
@@ -178,7 +185,16 @@ public class NotifyIcon : NativeWindow, IDisposable
         if (_toolTipWindow is null)
             return;
 
-        _showToolTipCancellationTokenSource?.Cancel();
+        if (_showToolTipCancellationTokenSource is not null)
+        {
+            try { _showToolTipCancellationTokenSource.Cancel(); }
+            catch (ObjectDisposedException) { /* already disposed */ }
+
+            try { _showToolTipCancellationTokenSource.Dispose(); }
+            catch (ObjectDisposedException) { /* already disposed */ }
+
+            _showToolTipCancellationTokenSource = null;
+        }
 
         _currentToolTipWindow?.Hide();
         _currentToolTipWindow = null;

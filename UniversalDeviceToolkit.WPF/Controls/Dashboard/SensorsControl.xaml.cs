@@ -48,6 +48,7 @@ public partial class SensorsControl : IDisposable
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
     private readonly SensorsGroupController? _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
+    private readonly IDelayProvider _delayProvider = IoCContainer.Resolve<IDelayProvider>();
     private bool _sensorRuntimeAvailable = true;
     private bool _forceShowSensorDetails;
     private volatile bool _forceDetailedRefresh;
@@ -509,7 +510,7 @@ public partial class SensorsControl : IDisposable
                     var onBatterySince = Battery.GetOnBatterySince();
                     await Dispatcher.InvokeAsync(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
 
-                    await Task.Delay(TimeSpan.FromSeconds(2), token);
+                    await _delayProvider.Delay(TimeSpan.FromSeconds(2), token);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -756,7 +757,7 @@ public partial class SensorsControl : IDisposable
                     if (detailed)
                         _forceDetailedRefresh = false;
                     await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
-                    await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
+                    await _delayProvider.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
                 catch (OperationCanceledException)
                 {

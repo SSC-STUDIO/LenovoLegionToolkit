@@ -93,7 +93,7 @@ public partial class App
             if (Log.Instance.IsTraceEnabled && logOnSuccess)
                 Log.Instance.Trace($"Initializing {operationName}...");
 
-            await action();
+            await action().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -114,7 +114,7 @@ public partial class App
         {
             var orchestrator = new StartupOrchestrator(this, e);
             _orchestrator = orchestrator;
-            var exitCode = await orchestrator.RunAsync();
+            var exitCode = await orchestrator.RunAsync().ConfigureAwait(false);
 
             if (exitCode != 0)
                 Environment.Exit(exitCode);
@@ -144,7 +144,7 @@ public partial class App
 
             // Scan and load plugins from the plugins directory
             // This will automatically discover and register external plugins
-            await pluginManager.ScanAndLoadPluginsAsync();
+            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugins initialized successfully.");
@@ -160,7 +160,7 @@ public partial class App
     {
         try
         {
-            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation);
+            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -250,9 +250,9 @@ public partial class App
                 var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await step();
+                    await step().ConfigureAwait(false);
                 })).ToArray();
-                await Task.WhenAll(initializationTasks);
+                await Task.WhenAll(initializationTasks).ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
@@ -260,9 +260,9 @@ public partial class App
                 var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await step();
+                    await step().ConfigureAwait(false);
                 })).ToArray();
-                await Task.WhenAll(serviceStartTasks);
+                await Task.WhenAll(serviceStartTasks).ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -299,17 +299,17 @@ public partial class App
 
         if (!task.IsCompleted)
         {
-            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS));
+            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS)).ConfigureAwait(false);
             if (completedTask != task)
             {
                 _backgroundInitializationCancellationTokenSource?.Cancel();
-                try { await Task.WhenAny(task, Task.Delay(500)); }
+                try { await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false); }
                 catch { /* Background task cancellation failed - app startup continues */ }
                 return;
             }
         }
 
-        try { await task; }
+        try { await task.ConfigureAwait(false); }
         catch { /* Background initialization failed - app continues startup */ }
     }
 
@@ -332,7 +332,7 @@ public partial class App
             {
                 try
                 {
-                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000));
+                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000)).ConfigureAwait(false);
                     if (completedTask != _backgroundInitializationTask)
                     {
                         if (Log.Instance.IsTraceEnabled)
@@ -415,7 +415,7 @@ public partial class App
 
         PluginHostContext.Reset();
 
-        try { await ShutdownAsync(true); }
+        try { await ShutdownAsync(true).ConfigureAwait(false); }
         catch { /* Shutdown failed - continue with exit anyway */ }
 
         try { Log.Instance.Shutdown(); }
@@ -424,7 +424,7 @@ public partial class App
         StopMacroControllerSafely();
         StopSingleInstanceThreadSafely();
 
-        await ForceExitAsync((uint)e.ApplicationExitCode);
+        await ForceExitAsync((uint)e.ApplicationExitCode).ConfigureAwait(false);
     }
 
     public void RestartMainWindow()
@@ -493,7 +493,7 @@ public partial class App
 
     private async Task ForceExitAsync(uint exitCode)
     {
-        await Task.Delay(100);
+        await Task.Delay(100).ConfigureAwait(false);
         try { Environment.Exit((int)exitCode); }
         catch { /* Environment.Exit failed - use fallback exit method */ }
         ExitProcess(exitCode);
@@ -506,7 +506,7 @@ public partial class App
             if (TryGetCachedService<T>() is not { } service)
                 return;
 
-            await stopAction(service);
+            await stopAction(service).ConfigureAwait(false);
         }
         catch { /* Service stop failed during shutdown - continue cleanup */ }
     }
@@ -526,7 +526,7 @@ public partial class App
             shutdownTask = _shutdownTask;
         }
 
-        await shutdownTask;
+        await shutdownTask.ConfigureAwait(false);
 
         bool shouldInvokeShutdown;
 
@@ -559,13 +559,24 @@ public partial class App
 
         try
         {
-            _backgroundInitializationCancellationTokenSource?.Cancel();
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+                _backgroundInitializationCancellationTokenSource?.Dispose();
+                _backgroundInitializationCancellationTokenSource = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing cancellation token source during shutdown: {ex.Message}");
+            }
+
             StopSingleInstanceThreadSafely();
             CleanupSingleInstanceResources();
 
-            await AwaitBackgroundInitializationAsync();
+            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
-            await StopPluginsAsync();
+            await StopPluginsAsync().ConfigureAwait(false);
 
             var stopServicesTask = Task.WhenAll(
                 StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
@@ -577,14 +588,14 @@ public partial class App
                 StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller")
             );
 
-            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2)));
+            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
             if (completedTask != stopServicesTask)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("Service stop timed out after 2 seconds.");
             }
 
-            await FinalizeRuntimeProfilesAsync();
+            await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
 
             StopMacroControllerSafely();
             StopSingleInstanceThreadSafely();
@@ -618,12 +629,12 @@ public partial class App
                 catch { /* Plugin shutdown failed - continue with other plugins */ }
             })).ToList();
 
-            await Task.WhenAll(shutdownTasks);
+            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
 
-            await Task.Delay(200);
+            await Task.Delay(200).ConfigureAwait(false);
 
             if (pluginManager is PluginManager manager)
-                await manager.PerformPendingDeletionsAsync();
+                await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
         }
         catch { /* Plugin shutdown process failed - continue with app shutdown */ }
     }
@@ -853,7 +864,7 @@ public partial class App
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
 
-                    await ShutdownAsync(true);
+                    await ShutdownAsync(true).ConfigureAwait(false);
                 }
             });
         }
@@ -883,9 +894,9 @@ public partial class App
             }
 
             if (TryGetCachedService<FanCurveManager>() is { } fanManager &&
-                await fanManager.IsSupportedAsync())
+                await fanManager.IsSupportedAsync().ConfigureAwait(false))
             {
-                await fanManager.SetRegisterAsync(false);
+                await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
             }
 
             if (TryGetCachedService<LampArrayController>() is { } lampArrayController &&

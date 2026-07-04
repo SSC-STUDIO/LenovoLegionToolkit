@@ -42,6 +42,7 @@ public class IpcServer(
     private static readonly SemaphoreSlim SupportedFeaturesCacheSemaphore = new(1, 1);
     private static string? _supportedFeaturesCache;
 
+    private readonly object _gate = new();
     private CancellationTokenSource _cancellationTokenSource = new();
     private Task _handler = Task.CompletedTask;
 
@@ -55,10 +56,18 @@ public class IpcServer(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Starting...");
 
-        _cancellationTokenSource = new();
-
-        var token = _cancellationTokenSource.Token;
-        _handler = Task.Run(() => Handler(token), token);
+        CancellationTokenSource newCts;
+        lock (_gate)
+        {
+            if (_cancellationTokenSource is not null)
+            {
+                try { _cancellationTokenSource.Dispose(); }
+                catch (ObjectDisposedException) { /* already disposed */ }
+            }
+            newCts = new CancellationTokenSource();
+            _cancellationTokenSource = newCts;
+            _handler = Task.Run(() => Handler(newCts.Token), newCts.Token);
+        }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Started");
@@ -66,11 +75,20 @@ public class IpcServer(
 
     public async Task StopAsync()
     {
+        CancellationTokenSource cts;
+        Task handler;
+
+        lock (_gate)
+        {
+            cts = _cancellationTokenSource;
+            handler = _handler;
+        }
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Stopping...");
 
-        await _cancellationTokenSource.CancelAsync();
-        await _handler;
+        await cts.CancelAsync().ConfigureAwait(false);
+        await handler.ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Stopped");

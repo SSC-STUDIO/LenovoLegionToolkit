@@ -210,6 +210,7 @@ public static class Registry
     private static bool AddPermissions(string hive, string subKey)
     {
         IdentityReference? originalOwner = null;
+        RegistrySecurity? originalSecurity = null;
 
         try
         {
@@ -253,6 +254,7 @@ public static class Registry
                 return false;
             }
 
+            originalSecurity = key.GetAccessControl();
             var accessControl = key.GetAccessControl();
 
             const RegistryRights RIGHTS = RegistryRights.FullControl;
@@ -274,6 +276,31 @@ public static class Registry
         }
         finally
         {
+            if (originalSecurity is not null)
+            {
+                try
+                {
+                    using var baseKey = GetBaseKey(hive);
+                    using var restoreKey = baseKey.OpenSubKey(subKey, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions | RegistryRights.ReadKey);
+                    if (restoreKey is not null)
+                    {
+                        restoreKey.SetAccessControl(originalSecurity);
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Restored original DACL on {hive}\\{subKey}.");
+                    }
+                    else if (Log.Instance.IsTraceEnabled)
+                    {
+                        Log.Instance.Trace($"Could not open {hive}\\{subKey} to restore original DACL.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to restore original DACL on {hive}\\{subKey}.", ex);
+                }
+            }
+
             if (originalOwner is not null)
             {
                 if (Log.Instance.IsTraceEnabled)

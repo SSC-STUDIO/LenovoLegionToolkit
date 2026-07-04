@@ -50,6 +50,7 @@ public class SpectrumKeyboardBacklightController : IDisposable
 
     private CancellationTokenSource? _auroraRefreshCancellationTokenSource;
     private Task? _auroraRefreshTask;
+    private readonly List<LENOVO_SPECTRUM_AURORA_ITEM> _auroraItemsBuffer = new();
 
     private static readonly JsonSerializerOptions SpectrumProfileJsonOptions = LltJson.CreateSettingsOptions();
 
@@ -499,7 +500,10 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
                 token.ThrowIfCancellationRequested();
 
-                var items = new List<LENOVO_SPECTRUM_AURORA_ITEM>(width * height);
+                _auroraItemsBuffer.Clear();
+                if (_auroraItemsBuffer.Capacity < width * height)
+                    _auroraItemsBuffer.Capacity = width * height;
+                var items = _auroraItemsBuffer;
 
                 var avgR = 0;
                 var avgG = 0;

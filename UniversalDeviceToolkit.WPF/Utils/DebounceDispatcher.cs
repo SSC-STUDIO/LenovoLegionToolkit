@@ -11,7 +11,7 @@ internal sealed class DebounceDispatcher
 
     public void Debounce(int delayMs, Action action)
     {
-        _cts?.Cancel();
+        DisposeCts();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
@@ -34,7 +34,7 @@ internal sealed class DebounceDispatcher
         if (_cts is { IsCancellationRequested: false })
             return;
 
-        _cts?.Cancel();
+        DisposeCts();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
@@ -54,7 +54,18 @@ internal sealed class DebounceDispatcher
 
     public void Cancel()
     {
-        _cts?.Cancel();
+        DisposeCts();
+    }
+
+    private void DisposeCts()
+    {
+        if (_cts is null)
+            return;
+
+        try { _cts.Cancel(); }
+        catch (ObjectDisposedException) { /* already disposed */ }
+
+        _cts.Dispose();
         _cts = null;
     }
 }

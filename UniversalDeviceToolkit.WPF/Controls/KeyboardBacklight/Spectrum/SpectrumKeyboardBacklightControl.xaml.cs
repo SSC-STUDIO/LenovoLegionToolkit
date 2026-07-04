@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,8 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
     private readonly SpecialKeyListener _listener = IoCContainer.Resolve<SpecialKeyListener>();
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly SpectrumKeyboardSettings _settings = IoCContainer.Resolve<SpectrumKeyboardSettings>();
+
+    private readonly Dictionary<int, Color?> _lastKeyColors = new();
 
 
     private CancellationTokenSource? _refreshStateCancellationTokenSource;
@@ -468,26 +471,33 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                     break;
 
                 var delay = Task.Delay(_refreshStateInterval, token);
-                var state = await Task.Run(() => _controller.GetStateAsync(!firstCheck), token);
+                var state = await _controller.GetStateAsync(!firstCheck).ConfigureAwait(false);
 
                 foreach (var button in buttons)
                 {
+                    Color? newColor;
                     if (!state.TryGetValue(button.KeyCode, out var rgb))
                     {
-                        button.Color = null;
-                        continue;
+                        newColor = null;
                     }
-
-                    if (rgb is { R: < 1, G: < 1, B: < 1 })
+                    else if (rgb is { R: < 1, G: < 1, B: < 1 })
                     {
-                        button.Color = null;
-                        continue;
+                        newColor = null;
+                    }
+                    else
+                    {
+                        newColor = Color.FromRgb(rgb.R, rgb.G, rgb.B);
                     }
 
-                    button.Color = Color.FromRgb(rgb.R, rgb.G, rgb.B);
+                    var key = (int)button.KeyCode;
+                    if (_lastKeyColors.TryGetValue(key, out var prevColor) && prevColor.Equals(newColor))
+                        continue;
+
+                    _lastKeyColors[key] = newColor;
+                    button.Color = newColor;
                 }
 
-                await delay;
+                await delay.ConfigureAwait(false);
 
                 firstCheck = false;
             }

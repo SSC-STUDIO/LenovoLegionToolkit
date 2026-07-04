@@ -41,7 +41,7 @@ public partial class UpdateWindow : IProgress<float>
     {
         try
         {
-            var updates = await _updateChecker.GetUpdatesAsync();
+            var updates = await _updateChecker.GetUpdatesAsync().ConfigureAwait(false);
 
             var stringBuilder = new StringBuilder();
             foreach (var update in updates)
@@ -75,7 +75,7 @@ public partial class UpdateWindow : IProgress<float>
         {
             if (_downloadCancellationTokenSource is not null)
             {
-                await _downloadCancellationTokenSource.CancelAsync();
+                await _downloadCancellationTokenSource.CancelAsync().ConfigureAwait(false);
                 _downloadCancellationTokenSource.Dispose();
             }
 
@@ -83,12 +83,12 @@ public partial class UpdateWindow : IProgress<float>
 
             SetDownloading(true);
 
-            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token);
+            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token).ConfigureAwait(false);
 
             _downloadCancellationTokenSource = null;
 
             using var process = Process.Start(path, $"/SILENT /RESTARTAPPLICATIONS /LANG={Resource.Culture.Name.Replace("-", string.Empty)}");
-            await App.Current.ShutdownAsync(true);
+            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {

@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
     <Style x:Key="AppLoadingRingStyle" TargetType="wpfui:ProgressRing">
         <Setter Property="Width" Value="48" />
@@ -36,7 +37,7 @@
         <Setter Property="Opacity" Value="1" />
         <Setter Property="Background">
             <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" PresentationOptions:Freeze="True">
                     <LinearGradientBrush.RelativeTransform>
                         <TranslateTransform X="-1.2" />
                     </LinearGradientBrush.RelativeTransform>
@@ -46,12 +47,17 @@
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform X="-1.2" />
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                 <BeginStoryboard>
                     <Storyboard>
                         <DoubleAnimation
-                            Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                             From="-1.2"
                             To="1.2"
                             Duration="{StaticResource AnimationDurationShimmer}"
