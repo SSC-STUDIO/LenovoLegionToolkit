@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.PackageDownloader;
@@ -10,6 +10,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.ViewModels;
 
@@ -17,6 +20,7 @@ public partial class PackagesViewModel : ObservableObject
 {
     private readonly PackageDownloaderSettings _settings;
     private readonly PackageDownloaderFactory _factory;
+    private CancellationTokenSource? _loadCts;
 
     [ObservableProperty]
     private ObservableCollection<Package> _packages = new();
@@ -31,7 +35,8 @@ public partial class PackagesViewModel : ObservableObject
     private string _filterText = string.Empty;
 
     [ObservableProperty]
-    private int _sortingIndex = 2; // 榛樿鎸夊彂甯冩棩鏈熸帓锟?
+    private int _sortingIndex = 2;
+
     [ObservableProperty]
     private bool _onlyShowUpdates;
 
@@ -47,13 +52,23 @@ public partial class PackagesViewModel : ObservableObject
         _factory = factory;
     }
 
-    [RelayCommand]
+    partial void OnIsLoadingChanged(bool value)
+    {
+        LoadPackagesCommand.NotifyCanExecuteChanged();
+        CancelLoadCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanLoadPackages))]
     private async Task LoadPackagesAsync()
     {
         if (string.IsNullOrWhiteSpace(MachineType) || MachineType.Length != 4)
             return;
 
+        CtsSwap.Replace(ref _loadCts, new CancellationTokenSource());
+        var token = _loadCts.Token;
+
         IsLoading = true;
+        Progress = 0;
         try
         {
             var downloader = _factory.GetInstance(PackageDownloaderFactory.Type.Vantage);
@@ -61,26 +76,48 @@ public partial class PackagesViewModel : ObservableObject
                 MachineType,
                 SelectedOS,
                 new Progress<float>(p => Progress = p),
-                CancellationToken.None);
+                token);
 
             Packages = new ObservableCollection<Package>(packages);
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to load packages", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
+                Resource.PackagesPage_DownloadFailed_Message,
+                SnackbarType.Error);
         }
         finally
         {
             IsLoading = false;
+            CtsSwap.Replace(ref _loadCts, null);
         }
     }
 
-    [RelayCommand]
+    private bool CanLoadPackages() => !IsLoading;
+
+    [RelayCommand(CanExecute = nameof(CanCancelLoad))]
     private void CancelLoad()
     {
-        // 鍙栨秷鍔犺浇閫昏緫
+        if (_loadCts is null)
+            return;
+
+        try
+        {
+            if (!_loadCts.IsCancellationRequested)
+                _loadCts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
+
+    private bool CanCancelLoad() => IsLoading;
 
     public List<Package> GetFilteredPackages()
     {
@@ -92,6 +129,8 @@ public partial class PackagesViewModel : ObservableObject
             _ => Packages.AsEnumerable(),
         };
 
+        result = result.Where(p => !_settings.Store.HiddenPackages.Contains(p.Id));
+
         if (!string.IsNullOrWhiteSpace(FilterText))
             result = result.Where(p => p.Index.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
 
@@ -101,4 +140,3 @@ public partial class PackagesViewModel : ObservableObject
         return result.ToList();
     }
 }
-

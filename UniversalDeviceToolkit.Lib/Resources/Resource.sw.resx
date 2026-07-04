@@ -732,6 +732,10 @@
     <value>Hawezi kuandika kigezo {0} kwenye UEFI</value>
     <comment>Ujumbe wa hitilafu wa umbizo kwa kushindwa kwa kuandika UEFI</comment>
   </data>
+  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
+    <value>Command exited with non-zero code {0}. Output: {1}</value>
+  </data>
+
   <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
     <value>Thamani ya kipengele cha WMI haipatikani kwa {0}.</value>
     <comment>Ujumbe wa hitilafu wa umbizo kwa kushindwa kwa kusoma WMI</comment>
@@ -944,6 +948,14 @@
     <value>Aina batili ya iliyopangwa</value>
     <comment>Ujumbe wa hitilafu kwa aina isiyotarajiwa ya umbizo</comment>
   </data>
+  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
+    <value>Optimization action with identifier {0} was not found.</value>
+  </data>
+  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
+    <value>Rollback is not available for this optimization action.</value>
+  </data>
+
+
   <data name="Exception_UpdateNoSHA256Hash" xml:space="preserve">
     <value>Ukaguzi wa uaminifu wa kifurushi cha toleo umeshindwa: hakuna hash ya SHA256 inayopatikana kwa toleo {0}. Ukaguzi wa uaminifu unahitajika kwa usalama.</value>
     <comment>Ujumbe wa hitilafu wa umbizo wakati hakuna hash ya SHA256 inayopatikana kwa toleo</comment>
@@ -952,4 +964,11 @@
     <value>Ukaguzi wa uaminifu wa kifurushi cha toleo umeshindwa. SHA256 inayotarajiwa: {0}, iliyokokotwa: {1}</value>
     <comment>Ujumbe wa hitilafu wa umbizo kwa kutolingana kwa hash ya SHA256 ya toleo</comment>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

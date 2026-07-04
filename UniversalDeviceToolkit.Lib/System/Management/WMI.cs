@@ -62,7 +62,7 @@ public static partial class WMI
         
         try
         {
-            watcher.Start();
+            watcher.StartWithTimeout();
         }
         catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
         {

@@ -162,6 +162,24 @@ Only actions that match current state will run.</value>
   <data name="AutomationPage_Saved_Title" xml:space="preserve">
     <value>Saved</value>
   </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Could not save</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Failed to save automation pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Could not toggle automatic pipelines</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Failed to toggle automatic pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Could not add manual pipeline</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Failed to add manual pipeline. Please try again.</value>
+  </data>
   <data name="AutomationPage_Title" xml:space="preserve">
     <value>Automation</value>
   </data>

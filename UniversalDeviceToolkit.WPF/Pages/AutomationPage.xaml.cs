@@ -63,6 +63,10 @@ public partial class AutomationPage
         {
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error toggling automatic pipelines.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_EnableAutomaticPipelines_Error_Title,
+                Resource.AutomationPage_EnableAutomaticPipelines_Error_Message,
+                SnackbarType.Error);
         }
     }
 
@@ -89,6 +93,10 @@ public partial class AutomationPage
         {
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error adding manual pipeline.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_AddManualPipeline_Error_Title,
+                Resource.AutomationPage_AddManualPipeline_Error_Message,
+                SnackbarType.Error);
         }
     }
 
@@ -122,6 +130,10 @@ public partial class AutomationPage
         {
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error saving automation pipelines.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Save_Error_Title,
+                Resource.AutomationPage_Save_Error_Message,
+                SnackbarType.Error);
         }
         finally
         {

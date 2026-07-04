@@ -23,7 +23,6 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,0,0,4" />
@@ -341,7 +340,7 @@
                                         <Separator />
                                         <MenuItem Header="{x:Static resources:Resource.PluginExtensionsPage_Uninstall}" Click="PluginUninstallButton_Click" Tag="{Binding PluginId}" Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}">
                                             <MenuItem.Icon>
-                                                <wpfui:SymbolIcon Symbol="Delete24" Foreground="Red" />
+                                                <wpfui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource StatusCriticalTextBrush}" />
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>

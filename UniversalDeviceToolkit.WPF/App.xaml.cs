@@ -114,7 +114,7 @@ public partial class App
         {
             var orchestrator = new StartupOrchestrator(this, e);
             _orchestrator = orchestrator;
-            var exitCode = await orchestrator.RunAsync().ConfigureAwait(false);
+            var exitCode = await orchestrator.RunAsync();
 
             if (exitCode != 0)
                 Environment.Exit(exitCode);
@@ -410,21 +410,36 @@ public partial class App
 
     private async void Application_Exit(object sender, ExitEventArgs e)
     {
-        lock (_shutdownLock)
-            _inExitHandler = true;
+        try
+        {
+            lock (_shutdownLock)
+                _inExitHandler = true;
 
-        PluginHostContext.Reset();
+            PluginHostContext.Reset();
 
-        try { await ShutdownAsync(true).ConfigureAwait(false); }
-        catch { /* Shutdown failed - continue with exit anyway */ }
+            try { await ShutdownAsync(true); }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Shutdown failed during Application_Exit.", ex);
+            }
 
-        try { Log.Instance.Shutdown(); }
-        catch { /* Log shutdown failed - continue with exit */ }
+            try { Log.Instance.Shutdown(); }
+            catch { /* Log shutdown failed - continue with exit */ }
 
-        StopMacroControllerSafely();
-        StopSingleInstanceThreadSafely();
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
 
-        await ForceExitAsync((uint)e.ApplicationExitCode).ConfigureAwait(false);
+            await ForceExitAsync((uint)e.ApplicationExitCode);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Application_Exit)}.", ex);
+
+            try { ExitProcess((uint)e.ApplicationExitCode); }
+            catch { /* last-resort exit */ }
+        }
     }
 
     public void RestartMainWindow()
@@ -844,27 +859,35 @@ public partial class App
         {
             Current.Dispatcher.BeginInvoke(async () =>
             {
-                if (Current.MainWindow is { } window)
+                try
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
-
-                    try
-                    {
-                        window.BringToForeground();
-                    }
-                    catch (Exception ex)
+                    if (Current.MainWindow is { } window)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                            Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
+
+                        try
+                        {
+                            window.BringToForeground();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                        }
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
+
+                        await ShutdownAsync(true);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
-
-                    await ShutdownAsync(true).ConfigureAwait(false);
+                        Log.Instance.Trace($"Error handling single-instance foreground request.", ex);
                 }
             });
         }

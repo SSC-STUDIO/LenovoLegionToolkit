@@ -3849,6 +3849,10 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
     <value>VRAM-Nutzung</value>
   </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+  </data>
+
   <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
     <value>Aktiviert erweiterte Hardware-Überwachung zur Anzeige detaillierter Temperaturen, Frequenzen und Leistungsgrenzen.</value>
   </data>
@@ -3873,7 +3877,18 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SettingsPage_Osd_Title" xml:space="preserve">
     <value>OSD aktivieren</value>
   </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Theme style</value>
+  </data>
+
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell-Integration verwalten</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shell aktivieren</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Aktiviert die Nilesoft Shell-Integration</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shell deaktivieren</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Deaktiviert die Nilesoft Shell-Integration</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Nicht verifiziert</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Bitte warten…</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell-Integration verwalten</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shell aktivieren</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Aktiviert die Nilesoft Shell-Integration</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shell deaktivieren</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Deaktiviert die Nilesoft Shell-Integration</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Nicht verifiziert</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Bitte warten…</value></data></root>

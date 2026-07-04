@@ -16,10 +16,9 @@ public class ExternalDisplayDisconnectedAutomationPipelineTrigger : INativeWindo
         return Task.FromResult(result);
     }
 
-    public Task<bool> IsMatchingState()
+    public async Task<bool> IsMatchingState()
     {
-        var result = ExternalDisplays.Get().Length < 1;
-        return Task.FromResult(result);
+        return await Task.Run(() => ExternalDisplays.Get().Length < 1).ConfigureAwait(false);
     }
 
     public void UpdateEnvironment(AutomationEnvironment environment) => environment.ExternalDisplayConnected = false;

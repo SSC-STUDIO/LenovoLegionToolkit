@@ -56,6 +56,7 @@ public class ThemeManager
         SetColor();
         ApplyStylePreset();
         ApplySurfaceResources();
+        ApplyStatusTextBrushes();
 
         ThemeApplied?.Invoke(this, EventArgs.Empty);
     }
@@ -305,6 +306,18 @@ public class ThemeManager
         // This method can be extended to check and adjust color contrast
         // for better accessibility compliance
         // Currently, WPF UI library handles most contrast automatically
+    }
+
+    private void ApplyStatusTextBrushes()
+    {
+        // StatusCriticalTextBrush is keyed as a static resource with the dark-mode color
+        // (#FFEB6B6B). In light mode that washed-out pink fails contrast against a near-
+        // white surface, so swap it for a darker critical tone whenever the app is in
+        // light theme. Keep the static token intact so XAML references continue to work.
+        var criticalColor = IsDarkMode()
+            ? Color.FromRgb(0xEB, 0x6B, 0x6B)
+            : Color.FromRgb(0xC6, 0x28, 0x28);
+        SetBrush("StatusCriticalTextBrush", criticalColor);
     }
 
     private sealed record ThemeStylePalette(

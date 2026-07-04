@@ -67,6 +67,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     // Sensor data cache, cache time is 100ms
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
+    private bool _sensorReadFailureLogged;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 100;
     private const int SENSOR_READ_TIMEOUT_SECONDS = 2;
@@ -164,6 +165,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var (cpu, gpu) = await GetSensorSnapshotAsync(detailed, timeoutCts.Token).ConfigureAwait(false);
 
             var result = new SensorsData(cpu, gpu);
+            _sensorReadFailureLogged = false;
 
             // Update cache only for the fast summary path.
             if (!detailed)
@@ -179,8 +181,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
         catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
         {
-            if (Log.Instance.IsTraceEnabled)
+            if (Log.Instance.IsTraceEnabled && !_sensorReadFailureLogged)
+            {
                 Log.Instance.Trace($"Sensor read timed out after {SENSOR_READ_TIMEOUT_SECONDS}s, falling back to cache. [type={GetType().Name}]");
+                _sensorReadFailureLogged = true;
+            }
 
             lock (_cacheLock)
             {
@@ -192,8 +197,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
+            if (Log.Instance.IsTraceEnabled && !_sensorReadFailureLogged)
+            {
                 Log.Instance.Trace($"Sensor read failed. [type={GetType().Name}]", ex);
+                _sensorReadFailureLogged = true;
+            }
 
             lock (_cacheLock)
             {
@@ -517,7 +525,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected virtual async Task<int> GetCpuWattageAsync()
     {
-        await Task.Yield();
+        await Task.Yield().ConfigureAwait(false);
 
         // Try method 1: Performance counter (if available)
         var performanceCounterWattage = GetCpuWattageFromPerformanceCounter();

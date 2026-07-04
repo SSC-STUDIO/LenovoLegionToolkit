@@ -75,7 +75,7 @@ public class WMIWrapper : IWMIWrapper
                 }
             };
 
-            watcher.Start();
+            watcher.StartWithTimeout();
 
             return new LambdaDisposable(() =>
             {

@@ -498,9 +498,6 @@ public partial class SensorsControl : IDisposable
 
         _batteryRefreshTask = Task.Run(async () =>
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery information refresh started...");
-
             while (!token.IsCancellationRequested)
             {
                 try
@@ -512,10 +509,9 @@ public partial class SensorsControl : IDisposable
 
                     await _delayProvider.Delay(TimeSpan.FromSeconds(2), token);
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("Battery refresh cancelled", ex);
+                    // Expected when battery refresh is cancelled.
                 }
                 catch (Exception ex)
                 {
@@ -523,9 +519,6 @@ public partial class SensorsControl : IDisposable
                         Log.Instance.Trace($"Battery information refresh failed.", ex);
                 }
             }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery information refresh stopped.");
         }, token);
     }
 
@@ -722,14 +715,8 @@ public partial class SensorsControl : IDisposable
 
         _refreshTask = Task.Run(async () =>
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Sensors refresh started...");
-
             if (!await _controller.IsSupportedAsync())
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Sensors not supported.");
-
                 await Dispatcher.InvokeAsync(() =>
                 {
                     _sensorRuntimeAvailable = false;
@@ -770,16 +757,9 @@ public partial class SensorsControl : IDisposable
 
                     var cached = TryGetSessionSensorDataForDisplay();
                     if (cached.HasValue)
-                    {
                         await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value));
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace("Using cached session data as fallback after sensor read failure.");
-                    }
                 }
             }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Sensors refresh stopped.");
         }, token);
     }
 

@@ -15,21 +15,20 @@ public class ProcessesAreRunningAutomationPipelineTrigger(ProcessInfo[]? process
 
     public ProcessInfo[] Processes { get; } = processes ?? [];
 
-    public Task<bool> IsMatchingEvent(IAutomationEvent automationEvent)
+    public async Task<bool> IsMatchingEvent(IAutomationEvent automationEvent)
     {
         if (automationEvent is not ProcessAutomationEvent { Type: ProcessEventInfoType.Started } e)
-            return Task.FromResult(false);
+            return false;
 
         if (!Processes.Contains(e.ProcessInfo) && !Processes.Select(p => p.Name).Contains(e.ProcessInfo.Name))
-            return Task.FromResult(false);
+            return false;
 
-        return Task.FromResult(Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).Any());
+        return await Task.Run(() => Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).Any()).ConfigureAwait(false);
     }
 
-    public Task<bool> IsMatchingState()
+    public async Task<bool> IsMatchingState()
     {
-        var result = Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).Any();
-        return Task.FromResult(result);
+        return await Task.Run(() => Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).Any()).ConfigureAwait(false);
     }
 
     public void UpdateEnvironment(AutomationEnvironment environment)

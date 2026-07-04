@@ -163,6 +163,24 @@ Only actions that match current state will run.</value>
   <data name="AutomationPage_Saved_Title" xml:space="preserve">
     <value>Saved</value>
   </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Could not save</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Failed to save automation pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Could not toggle automatic pipelines</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Failed to toggle automatic pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Could not add manual pipeline</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Failed to add manual pipeline. Please try again.</value>
+  </data>
   <data name="AutomationPage_Title" xml:space="preserve">
     <value>Automation</value>
   </data>
@@ -804,6 +822,12 @@ WARNING: This action will not run correctly if the internal display is off.</val
   </data>
   <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
     <value>Update {0} available!</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Open logs folder</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Log</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>Move down</value>
@@ -2835,6 +2859,36 @@ Supported formats are: {1}.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
     <value>Macro</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Number 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Number 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Number 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Number 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Number 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Number 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Number 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Number 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Number 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Number 9</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Repeat</value>

@@ -1037,6 +1037,27 @@ public class PluginRepositoryService : IDisposable
                 if (ShouldSkipPluginPayloadFile(file))
                     continue;
 
+                // SECURITY: skip reparse points (symlinks/junctions) to prevent
+                // a malicious archive from writing outside the plugin directory.
+                FileInfo fileInfo;
+                try
+                {
+                    fileInfo = new FileInfo(file);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping unreadable payload entry '{file}': {ex.Message}");
+                    continue;
+                }
+
+                if ((fileInfo.Attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping reparse point payload entry '{file}'.");
+                    continue;
+                }
+
                 var relativePath = file.Substring(extractPath.Length).TrimStart('\\', '/');
                 var destPath = Path.Combine(pluginDir, relativePath);
                 

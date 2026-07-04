@@ -146,7 +146,7 @@ public partial class WindowsOptimizationPage
         {
             try
             {
-                await _driverFilterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await _driverFilterDebounceCancellationTokenSource.CancelAsync();
             }
             catch (ObjectDisposedException)
             {
@@ -164,7 +164,7 @@ public partial class WindowsOptimizationPage
 
         try
         {
-            await Task.Delay(300, token).ConfigureAwait(false);
+            await Task.Delay(300, token);
             if (!token.IsCancellationRequested)
             {
                 // Ensure UI update happens on UI thread

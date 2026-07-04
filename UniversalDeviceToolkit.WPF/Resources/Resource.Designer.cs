@@ -586,6 +586,60 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Could not save.
+        /// </summary>
+        public static string AutomationPage_Save_Error_Title {
+            get {
+                return ResourceManager.GetString("AutomationPage_Save_Error_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to save automation pipelines. Please try again..
+        /// </summary>
+        public static string AutomationPage_Save_Error_Message {
+            get {
+                return ResourceManager.GetString("AutomationPage_Save_Error_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not toggle automatic pipelines.
+        /// </summary>
+        public static string AutomationPage_EnableAutomaticPipelines_Error_Title {
+            get {
+                return ResourceManager.GetString("AutomationPage_EnableAutomaticPipelines_Error_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to toggle automatic pipelines. Please try again..
+        /// </summary>
+        public static string AutomationPage_EnableAutomaticPipelines_Error_Message {
+            get {
+                return ResourceManager.GetString("AutomationPage_EnableAutomaticPipelines_Error_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not add manual pipeline.
+        /// </summary>
+        public static string AutomationPage_AddManualPipeline_Error_Title {
+            get {
+                return ResourceManager.GetString("AutomationPage_AddManualPipeline_Error_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to add manual pipeline. Please try again..
+        /// </summary>
+        public static string AutomationPage_AddManualPipeline_Error_Message {
+            get {
+                return ResourceManager.GetString("AutomationPage_AddManualPipeline_Error_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Automation.
         /// </summary>
         public static string AutomationPage_Title {
@@ -3403,6 +3457,96 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Number 0.
+        /// </summary>
+        public static string MacroPage_Number0 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number0", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 1.
+        /// </summary>
+        public static string MacroPage_Number1 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number1", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 2.
+        /// </summary>
+        public static string MacroPage_Number2 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number2", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 3.
+        /// </summary>
+        public static string MacroPage_Number3 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number3", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 4.
+        /// </summary>
+        public static string MacroPage_Number4 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number4", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 5.
+        /// </summary>
+        public static string MacroPage_Number5 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number5", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 6.
+        /// </summary>
+        public static string MacroPage_Number6 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number6", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 7.
+        /// </summary>
+        public static string MacroPage_Number7 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number7", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 8.
+        /// </summary>
+        public static string MacroPage_Number8 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number8", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Number 9.
+        /// </summary>
+        public static string MacroPage_Number9 {
+            get {
+                return ResourceManager.GetString("MacroPage_Number9", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Recording will start in 3 seconds....
         /// </summary>
         public static string MacroRecordingWindow_Preparing_Title {
@@ -3678,6 +3822,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string MainWindow_UpdateAvailableWithVersion {
             get {
                 return ResourceManager.GetString("MainWindow_UpdateAvailableWithVersion", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open logs folder.
+        /// </summary>
+        public static string MainWindow_OpenLogsTooltip {
+            get {
+                return ResourceManager.GetString("MainWindow_OpenLogsTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Log.
+        /// </summary>
+        public static string MainWindow_LogIndicatorLabel {
+            get {
+                return ResourceManager.GetString("MainWindow_LogIndicatorLabel", resourceCulture);
             }
         }
 

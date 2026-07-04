@@ -471,7 +471,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                     break;
 
                 var delay = Task.Delay(_refreshStateInterval, token);
-                var state = await _controller.GetStateAsync(!firstCheck).ConfigureAwait(false);
+                var state = await _controller.GetStateAsync(!firstCheck);
 
                 foreach (var button in buttons)
                 {
@@ -497,7 +497,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                     button.Color = newColor;
                 }
 
-                await delay.ConfigureAwait(false);
+                await delay;
 
                 firstCheck = false;
             }

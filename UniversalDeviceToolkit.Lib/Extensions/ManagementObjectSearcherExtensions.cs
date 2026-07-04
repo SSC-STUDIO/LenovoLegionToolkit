@@ -10,6 +10,9 @@ namespace LenovoLegionToolkit.Lib.Extensions;
 
 public static class ManagementObjectSearcherExtensions
 {
+    public static Task<IEnumerable<ManagementBaseObject>> GetAsyncWithTimeout(this ManagementObjectSearcher searcher, int timeoutMs = 5000) =>
+        searcher.GetAsync(timeoutMs);
+
     public static async Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos, int timeoutMs = 10000)
     {
         var scopePath = mos.Scope?.Path?.Path ?? string.Empty;
