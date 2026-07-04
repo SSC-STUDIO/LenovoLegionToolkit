@@ -21,7 +21,9 @@
                 x:Name="_list"
                 Margin="0,0,16,8"
                 HorizontalContentAlignment="Stretch"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling" />
         </wpfui:DynamicScrollViewer>
 
         <Border

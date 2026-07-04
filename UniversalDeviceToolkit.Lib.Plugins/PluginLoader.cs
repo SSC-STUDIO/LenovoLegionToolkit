@@ -593,7 +593,7 @@ public class PluginLoader : IPluginLoader
 
     private static string EnsureTrailingSeparator(string path)
     {
-        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+        if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) || path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             return path;
 
         return path + Path.DirectorySeparatorChar;

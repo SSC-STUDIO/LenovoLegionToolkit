@@ -26,6 +26,13 @@ public partial class MacroSequenceControl
 
         _controller.RecorderReceived += Controller_RecorderReceived;
         _controller.RecorderStopped += Controller_RecorderStopped;
+        Unloaded += MacroSequenceControl_Unloaded;
+    }
+
+    private void MacroSequenceControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _controller.RecorderReceived -= Controller_RecorderReceived;
+        _controller.RecorderStopped -= Controller_RecorderStopped;
     }
 
     public void Set(MacroIdentifier macroIdentifier)
@@ -119,7 +126,7 @@ public partial class MacroSequenceControl
         if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
             return;
 
-        await RecordAsync(settings);
+        await RecordAsync(settings).ConfigureAwait(false);
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)
@@ -136,7 +143,7 @@ public partial class MacroSequenceControl
             _recordingWindow.Owner = Window.GetWindow(this);
             _recordingWindow.Show();
 
-            await Task.Delay(TimeSpan.FromSeconds(3));
+            await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
 
             _recordingWindow.Close();
         }

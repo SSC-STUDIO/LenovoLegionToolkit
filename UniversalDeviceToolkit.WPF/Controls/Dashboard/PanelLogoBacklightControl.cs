@@ -21,6 +21,7 @@ public class PanelLogoBacklightControl : AbstractToggleFeatureCardControl<PanelL
         Subtitle = Resource.PanelLogoBacklightControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -28,6 +29,6 @@ public class PanelLogoBacklightControl : AbstractToggleFeatureCardControl<PanelL
         if (e.State != LightingChangeState.Panel)
             return;
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }, "refresh panel logo backlight control");
 }

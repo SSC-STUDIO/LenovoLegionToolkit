@@ -21,6 +21,7 @@ public class PortsBacklightControl : AbstractToggleFeatureCardControl<PortsBackl
         Subtitle = Resource.PortsBacklightControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -28,6 +29,6 @@ public class PortsBacklightControl : AbstractToggleFeatureCardControl<PortsBackl
         if (e.State != LightingChangeState.Ports)
             return;
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }, "refresh ports backlight control");
 }

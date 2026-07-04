@@ -92,7 +92,7 @@ public class EditDashboardGroupControl : UserControl
 
         _getExistingItems = getExistingItems;
 
-        _editButton.Click += async (_, _) => await EditNameAsync();
+        _editButton.Click += async (_, _) => await EditNameAsync().ConfigureAwait(false);
         _moveUpButton.Click += (_, _) => MoveUp?.Invoke(this, EventArgs.Empty);
         _moveDownButton.Click += (_, _) => MoveDown?.Invoke(this, EventArgs.Empty);
         _deleteButton.Click += (_, _) => Delete?.Invoke(this, EventArgs.Empty);
@@ -146,7 +146,7 @@ public class EditDashboardGroupControl : UserControl
             Resource.EditDashboardGroupControl_EditGroup_Message,
             text,
             primaryButton: Resource.OK,
-            secondaryButton: Resource.Cancel);
+            secondaryButton: Resource.Cancel).ConfigureAwait(false);
 
         if (string.IsNullOrEmpty(result))
             return;

@@ -780,11 +780,13 @@ internal static partial class Program
                 return true;
             }
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Debug.WriteLine($"[visual-smoke] InvokePattern failed: {ex.Message}");
         }
-        catch (ElementNotAvailableException)
+        catch (ElementNotAvailableException ex)
         {
+            Debug.WriteLine($"[visual-smoke] InvokePattern element not available: {ex.Message}");
         }
 
         return false;
@@ -802,11 +804,13 @@ internal static partial class Program
                 return true;
             }
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Debug.WriteLine($"[visual-smoke] ExpandCollapsePattern failed: {ex.Message}");
         }
-        catch (ElementNotAvailableException)
+        catch (ElementNotAvailableException ex)
         {
+            Debug.WriteLine($"[visual-smoke] ExpandCollapsePattern element not available: {ex.Message}");
         }
 
         return false;
@@ -1315,7 +1319,7 @@ internal static partial class Program
 
         SetEnvVar(startInfo.EnvironmentVariables, "UDT_SMOKE_AUTOMATION", "1");
 
-        return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
+        return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process."); // NOTE: Returned process — caller is responsible for disposal
     }
 
     private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle, string language)
@@ -1555,8 +1559,9 @@ internal static partial class Program
         {
             process.WaitForInputIdle(milliseconds);
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Debug.WriteLine($"[visual-smoke] WaitForInputIdle failed: {ex.Message}");
         }
     }
 
@@ -1571,16 +1576,18 @@ internal static partial class Program
             if (process.WaitForExit(5000))
                 return;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"[visual-smoke] CloseMainWindow failed: {ex.Message}");
         }
 
         try
         {
             process.Kill(entireProcessTree: true);
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"[visual-smoke] Kill process failed: {ex.Message}");
         }
     }
 
@@ -1705,8 +1712,9 @@ internal static partial class Program
             Directory.CreateDirectory(outputRoot);
             WriteResult(outputRoot, appDataDirectory, process, process?.HasExited == true ? process.ExitCode : null, ex.ToString());
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"[visual-smoke] WriteResult failed during crash handling: {ex.Message}");
         }
     }
 

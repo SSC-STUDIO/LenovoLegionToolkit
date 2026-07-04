@@ -21,6 +21,7 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
         Subtitle = Resource.FnLockControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -29,6 +30,6 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
             return;
 
         if (e.SpecialKey is SpecialKey.FnLockOn or SpecialKey.FnLockOff)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh FnLock control");
 }

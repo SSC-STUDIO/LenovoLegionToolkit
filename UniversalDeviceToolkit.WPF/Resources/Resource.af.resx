@@ -136,7 +136,7 @@ Slegs aksies wat by die huidige toestand pas, sal loop.</value>
     <value>Voeg nuwe by</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>Geen Vinnige Aksies gedefinieer nie. Klik &quot;Voeg nuwe by&quot; om &apos;n nuwe Vinnige Aksie te skep.</value>
+    <value>Geen Vinnige Aksies gedefinieer nie. Klik "Voeg nuwe by" om 'n nuwe Vinnige Aksie te skep.</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
     <value>Vinnige aksies is beskikbaar in die regsklik-kieslys van die lysikoon.</value>
@@ -502,10 +502,10 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af 
     <value>Redigeer</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
-    <value>Vink verversingstempo&apos;s af wat jy nie wil gebruik wanneer die Fn+R-sneltoets gebruik word nie.</value>
+    <value>Vink verversingstempo's af wat jy nie wil gebruik wanneer die Fn+R-sneltoets gebruik word nie.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Maak seker dat die skootrekenaar se skerm aan is. Universal Device Toolkit kan nie verversingstempo&apos;s laai vir &apos;n skerm wat nie aan is nie.</value>
+    <value>Maak seker dat die skootrekenaar se skerm aan is. Universal Device Toolkit kan nie verversingstempo's laai vir 'n skerm wat nie aan is nie.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
     <value>Geen Verversingstempo's gevind</value>
@@ -520,7 +520,7 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af 
     <value>Voer uit</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>Gebruik slegs geintegreerde GPU op battery en beide geintegreerde en diskrete GPU wanneer die WS-adapter gekoppel is. Wanneer &apos;n nie-standaard adapter gekoppel is, skakel die stelsel na Hibried-iGPU-alleen-modus.</value>
+    <value>Gebruik slegs geintegreerde GPU op battery en beide geintegreerde en diskrete GPU wanneer die WS-adapter gekoppel is. Wanneer 'n nie-standaard adapter gekoppel is, skakel die stelsel na Hibried-iGPU-alleen-modus.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
     <value>Hibried-Auto Modus</value>
@@ -697,7 +697,7 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie as die interne skerm af is.</
     <value>Jou toestel mag dalk vereiste stelselkomponente (LenovoGameZoneData) kort.</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>As jy &quot;OK&quot; klik om voort te gaan:</value>
+    <value>As jy "OK" klik om voort te gaan:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
     <value>- Die sagteware sal in beperkte modus loop</value>
@@ -721,7 +721,7 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie as die interne skerm af is.</
     <value>Masjientipe:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Klik &quot;OK&quot; om voort te gaan, of &quot;Kanselleer&quot; om te verlaat.</value>
+    <value>Klik "OK" om voort te gaan, of "Kanselleer" om te verlaat.</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Geen versoenbare sleutelbordes gevind</value>
@@ -959,7 +959,7 @@ Aktiveer hierdie opsie indien jy konflikte met volskerm-toepassings het.</value>
     <value>Weergawe</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>Hieronder is &apos;n lys sagteware-pakkette wat as versoenbaar met jou skootrekenaar gemerk is.
+    <value>Hieronder is 'n lys sagteware-pakkette wat as versoenbaar met jou skootrekenaar gemerk is.
 Maak altyd seker dat jy die korrekte pakkette installeer.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
@@ -1045,13 +1045,13 @@ Pestasie-modus kan ook met Fn+Q verander word.</value>
     <value>Skandeer vir drywer pakkette</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Kies &apos;n bron en skandeer om versoenbare bestuurderaflaaie te lys.</value>
+    <value>Kies 'n bron en skandeer om versoenbare bestuurderaflaaie te lys.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
     <value>Geen drywer aflaaie gevind</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Probeer &apos;n ander bron, bedryfstelsel of masjientipe.</value>
+    <value>Probeer 'n ander bron, bedryfstelsel of masjientipe.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
     <value>Geen ooreenstemmende aflaaie gevind</value>
@@ -1158,7 +1158,7 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien die interne skerm af 
     <value>Uitvoerbare Pad</value>
   </data>
   <data name="RunAutomationStepControl_Message" xml:space="preserve">
-    <value>Voer &apos;n skrip of program uit.
+    <value>Voer 'n skrip of program uit.
 Maak seker dat jou skrip eers korrek loop.</value>
   </data>
   <data name="RunAutomationStepControl_Title" xml:space="preserve">
@@ -1300,7 +1300,7 @@ Herbegin word aanbeveel na verandering van hierdie opsie.</value>
     <value>Binnekort beskikbaar</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>Uitbreidingsmark sal in &apos;n toekomstige opdatering beskikbaar wees.</value>
+    <value>Uitbreidingsmark sal in 'n toekomstige opdatering beskikbaar wees.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimalisering</value>
@@ -1694,7 +1694,7 @@ Herbegin word aanbeveel na verandering van hierdie opsie.</value>
     <value>Kon nie Lenovo Vantage en/of ImController aktiveer nie</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>Jy kan verversingstempo&apos;s uitsluit om die Fn+R-sneltoets meer nuttig te maak.</value>
+    <value>Jy kan verversingstempo's uitsluit om die Fn+R-sneltoets meer nuttig te maak.</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
     <value>Sluit Verversingstempo's uit</value>
@@ -1918,7 +1918,7 @@ Vereis herbegin.</value>
     <value>Skrap Verslag</value>
   </data>
   <data name="CrashReportNotification_Description" xml:space="preserve">
-    <value>&apos;n Ongelukverslag is op skyf gestoor. Jy kan die verslagbesonderhede hieronder hersien. Verslae word nie outomaties gestuur nie.</value>
+    <value>'n Ongelukverslag is op skyf gestoor. Jy kan die verslagbesonderhede hieronder hersien. Verslae word nie outomaties gestuur nie.</value>
   </data>
   <data name="CrashReportNotification_Message" xml:space="preserve">
     <value>Die toepassing het neergestort tydens die vorige sessie</value>
@@ -2223,7 +2223,7 @@ Hierdie instelling tree slegs in werking wanneer Pasgemaakte Modus geaktiveer is
     <value>Die deurlopende kragverbruik wat deur die SVE bereik kan word.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
-    <value>Die piek-kragverbruik wat deur die SVE bereik kan word binne &apos;n kort tydperk.</value>
+    <value>Die piek-kragverbruik wat deur die SVE bereik kan word binne 'n kort tydperk.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
     <value>Die maksimum oombliklike kragverbruik wat deur die SVE bereik kan word.</value>
@@ -2232,7 +2232,7 @@ Hierdie instelling tree slegs in werking wanneer Pasgemaakte Modus geaktiveer is
     <value>Die maksimum kragverbruik wat deur die SVE bereik kan word wanneer beide SVE en GPU ten volle benut word.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
-    <value>Die piek-kragverbruik wat deur die SVE bereik kan word met &apos;n klein vertraging.</value>
+    <value>Die piek-kragverbruik wat deur die SVE bereik kan word met 'n klein vertraging.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
     <value>Die maksimum temperatuur wat deur die SVE bereik kan word voordat frekwensie en krag verminder word.</value>
@@ -2472,13 +2472,13 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien diskrete GPU nie besk
     <value>Onmiddelik Begin</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Skakel die skootrekenaar aan wanneer &apos;n laaier gekoppel word.</value>
+    <value>Skakel die skootrekenaar aan wanneer 'n laaier gekoppel word.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
     <value>Onmiddelik Begin</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Skakel die skootrekenaar aan wanneer &apos;n laaier gekoppel word.</value>
+    <value>Skakel die skootrekenaar aan wanneer 'n laaier gekoppel word.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Kan Kragmodus nie verander nie</value>
@@ -2494,7 +2494,7 @@ WAARSKUWING: Hierdie aksie sal nie korrek loop nie, indien diskrete GPU nie besk
     <value>Kon nie GPU Werksmodus verander nie</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Probeer die modus weer oor &apos;n paar sekondes verander, indien jy nie die verwagte resultaat sien nie.
+    <value>Probeer die modus weer oor 'n paar sekondes verander, indien jy nie die verwagte resultaat sien nie.
 Indien dGPU glad nie reageer nie, herbegin asseblief jou skootrekenaar.</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
@@ -2706,7 +2706,7 @@ Ondersteunde formate is: {1}.</value>
     <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Stel &quot;Op battery sedert&quot; terug by opstart</value>
+    <value>Stel "Op battery sedert" terug by opstart</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
     <value>Skakel Wi-Fi af</value>
@@ -2721,7 +2721,7 @@ Ondersteunde formate is: {1}.</value>
     <value>Wag tot voltooi</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Voer konsole-toepassings uit, sonder om &apos;n konsole-venster te skep.</value>
+    <value>Voer konsole-toepassings uit, sonder om 'n konsole-venster te skep.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
     <value>Wag totdat die program of skrip klaar uitgevoer het</value>
@@ -2772,7 +2772,7 @@ Ondersteunde formate is: {1}.</value>
     <value>Foutspoor-stappe</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Maak seker Windows Management Instrumentation (WMI)-diens loop: Maak Dienste (services.msc) oop en kyk dat &quot;Windows Management Instrumentation&quot; loop.</value>
+    <value>Maak seker Windows Management Instrumentation (WMI)-diens loop: Maak Dienste (services.msc) oop en kyk dat "Windows Management Instrumentation" loop.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
     <value>Voer die toepassing as Administrateur uit om voldoende toestemmings te verseker om toegang tot die stelselregister en WMI te kry.</value>
@@ -2781,7 +2781,7 @@ Ondersteunde formate is: {1}.</value>
     <value>Kyk stelselhulpbronne: Sluit ander hulpbron-intensiewe toepassings en probeer weer.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>Hersien die logleer vir gedetailleerde foutinligting deur &quot;Open Log&quot; hieronder te klik.</value>
+    <value>Hersien die logleer vir gedetailleerde foutinligting deur "Open Log" hieronder te klik.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
     <value>Maak Log Lêer oop</value>
@@ -2979,7 +2979,7 @@ Ondersteunde formate is: {1}.</value>
     <value>Vinnige Aksie</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Voer &apos;n gestoorde vinnige aksie uit.</value>
+    <value>Voer 'n gestoorde vinnige aksie uit.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
     <value>Kennisgewing altyd bo-op</value>
@@ -3070,13 +3070,13 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
     <value>Kies taal</value>
   </data>
   <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
-    <value>Hierdie toestel sal in basiese modus begin. Hardeware-spesifieke kontroles is versteek totdat &apos;n versoenbare toestelpak beskikbaar is.</value>
+    <value>Hierdie toestel sal in basiese modus begin. Hardeware-spesifieke kontroles is versteek totdat 'n versoenbare toestelpak beskikbaar is.</value>
   </data>
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Toestelpak: Basiese modus</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>Universal Device Toolkit het &apos;n pasende toestelpak bespeur. Bevestig dit nou sodat hardeware-spesifieke kenmerke deur die toepassing voorberei kan word.</value>
+    <value>Universal Device Toolkit het 'n pasende toestelpak bespeur. Bevestig dit nou sodat hardeware-spesifieke kenmerke deur die toepassing voorberei kan word.</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
     <value>Toestelpak: {0}</value>
@@ -3346,10 +3346,10 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
     <value>Nuwe Weergawe Beskikbaar</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Weergawe: </value>
+    <value>Weergawe:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Vrystelling Datum: </value>
+    <value>Vrystelling Datum:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Wat's Nuut:</value>
@@ -3424,7 +3424,7 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
     <value>Gekopieer</value>
   </data>
   <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
-    <value>Invoegtoepassing-ID &apos;{0}&apos; na knipbord gekopieer.</value>
+    <value>Invoegtoepassing-ID '{0}' na knipbord gekopieer.</value>
   </data>
   <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
     <value>Aflaai voltooi</value>
@@ -3607,7 +3607,7 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
     <value>Invoegtoepassing {0} is geinstalleer, maar sy looptyd-UI kon nie gelaai word nie. Herbegin die toepassing of herinstalleer die invoegtoepassing.</value>
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
-    <value>Invoegtoepassing {0} is geinstalleer, maar dit stel nie &apos;n gebruikersgerigte toegangspunt bloot nie. Dit mag dalk net agtergronddienste of manifestdata verskaf.</value>
+    <value>Invoegtoepassing {0} is geinstalleer, maar dit stel nie 'n gebruikersgerigte toegangspunt bloot nie. Dit mag dalk net agtergronddienste of manifestdata verskaf.</value>
   </data>
   <data name="LargeFilesWindow_Title" xml:space="preserve">
     <value>Groot Lêers Analise</value>
@@ -3811,7 +3811,7 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
     <value>%</value>
   </data>
   <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
-    <value>Wag om te installeer (&apos;n ander invoegtoepassing laai tans af)...</value>
+    <value>Wag om te installeer ('n ander invoegtoepassing laai tans af)...</value>
   </data>
   <data name="SensorItem_PchTemperature" xml:space="preserve">
     <value>PCH Temperatuur</value>
@@ -3882,4 +3882,4 @@ Dit sal nie ander volskerm-vensters beinvloed nie, maar jy sal nie op die kennis
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

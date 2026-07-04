@@ -23,13 +23,14 @@ public class TouchpadLockControl : AbstractToggleFeatureCardControl<TouchpadLock
         Subtitle = Resource.TouchpadLockControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     protected override async Task OnStateChange(ToggleSwitch toggle, IFeature<TouchpadLockState> feature)
     {
-        await _listener.StopAsync();
-        await base.OnStateChange(toggle, feature);
-        await _listener.StartAsync();
+        await _listener.StopAsync().ConfigureAwait(false);
+        await base.OnStateChange(toggle, feature).ConfigureAwait(false);
+        await _listener.StartAsync().ConfigureAwait(false);
     }
 
     private void Listener_Changed(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -38,6 +39,6 @@ public class TouchpadLockControl : AbstractToggleFeatureCardControl<TouchpadLock
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnF10))
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh touchpad lock control");
 }

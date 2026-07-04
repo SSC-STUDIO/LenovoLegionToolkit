@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -62,7 +62,7 @@
     <value>Ferramenta Lenovo Legion</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>Versão</value>
+    <value>Compilação</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
     <value>Última versão no GitHub</value>
@@ -80,7 +80,7 @@
     <value>Sobre</value>
   </data>
   <data name="AboutPage_TranslationCredit" xml:space="preserve">
-    <value>Tradução para português de Portugal feita por dcsilva.</value>
+    <value>Tradução para português do Brasil.</value>
     <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
   </data>
   <data name="AboutPage_Version" xml:space="preserve">
@@ -464,7 +464,7 @@ ATENÇÃO: Esta ação não irá correr corretamente se o ecrã interno estiver 
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>Altera o brilho do ecrã interno.
 Os modos de desempenho podem alterar o brilho nalguns dispositivos.
-Certifica-te de que colocas este passo em último, se algo não funcionar corretamente 
+Certifica-te de que colocas este passo em último, se algo não funcionar corretamente
 
 ATENÇÃO: Esta ação não irá funcionar corretamente se o ecrã interno estiver desligado.</value>
   </data>
@@ -523,7 +523,7 @@ ATENÇÃO: Esta ação não irá funcionar corretamente se o ecrã interno estiv
     <value>Modo Híbrido-iGPU apenas</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
-    <value>Sbre modos de funcionamento da GPU</value>
+    <value>Sobre modos de funcionamento da GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
     <value>°F</value>
@@ -538,7 +538,7 @@ ATENÇÃO: Esta ação não irá funcionar corretamente se o ecrã interno estiv
     <value>Velocidade da ventoinha</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>Placa de vídeo</value>
+    <value>GPU</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU nº2</value>
@@ -609,7 +609,7 @@ Alguns portáteis podem aceitar valores maiores do que indicam, mas tem cuidado.
     <value>Não foi possível aplicar as definições</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
-    <value>Não foi possível carregar as aplicações.</value>
+    <value>Não foi possível carregar as configurações.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
     <value>A velocidade da ventoinha não é estritamente determinada por um sensor de temperatura. Irá aumentar o diminuir a velocidade de acordo com o sensor com a temperatura mais elevada entre o CPU, a GPU e o Heatsink. Os valores exatos irão aparecer quando passares com o rato em cima de cada passo.</value>
@@ -619,11 +619,11 @@ Alguns portáteis podem aceitar valores maiores do que indicam, mas tem cuidado.
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
     <value>ATENÇÃO!
-Uso prolongado desta opção vai degradar as ventoinhas e diminuir a dia longevidade.
+Uso prolongado desta opção vai degradar as ventoinhas e diminuir a longevidade.
 A sério! Tem cuidado com esta opção!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
-    <value>Valocidade máxima da ventoinha</value>
+    <value>Velocidade máxima da ventoinha</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
     <value>Ventoinhas</value>
@@ -649,13 +649,13 @@ A sério! Tem cuidado com esta opção!</value>
 ATENÇÃO: Esta ação não irá executar corretamente se o ecrã interno estiver desligado.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>laminagem direta a quente</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Ativar HDR no ecrã interno.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>laminagem direta a quente</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>A utilização de HDR está bloqueada pelas definições do Windows.</value>
@@ -775,7 +775,7 @@ ATENÇÃO: Esta ação não irá executar corretamente se o ecrã interno estive
     <value>Microfone desligado</value>
   </data>
   <data name="Notification_MicrophoneOn" xml:space="preserve">
-    <value>Microphone ligado</value>
+    <value>Microfone ligado</value>
   </data>
   <data name="Notification_NumLockOff" xml:space="preserve">
     <value>Num Lock desligado</value>
@@ -890,7 +890,7 @@ ATENÇÃO: Esta ação não irá executar corretamente se o ecrã interno estive
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
     <value>Abaixo está uma lista de software que foi marcado como compatível com o teu portátil.
-Confirma sempre que estás a instalar o pacotes corretos.</value>
+Confirma sempre que estás a instalar os pacotes corretos.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
     <value>Confirma que o tipo de máquina e sistema operativo estão definidos corretamente.</value>
@@ -914,7 +914,7 @@ Confirma sempre que estás a instalar o pacotes corretos.</value>
     <value>Sistema Operativo</value>
   </data>
   <data name="PackagesPage_PrimarySource" xml:space="preserve">
-    <value>Primário (Recomendo)</value>
+    <value>Primário (Recomendado)</value>
   </data>
   <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
     <value>O mesmo que o Lenovo Vantage</value>
@@ -1110,7 +1110,7 @@ Se desativado, esta app irá executar os atalhos Fn.
     <value>Desativar Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>O Lenovo Vantage e/ou o ImController podem são ter sido desativados corretamente</value>
+    <value>O Lenovo Vantage e/ou o ImController podem não ter sido desativados corretamente</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
     <value>Não foi possível desativar o Lenovo Vantage e/ou o ImController</value>
@@ -1135,7 +1135,7 @@ Se desativado, esta app irá executar os atalhos Fn.
     <value>Não foi possível ativar o Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>O Lenovo Vantage e/ou o ImController podem são ter sido ativados corretamente</value>
+    <value>O Lenovo Vantage e/ou o ImController podem não ter sido ativados corretamente</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
     <value>Não foi possível ativar o Lenovo Vantage e/ou o ImController</value>
@@ -1468,7 +1468,7 @@ Mover o rato ou clicar no teclado vai ligar os ecrãs.</value>
     <value>Desligar</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
-    <value>Ligar</value>
+    <value>Desligar</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
     <value>Desligar todos os ecrãs disponíveis.</value>
@@ -2240,11 +2240,11 @@ Formatos suportados são: {1}.</value>
     <value>Lenovo Vantage e/ou ImController está a correr em segundo plano.</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Desativa notificações para ações das teclas Fn, como silenciar o microfone. 
+    <value>Desativa notificações para ações das teclas Fn, como silenciar o microfone.
  Ative esta opção se tiver conflitos com aplicações em ecrã completo.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Coloque sempre a notificação no topo. 
+    <value>Coloque sempre a notificação no topo.
  Não afetará outras janelas em ecrã inteiro, mas não será possível clicar nas notificações.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
@@ -2382,7 +2382,7 @@ Formatos suportados são: {1}.</value>
     <value>Personalização do Windows</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Ocorreu uma exceção inesperada: 
+    <value>Ocorreu uma exceção inesperada:
  {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
@@ -2763,7 +2763,7 @@ Formatos suportados são: {1}.</value>
     <value>Ver progresso da operação de limpeza e tamanho estimado.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Iniciar minimizado para a bandeja quando fizer login no Windows.</value>
+    <value>Aparência</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Analisar</value>
@@ -3870,4 +3870,4 @@ ex. C:\Drivers</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

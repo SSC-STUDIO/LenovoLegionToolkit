@@ -421,15 +421,14 @@ public partial class App
         }
     }
 
-    private void Application_Exit(object sender, ExitEventArgs e)
+    private async void Application_Exit(object sender, ExitEventArgs e)
     {
         lock (_shutdownLock)
             _inExitHandler = true;
 
         PluginHostContext.Reset();
 
-        // Application.Exit requires synchronous handler
-        try { ShutdownAsync(true).GetAwaiter().GetResult(); }
+        try { await ShutdownAsync(true); }
         catch { /* Shutdown failed - continue with exit anyway */ }
 
         try { Log.Instance.Shutdown(); }
@@ -928,7 +927,7 @@ public partial class App
     {
         MessagingCenter.Subscribe<OsdChangedMessage>(this, message =>
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher.BeginInvoke(() =>
             {
                 HandleOsdCommand(message.State);
             });

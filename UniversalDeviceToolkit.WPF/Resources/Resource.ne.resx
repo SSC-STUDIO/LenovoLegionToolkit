@@ -3033,7 +3033,7 @@
     <value>बन्द गर्नुहोस्</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{1} मध्ये {0} कार्य चयन गरियो</value>
+    <value>{0} कार्य चयन गरियो {1} मध्ये</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>अनुमानित सफाइ साइज: {0}</value>
@@ -3077,7 +3077,7 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
 
-    <value>{1}s मा {0} खाली भयो</value>
+    <value>{0} खाली भयो {1}s मा</value>
 
   </data>
 <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
@@ -3431,10 +3431,10 @@
     <value>नयाँ संस्करण उपलब्ध</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>संस्करण: </value>
+    <value>संस्करण:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>रिलिज मिति: </value>
+    <value>रिलिज मिति:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>नयाँ के छ:</value>
@@ -3886,4 +3886,4 @@
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>प्लगइन {0} स्थापना भयो, तर यसले प्रयोगकर्ता-मुखी प्रवेश बिन्दु प्रदान गर्दैन। यसले पृष्ठभूमि सेवाहरू वा म्यानिफेस्ट डाटा मात्र प्रदान गर्न सक्छ।</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

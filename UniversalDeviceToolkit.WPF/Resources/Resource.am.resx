@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -3033,7 +3033,7 @@ dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ�
     <value>ዝጋ</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>ከ{1} ድርጊቶች {0} ተመርጠዋል</value>
+    <value>ከ{0} ድርጊቶች {1} ተመርጠዋል</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>የተገመተ የማጽዳት መጠን: {0}</value>
@@ -3077,7 +3077,7 @@ dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ�
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
 
-    <value>{1}ሰ ውስጥ {0} ተለቅቷል</value>
+    <value>{0} ተለቅቷል {1}ሰ ውስጥ</value>
 
   </data>
 <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
@@ -3431,10 +3431,10 @@ dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ�
     <value>አዲስ ስሪት አለ</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>ስሪት፡ </value>
+    <value>ስሪት፡</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>የመለቀቅ ቀን፡ </value>
+    <value>የመለቀቅ ቀን፡</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>ምን አዲስ ነው:</value>
@@ -3509,7 +3509,7 @@ dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ�
     <value>ተቀድቷል</value>
   </data>
   <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
-    <value>የተሰማሚ መለያ &apos;{0}&apos; ወደ ክሊፕቦርድ ተቀድቷል።</value>
+    <value>የተሰማሚ መለያ '{0}' ወደ ክሊፕቦርድ ተቀድቷል።</value>
   </data>
   <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
     <value>ማውረድ ተጠናቋል</value>
@@ -3886,4 +3886,4 @@ dGPU ምላሽ ካልሰጠ ላፕቶፕዎን እንደገና ያስጀምሩ�
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>ተሰማሚ {0} ተጭኖ፣ ነገር ግን ለተጠቃሚ የሚታይ የመግቢያ ነጥብ አይገልጽም። ምናልባት የኋላ አገልግሎቶችን ወይም የmanifest ዳታን ብቻ ሊያቀርብ ይችላል።</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

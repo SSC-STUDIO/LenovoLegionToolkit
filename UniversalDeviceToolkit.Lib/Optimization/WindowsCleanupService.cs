@@ -140,8 +140,16 @@ public class WindowsCleanupService
                                     largeFiles.Add(fi);
                                 }
                             }
-                            catch (UnauthorizedAccessException) { }  // Insufficient permissions to access file, skip
-                            catch (IOException) { }  // File may be locked or inaccessible, skip
+                            catch (UnauthorizedAccessException ex)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Insufficient permissions to access file: {file}", ex);
+                            }
+                            catch (IOException ex)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"File may be locked or inaccessible: {file}", ex);
+                            }
                         }
 
                         foreach (var subDir in Directory.EnumerateDirectories(currentPath))
@@ -164,12 +172,20 @@ public class WindowsCleanupService
                             }
                         }
                     }
-                    catch (UnauthorizedAccessException) { }  // Insufficient permissions to access directory, skip
-                    catch (IOException) { }  // Directory may be inaccessible, skip
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Insufficient permissions to access directory: {currentPath}", ex);
+                    }
+                    catch (IOException ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Directory may be inaccessible: {currentPath}", ex);
+                    }
                 }
             }
             return largeFiles;
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<long> EstimateLargeFilesSizeAsync(CancellationToken cancellationToken, Action<string>? progressCallback = null)
@@ -218,13 +234,15 @@ public class WindowsCleanupService
                         {
                             size += new FileInfo(file).Length;
                         }
-                        catch (UnauthorizedAccessException)
+                        catch (UnauthorizedAccessException ex)
                         {
-                            // Insufficient permissions to access file, skip
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Insufficient permissions to access file: {file}", ex);
                         }
-                        catch (IOException)
+                        catch (IOException ex)
                         {
-                            // File may be locked or inaccessible, skip
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"File may be locked or inaccessible: {file}", ex);
                         }
                     }
 
@@ -236,8 +254,16 @@ public class WindowsCleanupService
                         }
                     }
                 }
-                catch (UnauthorizedAccessException) { }  // Insufficient permissions to access directory, skip
-                catch (IOException) { }  // Directory may be inaccessible, skip
+                catch (UnauthorizedAccessException ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Insufficient permissions to access directory: {currentPath}", ex);
+                }
+                catch (IOException ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Directory may be inaccessible: {currentPath}", ex);
+                }
             }
 
             return size;
@@ -334,7 +360,7 @@ public class WindowsCleanupService
                     }
                 }
             }
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task ExecuteRegistryCleanupAsync(CancellationToken cancellationToken)
@@ -403,7 +429,7 @@ public class WindowsCleanupService
                         Log.Instance.Trace($"Registry cleanup failed. [key={hive}\\{subKey}]", ex);
                 }
             }
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     private static string NormalizeExtension(string extension)

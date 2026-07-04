@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1486,7 +1486,7 @@ Nastavenia sú účinne len keď je povolený vlastný režim.</value>
     <value>Údaje</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Teplota</value>
+    <value>Dočasné</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>Jas jediného displeja</value>
@@ -1753,13 +1753,13 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
     <value>Stav batérie</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximálna rýchlosť nabíjania batérie ( ), alebo vybíjania (-).</value>
+    <value>Maximálna rýchlosť nabíjania batérie (+), alebo vybíjania (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Maximálna rýchlosť vybíjania</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimálna rýchlosť nabíjania batérie ( ), alebo vybíjania (-).</value>
+    <value>Minimálna rýchlosť nabíjania batérie (+), alebo vybíjania (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Minimálna rýchlosť vybíjania</value>
@@ -1774,7 +1774,7 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
     <value>Predvolené Boot logo je nastavené</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Vlastné boot logo musí mať presne {0} pixelov. 
+    <value>Vlastné boot logo musí mať presne {0} pixelov.
  Podporované formáty sú: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
@@ -1908,7 +1908,7 @@ Prepínanie režimov môže vyžadovať reštart.</value>
     <value>Skryť všetko</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Skúste režim zmeniť znova o niekoľko sekúnd, ak nevidíte očakávaný výsledok. 
+    <value>Skúste režim zmeniť znova o niekoľko sekúnd, ak nevidíte očakávaný výsledok.
  Ak dGPU vôbec nereaguje, reštartujte prosím laptop.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
@@ -2026,7 +2026,7 @@ Prepínanie režimov môže vyžadovať reštart.</value>
     <value>Makro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Skrášľovanie systému</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Optimalizácia systému</value>
@@ -2047,11 +2047,11 @@ Prepínanie režimov môže vyžadovať reštart.</value>
     <value>Akcie</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Zakazuje oznámenia pre akcie kláves Fn ako stlmenie mikrofónu. 
+    <value>Zakazuje oznámenia pre akcie kláves Fn ako stlmenie mikrofónu.
  Povoliť túto možnosť, ak máte konflikty s aplikáciami na celú obrazovku.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Vždy umiestniť notifikáciu navrchu. 
+    <value>Vždy umiestniť notifikáciu navrchu.
  Neovplyvní to iné okná na celú obrazovku, ale nebudete môcť kliknúť na notifikácie.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
@@ -2307,13 +2307,13 @@ Prepínanie režimov môže vyžadovať reštart.</value>
     <value>Minimálna miera vybíjania</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
+    <value>Upravte efekty priehľadnosti Windows.</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
+    <value>Vizuálne efekty</value>
   </data>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
+    <value>Povoliť efekty priehľadnosti</value>
   </data>
 
 
@@ -2337,7 +2337,7 @@ Vyžaduje reštart.</value>
     <value>Zapnúť Wi-Fi</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Vyskytla sa neočakávaná výnimka: 
+    <value>Vyskytla sa neočakávaná výnimka:
  {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
@@ -2670,7 +2670,7 @@ Vyžaduje reštart.</value>
     <value>Služby</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Zkrášlenie systému</value>
+    <value>Skrášlenie systému</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>Režimy napájania Windows</value>
@@ -2763,7 +2763,7 @@ Vyžaduje reštart.</value>
     <value>Zobraziť priebeh čistiacej operácie a odhadovanú veľkosť.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Spustiť minimalizované na systémovej lište pri prihlásení do Windows.</value>
+    <value>Vzhľad</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skenovať</value>
@@ -2859,7 +2859,7 @@ Vyžaduje reštart.</value>
     <value>Vyčistenie registra</value>
   </data>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>Pr?kaz DISM</value>
+    <value>Príkaz DISM</value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
     <value>Čas používania</value>
@@ -2937,7 +2937,7 @@ Vyžaduje reštart.</value>
     <value>Používanie vstavaného nástroja Windows na čistenie registrov</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (Vypr?zdni? vyrovn?vaciu pam?? DNS)</value>
+    <value>ipconfig /flushdns (Vyprázdniť vyrovnávaciu pamäť DNS)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
     <value>netsh winsock reset (Obnoviť zásobník protokolu Winsock)</value>
@@ -2955,7 +2955,7 @@ Vyžaduje reštart.</value>
     <value>Inštalovať</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>Nain?talovan?</value>
+    <value>Nainštalované</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Nie je možné odinštalovať</value>
@@ -3000,10 +3000,10 @@ Vyžaduje reštart.</value>
     <value>Všetko</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>Nain?talovan?</value>
+    <value>Nainštalované</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Nenain?talovan?</value>
+    <value>Nenainštalované</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Žiadne dostupné pluginy</value>
@@ -3885,4 +3885,4 @@ Vyžaduje reštart.</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

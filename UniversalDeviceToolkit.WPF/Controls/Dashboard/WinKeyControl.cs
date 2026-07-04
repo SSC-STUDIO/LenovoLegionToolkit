@@ -24,6 +24,7 @@ public class WinKeyControl : AbstractToggleFeatureCardControl<WinKeyState>
         Subtitle = Resource.WinKeyControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -31,6 +32,6 @@ public class WinKeyControl : AbstractToggleFeatureCardControl<WinKeyState>
         if (!IsLoaded || !IsVisible)
             return;
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }, "refresh WinKey control");
 }

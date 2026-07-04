@@ -81,7 +81,7 @@
   </data>
   <data name="AboutPage_TranslationCredit" xml:space="preserve">
     <value>Itzulpenak komunitateak eskainiak.</value>
-    <comment>Please replace this text with something like &quot;Translated into &lt;language&gt; by &lt;your name&gt;.&quot;</comment>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
   </data>
   <data name="AboutPage_Version" xml:space="preserve">
     <value>Bertsioa</value>
@@ -120,7 +120,7 @@
     <value>Gaitu</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>Ez dago ekintzarik zehaztuta. Sakatu &quot;Berria gehitu&quot; ekintza berri bat sortzeko.</value>
+    <value>Ez dago ekintzarik zehaztuta. Sakatu "Berria gehitu" ekintza berri bat sortzeko.</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
     <value>Gaituz gero, ekintza hauek automatikoki exekutatuko dira. Egoera aldatzen denean, ekintza guztiak goitik behera ebaluatuko dira.
@@ -136,7 +136,7 @@ Egoera unekoarekin bat datozen ekintzak soilik exekutatuko dira.</value>
     <value>Berria gehitu</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>Ez dago ekintza azkarrik zehaztuta. Sakatu &quot;Berria gehitu&quot; ekintza azkar berri bat sortzeko.</value>
+    <value>Ez dago ekintza azkarrik zehaztuta. Sakatu "Berria gehitu" ekintza azkar berri bat sortzeko.</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
     <value>Ekintza azkarrak erabilgarri daude sistemako ikonoaren eskuin klik menuan.</value>
@@ -407,7 +407,7 @@ ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago edo 
     <value>Testua arbelera kopiatu da.</value>
   </data>
   <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
-    <value>&quot;{0}&quot; arbelera kopiatu da.</value>
+    <value>"{0}" arbelera kopiatu da.</value>
   </data>
   <data name="CopiedToClipboard_Title" xml:space="preserve">
     <value>Kopiatuta!</value>
@@ -697,7 +697,7 @@ ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</va
     <value>Zure gailuari baliteke sistema osagaiak (LenovoGameZoneData) faltatzea.</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>&quot;Ados&quot; sakatzen baduzu jarraitzeko:</value>
+    <value>"Ados" sakatzen baduzu jarraitzeko:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
     <value>- Softwarea modu mugatuan exekutatuko da</value>
@@ -721,7 +721,7 @@ ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</va
     <value>Makina mota:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Sakatu &quot;Ados&quot; jarraitzeko, edo &quot;Ezeztatu&quot; irteteko.</value>
+    <value>Sakatu "Ados" jarraitzeko, edo "Ezeztatu" irteteko.</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Ez da teklatu bateragarririk aurkitu</value>
@@ -1184,7 +1184,7 @@ ABISUA: Ekintza hau ez da ondo exekutatuko barneko pantaila itzalita badago.</va
     <value>Azentu kolorea</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Hasi minimizatuta sistemako ikonora Windowsen saioa hasten duzunean.</value>
+    <value>Itxura</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Abiarazte automatikoa</value>
@@ -2481,7 +2481,7 @@ ABISUA: Ekintza hau ez da ondo exekutatuko GPU diskretua eskuragarri ez badago.<
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>{0} energia modua ez dago eskuragarri AC elikadurarik gabe.</value>
-    <comment>For example: &quot;{Performance} power mode is not available without AC power.&quot;</comment>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sentsoreak</value>
@@ -2700,7 +2700,7 @@ Moduak aldatzeak berrabiaraztea eska dezake.</value>
     <value>Baterian noiztik kontagailua berrabiarazten du sistemak berrabiaraztean.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Berrezarri &quot;Baterian noiztik&quot; abiaraztean</value>
+    <value>Berrezarri "Baterian noiztik" abiaraztean</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
     <value>Itzali Wi-Fi</value>
@@ -2766,7 +2766,7 @@ Moduak aldatzeak berrabiaraztea eska dezake.</value>
     <value>Arazoak konpontzeko urratsak</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Ziurtatu Windows Management Instrumentation (WMI) zerbitzua exekutatzen ari dela: Ireki Zerbitzuak (services.msc) eta egiaztatu &quot;Windows Management Instrumentation&quot; exekutatzen ari dela.</value>
+    <value>Ziurtatu Windows Management Instrumentation (WMI) zerbitzua exekutatzen ari dela: Ireki Zerbitzuak (services.msc) eta egiaztatu "Windows Management Instrumentation" exekutatzen ari dela.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
     <value>Exekutatu aplikazioa Administratzaile gisa sistemaren erregistroa eta WMI atzitzeko baimen nahikoak ziurtatzeko.</value>
@@ -2775,7 +2775,7 @@ Moduak aldatzeak berrabiaraztea eska dezake.</value>
     <value>Egiaztatu sistemaren baliabideak: Itxi beste baliabide intentsiboak diren aplikazioak eta saiatu berriro.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>Berrikusi egunkari fitxategia errorearen informazio zehatza lortzeko behean &quot;Ireki Egunkaria&quot; sakatuz.</value>
+    <value>Berrikusi egunkari fitxategia errorearen informazio zehatza lortzeko behean "Ireki Egunkaria" sakatuz.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
     <value>Ireki egunkari fitxategia</value>
@@ -3001,7 +3001,7 @@ Ez ditu eraginak beste pantaila osoko leihoetan, baina ezin izango duzu jakinara
     <value>Itxi</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{1} ekintzatik {0} hautatuta</value>
+    <value>{0} ekintzatik {1} hautatuta</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Garbitze tamaina estimatua: {0}</value>
@@ -3340,10 +3340,10 @@ Ez ditu eraginak beste pantaila osoko leihoetan, baina ezin izango duzu jakinara
     <value>Bertsio berria eskuragarri</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Bertsioa: </value>
+    <value>Bertsioa:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Argitaratze data: </value>
+    <value>Argitaratze data:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Zer dago berri:</value>
@@ -3876,4 +3876,4 @@ Ez ditu eraginak beste pantaila osoko leihoetan, baina ezin izango duzu jakinara
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

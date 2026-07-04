@@ -21,11 +21,12 @@ public class ResolutionControl : AbstractComboBoxFeatureCardControl<Resolution>
         Subtitle = Resource.ResolutionControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     protected override async Task OnRefreshAsync()
     {
-        await base.OnRefreshAsync();
+        await base.OnRefreshAsync().ConfigureAwait(false);
 
         Visibility = ItemsCount < 2 ? Visibility.Collapsed : Visibility.Visible;
     }
@@ -39,6 +40,6 @@ public class ResolutionControl : AbstractComboBoxFeatureCardControl<Resolution>
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh resolution control");
 }

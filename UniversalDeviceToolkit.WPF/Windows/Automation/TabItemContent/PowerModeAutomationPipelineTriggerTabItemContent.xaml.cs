@@ -36,7 +36,7 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
 
     private async void PowerModeAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs eventArgs)
     {
-        var states = await _feature.GetAllStatesAsync();
+        var states = await _feature.GetAllStatesAsync().ConfigureAwait(false);
 
         foreach (var state in states)
         {

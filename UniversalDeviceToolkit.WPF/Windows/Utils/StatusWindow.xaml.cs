@@ -55,7 +55,7 @@ public partial class StatusWindow
         public bool IsCompatibilityMode { get; } = isCompatibilityMode;
     }
 
-    public static async Task<StatusWindow> CreateAsync() => new(await GetStatusWindowDataAsync());
+    public static async Task<StatusWindow> CreateAsync() => new(await GetStatusWindowDataAsync().ConfigureAwait(false));
 
     private static async Task<StatusWindowData> GetStatusWindowDataAsync()
     {
@@ -81,7 +81,7 @@ public partial class StatusWindow
 
         try
         {
-            var machineInfo = await MachineCompatibility.GetMachineInformationAsync();
+            var machineInfo = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
             isCompatibilityMode = !MachineCompatibility.IsSupportedLegionMachine(machineInfo);
         }
         catch (Exception ex)
@@ -91,12 +91,12 @@ public partial class StatusWindow
 
         try
         {
-            if (await powerModeFeature.IsSupportedAsync())
+            if (await powerModeFeature.IsSupportedAsync().ConfigureAwait(false))
             {
-                state = await powerModeFeature.GetStateAsync();
+                state = await powerModeFeature.GetStateAsync().ConfigureAwait(false);
 
                 if (state == PowerModeState.GodMode)
-                    godModePresetName = await godModeController.GetActivePresetNameAsync();
+                    godModePresetName = await godModeController.GetActivePresetNameAsync().ConfigureAwait(false);
             }
         }
         catch (Exception ex)
@@ -106,23 +106,23 @@ public partial class StatusWindow
 
         try
         {
-            if (await sensorsGroupController.IsSupportedAsync() is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
+            if (await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false) is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
             {
-                await sensorsGroupController.UpdateAsync();
+                await sensorsGroupController.UpdateAsync().ConfigureAwait(false);
                 cpuSensors = (
-                    await sensorsGroupController.GetCpuTemperatureAsync(),
-                    await sensorsGroupController.GetCpuPowerAsync(),
-                    await sensorsGroupController.GetCpuVoltageAsync());
+                    await sensorsGroupController.GetCpuTemperatureAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetCpuVoltageAsync().ConfigureAwait(false));
                 memorySensors = (
-                    await sensorsGroupController.GetMemoryUsedAsync(),
-                    await sensorsGroupController.GetMemoryTotalAsync(),
-                    await sensorsGroupController.GetMemoryUsageAsync(),
-                    await sensorsGroupController.GetHighestMemoryTemperatureAsync());
-                ssdTemperatures = await sensorsGroupController.GetSsdTemperaturesAsync();
+                    await sensorsGroupController.GetMemoryUsedAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetMemoryTotalAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetMemoryUsageAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetHighestMemoryTemperatureAsync().ConfigureAwait(false));
+                ssdTemperatures = await sensorsGroupController.GetSsdTemperaturesAsync().ConfigureAwait(false);
                 gpuSensors = (
-                    await sensorsGroupController.GetGpuTemperatureAsync(),
-                    await sensorsGroupController.GetGpuPowerAsync(),
-                    await sensorsGroupController.GetGpuVoltageAsync());
+                    await sensorsGroupController.GetGpuTemperatureAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetGpuPowerAsync().ConfigureAwait(false),
+                    await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false));
             }
         }
         catch (Exception ex)
@@ -132,8 +132,8 @@ public partial class StatusWindow
 
         try
         {
-            if (await gpuController.IsSupportedAsync())
-                gpuStatus = await gpuController.RefreshNowAsync();
+            if (await gpuController.IsSupportedAsync().ConfigureAwait(false))
+                gpuStatus = await gpuController.RefreshNowAsync().ConfigureAwait(false);
 
         }
         catch (Exception ex)
@@ -152,8 +152,8 @@ public partial class StatusWindow
 
         try
         {
-            if (await batteryFeature.IsSupportedAsync())
-                batteryState = await batteryFeature.GetStateAsync();
+            if (await batteryFeature.IsSupportedAsync().ConfigureAwait(false))
+                batteryState = await batteryFeature.GetStateAsync().ConfigureAwait(false);
 
         }
         catch (Exception ex)
@@ -172,7 +172,7 @@ public partial class StatusWindow
 
         try
         {
-            hasUpdate = await updateChecker.CheckAsync(false) is not null;
+            hasUpdate = await updateChecker.CheckAsync(false).ConfigureAwait(false) is not null;
         }
         catch (Exception ex)
         {

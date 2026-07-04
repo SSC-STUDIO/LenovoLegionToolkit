@@ -68,7 +68,7 @@ public partial class CreateAutomationPipelineWindow
     private async void CreateAutomationPipelineWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -132,7 +132,7 @@ public partial class CreateAutomationPipelineWindow
     private async void MultipleSelectCardControl_Click(object? sender, RoutedEventArgs e)
     {
         _multiSelect = true;
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private CardControl CreateCardControl(IAutomationPipelineTrigger trigger)

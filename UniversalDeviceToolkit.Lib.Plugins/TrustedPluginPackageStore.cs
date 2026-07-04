@@ -255,8 +255,10 @@ internal static class TrustedPluginPackageStore
             if (File.Exists(StorePath))
                 File.Delete(StorePath);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to delete trusted plugin store file", ex);
         }
     }
 

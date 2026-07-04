@@ -105,7 +105,7 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
     {
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
         OnFinishedLoading();
     }
 

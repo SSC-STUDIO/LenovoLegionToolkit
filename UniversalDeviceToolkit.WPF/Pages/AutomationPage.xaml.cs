@@ -39,14 +39,14 @@ public partial class AutomationPage
 
     private async void AutomationPage_Initialized(object? sender, EventArgs e)
     {
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private async void EnableAutomaticPipelinesToggle_Click(object sender, RoutedEventArgs e)
     {
         var isChecked = _enableAutomaticPipelinesToggle.IsChecked;
         if (isChecked.HasValue)
-            await _automationProcessor.SetEnabledAsync(isChecked.Value);
+            await _automationProcessor.SetEnabledAsync(isChecked.Value).ConfigureAwait(false);
     }
 
     private void NewAutomaticPipelineButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ public partial class AutomationPage
 
     private async void NewManualPipelineButton_Click(object sender, RoutedEventArgs e)
     {
-        await AddManualPipelineAsync();
+        await AddManualPipelineAsync().ConfigureAwait(false);
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -88,10 +88,10 @@ public partial class AutomationPage
             pipelines.AddRange(automaticPipelines);
             pipelines.AddRange(manualPipelines);
 
-            await _automationProcessor.ReloadPipelinesAsync(pipelines);
-            await RefreshAsync();
+            await _automationProcessor.ReloadPipelinesAsync(pipelines).ConfigureAwait(false);
+            await RefreshAsync().ConfigureAwait(false);
 
-            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Saved_Title, Resource.AutomationPage_Saved_Message);
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Saved_Title, Resource.AutomationPage_Saved_Message).ConfigureAwait(false);
         }
         finally
         {
@@ -102,9 +102,9 @@ public partial class AutomationPage
 
     private async void RevertButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
 
-        await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message);
+        await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message).ConfigureAwait(false);
     }
 
     private async Task RefreshAsync()
@@ -121,10 +121,10 @@ public partial class AutomationPage
         _automaticPipelinesStackPanel.Children.Clear();
         _manualPipelinesStackPanel.Children.Clear();
 
-        var pipelines = await _automationProcessor.GetPipelinesAsync();
+        var pipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
 
         if (_supportedAutomationSteps.IsEmpty())
-            _supportedAutomationSteps = await GetSupportedAutomationStepsAsync();
+            _supportedAutomationSteps = await GetSupportedAutomationStepsAsync().ConfigureAwait(false);
 
         foreach (var pipeline in pipelines.Where(p => p.Trigger is not null))
         {
@@ -149,7 +149,7 @@ public partial class AutomationPage
             ? Visibility.Visible
             : Visibility.Collapsed;
 
-        await Task.WhenAll(initializedTasks);
+        await Task.WhenAll(initializedTasks).ConfigureAwait(false);
 
         _loaderAutomatic.IsLoading = false;
         _loaderManual.IsLoading = false;
@@ -157,7 +157,7 @@ public partial class AutomationPage
 
     private static async Task<IAutomationStep[]> GetSupportedAutomationStepsAsync()
     {
-        var steps = new List<IAutomationStep>
+        var steps = new IAutomationStep[]
         {
             new AlwaysOnUsbAutomationStep(default),
             new BatteryAutomationStep(default),
@@ -200,13 +200,10 @@ public partial class AutomationPage
             new WinKeyAutomationStep(default)
         };
 
-        for (var index = steps.Count - 1; index >= 0; index--)
-        {
-            if (!await steps[index].IsSupportedAsync())
-                steps.RemoveAt(index);
-        }
+        var supportTasks = steps.Select(async step => new { Step = step, Supported = await step.IsSupportedAsync().ConfigureAwait(false) });
+        var results = await Task.WhenAll(supportTasks).ConfigureAwait(false);
 
-        return [.. steps];
+        return results.Where(r => r.Supported).Select(r => r.Step).ToArray();
     }
 
     private AutomationPipelineControl GenerateControl(AutomationPipeline pipeline, Panel stackPanel, bool allowQuickActionAutomationStep = true)
@@ -287,13 +284,13 @@ public partial class AutomationPage
         menuItems.Add(moveDownMenuItem);
 
         var renameMenuItem = new MenuItem { Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 }, Header = Resource.Rename };
-        renameMenuItem.Click += async (_, _) => await RenamePipelineAsync(control);
+        renameMenuItem.Click += async (_, _) => await RenamePipelineAsync(control).ConfigureAwait(false);
         menuItems.Add(renameMenuItem);
 
         if (control.AutomationPipeline.Trigger is null)
         {
             var changeIconMenuItem = new MenuItem { Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 }, Header = Resource.AutomationPage_ChangeIcon };
-            changeIconMenuItem.Click += async (_, _) => await ChangePipelineIconAsync(control);
+            changeIconMenuItem.Click += async (_, _) => await ChangePipelineIconAsync(control).ConfigureAwait(false);
             menuItems.Add(changeIconMenuItem);
         }
 
@@ -331,7 +328,7 @@ public partial class AutomationPage
     {
         var newName = await MessageBoxHelper.ShowInputAsync(this,
             Resource.AutomationPage_AddManualPipeline_Title,
-            Resource.AutomationPage_AddManualPipeline_Placeholder);
+            Resource.AutomationPage_AddManualPipeline_Placeholder).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(newName))
             return;
 
@@ -353,7 +350,7 @@ public partial class AutomationPage
             Resource.AutomationPage_RenamePipeline_Title,
             Resource.AutomationPage_RenamePipeline_Placeholder,
             name,
-            allowEmpty: true);
+            allowEmpty: true).ConfigureAwait(false);
 
         control.SetName(newName);
     }
@@ -365,7 +362,7 @@ public partial class AutomationPage
             var window = new SymbolRegularPicker { Owner = Window.GetWindow(this) };
             window.ShowDialog();
 
-            var icon = await window.SymbolRegularTask;
+            var icon = await window.SymbolRegularTask.ConfigureAwait(false);
             control.SetIcon(icon);
         }
         catch (OperationCanceledException)

@@ -40,7 +40,7 @@ public class PluginManagerTests : IDisposable
         foreach (var dir in _tempDirectories.Where(Directory.Exists))
         {
             try { Directory.Delete(dir, true); }
-            catch { }
+            catch { /* Best-effort cleanup in Dispose */ }
         }
     }
 

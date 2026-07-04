@@ -71,7 +71,7 @@ public class PluginInstallationService
             {
                 try
                 {
-                    backupDir = $"{targetDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
+                    backupDir = $"{targetDir}_backup_{DateTime.UtcNow:yyyyMMddHHmmss}";
                     Directory.Move(targetDir, backupDir);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Renamed existing plugin directory {targetDir} to {backupDir} to resolve conflict during import.");
@@ -535,15 +535,15 @@ public class PluginInstallationService
         foreach (var entry in archive.Entries)
         {
             // Skip directories (entries ending with /)
-            if (string.IsNullOrEmpty(entry.Name) && entry.FullName.EndsWith("/"))
+            if (string.IsNullOrEmpty(entry.Name) && entry.FullName.EndsWith("/", StringComparison.Ordinal))
                 continue;
 
             // SECURITY: Validate entry path to prevent path traversal
             // Check for dangerous patterns in entry full name
-            if (entry.FullName.Contains("..") || 
+            if (entry.FullName.Contains("..", StringComparison.Ordinal) || 
                 entry.FullName.Contains(':') || 
-                entry.FullName.StartsWith("/") || 
-                entry.FullName.StartsWith("\\"))
+                entry.FullName.StartsWith("/", StringComparison.Ordinal) || 
+                entry.FullName.StartsWith("\\", StringComparison.Ordinal))
             {
                 Log.Instance.Warning($"SECURITY: Skipping ZIP entry with suspicious path: {entry.FullName}");
                 continue;

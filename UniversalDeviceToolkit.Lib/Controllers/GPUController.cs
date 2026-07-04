@@ -231,9 +231,6 @@ public class GPUController : IDisposable
 
                 using (await _lock.LockAsync(token).ConfigureAwait(false))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Refreshing GPU state");
-
                     await RefreshStateAsync().ConfigureAwait(false);
                     Refreshed?.Invoke(this, new GPUStatus(_state, _performanceState, _processes));
                 }

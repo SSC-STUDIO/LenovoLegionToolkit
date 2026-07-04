@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -647,13 +647,13 @@ Serieus, wees voorzichtig met deze optie!</value>
 WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display is uitgeschakeld.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>Rechtstreeks warm</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>De hoog dynamisch bereik (HDR) van het ingebouwde beeldscherm inschakelen.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>Rechtstreeks warm</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>HDR-gebruik wordt geblokkeerd door Windows-instellingen.</value>
@@ -843,7 +843,7 @@ Zet deze optie aan als u problemen ondervindt met applicaties in de volledige sc
     <value>Touchpadvergrendeling</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>totaal</value>
+    <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Openen</value>
@@ -1534,7 +1534,7 @@ Deze instelling is alleen van kracht wanneer de Aangepaste modus ingeschakeld is
     <value>Gegevens</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temperatuur</value>
+    <value>Tijdelijke bestanden</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>Enkele Schermhelderheid</value>
@@ -2765,7 +2765,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Bekijk de voortgang van de opschoningsactie en de geschatte grootte.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Minimiseren naar systeemvak bij het inloggen op Windows.</value>
+    <value>Uiterlijk</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Scannen</value>
@@ -3886,4 +3886,4 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

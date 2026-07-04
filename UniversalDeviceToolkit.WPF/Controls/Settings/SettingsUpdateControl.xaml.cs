@@ -64,8 +64,8 @@ public partial class SettingsUpdateControl
         if (App.Current.MainWindow is not MainWindow mainWindow)
             return;
 
-        await mainWindow.CheckForUpdates(true);
-        await SnackbarHelper.ShowAsync(Resource.SettingsPage_CheckUpdates_Started_Title, type: SnackbarType.Info);
+        await mainWindow.CheckForUpdates(true).ConfigureAwait(false);
+        await SnackbarHelper.ShowAsync(Resource.SettingsPage_CheckUpdates_Started_Title, type: SnackbarType.Info).ConfigureAwait(false);
     }
 
     private void UpdateCheckFrequencyComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

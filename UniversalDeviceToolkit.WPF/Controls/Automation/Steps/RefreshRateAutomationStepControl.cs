@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -20,6 +21,12 @@ public class RefreshRateAutomationStepControl : AbstractComboBoxAutomationStepCa
         Subtitle = Resource.RefreshRateAutomationStepControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += RefreshRateAutomationStepControl_Unloaded;
+    }
+
+    private void RefreshRateAutomationStepControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _listener.Changed -= Listener_Changed;
     }
 
     protected override string ComboBoxItemDisplayName(RefreshRate value)
@@ -31,6 +38,6 @@ public class RefreshRateAutomationStepControl : AbstractComboBoxAutomationStepCa
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh refresh rate automation step");
 }

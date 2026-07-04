@@ -42,7 +42,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task InitializeNavigationAsync()
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
         IsSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
         var items = new List<NavigationItemViewModel>
@@ -75,7 +75,7 @@ public partial class SettingsViewModel : ObservableObject
             return;
 
         IsInitialized = true;
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public FnKeysDisabler FnKeysDisabler => _fnKeysDisabler;

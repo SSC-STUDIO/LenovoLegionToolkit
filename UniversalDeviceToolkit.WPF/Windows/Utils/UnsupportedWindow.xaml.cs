@@ -78,7 +78,7 @@ public partial class UnsupportedWindow : FluentWindow
         for (var i = 5; i > 0; i--)
         {
             continueButton.Content = $"{continueText} ({i})";
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
         }
 
         continueButton.Content = continueText;
@@ -121,7 +121,7 @@ public partial class UnsupportedWindow : FluentWindow
 
         try
         {
-            Process.Start(new ProcessStartInfo
+            using var process = Process.Start(new ProcessStartInfo
             {
                 FileName = uri.AbsoluteUri,
                 UseShellExecute = true

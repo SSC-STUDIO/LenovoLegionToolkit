@@ -22,7 +22,7 @@ public static class HybridModeControlFactory
 {
     public static async Task<AbstractRefreshingControl> GetControlAsync()
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        var mi = await MachineCompatibility.GetMachineInformationAsync().WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeControl()
             : new ToggleHybridModeControl();
@@ -76,17 +76,17 @@ public static class HybridModeControlFactory
                     Resource.ComboBoxHybridModeControl_RestartRequired_Title,
                     string.Format(Resource.ComboBoxHybridModeControl_RestartRequired_Message, newValue.GetDisplayName()),
                     Resource.RestartNow,
-                    Resource.RestartLater);
+                    Resource.RestartLater).ConfigureAwait(false);
 
-            await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
+            await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue).ConfigureAwait(false);
 
             if (reboot)
             {
-                await Power.RestartAsync();
+                await Power.RestartAsync().ConfigureAwait(false);
                 return;
             }
 
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
         }
 
         protected override void OnStateChangeException(Exception exception)
@@ -119,7 +119,7 @@ public static class HybridModeControlFactory
 
         private async void InfoButton_Click(object sender, RoutedEventArgs e)
         {
-            var states = await Feature.GetAllStatesAsync();
+            var states = await Feature.GetAllStatesAsync().ConfigureAwait(false);
             var window = new ExtendedHybridModeInfoWindow(states) { Owner = Window.GetWindow(this) };
             window.ShowDialog();
         }
@@ -140,17 +140,17 @@ public static class HybridModeControlFactory
 
         protected override async Task OnStateChange(ToggleSwitch toggle, IFeature<HybridModeState> feature)
         {
-            await base.OnStateChange(toggle, feature);
+            await base.OnStateChange(toggle, feature).ConfigureAwait(false);
 
             var result = await MessageBoxHelper.ShowAsync(
                 this,
                 Resource.ToggleHybridModeControl_RestartRequired_Title,
                 Resource.ToggleHybridModeControl_RestartRequired_Message,
                 Resource.RestartNow,
-                Resource.RestartLater);
+                Resource.RestartLater).ConfigureAwait(false);
 
             if (result)
-                await Power.RestartAsync();
+                await Power.RestartAsync().ConfigureAwait(false);
         }
     }
 }

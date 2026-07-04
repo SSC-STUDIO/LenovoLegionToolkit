@@ -34,7 +34,7 @@ public partial class WindowsOptimizationPage
             await SnackbarHelper.ShowAsync(
                 Resource.SettingsPage_WindowsOptimization_Title,
                 LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
-                SnackbarType.Warning);
+                SnackbarType.Warning).ConfigureAwait(false);
             return;
         }
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -685,7 +685,7 @@
     <value>ХДР</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
-    <value>Коришћење ХДР-а је блокирано подешавањима Windows-а.</value>
+    <value>Коришћење ХДР-а је блокирано подешавањима Виндоус-а.</value>
   </data>
   <data name="Import" xml:space="preserve">
     <value>Увези</value>
@@ -1036,7 +1036,7 @@
     <value>Подразумевано</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Wиндоwс планови напајања</value>
+    <value>Виндоус планови напајања</value>
   </data>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Скенирање доступних пакета драјвера, молимо сачекајте...</value>
@@ -1192,7 +1192,7 @@
     <value>Аутоматско покретање</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
-    <value>Покрените смањено у системску траку када се пријавите на Wиндоwс.</value>
+    <value>Покрените смањено у системску траку када се пријавите на Виндоус.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Легион Зоне можда није исправно онемогућен</value>
@@ -1303,7 +1303,7 @@
     <value>Маркетплаце проширења биће доступан у будућем ажурирању.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
-    <value>Оптимизација Wиндоwс-а</value>
+    <value>Оптимизација Виндоус-а</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>Изабери све</value>
@@ -1333,7 +1333,7 @@
     <value>Укључи подфасцикле</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>Управљање АппX-ом</value>
+    <value>Управљање Апкс-ом</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
     <value>Изаберите прединсталиране Мицрософт Сторе апликације за уклањање за све кориснике.</value>
@@ -1405,13 +1405,13 @@
     <value>Извршавање изабраних радњи није успело.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Еxплорер &amp; интерфаце</value>
+    <value>Експлорер &amp; интерфаце</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
     <value>Улепшавање система</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Подесите траку задатака, Филе Еxплорер и понашање корисничког интерфејса.</value>
+    <value>Подесите траку задатака, Филе Експлорер и понашање корисничког интерфејса.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
     <value>Перформансе</value>
@@ -1447,7 +1447,7 @@
     <value>Чишћење системских компонената</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
-    <value>Очистите фајлове системских компонената као што су кеш Wиндоwс Упдате-а, складиште компонената итд.</value>
+    <value>Очистите фајлове системских компонената као што су кеш Виндоус Упдате-а, складиште компонената итд.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
     <value>Чишћење перформанси</value>
@@ -1465,16 +1465,16 @@
     <value>Распоред траке задатака и Старт менија</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Сакријте поље за претрагу и дугме Таск Виеw, онемогућите груписање траке задатака и увек прикажите иконице у системској траци.</value>
+    <value>Сакријте поље за претрагу и дугме Таск Вид, онемогућите груписање траке задатака и увек прикажите иконице у системској траци.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Онемогућите Старт мени и отворите претрагу тастером Wин</value>
+    <value>Онемогућите Старт мени и отворите претрагу тастером Вин</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Потпуно онемогућите Старт мени. Када притиснете тастер Wин, отвориће се претрага уместо Старт менија.</value>
+    <value>Потпуно онемогућите Старт мени. Када притиснете тастер Вин, отвориће се претрага уместо Старт менија.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Побољшајте одзивност Еxплорера</value>
+    <value>Побољшајте одзивност Експлорера</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
     <value>Смањите кашњења менија, брже затворите замрзнуте апликације и подразумевано отворите Овај рачунар.</value>
@@ -1483,19 +1483,19 @@
     <value>Опције видљивости фајлова</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Прикажите екстензије фајлова и скривене фајлове у Филе Еxплорер-у.</value>
+    <value>Прикажите екстензије фајлова и скривене фајлове у Филе Експлорер-у.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Дисабле Еxплорер суггестионс</value>
+    <value>Дисабле Експлорер суггестионс</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
     <value>Искључите предлоге садржаја из облака и банере препорука.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Промени тастер Wиндоwс за отварање претраге</value>
+    <value>Промени тастер Виндоус за отварање претраге</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Измените понашање тастера Wиндоwс да отвори претрагу уместо Старт менија.</value>
+    <value>Измените понашање тастера Виндоус да отвори претрагу уместо Старт менија.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>Оптимизујте заказивање мултимедије</value>
@@ -1513,7 +1513,7 @@
     <value>Онемогући акрилик и центар обавештења</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Уклоните акрилик ефекте при пријави и сакријте Wиндоwс центар обавештења.</value>
+    <value>Уклоните акрилик ефекте при пријави и сакријте Виндоус центар обавештења.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
     <value>Смањите телеметрију и савете</value>
@@ -1531,7 +1531,7 @@
     <value>Онемогући дијагностичке услуге</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Зауставите и онемогућите услуге Цоннецтед Усер Еxпериенцес, Диагностицс Хуб и Деливери Оптимизатион.</value>
+    <value>Зауставите и онемогућите услуге Цоннецтед Усер Експериенцес, Диагностицс Хуб и Деливери Оптимизатион.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>Онемогући СисМаин</value>
@@ -1540,10 +1540,10 @@
     <value>Искључите Суперфетцх/СисМаин да бисте смањили позадинску активност диска.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Онемогући индексирање Wиндоwс Сеарцх-а</value>
+    <value>Онемогући индексирање Виндоус Сеарцх-а</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Зауставите услугу Wиндоwс Сеарцх да бисте спречили ажурирања индекса.</value>
+    <value>Зауставите услугу Виндоус Сеарцх да бисте спречили ажурирања индекса.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
     <value>Онемогући Удаљени регистар</value>
@@ -1555,7 +1555,7 @@
     <value>Онемогући пријаву грешака</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Зауставите Wиндоwс Еррор Репортинг да не прикупља и шаље податке о рушењу.</value>
+    <value>Зауставите Виндоус Еррор Репортинг да не прикупља и шаље податке о рушењу.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
     <value>Обриши кеш Удаљеног десктопа</value>
@@ -1564,7 +1564,7 @@
     <value>Уклоните кеш фајлове које је креирао клијент Удаљеног десктопа.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Очисти кеш Wиндоwс Упдате-а</value>
+    <value>Очисти кеш Виндоус Упдате-а</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
     <value>Обришите преузете фајлове ажурирања и кеш Деливери Оптимизатион.</value>
@@ -1579,13 +1579,13 @@
     <value>Остатци апликација</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Уклоните кеш фајлове и колачиће Интернет Еxплорер-а и Едге-а.</value>
+    <value>Уклоните кеш фајлове и колачиће Интернет Експлорер-а и Едге-а.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
     <value>Очисти кеш сличица</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Обришите базе података сличица Еxплорера и кеш Дирецт3Д шејдера.</value>
+    <value>Обришите базе података сличица Експлорера и кеш Дирецт3Д шејдера.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
     <value>Обриши .НЕТ нативне слике</value>
@@ -1609,7 +1609,7 @@
     <value>Велики фајлови</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Обришите Wиндоwс дневнике, извештаје о грешкама и дијагностичке трагове.</value>
+    <value>Обришите Виндоус дневнике, извештаје о грешкама и дијагностичке трагове.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
     <value>Обриши податке о рушењу</value>
@@ -1621,19 +1621,19 @@
     <value>Очисти скенирања Дефендер-а</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Обришите историју скенирања Wиндоwс Дефендер-а и кеш меморије.</value>
+    <value>Обришите историју скенирања Виндоус Дефендер-а и кеш меморије.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
     <value>Очисти привремене фајлове</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Испразните Wиндоwс и корисничке привремене директоријуме.</value>
+    <value>Испразните Виндоус и корисничке привремене директоријуме.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Уклони паковане Wиндоwс апликације</value>
+    <value>Уклони паковане Виндоус апликације</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Деинсталирајте изабране прединсталиране УWП апликације за све кориснике.</value>
+    <value>Деинсталирајте изабране прединсталиране УВП апликације за све кориснике.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
     <value>Испразни Канту за отпатке</value>
@@ -1645,7 +1645,7 @@
     <value>Обриши префетцх податке</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Обришите Wиндоwс префетцх податке да бисте регенерисали нове трагове.</value>
+    <value>Обришите Виндоус префетцх податке да бисте регенерисали нове трагове.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
     <value>Очисти прилагођене фајлове</value>
@@ -1657,7 +1657,7 @@
     <value>Складиште сервисних компонената</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Покрените ДИСМ чишћење и обришите WинСxС привремене фајлове.</value>
+    <value>Покрените ДИСМ чишћење и обришите ВинСкс привремене фајлове.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Онемогући Леново Хоткејс</value>
@@ -1757,7 +1757,7 @@
     <value>Обавештења</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
-    <value>Wиндоwс планови напајања</value>
+    <value>Виндоус планови напајања</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
     <value>Доделите брзу радњу на дупли притисак Фн+Ф9.</value>
@@ -1995,16 +1995,16 @@
     <value>Осветљеност тастатуре</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Онемогућите тастер Wиндоwс на уграђеној тастатури.</value>
+    <value>Онемогућите тастер Виндоус на уграђеној тастатури.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Закључавање тастера Wиндоwс</value>
+    <value>Закључавање тастера Виндоус</value>
   </data>
   <data name="WinKeyControl_Message" xml:space="preserve">
     <value>Ради само на уграђеној тастатури.</value>
   </data>
   <data name="WinKeyControl_Title" xml:space="preserve">
-    <value>Закључавање тастера Wиндоwс</value>
+    <value>Закључавање тастера Виндоус</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
@@ -2208,7 +2208,7 @@
     <value>Јединствена осветљеност екрана</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>Када је укључено, исти ниво осветљености ће се применити на све Wиндоwс планове напајања када га промените.</value>
+    <value>Када је укључено, исти ниво осветљености ће се применити на све Виндоус планове напајања када га промените.</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
     <value>Ажурирање {0} доступно!</value>
@@ -2319,16 +2319,16 @@
     <value>Откривен С0 модел ниже снаге</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Wиндоwс пријављује да овај лаптоп подржава Модерн Стандбај. Коришћење планова напајања осим Балансираног може изазвати неочекивано понашање.</value>
+    <value>Виндоус пријављује да овај лаптоп подржава Модерн Стандбај. Коришћење планова напајања осим Балансираног може изазвати неочекивано понашање.</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Изаберите Wиндоwс планове напајања за примену када се режим напајања промени.</value>
+    <value>Изаберите Виндоус планове напајања за примену када се режим напајања промени.</value>
   </data>
   <data name="SettingsPage_Power_Title" xml:space="preserve">
     <value>Снага</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Опције плана напајања у Wиндоwс контролном панелу</value>
+    <value>Опције плана напајања у Виндоус контролном панелу</value>
   </data>
   <data name="PoweredOff" xml:space="preserve">
     <value>Искључено</value>
@@ -2642,13 +2642,13 @@
     <value>Копирај тренутно име мреже</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Оставите празно за било коју Wи-Фи мрежу.</value>
+    <value>Оставите празно за било коју Ви-Фи мрежу.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>ХWиНФО64</value>
+    <value>ХВиНФО64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Делите брзину вентилатора, температуру батерије итд. са ХWиНФО64. Можда ћете морати да поново покренете ХWиНФО64 након промене ове опције.</value>
+    <value>Делите брзину вентилатора, температуру батерије итд. са ХВиНФО64. Можда ћете морати да поново покренете ХВиНФО64 након промене ове опције.</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
     <value>Интеграције</value>
@@ -2709,10 +2709,10 @@
     <value>Ресетуј "На батерији од" при покретању</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Искључи Wи-Фи</value>
+    <value>Искључи Ви-Фи</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Укључи Wи-Фи</value>
+    <value>Укључи Ви-Фи</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
     <value>Покрени тихо</value>
@@ -2739,7 +2739,7 @@
     <value>Увек смањи у системску траку уместо траке задатака.</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Wиндоwс режими напајања</value>
+    <value>Виндоус режими напајања</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
     <value>Пребаци на прилагођени режим са Фн+Q</value>
@@ -2751,13 +2751,13 @@
     <value>Синхронизација режима напајања</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Аутоматски промените Wиндоwс план напајања или Wиндоwс режим напајања када мењате режиме напајања.</value>
+    <value>Аутоматски промените Виндоус план напајања или Виндоус режим напајања када мењате режиме напајања.</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Wиндоwс режими напајања</value>
+    <value>Виндоус режими напајања</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Изаберите Wиндоwс режим напајања за примену када се режим напајања промени.</value>
+    <value>Изаберите Виндоус режим напајања за примену када се режим напајања промени.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Дошло је до грешке при читању информација о уређају.</value>
@@ -2772,10 +2772,10 @@
     <value>Кораци за решавање проблема</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Уверите се да је услуга Wиндоwс Манагемент Инструментатион (WМИ) покренута: Отворите Услуге (сервицес.мсц) и проверите да ли је "Wиндоwс Манагемент Инструментатион" покренут.</value>
+    <value>Уверите се да је услуга Виндоус Манагемент Инструментатион (ВМИ) покренута: Отворите Услуге (сервицес.мсц) и проверите да ли је "Виндоус Манагемент Инструментатион" покренут.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
-    <value>Покрените апликацију као администратор да бисте обезбедили довољне дозволе за приступ системском регистру и WМИ-ју.</value>
+    <value>Покрените апликацију као администратор да бисте обезбедили довољне дозволе за приступ системском регистру и ВМИ-ју.</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
     <value>Проверите системске ресурсе: Затворите друге апликације које троше ресурсе и покушајте поново.</value>
@@ -2973,7 +2973,7 @@
     <value>Пусти звук</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Подржани су уобичајени музички формати као што су wав или мп3.</value>
+    <value>Подржани су уобичајени музички формати као што су вав или мп3.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
     <value>Брза радња</value>
@@ -3028,10 +3028,10 @@
     <value>Улепшавање система</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Улепшавање Wиндоwс-а</value>
+    <value>Улепшавање Виндоус-а</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Прилагодите изглед и понашање Wиндоwс-а.</value>
+    <value>Прилагодите изглед и понашање Виндоус-а.</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
     <value>Ефекти</value>
@@ -3091,13 +3091,13 @@
     <value>Синхронизуј зоне</value>
   </data>
   <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
-    <value>Коришћење уграђене функције чишћења регистра Wиндоwс-а</value>
+    <value>Коришћење уграђене функције чишћења регистра Виндоус-а</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
     <value>ипцонфиг /флусхднс (Очисти ДНС кеш)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>нетсх wинсоцк ресет (Ресетуј Wинсоцк стек протокола)</value>
+    <value>нетсх винсоцк ресет (Ресетуј Винсоцк стек протокола)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
     <value>нетсх инт ип ресет (Ресетуј ТЦП/ИП стек протокола)</value>
@@ -3346,10 +3346,10 @@
     <value>Нова верзија доступна</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Верзија: </value>
+    <value>Верзија:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Датум издања: </value>
+    <value>Датум издања:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Шта је ново:</value>
@@ -3505,7 +3505,7 @@
     <value>Покрени све</value>
   </data>
   <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
-    <value>нпр. 82ЈQ</value>
+    <value>нпр. 82JQ</value>
   </data>
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>нпр. Ц:\Дриверс</value>
@@ -3790,7 +3790,7 @@
     <value>Ниски ФПС делта</value>
   </data>
   <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
-    <value>Максимална разлика између просечног ФПС-а и 1% Лоw. Изнад овога, бројач постаје критичан.</value>
+    <value>Максимална разлика између просечног ФПС-а и 1% Лов. Изнад овога, бројач постаје критичан.</value>
   </data>
   <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
     <value>Перформансе</value>
@@ -3859,7 +3859,7 @@
     <value>Омогућите напредно анкетирање хардвера за праћење детаљних температура, фреквенција и ограничења снаге.</value>
   </data>
   <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
-    <value>Морате прво инсталирати ПаwнИО да бисте користили хардверске сензоре!</value>
+    <value>Морате прво инсталирати ПавнИО да бисте користили хардверске сензоре!</value>
   </data>
   <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
     <value>Хардверски сензори</value>
@@ -3882,4 +3882,4 @@
   <data name="Watt" xml:space="preserve">
     <value>В</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

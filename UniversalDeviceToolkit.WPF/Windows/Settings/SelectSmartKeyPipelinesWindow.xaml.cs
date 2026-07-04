@@ -51,7 +51,7 @@ public partial class SelectSmartKeyPipelinesWindow
     private async void SelectSmartKeyPipelinesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshAsync()
@@ -60,7 +60,7 @@ public partial class SelectSmartKeyPipelinesWindow
 
         _showThisAppToggle.IsChecked = SettingsStoreGuid is null;
 
-        var allPipelines = await _automationProcessor.GetPipelinesAsync();
+        var allPipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
         var pipelines = allPipelines.Where(p => p.Trigger is null).OrderBy(p => p.Name).ToArray();
 
         _list.Items.Clear();

@@ -61,7 +61,7 @@ public partial class PackagesViewModel : ObservableObject
                 MachineType,
                 SelectedOS,
                 new Progress<float>(p => Progress = p),
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
 
             Packages = new ObservableCollection<Package>(packages);
         }

@@ -64,7 +64,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
         if (!TryGetActiveProfile(out var profile))
             return;
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name).ConfigureAwait(false);
         if (string.IsNullOrEmpty(result))
             return;
 
@@ -85,7 +85,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
     {
         SaveProfile();
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder).ConfigureAwait(false);
         if (string.IsNullOrEmpty(result))
             return;
 
@@ -97,13 +97,13 @@ public partial class OverclockDiscreteGPUSettingsWindow
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
         Save();
-        await ApplyAsync();
+        await ApplyAsync().ConfigureAwait(false);
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
     {
         Save();
-        await ApplyAsync();
+        await ApplyAsync().ConfigureAwait(false);
         Close();
     }
 
@@ -119,7 +119,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
         _gpuOverclockController.SaveState(enabled, _activeProfileId, GetCurrentInfo());
     }
 
-    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync();
+    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync().ConfigureAwait(false);
 
     private void SaveProfile() => _gpuOverclockController.SaveProfile(_activeProfileId, GetCurrentInfo());
 

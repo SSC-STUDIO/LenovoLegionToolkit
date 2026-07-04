@@ -2034,14 +2034,14 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotMotherboardMaxTemp);
     }
 
-    private async Task<LibreHardwareMonitorInitialState> InitializeAsync()
+    private async Task<LibreHardwareMonitorInitialState> InitializeAsync(CancellationToken cancellationToken = default)
     {
         if (_initialized)
         {
             InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Initialized;
             return InitialState;
         }
-        await _initSemaphore.WaitAsync().ConfigureAwait(false);
+        await _initSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (_initialized)

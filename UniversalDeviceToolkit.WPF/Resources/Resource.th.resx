@@ -684,7 +684,7 @@
     <value>อุปกรณ์ของคุณอาจขาดส่วนประกอบของระบบที่จำเป็น (LenovoGameZoneData)</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>หากคุณคลิก &quot;OK&quot; เพื่อดำเนินการต่อ:</value>
+    <value>หากคุณคลิก "OK" เพื่อดำเนินการต่อ:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
     <value>- ซอฟต์แวร์จะทำงานในโหมดจำกัด</value>
@@ -708,7 +708,7 @@
     <value>ประเภทเครื่อง:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>คลิก &quot;OK&quot; เพื่อดำเนินการต่อ หรือ &quot;Cancel&quot; เพื่อออก</value>
+    <value>คลิก "OK" เพื่อดำเนินการต่อ หรือ "Cancel" เพื่อออก</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>ไม่พบแป้นพิมพ์ที่เข้ากันได้</value>
@@ -1171,7 +1171,7 @@
     <value>สีหลัก</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>เริ่มแอปย่อเล็กสุดไปยังถาดเมื่อคุณลงชื่อเข้าใช้ Windows</value>
+    <value>รูปลักษณ์</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>เปิดอัตโนมัติ</value>
@@ -2688,10 +2688,10 @@
     <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>รีเซ็ตตัวนับสำหรับ &quot;ใช้แบตเตอรี่ตั้งแต่&quot; ในส่วนแบตเตอรี่เมื่อระบบรีบูต</value>
+    <value>รีเซ็ตตัวนับสำหรับ "ใช้แบตเตอรี่ตั้งแต่" ในส่วนแบตเตอรี่เมื่อระบบรีบูต</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>รีเซ็ต &quot;ใช้แบตเตอรี่ตั้งแต่&quot; เมื่อเริ่มต้น</value>
+    <value>รีเซ็ต "ใช้แบตเตอรี่ตั้งแต่" เมื่อเริ่มต้น</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
     <value>ปิด Wi-Fi</value>
@@ -2757,7 +2757,7 @@
     <value>ขั้นตอนการแก้ไขปัญหา</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>ตรวจสอบให้แน่ใจว่าบริการ Windows Management Instrumentation (WMI) กำลังทำงานอยู่: เปิด Services (services.msc) และตรวจสอบว่า &quot;Windows Management Instrumentation&quot; กำลังทำงานอยู่</value>
+    <value>ตรวจสอบให้แน่ใจว่าบริการ Windows Management Instrumentation (WMI) กำลังทำงานอยู่: เปิด Services (services.msc) และตรวจสอบว่า "Windows Management Instrumentation" กำลังทำงานอยู่</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
     <value>เรียกใช้แอปพลิเคชันในฐานะผู้ดูแลระบบเพื่อให้แน่ใจว่ามีสิทธิ์เพียงพอในการเข้าถึงรีจิสทรีของระบบและ WMI</value>
@@ -2766,7 +2766,7 @@
     <value>ตรวจสอบทรัพยากรระบบ: ปิดแอปพลิเคชันอื่น ๆ ที่ใช้ทรัพยากรมากแล้วลองอีกครั้ง</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>ตรวจสอบไฟล์บันทึกสำหรับข้อมูลข้อผิดพลาดโดยละเอียดโดยคลิก &quot;เปิดบันทึก&quot; ด้านล่าง</value>
+    <value>ตรวจสอบไฟล์บันทึกสำหรับข้อมูลข้อผิดพลาดโดยละเอียดโดยคลิก "เปิดบันทึก" ด้านล่าง</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
     <value>เปิดไฟล์บันทึก</value>
@@ -3331,10 +3331,10 @@
     <value>มีเวอร์ชันใหม่</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>เวอร์ชัน: </value>
+    <value>เวอร์ชัน:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>วันที่วางจำหน่าย: </value>
+    <value>วันที่วางจำหน่าย:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>มีอะไรใหม่:</value>
@@ -3409,7 +3409,7 @@
     <value>คัดลอกแล้ว</value>
   </data>
   <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
-    <value>คัดลอก ID ปลั๊กอิน &apos;{0}&apos; ไปยังคลิปบอร์ดแล้ว</value>
+    <value>คัดลอก ID ปลั๊กอิน '{0}' ไปยังคลิปบอร์ดแล้ว</value>
   </data>
   <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
     <value>ดาวน์โหลดเสร็จสมบูรณ์</value>
@@ -3866,5 +3866,29 @@
   </data>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
+  </data>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>จัดการการลงทะเบียนและการรวมเมนูบริบทของ Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>เปิดใช้งาน Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>ลงทะเบียน Nilesoft Shell เป็นตัวจัดการเมนูบริบท Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>ปิดใช้งาน Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>ยกเลิกการลงทะเบียน Nilesoft Shell และคืนค่าเมนูบริบทเริ่มต้น</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>ไม่สามารถยืนยันการเปลี่ยนแปลง อาจต้องใช้สิทธิ์ผู้ดูแลระบบ</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>กรุณารอให้การปรับแต่งปัจจุบันเสร็จสิ้น</value>
   </data>
 </root>

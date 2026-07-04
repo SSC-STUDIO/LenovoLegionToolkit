@@ -135,7 +135,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
             {
                 PluginId = pluginId,
                 OldVersion = oldVersion,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             PluginReloading?.Invoke(this, reloadingArgs);
 
@@ -209,7 +209,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
                 NewVersion = newVersion,
                 StateRestored = stateRestored,
                 Duration = stopwatch.Elapsed,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             PluginReloaded?.Invoke(this, reloadedArgs);
 
@@ -232,7 +232,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
                 NewVersion = newVersion,
                 ErrorMessage = ex.Message,
                 Duration = stopwatch.Elapsed,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow
             };
             ReloadFailed?.Invoke(this, failedArgs);
 
@@ -261,7 +261,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
             {
                 PluginId = pluginId,
                 PluginVersion = plugin.Version,
-                SavedAt = DateTime.Now,
+                SavedAt = DateTime.UtcNow,
                 Metadata = new Dictionary<string, string>
                 {
                     ["IsActive"] = plugin.IsActive.ToString(),
@@ -503,7 +503,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
             CleanupOldBackups(pluginId);
 
             // Create new backup
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
             var fileName = Path.GetFileNameWithoutExtension(assemblyPath);
             var extension = Path.GetExtension(assemblyPath);
             var backupFileName = $"{fileName}_{timestamp}{extension}";
@@ -611,7 +611,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
         var args = new HotReloadEventArgs
         {
             PluginId = pluginId,
-            Timestamp = DateTime.Now
+            Timestamp = DateTime.UtcNow
         };
         FileChanged?.Invoke(this, args);
 

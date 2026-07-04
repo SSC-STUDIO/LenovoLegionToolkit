@@ -88,7 +88,9 @@
                         <ItemsControl
                             x:Name="_list"
                             Margin="8,8,16,0"
-                            HorizontalContentAlignment="Stretch" />
+                            HorizontalContentAlignment="Stretch"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling" />
                     </wpfui:DynamicScrollViewer>
                 </Border>
 

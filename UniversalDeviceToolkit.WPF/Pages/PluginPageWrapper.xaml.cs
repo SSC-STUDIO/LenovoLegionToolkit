@@ -68,7 +68,7 @@ public partial class PluginPageWrapper : Page
                         {
                             _pluginId = mappedPluginId;
                         }
-                        // 如果 PageTag 格式�?"plugin:{pluginId}"，直接解�?                        else if (pageTag.StartsWith("plugin:"))
+                        // 如果 PageTag 格式�?"plugin:{pluginId}"，直接解�?                        else if (pageTag.StartsWith("plugin:", StringComparison.Ordinal))
                         {
                             _pluginId = pageTag.Substring("plugin:".Length);
                         }

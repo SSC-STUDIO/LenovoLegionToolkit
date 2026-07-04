@@ -58,18 +58,18 @@ public class TrayHelper : IDisposable
         notifyIcon.OnClick += (_, _) => _bringToForeground();
         _notifyIcon = notifyIcon;
 
-        _contextMenu.Opened += async (_, _) => await UpdateStatusItemsAsync();
+        _contextMenu.Opened += async (_, _) => await UpdateStatusItemsAsync().ConfigureAwait(false);
 
         _themeManager.ThemeApplied += (_, _) => _contextMenu.Resources = App.Current.Resources;
     }
 
     public async Task InitializeAsync()
     {
-        var pipelines = await _automationProcessor.GetPipelinesAsync();
+        var pipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
         pipelines = pipelines.Where(p => p.Trigger is null).ToList();
-        await SetAutomationItemsAsync(pipelines);
+        await SetAutomationItemsAsync(pipelines).ConfigureAwait(false);
 
-        _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p);
+        _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p).ConfigureAwait(false);
     }
 
     private void InitializeStaticItems(NavigationStore navigation)
@@ -87,7 +87,7 @@ public class TrayHelper : IDisposable
                 _contextMenu.IsOpen = false;
                 _bringToForeground();
 
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
                 navigation.Navigate(navigationItem.PageTag);
             };
             _contextMenu.Items.Add(navigationMenuItem);
@@ -107,7 +107,7 @@ public class TrayHelper : IDisposable
         closeMenuItem.Click += async (_, _) =>
         {
             _contextMenu.IsOpen = false;
-            await App.Current.ShutdownAsync(true);
+            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
         };
         _contextMenu.Items.Add(closeMenuItem);
     }
@@ -132,9 +132,9 @@ public class TrayHelper : IDisposable
             // Power Mode
             try
             {
-                if (await powerModeFeature.IsSupportedAsync())
+                if (await powerModeFeature.IsSupportedAsync().ConfigureAwait(false))
                 {
-                    var state = await powerModeFeature.GetStateAsync();
+                    var state = await powerModeFeature.GetStateAsync().ConfigureAwait(false);
                     var powerModeItem = new MenuItem
                     {
                         Header = $"{Resource.StatusTrayPopup_PowerMode}: {state.GetDisplayName()}",
@@ -145,7 +145,7 @@ public class TrayHelper : IDisposable
 
                     if (state == PowerModeState.GodMode)
                     {
-                        var presetName = await godModeController.GetActivePresetNameAsync();
+                        var presetName = await godModeController.GetActivePresetNameAsync().ConfigureAwait(false);
                         var presetItem = new MenuItem
                         {
                             Header = $"{Resource.StatusTrayPopup_Preset}: {presetName ?? "-"}",
@@ -165,9 +165,9 @@ public class TrayHelper : IDisposable
             // GPU Status
             try
             {
-                if (await gpuController.IsSupportedAsync())
+                if (await gpuController.IsSupportedAsync().ConfigureAwait(false))
                 {
-                    var gpuStatus = await gpuController.RefreshNowAsync();
+                    var gpuStatus = await gpuController.RefreshNowAsync().ConfigureAwait(false);
                     var gpuStateText = gpuStatus.State switch
                     {
                         GPUState.Active => Resource.Active,
@@ -213,9 +213,9 @@ public class TrayHelper : IDisposable
                 };
                 statusItems.Add(batteryItem);
 
-                if (await batteryFeature.IsSupportedAsync())
+                if (await batteryFeature.IsSupportedAsync().ConfigureAwait(false))
                 {
-                    var batteryState = await batteryFeature.GetStateAsync();
+                    var batteryState = await batteryFeature.GetStateAsync().ConfigureAwait(false);
                     var modeItem = new MenuItem
                     {
                         Header = $"{Resource.StatusTrayPopup_Mode}: {batteryState.GetDisplayName()}",
@@ -258,7 +258,7 @@ public class TrayHelper : IDisposable
             // Update Available
             try
             {
-                var hasUpdate = await updateChecker.CheckAsync(false) is not null;
+                var hasUpdate = await updateChecker.CheckAsync(false).ConfigureAwait(false) is not null;
                 if (hasUpdate)
                 {
                     var updateItem = new MenuItem
@@ -314,7 +314,7 @@ public class TrayHelper : IDisposable
         {
             try
             {
-                var supportChecks = await Task.WhenAll(pipeline.Steps.Select(s => s.IsSupportedAsync()));
+                var supportChecks = await Task.WhenAll(pipeline.Steps.Select(s => s.IsSupportedAsync())).ConfigureAwait(false);
                 if (supportChecks.All(s => s))
                     supportedPipelines.Add(pipeline);
             }
@@ -355,7 +355,7 @@ public class TrayHelper : IDisposable
             {
                 try
                 {
-                    await _automationProcessor.RunNowAsync(pipeline);
+                    await _automationProcessor.RunNowAsync(pipeline).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -390,9 +390,9 @@ public class TrayHelper : IDisposable
         GC.SuppressFinalize(this);
 
         // Unsubscribe from events to prevent memory leaks
-        _contextMenu.Opened -= async (_, _) => await UpdateStatusItemsAsync();
+        _contextMenu.Opened -= async (_, _) => await UpdateStatusItemsAsync().ConfigureAwait(false);
         _themeManager.ThemeApplied -= (_, _) => _contextMenu.Resources = App.Current.Resources;
-        _automationProcessor.PipelinesChanged -= async (_, p) => await SetAutomationItemsAsync(p);
+        _automationProcessor.PipelinesChanged -= async (_, p) => await SetAutomationItemsAsync(p).ConfigureAwait(false);
 
         if (_notifyIcon is not null)
             _notifyIcon.Visible = false;

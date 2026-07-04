@@ -310,7 +310,7 @@ public class WindowsOptimizationService
                     var original = ToolkitRegistry.GetValue<object?>(tweak.Hive, tweak.SubKey, tweak.ValueName, null);
                     originals.Add((tweak, original));
                 }
-                await ApplyRegistryTweaksAsync(ct, tweaks);
+                await ApplyRegistryTweaksAsync(ct, tweaks).ConfigureAwait(false);
             },
             recommended,
             ct => Task.FromResult(WindowsOptimizationHelper.AreRegistryTweaksApplied(tweaks)),
@@ -350,7 +350,7 @@ public class WindowsOptimizationService
                         $@"SYSTEM\CurrentControlSet\Services\{service}", "Start", -1);
                     originals.Add((service, start));
                 }
-                await DisableServicesAsync(ct, services);
+                await DisableServicesAsync(ct, services).ConfigureAwait(false);
             },
             recommended,
             ct => Task.FromResult(WindowsOptimizationHelper.AreServicesDisabled(services)),

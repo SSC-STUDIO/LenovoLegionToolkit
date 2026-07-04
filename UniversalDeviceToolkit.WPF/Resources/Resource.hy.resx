@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:schema id="root">
@@ -731,7 +731,7 @@
     <value>Ստեղնաշարի հետին լուսավորություն</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Ստեղաշար ստեղնաշարի հետին լուսավորությունը չի կարող կամավարվել այստեղ, երբ Lenovo Vantage-ը կամ դրա ծառայություններն աշխատում են:</value>
+    <value>Ստեղնաշար ստեղնաշարի հետին լուսավորությունը չի կարող կամավարվել այստեղ, երբ Lenovo Vantage-ը կամ դրա ծառայություններն աշխատում են:</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
     <value>Lenovo Vantage-ը կամ դրա ծառայությունները գործարկված են</value>
@@ -770,7 +770,7 @@
     <value>Կարգավորեք, թե որ նավարկման տարրերն են ցուցադրվում կողային վահանակում: Վահանակը և Կարգավորումներ միշտ տեսանելի կլինեն:</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Ստեղաշար նավարկման տարր</value>
+    <value>Show or hide the Ստեղնաշար նավարկման տարր</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Մարտկոց նավարկման տարր</value>
@@ -1187,7 +1187,7 @@
     <value>Ափումատություն</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Արտաքին տեսք</value>
+    <value>Տեսք</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
     <value>Հատկորոշել language, Ջերմաստիճան unit, Թեմա and accent Գույն.</value>
@@ -2005,13 +2005,13 @@ If Անջատված, this app will handle Fn Դյուրանցումs.
     <value>Կարգավորել ստեղնաշարի լուսավորությունի պայծառությունը:</value>
   </data>
   <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ստեղաշար Հետին լուսավորություն</value>
+    <value>Ստեղնաշար Հետին լուսավորություն</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
     <value>Կարող եք փոխել պայծառությունը Fn+Space-ով</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Ստեղաշար Հետին լուսավորություն</value>
+    <value>Ստեղնաշար Հետին լուսավորություն</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
     <value>Անջատել Windows Ստեղն on bUIlt-in ստեղնաշար.</value>
@@ -2072,13 +2072,13 @@ If Անջատված, this app will handle Fn Դյուրանցումs.
     <value>Ցուցադրում</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Ստեղաշար Հետին լուսավորություն</value>
+    <value>Ստեղնաշար Հետին լուսավորություն</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
     <value>Դուք կարող եք առատեռ լուսավորությունը Fn+Space հեղովումների հետ:</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ստեղաշար Հետին լուսավորություն</value>
+    <value>Ստեղնաշար Հետին լուսավորություն</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>Առատեռ լուսավորությունը:</value>
@@ -2865,10 +2865,10 @@ This Կարգավորումներ takes Էֆեկտ Միայն when Հատուկ 
     <value>Ընտրել բոլորը</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Ստեղաշար only</value>
+    <value>Ստեղնաշար only</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Ստեղաշար Ստեղներ and Մկնիկ Կոճակs</value>
+    <value>Ստեղնաշար Ստեղներ and Մկնիկ Կոճակs</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
     <value>Բոլոր մուտքերը</value>
@@ -3421,10 +3421,10 @@ It won't affect other Լիաէկրան Windows, but you will չի be able to Ս�
     <value>New Տարբերակ Հասանելի</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Տարբերակ: </value>
+    <value>Տարբերակ:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Թողարկման ամսաթիվ՝ </value>
+    <value>Թողարկման ամսաթիվ՝</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>What's New:</value>
@@ -3882,4 +3882,4 @@ It won't affect other Լիաէկրան Windows, but you will չի be able to Ս�
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>{0} հավելվածը տեղադրվել է, բայց այն չի բացահայտում օգտատիրոջն ուղղված մուտքի կետ։ Այն կարող է միայն ֆոնային ծառայություններ կամ մանիֆեստի տվյալներ տրամադրել։</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

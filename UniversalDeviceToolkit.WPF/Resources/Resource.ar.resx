@@ -1184,7 +1184,7 @@
     <value>لون التمييز في الواجهة</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>بدء التطبيق مصغراً إلى شريط النظام عند تسجيل الدخول إلى Windows - نافذة الإعدادات الكاملة</value>
+    <value>المظهر</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>تشغيل تلقائي عند بدء Windows</value>
@@ -3342,10 +3342,10 @@
     <value>إصدار جديد من الإضافة متوفر</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>رقم الإصدار الحالي: </value>
+    <value>رقم الإصدار الحالي:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>تاريخ إصدار الإضافة: </value>
+    <value>تاريخ إصدار الإضافة:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>قائمة التغييرات في هذا الإصدار:</value>
@@ -3878,4 +3878,4 @@
   <data name="Watt" xml:space="preserve">
     <value>واط - وحدة قياس القدرة الكهربائية المستهلكة</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

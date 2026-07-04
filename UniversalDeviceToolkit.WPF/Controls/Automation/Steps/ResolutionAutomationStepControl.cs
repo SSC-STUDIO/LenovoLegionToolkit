@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -19,11 +20,17 @@ public class ResolutionAutomationStepControl : AbstractComboBoxAutomationStepCar
         Subtitle = Resource.ResolutionAutomationStepControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += ResolutionAutomationStepControl_Unloaded;
+    }
+
+    private void ResolutionAutomationStepControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh resolution automation step");
 }

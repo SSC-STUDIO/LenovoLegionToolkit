@@ -49,7 +49,7 @@ public partial class DeviceInformationWindow
         };
     }
 
-    private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync();
+    private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync().ConfigureAwait(false);
 
     protected override void OnSourceInitialized(EventArgs e)
     {
@@ -63,7 +63,7 @@ public partial class DeviceInformationWindow
 
         try
         {
-            mi = await MachineCompatibility.GetMachineInformationAsync();
+            mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
             _manufacturerLabel.Text = mi.Vendor ?? "-";
             _modelLabel.Text = mi.Model ?? "-";
@@ -90,7 +90,7 @@ public partial class DeviceInformationWindow
             _snackBar.Appearance = ControlAppearance.Danger;
             await ShowSnackBarAsync(
                 Resource.CompatibilityCheckErrorWindow_Title,
-                Resource.CompatibilityCheckError_Message);
+                Resource.CompatibilityCheckError_Message).ConfigureAwait(false);
 
             return;
         }
@@ -104,7 +104,7 @@ public partial class DeviceInformationWindow
             _warrantyLinkCardAction.Tag = null;
             HasWarrantyInfo = false;
 
-            var warrantyInfo = await _warrantyChecker.GetWarrantyInfo(mi, forceRefresh);
+            var warrantyInfo = await _warrantyChecker.GetWarrantyInfo(mi, forceRefresh).ConfigureAwait(false);
 
             if (!warrantyInfo.HasValue)
                 return;
@@ -125,7 +125,7 @@ public partial class DeviceInformationWindow
         }
     }
 
-    private async void RefreshWarrantyButton_OnClick(object sender, RoutedEventArgs e) => await RefreshAsync(true);
+    private async void RefreshWarrantyButton_OnClick(object sender, RoutedEventArgs e) => await RefreshAsync(true).ConfigureAwait(false);
 
     private void SetHardwareInformation(HardwareInventory? hardware)
     {
@@ -260,7 +260,7 @@ public partial class DeviceInformationWindow
         try
         {
             System.Windows.Clipboard.SetText(str);
-            await ShowSnackBarAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
+            await ShowSnackBarAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str)).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -279,7 +279,7 @@ public partial class DeviceInformationWindow
     {
         _snackBar.Title = title;
         _snackBar.Content = message;
-        await _snackBar.ShowAsync();
+        await _snackBar.ShowAsync().ConfigureAwait(false);
     }
 }
 }

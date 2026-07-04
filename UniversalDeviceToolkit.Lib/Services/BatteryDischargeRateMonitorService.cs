@@ -33,8 +33,10 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                 {
                     _cts.Cancel();
                 }
-                catch (ObjectDisposedException)
+                catch (ObjectDisposedException ex)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("CTS already disposed during cancellation", ex);
                 }
                 _cts.Dispose();
             }
@@ -117,8 +119,10 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                 {
                     _cts.Cancel();
                 }
-                catch (ObjectDisposedException)
+                catch (ObjectDisposedException ex)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("CTS already disposed during cancellation", ex);
                 }
                 ctsToDispose = _cts;
                 _cts = null;
@@ -134,8 +138,10 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
             {
                 ctsToDispose.Cancel();
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException ex)
             {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("CTS already disposed during stop cancellation", ex);
             }
         }
 
@@ -150,8 +156,10 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("Battery monitoring service did not stop in time.");
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Battery monitoring service wait cancelled", ex);
             }
         }
 
@@ -194,10 +202,11 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                 {
                     ctsToDispose.Cancel();
                 }
-                catch (ObjectDisposedException)
+                catch (ObjectDisposedException ex)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("CTS already disposed during dispose", ex);
                 }
-                ctsToDispose.Dispose();
             }
 
             taskToWait?.Wait(TimeSpan.FromSeconds(5));

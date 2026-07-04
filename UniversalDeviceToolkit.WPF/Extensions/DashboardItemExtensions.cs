@@ -79,7 +79,7 @@ public static class DashboardItemExtensions
         DashboardItem.BatteryNightChargeMode => [new BatteryNightChargeModeControl()],
         DashboardItem.AlwaysOnUsb => [new AlwaysOnUSBControl()],
         DashboardItem.InstantBoot => [new InstantBootControl()],
-        DashboardItem.HybridMode => [await HybridModeControlFactory.GetControlAsync()],
+        DashboardItem.HybridMode => [await HybridModeControlFactory.GetControlAsync().ConfigureAwait(false)],
         DashboardItem.DiscreteGpu => [new DiscreteGPUControl()],
         DashboardItem.OverclockDiscreteGpu => [new OverclockDiscreteGPUControl()],
         DashboardItem.Resolution => [new ResolutionControl()],
@@ -123,7 +123,7 @@ file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<I
         {
             try
             {
-                await _itsModeFeature.SetStateAsync(newValue.Value);
+                await _itsModeFeature.SetStateAsync(newValue.Value).ConfigureAwait(false);
                 _itsModeFeature.LastItsMode = newValue.Value;
             }
             catch (DllNotFoundException)
@@ -133,7 +133,7 @@ file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<I
             }
         }
 
-        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
+        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue).ConfigureAwait(false);
     }
 
     protected override void OnStateChangeException(Exception exception)

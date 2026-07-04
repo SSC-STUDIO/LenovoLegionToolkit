@@ -38,7 +38,7 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
         IReadOnlyDictionary<Guid, GodModePreset> presets;
         try
         {
-            presets = (await _godModeController.GetStateAsync()).Presets;
+            presets = (await _godModeController.GetStateAsync().ConfigureAwait(false)).Presets;
         }
         catch (Exception ex)
         {

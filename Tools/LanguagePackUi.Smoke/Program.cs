@@ -24,7 +24,7 @@ const uint KeyEventKeyUp = 0x0002;
 var options = SmokeOptions.Parse(args);
 var repositoryRoot = ResolveRepositoryRoot();
 var runtimeDirectory = ResolveRuntimeDirectory(repositoryRoot, options.AppDirectory);
-var artifactRoot = Path.Combine(Path.GetTempPath(), $"udt-lang-ui-smoke-{DateTime.Now:yyyyMMdd-HHmmss}");
+var artifactRoot = Path.Combine(Path.GetTempPath(), $"udt-lang-ui-smoke-{DateTime.UtcNow:yyyyMMdd-HHmmss}");
 var sandboxRoot = Path.Combine(artifactRoot, "sandbox");
 var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
 Directory.CreateDirectory(appDataDirectory);
@@ -102,7 +102,7 @@ try
     startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
 
     Console.WriteLine($"[lang-ui-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
-    process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app.");
+    process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app."); // NOTE: Cross-method process reference — disposal must be handled at a higher level
     process = WaitForAppProcess(process, runtimeDirectory, TimeSpan.FromSeconds(30));
     try
     {
@@ -514,7 +514,7 @@ static Process RestartAppForLanguageVerification(Process process, string runtime
     startInfo.EnvironmentVariables["UDT_SMOKE_AUTOMATION"] = "1";
 
     Console.WriteLine($"[lang-ui-smoke] Restarting app for localized UI verification: {startInfo.FileName} {startInfo.Arguments}");
-    var restarted = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to restart app for localized UI verification.");
+    var restarted = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to restart app for localized UI verification."); // NOTE: Returned process — caller is responsible for disposal
     restarted = WaitForAppProcess(restarted, runtimeDirectory, TimeSpan.FromSeconds(30));
     _ = WaitForMainWindow(restarted, appDataDirectory, TimeSpan.FromSeconds(180));
     return restarted;

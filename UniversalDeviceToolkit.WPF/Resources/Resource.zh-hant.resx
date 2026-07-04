@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1554,16 +1554,16 @@
     <value>關閉此項將靜音所有可用的麥克風。</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
-    <value>分辨率</value>
+    <value>解析度</value>
   </data>
   <data name="ResolutionControl_Message" xml:space="preserve">
-    <value>切換內置屏幕分辨率。</value>
+    <value>切換內置屏幕解析度。</value>
   </data>
   <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
-    <value>分辨率</value>
+    <value>解析度</value>
   </data>
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
-    <value>切換內置屏幕分辨率。
+    <value>切換內置屏幕解析度。
 
 警告：如果內置屏幕已關閉，此操作將無法正確執行。</value>
   </data>
@@ -2080,7 +2080,7 @@
     <value>關閉</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>替換的自定義開機畫面圖標的圖片文件分辨率必須準確地爲 {0} 。
+    <value>替換的自定義開機畫面圖標的圖片文件解析度必須準確地爲 {0} 。
 支持的圖片文件格式爲：{1}。</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
@@ -2096,7 +2096,7 @@
     <value>啓用該功能後，當您插上電源過夜時，該設備將充電至 80%，並在您早上使用該設備時充電至 100%。</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>無效的圖像分辨率。</value>
+    <value>無效的圖像解析度。</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
     <value>無效的圖像格式。</value>
@@ -2343,16 +2343,16 @@
     <value>僅顯示被連接的設備</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>命令行界面</value>
+    <value>命令行介面</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>啓用命令行界面，允許使用命令行進行控制。</value>
+    <value>啓用命令行介面，允許使用命令行進行控制。</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>將命令行界面添加至 PATH 變量</value>
+    <value>將命令行介面添加至 PATH 變量</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>將命令行界面添加至用戶 PATH 環境變量中。</value>
+    <value>將命令行介面添加至用戶 PATH 環境變量中。</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
     <value>溫度</value>
@@ -2626,10 +2626,10 @@
     <value>無法完成所選操作。</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>資源管理器與界面</value>
+    <value>資源管理器與介面</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>調整任務欄、資源管理器及界面體驗。</value>
+    <value>調整任務欄、資源管理器及介面體驗。</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
     <value>性能優化</value>
@@ -2731,7 +2731,7 @@
     <value>禁用 Acrylic 與通知中心</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>移除登錄界面的 Acrylic 效果並隱藏通知中心。</value>
+    <value>移除登錄介面的 Acrylic 效果並隱藏通知中心。</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
     <value>減少遙測與提示</value>
@@ -3152,7 +3152,7 @@
     <value>作者: {0}</value>
   </data>
   <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>插件配置界面格式不正確。</value>
+    <value>插件配置介面格式不正確。</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>加載插件設置時出錯: {0}</value>
@@ -3910,4 +3910,4 @@
   <data name="Watt" xml:space="preserve">
     <value>瓦</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

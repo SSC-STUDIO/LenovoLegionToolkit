@@ -86,8 +86,7 @@ public class ThrottleLastDispatcher : IDisposable
         }
         catch (OperationCanceledException)
         {
-            if (_tag is not null && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Throttling... [tag={_tag}]");
+            // Task cancelled due to throttling
         }
     }
 

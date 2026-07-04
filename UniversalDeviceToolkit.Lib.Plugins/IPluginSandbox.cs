@@ -305,7 +305,7 @@ public class SandboxViolationEventArgs : EventArgs
     /// <summary>
     /// When the violation occurred
     /// </summary>
-    public DateTime Timestamp { get; set; } = DateTime.Now;
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// Stack trace at the time of violation (if available)
@@ -341,7 +341,7 @@ public class ResourceLimitExceededEventArgs : EventArgs
     /// <summary>
     /// When the limit was exceeded
     /// </summary>
-    public DateTime Timestamp { get; set; } = DateTime.Now;
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }
 
 /// <summary>

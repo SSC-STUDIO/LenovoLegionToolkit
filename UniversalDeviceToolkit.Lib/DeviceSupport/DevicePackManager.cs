@@ -205,7 +205,7 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
     }
 
     private static string EnsureTrailingDirectorySeparator(string path) =>
-        path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar)
+        path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) || path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal)
             ? path
             : path + Path.DirectorySeparatorChar;
 

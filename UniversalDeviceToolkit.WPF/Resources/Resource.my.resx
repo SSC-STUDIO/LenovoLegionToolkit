@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1185,7 +1185,7 @@ Fn+Q ဖြင့်လည်း စွမ်းဆောင်ရည်မု�
     <value>Accent အရောင်</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Windows သို့ login ဝင်သည့်အခါ tray သို့ minimize ဖြင့် စတင်ပါ။</value>
+    <value>အသွင်အပြင်</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>အလိုအလျောက်ပြေးဆွဲရန်</value>
@@ -3341,10 +3341,10 @@ Mode ပြောင်းလဲခြင်းသည် ပြန်ဖွင�
     <value>Version အသစ် ရရှိနိုင်ပါသည်</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>ဗားရှင်း- </value>
+    <value>ဗားရှင်း-</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>ထုတ်ပြန်သည့်ရက်: </value>
+    <value>ထုတ်ပြန်သည့်ရက်:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>အသစ်ဘာတွေ ရှိလဲ:</value>
@@ -3877,4 +3877,4 @@ Mode ပြောင်းလဲခြင်းသည် ပြန်ဖွင�
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

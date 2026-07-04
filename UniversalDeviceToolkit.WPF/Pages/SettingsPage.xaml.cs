@@ -48,7 +48,7 @@ public partial class SettingsPage
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
             _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
 
@@ -88,7 +88,7 @@ public partial class SettingsPage
         if (IsVisible && !_isInitialized)
         {
             _isInitialized = true;
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
         }
     }
 
@@ -127,14 +127,14 @@ public partial class SettingsPage
         {
             _contentControl.Content = _appearanceControl;
             PlayTransitionAnimation();
-            await _appearanceControl.RefreshAsync();
+            await _appearanceControl.RefreshAsync().ConfigureAwait(false);
         }
         else
         {
             _contentControl.Content = _applicationBehaviorControl;
             PlayTransitionAnimation();
             SelectNavigationItem("Application");
-            await _applicationBehaviorControl.RefreshAsync();
+            await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
         }
 
         // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
@@ -151,12 +151,12 @@ public partial class SettingsPage
             _displayControl?.RefreshAsync() ?? Task.CompletedTask,
             _powerControl?.RefreshAsync() ?? Task.CompletedTask,
             _integrationsControl!.RefreshAsync()
-        );
+        ).ConfigureAwait(false);
 
             _updateControl?.Refresh();
 
             // Update visibility based on FnKeys status
-            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
             _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
             _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
         }
@@ -197,15 +197,15 @@ public partial class SettingsPage
             {
                 case "Application":
                     if (_applicationBehaviorControl != null)
-                        await _applicationBehaviorControl.RefreshAsync();
+                        await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
                     break;
                 case "SmartKeys":
                     if (_smartKeysControl != null)
-                        await _smartKeysControl.RefreshAsync();
+                        await _smartKeysControl.RefreshAsync().ConfigureAwait(false);
                     break;
                 case "Display":
                     if (_displayControl != null)
-                        await _displayControl.RefreshAsync();
+                        await _displayControl.RefreshAsync().ConfigureAwait(false);
                     break;
                 case "Update":
                     if (_updateControl != null)
@@ -213,11 +213,11 @@ public partial class SettingsPage
                     break;
                 case "Power":
                     if (_powerControl != null)
-                        await _powerControl.RefreshAsync();
+                        await _powerControl.RefreshAsync().ConfigureAwait(false);
                     break;
                 case "Integrations":
                     if (_integrationsControl != null)
-                        await _integrationsControl.RefreshAsync();
+                        await _integrationsControl.RefreshAsync().ConfigureAwait(false);
                     break;
             }
         }

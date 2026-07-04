@@ -54,7 +54,7 @@ public partial class AboutPage
         if (!Directory.Exists(Folders.AppData))
             return;
 
-        Process.Start("explorer", Folders.AppData);
+        using var process = Process.Start("explorer", Folders.AppData);
     }
 
     private void OpenApplicationTempFolder_Click(object sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ public partial class AboutPage
         if (!Directory.Exists(Folders.Temp))
             return;
 
-        Process.Start("explorer", Folders.Temp);
+        using var process = Process.Start("explorer", Folders.Temp);
     }
 }
 }

@@ -74,7 +74,7 @@ public static class PathSecurity
             return false;
 
         // Check for trailing dots or spaces (Windows compatibility issue)
-        if (fileName.EndsWith(".") || fileName.EndsWith(" "))
+        if (fileName.EndsWith(".", StringComparison.Ordinal) || fileName.EndsWith(" ", StringComparison.Ordinal))
             return false;
 
         return true;
@@ -99,8 +99,8 @@ public static class PathSecurity
             var fullBasePath = Path.GetFullPath(basePath);
 
             // Ensure base path ends with separator for proper prefix checking
-            if (!fullBasePath.EndsWith(Path.DirectorySeparatorChar.ToString()) && 
-                !fullBasePath.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+            if (!fullBasePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) && 
+                !fullBasePath.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             {
                 fullBasePath += Path.DirectorySeparatorChar;
             }

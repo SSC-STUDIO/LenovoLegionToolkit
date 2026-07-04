@@ -429,7 +429,9 @@
                                     HorizontalContentAlignment="Stretch"
                                     ItemContainerStyle="{StaticResource NavigationStoreItem}"
                                     ItemsSource="{TemplateBinding Items}"
-                                    KeyboardNavigation.DirectionalNavigation="Contained">
+                                    KeyboardNavigation.DirectionalNavigation="Contained"
+                                    VirtualizingStackPanel.IsVirtualizing="True"
+                                    VirtualizingStackPanel.VirtualizationMode="Recycling">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel HorizontalAlignment="Stretch" />
@@ -449,7 +451,9 @@
                                 HorizontalContentAlignment="Stretch"
                                 ItemContainerStyle="{StaticResource NavigationStoreItem}"
                                 ItemsSource="{TemplateBinding Footer}"
-                                KeyboardNavigation.DirectionalNavigation="Contained">
+                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                VirtualizingStackPanel.IsVirtualizing="True"
+                                VirtualizingStackPanel.VirtualizationMode="Recycling">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel HorizontalAlignment="Stretch" />

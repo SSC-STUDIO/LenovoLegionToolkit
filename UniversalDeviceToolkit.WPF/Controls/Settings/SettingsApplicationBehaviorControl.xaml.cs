@@ -53,9 +53,9 @@ public partial class SettingsApplicationBehaviorControl
         var legionZoneTask = _legionZoneDisabler.GetStatusAsync();
         var fnKeysTask = _fnKeysDisabler.GetStatusAsync();
 
-        await Task.WhenAll(compatibilityTask, miTask, vantageTask, legionZoneTask, fnKeysTask);
+        await Task.WhenAll(compatibilityTask, miTask, vantageTask, legionZoneTask, fnKeysTask).ConfigureAwait(false);
 
-        var (isCompatible, _) = await compatibilityTask;
+        var (isCompatible, _) = await compatibilityTask.ConfigureAwait(false);
         if (!isCompatible)
         {
             _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
@@ -66,18 +66,18 @@ public partial class SettingsApplicationBehaviorControl
             _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
         }
 
-        var mi = await miTask;
+        var mi = await miTask.ConfigureAwait(false);
         var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
-        var vantageStatus = await vantageTask;
+        var vantageStatus = await vantageTask.ConfigureAwait(false);
         _vantageCard.Visibility = isSupportedLegionMachine && vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _vantageToggle.IsChecked = vantageStatus == SoftwareStatus.Disabled;
 
-        var legionZoneStatus = await legionZoneTask;
+        var legionZoneStatus = await legionZoneTask.ConfigureAwait(false);
         _legionZoneCard.Visibility = isSupportedLegionMachine && legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _legionZoneToggle.IsChecked = legionZoneStatus == SoftwareStatus.Disabled;
 
-        var fnKeysStatus = await fnKeysTask;
+        var fnKeysStatus = await fnKeysTask.ConfigureAwait(false);
         _fnKeysCard.Visibility = isSupportedLegionMachine && fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
 
@@ -103,7 +103,7 @@ public partial class SettingsApplicationBehaviorControl
 
         try
         {
-            await action();
+            await action().ConfigureAwait(false);
         }
         finally
         {
@@ -178,22 +178,22 @@ public partial class SettingsApplicationBehaviorControl
                 {
                     try
                     {
-                        await _vantageDisabler.DisableAsync();
+                        await _vantageDisabler.DisableAsync().ConfigureAwait(false);
                     }
                     catch
                     {
-                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableVantage_Error_Title, Resource.SettingsPage_DisableVantage_Error_Message, SnackbarType.Error);
+                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableVantage_Error_Title, Resource.SettingsPage_DisableVantage_Error_Message, SnackbarType.Error).ConfigureAwait(false);
                         return;
                     }
 
                     try
                     {
-                        if (await _rgbKeyboardBacklightController.IsSupportedAsync())
+                        if (await _rgbKeyboardBacklightController.IsSupportedAsync().ConfigureAwait(false))
                         {
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Setting light control owner and restoring preset...");
 
-                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(true, true);
+                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(true, true).ConfigureAwait(false);
                         }
                     }
                     catch (System.Exception ex)
@@ -204,12 +204,12 @@ public partial class SettingsApplicationBehaviorControl
                     try
                     {
                         var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-                        if (await controller.IsSupportedAsync())
+                        if (await controller.IsSupportedAsync().ConfigureAwait(false))
                         {
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Starting Aurora if needed...");
 
-                            var result = await controller.StartAuroraIfNeededAsync();
+                            var result = await controller.StartAuroraIfNeededAsync().ConfigureAwait(false);
                             if (result)
                             {
                                 if (Log.Instance.IsTraceEnabled)
@@ -231,12 +231,12 @@ public partial class SettingsApplicationBehaviorControl
                 {
                     try
                     {
-                        if (await _rgbKeyboardBacklightController.IsSupportedAsync())
+                        if (await _rgbKeyboardBacklightController.IsSupportedAsync().ConfigureAwait(false))
                         {
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Setting light control owner...");
 
-                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(false);
+                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(false).ConfigureAwait(false);
                         }
                     }
                     catch (System.Exception ex)
@@ -251,8 +251,8 @@ public partial class SettingsApplicationBehaviorControl
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Making sure Aurora is stopped...");
 
-                            if (await spectrumKeyboardBacklightController.IsSupportedAsync())
-                                await spectrumKeyboardBacklightController.StopAuroraIfNeededAsync();
+                            if (await spectrumKeyboardBacklightController.IsSupportedAsync().ConfigureAwait(false))
+                                await spectrumKeyboardBacklightController.StopAuroraIfNeededAsync().ConfigureAwait(false);
                         }
                     }
                     catch (System.Exception ex)
@@ -262,14 +262,14 @@ public partial class SettingsApplicationBehaviorControl
 
                     try
                     {
-                        await _vantageDisabler.EnableAsync();
+                        await _vantageDisabler.EnableAsync().ConfigureAwait(false);
                     }
                     catch
                     {
-                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableVantage_Error_Title, Resource.SettingsPage_EnableVantage_Error_Message, SnackbarType.Error);
+                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableVantage_Error_Title, Resource.SettingsPage_EnableVantage_Error_Message, SnackbarType.Error).ConfigureAwait(false);
                     }
                 }
-            });
+            }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -293,18 +293,18 @@ public partial class SettingsApplicationBehaviorControl
                 try
                 {
                     if (state.Value)
-                        await _legionZoneDisabler.DisableAsync();
+                        await _legionZoneDisabler.DisableAsync().ConfigureAwait(false);
                     else
-                        await _legionZoneDisabler.EnableAsync();
+                        await _legionZoneDisabler.EnableAsync().ConfigureAwait(false);
                 }
                 catch
                 {
                     await SnackbarHelper.ShowAsync(
                         state.Value ? Resource.SettingsPage_DisableLegionZone_Error_Title : Resource.SettingsPage_EnableLegionZone_Error_Title,
                         state.Value ? Resource.SettingsPage_DisableLegionZone_Error_Message : Resource.SettingsPage_EnableLegionZone_Error_Message,
-                        SnackbarType.Error);
+                        SnackbarType.Error).ConfigureAwait(false);
                 }
-            });
+            }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -328,23 +328,23 @@ public partial class SettingsApplicationBehaviorControl
                 try
                 {
                     if (state.Value)
-                        await _fnKeysDisabler.DisableAsync();
+                        await _fnKeysDisabler.DisableAsync().ConfigureAwait(false);
                     else
-                        await _fnKeysDisabler.EnableAsync();
+                        await _fnKeysDisabler.EnableAsync().ConfigureAwait(false);
                 }
                 catch
                 {
                     await SnackbarHelper.ShowAsync(
                         state.Value ? Resource.SettingsPage_DisableLenovoHotkeys_Error_Title : Resource.SettingsPage_EnableLenovoHotkeys_Error_Title,
                         state.Value ? Resource.SettingsPage_DisableLenovoHotkeys_Error_Message : Resource.SettingsPage_EnableLenovoHotkeys_Error_Message,
-                        SnackbarType.Error);
+                        SnackbarType.Error).ConfigureAwait(false);
                     return;
                 }
 
                 // Notify other controls about FnKeys status change
-                var newFnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+                var newFnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
                 FnKeysStatusChanged?.Invoke(this, newFnKeysStatus);
-            });
+            }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -396,7 +396,7 @@ public partial class SettingsApplicationBehaviorControl
                 {
                     _osdToggle.IsChecked = false;
                 }
-            });
+            }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

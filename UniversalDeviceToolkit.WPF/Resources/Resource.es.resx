@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -223,7 +223,7 @@ Sólo se ejecutarán las acciones que coincidan con el estado actual.</value>
     <value>Detecta automáticamente cuando se ejecutan determinados juegos y ajusta el rendimiento de la CPU y la GPU. Las temperaturas y el ruido del ventilador pueden aumentar.</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
-    <value>Activar el motor de Inteligencia artificiaI</value>
+    <value>Activar el motor de Inteligencia artificial</value>
   </data>
   <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
     <value>Ajustes del modo equilibrado</value>
@@ -274,7 +274,7 @@ Sólo se ejecutarán las acciones que coincidan con el estado actual.</value>
     <value>Velocidad de carga (+) o descarga (-) de la batería.</value>
   </data>
   <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Índice de descarga</value>
+    <value>Tasa de descarga</value>
   </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Tiempo restante estimado: {0}</value>
@@ -649,13 +649,13 @@ En serio, ¡tenga cuidado con esta opción!</value>
 AVISO: Esta acción no se ejecutará correctamente si la pantalla interna está apagada.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>laminado directo en caliente</value>
+    <value>Alto Rango Dinámico (HDR)</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Activar el rango dinámico alto (HDR) en la pantalla interna.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>laminado directo en caliente</value>
+    <value>Alto Rango Dinámico (HDR)</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>El uso del HDR está bloqueado por la configuración de Windows.</value>
@@ -1220,7 +1220,7 @@ Se recomienda reiniciar después de cambiar esta opción.</value>
     <value>Efectos</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
-    <value>Perfil no puede ser importado</value>
+    <value>El perfil no se puede exportar</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
     <value>No se pudo exportar el perfil</value>
@@ -1247,7 +1247,7 @@ Se recomienda reiniciar después de cambiar esta opción.</value>
     <value>Dirección</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
-    <value>Color Color</value>
+    <value>Color</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
     <value>Colores</value>
@@ -1536,7 +1536,7 @@ Esta configuración sólo tiene efecto si el modo personalizado está activado.<
     <value>Datos</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temperatura</value>
+    <value>Temporales</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>Un solo brillo de pantalla</value>
@@ -1623,7 +1623,7 @@ Esta configuración sólo tiene efecto si el modo personalizado está activado.<
     <value>Modo</value>
   </data>
   <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
-    <value>Índice de descarga</value>
+    <value>Tasa de descarga</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
     <value>¡Actualización disponible!</value>
@@ -2803,7 +2803,7 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
     <value>Ver el progreso de la operación de limpieza y el tamaño estimado.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Iniciar minimizado en la bandeja al iniciar sesión en Windows.</value>
+    <value>Apariencia</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Escanear</value>
@@ -3888,4 +3888,4 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

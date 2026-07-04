@@ -633,7 +633,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
             // Ensure UI updates happen on UI thread
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
-                await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size);
+                await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size).Task.ConfigureAwait(false);
             }
             else
             {
@@ -682,7 +682,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     await Application.Current.Dispatcher.InvokeAsync(() => SnackbarHelper.Show(
                         Resource.SettingsPage_WindowsOptimization_Title,
                 T("WindowsOptimization_NoCleanupSelection_Warning", "Please select at least one item to clean up."),
-                        SnackbarType.Warning));
+                        SnackbarType.Warning)).Task.ConfigureAwait(false);
                 }
                 return;
             }
@@ -690,7 +690,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
             // Mark as scanned to enable "Run Cleanup" button (if items selected)
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
-                await Application.Current.Dispatcher.BeginInvoke(() => IsScanned = true);
+                await Application.Current.Dispatcher.BeginInvoke(() => IsScanned = true).Task.ConfigureAwait(false);
             }
             else
             {
@@ -833,9 +833,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         return dispatcher.InvokeAsync(action).Task;
     }
 
-    public async Task ScanOptimizationStatesAsync()
+    public async Task ScanOptimizationStatesAsync(CancellationToken cancellationToken = default)
     {
-        await _optimizationStateScanLock.WaitAsync().ConfigureAwait(false);
+        await _optimizationStateScanLock.WaitAsync(cancellationToken).ConfigureAwait(false);
         _isRefreshingStates = true;
         try
         {
@@ -848,7 +848,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                 // Ensure UI updates happen on UI thread
                 if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
                 {
-                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied);
+                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied).Task.ConfigureAwait(false);
                 }
                 else
                 {
@@ -864,7 +864,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     UpdateSelectedActions();
                     // Save the scanned state (actual system state) to settings
                     SaveOptimizationSelection();
-                });
+                }).Task.ConfigureAwait(false);
             }
             else
             {

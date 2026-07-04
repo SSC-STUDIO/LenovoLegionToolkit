@@ -18,6 +18,7 @@ public partial class ColorPickerControl
     private bool CanHandleEvent => !_isEditing && _colorPicker is not null && _redNumberBox is not null && _greenNumberBox is not null && _blueNumberBox is not null && _hexTextBox is not null;
 
     private bool _isEditing;
+    private readonly SolidColorBrush _buttonBrush = new(Colors.Aqua);
 
     public Color SelectedColor
     {
@@ -32,6 +33,7 @@ public partial class ColorPickerControl
     {
         InitializeComponent();
 
+        _button.Background = _buttonBrush;
         SelectedColor = Colors.Aqua;
     }
 
@@ -61,7 +63,7 @@ public partial class ColorPickerControl
 
         var color = _colorPicker.SelectedColor;
 
-        _button.Background = new SolidColorBrush(color);
+        _buttonBrush.Color = color;
 
         _redNumberBox.Text = color.R.ToString();
         _greenNumberBox.Text = color.G.ToString();
@@ -87,7 +89,7 @@ public partial class ColorPickerControl
         var b = ToByte(_blueNumberBox.Text);
         var color = Color.FromRgb(r, g, b);
 
-        _button.Background = new SolidColorBrush(color);
+        _buttonBrush.Color = color;
 
         _hexTextBox.Text = $"#{r:X2}{g:X2}{b:X2}";
 
@@ -116,7 +118,7 @@ public partial class ColorPickerControl
             var c = ColorTranslator.FromHtml(_hexTextBox.Text);
             var color = Color.FromRgb(c.R, c.G, c.B);
 
-            _button.Background = new SolidColorBrush(color);
+            _buttonBrush.Color = color;
 
             _redNumberBox.Text = color.R.ToString();
             _greenNumberBox.Text = color.G.ToString();

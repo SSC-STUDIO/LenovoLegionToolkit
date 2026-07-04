@@ -32,14 +32,14 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
         try
         {
-            if (await IsSpectrumSupportedAsync())
+            if (await IsSpectrumSupportedAsync().ConfigureAwait(false))
             {
                 IsSpectrumSupported = true;
                 IsLoading = false;
                 return;
             }
 
-            if (await IsRgbSupportedAsync())
+            if (await IsRgbSupportedAsync().ConfigureAwait(false))
             {
                 IsRGBSupported = true;
                 IsLoading = false;
@@ -63,10 +63,10 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
     public static async Task<bool> IsSupportedAsync()
     {
-        if (await IsSpectrumSupportedAsync())
+        if (await IsSpectrumSupportedAsync().ConfigureAwait(false))
             return true;
 
-        return await IsRgbSupportedAsync();
+        return await IsRgbSupportedAsync().ConfigureAwait(false);
     }
 
     private static async Task<bool> IsSpectrumSupportedAsync()
@@ -74,7 +74,7 @@ public partial class KeyboardBacklightViewModel : ObservableObject
         try
         {
             var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-            return await spectrumController.IsSupportedAsync();
+            return await spectrumController.IsSupportedAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -90,7 +90,7 @@ public partial class KeyboardBacklightViewModel : ObservableObject
         try
         {
             var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-            return await rgbController.IsSupportedAsync();
+            return await rgbController.IsSupportedAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {

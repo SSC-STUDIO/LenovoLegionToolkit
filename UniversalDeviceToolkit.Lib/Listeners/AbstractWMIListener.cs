@@ -85,9 +85,9 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
     protected void RaiseChanged(TValue value) => Changed?.Invoke(this, GetEventArgs(value));
 
-private async Task HandlerAsync(TRawValue properties)
+private async Task HandlerAsync(TRawValue properties, CancellationToken cancellationToken = default)
     {
-        await _eventHandlerLock.WaitAsync().ConfigureAwait(false);
+        await _eventHandlerLock.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {

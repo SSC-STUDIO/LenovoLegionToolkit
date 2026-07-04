@@ -41,7 +41,12 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
     private async void DeviceAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
         RefreshButtons();
-        await LoadAsync();
+        await LoadAsync().ConfigureAwait(false);
+    }
+
+    private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _listener.Changed -= NativeWindowsMessageListener_Changed;
     }
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
@@ -49,7 +54,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
             return;
 
-        await LoadAsync();
+        await LoadAsync().ConfigureAwait(false);
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -57,11 +62,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         try
         {
             if (_filterDebounceCancellationTokenSource is not null)
-                await _filterDebounceCancellationTokenSource.CancelAsync();
+                await _filterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
             _filterDebounceCancellationTokenSource = new();
 
-            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
+            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token).ConfigureAwait(false);
 
             _content.Children.Clear();
             _scrollViewer.ScrollToHome();
@@ -100,7 +105,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         _listener.Changed -= NativeWindowsMessageListener_Changed;
 
         _devices.Clear();
-        _devices.AddRange(await Task.Run(Devices.GetAll));
+        _devices.AddRange(await Task.Run(Devices.GetAll).ConfigureAwait(false));
 
         _listener.Changed += NativeWindowsMessageListener_Changed;
 

@@ -58,7 +58,7 @@ public abstract class AbstractComboBoxAutomationStepCardControl<T>(IAutomationSt
     {
         AutomationProperties.SetName(_comboBox, Title);
 
-        var items = await AutomationStep.GetAllStatesAsync();
+        var items = await AutomationStep.GetAllStatesAsync().ConfigureAwait(false);
         var selectedItem = AutomationStep.State;
 
         _state = selectedItem;

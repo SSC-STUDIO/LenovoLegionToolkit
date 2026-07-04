@@ -129,7 +129,20 @@ public static class CMD
                 standardErrorTask = cmd.StandardError.ReadToEndAsync(token);
             }
 
-            await cmd.WaitForExitAsync(token).ConfigureAwait(false);
+            try
+            {
+                await cmd.WaitForExitAsync(token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                try { if (!cmd.HasExited) cmd.Kill(true); }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to kill process after cancellation", ex);
+                }
+                throw;
+            }
 
             var exitCode = cmd.ExitCode;
             var output = string.Empty;

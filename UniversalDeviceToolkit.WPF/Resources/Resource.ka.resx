@@ -78,7 +78,7 @@
   <data name="ApplyAndClose" xml:space="preserve"><value>გამოყენება და დახურვა</value></data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve"><value>ავტომატური მოქმედებების მუშაობისთვის Universal Device Toolkit უნდა მუშაობდეს.</value></data>
   <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve"><value>ჩართვა</value></data>
-  <data name="AutomationPage_Actions_Empty" xml:space="preserve"><value>მოქმედებები განსაზღვრული არ არის. დააჭირეთ &quot;ახლის დამატება&quot; ახალი მოქმედების შესაქმნელად.</value></data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve"><value>მოქმედებები განსაზღვრული არ არის. დააჭირეთ "ახლის დამატება" ახალი მოქმედების შესაქმნელად.</value></data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
     <value>თუ ჩართულია, ეს მოქმედებები ავტომატურად შესრულდება. როცა მდგომარეობა იცვლება, ყველა მოქმედება ზემოდან ქვემოთ შეფასდება.
 მხოლოდ მიმდინარე მდგომარეობასთან შესაბამისი მოქმედებები შესრულდება.</value>
@@ -86,7 +86,7 @@
   <data name="AutomationPage_Actions_Title" xml:space="preserve"><value>მოქმედებები</value></data>
   <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve"><value>სახელი...</value></data>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve"><value>ახლის დამატება</value></data>
-  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve"><value>სწრაფი მოქმედებები განსაზღვრული არ არის. დააჭირეთ &quot;ახლის დამატება&quot; ახალი სწრაფი მოქმედების შესაქმნელად.</value></data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve"><value>სწრაფი მოქმედებები განსაზღვრული არ არის. დააჭირეთ "ახლის დამატება" ახალი სწრაფი მოქმედების შესაქმნელად.</value></data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve"><value>სწრაფი მოქმედებები ხელმისაწვდომია სისტემური ტრეის ხატულაზე მარჯვენა ღილაკით დაწკაპუნების მენიუში.</value></data>
   <data name="AutomationPage_QuickActions_Title" xml:space="preserve"><value>სწრაფი მოქმედებები</value></data>
   <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve"><value>სახელი...</value></data>
@@ -185,7 +185,7 @@
   <data name="Delete" xml:space="preserve"><value>წაშლა</value></data>
   <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve"><value>BIOS-ის ვერსია</value></data>
   <data name="CopiedToClipboard_Message" xml:space="preserve"><value>ტექსტი კოპირებულია ბუფერში.</value></data>
-  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve"><value>&quot;{0}&quot; კოპირებულია ბუფერში.</value></data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve"><value>"{0}" კოპირებულია ბუფერში.</value></data>
   <data name="CopiedToClipboard_Title" xml:space="preserve"><value>დაკოპირდა!</value></data>
   <data name="DeviceInformationWindow_Device_Title" xml:space="preserve"><value>მოწყობილობა</value></data>
   <data name="DeviceInformationWindow_Hardware_Title" xml:space="preserve"><value>აპარატურა</value></data>
@@ -297,7 +297,7 @@
   <data name="Import" xml:space="preserve"><value>იმპორტი</value></data>
   <data name="IncompatibleDevice_Message" xml:space="preserve"><value>ეს მოწყობილობა არ არის თავსებადი Universal Device Toolkit-თან.</value></data>
   <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve"><value>შესაძლოა თქვენს მოწყობილობას აკლია საჭირო სისტემური კომპონენტები (LenovoGameZoneData).</value></data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve"><value>თუ &quot;OK&quot;-ზე დააჭერეთ გაგრძელებისთვის:</value></data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve"><value>თუ "OK"-ზე დააჭერეთ გაგრძელებისთვის:</value></data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve"><value>- პროგრამა მუშაობს შეზღუდულ რეჟიმში</value></data>
   <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve"><value>- ზოგიერთი ფუნქცია გამორთული იქნება (მთავარი პანელი, ავტომატიზაცია, მაკროები)</value></data>
   <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve"><value>- სხვა ძირითადი ფუნქციები კვლავ ხელმისაწვდომი იქნება</value></data>
@@ -305,7 +305,7 @@
   <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve"><value>მწარმოებელი:</value></data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve"><value>მოდელი:</value></data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve"><value>მოწყობილობის ტიპი:</value></data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve"><value>დააჭირეთ &quot;OK&quot; გასაგრძელებლად, ან &quot;გაუქმება&quot; გასასვლელად.</value></data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve"><value>დააჭირეთ "OK" გასაგრძელებლად, ან "გაუქმება" გასასვლელად.</value></data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve"><value>თავსებადი კლავიატურა ვერ მოიძებნა</value></data>
   <data name="KeyboardBacklightPage_Title" xml:space="preserve"><value>კლავიატურის განათება</value></data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve"><value>Lenovo Vantage-ის ან მისი სერვისების მუშაობისას კლავიატურის განათების მართვა აქ შეუძლებელია.</value></data>
@@ -1022,8 +1022,8 @@
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve"><value>განახლება</value></data>
   <data name="AbstractAutomationStepControl_Delete" xml:space="preserve"><value>წაშლა</value></data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve"><value>პერიოდი (წუთები)</value></data>
-  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve"><value>სისტემის გადატვირთვისას &quot;ბატარეაზე მუშაობს&quot;-ის მთვლელის გადატვირთვა.</value></data>
-  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve"><value>&quot;ბატარეაზე მუშაობს&quot;-ის გადატვირთვა ჩატვირთვისას</value></data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve"><value>სისტემის გადატვირთვისას "ბატარეაზე მუშაობს"-ის მთვლელის გადატვირთვა.</value></data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve"><value>"ბატარეაზე მუშაობს"-ის გადატვირთვა ჩატვირთვისას</value></data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve"><value>Wi-Fi-ის გამორთვა</value></data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve"><value>Wi-Fi-ის ჩართვა</value></data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve"><value>ჩუმად გაშვება</value></data>
@@ -1045,10 +1045,10 @@
   <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>თავსებადობის შემოწმების შეცდომა</value></data>
   <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>აპლიკაციამ ვერ წაიკითხა მოწყობილობის ინფორმაცია ჩატვირთვისას. გთხოვთ შეამოწმოთ შეცდომის დეტალები ქვემოთ და საჭიროების შემთხვევაში სცადეთ პრობლემების მოგვარება.</value></data>
   <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>პრობლემების მოგვარების ნაბიჯები</value></data>
-  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>დარწმუნდით, რომ Windows Management Instrumentation (WMI) სერვისი მუშაობს: გახსენით სერვისები (services.msc) და შეამოწმეთ, რომ &quot;Windows Management Instrumentation&quot; მუშაობს.</value></data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>დარწმუნდით, რომ Windows Management Instrumentation (WMI) სერვისი მუშაობს: გახსენით სერვისები (services.msc) და შეამოწმეთ, რომ "Windows Management Instrumentation" მუშაობს.</value></data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>გაუშვით აპლიკაცია ადმინისტრატორის სახით სისტემურ რეესტრზე და WMI-ზე წვდომისთვის საკმარისი პრივილეგიების უზრუნველსაყოფად.</value></data>
   <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>შეამოწმეთ სისტემური რესურსები: დახურეთ სხვა რესურსების მომხმარებელი აპლიკაციები და ისევ სცადეთ.</value></data>
-  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>მიმოხილვეთ ჟურნალის ფაილი დეტალური შეცდომის ინფორმაციისთვის ქვემოთ &quot;ჟურნალის გახსნა&quot;-ზე დაწკაპუნებით.</value></data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>მიმოხილვეთ ჟურნალის ფაილი დეტალური შეცდომის ინფორმაციისთვის ქვემოთ "ჟურნალის გახსნა"-ზე დაწკაპუნებით.</value></data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>ჟურნალის ფაილის გახსნა</value></data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve"><value>მაკრო</value></data>
   <data name="MacroPage_Title" xml:space="preserve"><value>მაკრო</value></data>
@@ -1239,8 +1239,8 @@
   <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>ჩამოტვირთვის მომზადება...</value></data>
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>ლოკალური</value></data>
   <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>ახალი ვერსია ხელმისაწვდომია</value></data>
-  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>ვერსია: </value></data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>გამოშვების თარიღი: </value></data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>ვერსია:</value></data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>გამოშვების თარიღი:</value></data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>რა არის ახალი:</value></data>
   <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve"><value>დეტალები</value></data>
   <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve"><value>გამოყენების სახელმძღვანელო</value></data>
@@ -1418,4 +1418,4 @@
   <data name="SettingsPage_Osd_Message" xml:space="preserve"><value>მცურავი გადაფარვა, რომელიც ნაჩვენებს აჩვენებს სენსორების მონაცემებს.</value></data>
   <data name="SettingsPage_Osd_Title" xml:space="preserve"><value>OSD-ის ჩართვა</value></data>
   <data name="Watt" xml:space="preserve"><value>ვტ</value></data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

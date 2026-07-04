@@ -56,6 +56,11 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
 
         _nativeWindowsMessageListener.Changed += NativeWindowsMessageListener_Changed;
         _controller.Changed += Controller_Changed;
+        Unloaded += (_, _) =>
+        {
+            _nativeWindowsMessageListener.Changed -= NativeWindowsMessageListener_Changed;
+            _controller.Changed -= Controller_Changed;
+        };
     }
 
     private void InitializeComponent()
@@ -80,7 +85,7 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _controller.IsSupportedAsync())
+        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             throw new NotSupportedException();
 
         var (enabled, _) = _controller.GetState();
@@ -94,13 +99,13 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
             return;
 
         Visibility = Visibility.Visible;
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         Visibility = Visibility.Visible;
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }, "refresh discrete GPU overclock control");
 
     private async void Toggle_Click(object sender, RoutedEventArgs e)
@@ -113,7 +118,7 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
             var enabled = _toggle.IsChecked.Value;
             var (_, info) = _controller.GetState();
             _controller.SaveState(enabled, info);
-            await _controller.ApplyStateAsync(true);
+            await _controller.ApplyStateAsync(true).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -125,7 +130,7 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
     private void ConfigButton_Click(object sender, RoutedEventArgs e)
     {
         var window = new OverclockDiscreteGPUSettingsWindow { Owner = Window.GetWindow(this) };
-        window.Closed += async (_, _) => await RefreshAsync();
+        window.Closed += async (_, _) => await RefreshAsync().ConfigureAwait(false);
         window.ShowDialog();
     }
 }

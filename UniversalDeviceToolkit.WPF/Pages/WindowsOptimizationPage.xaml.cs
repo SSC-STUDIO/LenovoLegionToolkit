@@ -351,7 +351,7 @@ public partial class WindowsOptimizationPage : Page
     {
         if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
         {
-            await StartOrPauseSelectedDriversAsync();
+            await StartOrPauseSelectedDriversAsync().ConfigureAwait(false);
         }
         else
         {

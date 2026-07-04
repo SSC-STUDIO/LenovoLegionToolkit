@@ -1,110 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>bu benim uzun stringim</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime kodlu serileştirilmiş .NET Framework nesnesi]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[.NET Framework nesnesinin byte dizisi formunu temsil eden base64 kodlu string]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -642,7 +584,7 @@
     <comment>Exception message when no updates found</comment>
   </data>
   <data name="Exception_SetupFileUrlNotFound" xml:space="preserve">
-    <value>Kurulum dosyası URL&apos;si bulunamadı</value>
+    <value>Kurulum dosyası URL'si bulunamadı</value>
     <comment>Exception message when update download URL is missing</comment>
   </data>
   <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve">
@@ -778,11 +720,11 @@
     <comment>Exception message for effect deserialization failure</comment>
   </data>
   <data name="Exception_CannotReadVariableUEFI" xml:space="preserve">
-    <value>UEFI&apos;den {0} değişkeni okunamıyor</value>
+    <value>UEFI'den {0} değişkeni okunamıyor</value>
     <comment>Exception message format for UEFI read failure</comment>
   </data>
   <data name="Exception_CannotWriteVariableUEFI" xml:space="preserve">
-    <value>UEFI&apos;ye {0} değişkeni yazılamıyor</value>
+    <value>UEFI'ye {0} değişkeni yazılamıyor</value>
     <comment>Exception message format for UEFI write failure</comment>
   </data>
   <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
@@ -798,7 +740,7 @@
     <comment>Exception message format for unsupported power mode</comment>
   </data>
   <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve">
-    <value>&apos;{0}&apos; güç modu AC adaptörü olmadan kullanılamaz.</value>
+    <value>'{0}' güç modu AC adaptörü olmadan kullanılamaz.</value>
     <comment>Exception message format for AC-restricted power mode</comment>
   </data>
   <data name="Exception_CommandFailedSecurity" xml:space="preserve">
@@ -826,31 +768,31 @@
     <comment>Exception message format for backslash in device pack path</comment>
   </data>
   <data name="Exception_DevicePackNotAvailable" xml:space="preserve">
-    <value>&apos;{0}&apos; cihaz paketi çevrimiçi kaynak kataloğunda mevcut değil.</value>
+    <value>'{0}' cihaz paketi çevrimiçi kaynak kataloğunda mevcut değil.</value>
     <comment>Exception message format for unavailable device pack</comment>
   </data>
   <data name="Exception_DevicePackNoManifest" xml:space="preserve">
-    <value>&apos;{0}&apos; cihaz paketi {1} içermiyor.</value>
+    <value>'{0}' cihaz paketi {1} içermiyor.</value>
     <comment>Exception message format for missing manifest file</comment>
   </data>
   <data name="Exception_DevicePackManifestEmpty" xml:space="preserve">
-    <value>&apos;{0}&apos; cihaz paketi manifesti boş.</value>
+    <value>'{0}' cihaz paketi manifesti boş.</value>
     <comment>Exception message format for empty manifest</comment>
   </data>
   <data name="Exception_DevicePackIdMismatch" xml:space="preserve">
-    <value>Cihaz paketi kimliği uyuşmuyor. Beklenen &apos;{0}&apos;, alınan &apos;{1}&apos;.</value>
+    <value>Cihaz paketi kimliği uyuşmuyor. Beklenen '{0}', alınan '{1}'.</value>
     <comment>Exception message format for ID mismatch</comment>
   </data>
   <data name="Exception_DevicePackVendorMismatch" xml:space="preserve">
-    <value>Cihaz paketi satıcısı uyuşmuyor. Beklenen &apos;{0}&apos;, alınan &apos;{1}&apos;.</value>
+    <value>Cihaz paketi satıcısı uyuşmuyor. Beklenen '{0}', alınan '{1}'.</value>
     <comment>Exception message format for vendor mismatch</comment>
   </data>
   <data name="Exception_DevicePackUrlEmpty" xml:space="preserve">
-    <value>&apos;{0}&apos; cihaz paketinin indirme URL&apos;si boş.</value>
+    <value>'{0}' cihaz paketinin indirme URL'si boş.</value>
     <comment>Exception message format for empty download URL</comment>
   </data>
   <data name="Exception_DevicePackSha256Missing" xml:space="preserve">
-    <value>&apos;{0}&apos; cihaz paketinde SHA256 meta verisi eksik.</value>
+    <value>'{0}' cihaz paketinde SHA256 meta verisi eksik.</value>
     <comment>Exception message format for missing SHA256</comment>
   </data>
   <data name="Exception_UnknownBatteryState" xml:space="preserve">
@@ -914,7 +856,7 @@
     <comment>Exception message for null or empty version tag</comment>
   </data>
   <data name="Exception_UnparseableVersionFormat" xml:space="preserve">
-    <value>Etiket adından sürüm ayrıştırılamadı: &apos;{0}&apos;. Beklenen biçim: &apos;3.0.1&apos;</value>
+    <value>Etiket adından sürüm ayrıştırılamadı: '{0}'. Beklenen biçim: '3.0.1'</value>
     <comment>Exception message format for unparseable version string</comment>
   </data>
   <data name="Exception_GodModePresetNotFound" xml:space="preserve">
@@ -954,7 +896,7 @@
     <comment>Exception message format when registry read fails</comment>
   </data>
   <data name="Exception_CouldNotGetColor" xml:space="preserve">
-    <value>&quot;{0}&quot; rengi alınamadı</value>
+    <value>"{0}" rengi alınamadı</value>
     <comment>Exception message format when uxtheme color lookup fails</comment>
   </data>
   <data name="Exception_DriverHandleFailed" xml:space="preserve">
@@ -1005,4 +947,4 @@
     <value>Güncelleme paketi bütünlük denetimi başarısız. Beklenen SHA256: {0}, Hesaplanan: {1}</value>
     <comment>Exception message format for update SHA256 hash mismatch</comment>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

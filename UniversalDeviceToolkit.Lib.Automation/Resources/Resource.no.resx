@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -60,16 +60,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r str酶madapteren er tilkoblet</value>
+    <value>Når strømadapteren er tilkoblet</value>
   </data>
   <data name="ACAdapterDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r str酶madapteren er frakoblet</value>
+    <value>Når strømadapteren er frakoblet</value>
   </data>
   <data name="DeactivateGPUAutomationStepState_KillApps" xml:space="preserve">
     <value>Drep apper</value>
   </data>
   <data name="DeactivateGPUAutomationStepState_RestartGPU" xml:space="preserve">
-    <value>Start GPU p氓 nytt</value>
+    <value>Start GPU på nytt</value>
   </data>
   <data name="Delay_Second" xml:space="preserve">
     <value>{0} sekund</value>
@@ -78,52 +78,52 @@
     <value>{0} sekunder</value>
   </data>
   <data name="LowWattageACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r vekselstr酶madapter med lavt wattforbruk er tilkoblet</value>
+    <value>Når vekselstrømadapter med lavt wattforbruk er tilkoblet</value>
   </data>
   <data name="OnStartupAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Ved oppstart</value>
   </data>
   <data name="PowerModeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r str酶mmodus endres</value>
+    <value>Når strømmodus endres</value>
   </data>
   <data name="ProcessesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r appen starter</value>
+    <value>Når appen starter</value>
   </data>
   <data name="ProcessesStopRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r appen lukkes</value>
+    <value>Når appen lukkes</value>
   </data>
   <data name="TimeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Ved oppgitt tidspunkt</value>
   </data>
   <data name="ExternalDisplayConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r ekstern skjerm er tilkoblet</value>
+    <value>Når ekstern skjerm er tilkoblet</value>
   </data>
   <data name="ExternalDisplayDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r ekstern skjerm er frakoblet</value>
+    <value>Når ekstern skjerm er frakoblet</value>
   </data>
   <data name="DisplayOnAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r skjermer sl氓s p氓</value>
+    <value>Når skjermer slås på</value>
   </data>
   <data name="DisplayOffAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r skjermene sl氓s av</value>
+    <value>Når skjermene slås av</value>
   </data>
   <data name="LidOpenedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>Lokket 氓pnes</value>
+    <value>Lokket åpnes</value>
   </data>
   <data name="LidClosedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Lokket lukket</value>
   </data>
   <data name="GamesStopAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r spillet avsluttes</value>
+    <value>Når spillet avsluttes</value>
   </data>
   <data name="GamesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Spillet er i gang</value>
   </data>
   <data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve">
-    <value>N氓r brukeren blir aktiv</value>
+    <value>Når brukeren blir aktiv</value>
   </data>
   <data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r brukeren blir inaktiv</value>
+    <value>Når brukeren blir inaktiv</value>
   </data>
   <data name="DeactivateGpuQuickAction_Title" xml:space="preserve">
     <value>Deaktiver GPU</value>
@@ -133,46 +133,46 @@
     <value>Av</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve">
-    <value>P氓</value>
+    <value>På</value>
   </data>
   <data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r egendefinert modus forh氓ndsinnstilling endres</value>
+    <value>Når egendefinert modus forhåndsinnstilling endres</value>
   </data>
   <data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Periodisk virkning</value>
     <comment>The display name of the periodic automation action.</comment>
   </data>
   <data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r Wi-Fi er tilkoblet</value>
+    <value>Når Wi-Fi er tilkoblet</value>
   </data>
   <data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r Wi-Fi er frakoblet</value>
+    <value>Når Wi-Fi er frakoblet</value>
   </data>
   <data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Ved gjenopptak</value>
   </data>
   <data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r HDR sl氓s av</value>
+    <value>Når HDR slås av</value>
   </data>
   <data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r HDR sl氓s p氓</value>
+    <value>Når HDR slås på</value>
   </data>
   <data name="MacroAutomationStepState_Off" xml:space="preserve">
     <value>Av</value>
   </data>
   <data name="MacroAutomationStepState_On" xml:space="preserve">
-    <value>P氓</value>
+    <value>På</value>
   </data>
   <data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r enheten er frakoblet</value>
+    <value>Når enheten er frakoblet</value>
   </data>
   <data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>N氓r enheten er tilkoblet</value>
+    <value>Når enheten er tilkoblet</value>
   </data>
   <data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>脴kt l氓st</value>
+    <value>Økt låst</value>
   </data>
   <data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>脴kt l氓st opp</value>
+    <value>Økt låst opp</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

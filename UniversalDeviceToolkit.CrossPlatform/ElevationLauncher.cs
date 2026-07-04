@@ -45,7 +45,7 @@ internal sealed class ElevationLauncher
             foreach (var arg in launchArguments)
                 startInfo.ArgumentList.Add(arg);
 
-            Process.Start(startInfo);
+            using var process = Process.Start(startInfo);
 
             return new ElevationLaunchResult(true, "Started the requested command.");
         }

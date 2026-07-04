@@ -189,8 +189,10 @@ public class AutomationProcessor(
                     await oldCts.CancelAsync().ConfigureAwait(false);
                     oldCts.Dispose();
                 }
-                catch (ObjectDisposedException)
+                catch (ObjectDisposedException ex)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("CTS already disposed during cancellation", ex);
                 }
             }
 
@@ -594,8 +596,10 @@ public class AutomationProcessor(
                     {
                         ctsToDispose.Cancel();
                     }
-                    catch (ObjectDisposedException)
+                    catch (ObjectDisposedException ex)
                     {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("CTS already disposed during disposal", ex);
                     }
                     ctsToDispose.Dispose();
                 }

@@ -62,13 +62,13 @@
     <value>Lenovo Legion-Toolkit</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>Bauen</value>
+    <value>Build</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
     <value>Neuste Version auf GitHub</value>
   </data>
   <data name="AboutPage_Links" xml:space="preserve">
-    <value>Link.</value>
+    <value>Links</value>
   </data>
   <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
     <value>Projektseite auf GitHub</value>
@@ -84,7 +84,7 @@
     <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
   </data>
   <data name="AboutPage_Version" xml:space="preserve">
-    <value>Versionen.</value>
+    <value>Version</value>
   </data>
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
@@ -129,7 +129,7 @@
     <value>Aktionen</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
-    <value>Die namen.</value>
+    <value>Name...</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
     <value>Neu hinzufügen</value>
@@ -144,7 +144,7 @@
     <value>Kurzbefehle</value>
   </data>
   <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
-    <value>Die namen.</value>
+    <value>Name...</value>
   </data>
   <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
     <value>Umbenennen</value>
@@ -535,7 +535,7 @@ WARNUNG: Diese Aktion wird nicht korrekt ausgeführt, wenn der interne Bildschir
     <value>Lüfterdrehzahl</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPUS</value>
+    <value>GPU</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>Grafikprozessor #2</value>
@@ -635,7 +635,7 @@ Ernsthaft, seien Sie vorsichtig mit dieser Option!</value>
     <value>GPU Temperatur-Grenzwert</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>GPUS</value>
+    <value>GPU</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>Benutzerdefinierter Modus Einstellungen</value>
@@ -646,13 +646,13 @@ Ernsthaft, seien Sie vorsichtig mit dieser Option!</value>
 WARNUNG: Diese Aktion wird nicht korrekt ausgeführt, wenn der interne Bildschirm ausgeschaltet ist.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>Direktes Wärmwalzen</value>
+    <value>Hoher Dynamikbereich (HDR)</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Aktiviere High Dynamic Range (HDR) auf dem integrierten Display.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>Direktes Wärmwalzen</value>
+    <value>Hoher Dynamikbereich (HDR)</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Die Verwendung von HDR wird durch die Windows-Einstellungen blockiert.</value>
@@ -824,7 +824,7 @@ Aktiviere diese Option, wenn Konflikte mit Vollbildanwendungen auftreten.</value
     <value>Mikrofon</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
-    <value>Position.</value>
+    <value>Position</value>
   </data>
   <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
     <value>Leistungsmodus</value>
@@ -887,7 +887,7 @@ Aktiviere diese Option, wenn Konflikte mit Vollbildanwendungen auftreten.</value
     <value>Dieses Paket ist mehr als ein Jahr alt.</value>
   </data>
   <data name="PackageControl_Version" xml:space="preserve">
-    <value>Versionen.</value>
+    <value>Version</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
     <value>Nachfolgend finden Sie eine Liste von Softwarepaketen, die als kompatibel mit Ihrem Laptop gekennzeichnet sind.
@@ -933,7 +933,7 @@ Stellen Sie immer sicher, dass Sie die richtigen Pakete installieren.</value>
     <value>Datum</value>
   </data>
   <data name="PackagesPage_Sort_Name" xml:space="preserve">
-    <value>Name?</value>
+    <value>Name</value>
   </data>
   <data name="PackagesPage_Source" xml:space="preserve">
     <value>Quelle</value>
@@ -1743,7 +1743,7 @@ WARNUNG: Diese Aktion wird nicht korrekt ausgeführt, wenn keine diskrete GPU ve
     <value>Lüfter</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPUS</value>
+    <value>GPU</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Speichertakt</value>
@@ -1846,7 +1846,7 @@ Erfordert einen Neustart.</value>
     <value>Benutzerdefiniertes Boot-Logo ist eingestellt</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
-    <value>Versetzen.</value>
+    <value>Status</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
     <value>Auf Standard zurücksetzen</value>
@@ -2115,7 +2115,7 @@ Unterstützte Formate sind: {1}.</value>
     <value>Nur verbundene Geräte anzeigen</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>Coin-levelindicator (Command Line Interface für Batch Scripting)</value>
+    <value>Befehlszeilen-Schnittstelle</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
     <value>Aktiviere die Befehlszeilenschnittstelle, die eine Steuerung über die Kommandozeile ermöglicht.</value>
@@ -2797,7 +2797,7 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
     <value>Fortschritt der Bereinigung und geschätzte Größe anzeigen.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Beim Anmelden bei Windows minimiert in den Infobereich starten.</value>
+    <value>Erscheinungsbild</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Scannen</value>
@@ -3882,4 +3882,4 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

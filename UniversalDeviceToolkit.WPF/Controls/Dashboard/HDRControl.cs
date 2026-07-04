@@ -25,15 +25,16 @@ public class HDRControl : AbstractToggleFeatureCardControl<HDRState>
         Subtitle = Resource.HDRControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     protected override async Task OnRefreshAsync()
     {
-        await base.OnRefreshAsync();
+        await base.OnRefreshAsync().ConfigureAwait(false);
 
         try
         {
-            var isHdrBlocked = await ((HDRFeature)Feature).IsHdrBlockedAsync();
+            var isHdrBlocked = await ((HDRFeature)Feature).IsHdrBlockedAsync().ConfigureAwait(false);
 
             IsToggleEnabled = !isHdrBlocked;
             Warning = isHdrBlocked ? Resource.HDRControl_Warning : string.Empty;
@@ -50,6 +51,6 @@ public class HDRControl : AbstractToggleFeatureCardControl<HDRState>
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh HDR control");
 }

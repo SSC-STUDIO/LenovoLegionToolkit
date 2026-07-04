@@ -26,7 +26,7 @@ public partial class AddAutomationStepWindow
     private async void AddAutomationStepWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

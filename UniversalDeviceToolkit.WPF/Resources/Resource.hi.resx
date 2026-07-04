@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:schema id="root">
@@ -199,7 +199,7 @@
     <value>{0} चरण</value>
   </data>
   <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
-    <value>{0} चरण</value>
+    <value>{0} चरणों</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
     <value>ऐप्स</value>
@@ -1168,7 +1168,7 @@
     <value>एक्सेंट रंग</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>दिखावट</value>
+    <value>उपस्थिति</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
     <value>भाषा, तापमान इकाई, थीम और एक्सेंट रंग अनुकूलित करें।</value>
@@ -3002,7 +3002,7 @@
     <value>बंद करें</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{1} में से {0} क्रियाएँ चयनित</value>
+    <value>{0} में से {1} क्रियाएँ चयनित</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>अनुमानित क्लीनअप आकार: {0}</value>
@@ -3044,7 +3044,7 @@
     <value>सभी संक्षिप्त करें</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>{1} सेकंड में {0} मुक्त किए गए</value>
+    <value>{0} मुक्त किए गए {1} सेकंड में</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>निष्पादित हो रहा है {0}%</value>
@@ -3395,10 +3395,10 @@
     <value>नया संस्करण उपलब्ध</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>संस्करण: </value>
+    <value>संस्करण:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>रिलीज़ तिथि: </value>
+    <value>रिलीज़ तिथि:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>क्या नया है:</value>
@@ -3856,4 +3856,4 @@
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>प्लगइन {0} इंस्टॉल किया गया, लेकिन यह उपयोगकर्ता-सामने प्रवेश बिंदु उजागर नहीं करता। यह केवल पृष्ठभूमि सेवाएँ या मैनिफेस्ट डेटा प्रदान कर सकता है।</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

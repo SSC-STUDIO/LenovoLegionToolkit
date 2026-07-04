@@ -40,7 +40,7 @@ public abstract class AbstractRefreshingControl : UserControl
             OnFinishedLoading();
         }
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     protected abstract void OnFinishedLoading();
@@ -48,7 +48,7 @@ public abstract class AbstractRefreshingControl : UserControl
     private async void RefreshingControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     protected async Task RefreshAsync()
@@ -64,7 +64,7 @@ public abstract class AbstractRefreshingControl : UserControl
                 IsEnabled = false;
 
             _refreshTask ??= OnRefreshAsync();
-            await _refreshTask;
+            await _refreshTask.ConfigureAwait(false);
         }
         catch (NotSupportedException)
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Resources;
@@ -44,15 +45,11 @@ public static partial class WMI
 
             return false;
         }
-        catch (ManagementException ex)
+        catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"WMI exists probe failed. [scope={scope}, query={queryFormatted}]", ex);
+                Log.Instance.Trace($"WMI exists probe failed or timed out. [scope={scope}, query={queryFormatted}]", ex);
 
-            return false;
-        }
-        catch
-        {
             return false;
         }
     }
@@ -148,7 +145,16 @@ public static partial class WMI
                 foreach (var pair in methodParams)
                     methodParamsObject[pair.Key] = pair.Value;
 
-                return mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+                var invokeTask = Task.Run(() => mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions()));
+                using var cts = new CancellationTokenSource();
+                var completedInvoke = await Task.WhenAny(invokeTask, Task.Delay(10000, cts.Token)).ConfigureAwait(false);
+                if (completedInvoke == invokeTask)
+                {
+                    cts.Cancel();
+                    return await invokeTask.ConfigureAwait(false);
+                }
+
+                throw new TimeoutException($"WMI method {methodName} invocation timed out after 3000ms.");
             }
             catch (ManagementException ex) when (attempt < 2 && IsInvalidObject(ex))
             {

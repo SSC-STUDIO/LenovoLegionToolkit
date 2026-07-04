@@ -115,7 +115,7 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
             {
                 if (File.Exists(_crashReportPath) && IsSafeFilePath(_crashReportPath))
                 {
-                    Process.Start(new ProcessStartInfo
+                    using var process = Process.Start(new ProcessStartInfo
                     {
                         FileName = _crashReportPath,
                         UseShellExecute = true
@@ -127,7 +127,7 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
                     var directory = Path.GetDirectoryName(_crashReportPath);
                     if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
                     {
-                        Process.Start("explorer.exe", directory);
+                        using var process = Process.Start("explorer.exe", directory);
                     }
                 }
             }

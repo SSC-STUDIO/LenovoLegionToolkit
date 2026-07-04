@@ -587,7 +587,7 @@ public class PluginRepositoryService : IDisposable
             return false;
         }
 
-        Process? process = null;
+        Process? process = null; // NOTE: Cross-scope process reference (try + catch) — disposal must be handled at a higher level
 
         try
         {
@@ -905,7 +905,7 @@ public class PluginRepositoryService : IDisposable
 
             // Extract zip with path traversal protection
             var extractRoot = Path.GetFullPath(extractPath);
-            if (!extractRoot.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!extractRoot.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                 extractRoot += Path.DirectorySeparatorChar;
 
             using var archive = ZipFile.OpenRead(zipPath);
@@ -985,7 +985,7 @@ public class PluginRepositoryService : IDisposable
             {
                 try
                 {
-                    backupDir = $"{pluginDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
+                    backupDir = $"{pluginDir}_backup_{DateTime.UtcNow:yyyyMMddHHmmss}";
                     Directory.Move(pluginDir, backupDir);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Renamed existing plugin directory {pluginDir} to {backupDir} to resolve conflict.");

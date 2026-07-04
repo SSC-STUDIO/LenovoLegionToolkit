@@ -33,10 +33,10 @@ public partial class SettingsPowerControl
         var miTask = MachineCompatibility.GetMachineInformationAsync();
         var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
 
-        await Task.WhenAll(miTask, powerModeSupportedTask);
+        await Task.WhenAll(miTask, powerModeSupportedTask).ConfigureAwait(false);
 
-        var mi = await miTask;
-        var isPowerModeFeatureSupported = await powerModeSupportedTask;
+        var mi = await miTask.ConfigureAwait(false);
+        var isPowerModeFeatureSupported = await powerModeSupportedTask.ConfigureAwait(false);
 
         // Check GodModeFnQSwitchable capability and get value if supported
         // Note: If WMI call fails, the card will be hidden to avoid showing broken UI
@@ -47,7 +47,7 @@ public partial class SettingsPowerControl
         {
             try
             {
-                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
+                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ public partial class SettingsPowerControl
 
         try
         {
-            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
+            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -109,7 +109,7 @@ public partial class SettingsPowerControl
         _settings.Store.PowerModeMappingMode = powerModeMappingMode;
         _settings.SynchronizeStore();
 
-        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
+        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync().ConfigureAwait(false);
         _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
@@ -135,7 +135,7 @@ public partial class SettingsPowerControl
 
     private void WindowsPowerPlansControlPanel_Click(object sender, RoutedEventArgs e)
     {
-        Process.Start("control", "/name Microsoft.PowerOptions");
+        using var process = Process.Start("control", "/name Microsoft.PowerOptions");
     }
 
     private void OnBatterySinceResetToggle_Click(object sender, RoutedEventArgs e)

@@ -70,7 +70,9 @@
                 Background="Transparent"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                 SelectionChanged="NavigationListBox_SelectionChanged"
-                SelectedIndex="0">
+                SelectedIndex="0"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">

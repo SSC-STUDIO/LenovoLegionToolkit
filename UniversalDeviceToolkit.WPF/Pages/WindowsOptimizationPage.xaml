@@ -375,7 +375,10 @@
                             </Style.Triggers>
                         </Style>
                     </ScrollViewer.Style>
-                    <ItemsControl ItemsSource="{Binding ActiveCategories}">
+                    <ItemsControl
+                        ItemsSource="{Binding ActiveCategories}"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Expander
@@ -422,7 +425,11 @@
                                                 Text="{Binding SelectionSummary}" />
                                         </Grid>
                                     </Expander.Header>
-                                    <ItemsControl ItemsSource="{Binding Actions}" Margin="12,8,0,0">
+                                    <ItemsControl
+                                        ItemsSource="{Binding Actions}"
+                                        Margin="12,8,0,0"
+                                        VirtualizingStackPanel.IsVirtualizing="True"
+                                        VirtualizingStackPanel.VirtualizationMode="Recycling">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid Margin="0,0,0,8" MouseLeftButtonDown="ActionItem_MouseLeftButtonDown">
@@ -1026,7 +1033,9 @@
                                         BorderThickness="0"
                                         Background="Transparent"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        VirtualizingStackPanel.IsVirtualizing="True"
+                                        VirtualizingStackPanel.VirtualizationMode="Recycling">
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="ListViewItem">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -1337,7 +1346,10 @@
                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Description}"
                                             TextWrapping="Wrap" />
-                                        <ItemsControl ItemsSource="{Binding CustomCleanupRules}">
+                                        <ItemsControl
+                                            ItemsSource="{Binding CustomCleanupRules}"
+                                            VirtualizingStackPanel.IsVirtualizing="True"
+                                            VirtualizingStackPanel.VirtualizationMode="Recycling">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel />

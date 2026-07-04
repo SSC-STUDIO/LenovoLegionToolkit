@@ -291,12 +291,12 @@ public class IpcServer(
         await automationProcessor.RunNowAsync(quickAction.Id);
     }
 
-    private static async Task<string?> ListFeaturesAsync()
+    private static async Task<string?> ListFeaturesAsync(CancellationToken cancellationToken = default)
     {
         if (_supportedFeaturesCache is { } cached)
             return cached;
 
-        await SupportedFeaturesCacheSemaphore.WaitAsync().ConfigureAwait(false);
+        await SupportedFeaturesCacheSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (_supportedFeaturesCache is { } cachedAfterWait)

@@ -115,7 +115,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 context.Info.PluginName = plugin.Name;
                 context.Info.Version = GetPluginVersion(pluginType);
                 context.Info.IsActive = true;
-                context.Info.LoadedAt = DateTime.Now;
+                context.Info.LoadedAt = DateTime.UtcNow;
 
                 // Start resource monitoring
                 StartResourceMonitoring(context);
@@ -413,7 +413,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 AverageOperationTimeMs = context.ResourceStats.AverageOperationTimeMs,
                 ViolationCount = context.ResourceStats.ViolationCount,
                 SandboxCreatedAt = context.Info.LoadedAt,
-                TotalRunningTime = DateTime.Now - context.Info.LoadedAt
+                TotalRunningTime = DateTime.UtcNow - context.Info.LoadedAt
             };
         }
     }
@@ -555,7 +555,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             ViolatedPermission = permission,
             Description = description,
             StackTrace = stackTrace,
-            Timestamp = DateTime.Now
+            Timestamp = DateTime.UtcNow
         };
 
         SandboxViolation?.Invoke(this, args);
@@ -574,7 +574,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             ResourceType = resourceType,
             CurrentUsage = currentUsage,
             MaximumAllowed = maximumAllowed,
-            Timestamp = DateTime.Now
+            Timestamp = DateTime.UtcNow
         };
 
         ResourceLimitExceeded?.Invoke(this, args);
@@ -596,7 +596,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
 
     private static string EnsureTrailingSeparator(string path)
     {
-        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+        if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) || path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             return path;
 
         return path + Path.DirectorySeparatorChar;
@@ -667,8 +667,8 @@ public class PluginSandbox : IPluginSandbox, IDisposable
         protected override Assembly? Load(AssemblyName assemblyName)
         {
             // Don't load host assemblies into plugin context
-            if (assemblyName.Name?.StartsWith("LenovoLegionToolkit") == true &&
-                !assemblyName.Name.Contains("Plugins"))
+            if (assemblyName.Name?.StartsWith("LenovoLegionToolkit", StringComparison.Ordinal) == true &&
+                !assemblyName.Name.Contains("Plugins", StringComparison.Ordinal))
             {
                 return null;
             }

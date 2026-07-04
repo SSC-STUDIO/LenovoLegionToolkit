@@ -53,7 +53,7 @@ public class DashboardGroupControl : UserControl
             {
                 try
                 {
-                    var itemControls = await item.GetControlAsync().WaitAsync(TimeSpan.FromSeconds(6));
+                    var itemControls = await item.GetControlAsync().WaitAsync(TimeSpan.FromSeconds(6)).ConfigureAwait(false);
                     controls.AddRange(itemControls);
                 }
                 catch (TimeoutException ex)
@@ -108,7 +108,7 @@ public class DashboardGroupControl : UserControl
         if (newContent is not StackPanel)
             return;
 
-        await TryCompleteFirstVisibleContentReadyAsync();
+        await TryCompleteFirstVisibleContentReadyAsync().ConfigureAwait(false);
     }
 
     private async Task TryCompleteFirstVisibleContentReadyAsync()
@@ -129,7 +129,7 @@ public class DashboardGroupControl : UserControl
                 return;
             }
 
-            await Task.WhenAll(visibleRefreshingControls.Select(control => control.InitialRefreshCompletedTask));
+            await Task.WhenAll(visibleRefreshingControls.Select(control => control.InitialRefreshCompletedTask)).ConfigureAwait(false);
             _firstVisibleContentReadyTaskCompletionSource.TrySetResult();
         }
         catch (Exception ex)

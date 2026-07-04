@@ -30,19 +30,19 @@ namespace UniversalDeviceToolkit.PerformanceTest
             results["WMI查询"] = await TestWMIQueryPerformance();
             results["文件IO"] = await TestFileIOPerformance();
             results["设置加载"] = await TestSettingsLoadPerformance();
-            results["字符串处�?] = await TestStringPerformance();
+            results["字符串处�?] = await TestStringPerformance();
             results["集合操作"] = await TestCollectionPerformance();
-            results["并行初始�?] = await TestParallelInitialization();
+            results["并行初始�?] = await TestParallelInitialization();
 
             Console.WriteLine("\n========================================");
-            Console.WriteLine("性能基准测试结果汇�?);
+            Console.WriteLine("性能基准测试结果汇�?);
             Console.WriteLine("========================================\n");
 
             foreach (var result in results.OrderBy(r => r.Value.AverageTimeMs))
             {
                 var status = result.Value.AverageTimeMs < 10 ? "优秀" :
                             result.Value.AverageTimeMs < 50 ? "良好" :
-                            result.Value.AverageTimeMs < 100 ? "一�? : "需优化";
+                            result.Value.AverageTimeMs < 100 ? "一�? : "需优化";
                 Console.WriteLine($"{result.Key,-20} | 平均耗时: {result.Value.AverageTimeMs,6:F2} ms | {status}");
             }
 
@@ -142,7 +142,7 @@ namespace UniversalDeviceToolkit.PerformanceTest
                 for (int i = 0; i < 100; i++)
                 {
                     var sw = Stopwatch.StartNew();
-                    var content = string.Join("\n", Enumerable.Range(0, 100).Select(j => $"测试�?{i}-{j}"));
+                    var content = string.Join("\n", Enumerable.Range(0, 100).Select(j => $"测试�?{i}-{j}"));
                     await File.WriteAllTextAsync(tempPath, content).ConfigureAwait(false);
                     var readContent = await File.ReadAllTextAsync(tempPath).ConfigureAwait(false);
                     File.Delete(tempPath);
@@ -224,9 +224,9 @@ namespace UniversalDeviceToolkit.PerformanceTest
             {
                 var sw = Stopwatch.StartNew();
                 var text = string.Join(" ", Enumerable.Range(0, 100).Select(j => $"单词{j}"));
-                var result = text.Split(' ').Where(s => s.StartsWith("�?)).ToList();
+                var result = text.Split(' ').Where(s => s.StartsWith("�?)).ToList();
                 var replaced = text.Replace("单词", "word");
-                var contains = replaced.Contains("word50");
+                var contains = replaced.Contains("word50", StringComparison.Ordinal);
                 sw.Stop();
                 times.Add(sw.ElapsedMilliseconds);
             }
@@ -237,7 +237,7 @@ namespace UniversalDeviceToolkit.PerformanceTest
 
             return new PerformanceMetric
             {
-                Name = "字符串处�?,
+                Name = "字符串处�?,
                 TotalTimeMs = stopwatch.ElapsedMilliseconds,
                 AverageTimeMs = times.Average(),
                 MinTimeMs = times.Min(),
@@ -311,7 +311,7 @@ namespace UniversalDeviceToolkit.PerformanceTest
 
             return new PerformanceMetric
             {
-                Name = "并行初始�?,
+                Name = "并行初始�?,
                 TotalTimeMs = serialTime + parallelTime,
                 AverageTimeMs = parallelTime,
                 MinTimeMs = parallelTime,
@@ -332,7 +332,7 @@ namespace UniversalDeviceToolkit.PerformanceTest
             {
                 var outputPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                    $"PerformanceBenchmark_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
+                    $"PerformanceBenchmark_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt");
 
                 var lines = new List<string>
                 {
@@ -354,7 +354,7 @@ namespace UniversalDeviceToolkit.PerformanceTest
                 lines.Add($"总测试耗时: {results.Sum(r => r.Value.TotalTimeMs):F2} ms");
                 lines.Add("");
                 lines.Add("性能分析建议:");
-                lines.Add("1. WMI查询耗时较长，建议实施缓存机�?);
+                lines.Add("1. WMI查询耗时较长，建议实施缓存机�?);
                 lines.Add("2. 文件IO操作频繁，建议使用异步操作和批量处理");
                 lines.Add("3. 设置加载可考虑内存缓存");
                 lines.Add("4. 并行初始化可显著提升启动性能");

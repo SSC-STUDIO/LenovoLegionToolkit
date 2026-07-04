@@ -19,6 +19,9 @@ public class SafePerformanceCounter(string categoryName, string counterName, str
         }
         catch
         {
+            _performanceCounter?.Dispose();
+            _performanceCounter = null;
+            _nextRetryTime = DateTime.UtcNow.AddSeconds(30);
             return 0f;
         }
     }
@@ -41,9 +44,11 @@ public class SafePerformanceCounter(string categoryName, string counterName, str
         GC.SuppressFinalize(this);
     }
 
+    private DateTime _nextRetryTime = DateTime.MinValue;
+
     private void TryCreateIfNeeded()
     {
-        if (_performanceCounter is not null)
+        if (_performanceCounter is not null || DateTime.UtcNow < _nextRetryTime)
             return;
 
         try
@@ -59,6 +64,7 @@ public class SafePerformanceCounter(string categoryName, string counterName, str
                 Log.Instance.Trace($"Failed to create performance counter. [categoryName={categoryName}, counterName={counterName}, instanceName={instanceName}]", ex);
 
             _performanceCounter = null;
+            _nextRetryTime = DateTime.UtcNow.AddSeconds(30);
         }
     }
 }

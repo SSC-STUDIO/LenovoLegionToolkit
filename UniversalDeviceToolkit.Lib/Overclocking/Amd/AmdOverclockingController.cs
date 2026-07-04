@@ -41,11 +41,11 @@ public sealed class AmdOverclockingController : IDisposable
 
     public bool DoNotApply { get; set; }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         if (_isInitialized) return;
 
-        await _lock.WaitAsync().ConfigureAwait(false);
+        await _lock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (_isInitialized) return;

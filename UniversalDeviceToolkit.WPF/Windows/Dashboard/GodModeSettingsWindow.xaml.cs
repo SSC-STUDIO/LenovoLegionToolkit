@@ -63,7 +63,7 @@ public partial class GodModeSettingsWindow
     private async void GodModeSettingsWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshAsync()
@@ -77,11 +77,11 @@ public partial class GodModeSettingsWindow
 
             var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
 
-            _vantageRunningWarningInfoBar.IsOpen = await _godModeController.NeedsVantageDisabledAsync() && await _vantageDisabler.GetStatusAsync() == SoftwareStatus.Enabled;
-            _legionZoneRunningWarningInfoBar.IsOpen = await _godModeController.NeedsLegionZoneDisabledAsync() && await _legionZoneDisabler.GetStatusAsync() == SoftwareStatus.Enabled;
+            _vantageRunningWarningInfoBar.IsOpen = await _godModeController.NeedsVantageDisabledAsync().ConfigureAwait(false) && await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled;
+            _legionZoneRunningWarningInfoBar.IsOpen = await _godModeController.NeedsLegionZoneDisabledAsync().ConfigureAwait(false) && await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled;
 
-            _state = await _godModeController.GetStateAsync();
-            _defaults = await _godModeController.GetDefaultsInOtherPowerModesAsync();
+            _state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            _defaults = await _godModeController.GetDefaultsInOtherPowerModesAsync().ConfigureAwait(false);
 
             if (_state is null)
                 throw new InvalidOperationException($"{nameof(_state)} is null");
@@ -89,17 +89,17 @@ public partial class GodModeSettingsWindow
             if (_defaults is null)
                 throw new InvalidOperationException($"{nameof(_defaults)} are null");
 
-            await SetStateAsync(_state.Value);
+            await SetStateAsync(_state.Value).ConfigureAwait(false);
 
             if (!_initialDefaultsApplied
                 && _initialDefaultsSourceMode is { } initialDefaultsSourceMode
                 && _defaults.TryGetValue(initialDefaultsSourceMode, out var defaults))
             {
-                SetDefaults(defaults);
+                await SetDefaultsAsync(defaults).ConfigureAwait(false);
                 _initialDefaultsApplied = true;
             }
 
-            await loadingTask;
+            await loadingTask.ConfigureAwait(false);
 
             _loadButton.Visibility = _defaults.Count != 0 ? Visibility.Visible : Visibility.Collapsed;
             _buttonsStackPanel.Visibility = Visibility.Visible;
@@ -110,7 +110,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't load settings.", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message).ConfigureAwait(false);
 
             Close();
         }
@@ -168,8 +168,8 @@ public partial class GodModeSettingsWindow
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Persisting God Mode state... [activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
 
-        await _godModeController.SetStateAsync(_state.Value);
-        _state = await _godModeController.GetStateAsync();
+        await _godModeController.SetStateAsync(_state.Value).ConfigureAwait(false);
+        _state = await _godModeController.GetStateAsync().ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"God Mode state reloaded after persistence. [activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
@@ -177,12 +177,12 @@ public partial class GodModeSettingsWindow
 
     private async Task PersistAndRefreshPresetListAsync()
     {
-        await PersistStateAsync();
+        await PersistStateAsync().ConfigureAwait(false);
 
         if (!_state.HasValue)
             return;
 
-        await SetStateAsync(_state.Value);
+        await SetStateAsync(_state.Value).ConfigureAwait(false);
     }
 
     internal static string GetUniquePresetName(
@@ -292,11 +292,11 @@ public partial class GodModeSettingsWindow
 
             FlushActivePresetToState();
 
-            if (await _powerModeFeature.GetStateAsync() != PowerModeState.GodMode)
-                await _powerModeFeature.SetStateAsync(PowerModeState.GodMode);
+            if (await _powerModeFeature.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
+                await _powerModeFeature.SetStateAsync(PowerModeState.GodMode).ConfigureAwait(false);
 
-            await PersistStateAsync();
-            await _godModeController.ApplyStateAsync();
+            await PersistStateAsync().ConfigureAwait(false);
+            await _godModeController.ApplyStateAsync().ConfigureAwait(false);
 
             return true;
         }
@@ -305,7 +305,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't apply settings", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message).ConfigureAwait(false);
 
             return false;
         }
@@ -350,7 +350,7 @@ public partial class GodModeSettingsWindow
         var fanTableInfo = preset.FanTableInfo;
         if (fanTableInfo.HasValue)
         {
-            var minimum = await _godModeController.GetMinimumFanTableAsync();
+            var minimum = await _godModeController.GetMinimumFanTableAsync().ConfigureAwait(false);
             _fanCurveControl.SetFanTableInfo(fanTableInfo.Value, minimum);
         }
         else
@@ -424,66 +424,74 @@ public partial class GodModeSettingsWindow
         _cpuShortTermPowerLimitControl.ValueChanged += CpuShortTermPowerLimitSlider_ValueChanged;
     }
 
-    private async void SetDefaults(GodModeDefaults defaults)
+    private async Task SetDefaultsAsync(GodModeDefaults defaults)
     {
-        if (_cpuLongTermPowerLimitControl.Visibility == Visibility.Visible && defaults.CPULongTermPowerLimit is { } cpuLongTermPowerLimit)
-            _cpuLongTermPowerLimitControl.Value = cpuLongTermPowerLimit;
-
-        if (_cpuShortTermPowerLimitControl.Visibility == Visibility.Visible && defaults.CPUShortTermPowerLimit is { } cpuShortTermPowerLimit)
-            _cpuShortTermPowerLimitControl.Value = cpuShortTermPowerLimit;
-
-        if (_cpuPeakPowerLimitControl.Visibility == Visibility.Visible && defaults.CPUPeakPowerLimit is { } cpuPeakPowerLimit)
-            _cpuPeakPowerLimitControl.Value = cpuPeakPowerLimit;
-
-        if (_cpuCrossLoadingLimitControl.Visibility == Visibility.Visible && defaults.CPUCrossLoadingPowerLimit is { } cpuCrossLoadingPowerLimit)
-            _cpuCrossLoadingLimitControl.Value = cpuCrossLoadingPowerLimit;
-
-        if (_cpuPL1TauControl.Visibility == Visibility.Visible && defaults.CPUPL1Tau is { } cpuPL1Tau)
-            _cpuPL1TauControl.Value = cpuPL1Tau;
-
-        if (_apuSPPTPowerLimitControl.Visibility == Visibility.Visible && defaults.APUsPPTPowerLimit is { } apuSPPTPowerLimit)
-            _apuSPPTPowerLimitControl.Value = apuSPPTPowerLimit;
-
-        if (_cpuTemperatureLimitControl.Visibility == Visibility.Visible && defaults.CPUTemperatureLimit is { } cpuTemperatureLimit)
-            _cpuTemperatureLimitControl.Value = cpuTemperatureLimit;
-
-        if (_gpuPowerBoostControl.Visibility == Visibility.Visible && defaults.GPUPowerBoost is { } gpuPowerBoost)
-            _gpuPowerBoostControl.Value = gpuPowerBoost;
-
-        if (_gpuConfigurableTGPControl.Visibility == Visibility.Visible && defaults.GPUConfigurableTGP is { } gpuConfigurableTgp)
-            _gpuConfigurableTGPControl.Value = gpuConfigurableTgp;
-
-        if (_gpuTemperatureLimitControl.Visibility == Visibility.Visible && defaults.GPUTemperatureLimit is { } gpuTemperatureLimit)
-            _gpuTemperatureLimitControl.Value = gpuTemperatureLimit;
-
-        if (_gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Visibility == Visibility.Visible && defaults.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline is { } gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline)
-            _gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Value = gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline;
-
-        if (_gpuToCpuDynamicBoostControl.Visibility == Visibility.Visible && defaults.GPUToCPUDynamicBoost is { } gpuToCPUDynamicBoost)
-            _gpuToCpuDynamicBoostControl.Value = gpuToCPUDynamicBoost;
-
-        if (_fanCurveCardControl.Visibility == Visibility.Visible && defaults.FanTable is { } fanTable)
+        try
         {
-            var state = await _godModeController.GetStateAsync();
-            var preset = state.Presets[state.ActivePresetId];
-            var data = preset.FanTableInfo?.Data;
+            if (_cpuLongTermPowerLimitControl.Visibility == Visibility.Visible && defaults.CPULongTermPowerLimit is { } cpuLongTermPowerLimit)
+                _cpuLongTermPowerLimitControl.Value = cpuLongTermPowerLimit;
 
-            if (data is not null)
+            if (_cpuShortTermPowerLimitControl.Visibility == Visibility.Visible && defaults.CPUShortTermPowerLimit is { } cpuShortTermPowerLimit)
+                _cpuShortTermPowerLimitControl.Value = cpuShortTermPowerLimit;
+
+            if (_cpuPeakPowerLimitControl.Visibility == Visibility.Visible && defaults.CPUPeakPowerLimit is { } cpuPeakPowerLimit)
+                _cpuPeakPowerLimitControl.Value = cpuPeakPowerLimit;
+
+            if (_cpuCrossLoadingLimitControl.Visibility == Visibility.Visible && defaults.CPUCrossLoadingPowerLimit is { } cpuCrossLoadingPowerLimit)
+                _cpuCrossLoadingLimitControl.Value = cpuCrossLoadingPowerLimit;
+
+            if (_cpuPL1TauControl.Visibility == Visibility.Visible && defaults.CPUPL1Tau is { } cpuPL1Tau)
+                _cpuPL1TauControl.Value = cpuPL1Tau;
+
+            if (_apuSPPTPowerLimitControl.Visibility == Visibility.Visible && defaults.APUsPPTPowerLimit is { } apuSPPTPowerLimit)
+                _apuSPPTPowerLimitControl.Value = apuSPPTPowerLimit;
+
+            if (_cpuTemperatureLimitControl.Visibility == Visibility.Visible && defaults.CPUTemperatureLimit is { } cpuTemperatureLimit)
+                _cpuTemperatureLimitControl.Value = cpuTemperatureLimit;
+
+            if (_gpuPowerBoostControl.Visibility == Visibility.Visible && defaults.GPUPowerBoost is { } gpuPowerBoost)
+                _gpuPowerBoostControl.Value = gpuPowerBoost;
+
+            if (_gpuConfigurableTGPControl.Visibility == Visibility.Visible && defaults.GPUConfigurableTGP is { } gpuConfigurableTgp)
+                _gpuConfigurableTGPControl.Value = gpuConfigurableTgp;
+
+            if (_gpuTemperatureLimitControl.Visibility == Visibility.Visible && defaults.GPUTemperatureLimit is { } gpuTemperatureLimit)
+                _gpuTemperatureLimitControl.Value = gpuTemperatureLimit;
+
+            if (_gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Visibility == Visibility.Visible && defaults.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline is { } gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline)
+                _gpuTotalProcessingPowerTargetOnAcOffsetFromBaselineControl.Value = gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline;
+
+            if (_gpuToCpuDynamicBoostControl.Visibility == Visibility.Visible && defaults.GPUToCPUDynamicBoost is { } gpuToCPUDynamicBoost)
+                _gpuToCpuDynamicBoostControl.Value = gpuToCPUDynamicBoost;
+
+            if (_fanCurveCardControl.Visibility == Visibility.Visible && defaults.FanTable is { } fanTable)
             {
-                var defaultFanTableInfo = new FanTableInfo(data, fanTable);
-                var minimum = await _godModeController.GetMinimumFanTableAsync();
-                _fanCurveControl.SetFanTableInfo(defaultFanTableInfo, minimum);
+                var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+                var preset = state.Presets[state.ActivePresetId];
+                var data = preset.FanTableInfo?.Data;
+
+                if (data is not null)
+                {
+                    var defaultFanTableInfo = new FanTableInfo(data, fanTable);
+                    var minimum = await _godModeController.GetMinimumFanTableAsync().ConfigureAwait(false);
+                    _fanCurveControl.SetFanTableInfo(defaultFanTableInfo, minimum);
+                }
             }
+
+            if (_fanFullSpeedCardControl.Visibility == Visibility.Visible && defaults.FanFullSpeed is { } fanFullSpeed)
+                _fanFullSpeedToggle.IsChecked = fanFullSpeed;
+
+            if (_maxValueOffsetCardControl.Visibility == Visibility.Visible)
+                _maxValueOffsetNumberBox.Text = "0";
+
+            if (_minValueOffsetCardControl.Visibility == Visibility.Visible)
+                _minValueOffsetNumberBox.Text = "0";
         }
-
-        if (_fanFullSpeedCardControl.Visibility == Visibility.Visible && defaults.FanFullSpeed is { } fanFullSpeed)
-            _fanFullSpeedToggle.IsChecked = fanFullSpeed;
-
-        if (_maxValueOffsetCardControl.Visibility == Visibility.Visible)
-            _maxValueOffsetNumberBox.Text = "0";
-
-        if (_minValueOffsetCardControl.Visibility == Visibility.Visible)
-            _minValueOffsetNumberBox.Text = "0";
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set God Mode defaults: {ex.Message}", ex);
+        }
     }
 
     private async void PresetsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -502,21 +510,21 @@ public partial class GodModeSettingsWindow
 
         try
         {
-            await PersistStateAsync();
+            await PersistStateAsync().ConfigureAwait(false);
 
-            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
-                await _godModeController.ApplyStateAsync();
+            if (await _powerModeFeature.GetStateAsync().ConfigureAwait(false) == PowerModeState.GodMode)
+                await _godModeController.ApplyStateAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't switch preset.", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message).ConfigureAwait(false);
             return;
         }
 
-        await SetStateAsync(_state.Value);
+        await SetStateAsync(_state.Value).ConfigureAwait(false);
     }
 
     private async void EditPresetsButton_Click(object sender, RoutedEventArgs e)
@@ -530,7 +538,7 @@ public partial class GodModeSettingsWindow
         var presets = _state.Value.Presets;
         var preset = presets[activePresetId];
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name).ConfigureAwait(false);
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Edit preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={activePresetId}]");
         if (string.IsNullOrWhiteSpace(result))
@@ -540,14 +548,14 @@ public partial class GodModeSettingsWindow
 
         try
         {
-            await PersistAndRefreshPresetListAsync();
+            await PersistAndRefreshPresetListAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't rename preset.", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message).ConfigureAwait(false);
             return;
         }
 
@@ -569,17 +577,17 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={_state.Value.Presets.Count}, newActivePresetId={_state.Value.ActivePresetId}]");
 
-            await PersistAndRefreshPresetListAsync();
+            await PersistAndRefreshPresetListAsync().ConfigureAwait(false);
 
-            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
-                await _godModeController.ApplyStateAsync();
+            if (await _powerModeFeature.GetStateAsync().ConfigureAwait(false) == PowerModeState.GodMode)
+                await _godModeController.ApplyStateAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't delete preset.", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message).ConfigureAwait(false);
             return;
         }
 
@@ -591,7 +599,7 @@ public partial class GodModeSettingsWindow
             return;
 
         var defaultName = GetUniquePresetName(GetDefaultPresetName(), _state.Value.Presets);
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, defaultName);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, defaultName).ConfigureAwait(false);
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Add preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
         if (string.IsNullOrWhiteSpace(result))
@@ -608,14 +616,14 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={_state.Value.Presets.Count}]");
 
-            await PersistAndRefreshPresetListAsync();
+            await PersistAndRefreshPresetListAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't add preset.", ex);
 
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message).ConfigureAwait(false);
             return;
         }
 
@@ -623,16 +631,16 @@ public partial class GodModeSettingsWindow
 
     private async void DefaultFanCurve_Click(object sender, RoutedEventArgs e)
     {
-        var state = await _godModeController.GetStateAsync();
+        var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
         var preset = state.Presets[state.ActivePresetId];
         var data = preset.FanTableInfo?.Data;
 
         if (data is null)
             return;
 
-        var defaultFanTable = await _godModeController.GetDefaultFanTableAsync();
+        var defaultFanTable = await _godModeController.GetDefaultFanTableAsync().ConfigureAwait(false);
         var defaultFanTableInfo = new FanTableInfo(data, defaultFanTable);
-        var minimum = await _godModeController.GetMinimumFanTableAsync();
+        var minimum = await _godModeController.GetMinimumFanTableAsync().ConfigureAwait(false);
         _fanCurveControl.SetFanTableInfo(defaultFanTableInfo, minimum);
     }
 
@@ -640,7 +648,7 @@ public partial class GodModeSettingsWindow
     {
         _snackBar.Title = title;
         _snackBar.Content = message;
-        await _snackBar.ShowAsync();
+        await _snackBar.ShowAsync().ConfigureAwait(false);
     }
 
     private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -656,7 +664,7 @@ public partial class GodModeSettingsWindow
             .Select(d =>
             {
                 var menuItem = new MenuItem { Header = d.Key.GetDisplayName() };
-                menuItem.Click += (_, _) => SetDefaults(d.Value);
+                menuItem.Click += async (_, _) => await SetDefaultsAsync(d.Value).ConfigureAwait(false);
                 return menuItem;
             });
 
@@ -675,14 +683,14 @@ public partial class GodModeSettingsWindow
 
     private async void SaveAndCloseButton_Click(object sender, RoutedEventArgs e)
     {
-        if (await ApplyAsync())
+        if (await ApplyAsync().ConfigureAwait(false))
             Close();
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        await ApplyAsync();
-        await RefreshAsync();
+        await ApplyAsync().ConfigureAwait(false);
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private void CpuLongTermPowerLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -32,7 +32,7 @@ public partial class EditDashboardWindow
     private async void EditDashboardWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshAsync()
@@ -55,7 +55,7 @@ public partial class EditDashboardWindow
 
         GroupsChanged();
 
-        await loadingTask;
+        await loadingTask.ConfigureAwait(false);
 
         _applyRevertStackPanel.Visibility = Visibility.Visible;
         _infoBar.Visibility = Visibility.Visible;
@@ -68,7 +68,7 @@ public partial class EditDashboardWindow
             Resource.EditDashboardWindow_CreateGroup_Title,
             Resource.EditDashboardWindow_CreateGroup_Message,
             primaryButton: Resource.OK,
-            secondaryButton: Resource.Cancel);
+            secondaryButton: Resource.Cancel).ConfigureAwait(false);
 
         if (string.IsNullOrEmpty(result))
             return;

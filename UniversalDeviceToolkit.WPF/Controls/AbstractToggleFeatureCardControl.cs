@@ -71,6 +71,12 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
     protected AbstractToggleFeatureCardControl()
     {
         InitializeComponent();
+        Unloaded += AbstractToggleFeatureCardControl_Unloaded;
+    }
+
+    private void AbstractToggleFeatureCardControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        MessagingCenter.Unsubscribe<FeatureStateMessage<T>>(this);
     }
 
     private void InitializeComponent()
@@ -86,14 +92,14 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
         Content = _cardControl;
     }
 
-    private async void Toggle_Click(object sender, RoutedEventArgs e) => await OnStateChange(_toggle, Feature);
+    private async void Toggle_Click(object sender, RoutedEventArgs e) => await OnStateChange(_toggle, Feature).ConfigureAwait(false);
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await Feature.IsSupportedAsync())
+        if (!await Feature.IsSupportedAsync().ConfigureAwait(false))
             throw new NotSupportedException();
 
-        _toggle.IsChecked = OnState.Equals(await Feature.GetStateAsync());
+        _toggle.IsChecked = OnState.Equals(await Feature.GetStateAsync().ConfigureAwait(false));
         _toggle.Visibility = Visibility.Visible;
     }
 
@@ -104,7 +110,7 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
             if (!IsVisible)
                 return;
 
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
         }));
     }
 
@@ -120,10 +126,10 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
             _toggle.IsEnabled = false;
 
             var state = toggle.IsChecked.Value ? OnState : OffState;
-            if (state.Equals(await feature.GetStateAsync()))
+            if (state.Equals(await feature.GetStateAsync().ConfigureAwait(false)))
                 return;
 
-            await feature.SetStateAsync(state);
+            await feature.SetStateAsync(state).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -137,13 +143,13 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
         finally
         {
             if (AdditionalStateChangeDelay > TimeSpan.Zero)
-                await Task.Delay(AdditionalStateChangeDelay);
+                await Task.Delay(AdditionalStateChangeDelay).ConfigureAwait(false);
 
             _toggle.IsEnabled = true;
         }
 
         if (exceptionOccurred)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     protected virtual void OnStateChangeException(Exception exception) { }

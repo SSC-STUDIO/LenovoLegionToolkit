@@ -115,17 +115,17 @@
     <value>لاگو کریں اور بند کریں</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
-    <value>Universal Device Toolkit must be running for automatic actions to work.</value>
+    <value>خودکار کارروائیوں کے کام کرنے کے لیے Universal Device Toolkit چل رہا ہونا چاہیے۔</value>
   </data>
   <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
     <value>فعال کریں</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>No Actions defined. Click "Add new" to create new Action.</value>
+    <value>کوئی کارروائیاں متعین نہیں ہیں۔ نئی کارروائی بنانے کے لیے "نیا شامل کریں" پر کلک کریں۔</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
-    <value>If enabled, these action will run automatically. Whenever state changes, all actions will be evaluated from top to bottom.
-Only actions that match current state will run.</value>
+    <value>اگر فعال ہو تو یہ کارروائیاں خودکار طور پر چلیں گی۔ جب بھی حالت تبدیل ہوگی، تمام کارروائیوں کا اوپر سے نیچے جائزہ لیا جائے گا۔
+صرف موجودہ حالت سے مطابقت رکھنے والی کارروائیاں چلیں گی۔</value>
   </data>
   <data name="AutomationPage_Actions_Title" xml:space="preserve">
     <value>کارروائیاں</value>
@@ -137,10 +137,10 @@ Only actions that match current state will run.</value>
     <value>نیا شامل کریں</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>No Quick Actions defined. Click "Add new" to create new Quick Action.</value>
+    <value>کوئی فوری کارروائیاں متعین نہیں ہیں۔ نئی فوری کارروائی بنانے کے لیے "نیا شامل کریں" پر کلک کریں۔</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
-    <value>Quick actions are available in the right click menu of the tray icon.</value>
+    <value>فوری کارروائیاں ٹرے آئیکن کے رائٹ کلک مینو میں دستیاب ہیں۔</value>
   </data>
   <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
     <value>فوری کارروائیاں</value>
@@ -176,7 +176,7 @@ Only actions that match current state will run.</value>
     <value>خصوصی</value>
   </data>
   <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
-    <value>Do not execute further actions when this action runs.</value>
+    <value>جب یہ کارروائی چلے تو مزید کارروائیاں نہ چلائیں۔</value>
   </data>
   <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
     <value>ابھی چلائیں</value>
@@ -221,7 +221,7 @@ Only actions that match current state will run.</value>
     <value>بغیر نام</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>Automatically detects when certain games are running and tweaks CPU and GPU performance. Temperatures and fan noise might increase.</value>
+    <value>جب کچھ خاص گیمز چل رہی ہوں تو خودکار طور پر پتہ لگاتا ہے اور CPU اور GPU کی کارکردگی ایڈجسٹ کرتا ہے۔ درجہ حرارت اور پنکھے کا شور بڑھ سکتا ہے۔</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
     <value>AI انجن فعال کریں</value>
@@ -323,8 +323,8 @@ Only actions that match current state will run.</value>
     <value>تیار کرنے کی تاریخ</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Time since laptop was last connected to AC power.
-This time might not be accurate, if laptop was charged when sleeping or off.</value>
+    <value>لیپ ٹاپ آخری بار AC پاور سے کب منسلک ہوا تھا اس کا وقت۔
+اگر سلیپ یا بند ہونے کی حالت میں لیپ ٹاپ چارج ہوا تو یہ وقت درست نہیں ہو سکتا۔</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
     <value>بیٹری پر ہے جب سے</value>
@@ -351,11 +351,11 @@ This time might not be accurate, if laptop was charged when sleeping or off.</va
     <value>سرخ</value>
   </data>
   <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>اپنے کمپیوٹر کے استعمال اور پاور کی حالت کی بنیاد پر GPU کام کرنے کا موڈ منتخب کریں۔
+موڈ تبدیل کرنے کے لیے دوبارہ شروع کرنا ضروری ہو سکتا ہے۔</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Changing to {0} requires restart. Do you want to restart now?</value>
+    <value>{0} میں تبدیل کرنے کے لیے دوبارہ شروع کرنا ضروری ہے۔ کیا آپ ابھی دوبارہ شروع کرنا چاہتے ہیں؟</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
     <value>دوبارہ شروع کرنا ضروری ہے</value>
@@ -385,18 +385,18 @@ Switching modes may require restart.</value>
     <value>ہوم</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU if it is active unnecessarily.
+    <value>اگر الگ GPU غیر ضروری طور پر فعال ہے تو اسے غیر فعال کریں۔
 
-WARNING: This action will not run correctly, if internal display is off or Hybrid mode is not active.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو یا ہائبرڈ موڈ فعال نہ ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
     <value>GPU غیر فعال کریں</value>
   </data>
   <data name="DelayAutomationStepControl_Message" xml:space="preserve">
-    <value>Add delay before running next step.</value>
+    <value>اگلا مرحلہ چلانے سے پہلے تاخیر شامل کریں۔</value>
   </data>
   <data name="DelayAutomationStepControl_Title" xml:space="preserve">
-    <value>Delay</value>
+    <value>تاخیر</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>حذف کریں</value>
@@ -468,10 +468,10 @@ WARNING: This action will not run correctly, if internal display is off or Hybri
     <value>ایپس بند کریں</value>
   </data>
   <data name="DiscreteGPUControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU, if it is active unnecessarily.</value>
+    <value>اگر الگ GPU غیر ضروری طور پر فعال ہے تو اسے غیر فعال کریں۔</value>
   </data>
   <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
-    <value>A monitor is connected to nVidia GPU.</value>
+    <value>nVidia GPU سے مانیٹر منسلک ہے۔</value>
   </data>
   <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
     <value>کوئی عمل نہیں</value>
@@ -492,25 +492,25 @@ WARNING: This action will not run correctly, if internal display is off or Hybri
     <value>مجرد GPU</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Change display brightness of the built-in display.
+    <value>بلٹ ان ڈسپلے کی چمک تبدیل کریں۔
 
-WARNING: This action will not run correctly, if internal display is off.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Display brightness</value>
+    <value>ڈسپلے کی چمک</value>
   </data>
 
   <data name="Edit" xml:space="preserve">
     <value>ترمیم کریں</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
-    <value>Uncheck refresh rates that you do not want to use when Fn+R shortcut is used.</value>
+    <value>جب Fn+R شارٹ کٹ استعمال ہو تو جن ریفریش ریٹس کو آپ استعمال نہیں کرنا چاہتے ان کا نشان ہٹائیں۔</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Make sure that laptop display is on. Universal Device Toolkit can't load refresh rates for a display that is not on.</value>
+    <value>یقینی بنائیں کہ لیپ ٹاپ کا ڈسپلے آن ہے۔ Universal Device Toolkit بند ڈسپلے کے لیے ریفریش ریٹس لوڈ نہیں کر سکتا۔</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
-    <value>No Refresh Rates found</value>
+    <value>کوئی ریفریش ریٹ نہیں ملا</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
     <value>ریفریش ریٹس خارج کریں</value>
@@ -522,37 +522,37 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>برآمد کریں</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>Use only integrated GPU when on battery and both integrated and discrete GPU when AC adapter is connected. When a non-standard adapter is connected, system switches to Hybrid-iGPU Only Mode.</value>
+    <value>جب بیٹری پر ہو تو صرف انٹیگریٹڈ GPU استعمال کریں اور جب AC اڈاپٹر منسلک ہو تو دونوں انٹیگریٹڈ اور الگ GPU استعمال کریں۔ جب نان اسٹینڈرڈ اڈاپٹر منسلک ہو تو سسٹم Hybrid-iGPU صرف موڈ پر سوئچ ہو جاتا ہے۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
-    <value>Hybrid-Auto Mode</value>
+    <value>ہائبرڈ-خودکار موڈ</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
-    <value>Switching to and from this mode requires restart.</value>
+    <value>اس موڈ میں اور اس سے باہر سوئچ کرنے کے لیے دوبارہ شروع کرنا ضروری ہے۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
-    <value>Use only discrete GPU. This mode provides best graphics performance, but increases power consumption.</value>
+    <value>صرف الگ GPU استعمال کریں۔ یہ موڈ بہترین گرافکس کارکردگی فراہم کرتا ہے لیکن پاور کا استعمال بڑھاتا ہے۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
-    <value>dGPU Mode</value>
+    <value>dGPU موڈ</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
-    <value>Both integrated and discrete GPU are enabled. System will automatically switch between them based on its needs.</value>
+    <value>انٹیگریٹڈ اور الگ GPU دونوں فعال ہیں۔ سسٹم ضرورت کے مطابق خودکار طور پر ان کے درمیان سوئچ کرے گا۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
     <value>ہائبرڈ موڈ</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
-    <value>This mode only takes effect when discrete GPU is not working.</value>
+    <value>یہ موڈ صرف اس وقت لاگو ہوتا ہے جب الگ GPU کام نہ کر رہا ہو۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
-    <value>Only use integrated GPU. This mode minimizes power consumption and noise.</value>
+    <value>صرف انٹیگریٹڈ GPU استعمال کریں۔ یہ موڈ پاور کا استعمال اور شور کم سے کم کرتا ہے۔</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
-    <value>Hybrid-iGPU Only Mode</value>
+    <value>ہائبرڈ-iGPU صرف موڈ</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
-    <value>About GPU Working Modes</value>
+    <value>GPU کام کرنے کے موڈز کے بارے میں</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
     <value>°F</value>
@@ -576,95 +576,95 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>RPM</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>جب لیپ ٹاپ کا ڈھکن کھولیں تو لیپ ٹاپ آن ہو جائے۔</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>شروع کرنے کے لیے کھولیں</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>جب لیپ ٹاپ کا ڈھکن کھولیں تو لیپ ٹاپ آن ہو جائے۔</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>شروع کرنے کے لیے کھولیں</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Fn کلید دبائے بغیر F1-F12 کلیدوں کے ثانوی افعال استعمال کریں۔</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
     <value>Fn لاک</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Fn کلید دبائے بغیر F1-F12 کلیدوں کے ثانوی افعال استعمال کریں۔</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
     <value>Fn لاک</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>انتباہ!
+کچھ لیپ ٹاپ اشارہ کردہ سے کم قیمتیں قبول کر سکتے ہیں لیکن محتاط رہیں۔ یہ آپشن غیر متوقع رویے کا سبب بن سکتا ہے۔ اگر آپ کو یقین نہیں ہے کہ آپ کیا کر رہے ہیں تو اسے 0 پر چھوڑ دیں۔</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>Minimum offset</value>
+    <value>کم از کم آفسیٹ</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>انتباہ!
+کچھ لیپ ٹاپ اشارہ کردہ سے زیادہ قیمتیں قبول کر سکتے ہیں لیکن محتاط رہیں۔ یہ آپشن غیر متوقع رویے کا سبب بن سکتا ہے۔ اگر آپ کو یقین نہیں ہے کہ آپ کیا کر رہے ہیں تو اسے 0 پر چھوڑ دیں۔</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>Maximum offset</value>
+    <value>زیادہ سے زیادہ آفسیٹ</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>Do not change options below unless you really know what you are doing.</value>
+    <value>جب تک آپ واقعی نہیں جانتے کہ آپ کیا کر رہے ہیں نیچے کے آپشنز تبدیل نہ کریں۔</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
-    <value>Advanced</value>
+    <value>اعلیٰ</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
-    <value>Long Term Power Limit (Cross Loading)</value>
+    <value>طویل مدتی پاور کی حد (کراس لوڈنگ)</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
-    <value>Long Term Power Limit</value>
+    <value>طویل مدتی پاور کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
-    <value>Short Term Power Limit</value>
+    <value>قلیل مدتی پاور کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
-    <value>CPU Temperature Limit</value>
+    <value>CPU درجہ حرارت کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
     <value>CPU</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
-    <value>Couldn't apply settings</value>
+    <value>ترتیبات لاگو نہیں ہو سکیں</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
-    <value>Couldn't load setting.</value>
+    <value>ترتیب لوڈ نہیں ہو سکی۔</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>Fan speed is not strictly determined by one temperature sensor. It will raise or lower speed per the highest sensor between CPU, GPU and Heatsink temperature. Exact values will appear when you hover mouse over each step.</value>
+    <value>پنکھے کی رفتار کا تعین ایک ہی درجہ حرارت سینسر سے قطعی طور پر نہیں ہوتا۔ یہ CPU، GPU اور ہیٹ سنک کے درجہ حرارت میں سب سے زیادہ سینسر کی بنیاد پر رفتار بڑھائے گا یا کم کرے گا۔ درست قیمتیں ہر مرحلے پر ماؤس لے جانے سے نظر آئیں گی۔</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
-    <value>Fan curve</value>
+    <value>پنکھے کا خم</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>WARNING!
-Prolonged usage of this option will degrade fans decreasing their longevity.
-Seriously, be careful with this option!</value>
+    <value>انتباہ!
+اس آپشن کے طویل استعمال سے پنکھے خراب ہوں گے اور ان کی عمر کم ہوگی۔
+سنجیدگی سے، اس آپشن کے ساتھ محتاط رہیں!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
-    <value>Maximum fan speed</value>
+    <value>زیادہ سے زیادہ پنکھے کی رفتار</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
-    <value>Fans</value>
+    <value>پنکھے</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
-    <value>Configurable TGP</value>
+    <value>قابل تشکیل TGP</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
-    <value>Dynamic Boost</value>
+    <value>متحرک بوسٹ</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
-    <value>GPU Temperature Limit</value>
+    <value>GPU درجہ حرارت کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
     <value>GPU</value>
@@ -673,42 +673,42 @@ Seriously, be careful with this option!</value>
     <value>اپنی مرضی کے مطابق موڈ کی ترتیبات</value>
   </data>
   <data name="HDRAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.
+    <value>بلٹ ان ڈسپلے پر ہائی ڈائنامک رینج (HDR) فعال کریں۔
 
-WARNING: This action will not run correctly if the internal display is off.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
     <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.</value>
+    <value>بلٹ ان ڈسپلے پر ہائی ڈائنامک رینج (HDR) فعال کریں۔</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
     <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
-    <value>HDR usage is blocked by Windows settings.</value>
+    <value>HDR کا استعمال ونڈوز کی ترتیبات کی وجہ سے بلاک ہے۔</value>
   </data>
   <data name="Import" xml:space="preserve">
     <value>درآمد کریں</value>
   </data>
   <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>This device is not compatible with Universal Device Toolkit.</value>
+    <value>یہ آلہ Universal Device Toolkit کے ساتھ مطابقت نہیں رکھتا۔</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Your device may be missing required system components (LenovoGameZoneData).</value>
+    <value>آپ کے آلے میں ضروری سسٹم اجزاء (LenovoGameZoneData) غائب ہو سکتے ہیں۔</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>If you click "OK" to continue:</value>
+    <value>اگر آپ جاری رکھنے کے لیے "ٹھیک ہے" پر کلک کریں:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- The software will run in restricted mode</value>
+    <value>- سافٹ ویئر محدود موڈ میں چلے گا</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Some features will be disabled (Dashboard, Automation, Macros)</value>
+    <value>- کچھ خصوصیات غیر فعال ہو جائیں گی (ڈیش بورڈ، آٹومیشن، میکروز)</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Other basic features will still be available</value>
+    <value>- دیگر بنیادی خصوصیات دستیاب رہیں گی</value>
   </data>
   <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
     <value>آلے کی معلومات:</value>
@@ -732,10 +732,10 @@ WARNING: This action will not run correctly if the internal display is off.</val
     <value>کی بورڈ بیک لائٹ</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.</value>
+    <value>جب Lenovo Vantage یا اس کی سروسز چل رہی ہوں تو یہاں سے کی بورڈ بیک لائٹ کنٹرول نہیں ہو سکتی۔</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage or its services are running</value>
+    <value>Lenovo Vantage یا اس کی سروسز چل رہی ہیں</value>
   </data>
   <data name="MainWindow_NavigationItem_About" xml:space="preserve">
     <value>تعارف</value>
@@ -769,41 +769,41 @@ WARNING: This action will not run correctly if the internal display is off.</val
     <value>نیویگیشن اشیاء کی ترتیبات</value>
   </data>
   <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
-    <value>Configure which navigation items are displayed in the sidebar. Dashboard and Settings will always be visible.</value>
+    <value>سائڈبار میں دکھائے جانے والے نیویگیشن آئٹمز کی تشکیل کریں۔ ڈیش بورڈ اور ترتیبات ہمیشہ نظر آئیں گے۔</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Keyboard navigation item</value>
+    <value>کی بورڈ نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Battery navigation item</value>
+    <value>بیٹری نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Automation navigation item</value>
+    <value>آٹومیشن نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Macro navigation item</value>
+    <value>میکرو نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the System Optimization navigation item</value>
+    <value>سسٹم آپٹیمائزیشن نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
 <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Plugin Extensions navigation item</value>
+    <value>پلگ ان توسیعات نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
 
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the About navigation item</value>
+    <value>تعارف نیویگیشن آئٹم دکھائیں یا چھپائیں</value>
   </data>
   <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
     <value>نیویگیشن اشیاء</value>
   </data>
   <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
-    <value>Configure which navigation items are displayed in the sidebar</value>
+    <value>سائڈبار میں دکھائے جانے والے نیویگیشن آئٹمز کی تشکیل کریں</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>اپ ڈیٹ دستیاب ہے!</value>
   </data>
   <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
-    <value>Update {0} available!</value>
+    <value>اپ ڈیٹ {0} دستیاب ہے!</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>نیچے لے جائیں</value>
@@ -815,61 +815,61 @@ WARNING: This action will not run correctly if the internal display is off.</val
     <value>نہیں</value>
   </data>
   <data name="Notification_ACAdapterConnected" xml:space="preserve">
-    <value>AC adapter connected</value>
+    <value>AC اڈاپٹر منسلک</value>
   </data>
   <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
-    <value>AC adapter connected (Low wattage)</value>
+    <value>AC اڈاپٹر منسلک (کم واٹیج)</value>
   </data>
   <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
-    <value>AC adapter disconnected</value>
+    <value>AC اڈاپٹر منسلک نہیں</value>
   </data>
   <data name="Notification_CameraOff" xml:space="preserve">
-    <value>Camera off</value>
+    <value>کیمرہ بند</value>
   </data>
   <data name="Notification_CameraOn" xml:space="preserve">
-    <value>Camera on</value>
+    <value>کیمرہ آن</value>
   </data>
   <data name="Notification_CapsLockOff" xml:space="preserve">
-    <value>Caps Lock off</value>
+    <value>کیپس لاک بند</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock on</value>
+    <value>کیپس لاک آن</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
-    <value>Fn Lock off</value>
+    <value>Fn لاک بند</value>
   </data>
   <data name="Notification_FnLockOn" xml:space="preserve">
-    <value>Fn Lock on</value>
+    <value>Fn لاک آن</value>
   </data>
   <data name="Notification_MicrophoneOff" xml:space="preserve">
-    <value>Microphone off</value>
+    <value>مائیکروفون بند</value>
   </data>
   <data name="Notification_MicrophoneOn" xml:space="preserve">
-    <value>Microphone on</value>
+    <value>مائیکروفون آن</value>
   </data>
   <data name="Notification_NumLockOff" xml:space="preserve">
-    <value>Num Lock off</value>
+    <value>نم لاک بند</value>
   </data>
   <data name="Notification_NumLockOn" xml:space="preserve">
-    <value>Num Lock on</value>
+    <value>نم لاک آن</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>بیک لائٹ {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
-    <value>Brightness {0}</value>
+    <value>چمک {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
-    <value>Profile {0}</value>
+    <value>پروفائل {0}</value>
   </data>
   <data name="Notification_TouchpadOff" xml:space="preserve">
-    <value>Touchpad off</value>
+    <value>ٹچ پیڈ بند</value>
   </data>
   <data name="Notification_TouchpadOn" xml:space="preserve">
-    <value>Touchpad on</value>
+    <value>ٹچ پیڈ آن</value>
   </data>
   <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>بیک لائٹ {0}</value>
   </data>
   <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
     <value>AC اڈاپٹر</value>
@@ -881,8 +881,8 @@ WARNING: This action will not run correctly if the internal display is off.</val
     <value>Caps Lock اور Num Lock</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Disables notification for Fn keys actions like microphone mute.
-Enable this option if you have conflicts with full screen applications.</value>
+    <value>Fn کلیدوں کی کارروائیوں جیسے مائیکروفون خاموش کرنے کے لیے اطلاع غیر فعال کرتا ہے۔
+اگر آپ کو فل اسکرین ایپلیکیشنز کے ساتھ تصادم ہو تو یہ آپشن فعال کریں۔</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
     <value>اطلاعات نہ دکھائیں</value>
@@ -933,7 +933,7 @@ Enable this option if you have conflicts with full screen applications.</value>
     <value>اوور ڈرائیو</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
-    <value>{0} downloaded!</value>
+    <value>{0} ڈاؤن لوڈ ہو گیا!</value>
   </data>
   <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
     <value>ڈاؤن لوڈ مکمل</value>
@@ -942,13 +942,13 @@ Enable this option if you have conflicts with full screen applications.</value>
     <value>کچھ غلط ہو گیا</value>
   </data>
   <data name="PackageControl_Http404Error_Message" xml:space="preserve">
-    <value>Server returned code 404.</value>
+    <value>سرور نے کوڈ 404 واپس کیا۔</value>
   </data>
   <data name="PackageControl_Http404Error_Title" xml:space="preserve">
-    <value>The file seems to be gone</value>
+    <value>فائل نظر نہیں آتی</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>چیک کریں کہ آپ کا انٹرنیٹ کنکشن چل رہا ہے۔</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
     <value>کچھ غلط ہو گیا</value>
@@ -957,26 +957,26 @@ Enable this option if you have conflicts with full screen applications.</value>
     <value>اپ ڈیٹ دستیاب ہے!</value>
   </data>
   <data name="PackageControl_OldPackageWarning" xml:space="preserve">
-    <value>This package is more than a year old.</value>
+    <value>یہ پیکیج ایک سال سے زیادہ پرانا ہے۔</value>
   </data>
   <data name="PackageControl_Version" xml:space="preserve">
     <value>ورژن</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>Below is a list of software packages that are marked as compatible with your laptop.
-Always make sure that you are installing correct packages.</value>
+    <value>نیچے سافٹ ویئر پیکیجز کی فہرست ہے جو آپ کے لیپ ٹاپ کے ساتھ مطابقت پذیر کے طور پر نشان زد ہیں۔
+ہمیشہ یقینی بنائیں کہ آپ درست پیکیجز انسٹال کر رہے ہیں۔</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
-    <value>Check if Machine Type and OS are set correctly.</value>
+    <value>چیک کریں کہ مشین کی قسم اور OS درست طریقے سے سیٹ ہیں۔</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
     <value>کچھ غلط ہو گیا</value>
   </data>
   <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
-    <value>Changing sorting, filtering results, hiding packages or refreshing the list will stop the download. Do you want to continue?</value>
+    <value>ترتیب، فلٹرنگ کے نتائج، پیکیجز کو چھپانا یا فہرست کو ریفریش کرنا ڈاؤن لوڈ روک دے گا۔ کیا آپ جاری رکھنا چاہتے ہیں؟</value>
   </data>
   <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
-    <value>Download in progress</value>
+    <value>ڈاؤن لوڈ جاری ہے</value>
   </data>
   <data name="Filter" xml:space="preserve">
     <value>فلٹر…</value>
@@ -991,13 +991,13 @@ Always make sure that you are installing correct packages.</value>
     <value>بنیادی (تجویز کردہ)</value>
   </data>
   <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo Vantage</value>
+    <value>Lenovo Vantage جیسا ہی</value>
   </data>
   <data name="PackagesPage_SecondarySource" xml:space="preserve">
     <value>ثانوی</value>
   </data>
   <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo PC Support</value>
+    <value>Lenovo PC Support جیسا ہی</value>
   </data>
   <data name="PackagesPage_Sort_Category" xml:space="preserve">
     <value>زمرہ</value>
@@ -1024,8 +1024,8 @@ Always make sure that you are installing correct packages.</value>
     <value>پاور موڈ</value>
   </data>
   <data name="PowerModeControl_Message" xml:space="preserve">
-    <value>Change performance mode.
-Performance mode can also be changed with Fn+Q.</value>
+    <value>کارکردگی کا موڈ تبدیل کریں۔
+کارکردگی کا موڈ Fn+Q سے بھی تبدیل کیا جا سکتا ہے۔</value>
   </data>
   <data name="PowerModeControl_Settings" xml:space="preserve">
     <value>ترتیبات</value>
@@ -1043,46 +1043,46 @@ Performance mode can also be changed with Fn+Q.</value>
     <value>ونڈوز پاور پلانز</value>
   </data>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
-    <value>Scanning for available driver packages, please wait...</value>
+    <value>دستیاب ڈرائیور پیکیجز کے لیے اسکین ہو رہا ہے، براہ کرم انتظار کریں…</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>ڈرائیور پیکیجز کے لیے اسکین کریں</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>مطابقت پذیر ڈرائیور ڈاؤن لوڈز کی فہرست بنانے کے لیے ذریعہ منتخب کریں اور اسکین کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>کوئی ڈرائیور ڈاؤن لوڈز نہیں ملے</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>مختلف ذریعہ، آپریٹنگ سسٹم، یا مشین کی قسم آزمائیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
     <value>کوئی مماثل ڈاؤن لوڈ نہیں ملا</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>فلٹر، صرف اپ ڈیٹ آپشن، یا چھپے ہوئے ڈاؤن لوڈ کی فہرست ایڈجسٹ کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>ڈرائیور اسکین مکمل نہیں ہوا</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>منتخب ذریعہ اور نیٹ ورک کنکشن چیک کریں، پھر دوبارہ اسکین کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Network error occurred. Retrying automatically...</value>
+    <value>نیٹ ورک کی خرابی پیش آئی۔ خودکار طور پر دوبارہ کوشش ہو رہی ہے…</value>
   </data>
   <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Retrying to fetch driver packages...</value>
+    <value>ڈرائیور پیکیجز لانے کے لیے دوبارہ کوشش ہو رہی ہے…</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>صفائی کی معلومات</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
-    <value>View cleanup operation progress and estimated size.</value>
+    <value>صفائی کی کارروائی کی پیش رفت اور تخمینی سائز دیکھیں۔</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight preset.</value>
+    <value>کی بورڈ بیک لائٹ کا پری سیٹ ایڈجسٹ کریں۔</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>کی بورڈ بیک لائٹ</value>
@@ -1124,21 +1124,21 @@ Performance mode can also be changed with Fn+Q.</value>
     <value>رفتار</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>ریڈ می</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>ریفریش کریں</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.
+    <value>بلٹ ان ڈسپلے کی ریفریش ریٹ تبدیل کریں۔
 
-WARNING: This action will not run correctly, if internal display is off.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
     <value>ریفریش ریٹ</value>
   </data>
   <data name="RefreshRateControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.</value>
+    <value>بلٹ ان ڈسپلے کی ریفریش ریٹ تبدیل کریں۔</value>
   </data>
   <data name="RefreshRateControl_Title" xml:space="preserve">
     <value>ریفریش ریٹ</value>
@@ -1156,17 +1156,17 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>واپس کریں</value>
   </data>
   <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
-    <value>Arguments</value>
+    <value>دلائل</value>
   </data>
   <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
-    <value>Executable Path</value>
+    <value>قابلِ عمل راستہ</value>
   </data>
   <data name="RunAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a script or a program.
-Make sure that your script runs correctly first.</value>
+    <value>اسکرپٹ یا پروگرام چلائیں۔
+پہلے یقینی بنائیں کہ آپ کی اسکرپٹ صحیح طریقے سے چلتی ہے۔</value>
   </data>
   <data name="RunAutomationStepControl_Title" xml:space="preserve">
-    <value>Run</value>
+    <value>چلائیں</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>محفوظ کریں</value>
@@ -1175,16 +1175,16 @@ Make sure that your script runs correctly first.</value>
     <value>محفوظ ہو رہا ہے…</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
-    <value>Choose one or more quick actions to cycle through</value>
+    <value>سائیکل کرنے کے لیے ایک یا زیادہ فوری کارروائیاں منتخب کریں</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
-    <value>No Quick Actions defined.</value>
+    <value>کوئی فوری کارروائیاں متعین نہیں ہیں۔</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
     <value>یہ ایپ دکھائیں</value>
   </data>
   <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
-    <value>Change the accent color of the app.</value>
+    <value>ایپ کا ایکسینٹ رنگ تبدیل کریں۔</value>
   </data>
   <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
     <value>ایکسینٹ رنگ</value>
@@ -1193,64 +1193,64 @@ Make sure that your script runs correctly first.</value>
     <value>ظاہری شکل</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
+    <value>زبان، درجہ حرارت کی اکائی، تھیم اور ایکسینٹ رنگ کو اپنی مرضی کے مطابق بنائیں۔</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>آٹورن</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
-    <value>Start minimized to tray when you sign in to Windows.</value>
+    <value>جب آپ ونڈوز میں سائن ان کریں تو ٹرے میں منیمائز ہو کر شروع ہو۔</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
-    <value>Legion Zone may have not been disabled correctly</value>
+    <value>Legion Zone شاید صحیح طریقے سے غیر فعال نہیں ہوا</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Legion Zone</value>
+    <value>Legion Zone غیر فعال نہیں ہو سکا</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>Disable Legion Zone and its service without uninstalling it.
-Restart is recommended after changing this option.</value>
+    <value>Legion Zone اور اس کی سروس کو ان انسٹال کیے بغیر غیر فعال کریں۔
+اس آپشن کو تبدیل کرنے کے بعد دوبارہ شروع کرنے کی سفارش کی جاتی ہے۔</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
     <value>Legion Zone غیر فعال کریں</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Lenovo Hotkeys may have not been disabled correctly</value>
+    <value>Lenovo ہاٹ کیز شاید صحیح طریقے سے غیر فعال نہیں ہوئیں</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Hotkeys</value>
+    <value>Lenovo ہاٹ کیز غیر فعال نہیں ہو سکیں</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>Disable Lenovo Hotkeys and its service without uninstalling it.
-If disabled, this app will handle Fn shortcuts.
-Restart is recommended after changing this option.</value>
+    <value>Lenovo ہاٹ کیز اور اس کی سروس کو ان انسٹال کیے بغیر غیر فعال کریں۔
+اگر غیر فعال ہو تو یہ ایپ Fn شارٹ کٹس کو ہینڈل کرے گی۔
+اس آپشن کو تبدیل کرنے کے بعد دوبارہ شروع کرنے کی سفارش کی جاتی ہے۔</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>سسٹم آپٹیمائزیشن</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>تجویز کردہ کارکردگی ٹویکس لاگو کریں اور عارضی فائلز صاف کریں۔</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>کارکردگی اور سروس ٹویکس لاگو کریں</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>کارکردگی کی اصلاحات لاگو ہو گئیں۔</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>کارکردگی کی اصلاحات لاگو نہیں ہو سکیں۔</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
     <value>صفائی چلائیں</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>صفائی مکمل ہوئی۔</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>صفائی ناکام۔</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>یہ کارروائیاں سسٹم سروسز اور فائلز میں ترمیم کرتی ہیں۔ ایڈمنسٹریٹر کے اختیارات درکار ہو سکتے ہیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
     <value>منتخب کردہ کارروائیاں لاگو کریں</value>
@@ -1268,46 +1268,46 @@ Restart is recommended after changing this option.</value>
     <value>صفائی کی کارروائیاں چلائیں</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} actions selected</value>
+    <value>{0} کارروائیاں منتخب کی گئیں</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>No actions selected yet.</value>
+    <value>ابھی تک کوئی کارروائی منتخب نہیں کی گئی۔</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Selected actions</value>
+    <value>منتخب کردہ کارروائیاں</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>صفائی</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>خوبصورتی</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
-    <value>Driver Download</value>
+    <value>ڈرائیور ڈاؤن لوڈ</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Safety Confirmation</value>
+    <value>حفاظتی تصدیق</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>System cleanup will permanently delete temporary files and cache. While usually safe, it is recommended to ensure you have backups of important data. Do you want to continue?</value>
+    <value>سسٹم صفائی عارضی فائلز اور کیشے کو مستقل طور پر حذف کر دے گی۔ اگرچہ عام طور پر محفوظ ہے، یہ یقینی بنانا سفارش کیا جاتا ہے کہ آپ کے پاس اہم ڈیٹا کا بیک اپ ہو۔ کیا آپ جاری رکھنا چاہتے ہیں؟</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
     <value>توسیعات</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Manage system optimization extensions and tools</value>
+    <value>سسٹم آپٹیمائزیشن توسیعات اور ٹولز کا انتظام کریں</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
     <value>کوئی توسیع دستیاب نہیں</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Install extensions from the Plugin Extensions page to enhance system optimization functionality.</value>
+    <value>سسٹم آپٹیمائزیشن فعالیت کو بڑھانے کے لیے پلگ ان توسیعات کے صفحے سے توسیعات انسٹال کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>جلد آرہا ہے</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>Extensions marketplace will be available in a future update.</value>
+    <value>توسیعات کا مارکیٹ پلیس مستقبل کی اپ ڈیٹ میں دستیاب ہوگا۔</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>ونڈوز آپٹیمائزیشن</value>
@@ -1316,10 +1316,10 @@ Restart is recommended after changing this option.</value>
     <value>سبھی منتخب کریں</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>کسٹم صفائی کے قوانین</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>وہ فولڈرز اور فائل ایکسٹینشنز منتخب کریں جو صفائی کے دوران حذف ہونے چاہیئں۔</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
     <value>قاعدہ شامل کریں</value>
@@ -1334,46 +1334,46 @@ Restart is recommended after changing this option.</value>
     <value>سب صاف کریں</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>کوئی کسٹم صفائی کے قوانین تشکیل نہیں کیے گئے۔</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
     <value>ذیلی فولڈرز شامل کریں</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>AppX کا انتظام</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>تمام صارفین کے لیے ہٹانے کے لیے پہلے سے انسٹال شدہ Microsoft Store ایپس منتخب کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>ہٹانے کے لیے کوئی ایپس منتخب نہیں کی گئیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>منتخب ایپس ان انسٹال کریں</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>منتخب ایپس ہٹانے کے لیے شیڈول کی گئیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>منتخب ایپس ہٹانے میں ناکام۔</value>
   </data>
 <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>ایپس لوڈ ہو رہی ہیں، براہ کرم انتظار کریں…</value>
   </data>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Loading plugins...</value>
+    <value>پلگ انز لوڈ ہو رہے ہیں…</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>لوڈ ناکام: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>پبلشر: {0}</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>رجسٹری MRU/ہسٹری کی صفائی</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>عام یوزر رجسٹری ہسٹریز صاف کریں (Run MRU، RecentDocs، Open/Save ڈائیلاگز، TypedPaths)۔ یہ سسٹم کے اہم اندراجات کو نہیں ہٹاتا۔</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>کارروائیاں</value>
@@ -1388,7 +1388,7 @@ Restart is recommended after changing this option.</value>
     <value>توسیعات</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>متعدد ایکسٹینشنز کو کاما سے الگ کریں (مثال: tmp، log، bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
     <value>ذیلی فولڈرز شامل کریں</value>
@@ -1400,327 +1400,327 @@ Restart is recommended after changing this option.</value>
     <value>براہ کرم فولڈر منتخب کریں۔</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>براہ کرم کم از کم ایک فائل ایکسٹینشن درج کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>براہ کرم کم از کم ایک کارروائی منتخب کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>منتخب کارروائیاں کامیابی سے مکمل ہوئیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>منتخب کارروائیاں مکمل کرنے میں ناکام۔</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>ایکسپلورر اور انٹرفیس</value>
   </data>
 
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>سسٹم کی خوبصورتی</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>ٹاسک بار، فائل ایکسپلورر اور یوزر انٹرفیس کے رویے کو ایڈجسٹ کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
     <value>کارکردگی</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>سسٹم کی کارکردگی اور ردعمل کی ترتیبات ایڈجسٹ کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>خدمات</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>وسائل استعمال کرنے والی پس منظر کی سروسز غیر فعال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Nilesoft Shell کے کانٹیکسٹ مینو کی رجسٹریشن اور انضمام کا انتظام کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Nilesoft Shell فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Nilesoft Shell کو ونڈوز کانٹیکسٹ مینو ہینڈلر کے طور پر رجسٹر کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Nilesoft Shell غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Nilesoft Shell کو ان رجسٹر کریں اور ڈیفالٹ کانٹیکسٹ مینو بحال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>کیشے، عارضی فائلز اور دیگر بچا ہوا مواد ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
-    <value>Cache Cleanup</value>
+    <value>کیشے کی صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
-    <value>Clean up cache files from various applications and the system to free up storage space.</value>
+    <value>اسٹوریج کی جگہ خالی کرنے کے لیے مختلف ایپلیکیشنز اور سسٹم سے کیشے کی فائلز صاف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
-    <value>System Files Cleanup</value>
+    <value>سسٹم فائلز کی صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
-    <value>Clean up system files such as temporary files, logs, crash dumps, etc.</value>
+    <value>عارضی فائلز، لاگز، کریش ڈمپس وغیرہ جیسی سسٹم فائلز صاف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
-    <value>System Components Cleanup</value>
+    <value>سسٹم اجزاء کی صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
-    <value>Clean up system component files such as Windows Update cache, component store, etc.</value>
+    <value>ونڈوز اپ ڈیٹ کیشے، کمپوننٹ اسٹور وغیرہ جیسی سسٹم کمپوننٹ فائلز صاف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
-    <value>Performance Cleanup</value>
+    <value>کارکردگی کی صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
-    <value>Clean up files that may affect system performance, such as prefetch files, etc.</value>
+    <value>وہ فائلز صاف کریں جو سسٹم کی کارکردگی کو متاثر کر سکتی ہیں، جیسے پری فیچ فائلز وغیرہ۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
-    <value>Custom Cleanup</value>
+    <value>کسٹم صفائی</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
-    <value>Clean up specified files and directories using custom rules.</value>
+    <value>کسٹم قوانین استعمال کرتے ہوئے مخصوص فائلز اور ڈائریکٹریز صاف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>ٹاسک بار اور اسٹارٹ مینو لے آؤٹ</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>سرچ باکس اور ٹاسک ویو بٹن چھپائیں، ٹاسک بار گروپنگ غیر فعال کریں اور ٹرے آئیکنز ہمیشہ دکھائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>اسٹارٹ مینو غیر فعال کریں اور Win کلید سے سرچ کھولیں</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>اسٹارٹ مینو مکمل طور پر غیر فعال کریں۔ جب آپ Win کلید دبائیں گے تو یہ اسٹارٹ مینو کی بجائے سرچ کھولے گا۔</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>ایکسپلورر کی ردعمل کو بہتر بنائیں</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>مینو کی تاخیر کم کریں، ہینگ ایپس کو تیزی سے بند کریں اور بطور ڈیفالٹ یہ پی سی کھولیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>فائل کی مرئیت کے آپشنز</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>فائل ایکسپلورر میں فائل ایکسٹینشنز اور چھپی ہوئی فائلز دکھائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>ایکسپلورر کی تجاویز غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>کلاؤڈ کنٹینٹ کی تجاویز اور سفارش کے بینرز بند کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>سرچ کھولنے کے لیے ونڈوز کلید تبدیل کریں</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>اسٹارٹ مینو کی بجائے سرچ کھولنے کے لیے ونڈوز کلید کا رویہ تبدیل کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>ملٹی میڈیا شیڈولنگ کو بہتر بنائیں</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>نیٹ ورک تھروٹلنگ ہٹائیں اور سسٹم کی ردعمل کی تاخیر کم کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>میموری مینجمنٹ بہتر بنائیں</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>سسٹم کیشے کو میموری میں رکھیں اور کرنل ڈرائیورز کی پیجنگ سے بچیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>ایکریلک اور نوٹیفکیشن سینٹر غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>لاگ ان پر ایکریلک اثرات ہٹائیں اور ونڈوز نوٹیفکیشن سینٹر چھپائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>ٹیلی میٹری اور ٹپس کم کریں</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>ایڈورٹائزنگ ID، Spotlight خصوصیات اور خودکار تجاویز غیر فعال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>ہائی پرفارمنس پلان پر مجبور کریں</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>ہائی پرفارمنس پاور اسکیم فعال کریں اور ہائبرنیشن غیر فعال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>تشخیصی سروسز غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Connected User Experiences، Diagnostics Hub اور Delivery Optimisation سروسز روکیں اور غیر فعال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>SysMain غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>پس منظر کی ڈسک سرگرمی کم کرنے کے لیے Superfetch/SysMain بند کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>ونڈوز سرچ انڈیکسنگ غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>انڈیکس اپ ڈیٹس کو روکنے کے لیے ونڈوز سرچ سروس بند کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>ریموٹ رجسٹری غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>ریموٹ رجسٹری تک رسائی غیر فعال کر کے سسٹم کو محفوظ کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>خرابی کی رپورٹنگ غیر فعال کریں</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>ونڈوز ایرر رپورٹنگ کو کریش ڈیٹا جمع کرنے اور بھیجنے سے روکیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>ریموٹ ڈیسک ٹاپ کیشے صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>ریموٹ ڈیسک ٹاپ کلائنٹ کے ذریعہ بنائی گئی کیشے کی فائلز ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>ونڈوز اپ ڈیٹ کیشے صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>ڈاؤن لوڈ شدہ اپ ڈیٹ فائلز اور Delivery Optimisation کیشے حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>براؤزر کیشے صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
-    <value>Cleans up temporary files and logs left behind by various applications.</value>
+    <value>مختلف ایپلیکیشنز کے چھوڑے گئے عارضی فائلز اور لاگز صاف کرتا ہے۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
-    <value>App Leftovers</value>
+    <value>ایپ کا بچا ہوا حصہ</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>انٹرنیٹ ایکسپلورر اور ایج کیشے اور کوکی فائلز ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>تھمب نیل کیشے صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>ایکسپلورر تھمب نیل ڈیٹا بیسز اور Direct3D شیڈر کیشے حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>.NET نیٹو امیجز صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>ڈسک کی جگہ واپس حاصل کرنے کے لیے کیش شدہ .NET نیٹو امیجز ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>لاگز اور تشخیصی ڈیٹا ہٹائیں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Scans for large files on your system drive that may be taking up significant space.</value>
+    <value>آپ کے سسٹم ڈرائیو پر بڑی فائلز کی اسکیننگ جو نمایاں جگہ لے سکتی ہیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
-    <value>Large Files Scan</value>
+    <value>بڑی فائلز کی اسکین</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>Identify and manage large files on your system.</value>
+    <value>اپنے سسٹم پر بڑی فائلز کی شناخت اور انتظام کریں۔</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
-    <value>Large Files</value>
+    <value>بڑی فائلز</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>ونڈوز لاگز، ایرر رپورٹس اور تشخیصی ٹریسز حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>کریش ڈمپس حذف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>سسٹم کریشز کے بعد بچی ہوئی میموری ڈمپ فائلز ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Defender اسکینز صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>ونڈوز Defender اسکین ہسٹری اور کیشے حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>عارضی فائلز صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>ونڈوز اور صارف کے عارضی ڈائریکٹریز خالی کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>بنڈل شدہ ونڈوز ایپس ہٹائیں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>تمام صارفین کے لیے منتخب پہلے سے انسٹال شدہ UWP ایپلیکیشنز ان انسٹال کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>ری سائیکل بن خالی کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>ری سائیکل بن میں محفوظ حذف شدہ فائلز ہٹائیں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>پری فیچ ڈیٹا صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>نئے ٹریسز دوبارہ بنانے کے لیے ونڈوز پری فیچ ڈیٹا حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>کسٹم فائلز صاف کریں</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>منتخب فولڈرز سے تشکیل شدہ ایکسٹینشنز سے مماثل فائلز حذف کریں۔</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>سروس کمپوننٹ اسٹور</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>DISM صفائی چلائیں اور WinSxS عارضی فائلز صاف کریں۔</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Lenovo ہاٹ کیز غیر فعال کریں</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been disabled correctly</value>
+    <value>Lenovo Vantage اور/یا ImController شاید صحیح طریقے سے غیر فعال نہیں ہوئے</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Vantage and/or ImController</value>
+    <value>Lenovo Vantage اور/یا ImController غیر فعال نہیں ہو سکے</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController without uninstalling them.
-Restart is recommended after changing this option.</value>
+    <value>Lenovo Vantage اور ImController کو ان انسٹال کیے بغیر غیر فعال کریں۔
+اس آپشن کو تبدیل کرنے کے بعد دوبارہ شروع کرنے کی سفارش کی جاتی ہے۔</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
     <value>Lenovo Vantage اور ImController غیر فعال کریں</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
-    <value>Legion Zone may have not been enabled correctly</value>
+    <value>Legion Zone شاید صحیح طریقے سے فعال نہیں ہوا</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Legion Zone</value>
+    <value>Legion Zone فعال نہیں ہو سکا</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Lenovo Hotkeys may have not been enabled correctly</value>
+    <value>Lenovo ہاٹ کیز شاید صحیح طریقے سے فعال نہیں ہوئیں</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Hotkeys Keys</value>
+    <value>Lenovo ہاٹ کیز کلیدز فعال نہیں ہو سکیں</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been enabled correctly</value>
+    <value>Lenovo Vantage اور/یا ImController شاید صحیح طریقے سے فعال نہیں ہوئے</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Vantage and/or ImController</value>
+    <value>Lenovo Vantage اور/یا ImController فعال نہیں ہو سکے</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>You can exclude refresh rates, to make Fn+R shortcut more useful.</value>
+    <value>Fn+R شارٹ کٹ کو زیادہ مفید بنانے کے لیے آپ ریفریش ریٹس کو خارج کر سکتے ہیں۔</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
     <value>ریفریش ریٹس خارج کریں</value>
@@ -1732,28 +1732,28 @@ Restart is recommended after changing this option.</value>
     <value>زبان انسٹال کریں</value>
   </data>
   <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
-    <value>Language installation failed</value>
+    <value>زبان انسٹالیشن ناکام</value>
   </data>
   <data name="SettingsPage_Language_DownloadFailed_Message" xml:space="preserve">
-    <value>Could not download the language pack. Check your network connection, proxy, or TLS settings, then try again.</value>
+    <value>زبان کا پیک ڈاؤن لوڈ نہیں ہو سکا۔ اپنا نیٹ ورک کنکشن، پراکسی، یا TLS ترتیبات چیک کریں، پھر دوبارہ کوشش کریں۔</value>
   </data>
   <data name="SettingsPage_Language_Installing" xml:space="preserve">
-    <value>Installing language</value>
+    <value>زبان انسٹال ہو رہی ہے</value>
   </data>
   <data name="SettingsPage_Language_Installing_Download" xml:space="preserve">
-    <value>Downloading language pack…</value>
+    <value>زبان کا پیک ڈاؤن لوڈ ہو رہا ہے…</value>
   </data>
   <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
-    <value>Extracting and installing…</value>
+    <value>نکالا اور انسٹال ہو رہا ہے…</value>
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
   </data>
   <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
-    <value>Use the download button to install this language pack.</value>
+    <value>اس زبان کا پیک انسٹال کرنے کے لیے ڈاؤن لوڈ بٹن استعمال کریں۔</value>
   </data>
   <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
-    <value>Language not installed</value>
+    <value>زبان انسٹال نہیں</value>
   </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
     <value>زبان</value>
@@ -1762,25 +1762,25 @@ Restart is recommended after changing this option.</value>
     <value>زبان انسٹال ختم کریں</value>
   </data>
   <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
-    <value>Language uninstall failed</value>
+    <value>زبان کی ان انسٹالیشن ناکام</value>
   </data>
   <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
-    <value>Uninstalling language</value>
+    <value>زبان ان انسٹال ہو رہی ہے</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>Always minimize to tray. Close with right click on tray icon.</value>
+    <value>ہمیشہ ٹرے میں منیمائز کریں۔ ٹرے آئیکن پر رائٹ کلک سے بند کریں۔</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>بند ہونے پر منیمائز کریں</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>اسٹارٹ اپ پر ظاہر ہونے والی غیر مطابقت پذیر آلے کی انتباہ کو چھپائیں۔</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>غیر مطابقت پذیر آلے کی انتباہ غیر فعال کریں</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
-    <value>Configure which notifications are shown.</value>
+    <value>دکھائی جانے والی اطلاعات کی تشکیل کریں۔</value>
   </data>
   <data name="SettingsPage_Notifications_Title" xml:space="preserve">
     <value>اطلاعات</value>
@@ -1789,19 +1789,19 @@ Restart is recommended after changing this option.</value>
     <value>ونڈوز پاور پلانز</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 double press.</value>
+    <value>Fn+F9 دوہرے پریس کے لیے فوری کارروائی تفویض کریں۔</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
     <value>سمارٹ کلیدی ثانوی کارروائی</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 single press.</value>
+    <value>Fn+F9 ایک پریس کے لیے فوری کارروائی تفویض کریں۔</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
     <value>سمارٹ کلیدی کارروائی</value>
   </data>
   <data name="SettingsPage_Theme_Description" xml:space="preserve">
-    <value>Set light theme, dark theme or follow system settings.</value>
+    <value>لائٹ تھیم، ڈارک تھیم سیٹ کریں یا سسٹم کی ترتیبات کی پیروی کریں۔</value>
   </data>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
     <value>تھیم</value>
@@ -1822,10 +1822,10 @@ Restart is recommended after changing this option.</value>
     <value>ترتیبات</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
-    <value>Configure the appearance, behavior, and functionality options of the application.</value>
+    <value>ایپلیکیشن کی ظاہری شکل، رویے اور فعالیت کے آپشنز کی تشکیل کریں۔</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight brightness.</value>
+    <value>کی بورڈ بیک لائٹ کی چمک ایڈجسٹ کریں۔</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
     <value>بند</value>
@@ -1837,10 +1837,10 @@ Restart is recommended after changing this option.</value>
     <value>اثر شامل کریں</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
-    <value>Couldn't apply profile</value>
+    <value>پروفائل لاگو نہیں ہو سکا</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
-    <value>Lighting profile couldn't be applied.</value>
+    <value>لائٹنگ پروفائل لاگو نہیں ہو سکا۔</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
     <value>چمک</value>
@@ -1849,19 +1849,19 @@ Restart is recommended after changing this option.</value>
     <value>تمام زونز غیر منتخب کریں</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>اثرات</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be exported</value>
+    <value>پروفائل برآمد نہیں ہو سکا</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
-    <value>Couldn't export profile</value>
+    <value>پروفائل برآمد نہیں ہو سکا</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be imported</value>
+    <value>پروفائل درآمد نہیں ہو سکا</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
-    <value>Couldn't import profile</value>
+    <value>پروفائل درآمد نہیں ہو سکا</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
     <value>کوئی اثر شامل نہیں۔</value>
@@ -1891,7 +1891,7 @@ Restart is recommended after changing this option.</value>
     <value>اثر</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>This effect will be applied to the whole keyboard and will replace all other effects.</value>
+    <value>یہ اثر پورے کی بورڈ پر لاگو ہوگا اور دیگر تمام اثرات کی جگہ لے لے گا۔</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
     <value>رفتار</value>
@@ -1900,10 +1900,10 @@ Restart is recommended after changing this option.</value>
     <value>اثر شامل کریں</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
-    <value>Edit effect</value>
+    <value>اثر میں ترمیم کریں</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight profile.</value>
+    <value>کی بورڈ بیک لائٹ پروفائل ایڈجسٹ کریں۔</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
     <value>کی بورڈ بیک لائٹ پروفائل</value>
@@ -1912,23 +1912,23 @@ Restart is recommended after changing this option.</value>
     <value>تمام چابیاں</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
-    <value>{0} zones</value>
+    <value>{0} زونز</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
-    <value>Sunrise</value>
+    <value>طلوع آفتاب</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
-    <value>Sunset</value>
+    <value>غروب آفتاب</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
-    <value>Time</value>
+    <value>وقت</value>
   </data>
   <data name="ToggleHybridModeControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>انٹیگریٹڈ اور الگ GPU کے درمیان سوئچنگ کی اجازت دیں۔
+دوبارہ شروع کرنا ضروری ہے۔</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Changing Hybrid Mode requires restart. Do you want to restart now?</value>
+    <value>ہائبرڈ موڈ تبدیل کرنے کے لیے دوبارہ شروع کرنا ضروری ہے۔ کیا آپ ابھی دوبارہ شروع کرنا چاہتے ہیں؟</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
     <value>دوبارہ شروع کرنا ضروری ہے</value>
@@ -1937,13 +1937,13 @@ Requires restart.</value>
     <value>ہائبرڈ موڈ</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable touchpad.</value>
+    <value>ٹچ پیڈ غیر فعال کریں۔</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
     <value>ٹچ پیڈ لاک</value>
   </data>
   <data name="TouchpadLockControl_Message" xml:space="preserve">
-    <value>Disable touchpad.</value>
+    <value>ٹچ پیڈ غیر فعال کریں۔</value>
   </data>
   <data name="TouchpadLockControl_Title" xml:space="preserve">
     <value>ٹچ پیڈ لاک</value>
@@ -1956,63 +1956,63 @@ Requires restart.</value>
 {0}</value>
   </data>
   <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
-    <value>Delete Report</value>
+    <value>رپورٹ حذف کریں</value>
   </data>
   <data name="CrashReportNotification_Description" xml:space="preserve">
-    <value>A crash report has been saved to disk. You can review the report details below. Reports are not sent automatically.</value>
+    <value>ایک کریش رپورٹ ڈسک پر محفوظ ہو گئی ہے۔ آپ نیچے رپورٹ کی تفصیلات دیکھ سکتے ہیں۔ رپورٹس خودکار طور پر نہیں بھیجی جاتیں۔</value>
   </data>
   <data name="CrashReportNotification_Message" xml:space="preserve">
-    <value>The application crashed during the previous session</value>
+    <value>پچھلے سیشن کے دوران ایپلیکیشن کریش ہو گئی تھی</value>
   </data>
   <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
-    <value>Failed to open crash report: {0}</value>
+    <value>کریش رپورٹ کھولنے میں ناکام: {0}</value>
   </data>
   <data name="CrashReportNotification_OpenReport" xml:space="preserve">
-    <value>Open Report</value>
+    <value>رپورٹ کھولیں</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>بند کریں</value>
   </data>
   <data name="CrashReportNotification_ReportPath" xml:space="preserve">
-    <value>Crash report saved to: {0}</value>
+    <value>کریش رپورٹ محفوظ: {0}</value>
   </data>
   <data name="CrashReportNotification_Title" xml:space="preserve">
-    <value>Crash Report Detected</value>
+    <value>کریش رپورٹ کا پتہ چلا</value>
   </data>
   <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
-    <value>Unable to load crash report details.</value>
+    <value>کریش رپورٹ کی تفصیلات لوڈ کرنے میں ناکام۔</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
     <value>بغیر نام</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
-    <value>You may choose to continue at your own risk, but keep in mind that some features may not be available and/or not work properly.
+    <value>آپ اپنی ذمہ داری پر جاری رکھنے کا انتخاب کر سکتے ہیں، لیکن ذہن میں رکھیں کہ کچھ خصوصیات دستیاب نہیں ہو سکتیں اور/یا صحیح طریقے سے کام نہیں کر سکتیں۔
 
-Logging will be enabled automatically, if you choose to continue.</value>
+اگر آپ جاری رکھنے کا انتخاب کریں تو لاگنگ خودکار طور پر فعال ہو جائے گی۔</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
-    <value>Check out project page on GitHub for more information.</value>
+    <value>مزید معلومات کے لیے GitHub پر پروجیکٹ کا صفحہ دیکھیں۔</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Logs folder</value>
+    <value>لاگز فولڈر</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>مشین کی قسم</value>
   </data>
   <data name="UnsupportedWindow_Message" xml:space="preserve">
-    <value>Universal Device Toolkit has not been tested with your device.</value>
+    <value>Universal Device Toolkit آپ کے آلے کے ساتھ ٹیسٹ نہیں کیا گیا ہے۔</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>آپ اس انتباہ کو ترتیبات میں کسی بھی وقت غیر فعال کر سکتے ہیں۔</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
     <value>ماڈل</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
-    <value>Unsupported device</value>
+    <value>غیر معاون آلہ</value>
   </data>
   <data name="UnsupportedWindow_Vendor" xml:space="preserve">
-    <value>Vendor</value>
+    <value>فروخت کنندہ</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>اپ ڈیٹ</value>
@@ -2021,31 +2021,31 @@ Logging will be enabled automatically, if you choose to continue.</value>
     <value>اپ ڈیٹ دستیاب ہے</value>
   </data>
   <data name="UpdateWindow_WhatsNew" xml:space="preserve">
-    <value>What's new?</value>
+    <value>نیا کیا ہے؟</value>
   </data>
   <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight brightness.</value>
+    <value>کی بورڈ بیک لائٹ کی چمک ایڈجسٹ کریں۔</value>
   </data>
   <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>کی بورڈ بیک لائٹ</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>You can change brightness with Fn+Space</value>
+    <value>آپ Fn+Space سے چمک تبدیل کر سکتے ہیں</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
     <value>کی بورڈ بیک لائٹ</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable Windows key on built-in keyboard.</value>
+    <value>بلٹ ان کی بورڈ پر ونڈوز کلید غیر فعال کریں۔</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>ونڈوز کلید لاک</value>
   </data>
   <data name="WinKeyControl_Message" xml:space="preserve">
-    <value>Only works on built-in keyboard.</value>
+    <value>صرف بلٹ ان کی بورڈ پر کام کرتا ہے۔</value>
   </data>
   <data name="WinKeyControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>ونڈوز کلید لاک</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>ہاں</value>
@@ -2054,41 +2054,41 @@ Logging will be enabled automatically, if you choose to continue.</value>
     <value>مائیکروفون</value>
   </data>
   <data name="MicrophoneControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>جب بند ہو تو مائیکروفون خاموش ہو جائیں گے۔</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
     <value>مائیکروفون</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>جب بند ہو تو مائیکروفون خاموش ہو جائیں گے۔</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
     <value>ریزولوشن</value>
   </data>
   <data name="ResolutionControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.</value>
+    <value>بلٹ ان ڈسپلے کی ریزولوشن تبدیل کریں۔</value>
   </data>
   <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
     <value>ریزولوشن</value>
   </data>
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.
+    <value>بلٹ ان ڈسپلے کی ریزولوشن تبدیل کریں۔
 
-WARNING: This action will not run correctly, if internal display is off.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
-    <value>Change scale of the built-in display.</value>
+    <value>بلٹ ان ڈسپلے کا اسکیل تبدیل کریں۔</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
-    <value>Change scaling of the built-in display.
+    <value>بلٹ ان ڈسپلے کا اسکیلنگ تبدیل کریں۔
 
-WARNING: This action will not run correctly, if internal display is off.</value>
+انتباہ: اگر اندرونی ڈسپلے بند ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="DashboardPage_Display_Title" xml:space="preserve">
     <value>ڈسپلے</value>
@@ -2097,13 +2097,13 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>کی بورڈ بیک لائٹ</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>You can turn backlight on or off with Fn+Space.</value>
+    <value>آپ Fn+Space سے بیک لائٹ آن یا بند کر سکتے ہیں۔</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>کی بورڈ بیک لائٹ</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn backlight on or off.</value>
+    <value>بیک لائٹ آن یا بند کریں۔</value>
   </data>
   <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
     <value>کوئی مماثل ڈاؤن لوڈ نہیں ملا</value>
@@ -2124,7 +2124,7 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>نام</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
-    <value>Some features may not appear on the Dashboard depending on state and configuration of your laptop.</value>
+    <value>آپ کے لیپ ٹاپ کی حالت اور ترتیب کے مطابق کچھ خصوصیات ڈیش بورڈ پر نظر نہیں آ سکتیں۔</value>
   </data>
   <data name="DashboardPage_Customize" xml:space="preserve">
     <value>اپنی مرضی کے مطابق بنائیں</value>
@@ -2133,8 +2133,8 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>ڈسپلے بند کریں</value>
   </data>
   <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.
-Moving the mouse or pressing the keyboard will wake displays up.</value>
+    <value>تمام دستیاب ڈسپلے بند کریں۔
+ماؤس ہلانے یا کی بورڈ دبانے سے ڈسپلے جاگ جائیں گے۔</value>
   </data>
   <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
     <value>بند کریں</value>
@@ -2143,7 +2143,7 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
     <value>ڈسپلے بند کریں</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.</value>
+    <value>تمام دستیاب ڈسپلے بند کریں۔</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
     <value>گروپ کا نام تبدیل کریں</value>
@@ -2152,16 +2152,16 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
     <value>نام</value>
   </data>
   <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
-    <value>Legion logo on</value>
+    <value>لیجن لوگو آن</value>
   </data>
   <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
-    <value>Legion logo off</value>
+    <value>لیجن لوگو بند</value>
   </data>
   <data name="Notification_PortLightingOn" xml:space="preserve">
-    <value>Ports backlight on</value>
+    <value>پورٹس بیک لائٹ آن</value>
   </data>
   <data name="Notification_PortLightingOff" xml:space="preserve">
-    <value>Ports backlight off</value>
+    <value>پورٹس بیک لائٹ بند</value>
   </data>
   <data name="PackageControl_RebootRequired" xml:space="preserve">
     <value>دوبارہ شروع کرنا ضروری ہے</value>
@@ -2188,34 +2188,34 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
     <value>مکمل</value>
   </data>
   <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
-    <value>Action definition not found</value>
+    <value>کارروائی کی تعریف نہیں ملی</value>
   </data>
   <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
-    <value>Technical implementation details are not available for this action</value>
+    <value>اس کارروائی کے لیے تکنیکی نفاذ کی تفصیلات دستیاب نہیں ہیں</value>
   </data>
   <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
-    <value>Load failed</value>
+    <value>لوڈ ناکام</value>
   </data>
   <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
     <value>نامعلوم</value>
   </data>
   <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
-    <value>Command execution</value>
+    <value>کمانڈ کا نفاذ</value>
   </data>
   <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
-    <value>Registry modification</value>
+    <value>رجسٹری میں ترمیم</value>
   </data>
   <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
-    <value>Service management</value>
+    <value>سروس کا انتظام</value>
   </data>
   <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
-    <value>Registry modification + PowerShell script</value>
+    <value>رجسٹری میں ترمیم + پاور شیل اسکرپٹ</value>
   </data>
   <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
-    <value>Registry cleanup</value>
+    <value>رجسٹری کی صفائی</value>
   </data>
   <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
-    <value>DISM command</value>
+    <value>DISM کمانڈ</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>محفوظ کریں اور بند کریں</value>
@@ -2224,17 +2224,17 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
     <value>اپنی مرضی کے مطابق موڈ پری سیٹ</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
-    <value>Activate Custom Mode preset.
-This settings takes effect only when Custom Mode is enabled.</value>
+    <value>کسٹم موڈ پری سیٹ فعال کریں۔
+یہ ترتیب صرف اس وقت لاگو ہوتی ہے جب کسٹم موڈ فعال ہو۔</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
-    <value>Preset name</value>
+    <value>پری سیٹ کا نام</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
     <value>نام</value>
   </data>
   <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
-    <value>Active preset</value>
+    <value>فعال پری سیٹ</value>
   </data>
   <data name="AboutPage_ApplicationFolders" xml:space="preserve">
     <value>ایپلیکیشن فولڈرز</value>
@@ -2249,58 +2249,58 @@ This settings takes effect only when Custom Mode is enabled.</value>
     <value>واحد ڈسپلے برائٹنس</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>When on, same brightness level will be applied to all Windows power plans whenever you change it.</value>
+    <value>جب آن ہو تو جب بھی آپ چمک تبدیل کریں گے، ایک ہی چمک کی سطح تمام ونڈوز پاور پلانز پر لاگو ہوگی۔</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
-    <value>Update {0} available!</value>
+    <value>اپ ڈیٹ {0} دستیاب ہے!</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
-    <value>Peak Power Limit</value>
+    <value>چوٹی کی پاور کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
-    <value>APU sPPT Power Limit</value>
+    <value>APU sPPT پاور کی حد</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
-    <value>The continuous power consumption that can be reached by the CPU.</value>
+    <value>مسلسل پاور کا استعمال جو CPU تک پہنچ سکتا ہے۔</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU within a short amount time.</value>
+    <value>قلیل مدت میں CPU تک پہنچنے والا چوٹی کا پاور کا استعمال۔</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
-    <value>The maximum instantaneous power consumption that can be reached by the CPU.</value>
+    <value>CPU تک پہنچنے والا زیادہ سے زیادہ فوری پاور کا استعمال۔</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
-    <value>The maximum power consumption that can be reached by the CPU when both CPU and GPU are fully utilized.</value>
+    <value>جب CPU اور GPU دونوں مکمل استعمال میں ہوں تو CPU تک پہنچنے والا زیادہ سے زیادہ پاور کا استعمال۔</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU with a minor delay.</value>
+    <value>معمولی تاخیر کے ساتھ CPU تک پہنچنے والا چوٹی کا پاور کا استعمال۔</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the CPU before frequency and power is reduced.</value>
+    <value>فریکوئنسی اور پاور کم ہونے سے پہلے CPU تک پہنچنے والا زیادہ سے زیادہ درجہ حرارت۔</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
-    <value>The additional maximum power that can be allocated to the GPU based on the power consumption of the CPU.</value>
+    <value>CPU کے پاور کے استعمال کی بنیاد پر GPU کو مختص کیا جانے والا اضافی زیادہ سے زیادہ پاور۔</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
-    <value>The additional amount of power that can be allocated to the GPU on top of base power consumption.</value>
+    <value>بنیادی پاور کے استعمال کے علاوہ GPU کو مختص کی جانے والی اضافی پاور کی مقدار۔</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the GPU before frequency and power is reduced.</value>
+    <value>فریکوئنسی اور پاور کم ہونے سے پہلے GPU تک پہنچنے والا زیادہ سے زیادہ درجہ حرارت۔</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>پہلے سے طے شدہ</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
-    <value>Short Term Power Limit Duration</value>
+    <value>قلیل مدتی پاور کی حد کی مدت</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
-    <value>The amount of time the CPU is allowed to boost and use Short Term Power Limit for. When Tau expires, Long Term Power Limit is used.</value>
+    <value>وہ وقت جس کے لیے CPU کو بوسٹ کرنے اور قلیل مدتی پاور کی حد استعمال کرنے کی اجازت ہے۔ جب Tau ختم ہو جاتا ہے تو طویل مدتی پاور کی حد استعمال ہوتی ہے۔</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
-    <value>Total Processor Power Target In AC</value>
+    <value>AC میں کل پروسیسر پاور ٹارگٹ</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
-    <value>The point at which the CPU triggers dynamic power consumption adjustment for the GPU.</value>
+    <value>وہ نقطہ جس پر CPU GPU کے لیے متحرک پاور کے استعمال کی ایڈجسٹمنٹ کو متحرک کرتا ہے۔</value>
   </data>
   <data name="Create" xml:space="preserve">
     <value>بنائیں</value>
@@ -2315,31 +2315,31 @@ This settings takes effect only when Custom Mode is enabled.</value>
     <value>پاور موڈ</value>
   </data>
   <data name="StatusTrayPopup_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>پری سیٹ</value>
   </data>
   <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
     <value>مجرد GPU</value>
   </data>
   <data name="StatusTrayPopup_PowerState" xml:space="preserve">
-    <value>Power State</value>
+    <value>پاور کی حالت</value>
   </data>
   <data name="StatusTrayPopup_Battery" xml:space="preserve">
     <value>بیٹری</value>
   </data>
   <data name="StatusTrayPopup_Mode" xml:space="preserve">
-    <value>Mode</value>
+    <value>موڈ</value>
   </data>
   <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
     <value>ڈسچارج ریٹ</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>کم از کم ڈسچارج ریٹ</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>زیادہ سے زیادہ ڈسچارج ریٹ</value>
   </data>
   <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
-    <value>Usage time</value>
+    <value>استعمال کا وقت</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
     <value>اپ ڈیٹ دستیاب ہے!</value>
@@ -2357,19 +2357,19 @@ This settings takes effect only when Custom Mode is enabled.</value>
     <value>ترتیب دیں</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
-    <value>S0 Lower Power Model detected</value>
+    <value>S0 لوئر پاور ماڈل کا پتہ چلا</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.</value>
+    <value>ونڈوز رپورٹ کرتا ہے کہ یہ لیپ ٹاپ Modern Standby سپورٹ کرتا ہے۔ متوازن کے علاوہ دیگر پاور پلانز استعمال کرنے سے غیر متوقع رویہ ہو سکتا ہے۔</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Select Windows Power Plans to apply when Power Mode changes.</value>
+    <value>پاور موڈ تبدیل ہونے پر لاگو کرنے کے لیے ونڈوز پاور پلانز منتخب کریں۔</value>
   </data>
   <data name="SettingsPage_Power_Title" xml:space="preserve">
     <value>پاور</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Power Plan options in Windows Control Panel</value>
+    <value>ونڈوز کنٹرول پینل میں پاور پلان کے آپشنز</value>
   </data>
   <data name="PoweredOff" xml:space="preserve">
     <value>بند ہے</value>
@@ -2403,39 +2403,39 @@ This settings takes effect only when Custom Mode is enabled.</value>
     <value>GPU اوور کلاک</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.</value>
+    <value>الگ GPU کو اوور کلاک کر کے کارکردگی بڑھائیں۔</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
     <value>GPU اوور کلاک</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.
+    <value>الگ GPU کو اوور کلاک کر کے کارکردگی بڑھائیں۔
 
-WARNING: This action will not run correctly, if discrete GPU is not available.</value>
+انتباہ: اگر الگ GPU دستیاب نہ ہو تو یہ کارروائی صحیح طریقے سے نہیں چلے گی۔</value>
   </data>
   <data name="PortsBacklightControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>پورٹس بیک لائٹ</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off backlight of the ports on the back of the laptop.</value>
+    <value>لیپ ٹاپ کے پیچھے پورٹس کی بیک لائٹ آن یا بند کریں۔</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>پورٹس بیک لائٹ</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight of the ports on the back of the laptop.</value>
+    <value>لیپ ٹاپ کے پیچھے پورٹس کی بیک لائٹ آن یا بند کریں۔</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>پینل لوگو بیک لائٹ</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>لیپ ٹاپ کے ڈھکن کی بیک لائٹ آن یا بند کریں۔</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>پینل لوگو بیک لائٹ</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>لیپ ٹاپ کے ڈھکن کی بیک لائٹ آن یا بند کریں۔</value>
   </data>
   <data name="GHz" xml:space="preserve">
     <value>GHz</value>
@@ -2444,7 +2444,7 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
     <value>MHz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>زیادہ سے زیادہ: {0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
     <value>CPU</value>
@@ -2456,10 +2456,10 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
     <value>کور کلاک</value>
   </data>
   <data name="SensorsControl_PCoreClock_Title" xml:space="preserve">
-    <value>P Core Clock</value>
+    <value>P کور کلاک</value>
   </data>
   <data name="SensorsControl_ECoreClock_Title" xml:space="preserve">
-    <value>E Core Clock</value>
+    <value>E کور کلاک</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
     <value>درجہ حرارت</value>
@@ -2483,10 +2483,10 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
     <value>SSD کا درجہ حرارت</value>
   </data>
   <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
-    <value>VRAM Usage</value>
+    <value>VRAM استعمال</value>
   </data>
   <data name="SensorsControl_SharedMemoryUsage_Title" xml:space="preserve">
-    <value>Shared Memory Usage</value>
+    <value>شیئرڈ میموری استعمال</value>
   </data>
   <data name="SensorsControl_VramTemperature_Title" xml:space="preserve">
     <value>VRAM کا درجہ حرارت</value>
@@ -2507,74 +2507,74 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
     <value>پلیٹ فارم</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
-    <value>Refresh interval</value>
+    <value>تازہ کرنے کا وقفہ</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>فوری بوٹ</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>جب چارجر منسلک ہو تو لیپ ٹاپ آن ہو جائے۔</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>فوری بوٹ</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>جب چارجر منسلک ہو تو لیپ ٹاپ آن ہو جائے۔</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Cannot change Power Mode</value>
+    <value>پاور موڈ تبدیل نہیں ہو سکتا</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} power mode is not available without AC power.</value>
+    <value>{0} پاور موڈ AC پاور کے بغیر دستیاب نہیں ہے۔</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>سینسرز</value>
   </data>
   <data name="IGPUModeChangeException_Title" xml:space="preserve">
-    <value>Could not change GPU Working Mode</value>
+    <value>GPU کام کرنے کا موڈ تبدیل نہیں ہو سکا</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
-If dGPU does not respond at all, please restart your laptop.</value>
+    <value>اگر آپ کو متوقع نتیجہ نظر نہیں آتا تو چند سیکنڈ بعد دوبارہ موڈ تبدیل کرنے کی کوشش کریں۔
+اگر dGPU بالکل ردعمل نہیں دیتا تو براہ کرم اپنا لیپ ٹاپ دوبارہ شروع کریں۔</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU is currently in use</value>
+    <value>dGPU فی الحال استعمال میں ہے</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use.</value>
+    <value>جب استعمال میں نہ ہو تو dGPU خودکار طور پر منقطع ہو جائے گا۔</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU is currently in use or laptop is not on battery power</value>
+    <value>dGPU فی الحال استعمال میں ہے یا لیپ ٹاپ بیٹری پاور پر نہیں ہے</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+    <value>جب استعمال میں نہ ہو اور لیپ ٹاپ بیٹری پاور پر ہو تو dGPU خودکار طور پر منقطع ہو جائے گا۔</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+    <value>جب Lenovo Vantage یا اس کی سروسز چل رہی ہوں گی تو کسٹم موڈ کی ترتیبات صحیح طریقے سے لاگو نہیں ہوں گی۔</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+    <value>جب Legion Zone یا اس کی سروسز چل رہی ہوں گی تو کسٹم موڈ کی ترتیبات صحیح طریقے سے لاگو نہیں ہوں گی۔</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
-    <value>dGPU connected</value>
+    <value>dGPU منسلک</value>
   </data>
   <data name="DGPU_Disconnected_Title" xml:space="preserve">
-    <value>dGPU disconnected</value>
+    <value>dGPU منقطع</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
     <value>GPU کام کرنے کا موڈ</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>اپنے کمپیوٹر کے استعمال اور پاور کی حالت کی بنیاد پر GPU کام کرنے کا موڈ منتخب کریں۔
+موڈ تبدیل کرنے کے لیے دوبارہ شروع کرنا ضروری ہو سکتا ہے۔</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
     <value>ہائبرڈ موڈ</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>انٹیگریٹڈ اور الگ GPU کے درمیان سوئچنگ کی اجازت دیں۔
+دوبارہ شروع کرنا ضروری ہے۔</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
     <value>دورانیہ</value>
@@ -2583,25 +2583,25 @@ Requires restart.</value>
     <value>اپ ڈیٹس</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
-    <value>GPU to CPU Dynamic Boost</value>
+    <value>GPU سے CPU متحرک بوسٹ</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+    <value>یہ CPU استعمال کی بنیاد پر GPU سے CPU کو مختص کی جانے والی زیادہ سے زیادہ اضافی پاور ہے۔ قیمت جتنی زیادہ ہو، CPU استعمال کرنے والی ایپلیکیشنز کی کارکردگی اتنی بہتر ہوگی۔</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
     <value>بوٹ لوگو</value>
   </data>
   <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
-    <value>Customize Boot Logo image, visible during system startup.</value>
+    <value>سسٹم اسٹارٹ اپ کے دوران نظر آنے والا بوٹ لوگو تصویر کو اپنی مرضی کے مطابق بنائیں۔</value>
   </data>
   <data name="BootLogoWindow_Title" xml:space="preserve">
     <value>بوٹ لوگو</value>
   </data>
   <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
-    <value>Default Boot Logo is set</value>
+    <value>ڈیفالٹ بوٹ لوگو سیٹ ہے</value>
   </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
-    <value>Custom Boot Logo is set</value>
+    <value>کسٹم بوٹ لوگو سیٹ ہے</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
     <value>حالت</value>
@@ -2622,74 +2622,74 @@ Requires restart.</value>
     <value>اطلاع دکھائیں</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>پری سیٹ</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
     <value>سمارٹ Fn لاک</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.</value>
+    <value>جب Alt، Ctrl یا Shift کلید دبائی جائے گی تو Fn لاک عارضی طور پر غیر فعال ہو جائے گا۔</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>بند</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Custom boot logo must be exactly {0} pixels large.
-Supported formats are: {1}.</value>
+    <value>کسٹم بوٹ لوگو بالکل {0} پکسلز بڑا ہونا چاہیے۔
+سپورٹ شدہ فارمیٹس: {1}۔</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
     <value>رات بھر کی بیٹری چارجنگ</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>جب فعال ہو تو یہ آلہ رات بھر چارج ہونے پر 80% تک چارج ہوگا اور صبح جب آپ اسے استعمال کریں گے تو 100% تک چارج مکمل ہو جائے گا۔</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
     <value>رات بھر کی بیٹری چارجنگ</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>جب فعال ہو تو یہ آلہ رات بھر چارج ہونے پر 80% تک چارج ہوگا اور صبح جب آپ اسے استعمال کریں گے تو 100% تک چارج مکمل ہو جائے گا۔</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Invalid image size.</value>
+    <value>تصویر کا سائز غلط ہے۔</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
-    <value>Invalid image format.</value>
+    <value>تصویر کی فارمیٹ غلط ہے۔</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Cannot mount EFI partition.</value>
+    <value>EFI پارٹیشن کو ماؤنٹ نہیں کیا جا سکتا۔</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
-    <value>Cannot set UEFI privilege.</value>
+    <value>UEFI اجازت سیٹ نہیں ہو سکتی۔</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Not enough free space on EFI partition.</value>
+    <value>EFI پارٹیشن پر کافی خالی جگہ نہیں ہے۔</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
-    <value>Custom logo could not be set: {0}</value>
+    <value>کسٹم لوگو سیٹ نہیں ہو سکا: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
-    <value>Default logo could not be set: {0}</value>
+    <value>ڈیفالٹ لوگو سیٹ نہیں ہو سکا: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
-    <value>Default boot logo set.</value>
+    <value>ڈیفالٹ بوٹ لوگو سیٹ ہو گیا۔</value>
   </data>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
-    <value>Custom boot logo set.</value>
+    <value>کسٹم بوٹ لوگو سیٹ ہو گیا۔</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
+    <value>نیٹ ورک کا نام (SSID)</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
-    <value>Copy current network name</value>
+    <value>موجودہ نیٹ ورک کا نام کاپی کریں</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Leave empty for any Wi-Fi network.</value>
+    <value>کسی بھی Wi-Fi نیٹ ورک کے لیے خالی چھوڑ دیں۔</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
     <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+    <value>HWiNFO64 کے ساتھ پنکھے کی رفتار، بیٹری کا درجہ حرارت وغیرہ شیئر کریں۔ اس آپشن کو تبدیل کرنے کے بعد آپ کو HWiNFO64 دوبارہ شروع کرنے کی ضرورت ہو سکتی ہے۔</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
     <value>انٹیگریشنز</value>
@@ -2722,19 +2722,19 @@ Supported formats are: {1}.</value>
     <value>فائل نہیں ملی، پہلے ڈاؤن لوڈ کریں</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>انسٹالر کوڈ {0} کے ساتھ باہر نکلا</value>
   </data>
   <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
     <value>انسٹالیشن شروع ہوئی</value>
   </data>
   <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
-    <value>Starting installer: {0}</value>
+    <value>انسٹالر شروع ہو رہا ہے: {0}</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
     <value>README کھولیں</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>پری سیٹ</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
     <value>ریفریش کریں</value>
@@ -2747,40 +2747,40 @@ Supported formats are: {1}.</value>
     <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+    <value>سسٹم کے دوبارہ شروع ہونے پر بیٹری سیکشن میں "بیٹری پر ہے جب سے" کے کاؤنٹر کو ری سیٹ کرتا ہے۔</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
     <value>اسٹارٹ اپ پر "بیٹری پر ہے جب سے" ری سیٹ کریں</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off Wi-Fi</value>
+    <value>Wi-Fi بند کریں</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn on Wi-Fi</value>
+    <value>Wi-Fi آن کریں</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Run silently</value>
+    <value>خاموشی سے چلائیں</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
-    <value>Wait until finished</value>
+    <value>مکمل ہونے تک انتظار کریں</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Execute console applications, without creating a console window.</value>
+    <value>کنسول ایپلیکیشنز چلائیں، بغیر کنسول ونڈو بنائے۔</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Wait until program or script finishes executing</value>
+    <value>پروگرام یا اسکرپٹ کے مکمل ہونے تک انتظار کریں</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>When mute, all active audio output devices will be muted.</value>
+    <value>جب خاموش ہو تو تمام فعال آڈیو آؤٹ پٹ آلات خاموش ہو جائیں گے۔</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Speaker</value>
+    <value>اسپیکر</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
     <value>ٹرے میں منیمائز کریں</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>Always minimize to tray instead of taskbar.</value>
+    <value>ٹاسک بار کی بجائے ہمیشہ ٹرے میں منیمائز کریں۔</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>ونڈوز پاور موڈز</value>
@@ -2789,43 +2789,43 @@ Supported formats are: {1}.</value>
     <value>Fn+Q کے ساتھ کسٹم موڈ میں سوئچ کریں</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
-    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+    <value>Fn+Q کے ساتھ کسٹم موڈ میں فوری سوئچنگ کی اجازت دیں۔</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
     <value>پاور موڈ سنکرونائزیشن</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.</value>
+    <value>پاور موڈز تبدیل کرتے وقت خودکار طور پر ونڈوز پاور پلان یا ونڈوز پاور موڈ تبدیل کریں۔</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
     <value>ونڈوز پاور موڈز</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Select Windows Power Mode to apply when Power Mode changes.</value>
+    <value>پاور موڈ تبدیل ہونے پر لاگو کرنے کے لیے ونڈوز پاور موڈ منتخب کریں۔</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occurred when reading device information.</value>
+    <value>آلے کی معلومات پڑھتے وقت خرابی پیش آئی۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
     <value>مطابقت کی جانچ میں خرابی</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
-    <value>The application failed to read device information during startup. Please check the error details below and try the troubleshooting steps if needed.</value>
+    <value>اسٹارٹ اپ کے دوران ایپلیکیشن آلے کی معلومات پڑھنے میں ناکام رہی۔ براہ کرم نیچے خرابی کی تفصیلات چیک کریں اور ضرورت ہونے پر خرابیوں کے ازالے کے اقدامات آزمائیں۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
     <value>خرابیوں کا ازالہ کرنے کے اقدامات</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>Ensure Windows Management Instrumentation (WMI) service is running: Open Services (services.msc) and check that "Windows Management Instrumentation" is running.</value>
+    <value>یقینی بنائیں کہ Windows Management Instrumentation (WMI) سروس چل رہی ہے: Services (services.msc) کھولیں اور چیک کریں کہ "Windows Management Instrumentation" چل رہی ہے۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
-    <value>Run the application as Administrator to ensure sufficient permissions to access system registry and WMI.</value>
+    <value>سسٹم رجسٹری اور WMI تک رسائی کے لیے کافی اجازتوں کو یقینی بنانے کے لیے ایپلیکیشن کو ایڈمنسٹریٹر کے طور پر چلائیں۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
-    <value>Check system resources: Close other resource-intensive applications and try again.</value>
+    <value>سسٹم وسائل چیک کریں: دیگر وسائل استعمال کرنے والی ایپلیکیشنز بند کریں اور دوبارہ کوشش کریں۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>Review the log file for detailed error information by clicking "Open Log" below.</value>
+    <value>نیچے "لاگ کھولیں" پر کلک کر کے تفصیلی خرابی کی معلومات کے لیے لاگ فائل کا جائزہ لیں۔</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
     <value>لاگ فائل کھولیں</value>
@@ -2855,19 +2855,19 @@ Supported formats are: {1}.</value>
     <value>دہرائیں نہیں</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Universal Device Toolkit must be running for macros to work.</value>
+    <value>میکروز کام کرنے کے لیے Universal Device Toolkit چل رہا ہونا چاہیے۔</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
     <value>فعال کریں</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>You can record series of key presses and invoke them using the number pad on your keyboard.</value>
+    <value>آپ کلیدوں کے دبانے کی سیریز ریکارڈ کر سکتے ہیں اور انہیں اپنے کی بورڈ کے نمبر پیڈ استعمال کر کے طلب کر سکتے ہیں۔</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
     <value>میکرو</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable or disable macros.</value>
+    <value>میکروز فعال یا غیر فعال کریں۔</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
     <value>اگر دوسری کلید دبائی گئی تو مداخلت کریں</value>
@@ -2879,7 +2879,7 @@ Supported formats are: {1}.</value>
     <value>سب چھپائیں</value>
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
-    <value>Devices</value>
+    <value>آلات</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
     <value>سبھی غیر منتخب کریں</value>
@@ -2909,43 +2909,43 @@ Supported formats are: {1}.</value>
     <value>روکنے کے لیے ESC دبائیں۔</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
-    <value>Show selected devices only</value>
+    <value>صرف منتخب آلات دکھائیں</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
-    <value>Show removable devices only</value>
+    <value>صرف ہٹنے والے آلات دکھائیں</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
-    <value>Show connected devices only</value>
+    <value>صرف منسلک آلات دکھائیں</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
     <value>CLI</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>Enable Command Line Interface that allows control from command line.</value>
+    <value>کمانڈ لائن سے کنٹرول کی اجازت دینے والا کمانڈ لائن انٹرفیس فعال کریں۔</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
     <value>PATH میں CLI شامل کریں</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Add CLI to user's PATH environment variable.</value>
+    <value>CLI کو صارف کے PATH ماحولیاتی متغیر میں شامل کریں۔</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
     <value>درجہ حرارت</value>
   </data>
   <data name="SettingsPage_Temperature_Message" xml:space="preserve">
-    <value>Select units for temperature sensors.</value>
+    <value>درجہ حرارت سینسرز کے لیے اکائیاں منتخب کریں۔</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys is running in the background.</value>
+    <value>Lenovo ہاٹ کیز پس منظر میں چل رہی ہیں۔</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone is running in the background.</value>
+    <value>Legion Zone پس منظر میں چل رہا ہے۔</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController is running in the background.</value>
+    <value>Lenovo Vantage اور/یا ImController پس منظر میں چل رہا ہے۔</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Show notification on all screens connected to your device.</value>
+    <value>آپ کے آلے سے منسلک تمام اسکرینوں پر اطلاع دکھائیں۔</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
     <value>تمام اسکرینوں پر اطلاع</value>
@@ -2963,74 +2963,74 @@ Supported formats are: {1}.</value>
     <value>اپ ڈیٹ</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>اس سیشن کے لیے اپ ڈیٹس کی جانچ غیر فعال ہے</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit کو {0} کے ساتھ شروع کیا گیا تھا۔ جب تک آپ اس اسٹارٹ اپ آرگیومینٹ کے بغیر دوبارہ شروع نہیں کریں گے، خودکار اور دستی اپ ڈیٹ جانچ، اور نیچے کی اپ ڈیٹ ترتیبات غیر فعال ہیں۔</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API rate limit reached, please try again later.</value>
+    <value>API ریٹ کی حد تک پہنچ گئی، براہ کرم بعد میں دوبارہ کوشش کریں۔</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
     <value>اپ ڈیٹس کی جانچ ناکام</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Something went wrong, please try again later.</value>
+    <value>کچھ غلط ہو گیا، براہ کرم بعد میں دوبارہ کوشش کریں۔</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
     <value>کوئی اپ ڈیٹ نہیں ملا</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
-    <value>Automatically check for updates</value>
+    <value>اپ ڈیٹس کی خودکار جانچ کریں</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
     <value>اپ ڈیٹ ریپوزٹری</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
-    <value>Configure the GitHub repository to check for updates. Leave empty to use default.</value>
+    <value>اپ ڈیٹس چیک کرنے کے لیے GitHub ریپوزٹری تشکیل کریں۔ ڈیفالٹ استعمال کرنے کے لیے خالی چھوڑ دیں۔</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
-    <value>Repository Owner</value>
+    <value>ریپوزٹری کا مالک</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
-    <value>e.g., SSC-STUDIO</value>
+    <value>مثلاً، SSC-STUDIO</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
-    <value>Repository Name</value>
+    <value>ریپوزٹری کا نام</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
-    <value>e.g., UniversalDeviceToolkit</value>
+    <value>مثلاً، UniversalDeviceToolkit</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
+    <value>اپ ڈیٹ کیٹلاگ نہیں ملا</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
+    <value>دوسرے ذریعے سے اپ ڈیٹس حاصل کرنے کی کوشش کریں۔</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>کچھ غلط ہو گیا</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>چیک کریں کہ آپ کا انٹرنیٹ کنکشن چل رہا ہے۔</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
-    <value>Play sound</value>
+    <value>آواز چلائیں</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Common music formats like wav or mp3 are supported.</value>
+    <value>wav یا mp3 جیسی عام میوزک فارمیٹس سپورٹ ہیں۔</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
-    <value>Quick Action</value>
+    <value>فوری کارروائی</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a saved quick action.</value>
+    <value>محفوظ شدہ فوری کارروائی چلائیں۔</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
     <value>اطلاع ہمیشہ اوپر</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>اطلاع کو ہمیشہ اوپر رکھیں۔
+یہ دیگر فل اسکرین ونڈوز کو متاثر نہیں کرے گا، لیکن آپ اطلاعات پر کلک نہیں کر سکیں گے۔</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>تجویز کردہ</value>
@@ -3051,19 +3051,19 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>بند کریں</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{1} میں سے {0} کارروائیاں منتخب کی گئیں</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>تخمینی صفائی کا سائز: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
-    <value>Click Scan to calculate total size</value>
+    <value>کل سائز کا حساب لگانے کے لیے اسکین پر کلک کریں</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>چل رہا ہے: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>منتخب ایپس ان انسٹال ہو رہی ہیں…</value>
   </data>
   <data name="Compact" xml:space="preserve">
     <value>مختصر منظر</value>
@@ -3073,19 +3073,19 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
 
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>ونڈوز کی خوبصورتی</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance and behavior.</value>
+    <value>ونڈوز کی ظاہری شکل اور رویہ اپنی مرضی کے مطابق بنائیں۔</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Effects</value>
+    <value>اثرات</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Customize visual effects.</value>
+    <value>بصری اثرات کو اپنی مرضی کے مطابق بنائیں۔</value>
   </data>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Transparency</value>
+    <value>شفافیت</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
     <value>سبھی کھولیں</value>
@@ -3095,17 +3095,17 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
 
-    <value>Freed {0} in {1}s</value>
+    <value>{1} سیکنڈ میں {0} خالی ہوئے</value>
 
   </data>
 <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>{0}% پر عمل درآمد ہو رہا ہے</value>
   </data>
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>آپریشن منسوخ</value>
   </data>
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>خرابی کی تفصیلات: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>چھپے ہوئے ڈاؤن لوڈ دکھائیں</value>
@@ -3114,46 +3114,46 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>چھپے ہوئے ڈاؤن لوڈ دکھائیں</value>
   </data>
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>زبان منتخب کریں</value>
   </data>
   <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
-    <value>This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.</value>
+    <value>یہ آلہ بنیادی موڈ میں شروع ہوگا۔ جب تک مطابقت پذیر آلے کا پیک دستیاب نہ ہو، ہارڈویئر مخصوص کنٹرولز چھپے ہوں گے۔</value>
   </data>
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
-    <value>Device pack: Basic mode</value>
+    <value>آلے کا پیک: بنیادی موڈ</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.</value>
+    <value>Universal Device Toolkit نے مماثل آلے کا پیک کا پتہ لگایا۔ ابھی اس کی تصدیق کریں تاکہ ایپ ہارڈویئر مخصوص خصوصیات تیار کر سکے۔</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
-    <value>Device pack: {0}</value>
+    <value>آلے کا پیک: {0}</value>
   </data>
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
-    <value>Preparing device setup...</value>
+    <value>آلے کا سیٹ اپ تیار ہو رہا ہے…</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>منسلک نہیں</value>
   </data>
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>زونز کو ہم آہنگ کریں</value>
   </data>
   <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
-    <value>Using Windows built-in registry cleanup functionality</value>
+    <value>ونڈوز کی بلٹ ان رجسٹری صفائی کی فعالیت استعمال کر رہا ہے</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
-    <value>ipconfig /flushdns (Flush DNS cache)</value>
+    <value>ipconfig /flushdns (DNS کیشے کی صفائی)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
-    <value>netsh winsock reset (Reset Winsock protocol stack)</value>
+    <value>netsh winsock reset (ون ساک پروٹوکول اسٹیک ری سیٹ کریں)</value>
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
-    <value>netsh int ip reset (Reset TCP/IP protocol stack)</value>
+    <value>netsh int ip reset (TCP/IP پروٹوکول اسٹیک ری سیٹ کریں)</value>
   </data>
   <data name="PluginExtensionsPage_Title" xml:space="preserve">
     <value>پلگ ان توسیعات</value>
   </data>
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
-    <value>Install and manage plugins to extend functionality</value>
+    <value>فعالیت بڑھانے کے لیے پلگ انز انسٹال کریں اور ان کا انتظام کریں</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
     <value>کل پلگ انز</value>
@@ -3168,25 +3168,25 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>اسٹور پلس</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>پلگ ان دستیابی کی جانچ ہو رہی ہے…</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
+    <value>{0} پلگ ان اپ ڈیٹس انسٹال کے لیے تیار ہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
+    <value>موجودہ فیڈ میں {0} اضافی پلگ انز دستیاب ہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>پلگ ان میٹا ڈیٹا لوڈ ہونے کا انتظار ہے۔</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>تمام معلوم پلگ انز فی الحال تازہ ترین ہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>اپ ڈیٹس دستیاب ہیں</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>انسٹال کے لیے دستیاب</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>میٹا ڈیٹا لوڈ ہو رہا ہے</value>
@@ -3201,10 +3201,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>ترتیبات</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>فوری کھولنا</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>بہتر بنائیں</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
     <value>اپ ڈیٹ</value>
@@ -3218,7 +3218,7 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
 
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Cannot Uninstall</value>
+    <value>ان انسٹال نہیں ہو سکتا</value>
   </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>پلگ ان کی ترتیبات</value>
@@ -3230,7 +3230,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پلگ ان کی تفصیل</value>
   </data>
   <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
-    <value>This plugin has no configurable settings.</value>
+    <value>اس پلگ ان کی کوئی قابل تشکیل ترتیبات نہیں ہیں۔</value>
   </data>
   <data name="PluginSettingsWindow_Close" xml:space="preserve">
     <value>بند کریں</value>
@@ -3248,10 +3248,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>مصنف: {0}</value>
   </data>
   <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Plugin configuration interface format is incorrect.</value>
+    <value>پلگ ان کنفیگریشن انٹرفیس فارمیٹ غلط ہے۔</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
-    <value>Error loading plugin settings: {0}</value>
+    <value>پلگ ان ترتیبات لوڈ کرنے میں خرابی: {0}</value>
   </data>
   <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
     <value>پلگ انز تلاش کریں…</value>
@@ -3269,7 +3269,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>کوئی پلگ ان دستیاب نہیں</value>
   </data>
   <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
-    <value>The plugin store is currently empty. Stay tuned for future plugin updates.</value>
+    <value>پلگ ان اسٹور فی الحال خالی ہے۔ مستقبل کی پلگ ان اپ ڈیٹس کے لیے تیار رہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_Configure" xml:space="preserve">
     <value>ترتیب دیں</value>
@@ -3287,13 +3287,13 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>ایپلیکیشن ڈیفالٹ استعمال کریں</value>
   </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
-    <value>Found {0} plugins</value>
+    <value>{0} پلگ انز ملے</value>
   </data>
   <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
     <value>بلک امپورٹ</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
-    <value>Import plugins from local ZIP files</value>
+    <value>مقامی ZIP فائلوں سے پلگ انز درآمد کریں</value>
   </data>
   <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
     <value>فائلوں سے امپورٹ کریں</value>
@@ -3302,91 +3302,91 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پلگ ان فائلیں منتخب کریں (.zip)</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
-    <value>Successfully imported {0} plugins</value>
+    <value>{0} پلگ انز کامیابی سے درآمد ہوئے</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
-    <value>{0} plugins have been successfully imported and are available</value>
+    <value>{0} پلگ انز کامیابی سے درآمد ہو چکے ہیں اور دستیاب ہیں</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
-    <value>Bulk import failed</value>
+    <value>بلک امپورٹ ناکام</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
-    <value>Failed to import plugins: {0}</value>
+    <value>پلگ انز درآمد کرنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
-    <value>Importing plugins...</value>
+    <value>پلگ انز درآمد ہو رہے ہیں…</value>
   </data>
   <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Importing {0}...</value>
+    <value>{0} درآمد ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Processing {0}...</value>
+    <value>{0} پروسیس ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
-    <value>Plugin installed successfully</value>
+    <value>پلگ ان کامیابی سے انسٹال ہو گیا</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
-    <value>Plugin has been successfully installed</value>
+    <value>پلگ ان کامیابی سے انسٹال ہو گیا ہے</value>
   </data>
   <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
     <value>انسٹالیشن ناکام</value>
   </data>
   <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
-    <value>Unable to install plugin: {0}</value>
+    <value>پلگ ان انسٹال کرنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
-    <value>Plugin uninstalled successfully</value>
+    <value>پلگ ان کامیابی سے ان انسٹال ہو گیا</value>
   </data>
   <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
-    <value>Plugin has been successfully uninstalled</value>
+    <value>پلگ ان کامیابی سے ان انسٹال ہو گیا ہے</value>
   </data>
   <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
-    <value>Uninstallation failed</value>
+    <value>ان انسٹالیشن ناکام</value>
   </data>
   <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
-    <value>Unable to uninstall plugin: {0}</value>
+    <value>پلگ ان ان انسٹال کرنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
-    <value>Failed to open plugin</value>
+    <value>پلگ ان کھولنے میں ناکام</value>
   </data>
     <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
-    <value>Unable to open plugin: {0}</value>
+    <value>پلگ ان کھولنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
-    <value>Unable to open plugin: {0}</value>
+    <value>پلگ ان کھولنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
-    <value>Plugin not installed</value>
+    <value>پلگ ان انسٹال نہیں</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
-    <value>Plugin is not installed and cannot be opened</value>
+    <value>پلگ ان انسٹال نہیں ہے اور نہیں کھولا جا سکتا</value>
   </data>
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
-    <value>Minimum host version {0} is required</value>
+    <value>کم از کم ہوسٹ ورژن {0} درکار ہے</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
-    <value>Plugin will be permanently deleted</value>
+    <value>پلگ ان مستقل طور پر حذف ہو جائے گا</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Plugin will be permanently deleted. This action cannot be undone.</value>
+    <value>پلگ ان مستقل طور پر حذف ہو جائے گا۔ یہ کارروائی واپس نہیں لی جا سکتی۔</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>اپ ڈیٹ ناکام</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
-    <value>Plugin update failed, please check network connection and try again later.</value>
+    <value>پلگ ان اپ ڈیٹ ناکام، براہ کرم نیٹ ورک کنکشن چیک کریں اور بعد میں دوبارہ کوشش کریں۔</value>
   </data>
   <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
     <value>اپ ڈیٹ کامیاب</value>
   </data>
   <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Plugin has been successfully updated</value>
+    <value>پلگ ان کامیابی سے اپ ڈیٹ ہو گیا</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
-    <value>Updating Plugin</value>
+    <value>پلگ ان اپ ڈیٹ ہو رہا ہے</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
-    <value>Downloading and updating plugin...</value>
+    <value>پلگ ان ڈاؤن لوڈ اور اپ ڈیٹ ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
     <value>تمام اپ ڈیٹ کریں</value>
@@ -3401,46 +3401,46 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پلگ ان انسٹال ختم</value>
   </data>
   <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Plugin will be deleted when the program closes.</value>
+    <value>جب پروگرام بند ہوگا تو پلگ ان حذف ہو جائے گا۔</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>حذف کرنا ناکام</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Error occurred while deleting plugin</value>
+    <value>پلگ ان حذف کرتے وقت خرابی پیش آئی</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
     <value>ترتیب ناکام</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Plugin is installed but not loaded. Please try restarting the application.</value>
+    <value>پلگ ان انسٹال ہے لیکن لوڈ نہیں ہوا۔ براہ کرم ایپلیکیشن دوبارہ شروع کرنے کی کوشش کریں۔</value>
   </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>کوئی ترتیب نہیں</value>
   </data>
   <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Plugin does not have any configuration options.</value>
+    <value>پلگ ان کے پاس کوئی کنفیگریشن آپشنز نہیں ہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Configuration Not Supported</value>
+    <value>کنفیگریشن سپورٹ نہیں</value>
   </data>
   <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Plugin does not support configuration.</value>
+    <value>پلگ ان کنفیگریشن کو سپورٹ نہیں کرتا۔</value>
   </data>
   <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Plugin States Reset</value>
+    <value>پلگ ان اسٹیٹس ری سیٹ</value>
   </data>
   <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>All plugin installation states have been cleared</value>
+    <value>تمام پلگ ان انسٹالیشن اسٹیٹس صاف کر دی گئی ہیں</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
-    <value>Bulk Update Complete</value>
+    <value>بلک اپ ڈیٹ مکمل</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
-    <value>All plugins have been processed.</value>
+    <value>تمام پلگ انز پروسیس ہو چکے ہیں۔</value>
   </data>
   <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
-    <value>Preparing download...</value>
+    <value>ڈاؤن لوڈ تیار ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>مقامی</value>
@@ -3449,10 +3449,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>نیا ورژن دستیاب</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>ورژن: </value>
+    <value>ورژن:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>تاریخ اجرا: </value>
+    <value>تاریخ اجرا:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>نیا کیا ہے:</value>
@@ -3473,43 +3473,43 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>دستیاب</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
-    <value>Refresh plugin list</value>
+    <value>پلگ ان فہرست ریفریش کریں</value>
   </data>
   <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
-    <value>No plugins found matching your search.</value>
+    <value>آپ کی تلاش سے مماثل کوئی پلگ ان نہیں ملا۔</value>
   </data>
   <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
-    <value>Update all available plugins</value>
+    <value>تمام دستیاب پلگ انز اپ ڈیٹ کریں</value>
   </data>
   <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
     <value>تمام انسٹال کریں</value>
   </data>
   <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
-    <value>Install all available plugins</value>
+    <value>تمام دستیاب پلگ انز انسٹال کریں</value>
   </data>
   <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
-    <value>Installing All...</value>
+    <value>سب انسٹال ہو رہے ہیں…</value>
   </data>
   <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
-    <value>Installing {0} plugin(s)...</value>
+    <value>{0} پلگ انز انسٹال ہو رہے ہیں…</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
-    <value>Bulk Install Complete</value>
+    <value>بلک انسٹال مکمل</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
-    <value>Installed {0} plugin(s).</value>
+    <value>{0} پلگ انز انسٹال ہوئے۔</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
-    <value>Bulk Install Failed</value>
+    <value>بلک انسٹال ناکام</value>
   </data>
   <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
-    <value>Failed to install plugins: {0}</value>
+    <value>پلگ انز انسٹال کرنے میں ناکام: {0}</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
-    <value>Updating All...</value>
+    <value>سب اپ ڈیٹ ہو رہے ہیں…</value>
   </data>
   <data name="PluginExtensionsPage_Updating" xml:space="preserve">
-    <value>Updating...</value>
+    <value>اپ ڈیٹ ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
     <value>فولڈر کھولیں</value>
@@ -3518,34 +3518,34 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پلگ ان ID کاپی کریں</value>
   </data>
   <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
-    <value>Folder Not Found</value>
+    <value>فولڈر نہیں ملا</value>
   </data>
   <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
-    <value>The plugin directory does not exist yet.</value>
+    <value>پلگ ان ڈائریکٹری ابھی تک موجود نہیں ہے۔</value>
   </data>
   <data name="PluginExtensionsPage_Copied" xml:space="preserve">
     <value>کاپی ہوگیا</value>
   </data>
   <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
-    <value>Plugin ID '{0}' copied to clipboard.</value>
+    <value>پلگ ان ID '{0}' کلپ بورڈ پر کاپی ہو گیا۔</value>
   </data>
   <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
-    <value>Download completed</value>
+    <value>ڈاؤن لوڈ مکمل</value>
   </data>
   <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
-    <value>Downloading...</value>
+    <value>ڈاؤن لوڈ ہو رہا ہے…</value>
   </data>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
-    <value>Downloading... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+    <value>ڈاؤن لوڈ ہو رہا ہے… {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
   <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
-    <value>Waiting to install (another plugin is downloading)...</value>
+    <value>انسٹال کا انتظار ہے (دوسرا پلگ ان ڈاؤن لوڈ ہو رہا ہے)…</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>No tools available. Please add tools in tools folder in application directory.</value>
+    <value>کوئی ٹولز دستیاب نہیں۔ براہ کرم ایپلیکیشن ڈائریکٹری میں ٹولز فولڈر میں ٹولز شامل کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Tools will appear here once they are available in the tools directory.</value>
+    <value>ٹولز ڈائریکٹری میں دستیاب ہونے پر ٹولز یہاں نظر آئیں گے۔</value>
   </data>
   <data name="SensorsControl_Model" xml:space="preserve">
     <value>ماڈل</value>
@@ -3563,10 +3563,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>شرح</value>
   </data>
   <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Min Rate</value>
+    <value>کم از کم شرح</value>
   </data>
   <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Max Rate</value>
+    <value>زیادہ سے زیادہ شرح</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>سائیکل</value>
@@ -3578,7 +3578,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>مکمل صلاحیت</value>
   </data>
   <data name="SensorsControl_DesignCapacity" xml:space="preserve">
-    <value>Design</value>
+    <value>ڈیزائن</value>
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>تاریخ</value>
@@ -3602,7 +3602,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>شرح کی حد</value>
   </data>
   <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
-    <value>Double-click to show or hide detailed sensor information.</value>
+    <value>تفصیلی سینسر معلومات دکھانے یا چھپانے کے لیے ڈبل کلک کریں۔</value>
   </data>
   <data name="SensorsControl_Loading" xml:space="preserve">
     <value>لوڈ ہو رہا ہے…</value>
@@ -3620,7 +3620,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>نامعلوم GPU</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
-    <value>Please select at least one cleanup option.</value>
+    <value>براہ کرم کم از کم ایک صفائی آپشن منتخب کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
     <value>سبھی شروع کریں</value>
@@ -3632,25 +3632,25 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>مثلاً C:\Drivers</value>
   </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
-    <value>Please select at least one item to clean up.</value>
+    <value>براہ کرم صاف کرنے کے لیے کم از کم ایک آئٹم منتخب کریں۔</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>{0} لاگو کرنے میں ناکام: {1}</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>تبدیلی کی تصدیق نہیں ہو سکی۔ ایڈمنسٹریٹر کے اختیارات درکار ہو سکتے ہیں۔</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>براہ کرم موجودہ اصلاح مکمل ہونے تک انتظار کریں۔</value>
   </data>
   <data name="LargeFilesWindow_Title" xml:space="preserve">
-    <value>Large Files Analysis</value>
+    <value>بڑی فائلز کا تجزیہ</value>
   </data>
   <data name="LargeFilesWindow_Description" xml:space="preserve">
-    <value>Select files you want to remove. Only files matching the filter are shown.</value>
+    <value>وہ فائلز منتخب کریں جنہیں آپ ہٹانا چاہتے ہیں۔ صرف فلٹر سے مماثل فائلز دکھائی جاتی ہیں۔</value>
   </data>
   <data name="LargeFilesWindow_FilterLabel" xml:space="preserve">
-    <value>Filter files larger than:</value>
+    <value>اس سے بڑی فائلز فلٹر کریں:</value>
   </data>
   <data name="LargeFilesWindow_Filter_1GB" xml:space="preserve">
     <value>1 GB</value>
@@ -3665,37 +3665,37 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>1 TB</value>
   </data>
   <data name="LargeFilesWindow_Filter_Custom" xml:space="preserve">
-    <value>Custom...</value>
+    <value>کسٹم…</value>
   </data>
   <data name="LargeFilesWindow_Header_Select" xml:space="preserve">
-    <value>Select</value>
+    <value>منتخب کریں</value>
   </data>
   <data name="LargeFilesWindow_Header_FileName" xml:space="preserve">
-    <value>File Name</value>
+    <value>فائل کا نام</value>
   </data>
   <data name="LargeFilesWindow_Header_Size" xml:space="preserve">
-    <value>Size</value>
+    <value>سائز</value>
   </data>
   <data name="LargeFilesWindow_Header_Path" xml:space="preserve">
     <value>پاتھ</value>
   </data>
   <data name="LargeFilesWindow_Confirm" xml:space="preserve">
-    <value>Confirm Selection</value>
+    <value>انتخاب کی تصدیق کریں</value>
   </data>
   <data name="LargeFilesWindow_SelectedFiles" xml:space="preserve">
-    <value>Selected: {0} files ({1})</value>
+    <value>منتخب: {0} فائلز ({1})</value>
   </data>
-  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>سافٹ ویئر رینڈرنگ پر مجبور کریں</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value></data>  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>سافٹ ویئر رینڈرنگ پر مجبور کریں</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>جب ریموٹ ڈیسک ٹاپ یا ہیڈ لیس ڈسپلے کا پتہ چلے تو سافٹ ویئر رینڈرنگ استعمال کریں۔ دوبارہ شروع کرنے کی سفارش کی جاتی ہے۔</value></data>  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
     <value>تھیم سٹائل</value>
   </data>
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
-    <value>Choose the visual style preset for the app. Theme mode and accent color still apply on top.</value>
+    <value>ایپ کے لیے بصری اسٹائل پری سیٹ منتخب کریں۔ تھیم موڈ اور ایکسینٹ رنگ اوپر لاگو رہیں گے۔</value>
   </data>
   <data name="GB" xml:space="preserve">
     <value>GB</value>
   </data>
   <data name="OsdAutomationStepControl_Message" xml:space="preserve">
-    <value>Show or Hide the OSD</value>
+    <value>OSD دکھائیں یا چھپائیں</value>
   </data>
   <data name="OsdAutomationStepControl_Title" xml:space="preserve">
     <value>OSD</value>
@@ -3770,13 +3770,13 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>FPS ریڈ لائن</value>
   </data>
   <data name="OsdSettings_Thresholds_FpsRedline_Description" xml:space="preserve">
-    <value>The minimum acceptable frame rate. Below this, the color turns critical.</value>
+    <value>کم از کم قابلِ قبول فریم ریٹ۔ اس سے نیچے رنگ نازک ہو جاتا ہے۔</value>
   </data>
   <data name="OsdSettings_Thresholds_LowFpsDelta" xml:space="preserve">
-    <value>Low FPS Delta</value>
+    <value>کم FPS ڈیلٹا</value>
   </data>
   <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
-    <value>The maximum difference between average FPS and 1% Low. Above this, the counter turns critical.</value>
+    <value>اوسط FPS اور 1% Low کے درمیان زیادہ سے زیادہ فرق۔ اس سے اوپر، کاؤنٹر نازک ہو جاتا ہے۔</value>
   </data>
   <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
     <value>کارکردگی</value>
@@ -3800,10 +3800,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پنکھا</value>
   </data>
   <data name="Osd_Disk_0_Temperature" xml:space="preserve">
-    <value>Disk 1 Temperature</value>
+    <value>ڈسک 1 کا درجہ حرارت</value>
   </data>
   <data name="Osd_Disk_1_Temperature" xml:space="preserve">
-    <value>Disk 2 Temperature</value>
+    <value>ڈسک 2 کا درجہ حرارت</value>
   </data>
   <data name="Osd_ECoreClock" xml:space="preserve">
     <value>E-کور کلاک</value>
@@ -3824,7 +3824,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>پنکھا</value>
   </data>
   <data name="Osd_Low_Fps" xml:space="preserve">
-    <value>1% Low</value>
+    <value>1% کم</value>
   </data>
   <data name="Osd_Memory_Temperature" xml:space="preserve">
     <value>درجہ حرارت</value>
@@ -3857,10 +3857,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>مدر بورڈ</value>
   </data>
   <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
-    <value>Enable advanced hardware polling to monitor detailed temperatures, frequencies, and power limits.</value>
+    <value>تفصیلی درجہ حرارت، فریکوئنسیز اور پاور کی حدود کی نگرانی کے لیے اعلیٰ ہارڈویئر پولنگ فعال کریں۔</value>
   </data>
   <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
-    <value>You need to install PawnIO first to use hardware sensors!</value>
+    <value>ہارڈویئر سینسرز استعمال کرنے کے لیے آپ کو پہلے PawnIO انسٹال کرنا ہوگا!</value>
   </data>
   <data name="SettingsPage_HardwareSensors_Title" xml:space="preserve">
     <value>ہارڈویئر سینسرز</value>
@@ -3896,18 +3896,18 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>PCH کا درجہ حرارت</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccessWithEntryMessage" xml:space="preserve">
-    <value>Plugin {0} was installed. Use Open to launch its available entry point.</value>
+    <value>پلگ ان {0} انسٹال ہو گیا۔ دستیاب ایک ایکشن پوائنٹ لانچ کرنے کے لیے کھولیں استعمال کریں۔</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
-    <value>Plugin {0} was installed and opened in System Optimization.</value>
+    <value>پلگ ان {0} انسٹال ہو گیا اور سسٹم آپٹیمائزیشن میں کھولا گیا۔</value>
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
-    <value>Installed, but no entry point</value>
+    <value>انسٹال ہے، لیکن کوئی ایکشن پوائنٹ نہیں</value>
   </data>
   <data name="PluginExtensionsPage_InstalledButRuntimeUnavailableMessage" xml:space="preserve">
-    <value>Plugin {0} was installed, but its runtime UI could not be loaded. Restart the app or reinstall the plugin.</value>
+    <value>پلگ ان {0} انسٹال ہو گیا، لیکن اس کا رن ٹائم UI لوڈ نہیں ہو سکا۔ ایپ دوبارہ شروع کریں یا پلگ ان دوبارہ انسٹال کریں۔</value>
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
-    <value>Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data.</value>
+    <value>پلگ ان {0} انسٹال ہو گیا، لیکن یہ صارف کے سامنے آنے والا ایک ایکشن پوائنٹ فراہم نہیں کرتا۔ یہ صرف پس منظر کی سروسز یا مینی فیسٹ ڈیٹا فراہم کر سکتا ہے۔</value>
   </data>
 </root>

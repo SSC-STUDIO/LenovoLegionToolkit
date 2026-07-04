@@ -17,6 +17,7 @@ public class WhiteKeyboardBacklightControl : AbstractComboBoxFeatureCardControl<
         Subtitle = Resource.WhiteKeyboardBacklightControl_Message;
 
         _listener.Changed += ListenerChanged;
+        Unloaded += (_, _) => _listener.Changed -= ListenerChanged;
     }
 
     private void ListenerChanged(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -25,6 +26,6 @@ public class WhiteKeyboardBacklightControl : AbstractComboBoxFeatureCardControl<
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnSpace))
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh white keyboard backlight control");
 }

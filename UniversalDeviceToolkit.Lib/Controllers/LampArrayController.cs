@@ -197,7 +197,7 @@ public class LampArrayController : IDisposable
                 {
                     Log.Instance.Trace($"Render loop error: {ex.Message}");
                 }
-                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token);
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token).ConfigureAwait(false);
             }
         }, token);
     }
@@ -294,10 +294,14 @@ public class LampArrayController : IDisposable
                         if (e is AuroraSyncEffect ae)
                             ae.UpdateScreenData(_screenBuffer, 32, 18);
 
-                await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token);
+                await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token).ConfigureAwait(false);
                 }
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Screen capture loop cancelled", ex);
+            }
         catch (Exception ex)
         {
             Log.Instance.Error($"Error adding LampArray device: {ex.Message}");
@@ -522,7 +526,7 @@ public class LampArrayController : IDisposable
         try
         {
             Log.Instance.Trace($"LampArray device added: {args.Id}");
-            var lampArray = await LampArray.FromIdAsync(args.Id);
+            var lampArray = await LampArray.FromIdAsync(args.Id).AsTask().ConfigureAwait(false);
 
             if (lampArray is null)
             {
@@ -629,7 +633,7 @@ public class LampArrayController : IDisposable
         }
 
         _settingsHydrated = true;
-        await StartAsync();
+        await StartAsync().ConfigureAwait(false);
     }
 
     public void SaveSettings(LampArraySettings settings)

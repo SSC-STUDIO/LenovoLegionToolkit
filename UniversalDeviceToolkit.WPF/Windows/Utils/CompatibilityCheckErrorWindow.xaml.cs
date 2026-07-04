@@ -113,7 +113,7 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
         {
             if (File.Exists(_logFilePath) && IsSafeFilePath(_logFilePath))
             {
-                Process.Start(new ProcessStartInfo
+                using var process = Process.Start(new ProcessStartInfo
                 {
                     FileName = _logFilePath,
                     UseShellExecute = true
@@ -125,7 +125,7 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
                 var logDirectory = Path.GetDirectoryName(_logFilePath);
                 if (!string.IsNullOrEmpty(logDirectory) && Directory.Exists(logDirectory))
                 {
-                    Process.Start("explorer.exe", logDirectory);
+                    using var process = Process.Start("explorer.exe", logDirectory);
                 }
             }
         }

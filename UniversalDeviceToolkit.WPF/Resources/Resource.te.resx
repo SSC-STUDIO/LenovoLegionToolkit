@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    
   <xs:schema id="root">
@@ -3418,10 +3418,10 @@ dGPU అసలు స్పందించకపోతే, దయచేసి �
     <value>కొత్త వెర్షన్ అందుబాటులో ఉంది</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>వెర్షన్: </value>
+    <value>వెర్షన్:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>విడుదల తేదీ: </value>
+    <value>విడుదల తేదీ:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>కొత్తది ఏమిటి:</value>
@@ -3879,4 +3879,4 @@ dGPU అసలు స్పందించకపోతే, దయచేసి �
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>{0} ప్లగ్ఇన్ ఇన్‌స్టాల్ చేయబడింది, కానీ ఇది వినియోగదారు-ఎదుర్కొనే ఎంట్రీ పాయింట్‌ను బహిర్గతం చేయదు. ఇది నేపథ్య సేవలు లేదా మానిఫెస్ట్ డేటాను మాత్రమే అందించవచ్చు.</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

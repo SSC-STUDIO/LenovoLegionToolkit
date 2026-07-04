@@ -33,9 +33,6 @@ public class ThrottleFirstDispatcher
 
             if (diff < _interval)
             {
-                if (_tag is not null && Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Throttling... [tag={_tag}, diff={diff.TotalMilliseconds}ms]");
-
                 return;
             }
 

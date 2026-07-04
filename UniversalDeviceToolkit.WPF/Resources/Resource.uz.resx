@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -457,7 +457,7 @@ DIQQAT: Eger ishki displey óshirilgen yamasa gibrid rejim aktiv emes bolsa, bul
     <value>Bólekli grafikalıq processor</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Ornatılǵan displeydiń jarıqlıǵın ózgertiń. 
+    <value>Ornatılǵan displeydiń jarıqlıǵın ózgertiń.
 Ayırım qurılmalarda quwatlıq rejimleri jarıqlıqtı ózgertedi. Eger bir nárse kerekli dárejede durıs islemese, bul qádem aqırǵısı ekenine isenim kámil etiń.
 
 ESLETPE: Eger ishki displey óshirilgen bolsa, bul háreket durıs islemeydi.</value>
@@ -472,7 +472,7 @@ ESLETPE: Eger ishki displey óshirilgen bolsa, bul háreket durıs islemeydi.</v
     <value>Fn+R túymelerin qollanǵanda, esapqa alıw kerek emes bolǵan jańalanıw tezliklerinen belgini alıp taslań.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Noutbuk displeyi qosılǵanına isenim kámil etiń. Lenova Legion Toolkit qosılmaǵan displey ushın jańalanıw tezligin júkley almaydı.</value>
+    <value>Noutbuk displeyi qosılǵanına isenim kámil etiń. Lenovo Legion Toolkit qosılmaǵan displey ushın jańalanıw tezligin júkley almaydı.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
     <value>Jańalanıw tezligi anıqlanbadı</value>
@@ -880,7 +880,7 @@ DIQQAT: Eger ishki displey óshirilgen bolsa, bul háreket durıs orınlanbaydı
     <value>Versiya</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>Tómende noutbukıńızǵa mas dep belgilengen baǵdarlamalıq paketler dizimi keltirilgen. 
+    <value>Tómende noutbukıńızǵa mas dep belgilengen baǵdarlamalıq paketler dizimi keltirilgen.
 Durıs paketlerdi ornatıp atırǵanıńızǵa isenim kámil etiń.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
@@ -1856,7 +1856,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Tavsiya etiladi</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} ning {1} tanlangan harakatlari</value>
+    <value>{0} / {1} ta harakat tanlangan</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Kesh tozalash</value>
@@ -2120,11 +2120,11 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Lenovo Vantage va/yoki ImController fon rejimida ishlamoqda.</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Fn tugmalari harakatlari, masalan mikrofonni o‘chirish uchun bildirishnomani o‘chirish. 
+    <value>Fn tugmalari harakatlari, masalan mikrofonni o‘chirish uchun bildirishnomani o‘chirish.
  Agar to‘liq ekranli dasturlar bilan ziddiyat bo‘lsa, ushbu parametrni yoqing.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Bildirishnomani har doim yuqoriga qo'ying. 
+    <value>Bildirishnomani har doim yuqoriga qo’ying.
  Bu boshqa to'liq ekran oynalariga ta'sir qilmaydi, lekin siz bildirishnomalarni bosolmaysiz.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
@@ -2337,7 +2337,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Wi-Fi ni yoqish</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Kutilmagan istisno yuz berdi: 
+    <value>Kutilmagan istisno yuz berdi:
  {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
@@ -2403,7 +2403,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
 
 
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>{1}s ichida {0} bo‘shatildi</value>
+    <value>{0} {1} soniyada bo‘shatildi</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
     <value>Tanlovni tozalash</value>
@@ -3885,4 +3885,4 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="Watt" xml:space="preserve">
     <value>Vt</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell kontekst menyusi roʻyxatga olish va integratsiyasini boshqarish.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shellni yoqish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell Windows kontekst menyusi ishlovchisi sifatida roʻyxatga olinadi.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shellni oʻchirish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Nilesoft Shell roʻyxatdan chiqariladi va standart kontekst menyusi tiklanadi.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Oʻzgarish tasdiqlanmadi. Administrator huquqlari talab qilinishi mumkin.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Joriy optimallashtirish tugashini kuting.</value></data></root>

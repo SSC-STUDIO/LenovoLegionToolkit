@@ -42,8 +42,17 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             if (!IsVisible)
                 return;
 
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
         }));
+
+        Unloaded += RGBKeyboardBacklightControl_Unloaded;
+    }
+
+    private void RGBKeyboardBacklightControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        MessagingCenter.Unsubscribe<RGBKeyboardBacklightChangedMessage>(this);
+        _listener.Changed -= Listener_Changed;
+        SizeChanged -= RGBKeyboardBacklightControl_SizeChanged;
     }
 
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -51,7 +60,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
         if (!IsLoaded || !IsVisible)
             return;
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }, "refresh RGB keyboard backlight control");
 
     private void RGBKeyboardBacklightControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -71,10 +80,10 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             return;
 
         var selectedPreset = (RGBKeyboardBacklightPreset)presetButton.Tag;
-        var state = await _controller.GetStateAsync();
-        await _controller.SetStateAsync(new(selectedPreset, state.Presets));
+        var state = await _controller.GetStateAsync().ConfigureAwait(false);
+        await _controller.SetStateAsync(new(selectedPreset, state.Presets)).ConfigureAwait(false);
 
-        await RefreshAsync();
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private async void SynchroniseZonesMenuItem_Click(object sender, RoutedEventArgs e)
@@ -85,22 +94,22 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
         foreach (var zone in Zones)
             zone.SelectedColor = pickerControl.SelectedColor;
 
-        await SaveState();
-        await RefreshAsync();
+        await SaveState().ConfigureAwait(false);
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     private async void CardControl_Changed(object? sender, EventArgs e)
     {
-        await SaveState();
-        await RefreshAsync();
+        await SaveState().ConfigureAwait(false);
+        await RefreshAsync().ConfigureAwait(false);
     }
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _controller.IsSupportedAsync())
+        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             throw new InvalidOperationException("RGB Keyboard does not seem to be supported");
 
-        var vantageStatus = await _vantageDisabler.GetStatusAsync();
+        var vantageStatus = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
         if (vantageStatus == SoftwareStatus.Enabled)
         {
             _vantageWarningInfoBar.IsOpen = true;
@@ -127,7 +136,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             return;
         }
 
-        var state = await _controller.GetStateAsync();
+        var state = await _controller.GetStateAsync().ConfigureAwait(false);
 
         foreach (var presetButton in PresetButtons)
         {
@@ -204,7 +213,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 
     private async Task SaveState()
     {
-        var state = await _controller.GetStateAsync();
+        var state = await _controller.GetStateAsync().ConfigureAwait(false);
 
         var selectedPreset = state.SelectedPreset;
         var presets = state.Presets;
@@ -220,7 +229,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             _zone3ColorPicker.SelectedColor.ToRGBColor(),
             _zone4ColorPicker.SelectedColor.ToRGBColor());
 
-        await _controller.SetStateAsync(new(selectedPreset, presets));
+        await _controller.SetStateAsync(new(selectedPreset, presets)).ConfigureAwait(false);
     }
 
     private void Expand()

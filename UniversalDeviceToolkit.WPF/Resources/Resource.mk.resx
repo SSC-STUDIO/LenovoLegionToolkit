@@ -656,7 +656,7 @@
     <value>Вентилатори</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
-    <value>Конфигурилив TGP</value>
+    <value>Прилагодлив TGP</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
     <value>Динамично засилување</value>
@@ -1186,7 +1186,7 @@
     <value>Нагласена боја</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Стартувај минимизирано во системската лента кога ќе се најавите во Windows.</value>
+    <value>Изглед</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Автоматско стартување</value>
@@ -1805,7 +1805,7 @@
     <value>Осветленост</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>ОтЀлени си зони</value>
+    <value>Отстрани ги сите зони</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
     <value>Ефекти</value>
@@ -2838,7 +2838,7 @@
     <value>Уреди</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>ОтЀли си</value>
+    <value>Отстрани ги сите</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Избери сè</value>
@@ -3346,10 +3346,10 @@
     <value>На располага е нова верзија</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Верзија: </value>
+    <value>Верзија:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Датум на издание: </value>
+    <value>Датум на издание:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Што е ново:</value>
@@ -3882,4 +3882,4 @@
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

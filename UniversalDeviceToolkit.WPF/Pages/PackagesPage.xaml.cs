@@ -62,7 +62,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void PackagesPage_Initialized(object? sender, EventArgs e)
     {
-        _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
+        _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false)).MachineType;
         _osComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
 
         var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
@@ -104,7 +104,7 @@ public partial class PackagesPage : IProgress<float>
             if (!Directory.Exists(location))
                 return;
 
-            Process.Start("explorer", location);
+            using var process = Process.Start("explorer", location);
         }
         catch (Exception ex)
         {
@@ -129,7 +129,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void DownloadPackagesButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
+        if (!await ShouldInterruptDownloadsIfRunning().ConfigureAwait(false))
             return;
 
         var errorOccurred = false;
@@ -153,12 +153,12 @@ public partial class PackagesPage : IProgress<float>
                 !_osComboBox.TryGetSelectedItem(out OS os))
             {
                 await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
-                    Resource.PackagesPage_DownloadFailed_Message);
+                    Resource.PackagesPage_DownloadFailed_Message).ConfigureAwait(false);
                 return;
             }
 
             if (_getPackagesTokenSource is not null)
-                await _getPackagesTokenSource.CancelAsync();
+                await _getPackagesTokenSource.CancelAsync().ConfigureAwait(false);
 
             _getPackagesTokenSource = new();
 
@@ -182,7 +182,7 @@ public partial class PackagesPage : IProgress<float>
             }
 
             _packageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
-            var packages = await _packageDownloader.GetPackagesAsync(machineType, os, this, token);
+            var packages = await _packageDownloader.GetPackagesAsync(machineType, os, this, token).ConfigureAwait(false);
 
             _packages = packages;
 
@@ -193,7 +193,7 @@ public partial class PackagesPage : IProgress<float>
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Update catalog not found.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_UpdateCatalogNotFound_Title, Resource.PackagesPage_UpdateCatalogNotFound_Message, SnackbarType.Info);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_UpdateCatalogNotFound_Title, Resource.PackagesPage_UpdateCatalogNotFound_Message, SnackbarType.Info).ConfigureAwait(false);
 
             errorOccurred = true;
         }
@@ -206,7 +206,7 @@ public partial class PackagesPage : IProgress<float>
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading packages.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, Resource.PackagesPage_Error_CheckInternet_Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, Resource.PackagesPage_Error_CheckInternet_Message, SnackbarType.Error).ConfigureAwait(false);
 
             errorOccurred = true;
         }
@@ -215,7 +215,7 @@ public partial class PackagesPage : IProgress<float>
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading packages.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
 
             errorOccurred = true;
         }
@@ -240,7 +240,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
+        if (!await ShouldInterruptDownloadsIfRunning().ConfigureAwait(false))
             return;
 
         try
@@ -249,11 +249,11 @@ public partial class PackagesPage : IProgress<float>
                 return;
 
             if (_filterDebounceCancellationTokenSource is not null)
-                await _filterDebounceCancellationTokenSource.CancelAsync();
+                await _filterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
             _filterDebounceCancellationTokenSource = new();
 
-            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
+            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token).ConfigureAwait(false);
 
             _packagesStackPanel.Children.Clear();
             _scrollViewer.ScrollToHome();
@@ -268,7 +268,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void OnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
+        if (!await ShouldInterruptDownloadsIfRunning().ConfigureAwait(false))
             return;
 
         if (_packages is null)
@@ -285,7 +285,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void SortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
+        if (!await ShouldInterruptDownloadsIfRunning().ConfigureAwait(false))
             return;
 
         if (_packages is null)
@@ -359,7 +359,7 @@ public partial class PackagesPage : IProgress<float>
         if (_packagesStackPanel.Children.ToArray().OfType<PackageControl>().Where(pc => pc.IsDownloading).IsEmpty())
             return true;
 
-        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);
+        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message).ConfigureAwait(false);
     }
 
     private void Reload()

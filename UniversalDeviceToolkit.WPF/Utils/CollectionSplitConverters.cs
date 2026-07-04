@@ -15,9 +15,16 @@ public class TakeHalfConverter : IValueConverter
         if (value is not IEnumerable items)
             return value;
 
-        var list = items.Cast<object>().ToList();
-        var half = (int)Math.Ceiling(list.Count / 2.0);
-        return list.Take(half).ToList();
+        var enumerator = items.GetEnumerator();
+        var allItems = new List<object>();
+        while (enumerator.MoveNext())
+            allItems.Add(enumerator.Current);
+
+        if (allItems.Count == 0)
+            return Array.Empty<object>();
+
+        var half = (int)Math.Ceiling(allItems.Count / 2.0);
+        return new ReadOnlyCollection<object>(allItems.GetRange(0, half));
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -33,9 +40,16 @@ public class SkipHalfConverter : IValueConverter
         if (value is not IEnumerable items)
             return value;
 
-        var list = items.Cast<object>().ToList();
-        var half = (int)Math.Ceiling(list.Count / 2.0);
-        return list.Skip(half).ToList();
+        var enumerator = items.GetEnumerator();
+        var allItems = new List<object>();
+        while (enumerator.MoveNext())
+            allItems.Add(enumerator.Current);
+
+        if (allItems.Count == 0)
+            return Array.Empty<object>();
+
+        var half = (int)Math.Ceiling(allItems.Count / 2.0);
+        return new ReadOnlyCollection<object>(allItems.GetRange(half, allItems.Count - half));
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

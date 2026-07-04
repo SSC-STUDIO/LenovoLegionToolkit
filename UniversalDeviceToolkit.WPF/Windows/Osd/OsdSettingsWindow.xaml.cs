@@ -36,6 +36,7 @@ public partial class OsdSettingsWindow
         InitializeComponent();
         this.Loaded += OsdSettingsWindow_Loaded;
         Closed += OsdSettingsWindow_Closed;
+        Unloaded += OsdSettingsWindow_Unloaded;
     }
 
     public static void ShowInstance()
@@ -57,6 +58,27 @@ public partial class OsdSettingsWindow
     private void OsdSettingsWindow_Closed(object? sender, EventArgs e)
     {
         Loaded -= OsdSettingsWindow_Loaded;
+        Unloaded -= OsdSettingsWindow_Unloaded;
+        ClearItemsStackPanelChildren();
+    }
+
+    private void OsdSettingsWindow_Unloaded(object sender, RoutedEventArgs e)
+    {
+        ClearItemsStackPanelChildren();
+    }
+
+    private void ClearItemsStackPanelChildren()
+    {
+        foreach (var stackPanel in _itemsStackPanel.Children.OfType<StackPanel>().ToList())
+        {
+            foreach (var checkBox in stackPanel.Children.OfType<CheckBox>().ToList())
+            {
+                checkBox.Checked -= CheckBox_CheckedOrUnchecked;
+                checkBox.Unchecked -= CheckBox_CheckedOrUnchecked;
+            }
+            stackPanel.Children.Clear();
+        }
+        _itemsStackPanel.Children.Clear();
     }
 
     private static void OsdSettingsWindow_StaticClosed(object? sender, EventArgs e)

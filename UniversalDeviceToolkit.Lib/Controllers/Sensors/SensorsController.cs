@@ -45,12 +45,7 @@ public class SensorsController(
     private async Task<ISensorsController?> GetControllerAsync()
     {
         if (_controller is not null)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Reusing selected sensors controller. [type={_controller.GetType().Name}]");
-
             return _controller;
-        }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace("Selecting sensors controller...");

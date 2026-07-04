@@ -23,7 +23,7 @@ using NeoSmart.AsyncLock;
 
 namespace UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.Spectrum
 {
-public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingControl
+public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingControl, IDisposable
 {
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
@@ -73,9 +73,9 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             if (!IsVisible)
                 return;
 
-            await RefreshBrightnessAsync();
-            await RefreshProfileAsync();
-            await RefreshProfileDescriptionAsync();
+            await RefreshBrightnessAsync().ConfigureAwait(false);
+            await RefreshProfileAsync().ConfigureAwait(false);
+            await RefreshProfileDescriptionAsync().ConfigureAwait(false);
         }, "spectrum backlight changed");
     }
 
@@ -84,7 +84,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         if (IsVisible)
             return;
 
-        await StopAnimationAsync();
+        await StopAnimationAsync().ConfigureAwait(false);
         _effects.Children.Clear();
     }
 
@@ -106,6 +106,15 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         _listener.Changed -= Listener_Changed;
         IsVisibleChanged -= SpectrumKeyboardBacklightControl_IsVisibleChanged;
         SizeChanged -= SpectrumKeyboardBacklightControl_SizeChanged;
+
+        Dispose();
+    }
+
+    public void Dispose()
+    {
+        _changeBrightnessDispatcher.Dispose();
+        _refreshStateCancellationTokenSource?.Dispose();
+        _refreshStateCancellationTokenSource = null;
     }
 
     private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -113,10 +122,10 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         if (!IsLoaded || !IsVisible)
             return;
 
-        if (!await _controller.IsSupportedAsync())
+        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             return;
 
-        if (await _vantageDisabler.GetStatusAsync() == SoftwareStatus.Enabled)
+        if (await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
             return;
 
         switch (e.SpecialKey)
@@ -125,7 +134,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                 or SpecialKey.SpectrumBacklight1
                 or SpecialKey.SpectrumBacklight2
                 or SpecialKey.SpectrumBacklight3:
-                await RefreshBrightnessAsync();
+                await RefreshBrightnessAsync().ConfigureAwait(false);
                 break;
             case SpecialKey.SpectrumPreset1
                 or SpecialKey.SpectrumPreset2
@@ -133,7 +142,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                 or SpecialKey.SpectrumPreset4
                 or SpecialKey.SpectrumPreset5
                 or SpecialKey.SpectrumPreset6:
-                await RefreshProfileAsync();
+                await RefreshProfileAsync().ConfigureAwait(false);
                 break;
         }
     }, "refresh spectrum keyboard backlight control");
@@ -141,13 +150,13 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
     private async void BrightnessSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => await _changeBrightnessDispatcher.DispatchAsync(async () =>
     {
         var value = await Dispatcher.InvokeAsync(() => (int)_brightnessSlider.Value);
-        if (await _controller.GetBrightnessAsync() != value)
-            await _controller.SetBrightnessAsync(value);
+        if (await _controller.GetBrightnessAsync().ConfigureAwait(false) != value)
+            await _controller.SetBrightnessAsync(value).ConfigureAwait(false);
     });
 
     private async void ProfileButton_OnClick(object sender, RoutedEventArgs e)
     {
-        await StopAnimationAsync();
+        await StopAnimationAsync().ConfigureAwait(false);
 
         if ((sender as RadioButton)?.Tag is not int profile)
             return;
@@ -156,10 +165,10 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         foreach (var profileButton in ProfileButtons)
             profileButton.IsEnabled = false;
 
-        if (await _controller.GetProfileAsync() != profile)
+        if (await _controller.GetProfileAsync().ConfigureAwait(false) != profile)
         {
-            await _controller.SetProfileAsync(profile);
-            await RefreshProfileDescriptionAsync();
+            await _controller.SetProfileAsync(profile).ConfigureAwait(false);
+            await RefreshProfileDescriptionAsync().ConfigureAwait(false);
         }
 
         foreach (var profileButton in ProfileButtons)
@@ -167,7 +176,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         _brightnessSlider.IsEnabled = true;
 
         if (IsVisible)
-            await StartAnimationAsync();
+            await StartAnimationAsync().ConfigureAwait(false);
     }
 
     private void SelectableControl_Selected(object? sender, SelectableControl.SelectedEventArgs e)
@@ -182,7 +191,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
     private async void SwitchKeyboardLayout_Click(object sender, RoutedEventArgs e)
     {
-        await StopAnimationAsync();
+        await StopAnimationAsync().ConfigureAwait(false);
 
         var buttons = _device.GetVisibleButtons();
         foreach (var button in buttons)
@@ -200,12 +209,12 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         _settings.Store.KeyboardLayout = keyboardLayout;
         _settings.SynchronizeStore();
 
-        var (spectrumLayout, _, keys) = await _controller.GetKeyboardLayoutAsync();
+        var (spectrumLayout, _, keys) = await _controller.GetKeyboardLayoutAsync().ConfigureAwait(false);
 
         _device.SetLayout(spectrumLayout, keyboardLayout, keys);
 
         if (IsVisible)
-            await StartAnimationAsync();
+            await StartAnimationAsync().ConfigureAwait(false);
     }
 
     private async void ExportButton_Click(object sender, RoutedEventArgs e)
@@ -224,15 +233,15 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             if (!result.HasValue || !result.Value)
                 return;
 
-            var profile = await _controller.GetProfileAsync();
-            await _controller.ExportProfileDescriptionAsync(profile, sfd.FileName);
+            var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
+            await _controller.ExportProfileDescriptionAsync(profile, sfd.FileName).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't export profile.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ExportProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ExportProfileError_Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ExportProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ExportProfileError_Message, SnackbarType.Error).ConfigureAwait(false);
         }
     }
 
@@ -252,17 +261,17 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             if (!result)
                 return;
 
-            var profile = await _controller.GetProfileAsync();
-            await _controller.ImportProfileDescription(profile, ofd.FileName);
+            var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
+            await _controller.ImportProfileDescription(profile, ofd.FileName).ConfigureAwait(false);
 
-            await RefreshProfileDescriptionAsync();
+            await RefreshProfileDescriptionAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't import profile.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ImportProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ImportProfileError_Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ImportProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ImportProfileError_Message, SnackbarType.Error).ConfigureAwait(false);
         }
     }
 
@@ -286,14 +295,14 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         CreateEffect(keyCodes, allKeyboardKeyCodes);
     }
 
-    private async void ResetToDefaultButton_Click(object sender, RoutedEventArgs e) => await ResetToDefaultAsync();
+    private async void ResetToDefaultButton_Click(object sender, RoutedEventArgs e) => await ResetToDefaultAsync().ConfigureAwait(false);
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _controller.IsSupportedAsync())
+        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
             throw new InvalidOperationException("Spectrum Keyboard does not seem to be supported");
 
-        var vantageStatus = await _vantageDisabler.GetStatusAsync();
+        var vantageStatus = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
         if (vantageStatus == SoftwareStatus.Enabled)
         {
             _vantageWarningInfoBar.IsOpen = true;
@@ -307,7 +316,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
         _vantageWarningInfoBar.IsOpen = false;
 
-        var (spectrumLayout, keyboardLayout, keys) = await _controller.GetKeyboardLayoutAsync();
+        var (spectrumLayout, keyboardLayout, keys) = await _controller.GetKeyboardLayoutAsync().ConfigureAwait(false);
 
         if (!_settings.Store.KeyboardLayout.HasValue)
         {
@@ -323,11 +332,11 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
         _content.IsEnabled = true;
 
-        await RefreshBrightnessAsync();
-        await RefreshProfileAsync();
+        await RefreshBrightnessAsync().ConfigureAwait(false);
+        await RefreshProfileAsync().ConfigureAwait(false);
 
         if (IsVisible)
-            await StartAnimationAsync();
+            await StartAnimationAsync().ConfigureAwait(false);
     }
 
     protected override void OnFinishedLoading() { }
@@ -367,10 +376,10 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
     {
         using (await _startStopAnimationLock.LockAsync())
         {
-            await StopAnimationAsync();
+            await StopAnimationAsync().ConfigureAwait(false);
 
             if (_refreshStateCancellationTokenSource is not null)
-                await _refreshStateCancellationTokenSource.CancelAsync();
+                await _refreshStateCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
             _refreshStateCancellationTokenSource = new();
 
@@ -383,12 +392,12 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         using (await _startStopAnimationLock.LockAsync())
         {
             if (_refreshStateCancellationTokenSource is not null)
-                await _refreshStateCancellationTokenSource.CancelAsync();
+                await _refreshStateCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
             _refreshStateCancellationTokenSource = new();
 
             if (_refreshStateTask is not null)
-                await _refreshStateTask;
+                await _refreshStateTask.ConfigureAwait(false);
 
             _refreshStateTask = null;
         }
@@ -413,7 +422,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                     break;
 
                 var delay = Task.Delay(_refreshStateInterval, token);
-                var state = await Task.Run(() => _controller.GetStateAsync(!firstCheck), token);
+                var state = await Task.Run(() => _controller.GetStateAsync(!firstCheck), token).ConfigureAwait(false);
 
                 foreach (var button in buttons)
                 {
@@ -432,7 +441,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                     button.Color = Color.FromRgb(rgb.R, rgb.G, rgb.B);
                 }
 
-                await delay;
+                await delay.ConfigureAwait(false);
 
                 firstCheck = false;
             }
@@ -455,25 +464,25 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
     private async Task RefreshBrightnessAsync()
     {
-        _brightnessSlider.Value = await _controller.GetBrightnessAsync();
+        _brightnessSlider.Value = await _controller.GetBrightnessAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshProfileAsync()
     {
-        var profile = await _controller.GetProfileAsync();
+        var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
         var profileButton = ProfileButtons.FirstOrDefault(pb => pb.Tag.Equals(profile));
         if (profileButton is null)
             return;
 
         profileButton.IsChecked = true;
 
-        await RefreshProfileDescriptionAsync();
+        await RefreshProfileDescriptionAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshProfileDescriptionAsync()
     {
-        var profile = await _controller.GetProfileAsync();
-        var (_, effects) = await _controller.GetProfileDescriptionAsync(profile);
+        var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
+        var (_, effects) = await _controller.GetProfileDescriptionAsync(profile).ConfigureAwait(false);
 
         DeleteAllEffects();
 
@@ -488,38 +497,38 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
     private async Task ApplyProfileAsync()
     {
-        var profile = await _controller.GetProfileAsync();
+        var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
         var effects = _effects.Children.OfType<SpectrumKeyboardEffectControl>().Select(c => c.Effect).ToArray();
 
         try
         {
-            await _controller.SetProfileDescriptionAsync(profile, effects);
+            await _controller.SetProfileDescriptionAsync(profile, effects).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't apply profile.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ApplyProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ApplyProfileError_Message, SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(Resource.SpectrumKeyboardBacklightControl_ApplyProfileError_Title, Resource.SpectrumKeyboardBacklightControl_ApplyProfileError_Message, SnackbarType.Error).ConfigureAwait(false);
         }
 
-        await RefreshProfileDescriptionAsync();
+        await RefreshProfileDescriptionAsync().ConfigureAwait(false);
     }
 
     private async Task ResetToDefaultAsync()
     {
         DeselectAllButtons();
 
-        var profile = await _controller.GetProfileAsync();
-        await _controller.SetProfileDefaultAsync(profile);
+        var profile = await _controller.GetProfileAsync().ConfigureAwait(false);
+        await _controller.SetProfileDefaultAsync(profile).ConfigureAwait(false);
 
-        await RefreshProfileDescriptionAsync();
+        await RefreshProfileDescriptionAsync().ConfigureAwait(false);
     }
 
     private void CreateEffect(ushort[] keyCodes, ushort[] allKeyboardKeyCodes)
     {
         var window = new SpectrumKeyboardBacklightEditEffectWindow(keyCodes, allKeyboardKeyCodes) { Owner = Window.GetWindow(this) };
-        window.Apply += async (_, e) => await AddEffect(e);
+        window.Apply += async (_, e) => await AddEffect(e).ConfigureAwait(false);
         window.ShowDialog();
     }
 
@@ -528,7 +537,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         var control = new SpectrumKeyboardEffectControl(effect);
         control.Click += (_, _) => SelectButtons(effect);
         control.Edit += (_, _) => EditEffect(control);
-        control.Delete += async (_, _) => await DeleteEffectAsync(control);
+        control.Delete += async (_, _) => await DeleteEffectAsync(control).ConfigureAwait(false);
         return control;
     }
 
@@ -539,7 +548,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         var control = CreateEffectControl(effect);
         _effects.Children.Add(control);
 
-        await ApplyProfileAsync();
+        await ApplyProfileAsync().ConfigureAwait(false);
     }
 
     private void EditEffect(SpectrumKeyboardEffectControl effectControl)
@@ -552,7 +561,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             .ToArray();
 
         var window = new SpectrumKeyboardBacklightEditEffectWindow(effectControl.Effect, keyCodes, allKeyboardKeyCodes) { Owner = Window.GetWindow(this) };
-        window.Apply += async (_, e) => await ReplaceEffectAsync(effectControl, e);
+        window.Apply += async (_, e) => await ReplaceEffectAsync(effectControl, e).ConfigureAwait(false);
         window.ShowDialog();
     }
 
@@ -563,7 +572,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         var control = new SpectrumKeyboardEffectControl(effect);
         control.Click += (_, _) => SelectButtons(effect);
         control.Edit += (_, _) => EditEffect(control);
-        control.Delete += async (_, _) => await DeleteEffectAsync(control);
+        control.Delete += async (_, _) => await DeleteEffectAsync(control).ConfigureAwait(false);
 
         var index = _effects.Children.IndexOf(effectControl);
         if (index < 0)
@@ -576,14 +585,14 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             _effects.Children.Insert(index, control);
         }
 
-        await ApplyProfileAsync();
+        await ApplyProfileAsync().ConfigureAwait(false);
     }
 
     private async Task DeleteEffectAsync(UIElement effectControl)
     {
         _effects.Children.Remove(effectControl);
 
-        await ApplyProfileAsync();
+        await ApplyProfileAsync().ConfigureAwait(false);
     }
 
     private void DeleteAllEffects() => _effects.Children.Clear();

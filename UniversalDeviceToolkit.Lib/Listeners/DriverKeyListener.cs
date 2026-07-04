@@ -49,7 +49,7 @@ public class DriverKeyListener(
         _cancellationTokenSource = null;
 
         if (_listenTask is not null)
-            await _listenTask;
+            await _listenTask.ConfigureAwait(false);
 
         _listenTask = null;
     }

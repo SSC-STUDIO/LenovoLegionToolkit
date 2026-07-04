@@ -103,7 +103,7 @@ public static class InstallerLaunchPathValidator
 
     private static string EnsureTrailingSeparator(string directoryPath)
     {
-        if (directoryPath.EndsWith(Path.DirectorySeparatorChar) || directoryPath.EndsWith(Path.AltDirectorySeparatorChar))
+        if (directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) || directoryPath.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             return directoryPath;
 
         return directoryPath + Path.DirectorySeparatorChar;

@@ -29,7 +29,7 @@ public partial class BootLogoWindow
     {
         var (enabled, resolution, formats, _) = BootLogo.GetStatus();
 
-        _descriptionTextBlock.Text = string.Format(Resource.BootLogoWindow_Description, resolution.DisplayName, string.Join(", ", formats.Select(f => f.ToString().ToUpper())));
+        _descriptionTextBlock.Text = string.Format(Resource.BootLogoWindow_Description, resolution.DisplayName, string.Join(", ", formats.Select(f => f.ToString().ToUpperInvariant())));
 
         _defaultStatus.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
         _customStatus.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
@@ -43,7 +43,7 @@ public partial class BootLogoWindow
         {
             _revertToDefaultButton.IsEnabled = false;
 
-            await BootLogo.DisableAsync();
+            await BootLogo.DisableAsync().ConfigureAwait(false);
 
             _resultTextBlock.Text = Resource.BootLogoWindow_SetDefaultSuccess;
 
@@ -83,7 +83,7 @@ public partial class BootLogoWindow
 
             var file = ofd.FileName;
 
-            await BootLogo.EnableAsync(file);
+            await BootLogo.EnableAsync(file).ConfigureAwait(false);
 
             _resultTextBlock.Text = Resource.BootLogoWindow_SetCustomSuccess;
 

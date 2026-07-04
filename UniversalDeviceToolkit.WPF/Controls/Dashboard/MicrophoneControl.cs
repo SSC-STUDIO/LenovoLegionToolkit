@@ -20,6 +20,7 @@ public class MicrophoneControl : AbstractToggleFeatureCardControl<MicrophoneStat
         Subtitle = Resource.MicrophoneControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     private void Listener_Changed(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
@@ -28,6 +29,6 @@ public class MicrophoneControl : AbstractToggleFeatureCardControl<MicrophoneStat
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnF4))
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh microphone control");
 }

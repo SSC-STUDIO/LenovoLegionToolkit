@@ -234,12 +234,12 @@ public partial class MainWindow
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
 
             var hideKeyboardBacklight =
                 deviceAvailability.HiddenFeatures.Contains("keyboard-backlight") ||
-                !await KeyboardBacklightPage.IsSupportedAsync();
+                !await KeyboardBacklightPage.IsSupportedAsync().ConfigureAwait(false);
 
             if (hideKeyboardBacklight)
             {
@@ -249,7 +249,7 @@ public partial class MainWindow
                         _navigationStore.Items.Remove(_keyboardItem);
 
                     UpdateNavigationVisibility();
-                });
+                }).Task.ConfigureAwait(false);
             }
         }
         catch (Exception ex)
@@ -264,7 +264,7 @@ public partial class MainWindow
         try
         {
             var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
-            await trayHelper.InitializeAsync();
+            await trayHelper.InitializeAsync().ConfigureAwait(false);
             trayHelper.MakeVisible();
             _trayHelper = trayHelper;
         }
@@ -291,7 +291,7 @@ public partial class MainWindow
 
         try
         {
-            await SaveSizeAsync();
+            await SaveSizeAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -323,7 +323,7 @@ public partial class MainWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Closing...");
 
-            await App.Current.ShutdownAsync(true);
+            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -446,7 +446,7 @@ public partial class MainWindow
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
             _deviceInfoIndicatorText.Text = mi.Model;
             _deviceInfoIndicator.Visibility = Visibility.Visible;
         }
@@ -504,7 +504,7 @@ public partial class MainWindow
     {
         try
         {
-            var result = await _updateChecker.CheckAsync(manualCheck);
+            var result = await _updateChecker.CheckAsync(manualCheck).ConfigureAwait(false);
             if (result is null)
             {
                 _updateIndicator.Visibility = Visibility.Collapsed;
@@ -514,13 +514,13 @@ public partial class MainWindow
                     switch (_updateChecker.Status)
                     {
                         case UpdateCheckStatus.Success:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title).ConfigureAwait(false);
                             break;
                         case UpdateCheckStatus.RateLimitReached:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error).ConfigureAwait(false);
                             break;
                         case UpdateCheckStatus.Error:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error).ConfigureAwait(false);
                             break;
                     }
                 }
@@ -612,7 +612,7 @@ public partial class MainWindow
             if (!Directory.Exists(Folders.AppData))
                 return;
 
-            Process.Start("explorer", Log.Instance.LogPath);
+            using var process = Process.Start("explorer", Log.Instance.LogPath);
         }
         catch (Exception ex)
         {

@@ -319,7 +319,9 @@
                          SelectionMode="Single"
                          SelectionChanged="PluginsListBox_SelectionChanged"
                          MouseDoubleClick="PluginListBox_MouseDoubleClick"
-                         ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
+                         ItemContainerStyle="{StaticResource PluginListItemContainerStyle}"
+                         VirtualizingStackPanel.IsVirtualizing="True"
+                         VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}"

@@ -649,9 +649,9 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         }
     }
 
-    private static async Task<TOut> SetAndGetFeature<TIn, TOut>(SafeHandle handle, TIn input) where TIn : notnull where TOut : struct
+    private static async Task<TOut> SetAndGetFeature<TIn, TOut>(SafeHandle handle, TIn input, CancellationToken cancellationToken = default) where TIn : notnull where TOut : struct
     {
-        await IoSemaphore.WaitAsync().ConfigureAwait(false);
+        await IoSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             await SetFeatureInternalAsync(handle, input).ConfigureAwait(false);
@@ -663,9 +663,9 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         }
     }
 
-    private static async Task<byte[]> SetAndGetFeature<TIn>(SafeHandle handle, TIn input, int size) where TIn : notnull
+    private static async Task<byte[]> SetAndGetFeature<TIn>(SafeHandle handle, TIn input, int size, CancellationToken cancellationToken = default) where TIn : notnull
     {
-        await IoSemaphore.WaitAsync().ConfigureAwait(false);
+        await IoSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             await SetFeatureInternalAsync(handle, input).ConfigureAwait(false);
@@ -677,9 +677,9 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         }
     }
 
-    private static async Task SetFeatureAsync<T>(SafeHandle handle, T str) where T : notnull
+    private static async Task SetFeatureAsync<T>(SafeHandle handle, T str, CancellationToken cancellationToken = default) where T : notnull
     {
-        await IoSemaphore.WaitAsync().ConfigureAwait(false);
+        await IoSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             await SetFeatureInternalAsync(handle, str).ConfigureAwait(false);
@@ -727,9 +727,9 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         return Task.CompletedTask;
     }
 
-    private static async Task<T> GetFeatureAsync<T>(SafeHandle handle) where T : struct
+    private static async Task<T> GetFeatureAsync<T>(SafeHandle handle, CancellationToken cancellationToken = default) where T : struct
     {
-        await IoSemaphore.WaitAsync().ConfigureAwait(false);
+        await IoSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             return await GetFeatureInternalAsync<T>(handle).ConfigureAwait(false);
@@ -768,9 +768,9 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
         }
     }
 
-    private static async Task<byte[]> GetFeatureAsync(SafeHandle handle, int size)
+    private static async Task<byte[]> GetFeatureAsync(SafeHandle handle, int size, CancellationToken cancellationToken = default)
     {
-        await IoSemaphore.WaitAsync().ConfigureAwait(false);
+        await IoSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             return await GetFeatureInternalAsync(handle, size).ConfigureAwait(false);

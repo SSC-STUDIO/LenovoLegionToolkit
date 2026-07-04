@@ -796,10 +796,10 @@ UPOZORENJE: Ova radnja neće se ispravno izvršiti ako je unutarnji zaslon isklj
     <value>Konfigurirajte koje stavke navigacije se prikazuju u bočnoj traci</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
-    <value>Ažuranje dostupno!</value>
+    <value>Ažuriranje dostupno!</value>
   </data>
   <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
-    <value>Ažuranje {0} dostupno!</value>
+    <value>Ažuriranje {0} dostupno!</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>Pomakni dolje</value>
@@ -950,7 +950,7 @@ Omogućite ovu opciju ako imate sukobe s aplikacijama u cijelom zaslonu.</value>
     <value>Nešto je pošlo po krivu</value>
   </data>
   <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
-    <value>Ažuranje dostupno!</value>
+    <value>Ažuriranje dostupno!</value>
   </data>
   <data name="PackageControl_OldPackageWarning" xml:space="preserve">
     <value>Ovaj paket je stariji od godinu dana.</value>
@@ -1186,7 +1186,7 @@ Provjerite radi li vaša skripta ispravno prvo.</value>
     <value>Naglašena boja</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Pokreni minimizirano u ladicu kada se prijavite u Windows.</value>
+    <value>Izgled</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Automatsko pokretanje</value>
@@ -1977,7 +1977,7 @@ Evidencija će biti automatski omogućena ako odaberete nastavak.</value>
     <value>Ažuriraj</value>
   </data>
   <data name="UpdateWindow_Title" xml:space="preserve">
-    <value>Ažuranje dostupno</value>
+    <value>Ažuriranje dostupno</value>
   </data>
   <data name="UpdateWindow_WhatsNew" xml:space="preserve">
     <value>Što je novo?</value>
@@ -2211,7 +2211,7 @@ Ove postavke stupaju na snagu samo kada je prilagođeni način rada omogućen.</
     <value>Kada je uključeno, ista razina svjetline će se primijeniti na sve Windows planove napajanja kada je promijenite.</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
-    <value>Ažuranje {0} dostupno!</value>
+    <value>Ažuriranje {0} dostupno!</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
     <value>Vrhovno ograničenje snage</value>
@@ -2301,7 +2301,7 @@ Ove postavke stupaju na snagu samo kada je prilagođeni način rada omogućen.</
     <value>Vrijeme korištenja</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
-    <value>Ažuranje dostupno!</value>
+    <value>Ažuriranje dostupno!</value>
   </data>
   <data name="SymbolRegularPicker_Title" xml:space="preserve">
     <value>Odaberite ikonu</value>
@@ -3346,10 +3346,10 @@ Neće utjecati na druge prozore u cijelom zaslonu, ali nećete moći kliknuti na
     <value>Nova verzija dostupna</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Verzija: </value>
+    <value>Verzija:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Datum izdanja: </value>
+    <value>Datum izdanja:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>Što je novo:</value>
@@ -3882,4 +3882,4 @@ Neće utjecati na druge prozore u cijelom zaslonu, ali nećete moći kliknuti na
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

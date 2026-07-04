@@ -54,7 +54,7 @@ public sealed class StartupDeviceSetupCoordinator
         if (_isSetupComplete())
             return;
 
-        var catalog = await GetCatalogOrBuiltInAsync();
+        var catalog = await GetCatalogOrBuiltInAsync().ConfigureAwait(false);
         var recommendedPack = FindRecommendedPack(machineInformation, catalog, _deviceSupportProvider);
         var availability = _deviceSupportProvider.Evaluate(machineInformation, catalog);
 

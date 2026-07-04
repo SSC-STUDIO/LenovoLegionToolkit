@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -199,7 +199,7 @@ Csak az aktuális állapotnak megfelelő műveletek fognak futni.</value>
     <value>{0} lépés</value>
   </data>
   <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
-    <value>{0} lépés</value>
+    <value>{0} lépésből</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
     <value>Alkalmazások</value>
@@ -646,13 +646,13 @@ Komolyan, legyen óvatos ezzel az opcióval!</value>
 FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző ki van kapcsolva.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>Közvetlenül forró</value>
+    <value>Nagy dinamikatartomány (HDR)</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>A nagy dinamikatartomány (HDR) engedélyezése a beépített kijelzőn.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>Közvetlenül forró</value>
+    <value>Nagy dinamikatartomány (HDR)</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>A HDR használatát a Windows beállításai blokkolják.</value>
@@ -1411,13 +1411,13 @@ A naplózás automatikusan engedélyezésre kerül, ha a folytatást választja.
 FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző ki van kapcsolva.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>(Szürke) Pont/ hüvelyk (a lapolvasó tisztasági paraméterei megfelelnek)</value>
+    <value>Pont/hüvelyk</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>A beépített kijelző méretarányának módosítása.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>(Szürke) Pont/ hüvelyk (a lapolvasó tisztasági paraméterei megfelelnek)</value>
+    <value>Pont/hüvelyk</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>A beépített kijelző méretezésének módosítása.
@@ -2262,13 +2262,13 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Akkumulátor állapota</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximális ráta, amellyel az akkumulátor töltődik ( ), vagy ürül (-).</value>
+    <value>Maximális ráta, amellyel az akkumulátor töltődik (+), vagy ürül (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Maximális kisütési ráta</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum ráta, amellyel az akkumulátor töltődik ( ), vagy ürül (-).</value>
+    <value>Minimum ráta, amellyel az akkumulátor töltődik (+), vagy ürül (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Minimális kisütési ráta</value>
@@ -2764,7 +2764,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>A tisztítási művelet előrehaladásának és becsült méretének megtekintése.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Windows-bejelentkezéskor indítás a tálcára minimalizálva.</value>
+    <value>Megjelenés</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Letapogatás</value>
@@ -3886,4 +3886,4 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

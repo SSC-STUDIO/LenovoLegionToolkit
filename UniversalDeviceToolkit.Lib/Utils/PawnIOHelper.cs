@@ -44,7 +44,7 @@ public static class PawnIOHelper
 
     public static void OpenPawnIODownloadPage()
     {
-        Process.Start(new ProcessStartInfo
+        using var process = Process.Start(new ProcessStartInfo
         {
             FileName = "https://pawnio.eu/",
             UseShellExecute = true

@@ -54,6 +54,12 @@ public abstract class OsdWindowBase : Window
 
     #region State
 
+    private static readonly string SuffixRpm = $" {Resource.RPM}";
+    private static readonly string SuffixGb = $" {Resource.GB}";
+    private static readonly string SuffixPercent = Resource.Percent;
+    private static readonly string SuffixFahrenheit = Resource.Fahrenheit;
+    private static readonly string SuffixCelsius = Resource.Celsius;
+
     private readonly SemaphoreSlim _refreshLock = new(1, 1);
     protected readonly StringBuilder _stringBuilder = new(64);
 
@@ -63,7 +69,7 @@ public abstract class OsdWindowBase : Window
 
     private CancellationTokenSource? _cts;
     protected bool _positionSet;
-    private bool _fpsMonitoringStarted;
+    private volatile bool _fpsMonitoringStarted;
     private bool _hasLenovoController;
 
     protected HashSet<OsdItem> _activeItems = [];
@@ -101,13 +107,13 @@ public abstract class OsdWindowBase : Window
     {
         try
         {
-            var mi = await Compatibility.GetMachineInformationAsync();
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             if (mi.Properties.IsAmdDevice)
             {
                 OnAmdDeviceDetected();
             }
 
-            _hasLenovoController = await _controller.IsSupportedAsync();
+            _hasLenovoController = await _controller.IsSupportedAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -304,7 +310,7 @@ public abstract class OsdWindowBase : Window
 
             _sensorsGroupControllers.Start(this, TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval));
 
-            await TheRing(_cts.Token);
+            await TheRing(_cts.Token).ConfigureAwait(false);
         }
         else
         {
@@ -455,9 +461,9 @@ public abstract class OsdWindowBase : Window
     protected void UpdateTextBlock(TextBlock tb, int value, string? suffix = null)
     {
         if (suffix == null)
-            suffix = $" {Resource.RPM}";
+            suffix = SuffixRpm;
         if (tb.Visibility != Visibility.Visible) return;
-        SetTextIfChanged(tb, value < 0 ? "-" : $"{value}{suffix}");
+        SetTextIfChanged(tb, value < 0 ? "-" : string.Concat(value, suffix));
         SetForegroundIfChanged(tb, _valueBrush);
     }
 
@@ -471,12 +477,12 @@ public abstract class OsdWindowBase : Window
     {
         if (_hardwareSensorSettings.Store.DisplayMemoryInGigabytes)
         {
-            if (used >= 0 && total > 0) return $"{used:F1}/{total:F1} {Resource.GB}";
-            if (used >= 0) return $"{used:F1} {Resource.GB}";
+            if (used >= 0 && total > 0) return string.Concat(used.ToString("F1"), "/", total.ToString("F1"), SuffixGb);
+            if (used >= 0) return string.Concat(used.ToString("F1"), SuffixGb);
             return "-";
         }
 
-        return usage >= 0 ? $"{usage:F0}{Resource.Percent}" : "-";
+        return usage >= 0 ? string.Concat(usage.ToString("F0"), SuffixPercent) : "-";
     }
 
     protected string GetMemoryDisplayText(SensorSnapshot data) => GetMemoryDisplayText(data.MemUsage, data.MemUsed, data.MemTotal);
@@ -490,10 +496,10 @@ public abstract class OsdWindowBase : Window
         if (_applicationSettings.Store.TemperatureUnit == TemperatureUnit.F)
         {
             var fahrenheit = rawCelsius * 9.0 / 5.0 + 32.0;
-            return $"{fahrenheit:F0}{Resource.Fahrenheit}";
+            return string.Concat(fahrenheit.ToString("F0"), SuffixFahrenheit);
         }
 
-        return $"{rawCelsius:F0}{Resource.Celsius}";
+        return string.Concat(rawCelsius.ToString("F0"), SuffixCelsius);
     }
 
     protected void UpdateTemperatureTextBlock(TextBlock tb, double rawCelsius,
@@ -537,7 +543,7 @@ public abstract class OsdWindowBase : Window
             {
                 case true when !_fpsMonitoringStarted:
                     _fpsMonitoringStarted = true;
-                    await StartFpsMonitoringAsync();
+                    await StartFpsMonitoringAsync().ConfigureAwait(false);
                     break;
                 case false when _fpsMonitoringStarted:
                     _fpsMonitoringStarted = false;
@@ -559,7 +565,7 @@ public abstract class OsdWindowBase : Window
 
     private async Task StartFpsMonitoringAsync()
     {
-        try { await _fpsController.StartMonitoringAsync(); }
+        try { await _fpsController.StartMonitoringAsync().ConfigureAwait(false); }
         catch (Exception ex) { Log.Instance.Trace($"Failed to start FPS monitoring", ex); }
     }
 
@@ -574,7 +580,11 @@ public abstract class OsdWindowBase : Window
         if (!_fpsMonitoringStarted) return;
         if (string.IsNullOrWhiteSpace(fpsData.Fps)) return;
 
-        long currentTick = DateTime.Now.Ticks;
+        var valueBrush = _valueBrush;
+        var criticalBrush = _criticalBrush;
+        if (valueBrush is null || criticalBrush is null) return;
+
+        long currentTick = DateTime.UtcNow.Ticks;
 
         int.TryParse(fpsData.Fps?.Trim(), out var fpsVal);
         int.TryParse(fpsData.LowFps?.Trim(), out var lowVal);
@@ -596,21 +606,21 @@ public abstract class OsdWindowBase : Window
 
             const string dash = "-";
 
-            fpsText = fpsVal.ToString();
-            fpsBrush = (fpsVal < _OsdSettings.Store.FpsThresholdCritical) ? _criticalBrush : _valueBrush;
+            fpsText = fpsVal.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            fpsBrush = (fpsVal < _OsdSettings.Store.FpsThresholdCritical) ? criticalBrush : valueBrush;
 
-            lowText = (lowVal > 0) ? lowVal.ToString() : dash;
-            lowBrush = (lowVal > 0 && (fpsVal - lowVal) >= _OsdSettings.Store.LowFpsDeltaThreshold) ? _criticalBrush : _valueBrush;
+            lowText = (lowVal > 0) ? lowVal.ToString(System.Globalization.CultureInfo.InvariantCulture) : dash;
+            lowBrush = (lowVal > 0 && (fpsVal - lowVal) >= _OsdSettings.Store.LowFpsDeltaThreshold) ? criticalBrush : valueBrush;
 
             if (ftVal > 0.1)
             {
                 ftText = $"{ftVal,5:F1}ms";
-                ftBrush = (ftVal > MAX_FRAME_TIME_MS) ? _criticalBrush : _valueBrush;
+                ftBrush = (ftVal > MAX_FRAME_TIME_MS) ? criticalBrush : valueBrush;
             }
             else
             {
                 ftText = dash;
-                ftBrush = _valueBrush;
+                ftBrush = valueBrush;
             }
         }
         else
@@ -618,9 +628,9 @@ public abstract class OsdWindowBase : Window
             if (currentTick - _lastValidFpsTick > FRAMETIME_TIMEOUT_TICKS)
             {
                 const string dash = "-";
-                fpsText = dash; fpsBrush = _valueBrush;
-                lowText = dash; lowBrush = _valueBrush;
-                ftText = dash; ftBrush = _valueBrush;
+                fpsText = dash; fpsBrush = valueBrush;
+                lowText = dash; lowBrush = valueBrush;
+                ftText = dash; ftBrush = valueBrush;
                 _lastFpsUiUpdateTick = currentTick;
             }
             else
@@ -652,7 +662,7 @@ public abstract class OsdWindowBase : Window
     {
         try
         {
-            await _refreshLock.WaitAsync(-1, token);
+            await _refreshLock.WaitAsync(-1, token).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -663,29 +673,34 @@ public abstract class OsdWindowBase : Window
         {
             while (!token.IsCancellationRequested)
             {
-                var loopStart = DateTime.Now;
+                var loopStart = DateTime.UtcNow;
                 try
                 {
-                    await RefreshSensorsDataAsync(token);
+                    await RefreshSensorsDataAsync(token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { break; }
                 catch (Exception ex)
                 {
                     Log.Instance.Trace($"Exception occurred when executing TheRing()", ex);
-                    await Task.Delay(1000, token);
+                    await Task.Delay(1000, token).ConfigureAwait(false);
                 }
 
-                var elapsed = DateTime.Now - loopStart;
+                var elapsed = DateTime.UtcNow - loopStart;
                 var delay = TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval) - elapsed;
                 if (delay > TimeSpan.Zero)
                 {
-                    await Task.Delay(delay, token);
+                    await Task.Delay(delay, token).ConfigureAwait(false);
                 }
             }
         }
         finally
         {
-            try { _refreshLock.Release(); } catch (ObjectDisposedException) { }
+            try { _refreshLock.Release(); }
+            catch (ObjectDisposedException ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("RefreshLock already disposed during release", ex);
+            }
         }
     }
 
@@ -693,9 +708,9 @@ public abstract class OsdWindowBase : Window
     {
         if (token.IsCancellationRequested) return;
 
-        if (_uiUpdateThrottleMs > 0 && (DateTime.Now - _lastUpdate).TotalMilliseconds < _uiUpdateThrottleMs) return;
+        if (_uiUpdateThrottleMs > 0 && (DateTime.UtcNow - _lastUpdate).TotalMilliseconds < _uiUpdateThrottleMs) return;
 
-        _lastUpdate = DateTime.Now;
+        _lastUpdate = DateTime.UtcNow;
 
         var cpuUsageTask = _sensorsGroupControllers.GetCpuUsageAsync();
         var cpuFreqTask = _sensorsGroupControllers.GetCpuCoreClockAsync();
@@ -762,7 +777,7 @@ public abstract class OsdWindowBase : Window
                 Disk2Temp = ssdTemps.Item2
             };
 
-            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal);
+            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task.ConfigureAwait(false);
         }
         else
         {
@@ -810,7 +825,7 @@ public abstract class OsdWindowBase : Window
                 Disk2Temp = ssdTemps.Item2
             };
 
-            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal);
+            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task.ConfigureAwait(false);
         }
     }
 

@@ -39,7 +39,7 @@ public partial class UpdateWindow : IProgress<float>
 
     private async void UpdateWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        var updates = await _updateChecker.GetUpdatesAsync();
+        var updates = await _updateChecker.GetUpdatesAsync().ConfigureAwait(false);
 
         var stringBuilder = new StringBuilder();
         foreach (var update in updates)
@@ -55,25 +55,32 @@ public partial class UpdateWindow : IProgress<float>
         HasUpdates = true;
     }
 
-    private void UpdateWindow_Closing(object? sender, CancelEventArgs e) => _downloadCancellationTokenSource?.Cancel();
+    private void UpdateWindow_Closing(object? sender, CancelEventArgs e)
+    {
+        _downloadCancellationTokenSource?.Cancel();
+        _downloadCancellationTokenSource?.Dispose();
+    }
 
     private async void DownloadButton_Click(object sender, RoutedEventArgs e)
     {
         try
         {
             if (_downloadCancellationTokenSource is not null)
-                await _downloadCancellationTokenSource.CancelAsync();
+            {
+                await _downloadCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                _downloadCancellationTokenSource.Dispose();
+            }
 
             _downloadCancellationTokenSource = new();
 
             SetDownloading(true);
 
-            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token);
+            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token).ConfigureAwait(false);
 
             _downloadCancellationTokenSource = null;
 
-            Process.Start(path, $"/SILENT /RESTARTAPPLICATIONS /LANG={Resource.Culture.Name.Replace("-", string.Empty)}");
-            await App.Current.ShutdownAsync(true);
+            using var process = Process.Start(path, $"/SILENT /RESTARTAPPLICATIONS /LANG={Resource.Culture.Name.Replace("-", string.Empty)}");
+            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {

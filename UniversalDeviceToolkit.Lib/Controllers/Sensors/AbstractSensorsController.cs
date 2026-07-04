@@ -175,9 +175,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 }
             }
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
-
             return result;
         }
         catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)

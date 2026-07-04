@@ -1234,13 +1234,13 @@ Os nad yw dGPU'n ymateb o gwbl, ailddechrau'ch gliniadur.</value>
     <value>Macro</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Rhaid i Universal Device Toolkit fod yn rhedeg i ffrwd_macros weithio.</value>
+    <value>Rhaid i Universal Device Toolkit fod yn rhedeg er mwyn i macros weithio.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
     <value>Galluogi</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>Gallwch recordio cyfresau o wasediadau allwedd a'u galw gan ddefnyddio'r bylchau rhif ar eich allweddfoard.</value>
+    <value>Gallwch recordio cyfresau o wasgiau allwedd a'u galw drwy ddefnyddio'r bysellbad rhif ar eich bysellfwrdd.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
     <value>Macro</value>
@@ -1264,10 +1264,10 @@ Os nad yw dGPU'n ymateb o gwbl, ailddechrau'ch gliniadur.</value>
     <value>Toriad os pwyswyd allwedd arall</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Allweddfoard yn unig</value>
+    <value>Allweddfwrdd yn unig</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Bysys allweddfoard a botwm llygoden</value>
+    <value>Bysys allweddfwrdd a botwm llygoden</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
     <value>Pob mewnbwn</value>
@@ -1908,13 +1908,13 @@ Sicrhewch bob amser eich bod yn gosod pecynnau cywir.</value>
     <value>Heb ganfod catalog diweddariadau</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Trowch y golau cefn ar gae yr opiniadur ymlaen neu i ffwrdd.</value>
+    <value>Trowch y golau cefn ar gefn y gliniadur ymlaen neu i ffwrdd.</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Golau cefn logo panel</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Trowch y golau cefn ar gae yr opiniadur ymlaen neu i ffwrdd.</value>
+    <value>Trowch y golau cefn ar gefn y gliniadur ymlaen neu i ffwrdd.</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
     <value>Golau cefn logo panel</value>
@@ -2205,7 +2205,7 @@ Sicrhewch bob amser eich bod yn gosod pecynnau cywir.</value>
     <value>Adnewyddu rhestr yr ategyon</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Dyddiad Rhyddhau: </value>
+    <value>Dyddiad Rhyddhau:</value>
   </data>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Rhedeg yr Ategy</value>
@@ -2313,7 +2313,7 @@ Sicrhewch bob amser eich bod yn gosod pecynnau cywir.</value>
     <value>Canllaw Defnydd</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>Fersiwn: </value>
+    <value>Fersiwn:</value>
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Awdur: {0}</value>
@@ -2349,13 +2349,13 @@ Sicrhewch bob amser eich bod yn gosod pecynnau cywir.</value>
     <value>Gosodiadau Ategy</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Trowch y golau cefn ar y pyrth ar gefn yr opiniadur ymlaen neu i ffwrdd.</value>
+    <value>Trowch y golau cefn ar y pyrth ar gefn y gliniadur ymlaen neu i ffwrdd.</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>Golau cefn pyrth</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Trowch y golau cefn ar y pyrth ar gefn yr opiniadur ymlaen neu i ffwrdd.</value>
+    <value>Trowch y golau cefn ar y pyrth ar gefn y gliniadur ymlaen neu i ffwrdd.</value>
   </data>
   <data name="PortsBacklightControl_Title" xml:space="preserve">
     <value>Golau cefn pyrth</value>
@@ -3068,13 +3068,13 @@ Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
     <value>Siaradwr</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Addasu disgleirdeb golau cefn allweddfoard.</value>
+    <value>Addasu disgleirdeb golau cefn allweddfwrdd.</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
     <value>I ffwrdd</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Disgleirdeb golau cefn allweddfoard</value>
+    <value>Disgleirdeb golau cefn allweddfwrdd</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
     <value>Ychwanegu effaith</value>
@@ -3119,7 +3119,7 @@ Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
     <value>Dewis pob parth</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
-    <value>Newid cynllun allweddfoard</value>
+    <value>Newid cynllun allweddfwrdd</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
     <value>Cyfeiriad</value>
@@ -3137,7 +3137,7 @@ Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
     <value>Effaith</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>Bydd yr effaith hon yn cael ei chymhwyso i'r allweddfoard cyfan ac yn disodli pob effaith arall.</value>
+    <value>Bydd yr effaith hon yn cael ei chymhwyso i'r allweddfwrdd cyfan ac yn disodli pob effaith arall.</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
     <value>Cyflymder</value>
@@ -3155,13 +3155,13 @@ Argymhellir ailddechrau ar ôl newid yr opsiwn hwn.</value>
     <value>Llwybr</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Mewnforio proffil golau cefn allweddfoard</value>
+    <value>Mewnforio proffil golau cefn allweddfwrdd</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Addasu proffil golau cefn allweddfoard.</value>
+    <value>Addasu proffil golau cefn allweddfwrdd.</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Proffil golau cefn allweddfoard</value>
+    <value>Proffil golau cefn allweddfwrdd</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
     <value>Pob allwedd</value>
@@ -3874,4 +3874,4 @@ Bydd logio'n cael ei alluogi'n awtomatig, os ydych chi'n dewis parhau.</value>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
     <value>Ailosod y cyfrifydd ar gyfer "Ar fatri ers" yn yr adran fatri pan fydd y system yn ailgychwyn.</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

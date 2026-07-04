@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1669,13 +1669,13 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
     <value>Stav baterie</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximální rychlost, při které se baterie nabíjí ( ), nebo vybíjí (-).</value>
+    <value>Maximální rychlost, při které se baterie nabíjí (+), nebo vybíjí (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Maximální rychlost vybíjení</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimální rychlost, při které se baterie nabíjí ( ), nebo vybíjí (-).</value>
+    <value>Minimální rychlost, při které se baterie nabíjí (+), nebo vybíjí (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Minimální rychlost vybíjení</value>
@@ -1956,7 +1956,7 @@ Přepínání režimů může vyžadovat restart.</value>
     <value>Makro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Zkrášlování systému</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Optimalizace systému</value>
@@ -2309,13 +2309,13 @@ Přepínání režimů může vyžadovat restart.</value>
     <value>Minimální vybíjecí proud</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
+    <value>Upravte efekty průhlednosti Windows.</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
+    <value>Vizuální efekty</value>
   </data>
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
+    <value>Povolit efekty průhlednosti</value>
   </data>
 
 
@@ -2765,7 +2765,7 @@ Vyžaduje restart.</value>
     <value>Zobrazit průběh operace úklidu a odhadovanou velikost.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Spustit minimalizované do oznamovací oblasti po přihlášení do Windows.</value>
+    <value>Vzhled</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skenovat</value>
@@ -2959,7 +2959,7 @@ Vyžaduje restart.</value>
     <value>Nainstalovat</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
-    <value>Nainstalov?no</value>
+    <value>Nainstalováno</value>
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Nelze odinstalovat</value>
@@ -3004,10 +3004,10 @@ Vyžaduje restart.</value>
     <value>Vše</value>
   </data>
   <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
-    <value>Nainstalov?no</value>
+    <value>Nainstalováno</value>
   </data>
   <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
-    <value>Nenainstalov?no</value>
+    <value>Nenainstalováno</value>
   </data>
   <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
     <value>Žádné dostupné pluginy</value>
@@ -3945,4 +3945,4 @@ Vyžaduje restart.</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

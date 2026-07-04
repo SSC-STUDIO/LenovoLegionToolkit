@@ -15,13 +15,19 @@ public partial class KeyboardBacklightPage
     {
         InitializeComponent();
         _titleTextBlock.Visibility = Visibility.Collapsed;
+        Unloaded += KeyboardBacklightPage_Unloaded;
+    }
+
+    private void KeyboardBacklightPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _content.Children.Clear();
     }
 
     private async void KeyboardBacklightPage_Initialized(object? sender, EventArgs e)
     {
         _titleTextBlock.Visibility = Visibility.Collapsed;
 
-        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
+        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null).ConfigureAwait(false);
 
         if (_viewModel.IsSpectrumSupported)
         {
@@ -44,6 +50,6 @@ public partial class KeyboardBacklightPage
         _loader.IsLoading = false;
     }
 
-    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
+    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync().ConfigureAwait(false);
 }
 }

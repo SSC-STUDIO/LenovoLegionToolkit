@@ -32,7 +32,7 @@ public partial class SymbolRegularPicker
     {
         Dispatcher.Invoke(Refresh);
         return Task.CompletedTask;
-    });
+    }).ConfigureAwait(false);
 
     private void ItemButton_Click(object sender, RoutedEventArgs e)
     {

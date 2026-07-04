@@ -27,7 +27,7 @@ public partial class ExcludeRefreshRatesWindow
     private async void PickProcessesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     private async Task RefreshAsync()
@@ -36,21 +36,21 @@ public partial class ExcludeRefreshRatesWindow
 
         var loadingTask = Task.Delay(500);
 
-        var refreshRates = await _feature.GetAllStatesAsync();
+        var refreshRates = await _feature.GetAllStatesAsync().ConfigureAwait(false);
         var excluded = _settings.Store.ExcludedRefreshRates;
 
         if (refreshRates.IsEmpty())
         {
-            await Task.Delay(500);
+            await Task.Delay(500).ConfigureAwait(false);
 
             var result = await MessageBoxHelper.ShowAsync(this,
                 Resource.ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title,
                 Resource.ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message,
                 Resource.TryAgain,
-                Resource.Cancel);
+                Resource.Cancel).ConfigureAwait(false);
 
             if (result)
-                await RefreshAsync();
+                await RefreshAsync().ConfigureAwait(false);
             else
                 Close();
 
@@ -73,7 +73,7 @@ public partial class ExcludeRefreshRatesWindow
             _list.Items.Add(item);
         }
 
-        await loadingTask;
+        await loadingTask.ConfigureAwait(false);
 
         _loader.IsLoading = false;
     }

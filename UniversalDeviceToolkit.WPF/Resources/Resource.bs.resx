@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -626,7 +626,7 @@ Uvijek provjerite da li instalirate ispravne pakete.</value>
     <value>Argumenti</value>
   </data>
   <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
-    <value>ExecutablePath</value>
+    <value>Putanja izvršne datoteke</value>
   </data>
   <data name="RunAutomationStepControl_Title" xml:space="preserve">
     <value>Pokreni</value>
@@ -641,8 +641,7 @@ Uvijek provjerite da li instalirate ispravne pakete.</value>
     <value>Akcentna boja</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
-    <value>Start minimized to tray when you log in to Windows.
-Startup is delayed by 30 seconds for compatibility reasons.</value>
+    <value>Pokreni minimizirano u traci kada se prijavite u Windows.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone možda nije ispravno onemogućeno</value>
@@ -922,13 +921,13 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Nizak nivo baterije</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maksimalna brzina kojom se baterija puni ( ), ili prazni (-).</value>
+    <value>Maksimalna brzina kojom se baterija puni (+), ili prazni (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Maksimalna brzina pražnjenja</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimalna brzina kojom se baterija puni ( ), ili prazni (-).</value>
+    <value>Minimalna brzina kojom se baterija puni (-), ili prazni (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Minimalna brzina pražnjenja</value>
@@ -1151,9 +1150,6 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
     <value>Neke funkcije možda se neće pojaviti na Kontrolnoj tabli ovisno o stanju i konfiguraciji vašeg laptopa.</value>
-  </data>
-  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
-    <value>Senzori</value>
   </data>
   <data name="EditDashboardWindow_Title" xml:space="preserve">
     <value>Prilagodi kontrolnu tablu</value>
@@ -1524,7 +1520,7 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Makro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Uređivanje sistema</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Optimizacija sistema</value>
@@ -1575,7 +1571,7 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Caps Lock isključen</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock na</value>
+    <value>Caps Lock uključen</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
     <value>Fn Lock isključen</value>
@@ -1593,7 +1589,7 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Num Lock isključen</value>
   </data>
   <data name="Notification_NumLockOn" xml:space="preserve">
-    <value>Num Lock Lock</value>
+    <value>Num Lock uključen</value>
   </data>
   <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
     <value>Legion logo isključen</value>
@@ -1736,9 +1732,6 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
     <value>Pomak frekvencije memorije</value>
-  </data>
-  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
-    <value>Postavke Overclocka GPU-a</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Preuzmi</value>
@@ -2047,9 +2040,6 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   <data name="SettingsPage_Notifications_Title" xml:space="preserve">
     <value>Obavještenja</value>
   </data>
-  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resetuje brojač za "Na bateriji otkako" u sekciji baterije kada se sistem ponovo pokrene.</value>
-  </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
     <value>Resetuj "Na bateriji otkako" pri pokretanju</value>
   </data>
@@ -2162,16 +2152,16 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Lighting profil se nije mogao primijeniti.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
-    <value>Nisam mogao aplicirati za profil</value>
+    <value>Nije moguće primijeniti profil</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
     <value>Svjetlost</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>Deselectujte sve zone</value>
+    <value>Poništi odabir svih zona</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
-    <value>Visual effects</value>
+    <value>Vizualni efekti</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
     <value>Profil se nije mogao izvesti</value>
@@ -2281,22 +2271,20 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   <data name="SymbolRegularPicker_Title" xml:space="preserve">
     <value>Odaberi ikonu</value>
   </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Prilagodite izgled sistema Windows uključujući stil desnog klika.</value>
-  </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
     <value>Uljepšavanje Windows-a</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Prilagodite izgled sistema Windows uključujući stil desnog klika.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Vizualni efekti</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Prilagodi Windows efekte transparentnosti.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Omogući efekte transparentnosti</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>Omogućava promjenu između integrisane i diskretne grafičke.
@@ -2439,7 +2427,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Procijenjena veličina čišćenja: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
-    <value>Estimating...</value>
+    <value>Procjenjivanje...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
     <value>Ove radnje mijenjaju sistemske servise i datoteke. Mogu biti potrebne administratorske privilegije.</value>
@@ -2763,7 +2751,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Prikaz napretka operacije čišćenja i procijenjene veličine.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Pokreni minimizirano u trayi kada se prijaviš na Windows.</value>
+    <value>Izgled</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skeniraj</value>
@@ -2853,7 +2841,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Upravljanje servisom</value>
   </data>
   <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
-    <value>Izmjena registra   PowerShell skripta</value>
+    <value>Izmjena registra + PowerShell skripta</value>
   </data>
   <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
     <value>Čišćenje registra</value>
@@ -3351,19 +3339,19 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Na čekanju</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
+    <value>od {0}</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Optimizuj</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Brzo otvaranje</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Postavke</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Ažuriranje</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>Provjera dostupnosti dodataka...</value>
@@ -3688,7 +3676,7 @@ Zahtijeva ponovno pokretanje.</value>
     <value>Snaga</value>
   </data>
   <data name="SensorsControl_CpuCoresPower_Label" xml:space="preserve">
-    <value> Jezgra</value>
+    <value>Jezgra</value>
   </data>
   <data name="SensorsControl_CpuMemoryPower_Label" xml:space="preserve">
     <value>Memorija</value>
@@ -3885,4 +3873,4 @@ Zahtijeva ponovno pokretanje.</value>
   <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
     <value>Stil teme</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

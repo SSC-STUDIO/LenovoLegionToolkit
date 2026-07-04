@@ -20,6 +20,9 @@ public partial class FanCurveControl : UserControl
 
     private readonly List<Slider> _sliders = [];
     private readonly InfoTooltip _customToolTip = new();
+    private Path? _cachedLinePath;
+    private Polygon? _cachedFillPolygon;
+    private SolidColorBrush? _cachedLineBrush;
 
     private FanTableData[]? _tableData;
     private FanTable? _minimumFanTable;
@@ -174,27 +177,23 @@ public partial class FanCurveControl : UserControl
             return;
 
         var currentValue = currentSlider.Value;
-        var slidersBefore = _sliders.Take(currentIndex);
-        var slidersAfter = _sliders.Skip(currentIndex + 1);
 
-        foreach (var slider in slidersBefore)
+        for (var i = 0; i < currentIndex; i++)
         {
-            if (slider.Value > currentValue)
-                slider.Value = currentValue;
+            if (_sliders[i].Value > currentValue)
+                _sliders[i].Value = currentValue;
         }
 
-        foreach (var slider in slidersAfter)
+        for (var i = currentIndex + 1; i < _sliders.Count; i++)
         {
-            if (slider.Value < currentValue)
-                slider.Value = currentValue;
+            if (_sliders[i].Value < currentValue)
+                _sliders[i].Value = currentValue;
         }
     }
 
     private void DrawGraph()
     {
         var color = Application.Current.Resources["ControlFillColorDefaultBrush"] as SolidColorBrush;
-
-        _canvas.Children.Clear();
 
         var points = _sliders
             .Select(GetThumbLocation)
@@ -204,36 +203,44 @@ public partial class FanCurveControl : UserControl
         if (points.IsEmpty())
             return;
 
-        // Line
+        if (_cachedLineBrush != color)
+        {
+            _cachedLineBrush = color;
+            _cachedLinePath = null;
+            _cachedFillPolygon = null;
+        }
+
+        if (_cachedLinePath is null || _cachedFillPolygon is null)
+        {
+            _canvas.Children.Clear();
+
+            _cachedLinePath = new Path
+            {
+                StrokeThickness = 2,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+            };
+            _canvas.Children.Add(_cachedLinePath);
+
+            _cachedFillPolygon = new Polygon();
+            _canvas.Children.Add(_cachedFillPolygon);
+        }
+
+        _cachedLinePath.Stroke = color;
 
         var pathSegmentCollection = new PathSegmentCollection();
         foreach (var point in points.Skip(1))
             pathSegmentCollection.Add(new LineSegment { Point = point });
         var pathFigure = new PathFigure { StartPoint = points[0], Segments = pathSegmentCollection };
-
-        var path = new Path
-        {
-            StrokeThickness = 2,
-            Stroke = color,
-            StrokeStartLineCap = PenLineCap.Round,
-            StrokeEndLineCap = PenLineCap.Round,
-            Data = new PathGeometry { Figures = [pathFigure] },
-        };
-        _canvas.Children.Add(path);
-
-        // Fill
+        _cachedLinePath.Data = new PathGeometry { Figures = [pathFigure] };
 
         var pointCollection = new PointCollection { new(points[0].X, _canvas.ActualHeight - 1) };
         foreach (var point in points)
             pointCollection.Add(point);
         pointCollection.Add(new(points[^1].X, _canvas.ActualHeight - 1));
 
-        var polygon = new Polygon
-        {
-            Fill = color,
-            Points = pointCollection
-        };
-        _canvas.Children.Add(polygon);
+        _cachedFillPolygon.Fill = color;
+        _cachedFillPolygon.Points = pointCollection;
     }
 
     private Point GetThumbLocation(Slider slider)

@@ -63,6 +63,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private void InitializeComponent()
     {
+        Unloaded += AbstractComboBoxFeatureCardControl_Unloaded;
         _comboBox.SelectionChanged += ComboBox_SelectionChanged;
         _comboBox.MinWidth = 165;
         _comboBox.Visibility = Visibility.Hidden;
@@ -76,9 +77,14 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
         Content = _cardControl;
     }
 
+    private void AbstractComboBoxFeatureCardControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        MessagingCenter.Unsubscribe<FeatureStateMessage<T>>(this);
+    }
+
     private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        await OnStateChangeAsync(_comboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>());
+        await OnStateChangeAsync(_comboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>()).ConfigureAwait(false);
     }
 
     protected bool TryGetSelectedItem(out T value) => _comboBox.TryGetSelectedItem(out value);
@@ -96,11 +102,11 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await Feature.IsSupportedAsync())
+        if (!await Feature.IsSupportedAsync().ConfigureAwait(false))
             throw new NotSupportedException();
 
-        var items = await Feature.GetAllStatesAsync();
-        var selectedItem = await Feature.GetStateAsync();
+        var items = await Feature.GetAllStatesAsync().ConfigureAwait(false);
+        var selectedItem = await Feature.GetStateAsync().ConfigureAwait(false);
 
         _comboBox.SetItems(items, selectedItem, ComboBoxItemDisplayName);
         _comboBox.IsEnabled = items.Length != 0;
@@ -114,7 +120,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
             if (!IsVisible)
                 return;
 
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
         }));
     }
 
@@ -135,12 +141,12 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
             if (!comboBox.TryGetSelectedItem(out T selectedState))
                 return;
 
-            var currentState = await feature.GetStateAsync();
+            var currentState = await feature.GetStateAsync().ConfigureAwait(false);
 
             if (selectedState.Equals(currentState))
                 return;
 
-            await feature.SetStateAsync(selectedState);
+            await feature.SetStateAsync(selectedState).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -155,13 +161,13 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
         {
             var delay = AdditionalStateChangeDelay(oldValue, newValue);
             if (delay > TimeSpan.Zero)
-                await Task.Delay(delay);
+                await Task.Delay(delay).ConfigureAwait(false);
 
             _comboBox.IsEnabled = true;
         }
 
         if (exceptionOccurred)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }
 
     protected virtual void OnStateChangeException(Exception exception) { }

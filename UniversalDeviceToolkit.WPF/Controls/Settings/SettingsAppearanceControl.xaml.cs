@@ -34,12 +34,19 @@ public partial class SettingsAppearanceControl
         InitializeComponent();
         _themeManager.ThemeApplied += ThemeManager_ThemeApplied;
         _languagePackInstallCoordinator.Changed += LanguagePackInstallCoordinator_Changed;
+        Unloaded += SettingsAppearanceControl_Unloaded;
         Loaded += (_, _) => SyncLanguageInstallUi();
         IsVisibleChanged += (_, e) =>
         {
             if (e.NewValue is true)
                 SyncLanguageInstallUi();
         };
+    }
+
+    private void SettingsAppearanceControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _themeManager.ThemeApplied -= ThemeManager_ThemeApplied;
+        _languagePackInstallCoordinator.Changed -= LanguagePackInstallCoordinator_Changed;
     }
 
     public async Task RefreshAsync()
@@ -66,7 +73,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.Visibility = Visibility.Visible;
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
 
-        var language = await languageTask;
+        var language = await languageTask.ConfigureAwait(false);
         _currentLanguage = language;
         if (languages.Length > 1)
         {
@@ -107,11 +114,11 @@ public partial class SettingsAppearanceControl
             await SnackbarHelper.ShowAsync(
                 Resource.SettingsPage_Language_NotInstalled_Title,
                 Resource.SettingsPage_Language_NotInstalled_Message,
-                SnackbarType.Info);
+                SnackbarType.Info).ConfigureAwait(false);
             return;
         }
 
-        await LocalizationHelper.SetLanguageAsync(cultureInfo);
+        await LocalizationHelper.SetLanguageAsync(cultureInfo).ConfigureAwait(false);
         App.Current.RestartMainWindow();
     }
 
@@ -131,14 +138,14 @@ public partial class SettingsAppearanceControl
             Resource.SettingsPage_Language_Installing,
             async (_, token) =>
             {
-                await _languagePackInstallCoordinator.InstallAsync(cultureInfo, token);
+                await _languagePackInstallCoordinator.InstallAsync(cultureInfo, token).ConfigureAwait(false);
                 _currentLanguage = cultureInfo;
-                await LocalizationHelper.SetLanguageAsync(cultureInfo);
+                await LocalizationHelper.SetLanguageAsync(cultureInfo).ConfigureAwait(false);
                 UpdateLanguagePackButtons();
                 App.Current.RestartMainWindow();
             },
             Resource.SettingsPage_Language_InstallFailed,
-            reportInstallProgress: true);
+            reportInstallProgress: true).ConfigureAwait(false);
     }
 
     private async void UninstallLanguageButton_Click(object sender, RoutedEventArgs e)
@@ -160,16 +167,16 @@ public partial class SettingsAppearanceControl
                 if (_currentLanguage is not null && _currentLanguage.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     _languagePackManager.QueueUninstall(cultureInfo);
-                    await LocalizationHelper.SetLanguageAsync(new CultureInfo("en"));
+                    await LocalizationHelper.SetLanguageAsync(new CultureInfo("en")).ConfigureAwait(false);
                     App.Current.RestartMainWindow();
                     return;
                 }
 
                 _languagePackManager.Uninstall(cultureInfo);
-                await RefreshAsync();
+                await RefreshAsync().ConfigureAwait(false);
             },
             Resource.SettingsPage_Language_UninstallFailed,
-            reportInstallProgress: false);
+            reportInstallProgress: false).ConfigureAwait(false);
     }
 
     private void TemperatureComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -259,11 +266,11 @@ public partial class SettingsAppearanceControl
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-            await operation(progress, cts.Token);
+            await operation(progress, cts.Token).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error).ConfigureAwait(false);
             RestoreCurrentLanguageSelection();
         }
         finally

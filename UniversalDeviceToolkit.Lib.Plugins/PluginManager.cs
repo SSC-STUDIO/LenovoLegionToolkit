@@ -370,7 +370,7 @@ public class PluginManager : IPluginManager
 
     private static string EnsureTrailingSeparator(string path)
     {
-        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+        if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) || path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             return path;
 
         return path + Path.DirectorySeparatorChar;
@@ -1111,7 +1111,7 @@ public class PluginManager : IPluginManager
                         .Where(f => !f.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-                    var pluginBaseName = Path.GetFileNameWithoutExtension(foundFiles.FirstOrDefault(f => f.StartsWith(dir)) ?? "");
+                    var pluginBaseName = Path.GetFileNameWithoutExtension(foundFiles.FirstOrDefault(f => f.StartsWith(dir, StringComparison.OrdinalIgnoreCase)) ?? "");
                     if (!string.IsNullOrEmpty(pluginBaseName) &&
                         allFiles.All(f => Path.GetFileName(f).StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase)))
                     {
@@ -1119,7 +1119,7 @@ public class PluginManager : IPluginManager
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Deleted plugin directory: {dir}");
                         // Remove files from foundFiles list since directory is deleted
-                        foundFiles.RemoveAll(f => f.StartsWith(dir));
+                        foundFiles.RemoveAll(f => f.StartsWith(dir, StringComparison.OrdinalIgnoreCase));
                     }
                 }
                 catch (Exception ex)

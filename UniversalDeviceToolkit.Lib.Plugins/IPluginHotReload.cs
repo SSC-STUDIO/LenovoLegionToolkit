@@ -27,7 +27,7 @@ public class PluginStateData
     /// <summary>
     /// When the state was saved
     /// </summary>
-    public DateTime SavedAt { get; set; } = DateTime.Now;
+    public DateTime SavedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// Plugin version when state was saved
@@ -78,7 +78,7 @@ public class HotReloadEventArgs : EventArgs
     /// <summary>
     /// When the reload occurred
     /// </summary>
-    public DateTime Timestamp { get; set; } = DateTime.Now;
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }
 
 /// <summary>

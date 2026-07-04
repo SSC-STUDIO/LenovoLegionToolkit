@@ -1,110 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>đây là chuỗi dài của tôi</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[đối tượng .NET Framework tuần tự hóa được mã hóa MIME base64]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[chuỗi được mã hóa MIME base64 đại diện cho mảng byte của đối tượng .NET Framework]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -547,9 +489,9 @@
   <data name="Exception_FanTableLength" xml:space="preserve"><value>Độ dài bảng quạt phải là 10</value><comment>Exception message for invalid fan table length</comment></data>
   <data name="Exception_CommandCannotBeEmpty" xml:space="preserve"><value>Lệnh không được để trống.</value><comment>Exception message for empty command parameter</comment></data>
   <data name="Exception_CurrentProcessFileNameNull" xml:space="preserve"><value>Tên tệp quy trình hiện tại không được null</value><comment>Exception message when process file name is null</comment></data>
-  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve"><value>Không khớp nhà cung cấp gói thiết bị. Mong đợi &apos;{0}&apos;, nhận &apos;{1}&apos;.</value><comment>Exception message format for vendor mismatch</comment></data>
+  <data name="Exception_DevicePackVendorMismatch" xml:space="preserve"><value>Không khớp nhà cung cấp gói thiết bị. Mong đợi '{0}', nhận '{1}'.</value><comment>Exception message format for vendor mismatch</comment></data>
   <data name="AmdOverclocking_Not_Supported" xml:space="preserve"><value>Không được hỗ trợ.</value></data>
-  <data name="Exception_DevicePackIdMismatch" xml:space="preserve"><value>Không khớp ID gói thiết bị. Mong đợi &apos;{0}&apos;, nhận &apos;{1}&apos;.</value><comment>Exception message format for ID mismatch</comment></data>
+  <data name="Exception_DevicePackIdMismatch" xml:space="preserve"><value>Không khớp ID gói thiết bị. Mong đợi '{0}', nhận '{1}'.</value><comment>Exception message format for ID mismatch</comment></data>
   <data name="FanMaxSpeedState_Off" xml:space="preserve"><value>Tắt</value></data>
   <data name="Exception_InvalidState" xml:space="preserve"><value>Trạng thái không hợp lệ</value><comment>Exception message for invalid enum/state value</comment></data>
   <data name="Exception_CannotReadVariableUEFI" xml:space="preserve"><value>Không thể đọc biến {0} từ UEFI</value><comment>Exception message format for UEFI read failure</comment></data>
@@ -566,7 +508,7 @@
   <data name="Exception_WmiFeatureUnavailable" xml:space="preserve"><value>Giá trị tính năng WMI không khả dụng cho {0}.</value><comment>Exception message format for WMI read failure</comment></data>
   <data name="Exception_RGBKeyboardUnsupported" xml:space="preserve"><value>Bàn phím RGB không được hỗ trợ</value><comment>Exception message when RGB keyboard hardware is not present</comment></data>
   <data name="Exception_CouldNotReadRegistrySetting" xml:space="preserve"><value>Không thể đọc cài đặt {0}</value><comment>Exception message format when registry read fails</comment></data>
-  <data name="Exception_DevicePackSha256Missing" xml:space="preserve"><value>Gói thiết bị &apos;{0}&apos; thiếu siêu dữ liệu SHA256.</value><comment>Exception message format for missing SHA256</comment></data>
+  <data name="Exception_DevicePackSha256Missing" xml:space="preserve"><value>Gói thiết bị '{0}' thiếu siêu dữ liệu SHA256.</value><comment>Exception message format for missing SHA256</comment></data>
   <data name="OsdItem_Fps" xml:space="preserve"><value>FPS</value></data>
   <data name="Exception_DevicePropertyNotGUID" xml:space="preserve"><value>Thuộc tính thiết bị không phải GUID</value><comment>Exception message for non-GUID device property</comment></data>
   <data name="Exception_MainModuleNull" xml:space="preserve"><value>Module chính không được null</value><comment>Exception message when process main module is null</comment></data>
@@ -591,9 +533,9 @@
   <data name="OsdItem_MemoryTemperature" xml:space="preserve"><value>Nhiệt độ bộ nhớ</value></data>
   <data name="Exception_PowerModeNotSupported" xml:space="preserve"><value>Chuyển đổi chế độ nguồn không được hỗ trợ trên thiết bị này.</value><comment>Exception message for unsupported power mode feature</comment></data>
   <data name="OsdItem_MotherboardTemperature" xml:space="preserve"><value>Nhiệt độ bo mạch chủ</value></data>
-  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve"><value>Manifest của gói thiết bị &apos;{0}&apos; trống.</value><comment>Exception message format for empty manifest</comment></data>
+  <data name="Exception_DevicePackManifestEmpty" xml:space="preserve"><value>Manifest của gói thiết bị '{0}' trống.</value><comment>Exception message format for empty manifest</comment></data>
   <data name="Exception_UnknownHive" xml:space="preserve"><value>Hive không xác định.</value><comment>Exception message for unknown registry hive</comment></data>
-  <data name="Exception_CouldNotGetColor" xml:space="preserve"><value>Không thể lấy màu &quot;{0}&quot;</value><comment>Exception message format when uxtheme color lookup fails</comment></data>
+  <data name="Exception_CouldNotGetColor" xml:space="preserve"><value>Không thể lấy màu "{0}"</value><comment>Exception message format when uxtheme color lookup fails</comment></data>
   <data name="Exception_ExplorerDidNotRestart" xml:space="preserve"><value>Explorer không khởi động lại kịp thời.</value><comment>Exception message for Explorer restart timeout</comment></data>
   <data name="Exception_InvalidEnvVariableValue" xml:space="preserve"><value>Giá trị biến môi trường không hợp lệ: {0}</value><comment>Exception message format for invalid env var value</comment></data>
   <data name="Exception_TempArrayMustBe10" xml:space="preserve"><value>Mảng nhiệt độ phải có chính xác 10 phần tử</value><comment>Exception message for invalid temperature array size</comment></data>
@@ -608,7 +550,7 @@
   <data name="Exception_WmiCallFailedDot" xml:space="preserve"><value>Gọi thất bại: {0}. [scope={1}, truy vấn={2}, tênPhươngThức={3}]</value><comment>Exception message format for WMI call failure (with trailing period)</comment></data>
   <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve"><value>Tiết kiệm pin</value></data>
   <data name="Exception_UnknownBatteryState" xml:space="preserve"><value>Trạng thái pin không xác định: {0}</value><comment>Exception message format for unrecognized battery state</comment></data>
-  <data name="Exception_UnparseableVersionFormat" xml:space="preserve"><value>Không thể phân tích phiên bản từ tên thẻ: &apos;{0}&apos;. Định dạng mong đợi: &apos;3.0.1&apos;</value><comment>Exception message format for unparseable version string</comment></data>
+  <data name="Exception_UnparseableVersionFormat" xml:space="preserve"><value>Không thể phân tích phiên bản từ tên thẻ: '{0}'. Định dạng mong đợi: '3.0.1'</value><comment>Exception message format for unparseable version string</comment></data>
   <data name="Exception_OpenServiceError" xml:space="preserve"><value>Lỗi mở dịch vụ</value><comment>Exception message for service open failure</comment></data>
   <data name="PowerModeState_Extreme" xml:space="preserve"><value>Cực đoan</value></data>
   <data name="OsdItem_Frequency" xml:space="preserve"><value>Tần số</value></data>
@@ -619,7 +561,7 @@
   <data name="OsdItem_Temperature" xml:space="preserve"><value>Nhiệt độ</value></data>
   <data name="OsdItem_LowFps" xml:space="preserve"><value>1% thấp</value></data>
   <data name="Exception_IoCMustBeInitialized" xml:space="preserve"><value>IoCContainer phải được khởi tạo trước [kiểu={0}]</value><comment>Exception message format when resolving before initialization</comment></data>
-  <data name="Exception_DevicePackNoManifest" xml:space="preserve"><value>Gói thiết bị &apos;{0}&apos; không chứa {1}.</value><comment>Exception message format for missing manifest file</comment></data>
+  <data name="Exception_DevicePackNoManifest" xml:space="preserve"><value>Gói thiết bị '{0}' không chứa {1}.</value><comment>Exception message format for missing manifest file</comment></data>
   <data name="Exception_OffsetCountExceedArray" xml:space="preserve"><value>Offset và count vượt quá giới hạn mảng</value><comment>Exception message for array bounds violation</comment></data>
   <data name="Exception_DriverHandleFailed" xml:space="preserve"><value>Không thể lấy handle cho driver: {0}</value><comment>Exception message format for driver handle failure</comment></data>
   <data name="Exception_DriverHandleError" xml:space="preserve"><value>Lỗi khi lấy handle driver: {0}</value><comment>Exception message format for driver handle error</comment></data>
@@ -628,13 +570,13 @@
   <data name="Exception_InvalidFileName" xml:space="preserve"><value>Tên tệp không hợp lệ</value><comment>Exception message for invalid file name parameter</comment></data>
   <data name="Exception_CantManageWithVantage" xml:space="preserve"><value>Không thể quản lý bàn phím RGB khi Vantage đang bật</value><comment>Exception message when Lenovo Vantage conflicts</comment></data>
   <data name="Exception_HandleInvalid" xml:space="preserve"><value>handle không hợp lệ</value><comment>Exception message for invalid handle</comment></data>
-  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve"><value>Chế độ nguồn &apos;{0}&apos; không khả dụng khi không có bộ chuyển đổi AC.</value><comment>Exception message format for AC-restricted power mode</comment></data>
+  <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve"><value>Chế độ nguồn '{0}' không khả dụng khi không có bộ chuyển đổi AC.</value><comment>Exception message format for AC-restricted power mode</comment></data>
   <data name="Exception_DeviceIoControlError" xml:space="preserve"><value>DeviceIoControl trả về 0, lỗi cuối: {0}</value><comment>Exception message format for driver IO control failure</comment></data>
   <data name="Exception_NotInAllowlist" xml:space="preserve"><value>Tệp thực thi không có trong danh sách cho phép: {0}</value><comment>Exception message format for disallowed executable</comment></data>
   <data name="Exception_KeyCouldNotBeOpened" xml:space="preserve"><value>Không thể mở khóa {0}</value><comment>Exception message format for registry key open failure</comment></data>
   <data name="Exception_InvalidTypeOfFormatted" xml:space="preserve"><value>Loại định dạng không hợp lệ</value><comment>Exception message for unexpected format type</comment></data>
   <data name="Exception_CurrentProcessFileVersionNull" xml:space="preserve"><value>Phiên bản tệp quy trình hiện tại không được null</value><comment>Exception message when process file version is null</comment></data>
-  <data name="Exception_DevicePackNotAvailable" xml:space="preserve"><value>Gói thiết bị &apos;{0}&apos; không khả dụng trong danh mục tài nguyên trực tuyến.</value><comment>Exception message format for unavailable device pack</comment></data>
+  <data name="Exception_DevicePackNotAvailable" xml:space="preserve"><value>Gói thiết bị '{0}' không khả dụng trong danh mục tài nguyên trực tuyến.</value><comment>Exception message format for unavailable device pack</comment></data>
   <data name="Exception_DriverCommandError" xml:space="preserve"><value>Lỗi khi gửi lệnh driver: controlCode={0}</value><comment>Exception message format for driver command error</comment></data>
   <data name="Exception_InteractiveShellRequiresArgs" xml:space="preserve"><value>Shell tương tác yêu cầu đối số khi chờ thoát</value><comment>Exception message for shell without arguments</comment></data>
   <data name="Exception_WildcardDeletionRestricted" xml:space="preserve"><value>Xóa ký tự đại diện bị hạn chế</value><comment>Exception message for wildcard deletion block</comment></data>
@@ -642,8 +584,8 @@
   <data name="Exception_FileChecksumMismatch" xml:space="preserve"><value>Tổng kiểm tra tệp không khớp</value><comment>Exception message for CRC mismatch</comment></data>
   <data name="OsdState_Show" xml:space="preserve"><value>Hiện</value></data>
   <data name="Exception_HasToBeWritable" xml:space="preserve"><value>Phải có khả năng ghi</value><comment>Exception message for non-writable stream</comment></data>
-  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve"><value>Gói thiết bị &apos;{0}&apos; có URL tải xuống trống.</value><comment>Exception message format for empty download URL</comment></data>
+  <data name="Exception_DevicePackUrlEmpty" xml:space="preserve"><value>Gói thiết bị '{0}' có URL tải xuống trống.</value><comment>Exception message format for empty download URL</comment></data>
   <data name="Exception_GodModePresetNotFound" xml:space="preserve"><value>Không tìm thấy cài đặt sẵn với ID {0}</value><comment>Exception message format for missing God Mode preset</comment></data>
   <data name="Exception_CurrentUserValueNull" xml:space="preserve"><value>Giá trị người dùng hiện tại là null</value><comment>Exception message when Windows identity is null</comment></data>
   <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve"><value>Handle thiết bị không khả dụng</value><comment>Exception message when device handle is null</comment></data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

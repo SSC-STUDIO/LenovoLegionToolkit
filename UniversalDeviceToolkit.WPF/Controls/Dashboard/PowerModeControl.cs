@@ -18,7 +18,7 @@ using Button = Wpf.Ui.Controls.Button;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard;
 
-public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeState>
+public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeState>, IDisposable
 {
     private readonly ThermalModeListener _thermalModeListener = IoCContainer.Resolve<ThermalModeListener>();
     private readonly PowerModeListener _powerModeListener = IoCContainer.Resolve<PowerModeListener>();
@@ -50,6 +50,18 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         _thermalModeListener.Changed += ThermalModeListener_Changed;
         _powerModeListener.Changed += PowerModeListener_Changed;
+        Unloaded += (_, _) =>
+        {
+            _thermalModeListener.Changed -= ThermalModeListener_Changed;
+            _powerModeListener.Changed -= PowerModeListener_Changed;
+
+            Dispose();
+        };
+    }
+
+    public void Dispose()
+    {
+        _throttleDispatcher.Dispose();
     }
 
     private async void ThermalModeListener_Changed(object? sender, ThermalModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
@@ -57,26 +69,26 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
         await Dispatcher.InvokeTaskAsync(async () =>
         {
             if (IsLoaded && IsVisible)
-                await RefreshAsync();
-        });
-    });
+                await RefreshAsync().ConfigureAwait(false);
+        }).ConfigureAwait(false);
+    }).ConfigureAwait(false);
 
     private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
     {
         await Dispatcher.InvokeTaskAsync(async () =>
         {
             if (IsLoaded && IsVisible)
-                await RefreshAsync();
-        });
-    });
+                await RefreshAsync().ConfigureAwait(false);
+        }).ConfigureAwait(false);
+    }).ConfigureAwait(false);
 
     protected override async Task OnRefreshAsync()
     {
-        await base.OnRefreshAsync();
+        await base.OnRefreshAsync().ConfigureAwait(false);
 
-        await UpdateConfigButtonVisibilityAsync();
+        await UpdateConfigButtonVisibilityAsync().ConfigureAwait(false);
 
-        if (await Power.IsPowerAdapterConnectedAsync() != PowerAdapterStatus.Connected
+        if (await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false) != PowerAdapterStatus.Connected
             && TryGetSelectedItem(out var state)
             && state is PowerModeState.Performance or PowerModeState.GodMode)
             Warning = Resource.PowerModeControl_Warning;
@@ -86,9 +98,9 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     protected override async Task OnStateChangeAsync(ComboBox comboBox, IFeature<PowerModeState> feature, PowerModeState? newValue, PowerModeState? oldValue)
     {
-        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
+        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue).ConfigureAwait(false);
 
-        await UpdateConfigButtonVisibilityAsync();
+        await UpdateConfigButtonVisibilityAsync().ConfigureAwait(false);
     }
 
     private async Task UpdateConfigButtonVisibilityAsync()
@@ -100,7 +112,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
             return;
         }
 
-        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
         var shouldShowConfigButton = ShouldShowConfigButton(state, mi);
         _configButton.ToolTip = shouldShowConfigButton ? Resource.PowerModeControl_Settings : null;

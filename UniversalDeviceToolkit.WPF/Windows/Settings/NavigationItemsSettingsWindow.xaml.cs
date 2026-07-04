@@ -25,7 +25,7 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         // Initialize the toggle states of all navigation items
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-        var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync();
+        var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync().ConfigureAwait(false);
         _keyboardCard.Visibility = keyboardSupported ? Visibility.Visible : Visibility.Collapsed;
         _keyboardToggle.IsChecked = keyboardSupported && GetNavigationItemVisibility("keyboard", visibilitySettings);
         _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);

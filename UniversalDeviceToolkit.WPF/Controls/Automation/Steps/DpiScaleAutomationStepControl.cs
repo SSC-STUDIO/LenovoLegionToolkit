@@ -20,6 +20,7 @@ public class DpiScaleAutomationStepControl : AbstractComboBoxAutomationStepCardC
         Subtitle = Resource.DpiScaleAutomationStepControl_Message;
 
         _listener.Changed += Listener_Changed;
+        Unloaded += (_, _) => _listener.Changed -= Listener_Changed;
     }
 
     protected override string ComboBoxItemDisplayName(DpiScale value)
@@ -31,6 +32,6 @@ public class DpiScaleAutomationStepControl : AbstractComboBoxAutomationStepCardC
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync();
+            await RefreshAsync().ConfigureAwait(false);
     }, "refresh DPI scale automation step");
 }

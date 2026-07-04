@@ -42,8 +42,9 @@ internal sealed class ConsoleLoadingAnimation : IDisposable
         {
             _task?.GetAwaiter().GetResult();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Debug.WriteLine($"[CLI] Loading animation task cancelled: {ex.Message}");
         }
 
         if (_enabled)

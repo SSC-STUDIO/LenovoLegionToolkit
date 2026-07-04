@@ -28,12 +28,12 @@ public class PluginLoaderTests : IDisposable
         foreach (var file in _tempFiles.Where(File.Exists))
         {
             try { File.Delete(file); }
-            catch { }
+            catch { /* Best-effort cleanup in Dispose */ }
         }
         foreach (var dir in _tempDirectories.Where(Directory.Exists))
         {
             try { Directory.Delete(dir, true); }
-            catch { }
+            catch { /* Best-effort cleanup in Dispose */ }
         }
     }
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
@@ -113,12 +114,20 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 if (!await EnsureSingleInstanceAsync())
                     return 0;
 
-                await ConfigureCompatibilityAsync();
+                // CRITICAL: Show the main window as early as possible so the user
+                // sees UI feedback even when subsequent (network-bound) initialization
+                // is slow. Without this, the process appears to hang over RDP for
+                // several seconds before the first window is presented, which also
+                // ties up the dispatcher and makes the whole session feel frozen.
                 await SetupIoCAsync();
-                await InitializePluginsAsync();
                 await CreateMainWindowAsync();
-                await StartBackgroundServicesAsync();
                 await ShowMainWindowAsync();
+
+                // Now safe to run the slower operations in the background while
+                // the user can already see and interact with the window.
+                await ConfigureCompatibilityAsync();
+                await InitializePluginsAsync();
+                await StartBackgroundServicesAsync();
                 await InitializeOsdAsync();
 
                 if (Log.Instance.IsTraceEnabled)
@@ -223,8 +232,10 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 {
                     Log.Instance.Flush();
                 }
-                catch
+                catch (Exception flushEx)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to flush log during error handling", flushEx);
                 }
 
                 var errorWindow = new CompatibilityCheckErrorWindow(ex);
@@ -305,27 +316,62 @@ namespace UniversalDeviceToolkit.WPF.Startup
 
         private Task ShowMainWindowAsync()
         {
-            if (_flags.Minimized)
+            if (Application.Current.MainWindow is not MainWindow mainWindow)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Sending MainWindow to tray...");
+                    Log.Instance.Trace("MainWindow not yet created when ShowMainWindowAsync was called.");
+                return Task.CompletedTask;
+            }
 
-                if (Application.Current.MainWindow is MainWindow mainWindow)
+            // Apply RDP-aware rendering compatibility BEFORE showing the window
+            // so first paint does not stall on a graphics path that may not
+            // be available over a remote desktop session.
+            mainWindow.SourceInitialized += (_, _) =>
+                RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(
+                    mainWindow,
+                    PresentationSource.FromVisual(mainWindow) as HwndSource,
+                    IoCContainer.Resolve<ApplicationSettings>());
+
+            void ShowAction()
+            {
+                if (_flags.Minimized)
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Sending MainWindow to tray...");
+
                     mainWindow.WindowState = WindowState.Minimized;
                     mainWindow.Show();
                     mainWindow.SendToTray();
                 }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Showing MainWindow...");
+
+                    // Show() on the dispatcher at Normal priority so the
+                    // window is presented in the very next render cycle and
+                    // is not queued behind the still-running async setup.
+                    mainWindow.Show();
+                    mainWindow.Activate();
+
+                    if (mainWindow.WindowState == WindowState.Minimized)
+                        mainWindow.WindowState = WindowState.Normal;
+                }
+            }
+
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                ShowAction();
             }
             else
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Showing MainWindow...");
-
-                Application.Current.MainWindow?.Show();
+                Application.Current.Dispatcher.BeginInvoke(
+                    new Action(ShowAction),
+                    System.Windows.Threading.DispatcherPriority.Loaded);
             }
 
-            _ = Application.Current.Dispatcher.BeginInvoke(App.CheckPendingCrashReports, DispatcherPriority.Background);
+            _ = Application.Current.Dispatcher.BeginInvoke(App.CheckPendingCrashReports,
+                System.Windows.Threading.DispatcherPriority.Background);
 
             return Task.CompletedTask;
         }

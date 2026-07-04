@@ -140,7 +140,7 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            await FetchOnlinePluginsAsync(forceRefresh: true);
+            await FetchOnlinePluginsAsync(forceRefresh: true).ConfigureAwait(false);
         }
         finally
         {
@@ -265,7 +265,7 @@ private string _currentSearchText = string.Empty;
 
             // Fetch online plugins
             _availableUpdates.Clear();
-            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh);
+            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(false);
 
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
@@ -283,7 +283,7 @@ private string _currentSearchText = string.Empty;
             {
                 // Check for plugin updates against actually installed plugin IDs only.
                 var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
-                var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
+                var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests).ConfigureAwait(false);
                 _availableUpdates = updates;
 
                 if (updates.Count > 0 && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -591,8 +591,8 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            await Task.Delay(100); // Small delay to let UI render first
-            await FetchOnlinePluginsAsync();
+            await Task.Delay(100).ConfigureAwait(false); // Small delay to let UI render first
+            await FetchOnlinePluginsAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -624,6 +624,7 @@ private string _currentSearchText = string.Empty;
 
     private void PluginExtensionsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
         DetachPluginInstallCoordinator();
     }
 
@@ -832,7 +833,7 @@ private string _currentSearchText = string.Empty;
 
             var firstLetter = new TextBlock
             {
-                Text = letters[0].ToString().ToUpper(),
+                Text = letters[0].ToString().ToUpperInvariant(),
                 FontSize = 48,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White
@@ -840,7 +841,7 @@ private string _currentSearchText = string.Empty;
 
             var secondLetter = new TextBlock
             {
-                Text = letters[1].ToString().ToLower(),
+                Text = letters[1].ToString().ToLowerInvariant(),
                 FontSize = 48,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White
@@ -854,7 +855,7 @@ private string _currentSearchText = string.Empty;
         {
             var letter = new TextBlock
             {
-                Text = letters[0].ToString().ToUpper(),
+                Text = letters[0].ToString().ToUpperInvariant(),
                 FontSize = 64,
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -1050,7 +1051,7 @@ private string _currentSearchText = string.Empty;
                     onlinePlugin.Name),
                 SnackbarType.Info);
 
-            await InstallOnlinePluginAsync(onlinePlugin);
+            await InstallOnlinePluginAsync(onlinePlugin).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -1290,7 +1291,7 @@ private string _currentSearchText = string.Empty;
             {
                 try
                 {
-                    await InstallOnlinePluginAsync(update, navigateToOptimizationCategoryOnSuccess: false);
+                    await InstallOnlinePluginAsync(update, navigateToOptimizationCategoryOnSuccess: false).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -1311,7 +1312,7 @@ private string _currentSearchText = string.Empty;
             _bulkUpdateButton.Content = Resource.PluginExtensionsPage_UpdateAll;
 
             // Refresh everything
-            await FetchOnlinePluginsAsync();
+            await FetchOnlinePluginsAsync().ConfigureAwait(false);
         }
     }
 
@@ -1350,7 +1351,7 @@ private string _currentSearchText = string.Empty;
             {
                 try
                 {
-                    await InstallOnlinePluginAsync(candidate, navigateToOptimizationCategoryOnSuccess: false);
+                    await InstallOnlinePluginAsync(candidate, navigateToOptimizationCategoryOnSuccess: false).ConfigureAwait(false);
 
                     if (IsPluginInstalledForUi(candidate.Id))
                         installedCount++;
@@ -1379,7 +1380,7 @@ private string _currentSearchText = string.Empty;
             if (_bulkUpdateButton != null)
                 _bulkUpdateButton.IsEnabled = true;
 
-            await FetchOnlinePluginsAsync();
+            await FetchOnlinePluginsAsync().ConfigureAwait(false);
         }
     }
 
@@ -1402,7 +1403,7 @@ private string _currentSearchText = string.Empty;
             {
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
             }
-            await InstallOnlinePluginAsync(onlinePlugin);
+            await InstallOnlinePluginAsync(onlinePlugin).ConfigureAwait(false);
             return;
         }
 
@@ -1425,7 +1426,7 @@ private string _currentSearchText = string.Empty;
                 _pluginManager.UninstallPlugin(pluginId);
 
                 // Wait a moment for the uninstall to complete
-                await Task.Delay(1000);
+                await Task.Delay(1000).ConfigureAwait(false);
             }
 
             _pluginManager.InstallPlugin(pluginId);
@@ -1435,8 +1436,8 @@ private string _currentSearchText = string.Empty;
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
             }
 
-            await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
-            await ShowInstalledPluginFeedbackAsync(pluginId);
+            await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true).ConfigureAwait(false);
+            await ShowInstalledPluginFeedbackAsync(pluginId).ConfigureAwait(false);
 
         }
         catch (Exception ex)
@@ -1475,17 +1476,17 @@ private string _currentSearchText = string.Empty;
             var installTask = _pluginInstallCoordinator.InstallAsync(manifest);
             SyncPluginInstallUi();
 
-            var success = await installTask;
+            var success = await installTask.ConfigureAwait(false);
 
             if (success)
             {
                 _recentInstalledVersions[manifest.Id] = manifest.Version;
                 RemoveAvailableUpdate(manifest.Id);
                 ReconcileAvailableUpdatesWithInstalledVersions();
-                await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true);
+                await RefreshInstalledPluginUiAfterInstallAsync(manifest.Id, forceRefreshRuntime: true).ConfigureAwait(false);
 
                 if (navigateToOptimizationCategoryOnSuccess)
-                    await ShowInstalledPluginFeedbackAsync(manifest.Id, manifest);
+                    await ShowInstalledPluginFeedbackAsync(manifest.Id, manifest).ConfigureAwait(false);
                 else
                     SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
@@ -1519,7 +1520,7 @@ private string _currentSearchText = string.Empty;
 
     private async Task ShowInstalledPluginFeedbackAsync(string pluginId, PluginManifest? fallbackManifest = null)
     {
-        var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+        var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true).ConfigureAwait(false);
         var manifestMetadata = ResolvePluginManifestMetadata(pluginId) ?? fallbackManifest;
         var runtimeCapabilities = plugin is null ? default : ResolveRuntimePluginCapabilities(plugin);
         var manifestCapabilities = PluginUiCapabilityResolver
@@ -1652,7 +1653,7 @@ private string _currentSearchText = string.Empty;
                 _pluginManager.StopPlugin(pluginId);
             }
 
-            var result = await Task.Run(() => _pluginManager.UninstallPlugin(pluginId));
+            var result = await Task.Run(() => _pluginManager.UninstallPlugin(pluginId)).ConfigureAwait(false);
 
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UninstallPlugin returned: {result}");
@@ -1688,7 +1689,7 @@ private string _currentSearchText = string.Empty;
         if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginConfigureButton_Click called for {pluginId}");
 
-        await OpenPluginConfigurationAsync(pluginId);
+        await OpenPluginConfigurationAsync(pluginId).ConfigureAwait(false);
     }
 
     private void PluginUpdateInfoButton_Click(object sender, RoutedEventArgs e)
@@ -1709,7 +1710,7 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            Process.Start(new ProcessStartInfo
+            using var process = Process.Start(new ProcessStartInfo
             {
                 FileName = uri.AbsoluteUri,
                 UseShellExecute = true
@@ -1736,7 +1737,7 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true).ConfigureAwait(false);
             var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
             var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
@@ -1777,7 +1778,7 @@ private string _currentSearchText = string.Empty;
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
-        await OpenPluginEntryPointAsync(pluginId);
+        await OpenPluginEntryPointAsync(pluginId).ConfigureAwait(false);
     }
 
     private async Task OpenPluginEntryPointAsync(string pluginId)
@@ -1791,15 +1792,15 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+            var plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true).ConfigureAwait(false);
             var manifestMetadata = ResolvePluginManifestMetadata(pluginId);
             var capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
 
             if (plugin is null &&
                 !capabilities.SupportsOptimizationCategory &&
-                await TryRepairInstalledOnlinePluginAsync(pluginId))
+                await TryRepairInstalledOnlinePluginAsync(pluginId).ConfigureAwait(false))
             {
-                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true);
+                plugin = await GetRegisteredPluginForUiAsync(pluginId, forceRefresh: true).ConfigureAwait(false);
                 manifestMetadata = ResolvePluginManifestMetadata(pluginId);
                 capabilities = ResolvePluginCapabilities(plugin, isInstalled: true, pluginId, manifestMetadata);
             }
@@ -1814,7 +1815,7 @@ private string _currentSearchText = string.Empty;
                     UseShellExecute = false
                 };
 
-                System.Diagnostics.Process.Start(processInfo);
+                using var process = System.Diagnostics.Process.Start(processInfo);
 
                 SnackbarHelper.Show(
                     Resource.PluginExtensionsPage_RunPlugin,
@@ -1856,7 +1857,7 @@ private string _currentSearchText = string.Empty;
             }
             else if (capabilities.SupportsSettingsPage)
             {
-                await OpenPluginConfigurationAsync(pluginId);
+                await OpenPluginConfigurationAsync(pluginId).ConfigureAwait(false);
             }
             else
             {
@@ -1889,7 +1890,7 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            await OpenPluginEntryPointAsync(pluginId);
+            await OpenPluginEntryPointAsync(pluginId).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -1910,7 +1911,7 @@ private string _currentSearchText = string.Empty;
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Repairing installed online plugin runtime before opening UI: {pluginId}");
 
-            var success = await _pluginInstallCoordinator.InstallAsync(manifest);
+            var success = await _pluginInstallCoordinator.InstallAsync(manifest).ConfigureAwait(false);
             if (!success)
                 return false;
 
@@ -2080,7 +2081,7 @@ private string _currentSearchText = string.Empty;
                 T("PluginExtensionsPage_PermanentlyDeleteConfirmationMessage", "Are you sure you want to permanently delete plugin \"{0}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted."),
                 plugin.Name),
             Resource.Delete,
-            Resource.Cancel);
+            Resource.Cancel).ConfigureAwait(false);
 
         if (!result)
             return;
@@ -2143,7 +2144,7 @@ private string _currentSearchText = string.Empty;
                     try
                     {
                         // Extract and install plugin
-                        var result = await ExtractAndInstallPluginAsync(zipFilePath);
+                        var result = await ExtractAndInstallPluginAsync(zipFilePath).ConfigureAwait(false);
                         if (result)
                         {
                             importedCount++;
@@ -2159,7 +2160,7 @@ private string _currentSearchText = string.Empty;
                 }
 
                 // Refresh plugins and UI
-                await _pluginManager.ScanAndLoadPluginsAsync();
+                await _pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
 
@@ -2192,7 +2193,7 @@ private string _currentSearchText = string.Empty;
         try
         {
             var installationService = new LenovoLegionToolkit.Lib.Plugins.PluginInstallationService(_pluginManager);
-            return await installationService.ExtractAndInstallPluginAsync(zipFilePath, pluginsDir);
+            return await installationService.ExtractAndInstallPluginAsync(zipFilePath, pluginsDir).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -2427,7 +2428,7 @@ private string _currentSearchText = string.Empty;
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Found subdirectory: {firstSubDirName}");
 
             // Case 1: Single level nesting (e.g., NetworkAcceleration/LenovoLegionToolkit.Plugins.NetworkAcceleration/)
-            if (firstSubDirName.StartsWith("LenovoLegionToolkit.Plugins."))
+            if (firstSubDirName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.Ordinal))
             {
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Detected single-level nesting, flattening...");
@@ -2435,7 +2436,7 @@ private string _currentSearchText = string.Empty;
                 var pluginId = firstSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
 
                 // Move all contents from nested directory to extractDir
-                await MoveDirectoryContentsAsync(firstSubDir, extractDir);
+                await MoveDirectoryContentsAsync(firstSubDir, extractDir).ConfigureAwait(false);
 
                 // Delete the now-empty nested directory
                 Directory.Delete(firstSubDir, true);
@@ -2453,7 +2454,7 @@ private string _currentSearchText = string.Empty;
                 var nestedSubDir = nestedSubDirs[0];
                 var nestedSubDirName = Path.GetFileName(nestedSubDir);
 
-                if (nestedSubDirName.StartsWith("LenovoLegionToolkit.Plugins."))
+                if (nestedSubDirName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.Ordinal))
                 {
                     if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                         LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Detected double-level nesting, flattening...");
@@ -2461,7 +2462,7 @@ private string _currentSearchText = string.Empty;
                     var pluginId = nestedSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
 
                     // Move all contents from deeply nested directory to extractDir
-                    await MoveDirectoryContentsAsync(nestedSubDir, extractDir);
+                    await MoveDirectoryContentsAsync(nestedSubDir, extractDir).ConfigureAwait(false);
 
                     // Delete the now-empty nested directories
                     Directory.Delete(nestedSubDir, true);
@@ -2510,7 +2511,7 @@ private string _currentSearchText = string.Empty;
                     Directory.Delete(destDir, true);
                 Directory.Move(dir, destDir);
             }
-        });
+        }).ConfigureAwait(false);
     }
 
 private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? manifest)
@@ -2702,7 +2703,7 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
 
             if (isInstalled)
             {
-                await OpenPluginDefaultActionAsync(selectedViewModel.PluginId);
+                await OpenPluginDefaultActionAsync(selectedViewModel.PluginId).ConfigureAwait(false);
             }
             else
             {
@@ -2759,7 +2760,7 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
 
                 if (Directory.Exists(path))
                 {
-                    System.Diagnostics.Process.Start("explorer.exe", path);
+                    using var process = System.Diagnostics.Process.Start("explorer.exe", path);
                 }
                 else
                 {

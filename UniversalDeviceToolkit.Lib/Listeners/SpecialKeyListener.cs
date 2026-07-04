@@ -206,7 +206,7 @@ public class SpecialKeyListener(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Starting snipping tool..");
 
-        Process.Start("explorer", "ms-screenclip:");
+        using var process = Process.Start("explorer", "ms-screenclip:");
     }
 
     private static void NotifySpectrumBacklight(SpectrumKeyboardBacklightBrightness value)

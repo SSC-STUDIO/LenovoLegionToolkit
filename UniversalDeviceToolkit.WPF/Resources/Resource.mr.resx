@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
+
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -78,32 +78,32 @@
     <value>तृतीय-पक्ष लाइब्रेरी</value>
   </data>
   <data name="AboutPage_Title" xml:space="preserve">
-    <value>बद्दल मध्ये</value>
+    <value>आमच्याबद्दल</value>
   </data>
   <data name="AboutPage_TranslationCredit" xml:space="preserve">
     <value>अनुवाद समुदाय द्वारा प्रदान केले गए।</value>
-    <comment>Please replace this text with something like &quot;Translated into &lt;language&gt; by &lt;your name&gt;.&quot;</comment>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
   </data>
   <data name="AboutPage_Version" xml:space="preserve">
     <value>संस्करण</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>जोड़ें</value>
+    <value>जोडा</value>
   </data>
   <data name="AddNew" xml:space="preserve">
-    <value>नया जोड़ें</value>
+    <value>नवीन जोडा</value>
   </data>
   <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
     <value>लैपटॉप बंद, स्लीप या हाइबरनेट होने पर USB उपकरणों ला चार्ज करा।</value>
   </data>
   <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
-    <value>नेआम्हीी USB चालू</value>
+    <value>नेहमी USB चालू</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
     <value>लैपटॉप बंद, स्लीप या हाइबरनेट होने पर USB उपकरणों ला चार्ज करा।</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
-    <value>नेआम्हीी USB चालू</value>
+    <value>नेहमी USB चालू</value>
   </data>
   <data name="AppName" xml:space="preserve">
     <value>Universal Device Toolkit</value>
@@ -112,7 +112,7 @@
     <value>लागू करा</value>
   </data>
   <data name="ApplyAndClose" xml:space="preserve">
-    <value>लागू करा आणी बंद करा</value>
+    <value>लागू करा आणि बंद करा</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
     <value>स्वयंचलित क्रियाओं के काम करने साठी Universal Device Toolkit चलना चाहिए।</value>
@@ -121,7 +121,7 @@
     <value>सक्षम करा</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>लाई क्रिया परिभाषित नाही। नई क्रिया बनाने साठी &quot;नया जोड़ें&quot; पर क्लिक करा।</value>
+    <value>लाई क्रिया परिभाषित नाही। नई क्रिया बनाने साठी "नया जोडा" पर क्लिक करा।</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
     <value>यदि सक्षम आहे, तो ये क्रियाएँ स्वयंचलित रूप से चलेंगी। जब भी स्थिति बदलेगी, सभी क्रियाओं का मूल्यांकन ऊपर से नीचे केला जाएगा। केवल वर्तमान स्थिति से मेल खाने वाली क्रियाएँ ही चलेंगी।</value>
@@ -133,10 +133,10 @@
     <value>नाम...</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
-    <value>नया जोड़ें</value>
+    <value>नया जोडा</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>लाई त्वरित क्रिया परिभाषित नाही। नई त्वरित क्रिया बनाने साठी &quot;नया जोड़ें&quot; पर क्लिक करा।</value>
+    <value>लाई त्वरित क्रिया परिभाषित नाही। नई त्वरित क्रिया बनाने साठी "नया जोडा" पर क्लिक करा।</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
     <value>त्वरित क्रियाएँ ट्रे आइकन के राइट-क्लिक मेनू मध्ये उपलब्ध आहेत।</value>
@@ -166,7 +166,7 @@
     <value>स्वचालन</value>
   </data>
   <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
-    <value>चरण जोड़ें</value>
+    <value>चरण जोडा</value>
   </data>
   <data name="AutomationPipelineControl_Configure" xml:space="preserve">
     <value>कॉन्फ़िगर करा</value>
@@ -220,7 +220,7 @@
     <value>अनाम</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>स्वयंचलित रूप से पता लगाता आहे कि कुछ गेम चल रहे आहेत आणी CPU आणी GPU प्रदर्शन ला समायोजित करता आहे। तापमान आणी पंखे की आवाज़ बढ़ सकती आहे।</value>
+    <value>स्वयंचलित रूप से पता लगाता आहे कि कुछ गेम चल रहे आहेत आणि CPU आणि GPU प्रदर्शन ला समायोजित करता आहे। तापमान आणि पंखे की आवाज़ बढ़ सकती आहे।</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
     <value>AI इंजन सक्षम करा</value>
@@ -349,7 +349,7 @@
     <value>लाल</value>
   </data>
   <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
-    <value>अपने कंप्यूटर के उपयोग आणी पावर स्थितियों के आधार पर GPU ऑपरेटिंग मोड चुनें। मोड स्विच करने साठी पुनरारंभ आवश्यक हो सकता आहे।</value>
+    <value>अपने कंप्यूटर के उपयोग आणि पावर स्थितियों के आधार पर GPU ऑपरेटिंग मोड चुनें। मोड स्विच करने साठी पुनरारंभ आवश्यक हो सकता आहे।</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
     <value>{0} मध्ये बदलने साठी पुनरारंभ आवश्यक आहे। काय आप आता पुनरारंभ करना चाहते आहेत?</value>
@@ -388,7 +388,7 @@
     <value>GPU निष्क्रिय करा</value>
   </data>
   <data name="DelayAutomationStepControl_Message" xml:space="preserve">
-    <value>अगला चरण चलाने से आधी विलंब जोड़ें।</value>
+    <value>अगला चरण चलाने से आधी विलंब जोडा।</value>
   </data>
   <data name="DelayAutomationStepControl_Title" xml:space="preserve">
     <value>विलंब</value>
@@ -403,7 +403,7 @@
     <value>टेक्स्ट क्लिपबोर्ड पर कॉपी केला गया।</value>
   </data>
   <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
-    <value>&quot;{0}&quot; क्लिपबोर्ड पर कॉपी केला गया।</value>
+    <value>"{0}" क्लिपबोर्ड पर कॉपी केला गया।</value>
   </data>
   <data name="CopiedToClipboard_Title" xml:space="preserve">
     <value>कॉपी केला गया!</value>
@@ -439,7 +439,7 @@
     <value>सीरियल नंबर</value>
   </data>
   <data name="DeviceInformationWindow_Title" xml:space="preserve">
-    <value>तूम्हीच्या डिवाइस बद्दल मध्ये</value>
+    <value>तुमच्या डिव्हाइस बद्दल</value>
   </data>
   <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
     <value>समाप्ति तिथि</value>
@@ -514,13 +514,13 @@
     <value>निर्यात</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>बैटरी पर होने पर केवल एकीकृत GPU का उपयोग करा आणी AC एडाप्टर कनेक्ट होने पर एकीकृत आणी डिस्क्रीट दोनों GPU का उपयोग करा। जब गैर-मानक एडाप्टर कनेक्ट होता आहे, तो सिस्टम Hybrid-iGPU Only Mode मध्ये स्विच हो जाता आहे।</value>
+    <value>बैटरी पर होने पर केवल एकीकृत GPU का उपयोग करा आणि AC एडाप्टर कनेक्ट होने पर एकीकृत आणि डिस्क्रीट दोनों GPU का उपयोग करा। जब गैर-मानक एडाप्टर कनेक्ट होता आहे, तो सिस्टम Hybrid-iGPU Only Mode मध्ये स्विच हो जाता आहे।</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
     <value>Hybrid-Auto मोड</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
-    <value>इस मोड मध्ये आणी से स्विच करने साठी पुनरारंभ आवश्यक आहे।</value>
+    <value>इस मोड मध्ये आणि से स्विच करने साठी पुनरारंभ आवश्यक आहे।</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
     <value>केवल डिस्क्रीट GPU का उपयोग करा। हे मोड सर्वोत्तम ग्राफ़िक्स प्रदर्शन प्रदान करता आहे, परंतु बिजली की खपत बढ़ाता आहे।</value>
@@ -529,7 +529,7 @@
     <value>dGPU मोड</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
-    <value>एकीकृत आणी डिस्क्रीट दोनों GPU सक्षम आहेत। सिस्टम अपनी ज़रूरतों के आधार पर उनके बीच स्वयंचलित रूप से स्विच करागा।</value>
+    <value>एकीकृत आणि डिस्क्रीट दोनों GPU सक्षम आहेत। सिस्टम अपनी ज़रूरतों के आधार पर उनके बीच स्वयंचलित रूप से स्विच करागा।</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
     <value>हाइब्रिड मोड</value>
@@ -538,13 +538,13 @@
     <value>हे मोड केवल तब प्रभावी होता आहे जब डिस्क्रीट GPU काम नाही कर रहा हो।</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
-    <value>केवल एकीकृत GPU का उपयोग करा। हे मोड बिजली की खपत आणी शोर ला न्यूनतम करता आहे।</value>
+    <value>केवल एकीकृत GPU का उपयोग करा। हे मोड बिजली की खपत आणि शोर ला न्यूनतम करता आहे।</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
     <value>Hybrid-iGPU Only मोड</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
-    <value>GPU कार्य मोड बद्दल मध्ये</value>
+    <value>GPU कार्यरत मोड बद्दल</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
     <value>°F</value>
@@ -631,13 +631,13 @@
     <value>सेटिंग लोड नाही की जा सकी।</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>पंखे की गति सख्ती से एक तापमान सेंसर द्वारा निर्धारित नाही होती। हे CPU, GPU आणी हीटसिंक तापमान के बीच उच्चतम सेंसर के अनुसार गति बढ़ाएगा या घटाएगा। जब आप माउस ला प्रत्येक चरण पर ले जाएँगे तो सटीक मान दिखाई देंगे।</value>
+    <value>पंखे की गति सख्ती से एक तापमान सेंसर द्वारा निर्धारित नाही होती। हे CPU, GPU आणि हीटसिंक तापमान के बीच उच्चतम सेंसर के अनुसार गति बढ़ाएगा या घटाएगा। जब आप माउस ला प्रत्येक चरण पर ले जाएँगे तो सटीक मान दिखाई देंगे।</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
     <value>पंखा वक्र</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>चेतावनी! इस विकल्प का लंबे समय तक उपयोग पंखों ला नुकसान पहुँचाएगा आणी उनकी उम्र कम करागा। सच मध्ये, इस विकल्प के साथ सावधान रहें!</value>
+    <value>चेतावनी! इस विकल्प का लंबे समय तक उपयोग पंखों ला नुकसान पहुँचाएगा आणि उनकी उम्र कम करागा। सच मध्ये, इस विकल्प के साथ सावधान रहें!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
     <value>अधिकतम पंखा गति</value>
@@ -685,7 +685,7 @@
     <value>तूम्हीच्या डिवाइस मध्ये आवश्यक सिस्टम घटक (LenovoGameZoneData) गायब हो सकते आहेत।</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>यदि आप जारी रखने साठी &quot;ठीक आहे&quot; पर क्लिक करते आहेत:</value>
+    <value>यदि आप जारी रखने साठी "ठीक आहे" पर क्लिक करते आहेत:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
     <value>- सॉफ्टवेयर प्रतिबंधित मोड मध्ये चलेगा</value>
@@ -709,7 +709,7 @@
     <value>मशीन प्रकार:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>जारी रखने साठी &quot;ठीक आहे&quot; पर क्लिक करा, या बाहर निकलने साठी &quot;रद्द करा&quot;।</value>
+    <value>जारी रखने साठी "ठीक आहे" पर क्लिक करा, या बाहर निकलने साठी "रद्द करा"।</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>लाई संगत कीबोर्ड नाही मिला</value>
@@ -724,7 +724,7 @@
     <value>Lenovo Vantage या इसकी सेवाएँ चल रही आहेत</value>
   </data>
   <data name="MainWindow_NavigationItem_About" xml:space="preserve">
-    <value>बद्दल मध्ये</value>
+    <value>आमच्याबद्दल</value>
   </data>
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>क्रियाएँ</value>
@@ -754,7 +754,7 @@
     <value>नेविगेशन आइटम सेटिंग्स</value>
   </data>
   <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
-    <value>कॉन्फ़िगर करा कि साइडबार मध्ये कोन से नेविगेशन आइटम प्रदर्शित हों। डैशबोर्ड आणी सेटिंग्स नेआम्हीी दिखाई देंगे।</value>
+    <value>कॉन्फ़िगर करा कि साइडबार मध्ये कोन से नेविगेशन आइटम प्रदर्शित हों। डैशबोर्ड आणि सेटिंग्स नेहमी दिखाई देंगे।</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>कीबोर्ड नेविगेशन आइटम दिखाएँ या छिपाएँ</value>
@@ -775,7 +775,7 @@
     <value>प्लगइन एक्सटेंशन नेविगेशन आइटम दिखाएँ या छिपाएँ</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
-    <value>बद्दल मध्ये नेविगेशन आइटम दिखाएँ या छिपाएँ</value>
+    <value>आमच्याबद्दल नेविगेशन आइटम दिखाएँ या छिपाएँ</value>
   </data>
   <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
     <value>नेविगेशन आइटम</value>
@@ -862,7 +862,7 @@
     <value>कैमरा</value>
   </data>
   <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
-    <value>कैप्स लॉक आणी Num Lock</value>
+    <value>कैप्स लॉक आणि Num Lock</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
     <value>Fn कुंजी क्रियाओं जैसे माइक्रोफ़ोन म्यूट साठी अधिसूचना अक्षम करा। यदि तूम्हीच्या पास फुलस्क्रीन एप्लिकेशन के साथ विरोधाभास आहेत तो हे विकल्प सक्षम करा।</value>
@@ -931,7 +931,7 @@
     <value>फ़ाइल गायब प्रतीत होती आहे</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
-    <value>जाँचें कि तूम्हीचा इंटरनेट कनेक्शन चालू आहे आणी काम कर रहा आहे।</value>
+    <value>जाँचें कि तूम्हीचा इंटरनेट कनेक्शन चालू आहे आणि काम कर रहा आहे।</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
     <value>कुछ गलत हो गया</value>
@@ -946,10 +946,10 @@
     <value>संस्करण</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>नीचे सॉफ्टवेयर पैकेजों की सूची आहे जिन्हें तूम्हीच्या लैपटॉप के साथ संगत के रूप मध्ये चिह्नित केला गया आहे। नेआम्हीी सुनिश्चित करा कि आप सही पैकेज इंस्टॉल कर रहे आहेत।</value>
+    <value>नीचे सॉफ्टवेयर पैकेजों की सूची आहे जिन्हें तूम्हीच्या लैपटॉप के साथ संगत के रूप मध्ये चिह्नित केला गया आहे। नेहमी सुनिश्चित करा कि आप सही पैकेज इंस्टॉल कर रहे आहेत।</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
-    <value>जाँचें कि मशीन प्रकार आणी OS सही तरीके से सेट आहेत।</value>
+    <value>जाँचें कि मशीन प्रकार आणि OS सही तरीके से सेट आहेत।</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
     <value>कुछ गलत हो गया</value>
@@ -1030,7 +1030,7 @@
     <value>ड्राइवर पैकेज स्कैन करा</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>संगत ड्राइवर डाउनलोड सूचीबद्ध करने साठी स्रोत चुनें आणी स्कैन करा।</value>
+    <value>संगत ड्राइवर डाउनलोड सूचीबद्ध करने साठी स्रोत चुनें आणि स्कैन करा।</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
     <value>लाई ड्राइवर डाउनलोड नाही मिला</value>
@@ -1048,7 +1048,7 @@
     <value>ड्राइवर स्कैन पूरा नाही झाला</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>चयनित स्रोत आणी नेटवर्क कनेक्शन जाँचें, फिर से स्कैन करा।</value>
+    <value>चयनित स्रोत आणि नेटवर्क कनेक्शन जाँचें, फिर से स्कैन करा।</value>
   </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
     <value>नेटवर्क त्रुटि झाली। स्वयंचलित रूप से पुनः प्रयास केला जा रहा आहे...</value>
@@ -1060,7 +1060,7 @@
     <value>क्लीनअप जानकारी</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
-    <value>क्लीनअप ऑपरेशन प्रगति आणी अनुमानित आकार देखें।</value>
+    <value>क्लीनअप ऑपरेशन प्रगति आणि अनुमानित आकार देखें।</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>कीबोर्ड बैकलाइट प्रीसेट समायोजित करा।</value>
@@ -1168,10 +1168,10 @@
     <value>एक्सेंट रंग</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>दिखावट</value>
+    <value>देखावा</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>भाषा, तापमान इकाई, थीम आणी एक्सेंट रंग अनुकूलित करा।</value>
+    <value>भाषा, तापमान इकाई, थीम आणि एक्सेंट रंग अनुकूलित करा।</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>ऑटोरन</value>
@@ -1186,7 +1186,7 @@
     <value>Legion Zone अक्षम नाही केला जा सका</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>इसे अनइंस्टॉल केले बिना Legion Zone आणी इसकी सेवा ला अक्षम करा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
+    <value>इसे अनइंस्टॉल केले बिना Legion Zone आणि इसकी सेवा ला अक्षम करा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
     <value>Legion Zone अक्षम करा</value>
@@ -1198,16 +1198,16 @@
     <value>Lenovo Hotkeys अक्षम नाही केला जा सका</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>इसे अनइंस्टॉल केले बिना Lenovo Hotkeys आणी इसकी सेवा ला अक्षम करा। यदि अक्षम आहे, तो हे ऐप Fn शॉर्टकट संभालेगा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
+    <value>इसे अनइंस्टॉल केले बिना Lenovo Hotkeys आणि इसकी सेवा ला अक्षम करा। यदि अक्षम आहे, तो हे ऐप Fn शॉर्टकट संभालेगा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>सिस्टम ऑप्टिमाइज़ेशन</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>अनुशंसित प्रदर्शन ट्वीक्स लागू करा आणी अस्थायी फ़ाइलें साफ़ करा।</value>
+    <value>अनुशंसित प्रदर्शन ट्वीक्स लागू करा आणि अस्थायी फ़ाइलें साफ़ करा।</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>प्रदर्शन आणी सेवा ट्वीक्स लागू करा</value>
+    <value>प्रदर्शन आणि सेवा ट्वीक्स लागू करा</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
     <value>प्रदर्शन अनुकूलन लागू केले गए।</value>
@@ -1225,7 +1225,7 @@
     <value>क्लीनअप विफल।</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>ये क्रियाएँ सिस्टम सेवाओं आणी फ़ाइलों ला संशोधित करती आहेत। व्यवस्थापक विशेषाधिकार आवश्यक हो सकते आहेत।</value>
+    <value>ये क्रियाएँ सिस्टम सेवाओं आणि फ़ाइलों ला संशोधित करती आहेत। व्यवस्थापक विशेषाधिकार आवश्यक हो सकते आहेत।</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
     <value>चयनित क्रियाएँ लागू करा</value>
@@ -1264,13 +1264,13 @@
     <value>सुरक्षा पुष्टि</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>सिस्टम क्लीनअप अस्थायी फ़ाइलों आणी कैश ला स्थायी रूप से हटा देगा। आमतौर पर सुरक्षित होने पर भी, हे सुनिश्चित करना सिफारिश की जाती आहे कि तूम्हीच्या पास महत्वपूर्ण डेटा का बैकअप हो। काय आप जारी रखना चाहते आहेत?</value>
+    <value>सिस्टम क्लीनअप अस्थायी फ़ाइलों आणि कैश ला स्थायी रूप से हटा देगा। आमतौर पर सुरक्षित होने पर भी, हे सुनिश्चित करना सिफारिश की जाती आहे कि तूम्हीच्या पास महत्वपूर्ण डेटा का बैकअप हो। काय आप जारी रखना चाहते आहेत?</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
     <value>एक्सटेंशन</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>सिस्टम ऑप्टिमाइज़ेशन एक्सटेंशन आणी टूल प्रबंधित करा</value>
+    <value>सिस्टम ऑप्टिमाइज़ेशन एक्सटेंशन आणि टूल प्रबंधित करा</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
     <value>लाई एक्सटेंशन उपलब्ध नाही</value>
@@ -1294,10 +1294,10 @@
     <value>कस्टम क्लीनअप नियम</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>वे फ़ोल्डर आणी फ़ाइल एक्सटेंशन चुनें जिन्हें क्लीनअप के दौरान हटाया जाना चाहिए।</value>
+    <value>वे फ़ोल्डर आणि फ़ाइल एक्सटेंशन चुनें जिन्हें क्लीनअप के दौरान हटाया जाना चाहिए।</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>नियम जोड़ें</value>
+    <value>नियम जोडा</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
     <value>संपादित करा</value>
@@ -1387,19 +1387,19 @@
     <value>चयनित क्रियाएँ पूरी करने मध्ये विफल।</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>एक्सप्लोरर आणी इंटरफ़ेस</value>
+    <value>एक्सप्लोरर आणि इंटरफ़ेस</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
     <value>सिस्टम सौंदर्यीकरण</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>टास्कबार, फ़ाइल एक्सप्लोरर आणी उपयोगकर्ता इंटरफ़ेस व्यतोार ट्यून करा।</value>
+    <value>टास्कबार, फ़ाइल एक्सप्लोरर आणि उपयोगकर्ता इंटरफ़ेस व्यतोार ट्यून करा।</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
     <value>प्रदर्शन</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>सिस्टम प्रदर्शन आणी प्रतिक्रिया सेटिंग्स समायोजित करा।</value>
+    <value>सिस्टम प्रदर्शन आणि प्रतिक्रिया सेटिंग्स समायोजित करा।</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>सेवाएँ</value>
@@ -1411,13 +1411,13 @@
     <value>क्लीनअप</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>कैश, अस्थायी फ़ाइलें आणी अन्य अवशेष हटाएँ।</value>
+    <value>कैश, अस्थायी फ़ाइलें आणि अन्य अवशेष हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>कैश क्लीनअप</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
-    <value>संग्रहण स्थान खाली करने साठी विभिन्न एप्लिकेशन आणी सिस्टम से कैश फ़ाइलें साफ़ करा।</value>
+    <value>संग्रहण स्थान खाली करने साठी विभिन्न एप्लिकेशन आणि सिस्टम से कैश फ़ाइलें साफ़ करा।</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
     <value>सिस्टम फ़ाइलें क्लीनअप</value>
@@ -1441,16 +1441,16 @@
     <value>कस्टम क्लीनअप</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
-    <value>कस्टम नियमों का उपयोग करके निर्दिष्ट फ़ाइलें आणी निर्देशिकाएँ साफ़ करा।</value>
+    <value>कस्टम नियमों का उपयोग करके निर्दिष्ट फ़ाइलें आणि निर्देशिकाएँ साफ़ करा।</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>टास्कबार आणी स्टार्ट मेनू लेआउट</value>
+    <value>टास्कबार आणि स्टार्ट मेनू लेआउट</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>सर्च बॉक्स आणी टास्क व्यू बटन छिपाएँ, टास्कबार ग्रुपिंग अक्षम करा आणी नेआम्हीी ट्रे आइकन दिखाएँ।</value>
+    <value>सर्च बॉक्स आणि टास्क व्यू बटन छिपाएँ, टास्कबार ग्रुपिंग अक्षम करा आणि नेहमी ट्रे आइकन दिखाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>स्टार्ट मेनू अक्षम करा आणी Win कुंजी से सर्च खोलें</value>
+    <value>स्टार्ट मेनू अक्षम करा आणि Win कुंजी से सर्च खोलें</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
     <value>स्टार्ट मेनू ला पूरी तरह अक्षम करा। जब आप Win कुंजी दबाएँगे, तो हे स्टार्ट मेनू के बजाय सर्च खोलेगा।</value>
@@ -1459,19 +1459,19 @@
     <value>एक्सप्लोरर प्रतिक्रिया मध्ये सुधार</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>मेनू विलंब कम करा, लटके झाले ऐप्स ला तेज़ी से बंद करा आणी डिफ़ॉल्ट रूप से हे PC खोलें।</value>
+    <value>मेनू विलंब कम करा, लटके झाले ऐप्स ला तेज़ी से बंद करा आणि डिफ़ॉल्ट रूप से हे PC खोलें।</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
     <value>फ़ाइल दृश्यता विकल्प</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>फ़ाइल एक्सप्लोरर मध्ये फ़ाइल एक्सटेंशन आणी छिपी झाली फ़ाइलें दिखाएँ।</value>
+    <value>फ़ाइल एक्सप्लोरर मध्ये फ़ाइल एक्सटेंशन आणि छिपी झाली फ़ाइलें दिखाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
     <value>एक्सप्लोरर सुझाव अक्षम करा</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>क्लाउड कंटेंट सुझाव आणी अनुशंसा बैनर बंद करा।</value>
+    <value>क्लाउड कंटेंट सुझाव आणि अनुशंसा बैनर बंद करा।</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
     <value>Windows कुंजी ला सर्च खोलने साठी बदलें</value>
@@ -1483,37 +1483,37 @@
     <value>मल्टीमीडिया शेड्यूलिंग अनुकूलित करा</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>नेटवर्क थ्रॉटलिंग हटाएँ आणी सिस्टम प्रतिक्रिया विलंब कम करा।</value>
+    <value>नेटवर्क थ्रॉटलिंग हटाएँ आणि सिस्टम प्रतिक्रिया विलंब कम करा।</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
     <value>मेमोरी प्रबंधन मध्ये सुधार</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>सिस्टम कैश ला मेमोरी मध्ये रखें आणी कर्नेल ड्राइवरों ला पेजिंग से बचाएँ।</value>
+    <value>सिस्टम कैश ला मेमोरी मध्ये रखें आणि कर्नेल ड्राइवरों ला पेजिंग से बचाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>एक्रेलिक आणी अधिसूचना केंद्र अक्षम करा</value>
+    <value>एक्रेलिक आणि अधिसूचना केंद्र अक्षम करा</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>लॉगऑन पर एक्रेलिक प्रभाव हटाएँ आणी Windows अधिसूचना केंद्र छिपाएँ।</value>
+    <value>लॉगऑन पर एक्रेलिक प्रभाव हटाएँ आणि Windows अधिसूचना केंद्र छिपाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>टेलीमेट्री आणी टिप्स कम करा</value>
+    <value>टेलीमेट्री आणि टिप्स कम करा</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>विज्ञापन ID, Spotlight सुविधाएँ आणी स्वयंचलित सुझाव अक्षम करा।</value>
+    <value>विज्ञापन ID, Spotlight सुविधाएँ आणि स्वयंचलित सुझाव अक्षम करा।</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
     <value>उच्च प्रदर्शन योजना लागू करा</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>उच्च प्रदर्शन पावर योजना सक्रिय करा आणी हाइबरनेशन अक्षम करा।</value>
+    <value>उच्च प्रदर्शन पावर योजना सक्रिय करा आणि हाइबरनेशन अक्षम करा।</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
     <value>डायग्नोस्टिक सेवाएँ अक्षम करा</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Connected User Experiences, Diagnostics Hub आणी Delivery Optimisation सेवाओं ला रोकें आणी अक्षम करा।</value>
+    <value>Connected User Experiences, Diagnostics Hub आणि Delivery Optimisation सेवाओं ला रोकें आणि अक्षम करा।</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>SysMain अक्षम करा</value>
@@ -1537,7 +1537,7 @@
     <value>त्रुटि रिपोर्टिंग अक्षम करा</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Windows Error Reporting ला क्रैश डेटा एकत्र करने आणी भेजने से रोकें।</value>
+    <value>Windows Error Reporting ला क्रैश डेटा एकत्र करने आणि भेजने से रोकें।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
     <value>Remote Desktop कैश साफ़ करा</value>
@@ -1549,25 +1549,25 @@
     <value>Windows Update कैश साफ़ करा</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>डाउनलोड की गई अपडेट फ़ाइलें आणी Delivery Optimisation कैश हटाएँ।</value>
+    <value>डाउनलोड की गई अपडेट फ़ाइलें आणि Delivery Optimisation कैश हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
     <value>ब्राउज़र कैश साफ़ करा</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
-    <value>विभिन्न एप्लिकेशन द्वारा छोड़ी गई अस्थायी फ़ाइलें आणी लॉग साफ़ करता आहे।</value>
+    <value>विभिन्न एप्लिकेशन द्वारा छोड़ी गई अस्थायी फ़ाइलें आणि लॉग साफ़ करता आहे।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
     <value>ऐप अवशेष</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Internet Explorer आणी Edge कैश आणी कुकी फ़ाइलें हटाएँ।</value>
+    <value>Internet Explorer आणि Edge कैश आणि कुकी फ़ाइलें हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
     <value>थंबनेल कैश साफ़ करा</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Explorer थंबनेल डेटाबेस आणी Direct3D शेडर कैश हटाएँ।</value>
+    <value>Explorer थंबनेल डेटाबेस आणि Direct3D शेडर कैश हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
     <value>.NET नेटिव इमेज साफ़ करा</value>
@@ -1576,7 +1576,7 @@
     <value>डिस्क स्थान पुनः प्राप्त करने साठी कैश केले गए .NET Native इमेज हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>लॉग आणी डायग्नोस्टिक डेटा हटाएँ</value>
+    <value>लॉग आणि डायग्नोस्टिक डेटा हटाएँ</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
     <value>तूम्हीच्या सिस्टम ड्राइव पर बड़ी फ़ाइलों ला स्कैन करता आहे जो महत्वपूर्ण स्थान ले सकती आहेत।</value>
@@ -1585,13 +1585,13 @@
     <value>बड़ी फ़ाइलें स्कैन</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
-    <value>अपने सिस्टम पर बड़ी फ़ाइलों की पहचान आणी प्रबंधन करा।</value>
+    <value>अपने सिस्टम पर बड़ी फ़ाइलों की पहचान आणि प्रबंधन करा।</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
     <value>बड़ी फ़ाइलें</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Windows लॉग, त्रुटि रिपोर्ट आणी डायग्नोस्टिक ट्रेस हटाएँ।</value>
+    <value>Windows लॉग, त्रुटि रिपोर्ट आणि डायग्नोस्टिक ट्रेस हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
     <value>क्रैश डंप हटाएँ</value>
@@ -1603,13 +1603,13 @@
     <value>Defender स्कैन साफ़ करा</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Windows Defender स्कैन इतिहास आणी कैश हटाएँ।</value>
+    <value>Windows Defender स्कैन इतिहास आणि कैश हटाएँ।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
     <value>अस्थायी फ़ाइलें साफ़ करा</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Windows आणी उपयोगकर्ता अस्थायी निर्देशिकाएँ खाली करा।</value>
+    <value>Windows आणि उपयोगकर्ता अस्थायी निर्देशिकाएँ खाली करा।</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
     <value>बंडल Windows ऐप्स हटाएँ</value>
@@ -1639,22 +1639,22 @@
     <value>सेवा घटक स्टोर</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>DISM क्लीनअप चलाएँ आणी WinSxS अस्थायी फ़ाइलें साफ़ करा।</value>
+    <value>DISM क्लीनअप चलाएँ आणि WinSxS अस्थायी फ़ाइलें साफ़ करा।</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Lenovo Hotkeys अक्षम करा</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage आणी/या ImController ठीक से अक्षम नाही केला गया होगा</value>
+    <value>Lenovo Vantage आणि/या ImController ठीक से अक्षम नाही केला गया होगा</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Lenovo Vantage आणी/या ImController अक्षम नाही केला जा सका</value>
+    <value>Lenovo Vantage आणि/या ImController अक्षम नाही केला जा सका</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>इन्हें अनइंस्टॉल केले बिना Lenovo Vantage आणी ImController अक्षम करा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
+    <value>इन्हें अनइंस्टॉल केले बिना Lenovo Vantage आणि ImController अक्षम करा। इस विकल्प ला बदलने के नंतर पुनरारंभ की सिफारिश की जाती आहे।</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
-    <value>Lenovo Vantage आणी ImController अक्षम करा</value>
+    <value>Lenovo Vantage आणि ImController अक्षम करा</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone ठीक से सक्षम नाही केला गया होगा</value>
@@ -1669,10 +1669,10 @@
     <value>Lenovo Hotkeys कुंजियाँ सक्षम नाही की जा सकीं</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage आणी/या ImController ठीक से सक्षम नाही केला गया होगा</value>
+    <value>Lenovo Vantage आणि/या ImController ठीक से सक्षम नाही केला गया होगा</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Lenovo Vantage आणी/या ImController सक्षम नाही केला जा सका</value>
+    <value>Lenovo Vantage आणि/या ImController सक्षम नाही केला जा सका</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
     <value>Fn+R शॉर्टकट ला अधिक उपयोगी बनाने साठी आप रिफ्रेश दरें बहिष्कृत कर सकते आहेत।</value>
@@ -1699,7 +1699,7 @@
     <value>भाषा पैक डाउनलोड हो रहा आहे…</value>
   </data>
   <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
-    <value>निकाला आणी इंस्टॉल केला जा रहा आहे…</value>
+    <value>निकाला आणि इंस्टॉल केला जा रहा आहे…</value>
   </data>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
@@ -1723,7 +1723,7 @@
     <value>भाषा अनइंस्टॉल हो रही आहे</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>नेआम्हीी ट्रे मध्ये न्यूनतम करा। ट्रे आइकन पर राइट-क्लिक करके बंद करा।</value>
+    <value>नेहमी ट्रे मध्ये न्यूनतम करा। ट्रे आइकन पर राइट-क्लिक करके बंद करा।</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>बंद करने पर न्यूनतम करा</value>
@@ -1777,7 +1777,7 @@
     <value>सेटिंग्स</value>
   </data>
   <data name="SettingsPage_Description" xml:space="preserve">
-    <value>एप्लिकेशन की दिखावट, व्यतोार आणी कार्यक्षमता विकल्प कॉन्फ़िगर करा।</value>
+    <value>एप्लिकेशन की दिखावट, व्यतोार आणि कार्यक्षमता विकल्प कॉन्फ़िगर करा।</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>कीबोर्ड बैकलाइट चमक समायोजित करा।</value>
@@ -1789,7 +1789,7 @@
     <value>कीबोर्ड बैकलाइट चमक</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
-    <value>प्रभाव जोड़ें</value>
+    <value>प्रभाव जोडा</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
     <value>प्रोफ़ाइल लागू नाही की जा सकी</value>
@@ -1846,13 +1846,13 @@
     <value>प्रभाव</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>हे प्रभाव पूरे कीबोर्ड पर लागू होगा आणी अन्य सभी प्रभावों ला प्रतिस्थापित करागा।</value>
+    <value>हे प्रभाव पूरे कीबोर्ड पर लागू होगा आणि अन्य सभी प्रभावों ला प्रतिस्थापित करागा।</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
     <value>गति</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
-    <value>प्रभाव जोड़ें</value>
+    <value>प्रभाव जोडा</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
     <value>प्रभाव संपादित करा</value>
@@ -1879,7 +1879,7 @@
     <value>समय</value>
   </data>
   <data name="ToggleHybridModeControl_Message" xml:space="preserve">
-    <value>एकीकृत आणी डिस्क्रीट GPU के बीच स्विचिंग की अनुमति दें। पुनरारंभ आवश्यक आहे।</value>
+    <value>एकीकृत आणि डिस्क्रीट GPU के बीच स्विचिंग की अनुमति दें। पुनरारंभ आवश्यक आहे।</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
     <value>हाइब्रिड मोड बदलने साठी पुनरारंभ आवश्यक आहे। काय आप आता पुनरारंभ करना चाहते आहेत?</value>
@@ -1940,7 +1940,7 @@
     <value>अनाम</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
-    <value>आप अपनी जोखिम पर जारी रखना चुन सकते आहेत, परंतु ध्यान रखें कि कुछ सुविधाएँ उपलब्ध नाही हो सकती आहेत आणी/या ठीक से काम नाही कर सकती आहेत।
+    <value>आप अपनी जोखिम पर जारी रखना चुन सकते आहेत, परंतु ध्यान रखें कि कुछ सुविधाएँ उपलब्ध नाही हो सकती आहेत आणि/या ठीक से काम नाही कर सकती आहेत।
 
 यदि आप जारी रखना चुनते आहेत तो लॉगिंग स्वयंचलित रूप से सक्षम हो जाएगी।</value>
   </data>
@@ -2078,7 +2078,7 @@
     <value>नाम</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
-    <value>कुछ सुविधाएँ तूम्हीच्या लैपटॉप की स्थिति आणी कॉन्फ़िगरेशन के आधार पर डैशबोर्ड पर नाही दिखाई दे सकती आहेत।</value>
+    <value>कुछ सुविधाएँ तूम्हीच्या लैपटॉप की स्थिति आणि कॉन्फ़िगरेशन के आधार पर डैशबोर्ड पर नाही दिखाई दे सकती आहेत।</value>
   </data>
   <data name="DashboardPage_Customize" xml:space="preserve">
     <value>अनुकूलित करा</value>
@@ -2172,7 +2172,7 @@
     <value>DISM कमांड</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>सहेजें आणी बंद करा</value>
+    <value>सहेजें आणि बंद करा</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
     <value>कस्टम मोड प्रीसेट</value>
@@ -2224,13 +2224,13 @@
     <value>CPU द्वारा पहुँची जा सकने वाली अधिकतम तात्कालिक बिजली खपत।</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
-    <value>CPU आणी GPU दोनों के पूर्ण उपयोग मध्ये होने पर CPU द्वारा पहुँची जा सकने वाली अधिकतम बिजली खपत।</value>
+    <value>CPU आणि GPU दोनों के पूर्ण उपयोग मध्ये होने पर CPU द्वारा पहुँची जा सकने वाली अधिकतम बिजली खपत।</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
     <value>मामूली विलंब के साथ CPU द्वारा पहुँची जा सकने वाली पीक बिजली खपत।</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
-    <value>CPU द्वारा पहुँचा जा सकने वाला अधिकतम तापमान जिससे आधी आवृत्ति आणी बिजली कम हो जाती आहे।</value>
+    <value>CPU द्वारा पहुँचा जा सकने वाला अधिकतम तापमान जिससे आधी आवृत्ति आणि बिजली कम हो जाती आहे।</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
     <value>CPU की बिजली खपत के आधार पर GPU ला आवंटित की जा सकने वाली अतिरिक्त अधिकतम बिजली।</value>
@@ -2239,7 +2239,7 @@
     <value>आधार बिजली खपत के शीर्ष पर GPU ला आवंटित की जा सकने वाली अतिरिक्त बिजली की मात्रा।</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
-    <value>GPU द्वारा पहुँचा जा सकने वाला अधिकतम तापमान जिससे आधी आवृत्ति आणी बिजली कम हो जाती आहे।</value>
+    <value>GPU द्वारा पहुँचा जा सकने वाला अधिकतम तापमान जिससे आधी आवृत्ति आणि बिजली कम हो जाती आहे।</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>डिफ़ॉल्ट</value>
@@ -2248,7 +2248,7 @@
     <value>अल्पकालिक पावर सीमा अवधि</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
-    <value>तो समय जिससाठी CPU ला बूस्ट करने आणी अल्पकालिक पावर सीमा का उपयोग करने की अनुमति आहे। जब Tau समाप्त हो जाता आहे, तो दीर्घकालिक पावर सीमा का उपयोग केला जाता आहे।</value>
+    <value>तो समय जिससाठी CPU ला बूस्ट करने आणि अल्पकालिक पावर सीमा का उपयोग करने की अनुमति आहे। जब Tau समाप्त हो जाता आहे, तो दीर्घकालिक पावर सीमा का उपयोग केला जाता आहे।</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
     <value>AC मध्ये कुल प्रोसेसर पावर लक्ष्य</value>
@@ -2260,7 +2260,7 @@
     <value>बनाएँ</value>
   </data>
   <data name="AddAutomationStepWindow_Title" xml:space="preserve">
-    <value>चरण जोड़ें</value>
+    <value>चरण जोडा</value>
   </data>
   <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
     <value>क्रिया बनाएँ</value>
@@ -2332,7 +2332,7 @@
     <value>कीबोर्ड बैकलाइट प्रोफ़ाइल आयात करा</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>वर्तमान प्रोफ़ाइल मध्ये बैकलाइट कॉन्फ़िगरेशन आयात आणी लागू करा।</value>
+    <value>वर्तमान प्रोफ़ाइल मध्ये बैकलाइट कॉन्फ़िगरेशन आयात आणि लागू करा।</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
     <value>पथ</value>
@@ -2480,7 +2480,7 @@
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>{0} पावर मोड AC पावर के बिना उपलब्ध नाही आहे।</value>
-    <comment>For example: &quot;{Performance} power mode is not available without AC power.&quot;</comment>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>सेंसर</value>
@@ -2502,7 +2502,7 @@
     <value>dGPU वर्तमान मध्ये उपयोग मध्ये आहे या लैपटॉप बैटरी पावर पर नाही आहे</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU उपयोग मध्ये न होने पर आणी लैपटॉप बैटरी पावर पर होने पर स्वयंचलित रूप से डिस्कनेक्ट हो जाएगा।</value>
+    <value>dGPU उपयोग मध्ये न होने पर आणि लैपटॉप बैटरी पावर पर होने पर स्वयंचलित रूप से डिस्कनेक्ट हो जाएगा।</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
     <value>जब Lenovo Vantage या इसकी सेवाएँ चल रही हों तो कस्टम मोड सेटिंग्स सही ढंग से लागू नाही होंगी।</value>
@@ -2520,13 +2520,13 @@
     <value>GPU कार्य मोड</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>अपने कंप्यूटर के उपयोग आणी पावर स्थितियों के आधार पर GPU ऑपरेटिंग मोड चुनें। मोड स्विच करने साठी पुनरारंभ आवश्यक हो सकता आहे।</value>
+    <value>अपने कंप्यूटर के उपयोग आणि पावर स्थितियों के आधार पर GPU ऑपरेटिंग मोड चुनें। मोड स्विच करने साठी पुनरारंभ आवश्यक हो सकता आहे।</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
     <value>हाइब्रिड मोड</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>एकीकृत आणी डिस्क्रीट GPU के बीच स्विचिंग की अनुमति दें। पुनरारंभ आवश्यक आहे।</value>
+    <value>एकीकृत आणि डिस्क्रीट GPU के बीच स्विचिंग की अनुमति दें। पुनरारंभ आवश्यक आहे।</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
     <value>अवधि</value>
@@ -2592,13 +2592,13 @@
     <value>रात भर बैटरी चार्जिंग</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>सक्षम होने पर, हे डिवाइस रात भर प्लग इन होने पर 80% तक चार्ज होगा आणी सुबह तूम्हीच्या डिवाइस का उपयोग करने के समय तक 100% तक चार्जिंग पूरी करागा।</value>
+    <value>सक्षम होने पर, हे डिवाइस रात भर प्लग इन होने पर 80% तक चार्ज होगा आणि सुबह तूम्हीच्या डिवाइस का उपयोग करने के समय तक 100% तक चार्जिंग पूरी करागा।</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
     <value>रात भर बैटरी चार्जिंग</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>सक्षम होने पर, हे डिवाइस रात भर प्लग इन होने पर 80% तक चार्ज होगा आणी सुबह तूम्हीच्या डिवाइस का उपयोग करने के समय तक 100% तक चार्जिंग पूरी करागा।</value>
+    <value>सक्षम होने पर, हे डिवाइस रात भर प्लग इन होने पर 80% तक चार्ज होगा आणि सुबह तूम्हीच्या डिवाइस का उपयोग करने के समय तक 100% तक चार्जिंग पूरी करागा।</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
     <value>अमान्य छवि आकार।</value>
@@ -2698,10 +2698,10 @@
     <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>सिस्टम पुनरारंभ होने पर बैटरी अनुभाग मध्ये &quot;बैटरी पर कब से&quot; साठी काउंटर रीसेट करता आहे।</value>
+    <value>सिस्टम पुनरारंभ होने पर बैटरी अनुभाग मध्ये "बैटरी पर कब से" साठी काउंटर रीसेट करता आहे।</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>स्टार्टअप पर &quot;बैटरी पर कब से&quot; रीसेट करा</value>
+    <value>स्टार्टअप पर "बैटरी पर कब से" रीसेट करा</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
     <value>Wi-Fi बंद करा</value>
@@ -2731,7 +2731,7 @@
     <value>ट्रे मध्ये न्यूनतम करा</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>टास्कबार के बजाय नेआम्हीी ट्रे मध्ये न्यूनतम करा।</value>
+    <value>टास्कबार के बजाय नेहमी ट्रे मध्ये न्यूनतम करा।</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>Windows पावर मोड</value>
@@ -2761,22 +2761,22 @@
     <value>संगतता जाँच त्रुटि</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
-    <value>स्टार्टअप के दौरान एप्लिकेशन डिवाइस जानकारी पढ़ने मध्ये विफल रहा। कृपया नीचे त्रुटि विवरण देखें आणी यदि आवश्यक हो तो समस्या निवारण चरण आज़माएँ।</value>
+    <value>स्टार्टअप के दौरान एप्लिकेशन डिवाइस जानकारी पढ़ने मध्ये विफल रहा। कृपया नीचे त्रुटि विवरण देखें आणि यदि आवश्यक हो तो समस्या निवारण चरण आज़माएँ।</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
     <value>समस्या निवारण चरण</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>सुनिश्चित करा कि Windows Management Instrumentation (WMI) सेवा चल रही आहे: Services (services.msc) खोलें आणी जाँचें कि &quot;Windows Management Instrumentation&quot; चल रहा आहे।</value>
+    <value>सुनिश्चित करा कि Windows Management Instrumentation (WMI) सेवा चल रही आहे: Services (services.msc) खोलें आणि जाँचें कि "Windows Management Instrumentation" चल रहा आहे।</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
-    <value>सिस्टम रजिस्ट्री आणी WMI तक पर्याप्त पहुँच सुनिश्चित करने साठी एप्लिकेशन ला व्यवस्थापक के रूप मध्ये चलाएँ।</value>
+    <value>सिस्टम रजिस्ट्री आणि WMI तक पर्याप्त पहुँच सुनिश्चित करने साठी एप्लिकेशन ला व्यवस्थापक के रूप मध्ये चलाएँ।</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
-    <value>सिस्टम संसाधन जाँचें: अन्य संसाधन-गहन एप्लिकेशन बंद करा आणी फिर से प्रयास करा।</value>
+    <value>सिस्टम संसाधन जाँचें: अन्य संसाधन-गहन एप्लिकेशन बंद करा आणि फिर से प्रयास करा।</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
-    <value>नीचे &quot;लॉग खोलें&quot; पर क्लिक करके विस्तृत त्रुटि जानकारी साठी लॉग फ़ाइल की समीक्षा करा।</value>
+    <value>नीचे "लॉग खोलें" पर क्लिक करके विस्तृत त्रुटि जानकारी साठी लॉग फ़ाइल की समीक्षा करा।</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
     <value>लॉग फ़ाइल खोलें</value>
@@ -2812,7 +2812,7 @@
     <value>सक्षम करा</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>आप कुंजी प्रेस की श्रृंखला रिकॉर्ड कर सकते आहेत आणी अपने कीबोर्ड के नंबर पैड का उपयोग करके उन्हें लागू कर सकते आहेत।</value>
+    <value>आप कुंजी प्रेस की श्रृंखला रिकॉर्ड कर सकते आहेत आणि अपने कीबोर्ड के नंबर पैड का उपयोग करके उन्हें लागू कर सकते आहेत।</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
     <value>मैक्रो</value>
@@ -2842,7 +2842,7 @@
     <value>केवल कीबोर्ड</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>कीबोर्ड कुंजियाँ आणी माउस बटन</value>
+    <value>कीबोर्ड कुंजियाँ आणि माउस बटन</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
     <value>सभी इनपुट</value>
@@ -2875,10 +2875,10 @@
     <value>कमांड लाइन से नियंत्रण की अनुमति देने वाला कमांड लाइन इंटरफ़ेस सक्षम करा।</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>PATH मध्ये CLI जोड़ें</value>
+    <value>PATH मध्ये CLI जोडा</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>उपयोगकर्ता के PATH पर्यावरण चर मध्ये CLI जोड़ें।</value>
+    <value>उपयोगकर्ता के PATH पर्यावरण चर मध्ये CLI जोडा।</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
     <value>तापमान</value>
@@ -2893,7 +2893,7 @@
     <value>Legion Zone पृष्ठभूमि मध्ये चल रहा आहे।</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage आणी/या ImController पृष्ठभूमि मध्ये चल रहा आहे।</value>
+    <value>Lenovo Vantage आणि/या ImController पृष्ठभूमि मध्ये चल रहा आहे।</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
     <value>तूम्हीच्या डिवाइस से कनेक्ट सभी स्क्रीन पर अधिसूचना दिखाएँ।</value>
@@ -2917,7 +2917,7 @@
     <value>इस सत्र साठी अपडेट जाँच अक्षम आहेत</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit {0} के साथ शुरू केला गया था। स्वयंचलित आणी मैन्युअल अपडेट जाँच, साथ ही नीचे दी गई अपडेट सेटिंग्स, तूम्हीच्या बिना उस स्टार्टअप तर्क के पुनः लॉन्च करने तक अक्षम आहेत।</value>
+    <value>Universal Device Toolkit {0} के साथ शुरू केला गया था। स्वयंचलित आणि मैन्युअल अपडेट जाँच, साथ ही नीचे दी गई अपडेट सेटिंग्स, तूम्हीच्या बिना उस स्टार्टअप तर्क के पुनः लॉन्च करने तक अक्षम आहेत।</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>API दर सीमा पहुँच गई, कृपया नंतर मध्ये फिर से प्रयास करा।</value>
@@ -2962,7 +2962,7 @@
     <value>कुछ गलत हो गया</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>जाँचें कि तूम्हीचा इंटरनेट कनेक्शन चालू आहे आणी काम कर रहा आहे।</value>
+    <value>जाँचें कि तूम्हीचा इंटरनेट कनेक्शन चालू आहे आणि काम कर रहा आहे।</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
     <value>ध्वनि चलाएँ</value>
@@ -2977,10 +2977,10 @@
     <value>एक सहेजी गई त्वरित क्रिया चलाएँ।</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>अधिसूचना नेआम्हीी शीर्ष पर</value>
+    <value>अधिसूचना नेहमी शीर्ष पर</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>अधिसूचना ला नेआम्हीी शीर्ष पर रखें।
+    <value>अधिसूचना ला नेहमी शीर्ष पर रखें।
 हे अन्य फुलस्क्रीन विंडो ला प्रभावित नाही करागा, परंतु आप अधिसूचनाओं पर क्लिक नाही कर पाएँगे।</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
@@ -3026,7 +3026,7 @@
     <value>Windows सौंदर्यीकरण</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Windows की दिखावट आणी व्यतोार अनुकूलित करा।</value>
+    <value>Windows की दिखावट आणि व्यतोार अनुकूलित करा।</value>
   </data>
   <data name="SystemBeautification_Effects_Title" xml:space="preserve">
     <value>प्रभाव</value>
@@ -3101,7 +3101,7 @@
     <value>प्लगइन एक्सटेंशन</value>
   </data>
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
-    <value>कार्यक्षमता बढ़ाने साठी प्लगइन इंस्टॉल आणी प्रबंधित करा</value>
+    <value>कार्यक्षमता बढ़ाने साठी प्लगइन इंस्टॉल आणि प्रबंधित करा</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
     <value>कुल प्लगइन</value>
@@ -3251,7 +3251,7 @@
     <value>{0} प्लगइन सफलतापूर्वक आयात केले गए</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
-    <value>{0} प्लगइन सफलतापूर्वक आयात केले गए आहेत आणी उपलब्ध आहेत</value>
+    <value>{0} प्लगइन सफलतापूर्वक आयात केले गए आहेत आणि उपलब्ध आहेत</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
     <value>थोक आयात विफल</value>
@@ -3305,7 +3305,7 @@
     <value>प्लगइन इंस्टॉल नाही आहे</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
-    <value>प्लगइन इंस्टॉल नाही आहे आणी खोला नाही जा सकता</value>
+    <value>प्लगइन इंस्टॉल नाही आहे आणि खोला नाही जा सकता</value>
   </data>
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>न्यूनतम होस्ट संस्करण {0} आवश्यक आहे</value>
@@ -3320,7 +3320,7 @@
     <value>अपडेट विफल</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
-    <value>प्लगइन अपडेट विफल, कृपया नेटवर्क कनेक्शन जाँचें आणी नंतर मध्ये फिर से प्रयास करा।</value>
+    <value>प्लगइन अपडेट विफल, कृपया नेटवर्क कनेक्शन जाँचें आणि नंतर मध्ये फिर से प्रयास करा।</value>
   </data>
   <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
     <value>अपडेट सफल</value>
@@ -3332,7 +3332,7 @@
     <value>प्लगइन अपडेट हो रहा आहे</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
-    <value>प्लगइन डाउनलोड आणी अपडेट हो रहा आहे...</value>
+    <value>प्लगइन डाउनलोड आणि अपडेट हो रहा आहे...</value>
   </data>
   <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
     <value>सभी अपडेट करा</value>
@@ -3395,10 +3395,10 @@
     <value>नया संस्करण उपलब्ध</value>
   </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
-    <value>संस्करण: </value>
+    <value>संस्करण:</value>
   </data>
   <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>रिलीज़ तिथि: </value>
+    <value>रिलीज़ तिथि:</value>
   </data>
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>काय नया आहे:</value>
@@ -3488,7 +3488,7 @@
     <value>इंस्टॉल साठी प्रतीक्षा (दूसरा प्लगइन डाउनलोड हो रहा आहे)...</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>लाई टूल उपलब्ध नाही। कृपया एप्लिकेशन निर्देशिका मध्ये टूल्स फ़ोल्डर मध्ये टूल जोड़ें।</value>
+    <value>लाई टूल उपलब्ध नाही। कृपया एप्लिकेशन निर्देशिका मध्ये टूल्स फ़ोल्डर मध्ये टूल जोडा।</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
     <value>टूल्स निर्देशिका मध्ये उपलब्ध होने पर टूल हेोय दिखाई देंगे।</value>
@@ -3635,7 +3635,7 @@
     <value>थीम शैली</value>
   </data>
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
-    <value>ऐप साठी विज़ुअल शैली प्रीसेट चुनें। थीम मोड आणी एक्सेंट रंग ऊपर से लागू होते रहते आहेत।</value>
+    <value>ऐप साठी विज़ुअल शैली प्रीसेट चुनें। थीम मोड आणि एक्सेंट रंग ऊपर से लागू होते रहते आहेत।</value>
   </data>
   <data name="GB" xml:space="preserve">
     <value>GB</value>
@@ -3722,7 +3722,7 @@
     <value>कम FPS डेल्टा</value>
   </data>
   <data name="OsdSettings_Thresholds_LowFpsDelta_Description" xml:space="preserve">
-    <value>औसत FPS आणी 1% कम के बीच अधिकतम अंतर। इससे ऊपर, काउंटर गंभीर हो जाता आहे।</value>
+    <value>औसत FPS आणि 1% कम के बीच अधिकतम अंतर। इससे ऊपर, काउंटर गंभीर हो जाता आहे।</value>
   </data>
   <data name="OsdSettings_Thresholds_Performance" xml:space="preserve">
     <value>प्रदर्शन</value>
@@ -3803,7 +3803,7 @@
     <value>मदरबोर्ड</value>
   </data>
   <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
-    <value>विस्तृत तापमान, आवृत्ति आणी बिजली सीमा की निगरानी साठी उन्नत हार्डवेयर पोलिंग सक्षम करा।</value>
+    <value>विस्तृत तापमान, आवृत्ति आणि बिजली सीमा की निगरानी साठी उन्नत हार्डवेयर पोलिंग सक्षम करा।</value>
   </data>
   <data name="SettingsPage_HardwareSensors_PawnIOWarning" xml:space="preserve">
     <value>हार्डवेयर सेंसर का उपयोग करने साठी तूम्हीहाला आधी PawnIO इंस्टॉल करना होगा!</value>
@@ -3845,7 +3845,7 @@
     <value>प्लगइन {0} इंस्टॉल केला गया। इसके उपलब्ध प्रवेश बिंदु ला लॉन्च करने साठी खोलें का उपयोग करा।</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccessOptimizationMessage" xml:space="preserve">
-    <value>प्लगइन {0} इंस्टॉल केला गया आणी सिस्टम ऑप्टिमाइज़ेशन मध्ये खोला गया।</value>
+    <value>प्लगइन {0} इंस्टॉल केला गया आणि सिस्टम ऑप्टिमाइज़ेशन मध्ये खोला गया।</value>
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryTitle" xml:space="preserve">
     <value>इंस्टॉल केला गया, परंतु लाई प्रवेश बिंदु नाही</value>
@@ -3856,4 +3856,4 @@
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>प्लगइन {0} इंस्टॉल केला गया, परंतु हे उपयोगकर्ता-सामने प्रवेश बिंदु उजागर नाही करता। हे केवल पृष्ठभूमि सेवाएँ या मैनिफेस्ट डेटा प्रदान कर सकता आहे।</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

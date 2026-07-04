@@ -22,7 +22,7 @@ using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {
-public partial class SensorsControl
+public partial class SensorsControl : IDisposable
 {
     private const string CelsiusUnit = "\u00B0C";
     private const string FahrenheitUnit = "\u00B0F";
@@ -95,6 +95,24 @@ public partial class SensorsControl
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
         SizeChanged += SensorsControl_SizeChanged;
+        Unloaded += SensorsControl_Unloaded;
+    }
+
+    private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        IsVisibleChanged -= SensorsControl_IsVisibleChanged;
+        SizeChanged -= SensorsControl_SizeChanged;
+        Unloaded -= SensorsControl_Unloaded;
+        Dispose();
+    }
+
+    public void Dispose()
+    {
+        _cts?.Dispose();
+        _cts = null;
+
+        _batteryCts?.Dispose();
+        _batteryCts = null;
     }
 
     internal enum SensorSummaryLayoutMode
@@ -439,19 +457,19 @@ public partial class SensorsControl
         }
 
         if (_cts is not null)
-            await _cts.CancelAsync();
+            await _cts.CancelAsync().ConfigureAwait(false);
         _cts = null;
 
         if (_refreshTask is not null)
-            await _refreshTask;
+            await _refreshTask.ConfigureAwait(false);
         _refreshTask = null;
 
         if (_batteryCts is not null)
-            await _batteryCts.CancelAsync();
+            await _batteryCts.CancelAsync().ConfigureAwait(false);
         _batteryCts = null;
 
         if (_batteryRefreshTask is not null)
-            await _batteryRefreshTask;
+            await _batteryRefreshTask.ConfigureAwait(false);
         _batteryRefreshTask = null;
     }
 
@@ -478,7 +496,11 @@ public partial class SensorsControl
 
                     await Task.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException) { }  // Expected when battery refresh is cancelled, no action needed
+                catch (OperationCanceledException ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Battery refresh cancelled", ex);
+                }
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
@@ -771,11 +793,11 @@ public partial class SensorsControl
             CompleteInitialSensorDataLoad();
 
         UpdateValue(_cpuCoreClockBar, _cpuCoreClockLabel, data.CPU.MaxCoreClock, data.CPU.CoreClock,
-            $"{data.CPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.CPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
+            string.Concat((data.CPU.CoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit), string.Concat((data.CPU.MaxCoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit));
         UpdateValue(_cpuTemperatureBar, _cpuTemperatureLabel, data.CPU.MaxTemperature, data.CPU.Temperature,
             GetTemperatureText(data.CPU.Temperature), GetTemperatureText(data.CPU.MaxTemperature));
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
-            $"{data.CPU.FanSpeed} {RpmUnit}", $"{data.CPU.MaxFanSpeed} {RpmUnit}");
+            string.Concat(data.CPU.FanSpeed.ToString("0.0"), " ", RpmUnit), string.Concat(data.CPU.MaxFanSpeed.ToString("0.0"), " ", RpmUnit));
 
         if (_cpuWattageText is not null)
         {
@@ -805,7 +827,7 @@ public partial class SensorsControl
 
         // GPU Core Clock (Main view)
         UpdateValue(_gpuCoreClockBar, _gpuCoreClockLabel, data.GPU.MaxCoreClock, data.GPU.CoreClock,
-            $"{data.GPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.GPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
+            string.Concat((data.GPU.CoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit), string.Concat((data.GPU.MaxCoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit));
 
         // GPU Memory Clock (Details view)
         if (_gpuMemoryClockBar is not null && _gpuMemoryClockText is not null)
@@ -819,14 +841,14 @@ public partial class SensorsControl
             {
                 _gpuMemoryClockBar.Maximum = data.GPU.MaxMemoryClock;
                 _gpuMemoryClockBar.Value = data.GPU.MemoryClock;
-                _gpuMemoryClockText.Text = $"{data.GPU.MemoryClock} {MegahertzUnit}";
+                _gpuMemoryClockText.Text = string.Concat(data.GPU.MemoryClock.ToString("0.0"), " ", MegahertzUnit);
             }
         }
 
         UpdateValue(_gpuTemperatureBar, _gpuTemperatureLabel, data.GPU.MaxTemperature, data.GPU.Temperature,
             GetTemperatureText(data.GPU.Temperature), GetTemperatureText(data.GPU.MaxTemperature));
         UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
-            $"{data.GPU.FanSpeed} {RpmUnit}", $"{data.GPU.MaxFanSpeed} {RpmUnit}");
+            string.Concat(data.GPU.FanSpeed.ToString("0.0"), " ", RpmUnit), string.Concat(data.GPU.MaxFanSpeed.ToString("0.0"), " ", RpmUnit));
 
         if (_gpuWattageText is not null)
         {
@@ -867,7 +889,7 @@ public partial class SensorsControl
             var util = data.CPU.Utilization >= 0 ? data.CPU.Utilization : 0;
             _cpuGauge.Maximum = data.CPU.MaxUtilization > 0 ? data.CPU.MaxUtilization : 100;
             _cpuGauge.Value = util;
-            _cpuGauge.ValueText = data.CPU.Utilization >= 0 ? $"{data.CPU.Utilization}%" : "-";
+            _cpuGauge.ValueText = data.CPU.Utilization >= 0 ? string.Concat(data.CPU.Utilization.ToString(), "%") : "-";
         }
 
         if (_gpuGauge is not null)
@@ -875,7 +897,7 @@ public partial class SensorsControl
             var util = data.GPU.Utilization >= 0 ? data.GPU.Utilization : 0;
             _gpuGauge.Maximum = data.GPU.MaxUtilization > 0 ? data.GPU.MaxUtilization : 100;
             _gpuGauge.Value = util;
-            _gpuGauge.ValueText = data.GPU.Utilization >= 0 ? $"{data.GPU.Utilization}%" : "-";
+            _gpuGauge.ValueText = data.GPU.Utilization >= 0 ? string.Concat(data.GPU.Utilization.ToString(), "%") : "-";
         }
 
         // Trend charts: push the latest summary samples (utilization %, core clock GHz, temperature).
@@ -944,7 +966,7 @@ public partial class SensorsControl
     /// </summary>
     private static void RecordTrendSample(string scope, string seriesKey, double value)
     {
-        var key = $"{scope}:{seriesKey}";
+        var key = string.Concat(scope, ":", seriesKey);
         lock (TrendHistoryLock)
         {
             if (!_sessionTrendHistory.TryGetValue(key, out var list))
@@ -1460,9 +1482,9 @@ public partial class SensorsControl
                 UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperature > 0 ? memoryTemperature : null));
                 UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperatures, _applicationSettings.Store.TemperatureUnit));
                 UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltage));
-                UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
+                UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content as string ?? _cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
                 UpdateDetailText("_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
-                UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
+                UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content as string ?? _gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
                 UpdateDetailText("_gpuVoltageRange", FormatFallbackRangeText(_gpuVoltage.Text, _gpuVoltageRange.Text));
 
                 if (_gpuMemoryClockBar is not null && _gpuMemoryClockText is not null)
@@ -1545,26 +1567,28 @@ public partial class SensorsControl
         };
     }
 
+    private static readonly System.Collections.Generic.List<string> _cpuPowerParts = new(4);
+
     internal static string FormatCpuPowerBreakdown(float totalWatts, (float cores, float memory, float platform) components)
     {
-        var parts = new System.Collections.Generic.List<string>();
+        _cpuPowerParts.Clear();
         var coresLabel = T("SensorsControl_CpuCoresPower_Label", "Cores");
         var memoryLabel = T("SensorsControl_CpuMemoryPower_Label", "Memory");
         var platformLabel = T("SensorsControl_CpuPlatformPower_Label", "Platform");
 
         if (totalWatts >= 0)
-            parts.Add($"{totalWatts} W");
+            _cpuPowerParts.Add($"{totalWatts} W");
 
         if (components.cores > 0)
-            parts.Add($"{coresLabel} {components.cores:0.#} W");
+            _cpuPowerParts.Add($"{coresLabel} {components.cores:0.#} W");
 
         if (components.memory > 0)
-            parts.Add($"{memoryLabel} {components.memory:0.#} W");
+            _cpuPowerParts.Add($"{memoryLabel} {components.memory:0.#} W");
 
         if (components.platform > 0)
-            parts.Add($"{platformLabel} {components.platform:0.#} W");
+            _cpuPowerParts.Add($"{platformLabel} {components.platform:0.#} W");
 
-        return parts.Count > 0 ? string.Join(" | ", parts) : NotAvailableText();
+        return _cpuPowerParts.Count > 0 ? string.Join(" | ", _cpuPowerParts) : NotAvailableText();
     }
 
     internal static string FormatVoltage(float voltage) =>

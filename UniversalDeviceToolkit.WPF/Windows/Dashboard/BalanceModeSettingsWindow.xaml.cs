@@ -31,9 +31,9 @@ public partial class BalanceModeSettingsWindow
 
         _aiController.IsAIModeEnabled = isAiModeChecked;
 
-        await _aiController.StopAsync();
-        await _powerModeFeature.SetStateAsync(PowerModeState.Balance);
-        await _aiController.StartIfNeededAsync();
+        await _aiController.StopAsync().ConfigureAwait(false);
+        await _powerModeFeature.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
+        await _aiController.StartIfNeededAsync().ConfigureAwait(false);
 
         Close();
     }

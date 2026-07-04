@@ -359,7 +359,7 @@ internal static class Program
             var startInfo = CreateMainAppStartInfo(appRuntimeDirectory, smokeSandboxState, localPluginPackageBundle);
             Console.WriteLine($"[main-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
 
-            process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start main app process.");
+            process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start main app process."); // NOTE: Cross-method process reference — disposal must be handled at a higher level
             _mainProcessId = process.Id;
             TryWaitForInputIdle(process, 8000);
 
@@ -1039,7 +1039,7 @@ Environment variables:
 
     private static SmokeSandboxState PrepareSmokeSandbox()
     {
-        var rootDirectory = Path.Combine(Path.GetTempPath(), $"llt-plugin-smoke-{DateTime.Now:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
+        var rootDirectory = Path.Combine(Path.GetTempPath(), $"llt-plugin-smoke-{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
         var appDataDirectory = Path.Combine(rootDirectory, "appdata");
         var pluginsDirectory = Path.Combine(appDataDirectory, "plugins");
 
@@ -1114,7 +1114,7 @@ Environment variables:
 
     private static LocalPluginPackageBundle PrepareLocalPluginPackages(string repositoryRoot, IReadOnlyList<string> preferredPlugins)
     {
-        var packageRoot = Path.Combine(Path.GetTempPath(), $"llt-plugin-local-packages-{DateTime.Now:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
+        var packageRoot = Path.Combine(Path.GetTempPath(), $"llt-plugin-local-packages-{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
         Directory.CreateDirectory(packageRoot);
 
         if (preferredPlugins.Count == 0)
@@ -7637,7 +7637,7 @@ Environment variables:
             return _activeScreenshotOutputDirectory;
 
         _activeScreenshotOutputDirectory = string.IsNullOrWhiteSpace(_requestedScreenshotOutputDirectory)
-            ? Path.Combine(Path.GetTempPath(), $"llt-main-smoke-{DateTime.Now:yyyyMMdd-HHmmss}")
+            ? Path.Combine(Path.GetTempPath(), $"llt-main-smoke-{DateTime.UtcNow:yyyyMMdd-HHmmss}")
             : _requestedScreenshotOutputDirectory;
 
         Directory.CreateDirectory(_activeScreenshotOutputDirectory);

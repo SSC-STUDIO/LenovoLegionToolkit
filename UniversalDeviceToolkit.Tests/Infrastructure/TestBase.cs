@@ -38,9 +38,9 @@ public abstract class UnitTestBase : IDisposable
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-        try { UniversalDeviceToolkit.WPF.Resources.Resource.Culture = null; } catch {}
-        try { LenovoLegionToolkit.Lib.Resources.Resource.Culture = null; } catch {}
-        try { UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = null; } catch {}
+        try { UniversalDeviceToolkit.WPF.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
+        try { LenovoLegionToolkit.Lib.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
+        try { UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
 
         Setup();
     }

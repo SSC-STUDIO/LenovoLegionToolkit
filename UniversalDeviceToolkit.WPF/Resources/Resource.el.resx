@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1533,7 +1533,7 @@
     <value>Δεδομένα</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Θερμοκρασία</value>
+    <value>Προσωρινά</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>Ενιαία Φωτεινότητα Οθόνης</value>
@@ -1719,10 +1719,10 @@
     <value>Άναμμα ή σβήσιμο του φωτισμού στο καπάκι του υπολογιστή.</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>Γκμ</value>
+    <value>GHz</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>ΜΧζ</value>
+    <value>MHz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
     <value>Μέγιστο: {0}</value>
@@ -1898,7 +1898,7 @@
     <value>Άκυρη μορφή εικόνας.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Δεν είναι δυνατή η προσάρτηση διαμερίσματος EFI.elect</value>
+    <value>Δεν είναι δυνατή η προσάρτηση διαμερίσματος EFI.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
     <value>Δεν είναι δυνατός ο ορισμός προνομίου UEFI.</value>
@@ -2263,13 +2263,13 @@
     <value>Κατάσταση μπαταρίας</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Μέγιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία ( ), ή εκφορτίζεται (-).</value>
+    <value>Μέγιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία (+), ή εκφορτίζεται (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
     <value>Μέγιστος ρυθμός εκφόρτισης</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Ελάχιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία ( ), ή εκφορτίζεται (-).</value>
+    <value>Ελάχιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία (+), ή εκφορτίζεται (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
     <value>Ελάχιστος ρυθμός εκφόρτισης</value>
@@ -2765,7 +2765,7 @@
     <value>Δείτε την πρόοδο της λειτουργίας καθαρισμού και το εκτιμώμενο μέγεθος.</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Έναρξη σε ελάχιστο μέγεθος στο δίσκο όταν συνδέεστε στα Windows.</value>
+    <value>Εμφάνιση</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Σάρωση</value>
@@ -3887,4 +3887,4 @@
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-</root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
