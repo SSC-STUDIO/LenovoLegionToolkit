@@ -21,7 +21,7 @@ using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
 namespace UniversalDeviceToolkit.WPF.ViewModels;
 
-public class WindowsOptimizationViewModel : INotifyPropertyChanged
+public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 {
     private readonly WindowsOptimizationService _windowsOptimizationService;
     private readonly WindowsCleanupService _cleanupService;
@@ -33,7 +33,22 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);
+    private CancellationTokenSource? _driverGetPackagesTokenSource;
+    private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
+    private bool _disposed;
     private bool _isRefreshingStates;
+
+    public CancellationTokenSource? DriverGetPackagesTokenSource
+    {
+        get => _driverGetPackagesTokenSource;
+        set => _driverGetPackagesTokenSource = value;
+    }
+
+    public CancellationTokenSource? DriverFilterDebounceCancellationTokenSource
+    {
+        get => _driverFilterDebounceCancellationTokenSource;
+        set => _driverFilterDebounceCancellationTokenSource = value;
+    }
 
     public WindowsOptimizationViewModel(
         WindowsOptimizationService windowsOptimizationService,
@@ -948,5 +963,36 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+        _disposed = true;
+
+        DisposeCts(ref _driverFilterDebounceCancellationTokenSource);
+        DisposeCts(ref _driverGetPackagesTokenSource);
+        _optimizationStateScanLock.Dispose();
+    }
+
+    private static void DisposeCts(ref CancellationTokenSource? cts)
+    {
+        if (cts is null)
+            return;
+
+        try
+        {
+            if (!cts.IsCancellationRequested)
+                cts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+        finally
+        {
+            cts.Dispose();
+            cts = null;
+        }
+    }
 }
 

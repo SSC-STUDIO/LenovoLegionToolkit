@@ -1,12 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,9 @@ public partial class PackagesViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<Package> _packages = new();
+
+    [ObservableProperty]
+    private ObservableCollection<Package> _filteredPackages = new();
 
     [ObservableProperty]
     private bool _isLoading;
@@ -46,16 +51,49 @@ public partial class PackagesViewModel : ObservableObject
     [ObservableProperty]
     private OS _selectedOS;
 
+    [ObservableProperty]
+    private PackageDownloaderFactory.Type _downloaderType = PackageDownloaderFactory.Type.Vantage;
+
+    public IReadOnlyList<OS> AvailableOperatingSystems { get; } = Enum.GetValues<OS>();
+
     public PackagesViewModel(PackageDownloaderSettings settings, PackageDownloaderFactory factory)
     {
         _settings = settings;
         _factory = factory;
+
+        Packages.CollectionChanged += OnPackagesCollectionChanged;
+        SelectedOS = OSExtensions.GetCurrent();
     }
+
+    public bool HasNoFilteredPackages => FilteredPackages.Count == 0 && Packages.Count > 0;
+
+    public bool HasHiddenPackages => _settings.Store.HiddenPackages.Count > 0;
 
     partial void OnIsLoadingChanged(bool value)
     {
         LoadPackagesCommand.NotifyCanExecuteChanged();
         CancelLoadCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnFilterTextChanged(string value) => RefreshFilteredPackages();
+
+    partial void OnSortingIndexChanged(int value) => RefreshFilteredPackages();
+
+    partial void OnOnlyShowUpdatesChanged(bool value) => RefreshFilteredPackages();
+
+    private void OnPackagesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        RefreshFilteredPackages();
+        OnPropertyChanged(nameof(HasNoFilteredPackages));
+    }
+
+    private void RefreshFilteredPackages()
+    {
+        var filtered = GetFilteredPackages();
+        FilteredPackages.Clear();
+        foreach (var package in filtered)
+            FilteredPackages.Add(package);
+        OnPropertyChanged(nameof(HasNoFilteredPackages));
     }
 
     [RelayCommand(CanExecute = nameof(CanLoadPackages))]
@@ -65,20 +103,21 @@ public partial class PackagesViewModel : ObservableObject
             return;
 
         CtsSwap.Replace(ref _loadCts, new CancellationTokenSource());
-        var token = _loadCts.Token;
+        var token = _loadCts!.Token;
 
         IsLoading = true;
         Progress = 0;
         try
         {
-            var downloader = _factory.GetInstance(PackageDownloaderFactory.Type.Vantage);
+            var downloader = _factory.GetInstance(DownloaderType);
             var packages = await downloader.GetPackagesAsync(
                 MachineType,
                 SelectedOS,
                 new Progress<float>(p => Progress = p),
-                token);
+                token).ConfigureAwait(false);
 
             Packages = new ObservableCollection<Package>(packages);
+            Packages.CollectionChanged += OnPackagesCollectionChanged;
         }
         catch (OperationCanceledException)
         {
@@ -119,9 +158,18 @@ public partial class PackagesViewModel : ObservableObject
 
     private bool CanCancelLoad() => IsLoading;
 
+    [RelayCommand]
+    private void ClearHiddenPackages()
+    {
+        _settings.Store.HiddenPackages.Clear();
+        _settings.SynchronizeStore();
+        OnPropertyChanged(nameof(HasHiddenPackages));
+        RefreshFilteredPackages();
+    }
+
     public List<Package> GetFilteredPackages()
     {
-        var result = SortingIndex switch
+        IEnumerable<Package> result = SortingIndex switch
         {
             0 => Packages.OrderBy(p => p.Title),
             1 => Packages.OrderBy(p => p.Category),

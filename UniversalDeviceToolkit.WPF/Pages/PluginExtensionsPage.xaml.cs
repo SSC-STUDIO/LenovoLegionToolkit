@@ -139,16 +139,16 @@ private string _currentSearchText = string.Empty;
             refreshButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowSync24 };
         }
 
-    try
-    {
-        await FetchOnlinePluginsAsync(forceRefresh: true);
-    }
-    catch (Exception ex)
-    {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Error in {nameof(RefreshButton_Click)}: {ex.Message}", ex);
-    }
-    finally
+        try
+        {
+            await FetchOnlinePluginsAsync(forceRefresh: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(RefreshButton_Click)}: {ex.Message}", ex);
+        }
+        finally
         {
             _isRefreshing = false;
             if (refreshButton != null)
@@ -1317,8 +1317,15 @@ private string _currentSearchText = string.Empty;
             _bulkUpdateButton.IsEnabled = true;
             _bulkUpdateButton.Content = Resource.PluginExtensionsPage_UpdateAll;
 
-            // Refresh everything
-            await FetchOnlinePluginsAsync();
+            try
+            {
+                await FetchOnlinePluginsAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error refreshing plugins after bulk update: {ex.Message}", ex);
+            }
         }
     }
 
@@ -1386,7 +1393,15 @@ private string _currentSearchText = string.Empty;
             if (_bulkUpdateButton != null)
                 _bulkUpdateButton.IsEnabled = true;
 
-            await FetchOnlinePluginsAsync();
+            try
+            {
+                await FetchOnlinePluginsAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error refreshing plugins after bulk install: {ex.Message}", ex);
+            }
         }
     }
     private async void PluginInstallButton_Click(object sender, RoutedEventArgs e)
@@ -2090,33 +2105,27 @@ private string _currentSearchText = string.Empty;
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
-        var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-        if (plugin == null)
-            return;
-
-        // Show confirmation dialog
-        var result = await MessageBoxHelper.ShowAsync(this,
-            T("PluginExtensionsPage_PermanentlyDeleteTitle", "Permanently Delete Plugin"),
-            string.Format(
-                Resource.Culture ?? CultureInfo.CurrentUICulture,
-                T("PluginExtensionsPage_PermanentlyDeleteConfirmationMessage", "Are you sure you want to permanently delete plugin \"{0}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted."),
-                plugin.Name),
-            Resource.Delete,
-            Resource.Cancel);
-
-        if (!result)
-            return;
-
-        // Execute permanent deletion
         try
         {
-            // Stop plugin first
-            _pluginManager.StopPlugin(pluginId);
+            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
+            if (plugin == null)
+                return;
 
-            // Uninstall (removes from settings)
+            var result = await MessageBoxHelper.ShowAsync(this,
+                T("PluginExtensionsPage_PermanentlyDeleteTitle", "Permanently Delete Plugin"),
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_PermanentlyDeleteConfirmationMessage", "Are you sure you want to permanently delete plugin \"{0}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted."),
+                    plugin.Name),
+                Resource.Delete,
+                Resource.Cancel);
+
+            if (!result)
+                return;
+
+            _pluginManager.StopPlugin(pluginId);
             _pluginManager.UninstallPlugin(pluginId);
 
-            // Permanently delete from disk
             var deleted = await _pluginManager.PermanentlyDeletePluginAsync(pluginId);
 
             UpdateAllPluginsUI();
@@ -2138,7 +2147,8 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
 
             SnackbarHelper.Show(
                 Resource.PluginExtensionsPage_DeletionFailed,

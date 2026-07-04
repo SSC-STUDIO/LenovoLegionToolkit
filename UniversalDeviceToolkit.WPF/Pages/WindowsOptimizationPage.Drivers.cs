@@ -31,8 +31,6 @@ namespace UniversalDeviceToolkit.WPF.Pages;
 public partial class WindowsOptimizationPage
 {
     private IPackageDownloader? _driverPackageDownloader;
-    private CancellationTokenSource? _driverGetPackagesTokenSource;
-    private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private List<Package>? _driverPackages;
     private static CultureInfo ActiveDriverCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
 
@@ -142,11 +140,11 @@ public partial class WindowsOptimizationPage
     private async void DriverFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         // Cancel and dispose previous token source
-        if (_driverFilterDebounceCancellationTokenSource != null)
+        if (ViewModel.DriverFilterDebounceCancellationTokenSource != null)
         {
             try
             {
-                await _driverFilterDebounceCancellationTokenSource.CancelAsync();
+                await ViewModel.DriverFilterDebounceCancellationTokenSource.CancelAsync();
             }
             catch (ObjectDisposedException)
             {
@@ -154,13 +152,13 @@ public partial class WindowsOptimizationPage
             }
             finally
             {
-                _driverFilterDebounceCancellationTokenSource.Dispose();
-                _driverFilterDebounceCancellationTokenSource = null;
+                ViewModel.DriverFilterDebounceCancellationTokenSource.Dispose();
+                ViewModel.DriverFilterDebounceCancellationTokenSource = null;
             }
         }
 
-        _driverFilterDebounceCancellationTokenSource = new CancellationTokenSource();
-        var token = _driverFilterDebounceCancellationTokenSource.Token;
+        ViewModel.DriverFilterDebounceCancellationTokenSource = new CancellationTokenSource();
+        var token = ViewModel.DriverFilterDebounceCancellationTokenSource.Token;
 
         try
         {
@@ -319,11 +317,11 @@ public partial class WindowsOptimizationPage
                 _driverLoadingIndicator.Visibility = Visibility.Visible;
 
             // Cancel and dispose previous token source
-            if (_driverGetPackagesTokenSource is not null)
+            if (ViewModel.DriverGetPackagesTokenSource is not null)
             {
                 try
                 {
-                    await _driverGetPackagesTokenSource.CancelAsync();
+                    await ViewModel.DriverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -331,14 +329,14 @@ public partial class WindowsOptimizationPage
                 }
                 finally
                 {
-                    _driverGetPackagesTokenSource.Dispose();
-                    _driverGetPackagesTokenSource = null;
+                    ViewModel.DriverGetPackagesTokenSource.Dispose();
+                    ViewModel.DriverGetPackagesTokenSource = null;
                 }
             }
 
-            _driverGetPackagesTokenSource = new CancellationTokenSource();
+            ViewModel.DriverGetPackagesTokenSource = new CancellationTokenSource();
 
-            var token = _driverGetPackagesTokenSource.Token;
+            var token = ViewModel.DriverGetPackagesTokenSource.Token;
 
             var packageDownloaderType = new[] { _driverSourcePrimaryRadio, _driverSourceSecondaryRadio }
                 .Where(r => r != null && r.IsChecked == true)
@@ -381,12 +379,12 @@ public partial class WindowsOptimizationPage
         finally
         {
             // Clean up token source
-            if (_driverGetPackagesTokenSource != null)
+            if (ViewModel.DriverGetPackagesTokenSource != null)
             {
                 try
                 {
-                    if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                        await _driverGetPackagesTokenSource.CancelAsync();
+                    if (!ViewModel.DriverGetPackagesTokenSource.Token.IsCancellationRequested)
+                        await ViewModel.DriverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -394,8 +392,8 @@ public partial class WindowsOptimizationPage
                 }
                 finally
                 {
-                    _driverGetPackagesTokenSource?.Dispose();
-                    _driverGetPackagesTokenSource = null;
+                    ViewModel.DriverGetPackagesTokenSource?.Dispose();
+                    ViewModel.DriverGetPackagesTokenSource = null;
                 }
             }
 

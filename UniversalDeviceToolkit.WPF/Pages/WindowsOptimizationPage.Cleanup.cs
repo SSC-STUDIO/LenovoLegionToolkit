@@ -108,16 +108,24 @@ public partial class WindowsOptimizationPage
         }
         finally
         {
-            // Update UI on UI thread
-            await Dispatcher.BeginInvoke(() =>
+            try
             {
-                ViewModel.IsBusy = false;
-                ViewModel.IsCleaning = false;
-                ViewModel.CurrentOperationText = string.Empty;
-                ViewModel.RunCleanupButtonText = string.Empty;
-            });
-            
-            await ViewModel.UpdateEstimatedCleanupSizeAsync();
+                // Update UI on UI thread
+                await Dispatcher.BeginInvoke(() =>
+                {
+                    ViewModel.IsBusy = false;
+                    ViewModel.IsCleaning = false;
+                    ViewModel.CurrentOperationText = string.Empty;
+                    ViewModel.RunCleanupButtonText = string.Empty;
+                });
+
+                await ViewModel.UpdateEstimatedCleanupSizeAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Cleanup finally block failed.", ex);
+            }
         }
     }
 

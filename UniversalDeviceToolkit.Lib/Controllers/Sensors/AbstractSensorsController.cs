@@ -525,7 +525,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected virtual async Task<int> GetCpuWattageAsync()
     {
-        await Task.Yield().ConfigureAwait(false);
+        await Task.Delay(0, CancellationToken.None).ConfigureAwait(false);
 
         // Try method 1: Performance counter (if available)
         var performanceCounterWattage = GetCpuWattageFromPerformanceCounter();

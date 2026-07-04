@@ -104,8 +104,8 @@ public partial class WindowsOptimizationPage : Page
         // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
         UnsubscribeFromPackageControlHandlers();
 
-        // Clean up CancellationTokenSource instances to prevent memory leaks
-        CleanupCancellationTokenSources();
+        // Dispose the ViewModel which releases any CTS instances held by it
+        _viewModel.Dispose();
     }
 
     private void TryApplyPendingPluginFocusRequest()
@@ -187,47 +187,6 @@ public partial class WindowsOptimizationPage : Page
 
             foreach (var nested in EnumerateVisualDescendants<T>(child))
                 yield return nested;
-        }
-    }
-
-    private void CleanupCancellationTokenSources()
-    {
-        // Clean up driver filter debounce token source
-        if (_driverFilterDebounceCancellationTokenSource != null)
-        {
-            try
-            {
-                if (!_driverFilterDebounceCancellationTokenSource.Token.IsCancellationRequested)
-                    _driverFilterDebounceCancellationTokenSource.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Already disposed, ignore
-            }
-            finally
-            {
-                _driverFilterDebounceCancellationTokenSource?.Dispose();
-                _driverFilterDebounceCancellationTokenSource = null;
-            }
-        }
-
-        // Clean up driver get packages token source
-        if (_driverGetPackagesTokenSource != null)
-        {
-            try
-            {
-                if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                    _driverGetPackagesTokenSource.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Already disposed, ignore
-            }
-            finally
-            {
-                _driverGetPackagesTokenSource?.Dispose();
-                _driverGetPackagesTokenSource = null;
-            }
         }
     }
 
