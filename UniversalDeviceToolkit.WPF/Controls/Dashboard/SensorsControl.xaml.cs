@@ -401,10 +401,10 @@ public partial class SensorsControl : IDisposable
         try
         {
             if (_sensorsGroupController is not null
-                && await _sensorsGroupController.IsSupportedAsync().ConfigureAwait(false) is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
+                && await _sensorsGroupController.IsSupportedAsync() is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success)
             {
-                _cpuName = await _sensorsGroupController.GetCpuNameAsync().ConfigureAwait(false);
-                _gpuName = await _sensorsGroupController.GetGpuNameAsync().ConfigureAwait(false);
+                _cpuName = await _sensorsGroupController.GetCpuNameAsync();
+                _gpuName = await _sensorsGroupController.GetGpuNameAsync();
             }
 
             _cpuName = NormalizeHardwareNameOrFallback(_cpuName, T("SensorsControl_UnknownCpu", "Unknown CPU"));
@@ -457,25 +457,32 @@ public partial class SensorsControl : IDisposable
         }
 
         if (_cts is not null)
-            await _cts.CancelAsync().ConfigureAwait(false);
+        {
+            await _cts.CancelAsync();
+            _cts.Dispose();
+        }
         _cts = null;
 
         if (_refreshTask is not null)
-            await _refreshTask.ConfigureAwait(false);
+            await _refreshTask;
         _refreshTask = null;
 
         if (_batteryCts is not null)
-            await _batteryCts.CancelAsync().ConfigureAwait(false);
+        {
+            await _batteryCts.CancelAsync();
+            _batteryCts.Dispose();
+        }
         _batteryCts = null;
 
         if (_batteryRefreshTask is not null)
-            await _batteryRefreshTask.ConfigureAwait(false);
+            await _batteryRefreshTask;
         _batteryRefreshTask = null;
     }
 
     private void RefreshBattery()
     {
         _batteryCts?.Cancel();
+        _batteryCts?.Dispose();
         _batteryCts = new CancellationTokenSource();
 
         var token = _batteryCts.Token;
@@ -490,11 +497,11 @@ public partial class SensorsControl : IDisposable
                 try
                 {
                     var batteryInfo = Battery.GetBatteryInformation();
-                    var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
+                    var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync();
                     var onBatterySince = Battery.GetOnBatterySince();
                     await Dispatcher.InvokeAsync(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
 
-                    await Task.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(2), token);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -699,6 +706,7 @@ public partial class SensorsControl : IDisposable
     private void Refresh()
     {
         _cts?.Cancel();
+        _cts?.Dispose();
         _cts = new CancellationTokenSource();
 
         var token = _cts.Token;
@@ -708,7 +716,7 @@ public partial class SensorsControl : IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Sensors refresh started...");
 
-            if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
+            if (!await _controller.IsSupportedAsync())
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Sensors not supported.");
@@ -729,18 +737,18 @@ public partial class SensorsControl : IDisposable
                 SetSensorSectionsVisible(true);
             });
 
-            await _controller.PrepareAsync().ConfigureAwait(false);
+            await _controller.PrepareAsync();
 
             while (!token.IsCancellationRequested)
             {
                 try
                 {
                     var detailed = await Dispatcher.InvokeAsync(() => CanShowSensorDetails && _cpuDetailsPanel.Visibility == Visibility.Visible) || (CanShowSensorDetails && _forceDetailedRefresh);
-                    var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
+                    var data = await _controller.GetDataAsync(detailed);
                     if (detailed)
                         _forceDetailedRefresh = false;
                     await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
-                    await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -1236,7 +1244,7 @@ public partial class SensorsControl : IDisposable
 
         try
         {
-            var data = await _controller.GetDataAsync(true).ConfigureAwait(false);
+            var data = await _controller.GetDataAsync(true);
             await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
         }
         catch (Exception ex)
@@ -1389,12 +1397,12 @@ public partial class SensorsControl : IDisposable
             var refreshVersion = Interlocked.Increment(ref _extendedDetailsRefreshVersion);
 
             if (!_sensorsGroupController.IsLibreHardwareMonitorInitialized())
-                _ = await _sensorsGroupController.IsSupportedAsync().ConfigureAwait(false);
+                _ = await _sensorsGroupController.IsSupportedAsync();
 
             if (!_sensorsGroupController.IsLibreHardwareMonitorInitialized())
                 return;
 
-            await _sensorsGroupController.UpdateAsync().ConfigureAwait(false);
+            await _sensorsGroupController.UpdateAsync();
 
             var gpuVramUsedTask = _sensorsGroupController.GetGpuVramUsedAsync();
             var gpuVramTotalTask = _sensorsGroupController.GetGpuVramTotalAsync();
@@ -1439,29 +1447,29 @@ public partial class SensorsControl : IDisposable
                 memoryTotalTask,
                 memoryTemperatureTask,
                 ssdTemperaturesTask,
-                cpuComponentPowersTask).ConfigureAwait(false);
+                cpuComponentPowersTask);
 
-            var gpuIsIntegrated = await gpuIsIntegratedTask.ConfigureAwait(false);
-            var gpuVramUsed = await gpuVramUsedTask.ConfigureAwait(false);
-            var gpuVramTotal = await gpuVramTotalTask.ConfigureAwait(false);
-            var gpuVramUtilization = await gpuVramUtilizationTask.ConfigureAwait(false);
-            var gpuVramTemperature = await gpuVramTemperatureTask.ConfigureAwait(false);
-            var gpuHotSpotTemperature = await gpuHotSpotTemperatureTask.ConfigureAwait(false);
-            var gpuPcieRxThroughput = await gpuPcieRxThroughputTask.ConfigureAwait(false);
-            var gpuPcieTxThroughput = await gpuPcieTxThroughputTask.ConfigureAwait(false);
-            var gpuPower = await gpuPowerTask.ConfigureAwait(false);
-            var gpuVoltage = await gpuVoltageTask.ConfigureAwait(false);
-            var cpuPower = await cpuPowerTask.ConfigureAwait(false);
-            var cpuVoltage = await cpuVoltageTask.ConfigureAwait(false);
-            var cpuPCoreClock = await cpuPCoreClockTask.ConfigureAwait(false);
-            var cpuECoreClock = await cpuECoreClockTask.ConfigureAwait(false);
-            var memoryUsage = await memoryUsageTask.ConfigureAwait(false);
-            var memoryUsed = await memoryUsedTask.ConfigureAwait(false);
-            var memoryTotal = await memoryTotalTask.ConfigureAwait(false);
-            var memoryTemperature = await memoryTemperatureTask.ConfigureAwait(false);
-            var ssdTemperatures = await ssdTemperaturesTask.ConfigureAwait(false);
-            var cpuComponentPowers = await cpuComponentPowersTask.ConfigureAwait(false);
-            var gpuMemoryClock = await gpuMemoryClockTask.ConfigureAwait(false);
+            var gpuIsIntegrated = await gpuIsIntegratedTask;
+            var gpuVramUsed = await gpuVramUsedTask;
+            var gpuVramTotal = await gpuVramTotalTask;
+            var gpuVramUtilization = await gpuVramUtilizationTask;
+            var gpuVramTemperature = await gpuVramTemperatureTask;
+            var gpuHotSpotTemperature = await gpuHotSpotTemperatureTask;
+            var gpuPcieRxThroughput = await gpuPcieRxThroughputTask;
+            var gpuPcieTxThroughput = await gpuPcieTxThroughputTask;
+            var gpuPower = await gpuPowerTask;
+            var gpuVoltage = await gpuVoltageTask;
+            var cpuPower = await cpuPowerTask;
+            var cpuVoltage = await cpuVoltageTask;
+            var cpuPCoreClock = await cpuPCoreClockTask;
+            var cpuECoreClock = await cpuECoreClockTask;
+            var memoryUsage = await memoryUsageTask;
+            var memoryUsed = await memoryUsedTask;
+            var memoryTotal = await memoryTotalTask;
+            var memoryTemperature = await memoryTemperatureTask;
+            var ssdTemperatures = await ssdTemperaturesTask;
+            var cpuComponentPowers = await cpuComponentPowersTask;
+            var gpuMemoryClock = await gpuMemoryClockTask;
 
             await Dispatcher.InvokeAsync(() =>
             {

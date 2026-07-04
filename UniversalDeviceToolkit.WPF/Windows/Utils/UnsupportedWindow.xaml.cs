@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -78,7 +78,7 @@ public partial class UnsupportedWindow : FluentWindow
         for (var i = 5; i > 0; i--)
         {
             continueButton.Content = $"{continueText} ({i})";
-            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
         continueButton.Content = continueText;
@@ -135,3 +135,4 @@ public partial class UnsupportedWindow : FluentWindow
     }
 }
 }
+

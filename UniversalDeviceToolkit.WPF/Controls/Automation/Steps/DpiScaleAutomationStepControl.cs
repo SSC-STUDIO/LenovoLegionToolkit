@@ -32,6 +32,6 @@ public class DpiScaleAutomationStepControl : AbstractComboBoxAutomationStepCardC
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh DPI scale automation step");
 }

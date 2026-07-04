@@ -204,7 +204,11 @@ public class LampArrayController : IDisposable
 
     private void StopRenderLoop()
     {
-        _renderCts?.Cancel();
+        if (_renderCts is not null)
+        {
+            _renderCts.Cancel();
+            _renderCts.Dispose();
+        }
         _renderCts = null;
         StopScreenCapture();
     }
@@ -311,7 +315,11 @@ public class LampArrayController : IDisposable
 
     private void StopScreenCapture()
     {
-        _screenCaptureCts?.Cancel();
+        if (_screenCaptureCts is not null)
+        {
+            _screenCaptureCts.Cancel();
+            _screenCaptureCts.Dispose();
+        }
         _screenCaptureCts = null;
     }
 

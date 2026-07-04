@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,8 +33,16 @@ public partial class WindowsPowerPlansWindow
 
     private async void PowerPlansWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(PowerPlansWindow_IsVisibleChanged)}: {ex.Message}", ex);
+        }
     }
 
     private async Task RefreshAsync()
@@ -43,7 +51,7 @@ public partial class WindowsPowerPlansWindow
 
         var loadingTask = Task.Delay(500);
 
-        var compatibility = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var compatibility = await MachineCompatibility.GetMachineInformationAsync();
         _aoAcWarningCard.Visibility = compatibility.Properties.SupportsAlwaysOnAc.status
             ? Visibility.Visible
             : Visibility.Collapsed;
@@ -53,13 +61,13 @@ public partial class WindowsPowerPlansWindow
         Refresh(_balanceModeComboBox, powerPlans, PowerModeState.Balance);
         Refresh(_performanceModeComboBox, powerPlans, PowerModeState.Performance);
 
-        var allStates = await _powerModeFeature.GetAllStatesAsync().ConfigureAwait(false);
+        var allStates = await _powerModeFeature.GetAllStatesAsync();
         if (allStates.Contains(PowerModeState.GodMode))
             Refresh(_godModeComboBox, powerPlans, PowerModeState.GodMode);
         else
             _godModeCardControl.Visibility = Visibility.Collapsed;
 
-        await loadingTask.ConfigureAwait(false);
+        await loadingTask;
 
         _loader.IsLoading = false;
     }
@@ -79,31 +87,64 @@ public partial class WindowsPowerPlansWindow
         _settings.Store.PowerPlans[powerModeState] = windowsPowerPlan.Guid;
         _settings.SynchronizeStore();
 
-        await _powerModeFeature.EnsureCorrectWindowsPowerSettingsAreSetAsync().ConfigureAwait(false);
+        await _powerModeFeature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
     }
 
     private async void QuietModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_quietModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
-            await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Quiet).ConfigureAwait(false);
+        try
+        {
+            if (_quietModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
+                await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Quiet);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(QuietModeComboBox_SelectionChanged)}: {ex.Message}", ex);
+        }
     }
 
     private async void BalanceModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_balanceModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
-            await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Balance).ConfigureAwait(false);
+        try
+        {
+            if (_balanceModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
+                await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Balance);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(BalanceModeComboBox_SelectionChanged)}: {ex.Message}", ex);
+        }
     }
 
     private async void PerformanceModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_performanceModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
-            await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Performance).ConfigureAwait(false);
+        try
+        {
+            if (_performanceModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
+                await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.Performance);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(PerformanceModeComboBox_SelectionChanged)}: {ex.Message}", ex);
+        }
     }
 
     private async void GodModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_godModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
-            await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.GodMode).ConfigureAwait(false);
+        try
+        {
+            if (_godModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
+                await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.GodMode);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(GodModeComboBox_SelectionChanged)}: {ex.Message}", ex);
+        }
     }
 }
 }
+

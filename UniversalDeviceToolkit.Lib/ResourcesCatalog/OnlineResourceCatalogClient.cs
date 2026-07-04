@@ -47,7 +47,7 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
     {
         try
         {
-            await using (var stream = File.Create(destinationPath))
+            using (var stream = File.Create(destinationPath))
             {
                 using var httpClient = httpClientFactory.Create();
                 await httpClient.DownloadAsync(url, stream, progress, token).ConfigureAwait(false);
@@ -76,7 +76,7 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
 
     private static async Task<string> ComputeSha256Async(string path, CancellationToken token)
     {
-        await using var stream = File.OpenRead(path);
+        using var stream = File.OpenRead(path);
         using var sha256 = SHA256.Create();
         var hash = await sha256.ComputeHashAsync(stream, token).ConfigureAwait(false);
         return Convert.ToHexString(hash).ToLowerInvariant();

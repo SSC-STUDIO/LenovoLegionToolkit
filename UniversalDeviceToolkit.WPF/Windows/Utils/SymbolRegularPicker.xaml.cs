@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ public partial class SymbolRegularPicker
     {
         Dispatcher.Invoke(Refresh);
         return Task.CompletedTask;
-    }).ConfigureAwait(false);
+    });
 
     private void ItemButton_Click(object sender, RoutedEventArgs e)
     {
@@ -75,4 +75,5 @@ public partial class SymbolRegularPicker
     }
 }
 }
+
 

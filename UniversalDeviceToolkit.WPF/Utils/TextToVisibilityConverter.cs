@@ -5,7 +5,11 @@ using System.Windows.Data;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
-public class TextToVisibilityConverter : IValueConverter
+    /// <summary>
+    /// Converts a non-empty string to <see cref="Visibility.Visible"/>, and <c>null</c> or
+    /// whitespace to <see cref="Visibility.Collapsed"/>.
+    /// </summary>
+    public class TextToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

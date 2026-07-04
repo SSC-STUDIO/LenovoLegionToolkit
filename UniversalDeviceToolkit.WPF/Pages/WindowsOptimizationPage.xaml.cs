@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -156,7 +156,7 @@ public partial class WindowsOptimizationPage : Page
         Dispatcher.InvokeAsync(async () =>
         {
             if (e.IsInstalled)
-                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true);
 
             ViewModel.Initialize();
 
@@ -250,7 +250,7 @@ public partial class WindowsOptimizationPage : Page
         else if (element == _driverDownloadNavButton)
         {
             ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.DriverDownload;
-            InitializeDriverDownloadPage();
+            _ = InitializeDriverDownloadPage();
         }
     }
 
@@ -351,7 +351,7 @@ public partial class WindowsOptimizationPage : Page
     {
         if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
         {
-            await StartOrPauseSelectedDriversAsync().ConfigureAwait(false);
+            await StartOrPauseSelectedDriversAsync();
         }
         else
         {
@@ -360,3 +360,4 @@ public partial class WindowsOptimizationPage : Page
     }
 }
 }
+

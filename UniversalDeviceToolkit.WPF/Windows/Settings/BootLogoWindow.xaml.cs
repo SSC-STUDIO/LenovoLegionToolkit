@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using LenovoLegionToolkit.Lib.System;
@@ -43,7 +43,7 @@ public partial class BootLogoWindow
         {
             _revertToDefaultButton.IsEnabled = false;
 
-            await BootLogo.DisableAsync().ConfigureAwait(false);
+            await BootLogo.DisableAsync();
 
             _resultTextBlock.Text = Resource.BootLogoWindow_SetDefaultSuccess;
 
@@ -83,7 +83,7 @@ public partial class BootLogoWindow
 
             var file = ofd.FileName;
 
-            await BootLogo.EnableAsync(file).ConfigureAwait(false);
+            await BootLogo.EnableAsync(file);
 
             _resultTextBlock.Text = Resource.BootLogoWindow_SetCustomSuccess;
 
@@ -115,3 +115,4 @@ public partial class BootLogoWindow
     };
 }
 }
+

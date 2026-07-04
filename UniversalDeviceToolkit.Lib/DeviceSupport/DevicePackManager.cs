@@ -82,7 +82,7 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
             if (!File.Exists(manifestPath))
                 throw ExceptionHelper.DevicePackNoManifest(packId, ManifestFileName);
 
-            await using var stream = File.OpenRead(manifestPath);
+            using var stream = File.OpenRead(manifestPath);
             var pack = await JsonSerializer.DeserializeAsync<DevicePack>(stream, JsonOptions, token).ConfigureAwait(false)
                        ?? throw ExceptionHelper.DevicePackManifestEmpty(packId);
 

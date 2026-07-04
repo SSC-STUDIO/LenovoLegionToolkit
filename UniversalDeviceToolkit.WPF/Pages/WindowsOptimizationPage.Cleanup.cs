@@ -19,7 +19,7 @@ public partial class WindowsOptimizationPage
 {
     private async void ScanCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        await ViewModel.ScanCleanupAsync(CancellationToken.None).ConfigureAwait(false);
+        await ViewModel.ScanCleanupAsync(CancellationToken.None);
     }
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
@@ -34,7 +34,7 @@ public partial class WindowsOptimizationPage
             await SnackbarHelper.ShowAsync(
                 Resource.SettingsPage_WindowsOptimization_Title,
                 LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
-                SnackbarType.Warning).ConfigureAwait(false);
+                SnackbarType.Warning);
             return;
         }
 
@@ -61,7 +61,7 @@ public partial class WindowsOptimizationPage
                 long sizeBefore = 0;
                 try
                 {
-                    sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -69,12 +69,12 @@ public partial class WindowsOptimizationPage
                         Log.Instance.Trace($"Failed to estimate size before cleanup for {action.Key}", ex);
                 }
 
-                await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None).ConfigureAwait(false);
+                await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None);
 
                 long sizeAfter = 0;
                 try
                 {
-                    sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -109,7 +109,7 @@ public partial class WindowsOptimizationPage
                 ViewModel.RunCleanupButtonText = string.Empty;
             });
             
-            await ViewModel.UpdateEstimatedCleanupSizeAsync().ConfigureAwait(false);
+            await ViewModel.UpdateEstimatedCleanupSizeAsync();
         }
     }
 

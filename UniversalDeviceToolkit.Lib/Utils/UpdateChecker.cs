@@ -216,7 +216,7 @@ public class UpdateChecker
             if (latestUpdate.Url is null)
                 throw ExceptionHelper.SetupFileUrlNotFound();
 
-            await using var fileStream = File.OpenWrite(tempPath);
+            using var fileStream = File.OpenWrite(tempPath);
             using var httpClient = _httpClientFactory.Create();
             await httpClient.DownloadAsync(latestUpdate.Url, fileStream, progress, cancellationToken).ConfigureAwait(false);
 
@@ -237,7 +237,7 @@ public class UpdateChecker
 
         // Compute SHA256 hash of downloaded file and release the handle before any delete attempt.
         string computedHash;
-        await using (var fileStream = File.OpenRead(filePath))
+        using (var fileStream = File.OpenRead(filePath))
         {
             using var sha256 = global::System.Security.Cryptography.SHA256.Create();
             var hashBytes = await sha256.ComputeHashAsync(fileStream, cancellationToken).ConfigureAwait(false);

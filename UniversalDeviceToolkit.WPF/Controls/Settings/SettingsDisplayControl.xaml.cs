@@ -31,13 +31,13 @@ public partial class SettingsDisplayControl
         _synchronizeBrightnessToAllPowerPlansToggle.IsChecked = _settings.Store.SynchronizeBrightnessToAllPowerPlans;
         _forceSoftwareRenderingToggle.IsChecked = _settings.Store.ForceSoftwareRendering;
 
-        await Task.WhenAll(fnKeysTask, bootLogoTask).ConfigureAwait(false);
+        await Task.WhenAll(fnKeysTask, bootLogoTask);
 
-        var fnKeysStatus = await fnKeysTask.ConfigureAwait(false);
+        var fnKeysStatus = await fnKeysTask;
         _notificationsCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
 
-        _bootLogoCard.Visibility = await bootLogoTask.ConfigureAwait(false) ? Visibility.Visible : Visibility.Collapsed;
+        _bootLogoCard.Visibility = await bootLogoTask ? Visibility.Visible : Visibility.Collapsed;
 
         _isRefreshing = false;
     }

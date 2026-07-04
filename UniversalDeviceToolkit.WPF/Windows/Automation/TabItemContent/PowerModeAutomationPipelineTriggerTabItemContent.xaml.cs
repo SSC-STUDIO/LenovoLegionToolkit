@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
@@ -36,7 +36,7 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
 
     private async void PowerModeAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs eventArgs)
     {
-        var states = await _feature.GetAllStatesAsync().ConfigureAwait(false);
+        var states = await _feature.GetAllStatesAsync();
 
         foreach (var state in states)
         {
@@ -52,3 +52,4 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
     }
 }
 }
+

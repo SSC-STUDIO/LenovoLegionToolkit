@@ -5,6 +5,11 @@ using System.Windows;
 
 namespace UniversalDeviceToolkit.WPF.Utils
 {
+    /// <summary>
+    /// Implements <see cref="IMultiValueConverter"/> — returns <c>true</c> when ALL bound values are <c>true</c>.
+    /// If the target type is <see cref="Visibility"/>, returns <see cref="Visibility.Visible"/> when all are true,
+    /// otherwise <see cref="Visibility.Collapsed"/>.
+    /// </summary>
     public class BooleanAndConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

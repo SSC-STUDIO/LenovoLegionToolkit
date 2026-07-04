@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -32,14 +32,14 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
         try
         {
-            if (await IsSpectrumSupportedAsync().ConfigureAwait(false))
+            if (await IsSpectrumSupportedAsync())
             {
                 IsSpectrumSupported = true;
                 IsLoading = false;
                 return;
             }
 
-            if (await IsRgbSupportedAsync().ConfigureAwait(false))
+            if (await IsRgbSupportedAsync())
             {
                 IsRGBSupported = true;
                 IsLoading = false;
@@ -63,10 +63,10 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
     public static async Task<bool> IsSupportedAsync()
     {
-        if (await IsSpectrumSupportedAsync().ConfigureAwait(false))
+        if (await IsSpectrumSupportedAsync())
             return true;
 
-        return await IsRgbSupportedAsync().ConfigureAwait(false);
+        return await IsRgbSupportedAsync();
     }
 
     private static async Task<bool> IsSpectrumSupportedAsync()
@@ -74,7 +74,7 @@ public partial class KeyboardBacklightViewModel : ObservableObject
         try
         {
             var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-            return await spectrumController.IsSupportedAsync().ConfigureAwait(false);
+            return await spectrumController.IsSupportedAsync();
         }
         catch (Exception ex)
         {
@@ -90,7 +90,7 @@ public partial class KeyboardBacklightViewModel : ObservableObject
         try
         {
             var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-            return await rgbController.IsSupportedAsync().ConfigureAwait(false);
+            return await rgbController.IsSupportedAsync();
         }
         catch (Exception ex)
         {
@@ -101,3 +101,4 @@ public partial class KeyboardBacklightViewModel : ObservableObject
         }
     }
 }
+

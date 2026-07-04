@@ -37,7 +37,7 @@ public partial class DashboardPage
     {
         try
         {
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
         }
         catch (Exception ex)
         {
@@ -98,7 +98,7 @@ public partial class DashboardPage
         editDashboardHyperlink.Click += (_, _) =>
         {
             var window = new EditDashboardWindow { Owner = Window.GetWindow(this) };
-            window.Apply += async (_, _) => await RefreshAsync().ConfigureAwait(false);
+            window.Apply += async (_, _) => await RefreshAsync();
             window.ShowDialog();
         };
 
@@ -107,10 +107,10 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await WaitForDashboardShellAsync(sensorsReadyTask).ConfigureAwait(false);
+        await WaitForDashboardShellAsync(sensorsReadyTask);
         SetDashboardContentReady(true);
         _loader.IsLoading = false;
-        await Task.Delay(TimeSpan.FromMilliseconds(250)).ConfigureAwait(false);
+        await Task.Delay(TimeSpan.FromMilliseconds(250));
     }
 
     private void SetDashboardContentReady(bool ready)
@@ -124,7 +124,7 @@ public partial class DashboardPage
     {
         var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
         if (groupInitializationTasks.Length > 0)
-            await Task.WhenAll(groupInitializationTasks).ConfigureAwait(false);
+            await Task.WhenAll(groupInitializationTasks);
 
         var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
 
@@ -132,7 +132,7 @@ public partial class DashboardPage
         {
             try
             {
-                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout()).ConfigureAwait(false);
+                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout());
             }
             catch (TimeoutException)
             {
@@ -141,16 +141,16 @@ public partial class DashboardPage
         }
 
         if (sensorsReadyTask is not null)
-            await WaitForDashboardSensorDataAsync(sensorsReadyTask).ConfigureAwait(false);
+            await WaitForDashboardSensorDataAsync(sensorsReadyTask);
 
-        await Task.Delay(GetDashboardFallbackLoadingDelay()).ConfigureAwait(false);
+        await Task.Delay(GetDashboardFallbackLoadingDelay());
     }
 
     private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask)
     {
         try
         {
-            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout()).ConfigureAwait(false);
+            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout());
         }
         catch (TimeoutException)
         {

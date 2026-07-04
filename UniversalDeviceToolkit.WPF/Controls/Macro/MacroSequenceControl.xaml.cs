@@ -126,7 +126,7 @@ public partial class MacroSequenceControl
         if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
             return;
 
-        await RecordAsync(settings).ConfigureAwait(false);
+        await RecordAsync(settings);
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)
@@ -143,7 +143,7 @@ public partial class MacroSequenceControl
             _recordingWindow.Owner = Window.GetWindow(this);
             _recordingWindow.Show();
 
-            await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             _recordingWindow.Close();
         }

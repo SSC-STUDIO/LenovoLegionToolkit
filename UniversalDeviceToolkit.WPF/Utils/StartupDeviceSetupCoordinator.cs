@@ -54,14 +54,14 @@ public sealed class StartupDeviceSetupCoordinator
         if (_isSetupComplete())
             return;
 
-        var catalog = await GetCatalogOrBuiltInAsync().ConfigureAwait(false);
+        var catalog = await GetCatalogOrBuiltInAsync();
         var recommendedPack = FindRecommendedPack(machineInformation, catalog, _deviceSupportProvider);
         var availability = _deviceSupportProvider.Evaluate(machineInformation, catalog);
 
         var window = _createWindow(machineInformation, recommendedPack, availability.IsBasicMode);
         LocalizationHelper.ApplyStartupTheme(window);
         window.Show();
-        var result = await window.ShouldContinue.ConfigureAwait(false);
+        var result = await window.ShouldContinue;
 
         if (!result.Confirmed)
             return;
@@ -85,7 +85,7 @@ public sealed class StartupDeviceSetupCoordinator
     {
         try
         {
-            return await _deviceSupportProvider.GetCatalogAsync().ConfigureAwait(false);
+            return await _deviceSupportProvider.GetCatalogAsync();
         }
         catch (Exception ex)
         {

@@ -1,5 +1,9 @@
 name: Cross-Platform CLI
 
+# NOTE: This workflow MUST be set as a required check in GitHub branch protection rules
+# for the default branch. Without it, PRs that break cross-platform compatibility can
+# be merged even though cross-platform builds and tests are essential for this project.
+
 on:
   workflow_dispatch:
 

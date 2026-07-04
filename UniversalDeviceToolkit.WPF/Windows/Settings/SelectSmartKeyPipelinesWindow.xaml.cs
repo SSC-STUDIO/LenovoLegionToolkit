@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +51,7 @@ public partial class SelectSmartKeyPipelinesWindow
     private async void SelectSmartKeyPipelinesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }
 
     private async Task RefreshAsync()
@@ -60,7 +60,7 @@ public partial class SelectSmartKeyPipelinesWindow
 
         _showThisAppToggle.IsChecked = SettingsStoreGuid is null;
 
-        var allPipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
+        var allPipelines = await _automationProcessor.GetPipelinesAsync();
         var pipelines = allPipelines.Where(p => p.Trigger is null).OrderBy(p => p.Name).ToArray();
 
         _list.Items.Clear();
@@ -165,3 +165,4 @@ public partial class SelectSmartKeyPipelinesWindow
     }
 }
 }
+

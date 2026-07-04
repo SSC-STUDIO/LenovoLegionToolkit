@@ -32,6 +32,6 @@ public class WinKeyControl : AbstractToggleFeatureCardControl<WinKeyState>
         if (!IsLoaded || !IsVisible)
             return;
 
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }, "refresh WinKey control");
 }

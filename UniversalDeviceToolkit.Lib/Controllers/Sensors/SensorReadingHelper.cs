@@ -112,14 +112,28 @@ internal static class SensorReadingHelper
         }
     }
 
+    private static DateTime _lastGpuUtilizationFailTime = DateTime.MinValue;
+    private static readonly TimeSpan GpuUtilizationCooldown = TimeSpan.FromSeconds(30);
+
     private static int ReadGpuEngineUtilization(string instanceName)
     {
-        using var counter = new PerformanceCounter("GPU Engine", "Utilization Percentage", instanceName, true);
-        var value = counter.NextValue();
-        if (value < 0)
+        if (DateTime.UtcNow - _lastGpuUtilizationFailTime < GpuUtilizationCooldown)
             return -1;
 
-        return Math.Min(100, (int)Math.Round(value, MidpointRounding.AwayFromZero));
+        try
+        {
+            using var counter = new PerformanceCounter("GPU Engine", "Utilization Percentage", instanceName, true);
+            var value = counter.NextValue();
+            if (value < 0)
+                return -1;
+
+            return Math.Min(100, (int)Math.Round(value, MidpointRounding.AwayFromZero));
+        }
+        catch
+        {
+            _lastGpuUtilizationFailTime = DateTime.UtcNow;
+            return -1;
+        }
     }
 
     private static bool TryConvertToDouble(object? value, out double result)

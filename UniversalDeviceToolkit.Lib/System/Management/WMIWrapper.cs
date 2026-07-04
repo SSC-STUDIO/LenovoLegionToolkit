@@ -13,7 +13,7 @@ public class WMIWrapper : IWMIWrapper
 {
     private bool _disposed = false;
 
-    public Task<T?> QueryAsync<T>(string query) where T : new()
+    public async Task<T?> QueryAsync<T>(string query) where T : new()
     {
         if (_disposed)
             throw new ObjectDisposedException(nameof(WMIWrapper));
@@ -25,7 +25,7 @@ public class WMIWrapper : IWMIWrapper
             // and call the appropriate WMI methods
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, query);
-            using var managementObjects = mos.Get();
+            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
 
             foreach (var mo in managementObjects)
             {
@@ -36,19 +36,19 @@ public class WMIWrapper : IWMIWrapper
                     using (managementObject)
                     {
                     var result = ConvertManagementObject<T>(managementObject);
-                    return Task.FromResult<T?>(result);
+                    return result;
                     }
                 }
             }
 
-            return Task.FromResult<T?>(default);
+            return default;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"WMI query failed: {query}", ex);
 
-            return Task.FromResult<T?>(default);
+            return default;
         }
     }
 
@@ -102,7 +102,7 @@ public class WMIWrapper : IWMIWrapper
         }
     }
 
-    public Task<bool> IsAvailableAsync()
+    public async Task<bool> IsAvailableAsync()
     {
         if (_disposed)
             throw new ObjectDisposedException(nameof(WMIWrapper));
@@ -112,14 +112,14 @@ public class WMIWrapper : IWMIWrapper
             // Try to create a simple WMI query to test availability
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, "SELECT * FROM Win32_OperatingSystem");
-            using var results = mos.Get();
-            return Task.FromResult(true);
+            var results = await mos.GetAsync().ConfigureAwait(false);
+            return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("WMI availability check failed", ex);
-            return Task.FromResult(false);
+            return false;
         }
     }
 

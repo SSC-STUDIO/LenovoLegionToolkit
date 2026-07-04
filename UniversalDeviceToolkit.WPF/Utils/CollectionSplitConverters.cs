@@ -8,6 +8,10 @@ using System.Windows.Data;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
+/// <summary>
+/// Takes the first half of an <see cref="IEnumerable"/> collection and returns it as a
+/// <see cref="ReadOnlyCollection{T}"/>.
+/// </summary>
 public class TakeHalfConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -33,6 +37,10 @@ public class TakeHalfConverter : IValueConverter
     }
 }
 
+/// <summary>
+/// Skips the first half of an <see cref="IEnumerable"/> collection and returns the remainder as a
+/// <see cref="ReadOnlyCollection{T}"/>.
+/// </summary>
 public class SkipHalfConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

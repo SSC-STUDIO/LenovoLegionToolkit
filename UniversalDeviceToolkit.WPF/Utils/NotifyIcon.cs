@@ -94,7 +94,7 @@ public class NotifyIcon : NativeWindow, IDisposable
                     case PInvoke.NIN_POPUPOPEN:
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"NIN_POPUPOPEN");
-                        ShowToolTipAsync();
+                        _ = ShowToolTipAsync();
                         break;
                     case PInvoke.NIN_POPUPCLOSE:
                         if (Log.Instance.IsTraceEnabled)
@@ -133,26 +133,26 @@ public class NotifyIcon : NativeWindow, IDisposable
         }
     }
 
-    private async void ShowToolTipAsync()
+    private async Task ShowToolTipAsync()
     {
         if (_toolTipWindow is null)
             return;
 
         if (_showToolTipCancellationTokenSource is not null)
-            await _showToolTipCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            await _showToolTipCancellationTokenSource.CancelAsync();
         _showToolTipCancellationTokenSource = new();
 
         var token = _showToolTipCancellationTokenSource.Token;
 
         try
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(500), token).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(500), token);
 
             if (ContextMenu is not null && ContextMenu.IsOpen)
                 return;
 
             _currentToolTipWindow?.Close();
-            _currentToolTipWindow = await _toolTipWindow().ConfigureAwait(false);
+            _currentToolTipWindow = await _toolTipWindow();
 
             token.ThrowIfCancellationRequested();
 

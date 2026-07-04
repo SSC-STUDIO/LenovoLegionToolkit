@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,7 +68,7 @@ public partial class CreateAutomationPipelineWindow
     private async void CreateAutomationPipelineWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -132,7 +132,7 @@ public partial class CreateAutomationPipelineWindow
     private async void MultipleSelectCardControl_Click(object? sender, RoutedEventArgs e)
     {
         _multiSelect = true;
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }
 
     private CardControl CreateCardControl(IAutomationPipelineTrigger trigger)
@@ -213,3 +213,4 @@ public partial class CreateAutomationPipelineWindow
     }
 }
 }
+

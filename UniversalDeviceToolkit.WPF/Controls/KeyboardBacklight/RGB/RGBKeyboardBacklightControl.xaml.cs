@@ -42,7 +42,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             if (!IsVisible)
                 return;
 
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
         }));
 
         Unloaded += RGBKeyboardBacklightControl_Unloaded;
@@ -60,7 +60,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
         if (!IsLoaded || !IsVisible)
             return;
 
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }, "refresh RGB keyboard backlight control");
 
     private void RGBKeyboardBacklightControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -80,10 +80,10 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             return;
 
         var selectedPreset = (RGBKeyboardBacklightPreset)presetButton.Tag;
-        var state = await _controller.GetStateAsync().ConfigureAwait(false);
-        await _controller.SetStateAsync(new(selectedPreset, state.Presets)).ConfigureAwait(false);
+        var state = await _controller.GetStateAsync();
+        await _controller.SetStateAsync(new(selectedPreset, state.Presets));
 
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }
 
     private async void SynchroniseZonesMenuItem_Click(object sender, RoutedEventArgs e)
@@ -94,22 +94,22 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
         foreach (var zone in Zones)
             zone.SelectedColor = pickerControl.SelectedColor;
 
-        await SaveState().ConfigureAwait(false);
-        await RefreshAsync().ConfigureAwait(false);
+        await SaveState();
+        await RefreshAsync();
     }
 
     private async void CardControl_Changed(object? sender, EventArgs e)
     {
-        await SaveState().ConfigureAwait(false);
-        await RefreshAsync().ConfigureAwait(false);
+        await SaveState();
+        await RefreshAsync();
     }
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
+        if (!await _controller.IsSupportedAsync())
             throw new InvalidOperationException("RGB Keyboard does not seem to be supported");
 
-        var vantageStatus = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
+        var vantageStatus = await _vantageDisabler.GetStatusAsync();
         if (vantageStatus == SoftwareStatus.Enabled)
         {
             _vantageWarningInfoBar.IsOpen = true;
@@ -136,7 +136,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             return;
         }
 
-        var state = await _controller.GetStateAsync().ConfigureAwait(false);
+        var state = await _controller.GetStateAsync();
 
         foreach (var presetButton in PresetButtons)
         {
@@ -213,7 +213,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 
     private async Task SaveState()
     {
-        var state = await _controller.GetStateAsync().ConfigureAwait(false);
+        var state = await _controller.GetStateAsync();
 
         var selectedPreset = state.SelectedPreset;
         var presets = state.Presets;
@@ -229,7 +229,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             _zone3ColorPicker.SelectedColor.ToRGBColor(),
             _zone4ColorPicker.SelectedColor.ToRGBColor());
 
-        await _controller.SetStateAsync(new(selectedPreset, presets)).ConfigureAwait(false);
+        await _controller.SetStateAsync(new(selectedPreset, presets));
     }
 
     private void Expand()

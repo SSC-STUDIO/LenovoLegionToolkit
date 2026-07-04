@@ -18,7 +18,7 @@ public partial class TurnOffMonitorsControl : AbstractRefreshingControl
 
         try
         {
-            await _nativeWindowsMessageListener.TurnOffMonitorAsync().ConfigureAwait(false);
+            await _nativeWindowsMessageListener.TurnOffMonitorAsync();
         }
         catch (System.Exception ex)
         {

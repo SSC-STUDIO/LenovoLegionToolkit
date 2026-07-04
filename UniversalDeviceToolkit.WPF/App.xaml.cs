@@ -110,39 +110,18 @@ public partial class App
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
-#if DEBUG
-        if (Debugger.IsAttached)
-        {
-            Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)
-                .Where(p => p.Id != Environment.ProcessId)
-                .ForEach(p =>
-                {
-                    p.Kill();
-                    p.WaitForExit();
-                });
-        }
-#endif
-
-        var flags = new Flags(e.Args);
-
-        Log.Instance.IsTraceEnabled = flags.IsTraceEnabled;
-
-        ApplyStartupOverrides(flags);
-
-        Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
-
-        AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
-        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Flags: {flags}");
-
-        var orchestrator = new StartupOrchestrator(flags);
+        var orchestrator = new StartupOrchestrator(this, e);
         _orchestrator = orchestrator;
-        var exitCode = await orchestrator.RunAsync(e);
+        var exitCode = await orchestrator.RunAsync();
 
         if (exitCode != 0)
             Environment.Exit(exitCode);
+    }
+
+    internal void RegisterExceptionHandlers()
+    {
+        AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
     }
 
     internal static async Task InitializePluginsAsync()
@@ -437,7 +416,7 @@ public partial class App
         StopMacroControllerSafely();
         StopSingleInstanceThreadSafely();
 
-        ForceExit((uint)e.ApplicationExitCode);
+        await ForceExitAsync((uint)e.ApplicationExitCode);
     }
 
     public void RestartMainWindow()
@@ -504,15 +483,12 @@ public partial class App
         _singleInstanceGuard = null;
     }
 
-    private void ForceExit(uint exitCode)
+    private async Task ForceExitAsync(uint exitCode)
     {
-        ThreadPool.QueueUserWorkItem(_ =>
-        {
-            Thread.Sleep(100);
-            try { Environment.Exit((int)exitCode); }
-            catch { /* Environment.Exit failed - use fallback exit method */ }
-            ExitProcess(exitCode);
-        });
+        await Task.Delay(100);
+        try { Environment.Exit((int)exitCode); }
+        catch { /* Environment.Exit failed - use fallback exit method */ }
+        ExitProcess(exitCode);
     }
 
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class

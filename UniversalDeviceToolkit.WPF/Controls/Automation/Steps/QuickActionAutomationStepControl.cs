@@ -48,7 +48,7 @@ public class QuickActionAutomationStepControl : AbstractAutomationStepControl<Qu
 
     protected override async Task RefreshAsync()
     {
-        var pipelines = await _processor.GetPipelinesAsync().ConfigureAwait(false);
+        var pipelines = await _processor.GetPipelinesAsync();
         var filteredPipelines = pipelines.Where(p => p.Trigger is null).ToArray();
         var selectedPipeline = filteredPipelines.FirstOrDefault(p => p.Id == AutomationStep.PipelineId);
 

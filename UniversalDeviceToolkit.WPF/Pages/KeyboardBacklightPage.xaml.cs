@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.RGB;
@@ -27,7 +27,7 @@ public partial class KeyboardBacklightPage
     {
         _titleTextBlock.Visibility = Visibility.Collapsed;
 
-        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null).ConfigureAwait(false);
+        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
 
         if (_viewModel.IsSpectrumSupported)
         {
@@ -50,6 +50,7 @@ public partial class KeyboardBacklightPage
         _loader.IsLoading = false;
     }
 
-    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync().ConfigureAwait(false);
+    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
 }
 }
+

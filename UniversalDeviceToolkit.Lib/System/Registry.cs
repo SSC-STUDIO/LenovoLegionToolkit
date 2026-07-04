@@ -29,6 +29,7 @@ public static class Registry
         {
             await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
             await task.ConfigureAwait(false);
+            cancellationTokenSource.Dispose();
         });
 
         void Handler(CancellationToken token)
@@ -76,28 +77,63 @@ public static class Registry
 
     public static IDisposable ObserveValue(string hive, string path, string valueName, Action handler)
     {
-        if (hive is "HKEY_CURRENT_USER" or "HKCU")
-            hive = WindowsIdentity.GetCurrent().User?.Value ?? throw ExceptionHelper.CurrentUserValueNull();
-
-        var pathFormatted = @$"SELECT * FROM RegistryValueChangeEvent WHERE Hive = 'HKEY_USERS' AND KeyPath = '{hive}\\{path.Replace(@"\", @"\\")}' AND ValueName = '{valueName}'";
+        if (hive is "HKCU")
+            hive = "HKEY_CURRENT_USER";
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting listener... [hive={hive}, pathFormatted={pathFormatted}, key={valueName}]");
+            Log.Instance.Trace($"Starting Win32 registry listener... [hive={hive}, path={path}, key={valueName}]");
 
-        var watcher = new ManagementEventWatcher(pathFormatted);
-        watcher.EventArrived += (_, e) =>
+        var cancellationTokenSource = new CancellationTokenSource();
+        var task = Task.Run(() =>
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Event arrived [classPath={e.NewEvent.ClassPath}, hive={hive}, pathFormatted={pathFormatted}, key={valueName}]");
+            try
+            {
+                using var baseKey = GetBaseKey(hive);
+                using var key = baseKey.OpenSubKey(path) ?? throw new InvalidOperationException(string.Format(Resource.Exception_KeyCouldNotBeOpened, path));
 
-            handler();
-        };
-        watcher.Start();
+                using var resetEvent = new ManualResetEvent(false);
+
+                while (true)
+                {
+                    var regNotifyChangeKeyValueResult = PInvoke.RegNotifyChangeKeyValue(key.Handle,
+                        false,
+                        REG_NOTIFY_FILTER.REG_NOTIFY_CHANGE_LAST_SET | REG_NOTIFY_FILTER.REG_NOTIFY_THREAD_AGNOSTIC,
+                        resetEvent.SafeWaitHandle,
+                        true);
+                    if (regNotifyChangeKeyValueResult != WIN32_ERROR.NO_ERROR)
+                        PInvokeExtensions.ThrowIfWin32Error("RegNotifyChangeKeyValue");
+
+                    WaitHandle.WaitAny([resetEvent, cancellationTokenSource.Token.WaitHandle]);
+                    cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Win32 registry event arrived [hive={hive}, path={path}, key={valueName}]");
+
+                    handler();
+
+                    resetEvent.Reset();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when registry monitoring is cancelled, no action needed
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error in Win32 registry listener [hive={hive}, path={path}, key={valueName}].", ex);
+            }
+        }, cancellationTokenSource.Token);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Started listener [hive={hive}, pathFormatted={pathFormatted}, key={valueName}]");
+            Log.Instance.Trace($"Started Win32 registry listener [hive={hive}, path={path}, key={valueName}]");
 
-        return watcher;
+        return new LambdaDisposable(() =>
+        {
+            cancellationTokenSource.Cancel();
+            try { task.Wait(1000); } catch { }
+            cancellationTokenSource.Dispose();
+        });
     }
 
     public static bool KeyExists(string hive, string subKey)

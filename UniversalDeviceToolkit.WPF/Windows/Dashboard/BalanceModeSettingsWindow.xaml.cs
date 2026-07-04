@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
@@ -31,9 +31,9 @@ public partial class BalanceModeSettingsWindow
 
         _aiController.IsAIModeEnabled = isAiModeChecked;
 
-        await _aiController.StopAsync().ConfigureAwait(false);
-        await _powerModeFeature.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
-        await _aiController.StartIfNeededAsync().ConfigureAwait(false);
+        await _aiController.StopAsync();
+        await _powerModeFeature.SetStateAsync(PowerModeState.Balance);
+        await _aiController.StartIfNeededAsync();
 
         Close();
     }
@@ -41,3 +41,4 @@ public partial class BalanceModeSettingsWindow
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
 }
 }
+

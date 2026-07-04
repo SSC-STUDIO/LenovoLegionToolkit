@@ -84,18 +84,18 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _gpuController.IsSupportedAsync().ConfigureAwait(false))
+        if (!await _gpuController.IsSupportedAsync())
         {
             Visibility = Visibility.Collapsed;
             IsGpuContentReady = false;
-            await _gpuController.StopAsync().ConfigureAwait(false);
+            await _gpuController.StopAsync();
             return;
         }
 
         Visibility = Visibility.Visible;
         IsGpuContentReady = true;
 
-        await _gpuController.StartAsync().ConfigureAwait(false);
+        await _gpuController.StartAsync();
     }
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
@@ -104,7 +104,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             return;
 
         Visibility = Visibility.Visible;
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }
 
     private async void DiscreteGPUControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -114,7 +114,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         IsGpuContentReady = false;
 
-        await _gpuController.StopAsync().ConfigureAwait(false);
+        await _gpuController.StopAsync();
     }
 
     private void GpuController_Refreshed(object? sender, GPUStatus e) => Dispatcher.BeginInvoke(() =>
@@ -220,7 +220,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         try
         {
-            await _gpuController.KillGPUProcessesAsync().ConfigureAwait(false);
+            await _gpuController.KillGPUProcessesAsync();
         }
         catch (Exception ex)
         {
@@ -240,7 +240,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         try
         {
-            await _gpuController.RestartGPUAsync().ConfigureAwait(false);
+            await _gpuController.RestartGPUAsync();
         }
         catch (Exception ex)
         {

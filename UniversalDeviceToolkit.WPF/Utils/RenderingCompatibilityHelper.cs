@@ -112,6 +112,14 @@ internal static class RenderingCompatibilityHelper
                 return true;
             }
 
+            if (RemoteSessionHelper.IsRemoteSession)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Remote session detected via RemoteSessionHelper. Enabling software rendering.");
+
+                return true;
+            }
+
             var screens = Screen.AllScreens;
             if (screens == null || screens.Length == 0)
             {

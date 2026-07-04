@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,14 +41,14 @@ public partial class SettingsPage
 
         IsVisibleChanged += SettingsPage_IsVisibleChanged;
 
-        InitializeNavigationItems();
+        _ = InitializeNavigationItems();
     }
 
-    private async void InitializeNavigationItems()
+    private async Task InitializeNavigationItems()
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
             _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
 
@@ -88,7 +88,7 @@ public partial class SettingsPage
         if (IsVisible && !_isInitialized)
         {
             _isInitialized = true;
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
         }
     }
 
@@ -127,14 +127,14 @@ public partial class SettingsPage
         {
             _contentControl.Content = _appearanceControl;
             PlayTransitionAnimation();
-            await _appearanceControl.RefreshAsync().ConfigureAwait(false);
+            await _appearanceControl.RefreshAsync();
         }
         else
         {
             _contentControl.Content = _applicationBehaviorControl;
             PlayTransitionAnimation();
             SelectNavigationItem("Application");
-            await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
+            await _applicationBehaviorControl.RefreshAsync();
         }
 
         // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
@@ -151,12 +151,12 @@ public partial class SettingsPage
             _displayControl?.RefreshAsync() ?? Task.CompletedTask,
             _powerControl?.RefreshAsync() ?? Task.CompletedTask,
             _integrationsControl!.RefreshAsync()
-        ).ConfigureAwait(false);
+        );
 
             _updateControl?.Refresh();
 
             // Update visibility based on FnKeys status
-            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
             _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
             _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
         }
@@ -197,15 +197,15 @@ public partial class SettingsPage
             {
                 case "Application":
                     if (_applicationBehaviorControl != null)
-                        await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
+                        await _applicationBehaviorControl.RefreshAsync();
                     break;
                 case "SmartKeys":
                     if (_smartKeysControl != null)
-                        await _smartKeysControl.RefreshAsync().ConfigureAwait(false);
+                        await _smartKeysControl.RefreshAsync();
                     break;
                 case "Display":
                     if (_displayControl != null)
-                        await _displayControl.RefreshAsync().ConfigureAwait(false);
+                        await _displayControl.RefreshAsync();
                     break;
                 case "Update":
                     if (_updateControl != null)
@@ -213,11 +213,11 @@ public partial class SettingsPage
                     break;
                 case "Power":
                     if (_powerControl != null)
-                        await _powerControl.RefreshAsync().ConfigureAwait(false);
+                        await _powerControl.RefreshAsync();
                     break;
                 case "Integrations":
                     if (_integrationsControl != null)
-                        await _integrationsControl.RefreshAsync().ConfigureAwait(false);
+                        await _integrationsControl.RefreshAsync();
                     break;
             }
         }
@@ -271,3 +271,4 @@ public partial class SettingsPage
     }
 }
 }
+

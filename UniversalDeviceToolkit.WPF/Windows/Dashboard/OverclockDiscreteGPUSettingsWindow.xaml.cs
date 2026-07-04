@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +64,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
         if (!TryGetActiveProfile(out var profile))
             return;
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name).ConfigureAwait(false);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name);
         if (string.IsNullOrEmpty(result))
             return;
 
@@ -85,7 +85,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
     {
         SaveProfile();
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder).ConfigureAwait(false);
+        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder);
         if (string.IsNullOrEmpty(result))
             return;
 
@@ -97,13 +97,13 @@ public partial class OverclockDiscreteGPUSettingsWindow
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
         Save();
-        await ApplyAsync().ConfigureAwait(false);
+        await ApplyAsync();
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
     {
         Save();
-        await ApplyAsync().ConfigureAwait(false);
+        await ApplyAsync();
         Close();
     }
 
@@ -119,7 +119,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
         _gpuOverclockController.SaveState(enabled, _activeProfileId, GetCurrentInfo());
     }
 
-    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync().ConfigureAwait(false);
+    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync();
 
     private void SaveProfile() => _gpuOverclockController.SaveProfile(_activeProfileId, GetCurrentInfo());
 
@@ -164,3 +164,4 @@ public partial class OverclockDiscreteGPUSettingsWindow
     }
 }
 }
+

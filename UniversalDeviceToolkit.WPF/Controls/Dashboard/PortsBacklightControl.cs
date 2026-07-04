@@ -29,6 +29,6 @@ public class PortsBacklightControl : AbstractToggleFeatureCardControl<PortsBackl
         if (e.State != LightingChangeState.Ports)
             return;
 
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }, "refresh ports backlight control");
 }

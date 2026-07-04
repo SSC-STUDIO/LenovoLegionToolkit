@@ -29,6 +29,6 @@ public class PanelLogoBacklightControl : AbstractToggleFeatureCardControl<PanelL
         if (e.State != LightingChangeState.Panel)
             return;
 
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }, "refresh panel logo backlight control");
 }

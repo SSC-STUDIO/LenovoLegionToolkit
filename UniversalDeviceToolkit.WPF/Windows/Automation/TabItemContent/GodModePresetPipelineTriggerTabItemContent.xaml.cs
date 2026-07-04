@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -38,7 +38,7 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
         IReadOnlyDictionary<Guid, GodModePreset> presets;
         try
         {
-            presets = (await _godModeController.GetStateAsync().ConfigureAwait(false)).Presets;
+            presets = (await _godModeController.GetStateAsync()).Presets;
         }
         catch (Exception ex)
         {
@@ -62,3 +62,4 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
     }
 }
 }
+

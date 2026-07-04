@@ -67,7 +67,7 @@ public class FnKeysDisabler : AbstractSoftwareDisabler
                 if (!description.Equals("Lenovo Hotkeys", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                process.Kill();
+                process.Kill(true);
                 await process.WaitForExitAsync().ConfigureAwait(false);
             }
         }

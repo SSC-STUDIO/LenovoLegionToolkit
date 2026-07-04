@@ -39,7 +39,7 @@ public partial class WindowsOptimizationPage
     private static string DriverText(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveDriverCulture);
 
-    private async void InitializeDriverDownloadPage()
+    private async Task InitializeDriverDownloadPage()
     {
         if (_driverOsComboBox != null && _driverOsComboBox.Items.Count == 0)
                 _driverOsComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
@@ -48,7 +48,7 @@ public partial class WindowsOptimizationPage
             {
                 try
                 {
-                    var machineInfo = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                    var machineInfo = await MachineCompatibility.GetMachineInformationAsync();
                     _driverMachineTypeTextBox.Text = machineInfo.MachineType;
                 }
                 catch (Exception ex)
@@ -119,7 +119,7 @@ public partial class WindowsOptimizationPage
 
     private async void DriverSearchButton_Click(object sender, RoutedEventArgs e)
     {
-        await DriverDownloadPackagesButton_Click(sender, e).ConfigureAwait(false);
+        await DriverDownloadPackagesButton_Click(sender, e);
     }
 
     private void DriverScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
@@ -138,7 +138,7 @@ public partial class WindowsOptimizationPage
         {
             try
             {
-                await _driverFilterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await _driverFilterDebounceCancellationTokenSource.CancelAsync();
             }
             catch (ObjectDisposedException)
             {
@@ -156,11 +156,11 @@ public partial class WindowsOptimizationPage
 
         try
         {
-            await Task.Delay(300, token).ConfigureAwait(false);
+            await Task.Delay(300, token);
             if (!token.IsCancellationRequested)
             {
                 // Ensure UI update happens on UI thread
-                Dispatcher.BeginInvoke(() => DriverReload());
+                _ = Dispatcher.BeginInvoke(() => DriverReload());
             }
         }
         catch (TaskCanceledException)
@@ -208,7 +208,7 @@ public partial class WindowsOptimizationPage
             if (control is null)
                 continue;
 
-            await control.StartAsync().ConfigureAwait(false);
+            await control.StartAsync();
             UpdateDriverRunningState();
             ViewModel.NotifyDriverSelectionChanged();
         }
@@ -267,7 +267,7 @@ public partial class WindowsOptimizationPage
 
     private async Task DriverDownloadPackagesButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDriverDownloadsIfRunning().ConfigureAwait(false))
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
             return;
 
         var errorOccurred = false;
@@ -303,7 +303,7 @@ public partial class WindowsOptimizationPage
                 _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem(out OS os))
             {
                 await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
-                    Resource.PackagesPage_DownloadFailed_Message).ConfigureAwait(false);
+                    Resource.PackagesPage_DownloadFailed_Message);
                 return;
             }
 
@@ -315,7 +315,7 @@ public partial class WindowsOptimizationPage
             {
                 try
                 {
-                    await _driverGetPackagesTokenSource.CancelAsync().ConfigureAwait(false);
+                    await _driverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -347,12 +347,12 @@ public partial class WindowsOptimizationPage
             }
 
             _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
-            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token).ConfigureAwait(false);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
 
             _driverPackages = packages;
 
             // Ensure UI update happens on UI thread
-            Dispatcher.BeginInvoke(() => DriverReload());
+            _ = Dispatcher.BeginInvoke(() => DriverReload());
 
             StopDriverRetryTimer();
 
@@ -367,7 +367,7 @@ public partial class WindowsOptimizationPage
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading packages.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
             errorOccurred = true;
         }
         finally
@@ -378,7 +378,7 @@ public partial class WindowsOptimizationPage
                 try
                 {
                     if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                        await _driverGetPackagesTokenSource.CancelAsync().ConfigureAwait(false);
+                        await _driverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -392,7 +392,7 @@ public partial class WindowsOptimizationPage
             }
 
             // UI updates must be on UI thread
-            Dispatcher.BeginInvoke(() =>
+            _ = Dispatcher.BeginInvoke(() =>
             {
                 if (!errorOccurred && _driverLoadingIndicator != null)
                     _driverLoadingIndicator.Visibility = Visibility.Collapsed;
@@ -643,7 +643,7 @@ public partial class WindowsOptimizationPage
                 pc.Status is PackageControl.PackageStatus.Downloading or PackageControl.PackageStatus.Installing))
             return true;
 
-        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message).ConfigureAwait(false);
+        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);
     }
 
     private void DriverDownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)

@@ -103,7 +103,7 @@ try
 
     Console.WriteLine($"[lang-ui-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
     process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app."); // NOTE: Cross-method process reference — disposal must be handled at a higher level
-    process = WaitForAppProcess(process, runtimeDirectory, TimeSpan.FromSeconds(30));
+    process = await WaitForAppProcessAsync(process, runtimeDirectory, TimeSpan.FromSeconds(30)).ConfigureAwait(false);
     try
     {
         process.WaitForInputIdle(20000);
@@ -176,7 +176,7 @@ try
         Console.WriteLine($"{pass}: Sandbox lang file set to {targetCulture}.");
     }
 
-    process = RestartAppForLanguageVerification(process, runtimeDirectory, appDataDirectory);
+    process = await RestartAppForLanguageVerificationAsync(process, runtimeDirectory, appDataDirectory).ConfigureAwait(false);
 
     if (!WaitForLocalizedUi(process, uiMarkers.UiStrings, localizedUiTimeout, out var localizedWindow))
     {
@@ -494,7 +494,7 @@ static bool WaitForLocalizedUi(Process process, string[] expectedStrings, TimeSp
     return false;
 }
 
-static Process RestartAppForLanguageVerification(Process process, string runtimeDirectory, string appDataDirectory)
+static async Task<Process> RestartAppForLanguageVerificationAsync(Process process, string runtimeDirectory, string appDataDirectory)
 {
     try
     {
@@ -515,7 +515,7 @@ static Process RestartAppForLanguageVerification(Process process, string runtime
 
     Console.WriteLine($"[lang-ui-smoke] Restarting app for localized UI verification: {startInfo.FileName} {startInfo.Arguments}");
     var restarted = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to restart app for localized UI verification."); // NOTE: Returned process — caller is responsible for disposal
-    restarted = WaitForAppProcess(restarted, runtimeDirectory, TimeSpan.FromSeconds(30));
+    restarted = await WaitForAppProcessAsync(restarted, runtimeDirectory, TimeSpan.FromSeconds(30)).ConfigureAwait(false);
     _ = WaitForMainWindow(restarted, appDataDirectory, TimeSpan.FromSeconds(180));
     return restarted;
 }
@@ -575,7 +575,7 @@ static AutomationElement? FindInstallLanguageButton(AutomationElement root) =>
     ?? FindByName(root, "Install language", ControlType.Button)
     ?? FindByName(root, "Sprache installieren", ControlType.Button);
 
-static Process WaitForAppProcess(Process initialProcess, string runtimeDirectory, TimeSpan timeout)
+static async Task<Process> WaitForAppProcessAsync(Process initialProcess, string runtimeDirectory, TimeSpan timeout)
 {
     var deadline = DateTime.UtcNow + timeout;
     var normalizedRuntimeDirectory = Path.GetFullPath(runtimeDirectory).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -584,10 +584,16 @@ static Process WaitForAppProcess(Process initialProcess, string runtimeDirectory
         if (initialProcess.HasExited)
             break;
 
-        var child = Process.GetProcessesByName("Universal Device Toolkit")
-            .Where(p => ProcessLooksLikeRuntimeDirectory(p, normalizedRuntimeDirectory))
-            .OrderByDescending(p => p.StartTime)
-            .FirstOrDefault();
+        var processes = Process.GetProcessesByName("Universal Device Toolkit");
+        Process? child = null;
+        foreach (var p in processes)
+        {
+            if (await ProcessLooksLikeRuntimeDirectoryAsync(p, normalizedRuntimeDirectory).ConfigureAwait(false))
+            {
+                child = p;
+                break;
+            }
+        }
         if (child is not null && child.Id != initialProcess.Id)
         {
             Console.WriteLine($"[lang-ui-smoke] Resolved app process PID={child.Id} (launcher PID={initialProcess.Id}).");
@@ -597,13 +603,13 @@ static Process WaitForAppProcess(Process initialProcess, string runtimeDirectory
         if (initialProcess.ProcessName.Contains("Universal", StringComparison.OrdinalIgnoreCase))
             return initialProcess;
 
-        Thread.Sleep(500);
+        await Task.Delay(500).ConfigureAwait(false);
     }
 
     return initialProcess;
 }
 
-static bool ProcessLooksLikeRuntimeDirectory(Process process, string runtimeDirectory)
+static async Task<bool> ProcessLooksLikeRuntimeDirectoryAsync(Process process, string runtimeDirectory)
 {
     try
     {
@@ -614,12 +620,13 @@ static bool ProcessLooksLikeRuntimeDirectory(Process process, string runtimeDire
                 .Equals(runtimeDirectory, StringComparison.OrdinalIgnoreCase))
             return true;
 
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         using var searcher = new System.Management.ManagementObjectSearcher(
             "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id.ToString(CultureInfo.InvariantCulture));
-        var commandLine = searcher.Get()
+        var commandLine = await Task.Run(() => searcher.Get()
             .Cast<System.Management.ManagementObject>()
             .Select(mo => mo["CommandLine"] as string)
-            .FirstOrDefault();
+            .FirstOrDefault(), cts.Token).ConfigureAwait(false);
 
         return commandLine?.Contains(runtimeDirectory, StringComparison.OrdinalIgnoreCase) == true;
     }

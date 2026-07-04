@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -391,7 +391,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     {
         try
         {
-            await ScanOptimizationStatesAsync().ConfigureAwait(false);
+            await ScanOptimizationStatesAsync();
         }
         catch (Exception ex)
         {
@@ -628,12 +628,12 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                         CurrentOperationText = path;
                     });
                 }
-            }).ConfigureAwait(false);
+            });
             
             // Ensure UI updates happen on UI thread
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
-                await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size).Task.ConfigureAwait(false);
+                await Application.Current.Dispatcher.BeginInvoke(() => EstimatedCleanupSize = size).Task;
             }
             else
             {
@@ -682,7 +682,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     await Application.Current.Dispatcher.InvokeAsync(() => SnackbarHelper.Show(
                         Resource.SettingsPage_WindowsOptimization_Title,
                 T("WindowsOptimization_NoCleanupSelection_Warning", "Please select at least one item to clean up."),
-                        SnackbarType.Warning)).Task.ConfigureAwait(false);
+                        SnackbarType.Warning)).Task;
                 }
                 return;
             }
@@ -690,14 +690,14 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
             // Mark as scanned to enable "Run Cleanup" button (if items selected)
             if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
             {
-                await Application.Current.Dispatcher.BeginInvoke(() => IsScanned = true).Task.ConfigureAwait(false);
+                await Application.Current.Dispatcher.BeginInvoke(() => IsScanned = true).Task;
             }
             else
             {
                 IsScanned = true;
             }
             
-            await UpdateEstimatedCleanupSizeAsync().ConfigureAwait(false);
+            await UpdateEstimatedCleanupSizeAsync();
         }
         finally
         {
@@ -744,10 +744,10 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
         if (IsBusy)
         {
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied).ConfigureAwait(false);
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied);
             await ShowOptimizationSnackbarAsync(
                 T("WindowsOptimizationPage_Optimization_Busy_Wait", "Please wait for the current optimization to finish."),
-                SnackbarType.Warning).ConfigureAwait(false);
+                SnackbarType.Warning);
             return;
         }
 
@@ -755,11 +755,11 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         try
         {
             if (desiredApplied)
-                await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+                await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None);
             else
-                await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+                await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None);
 
-            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
+            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
 
             if (isApplied != desiredApplied)
             {
@@ -768,11 +768,11 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                         T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
                         actionVm.Title,
                         T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
-                    SnackbarType.Error).ConfigureAwait(false);
+                    SnackbarType.Error);
             }
 
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied).ConfigureAwait(false);
-            await RunOnUiAsync(SaveOptimizationSelection).ConfigureAwait(false);
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
+            await RunOnUiAsync(SaveOptimizationSelection);
         }
         catch (Exception ex)
         {
@@ -784,15 +784,15 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
                     actionVm.Title,
                     ex.Message),
-                SnackbarType.Error).ConfigureAwait(false);
+                SnackbarType.Error);
 
-            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None).ConfigureAwait(false);
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied).ConfigureAwait(false);
-            await RunOnUiAsync(SaveOptimizationSelection).ConfigureAwait(false);
+            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
+            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
+            await RunOnUiAsync(SaveOptimizationSelection);
         }
         finally
         {
-            await RunOnUiAsync(() => IsBusy = false).ConfigureAwait(false);
+            await RunOnUiAsync(() => IsBusy = false);
         }
     }
 
@@ -835,20 +835,20 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public async Task ScanOptimizationStatesAsync(CancellationToken cancellationToken = default)
     {
-        await _optimizationStateScanLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await _optimizationStateScanLock.WaitAsync(cancellationToken);
         _isRefreshingStates = true;
         try
         {
-            var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);
+            var actions = await GetOptimizationActionSnapshotAsync();
             foreach (var action in actions)
             {
                 // Scan to detect actual system state
-                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None);
                 
                 // Ensure UI updates happen on UI thread
                 if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
                 {
-                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied).Task.ConfigureAwait(false);
+                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied).Task;
                 }
                 else
                 {
@@ -864,7 +864,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                     UpdateSelectedActions();
                     // Save the scanned state (actual system state) to settings
                     SaveOptimizationSelection();
-                }).Task.ConfigureAwait(false);
+                }).Task;
             }
             else
             {
@@ -884,7 +884,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     {
         var dispatcher = Application.Current?.Dispatcher;
         if (dispatcher != null && !dispatcher.CheckAccess())
-            return await dispatcher.InvokeAsync(SnapshotOptimizationActions).Task.ConfigureAwait(false);
+            return await dispatcher.InvokeAsync(SnapshotOptimizationActions).Task;
 
         return SnapshotOptimizationActions();
     }
@@ -949,3 +949,4 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
+

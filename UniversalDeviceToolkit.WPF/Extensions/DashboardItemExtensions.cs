@@ -79,7 +79,7 @@ public static class DashboardItemExtensions
         DashboardItem.BatteryNightChargeMode => [new BatteryNightChargeModeControl()],
         DashboardItem.AlwaysOnUsb => [new AlwaysOnUSBControl()],
         DashboardItem.InstantBoot => [new InstantBootControl()],
-        DashboardItem.HybridMode => [await HybridModeControlFactory.GetControlAsync().ConfigureAwait(false)],
+        DashboardItem.HybridMode => [await HybridModeControlFactory.GetControlAsync()],
         DashboardItem.DiscreteGpu => [new DiscreteGPUControl()],
         DashboardItem.OverclockDiscreteGpu => [new OverclockDiscreteGPUControl()],
         DashboardItem.Resolution => [new ResolutionControl()],
@@ -123,17 +123,16 @@ file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<I
         {
             try
             {
-                await _itsModeFeature.SetStateAsync(newValue.Value).ConfigureAwait(false);
+                await _itsModeFeature.SetStateAsync(newValue.Value);
                 _itsModeFeature.LastItsMode = newValue.Value;
             }
             catch (DllNotFoundException)
             {
-                await MessageBoxHelper.ShowAsync(this, "ITS Mode", "ITS runtime is unavailable on this system.", Resource.OK)
-                    .ConfigureAwait(false);
+                await MessageBoxHelper.ShowAsync(this, "ITS Mode", "ITS runtime is unavailable on this system.", Resource.OK);
             }
         }
 
-        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue).ConfigureAwait(false);
+        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
     }
 
     protected override void OnStateChangeException(Exception exception)

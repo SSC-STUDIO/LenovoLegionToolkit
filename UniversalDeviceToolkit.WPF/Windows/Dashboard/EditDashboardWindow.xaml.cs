@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ public partial class EditDashboardWindow
     private async void EditDashboardWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }
 
     private async Task RefreshAsync()
@@ -55,7 +55,7 @@ public partial class EditDashboardWindow
 
         GroupsChanged();
 
-        await loadingTask.ConfigureAwait(false);
+        await loadingTask;
 
         _applyRevertStackPanel.Visibility = Visibility.Visible;
         _infoBar.Visibility = Visibility.Visible;
@@ -68,7 +68,7 @@ public partial class EditDashboardWindow
             Resource.EditDashboardWindow_CreateGroup_Title,
             Resource.EditDashboardWindow_CreateGroup_Message,
             primaryButton: Resource.OK,
-            secondaryButton: Resource.Cancel).ConfigureAwait(false);
+            secondaryButton: Resource.Cancel);
 
         if (string.IsNullOrEmpty(result))
             return;
@@ -176,3 +176,4 @@ public partial class EditDashboardWindow
     }
 }
 }
+

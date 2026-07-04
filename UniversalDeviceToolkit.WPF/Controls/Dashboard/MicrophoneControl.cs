@@ -29,6 +29,6 @@ public class MicrophoneControl : AbstractToggleFeatureCardControl<MicrophoneStat
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnF4))
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh microphone control");
 }

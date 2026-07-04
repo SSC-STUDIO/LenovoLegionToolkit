@@ -640,6 +640,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
             var output = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
             await process.WaitForExitAsync().ConfigureAwait(false);
+            process.Kill(true);
 
             int wattage = -1;
             double voltage = 0;

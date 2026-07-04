@@ -68,7 +68,7 @@ public sealed class LanguagePackInstallCoordinator(LanguagePackManager languageP
     {
         try
         {
-            await languagePackManager.InstallAsync(culture, progress, cancellationToken).ConfigureAwait(false);
+            await languagePackManager.InstallAsync(culture, progress, cancellationToken);
         }
         finally
         {

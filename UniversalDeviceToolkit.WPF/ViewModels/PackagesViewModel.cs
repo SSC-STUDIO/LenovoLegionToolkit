@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.PackageDownloader;
@@ -31,7 +31,7 @@ public partial class PackagesViewModel : ObservableObject
     private string _filterText = string.Empty;
 
     [ObservableProperty]
-    private int _sortingIndex = 2; // 默认按发布日期排�?
+    private int _sortingIndex = 2; // 榛樿鎸夊彂甯冩棩鏈熸帓锟?
     [ObservableProperty]
     private bool _onlyShowUpdates;
 
@@ -61,7 +61,7 @@ public partial class PackagesViewModel : ObservableObject
                 MachineType,
                 SelectedOS,
                 new Progress<float>(p => Progress = p),
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             Packages = new ObservableCollection<Package>(packages);
         }
@@ -79,7 +79,7 @@ public partial class PackagesViewModel : ObservableObject
     [RelayCommand]
     private void CancelLoad()
     {
-        // 取消加载逻辑
+        // 鍙栨秷鍔犺浇閫昏緫
     }
 
     public List<Package> GetFilteredPackages()
@@ -101,3 +101,4 @@ public partial class PackagesViewModel : ObservableObject
         return result.ToList();
     }
 }
+

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -95,7 +95,7 @@ public abstract class OsdWindowBase : Window
 
         SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
 
-        InitializeComponentSpecifics();
+        _ = InitializeComponentSpecifics();
         SubscribeEvents();
         _fpsController.FpsDataUpdated += OnFpsDataUpdated;
 
@@ -103,17 +103,17 @@ public abstract class OsdWindowBase : Window
         UpdateMeasurementControlsVisibility();
     }
 
-    private async void InitializeComponentSpecifics()
+    private async Task InitializeComponentSpecifics()
     {
         try
         {
-            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var mi = await Compatibility.GetMachineInformationAsync();
             if (mi.Properties.IsAmdDevice)
             {
                 OnAmdDeviceDetected();
             }
 
-            _hasLenovoController = await _controller.IsSupportedAsync().ConfigureAwait(false);
+            _hasLenovoController = await _controller.IsSupportedAsync();
         }
         catch (Exception ex)
         {
@@ -305,18 +305,18 @@ public abstract class OsdWindowBase : Window
             _cts?.Dispose();
             _cts = new CancellationTokenSource();
 
-            CheckAndUpdateFpsMonitoring();
+            await CheckAndUpdateFpsMonitoring();
             UpdateMeasurementControlsVisibility();
 
             _sensorsGroupControllers.Start(this, TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval));
 
-            await TheRing(_cts.Token).ConfigureAwait(false);
+            await TheRing(_cts.Token);
         }
         else
         {
             _cts?.Cancel();
             _sensorsGroupControllers.Stop(this);
-            CheckAndUpdateFpsMonitoring();
+            await CheckAndUpdateFpsMonitoring();
         }
     }
 
@@ -422,7 +422,7 @@ public abstract class OsdWindowBase : Window
                 : Visibility.Collapsed;
         }
 
-        CheckAndUpdateFpsMonitoring();
+        _ = CheckAndUpdateFpsMonitoring();
         this.EscalateZBand();
     }
 
@@ -533,7 +533,7 @@ public abstract class OsdWindowBase : Window
 
     #region FPS Monitoring
 
-    private async void CheckAndUpdateFpsMonitoring()
+    private async Task CheckAndUpdateFpsMonitoring()
     {
         try
         {
@@ -543,7 +543,7 @@ public abstract class OsdWindowBase : Window
             {
                 case true when !_fpsMonitoringStarted:
                     _fpsMonitoringStarted = true;
-                    await StartFpsMonitoringAsync().ConfigureAwait(false);
+                    await StartFpsMonitoringAsync();
                     break;
                 case false when _fpsMonitoringStarted:
                     _fpsMonitoringStarted = false;
@@ -565,7 +565,7 @@ public abstract class OsdWindowBase : Window
 
     private async Task StartFpsMonitoringAsync()
     {
-        try { await _fpsController.StartMonitoringAsync().ConfigureAwait(false); }
+        try { await _fpsController.StartMonitoringAsync(); }
         catch (Exception ex) { Log.Instance.Trace($"Failed to start FPS monitoring", ex); }
     }
 
@@ -662,7 +662,7 @@ public abstract class OsdWindowBase : Window
     {
         try
         {
-            await _refreshLock.WaitAsync(-1, token).ConfigureAwait(false);
+            await _refreshLock.WaitAsync(-1, token);
         }
         catch (OperationCanceledException)
         {
@@ -676,20 +676,20 @@ public abstract class OsdWindowBase : Window
                 var loopStart = DateTime.UtcNow;
                 try
                 {
-                    await RefreshSensorsDataAsync(token).ConfigureAwait(false);
+                    await RefreshSensorsDataAsync(token);
                 }
                 catch (OperationCanceledException) { break; }
                 catch (Exception ex)
                 {
                     Log.Instance.Trace($"Exception occurred when executing TheRing()", ex);
-                    await Task.Delay(1000, token).ConfigureAwait(false);
+                    await Task.Delay(1000, token);
                 }
 
                 var elapsed = DateTime.UtcNow - loopStart;
                 var delay = TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval) - elapsed;
                 if (delay > TimeSpan.Zero)
                 {
-                    await Task.Delay(delay, token).ConfigureAwait(false);
+                    await Task.Delay(delay, token);
                 }
             }
         }
@@ -733,7 +733,7 @@ public abstract class OsdWindowBase : Window
 
         if (_hasLenovoController)
         {
-            var mainData = await _controller.GetDataAsync().ConfigureAwait(false);
+            var mainData = await _controller.GetDataAsync();
 
             if (token.IsCancellationRequested) return;
 
@@ -741,34 +741,34 @@ public abstract class OsdWindowBase : Window
                 cpuUsageTask, cpuFreqTask, cpuPFreqTask, cpuEFreqTask, cpuPowerTask,
                 gpuUsageTask, gpuFreqTask, gpuTempTask, gpuVramUsageTask, gpuVramUsedTask,
                 gpuVramTotalTask, gpuVramTempTask, gpuPowerTask, memUsageTask, memUsedTask,
-                memTotalTask, memTempTask, ssdTempsTask).ConfigureAwait(false);
+                memTotalTask, memTempTask, ssdTempsTask);
 
-            var ssdTemps = await ssdTempsTask.ConfigureAwait(false);
+            var ssdTemps = await ssdTempsTask;
 
             var snapshot = new SensorSnapshot
             {
                 CpuUsage = mainData.CPU.Utilization,
-                CpuFrequency = await cpuFreqTask.ConfigureAwait(false),
-                CpuPClock = await cpuPFreqTask.ConfigureAwait(false),
-                CpuEClock = await cpuEFreqTask.ConfigureAwait(false),
+                CpuFrequency = await cpuFreqTask,
+                CpuPClock = await cpuPFreqTask,
+                CpuEClock = await cpuEFreqTask,
                 CpuTemp = mainData.CPU.Temperature,
-                CpuPower = await cpuPowerTask.ConfigureAwait(false),
+                CpuPower = await cpuPowerTask,
                 CpuFanSpeed = mainData.CPU.FanSpeed,
 
                 GpuUsage = mainData.GPU.Utilization,
                 GpuFrequency = mainData.GPU.CoreClock,
                 GpuTemp = mainData.GPU.Temperature,
-                GpuVramUsage = await gpuVramUsageTask.ConfigureAwait(false),
-                GpuVramUsed = await gpuVramUsedTask.ConfigureAwait(false),
-                GpuVramTotal = await gpuVramTotalTask.ConfigureAwait(false),
-                GpuVramTemp = await gpuVramTempTask.ConfigureAwait(false),
-                GpuPower = await gpuPowerTask.ConfigureAwait(false),
+                GpuVramUsage = await gpuVramUsageTask,
+                GpuVramUsed = await gpuVramUsedTask,
+                GpuVramTotal = await gpuVramTotalTask,
+                GpuVramTemp = await gpuVramTempTask,
+                GpuPower = await gpuPowerTask,
                 GpuFanSpeed = mainData.GPU.FanSpeed,
 
-                MemUsage = await memUsageTask.ConfigureAwait(false),
-                MemUsed = await memUsedTask.ConfigureAwait(false),
-                MemTotal = await memTotalTask.ConfigureAwait(false),
-                MemTemp = (float)await memTempTask.ConfigureAwait(false),
+                MemUsage = await memUsageTask,
+                MemUsed = await memUsedTask,
+                MemTotal = await memTotalTask,
+                MemTemp = (float)await memTempTask,
 
                 PchTemp = -1,
                 PchFanSpeed = -1,
@@ -777,7 +777,7 @@ public abstract class OsdWindowBase : Window
                 Disk2Temp = ssdTemps.Item2
             };
 
-            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task.ConfigureAwait(false);
+            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task;
         }
         else
         {
@@ -787,36 +787,36 @@ public abstract class OsdWindowBase : Window
                 cpuUsageTask, cpuFreqTask, cpuPFreqTask, cpuEFreqTask, cpuPowerTask, cpuTempTask,
                 gpuUsageTask, gpuFreqTask, gpuTempTask, gpuVramUsageTask, gpuVramUsedTask,
                 gpuVramTotalTask, gpuVramTempTask, gpuPowerTask, memUsageTask, memUsedTask,
-                memTotalTask, memTempTask, ssdTempsTask).ConfigureAwait(false);
+                memTotalTask, memTempTask, ssdTempsTask);
 
             if (token.IsCancellationRequested) return;
 
-            var ssdTemps = await ssdTempsTask.ConfigureAwait(false);
+            var ssdTemps = await ssdTempsTask;
 
             var snapshot = new SensorSnapshot
             {
-                CpuUsage = await cpuUsageTask.ConfigureAwait(false),
-                CpuFrequency = await cpuFreqTask.ConfigureAwait(false),
-                CpuPClock = await cpuPFreqTask.ConfigureAwait(false),
-                CpuEClock = await cpuEFreqTask.ConfigureAwait(false),
-                CpuTemp = await cpuTempTask.ConfigureAwait(false),
-                CpuPower = await cpuPowerTask.ConfigureAwait(false),
+                CpuUsage = await cpuUsageTask,
+                CpuFrequency = await cpuFreqTask,
+                CpuPClock = await cpuPFreqTask,
+                CpuEClock = await cpuEFreqTask,
+                CpuTemp = await cpuTempTask,
+                CpuPower = await cpuPowerTask,
                 CpuFanSpeed = -1,
 
-                GpuUsage = await gpuUsageTask.ConfigureAwait(false),
-                GpuFrequency = await gpuFreqTask.ConfigureAwait(false),
-                GpuTemp = await gpuTempTask.ConfigureAwait(false),
-                GpuVramUsage = await gpuVramUsageTask.ConfigureAwait(false),
-                GpuVramUsed = await gpuVramUsedTask.ConfigureAwait(false),
-                GpuVramTotal = await gpuVramTotalTask.ConfigureAwait(false),
-                GpuVramTemp = await gpuVramTempTask.ConfigureAwait(false),
-                GpuPower = await gpuPowerTask.ConfigureAwait(false),
+                GpuUsage = await gpuUsageTask,
+                GpuFrequency = await gpuFreqTask,
+                GpuTemp = await gpuTempTask,
+                GpuVramUsage = await gpuVramUsageTask,
+                GpuVramUsed = await gpuVramUsedTask,
+                GpuVramTotal = await gpuVramTotalTask,
+                GpuVramTemp = await gpuVramTempTask,
+                GpuPower = await gpuPowerTask,
                 GpuFanSpeed = -1,
 
-                MemUsage = await memUsageTask.ConfigureAwait(false),
-                MemUsed = await memUsedTask.ConfigureAwait(false),
-                MemTotal = await memTotalTask.ConfigureAwait(false),
-                MemTemp = (float)await memTempTask.ConfigureAwait(false),
+                MemUsage = await memUsageTask,
+                MemUsed = await memUsedTask,
+                MemTotal = await memTotalTask,
+                MemTemp = (float)await memTempTask,
 
                 PchTemp = -1,
                 PchFanSpeed = -1,
@@ -825,7 +825,7 @@ public abstract class OsdWindowBase : Window
                 Disk2Temp = ssdTemps.Item2
             };
 
-            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task.ConfigureAwait(false);
+            await Dispatcher.BeginInvoke(() => UpdateSensorData(snapshot), DispatcherPriority.Normal).Task;
         }
     }
 

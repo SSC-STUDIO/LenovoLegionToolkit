@@ -31,6 +31,6 @@ public class ResolutionAutomationStepControl : AbstractComboBoxAutomationStepCar
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh resolution automation step");
 }

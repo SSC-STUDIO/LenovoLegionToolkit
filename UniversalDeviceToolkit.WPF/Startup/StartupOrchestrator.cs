@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -10,14 +11,16 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Integrations;
-using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.Hybrid;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 using LenovoLegionToolkit.Lib.Features.PanelLogo;
 using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
+using LenovoLegionToolkit.Lib.Integrations;
+using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
 using LenovoLegionToolkit.Lib.Services;
@@ -26,8 +29,6 @@ using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -52,12 +53,16 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
+        private readonly App _app;
+        private readonly StartupEventArgs _startupEventArgs;
         private readonly Flags _flags;
         private ApplicationSettings? _settings;
 
-        public StartupOrchestrator(Flags flags)
+        public StartupOrchestrator(App app, StartupEventArgs startupEventArgs)
         {
-            _flags = flags ?? throw new ArgumentNullException(nameof(flags));
+            _app = app ?? throw new ArgumentNullException(nameof(app));
+            _startupEventArgs = startupEventArgs ?? throw new ArgumentNullException(nameof(startupEventArgs));
+            _flags = new Flags(startupEventArgs.Args);
         }
 
         public (Func<Task>[] initializationSteps, Func<Task>[] serviceStartSteps) GetBackgroundInitializationSteps()
@@ -107,11 +112,13 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return (bgSteps, postSteps);
         }
 
-        public async Task<int> RunAsync(StartupEventArgs e)
+        public async Task<int> RunAsync()
         {
             try
             {
-                if (!await EnsureSingleInstanceAsync())
+                await InitializeBootstrappingAsync();
+
+                if (!await InitializeSingleInstanceAsync())
                     return 0;
 
                 // CRITICAL: Show the main window as early as possible so the user
@@ -119,15 +126,15 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 // is slow. Without this, the process appears to hang over RDP for
                 // several seconds before the first window is presented, which also
                 // ties up the dispatcher and makes the whole session feel frozen.
-                await SetupIoCAsync();
+                await InitializeIoCAsync();
                 await CreateMainWindowAsync();
                 await ShowMainWindowAsync();
 
                 // Now safe to run the slower operations in the background while
                 // the user can already see and interact with the window.
-                await ConfigureCompatibilityAsync();
-                await InitializePluginsAsync();
-                await StartBackgroundServicesAsync();
+                await CheckCompatibilityAsync();
+                await LoadPluginsAsync();
+                await StartBackgroundInitAsync();
                 await InitializeOsdAsync();
 
                 if (Log.Instance.IsTraceEnabled)
@@ -146,7 +153,32 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
-        private async Task<bool> EnsureSingleInstanceAsync()
+        private Task InitializeBootstrappingAsync()
+        {
+#if DEBUG
+            if (Debugger.IsAttached)
+            {
+                Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)
+                    .Where(p => p.Id != Environment.ProcessId)
+                    .ForEach(p =>
+                    {
+                        p.Kill(true);
+                        p.WaitForExit();
+                    });
+            }
+#endif
+
+            Log.Instance.IsTraceEnabled = _flags.IsTraceEnabled;
+            Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
+            _app.RegisterExceptionHandlers();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Flags: {_flags}");
+
+            return Task.CompletedTask;
+        }
+
+        private async Task<bool> InitializeSingleInstanceAsync()
         {
             if (!App.Current.EnsureSingleInstance())
             {
@@ -158,7 +190,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return true;
         }
 
-        private async Task ConfigureCompatibilityAsync()
+        private async Task CheckCompatibilityAsync()
         {
             await LocalizationHelper.SetLanguageAsync(true, App.CreateStartupLanguagePackManager(_flags));
 
@@ -246,7 +278,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
-        private Task SetupIoCAsync()
+        private Task InitializeIoCAsync()
         {
             WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
             RenderOptions.ProcessRenderMode = RenderingCompatibilityHelper.GetPreferredRenderMode(_settings);
@@ -279,7 +311,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return Task.CompletedTask;
         }
 
-        private async Task InitializePluginsAsync()
+        private async Task LoadPluginsAsync()
         {
             await App.InitializePluginsAsync();
             LocalizationHelper.SetPluginResourceCultures();
@@ -308,7 +340,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return Task.CompletedTask;
         }
 
-        private Task StartBackgroundServicesAsync()
+        private Task StartBackgroundInitAsync()
         {
             App.Current.StartBackgroundInitialization();
             return Task.CompletedTask;

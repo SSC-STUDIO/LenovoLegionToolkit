@@ -134,6 +134,7 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
 
             var output = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
             await process.WaitForExitAsync().ConfigureAwait(false);
+            process.Kill(true);
 
             if (process.ExitCode != 0)
                 return GPUInfo.Empty;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,14 +39,14 @@ public partial class AutomationPage
 
     private async void AutomationPage_Initialized(object? sender, EventArgs e)
     {
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
     }
 
     private async void EnableAutomaticPipelinesToggle_Click(object sender, RoutedEventArgs e)
     {
         var isChecked = _enableAutomaticPipelinesToggle.IsChecked;
         if (isChecked.HasValue)
-            await _automationProcessor.SetEnabledAsync(isChecked.Value).ConfigureAwait(false);
+            await _automationProcessor.SetEnabledAsync(isChecked.Value);
     }
 
     private void NewAutomaticPipelineButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ public partial class AutomationPage
 
     private async void NewManualPipelineButton_Click(object sender, RoutedEventArgs e)
     {
-        await AddManualPipelineAsync().ConfigureAwait(false);
+        await AddManualPipelineAsync();
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -88,10 +88,10 @@ public partial class AutomationPage
             pipelines.AddRange(automaticPipelines);
             pipelines.AddRange(manualPipelines);
 
-            await _automationProcessor.ReloadPipelinesAsync(pipelines).ConfigureAwait(false);
-            await RefreshAsync().ConfigureAwait(false);
+            await _automationProcessor.ReloadPipelinesAsync(pipelines);
+            await RefreshAsync();
 
-            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Saved_Title, Resource.AutomationPage_Saved_Message).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Saved_Title, Resource.AutomationPage_Saved_Message);
         }
         finally
         {
@@ -102,9 +102,9 @@ public partial class AutomationPage
 
     private async void RevertButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshAsync().ConfigureAwait(false);
+        await RefreshAsync();
 
-        await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message).ConfigureAwait(false);
+        await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message);
     }
 
     private async Task RefreshAsync()
@@ -121,10 +121,10 @@ public partial class AutomationPage
         _automaticPipelinesStackPanel.Children.Clear();
         _manualPipelinesStackPanel.Children.Clear();
 
-        var pipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
+        var pipelines = await _automationProcessor.GetPipelinesAsync();
 
         if (_supportedAutomationSteps.IsEmpty())
-            _supportedAutomationSteps = await GetSupportedAutomationStepsAsync().ConfigureAwait(false);
+            _supportedAutomationSteps = await GetSupportedAutomationStepsAsync();
 
         foreach (var pipeline in pipelines.Where(p => p.Trigger is not null))
         {
@@ -149,7 +149,7 @@ public partial class AutomationPage
             ? Visibility.Visible
             : Visibility.Collapsed;
 
-        await Task.WhenAll(initializedTasks).ConfigureAwait(false);
+        await Task.WhenAll(initializedTasks);
 
         _loaderAutomatic.IsLoading = false;
         _loaderManual.IsLoading = false;
@@ -200,8 +200,8 @@ public partial class AutomationPage
             new WinKeyAutomationStep(default)
         };
 
-        var supportTasks = steps.Select(async step => new { Step = step, Supported = await step.IsSupportedAsync().ConfigureAwait(false) });
-        var results = await Task.WhenAll(supportTasks).ConfigureAwait(false);
+        var supportTasks = steps.Select(async step => new { Step = step, Supported = await step.IsSupportedAsync() });
+        var results = await Task.WhenAll(supportTasks);
 
         return results.Where(r => r.Supported).Select(r => r.Step).ToArray();
     }
@@ -284,13 +284,13 @@ public partial class AutomationPage
         menuItems.Add(moveDownMenuItem);
 
         var renameMenuItem = new MenuItem { Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 }, Header = Resource.Rename };
-        renameMenuItem.Click += async (_, _) => await RenamePipelineAsync(control).ConfigureAwait(false);
+        renameMenuItem.Click += async (_, _) => await RenamePipelineAsync(control);
         menuItems.Add(renameMenuItem);
 
         if (control.AutomationPipeline.Trigger is null)
         {
             var changeIconMenuItem = new MenuItem { Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 }, Header = Resource.AutomationPage_ChangeIcon };
-            changeIconMenuItem.Click += async (_, _) => await ChangePipelineIconAsync(control).ConfigureAwait(false);
+            changeIconMenuItem.Click += async (_, _) => await ChangePipelineIconAsync(control);
             menuItems.Add(changeIconMenuItem);
         }
 
@@ -328,7 +328,7 @@ public partial class AutomationPage
     {
         var newName = await MessageBoxHelper.ShowInputAsync(this,
             Resource.AutomationPage_AddManualPipeline_Title,
-            Resource.AutomationPage_AddManualPipeline_Placeholder).ConfigureAwait(false);
+            Resource.AutomationPage_AddManualPipeline_Placeholder);
         if (string.IsNullOrWhiteSpace(newName))
             return;
 
@@ -350,7 +350,7 @@ public partial class AutomationPage
             Resource.AutomationPage_RenamePipeline_Title,
             Resource.AutomationPage_RenamePipeline_Placeholder,
             name,
-            allowEmpty: true).ConfigureAwait(false);
+            allowEmpty: true);
 
         control.SetName(newName);
     }
@@ -362,7 +362,7 @@ public partial class AutomationPage
             var window = new SymbolRegularPicker { Owner = Window.GetWindow(this) };
             window.ShowDialog();
 
-            var icon = await window.SymbolRegularTask.ConfigureAwait(false);
+            var icon = await window.SymbolRegularTask;
             control.SetIcon(icon);
         }
         catch (OperationCanceledException)
@@ -392,3 +392,4 @@ public partial class AutomationPage
     }
 }
 }
+

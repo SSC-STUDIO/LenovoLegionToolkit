@@ -231,7 +231,7 @@ public static class IpcClient
     private static async Task<string?> SendRequestAsync(IpcRequest req)
     {
         using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req));
-        await using var pipe = new NamedPipeClientStream(GetPipeName());
+        using var pipe = new NamedPipeClientStream(GetPipeName());
 
         await ConnectAsync(pipe).ConfigureAwait(false);
 

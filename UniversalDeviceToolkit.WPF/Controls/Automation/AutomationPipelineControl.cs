@@ -153,11 +153,11 @@ public class AutomationPipelineControl : UserControl
         try
         {
             _cardExpander.Header = _cardHeaderControl;
-            _godModePresets = await LoadGodModePresetsAsync().ConfigureAwait(false);
+            _godModePresets = await LoadGodModePresetsAsync();
 
             foreach (var step in AutomationPipeline.Steps)
             {
-                var control = await GenerateStepControlAsync(step).ConfigureAwait(false);
+                var control = await GenerateStepControlAsync(step);
                 _stepsStackPanel.Children.Add(control);
             }
 
@@ -171,13 +171,13 @@ public class AutomationPipelineControl : UserControl
                 _isExclusiveCheckBox.Visibility = Visibility.Hidden;
             }
 
-            _runNowButton.Click += async (_, _) => await RunAsync().ConfigureAwait(false);
+            _runNowButton.Click += async (_, _) => await RunAsync();
 
             _addStepButton.Click += async (_, _) =>
             {
                 var stepControls = new List<AbstractAutomationStepControl>();
                 foreach (var step in _supportedAutomationSteps)
-                    stepControls.Add(await GenerateStepControlAsync(step).ConfigureAwait(false));
+                    stepControls.Add(await GenerateStepControlAsync(step));
 
                 var window = new AddAutomationStepWindow(stepControls, AddStep) { Owner = Window.GetWindow(this) };
                 window.ShowDialog();
@@ -225,16 +225,16 @@ public class AutomationPipelineControl : UserControl
             _runNowButton.IsEnabled = false;
             _runNowButton.Content = Resource.AutomationPipelineControl_Running;
             var pipeline = CreateAutomationPipeline();
-            await _automationProcessor.RunNowAsync(pipeline).ConfigureAwait(false);
+            await _automationProcessor.RunNowAsync(pipeline);
 
-            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Success_Title, Resource.AutomationPipelineControl_RunNow_Success_Message).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Success_Title, Resource.AutomationPipelineControl_RunNow_Success_Message);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Run now completed with errors", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Error_Title, Resource.AutomationPipelineControl_RunNow_Error_Message).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Error_Title, Resource.AutomationPipelineControl_RunNow_Error_Message);
         }
         finally
         {
@@ -330,7 +330,7 @@ public class AutomationPipelineControl : UserControl
     {
         try
         {
-            return (await _godModeController.GetStateAsync().ConfigureAwait(false)).Presets;
+            return (await _godModeController.GetStateAsync()).Presets;
         }
         catch (Exception ex)
         {
@@ -356,13 +356,13 @@ public class AutomationPipelineControl : UserControl
         };
         button.Click += async (_, _) =>
         {
-            _godModePresets = await LoadGodModePresetsAsync().ConfigureAwait(false);
+            _godModePresets = await LoadGodModePresetsAsync();
 
             var window = new AutomationPipelineTriggerConfigurationWindow(triggers) { Owner = Window.GetWindow(this) };
             window.OnSave += async (_, e) =>
             {
                 AutomationPipeline.Trigger = e;
-                _godModePresets = await LoadGodModePresetsAsync().ConfigureAwait(false);
+                _godModePresets = await LoadGodModePresetsAsync();
                 _cardHeaderControl.Subtitle = GenerateSubtitle();
                 _cardHeaderControl.Accessory = GenerateAccessory();
                 _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
@@ -388,7 +388,7 @@ public class AutomationPipelineControl : UserControl
             FnLockAutomationStep s => new FnLockAutomationStepControl(s),
             GodModePresetAutomationStep s => new GodModePresetAutomationStepControl(s),
             HDRAutomationStep s => new HDRAutomationStepControl(s),
-            HybridModeAutomationStep s => await HybridModeAutomationStepControlFactory.GetControlAsync(s).ConfigureAwait(false),
+            HybridModeAutomationStep s => await HybridModeAutomationStepControlFactory.GetControlAsync(s),
             InstantBootAutomationStep s => new InstantBootAutomationStepControl(s),
             MacroAutomationStep s => new MacroAutomationStepControl(s),
             MicrophoneAutomationStep s => new MicrophoneAutomationStepControl(s),

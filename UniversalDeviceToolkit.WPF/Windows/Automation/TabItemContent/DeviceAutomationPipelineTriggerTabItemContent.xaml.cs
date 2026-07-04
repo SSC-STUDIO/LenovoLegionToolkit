@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -41,7 +41,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
     private async void DeviceAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
         RefreshButtons();
-        await LoadAsync().ConfigureAwait(false);
+        await LoadAsync();
     }
 
     private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
@@ -54,7 +54,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
             return;
 
-        await LoadAsync().ConfigureAwait(false);
+        await LoadAsync();
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -62,11 +62,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         try
         {
             if (_filterDebounceCancellationTokenSource is not null)
-                await _filterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await _filterDebounceCancellationTokenSource.CancelAsync();
 
             _filterDebounceCancellationTokenSource = new();
 
-            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token).ConfigureAwait(false);
+            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
 
             _content.Children.Clear();
             _scrollViewer.ScrollToHome();
@@ -105,7 +105,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         _listener.Changed -= NativeWindowsMessageListener_Changed;
 
         _devices.Clear();
-        _devices.AddRange(await Task.Run(Devices.GetAll).ConfigureAwait(false));
+        _devices.AddRange(await Task.Run(Devices.GetAll));
 
         _listener.Changed += NativeWindowsMessageListener_Changed;
 
@@ -281,3 +281,4 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
     }
 }
 }
+

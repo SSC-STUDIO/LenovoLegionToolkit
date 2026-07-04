@@ -130,7 +130,7 @@ public sealed class PluginInstallCoordinator(
             var success = false;
             try
             {
-                success = await RunInstallAsync(request.Manifest, request.CancellationToken).ConfigureAwait(false);
+                success = await RunInstallAsync(request.Manifest, request.CancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -171,7 +171,7 @@ public sealed class PluginInstallCoordinator(
                 pluginManager.StopPlugin(manifest.Id);
 
             AttachProgressHandler();
-            return await pluginRepositoryService.DownloadAndInstallPluginAsync(manifest).ConfigureAwait(false);
+            return await pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
         }
         finally
         {

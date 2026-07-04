@@ -60,7 +60,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             try
             {
                 installProgress.ReportStarted();
-                catalog = await resourceCatalogClient.GetCatalogAsync(token).ConfigureAwait(false);
+                catalog = await resourceCatalogClient.GetCatalogAsync(token);
                 installProgress.ReportCatalogComplete();
 
                 var languageResource = GetLanguageResource(catalog, cultureInfo);
@@ -68,9 +68,9 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
                     languageResource.Url,
                     tempZipPath,
                     installProgress.CreateDownloadProgress(),
-                    token).ConfigureAwait(false);
+                    token);
                 installProgress.ReportVerifyStarted();
-                await resourceCatalogClient.VerifySha256Async(tempZipPath, languageResource.Sha256, token).ConfigureAwait(false);
+                await resourceCatalogClient.VerifySha256Async(tempZipPath, languageResource.Sha256, token);
                 installProgress.ReportVerifyComplete();
 
                 installProgress.ReportApplyStarted();
@@ -87,7 +87,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Language pack download failed for '{cultureInfo.Name}'. Falling back to full portable package.", ex);
 
-                await InstallFromFullPortableAsync(cultureInfo, catalog, fallbackZipPath, fallbackExtractPath, installProgress, token).ConfigureAwait(false);
+                await InstallFromFullPortableAsync(cultureInfo, catalog, fallbackZipPath, fallbackExtractPath, installProgress, token);
 
                 if (!IsInstalled(cultureInfo))
                     throw new InvalidDataException($"Language pack for '{cultureInfo.Name}' could not be installed.", ex);
@@ -191,7 +191,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         CancellationToken token)
     {
         installProgress.ReportStarted();
-        var fullPortable = await GetFullPortableResourceAsync(catalog, installProgress, token).ConfigureAwait(false);
+        var fullPortable = await GetFullPortableResourceAsync(catalog, installProgress, token);
         installProgress.ReportCatalogComplete();
 
         if (string.IsNullOrWhiteSpace(fullPortable.Url))
@@ -201,9 +201,9 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             throw new InvalidDataException("Full portable fallback is missing SHA256 metadata.");
 
         Directory.CreateDirectory(extractPath);
-        await resourceCatalogClient.DownloadAsync(fullPortable.Url, zipPath, installProgress.CreateDownloadProgress(), token).ConfigureAwait(false);
+        await resourceCatalogClient.DownloadAsync(fullPortable.Url, zipPath, installProgress.CreateDownloadProgress(), token);
         installProgress.ReportVerifyStarted();
-        await resourceCatalogClient.VerifySha256Async(zipPath, fullPortable.Sha256, token).ConfigureAwait(false);
+        await resourceCatalogClient.VerifySha256Async(zipPath, fullPortable.Sha256, token);
         installProgress.ReportVerifyComplete();
 
         installProgress.ReportApplyStarted();
@@ -221,7 +221,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             return catalogPortable;
         }
 
-        return await CreateReleaseFullPortableResourceAsync(token).ConfigureAwait(false);
+        return await CreateReleaseFullPortableResourceAsync(token);
     }
 
     private async Task<OnlineFileResource> CreateReleaseFullPortableResourceAsync(CancellationToken token)
@@ -235,8 +235,8 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
         try
         {
-            await resourceCatalogClient.DownloadAsync(hashUrl, hashTempPath, token: token).ConfigureAwait(false);
-            var hashText = await File.ReadAllTextAsync(hashTempPath, token).ConfigureAwait(false);
+            await resourceCatalogClient.DownloadAsync(hashUrl, hashTempPath, token: token);
+            var hashText = await File.ReadAllTextAsync(hashTempPath, token);
             var sha256 = ResolveHash(hashText, assetName);
             if (string.IsNullOrWhiteSpace(sha256))
                 throw new InvalidDataException($"SHA256 file does not contain an entry for '{assetName}'.");
