@@ -39,41 +39,49 @@ internal class SmartKeyHelper
 
     private async void SpecialKeyListener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e)
     {
-        if (e.SpecialKey != SpecialKey.FnF9)
-            return;
-
-        if (await _fnKeysDisabler.GetStatusAsync() == SoftwareStatus.Enabled)
+        try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Ignoring Fn+F9 FnKeys are enabled.");
+            if (e.SpecialKey != SpecialKey.FnF9)
+                return;
 
-            return;
-        }
-
-        if (_smartKeyDoublePressCancellationTokenSource is not null)
-        {
-            await _smartKeyDoublePressCancellationTokenSource.CancelAsync();
-            _smartKeyDoublePressCancellationTokenSource.Dispose();
-        }
-        _smartKeyDoublePressCancellationTokenSource = new CancellationTokenSource();
-
-        var token = _smartKeyDoublePressCancellationTokenSource.Token;
-
-        _ = Task.Run(async () =>
-        {
-            var now = DateTime.UtcNow;
-            var diff = now - _lastSmartKeyPress;
-            _lastSmartKeyPress = now;
-
-            if (diff < _smartKeyDoublePressInterval)
+            if (await _fnKeysDisabler.GetStatusAsync() == SoftwareStatus.Enabled)
             {
-                await ProcessSpecialKey(true);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Ignoring Fn+F9 FnKeys are enabled.");
+
                 return;
             }
 
-            await Task.Delay(_smartKeyDoublePressInterval, token);
-            await ProcessSpecialKey(false);
-        }, token);
+            if (_smartKeyDoublePressCancellationTokenSource is not null)
+            {
+                await _smartKeyDoublePressCancellationTokenSource.CancelAsync();
+                _smartKeyDoublePressCancellationTokenSource.Dispose();
+            }
+            _smartKeyDoublePressCancellationTokenSource = new CancellationTokenSource();
+
+            var token = _smartKeyDoublePressCancellationTokenSource.Token;
+
+            _ = Task.Run(async () =>
+            {
+                var now = DateTime.UtcNow;
+                var diff = now - _lastSmartKeyPress;
+                _lastSmartKeyPress = now;
+
+                if (diff < _smartKeyDoublePressInterval)
+                {
+                    await ProcessSpecialKey(true);
+                    return;
+                }
+
+                await Task.Delay(_smartKeyDoublePressInterval, token);
+                await ProcessSpecialKey(false);
+            }, token);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SpecialKeyListener_Changed)}.", ex);
+        }
     }
 
     private async Task ProcessSpecialKey(bool isDoublePress)
@@ -89,7 +97,10 @@ internal class SmartKeyHelper
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Bringing to foreground after {(isDoublePress ? "double" : "single")} Fn+F9 press.");
-            BringToForeground?.Invoke();
+            if (System.Windows.Application.Current?.Dispatcher is not null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+                _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(() => BringToForeground?.Invoke());
+            else
+                BringToForeground?.Invoke();
             return;
         }
 

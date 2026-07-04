@@ -52,18 +52,22 @@ public partial class DeviceSetupWindow
 
     private async void Confirm_Click(object sender, RoutedEventArgs e)
     {
-        if (_isPreparing)
-            return;
+        try
+        {
+            if (_isPreparing)
+                return;
 
-        _isPreparing = true;
-        _confirmButton.IsEnabled = false;
-        _skipButton.IsEnabled = false;
-        _statusText.Text = T("DeviceSetupWindow_Preparing", "Preparing device setup...");
-        _statusText.Visibility = Visibility.Visible;
+            _isPreparing = true;
+            _confirmButton.IsEnabled = false;
+            _skipButton.IsEnabled = false;
+            _statusText.Text = T("DeviceSetupWindow_Preparing", "Preparing device setup...");
+            _statusText.Visibility = Visibility.Visible;
 
-        await Task.Yield();
+            await Task.Yield();
 
-        _taskCompletionSource.TrySetResult(new DeviceSetupResult(true, _recommendedPack?.Id, this));
+            _taskCompletionSource.TrySetResult(new DeviceSetupResult(true, _recommendedPack?.Id, this));
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void Skip_Click(object sender, RoutedEventArgs e)

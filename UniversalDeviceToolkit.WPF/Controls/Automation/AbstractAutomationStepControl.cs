@@ -105,8 +105,12 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
     {
-        await RefreshAsync();
-        OnFinishedLoading();
+        try
+        {
+            await RefreshAsync();
+            OnFinishedLoading();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     public abstract IAutomationStep CreateAutomationStep();

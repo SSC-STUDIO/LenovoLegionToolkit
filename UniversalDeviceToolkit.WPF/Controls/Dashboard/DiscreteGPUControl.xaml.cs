@@ -100,21 +100,37 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
-            return;
+        try
+        {
+            if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
+                return;
 
-        Visibility = Visibility.Visible;
-        await RefreshAsync();
+            Visibility = Visibility.Visible;
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NativeWindowsMessageListener_Changed)}.", ex);
+        }
     }
 
     private async void DiscreteGPUControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            return;
+        try
+        {
+            if (IsVisible)
+                return;
 
-        IsGpuContentReady = false;
+            IsGpuContentReady = false;
 
-        await _gpuController.StopAsync();
+            await _gpuController.StopAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DiscreteGPUControl_IsVisibleChanged)}.", ex);
+        }
     }
 
     private void GpuController_Refreshed(object? sender, GPUStatus e) => Dispatcher.BeginInvoke(() =>

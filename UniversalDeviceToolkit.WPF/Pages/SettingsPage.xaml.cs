@@ -85,10 +85,18 @@ public partial class SettingsPage
 
     private async void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible && !_isInitialized)
+        try
         {
-            _isInitialized = true;
-            await RefreshAsync();
+            if (IsVisible && !_isInitialized)
+            {
+                _isInitialized = true;
+                await RefreshAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error initializing settings page.", ex);
         }
     }
 
@@ -169,57 +177,65 @@ public partial class SettingsPage
 
     private async void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)
     {
-        if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
-            return;
-
-        UserControl? controlToShow = selectedItem.Key switch
+        try
         {
-            "Appearance" => _appearanceControl,
-            "Application" => _applicationBehaviorControl,
-            "SmartKeys" => _smartKeysControl,
-            "Display" => _displayControl,
-            "Update" => _updateControl,
-            "Power" => _powerControl,
-            "Integrations" => _integrationsControl,
-            _ => null
-        };
+            if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
+                return;
 
-        if (controlToShow != null)
-        {
-            _contentControl.Content = controlToShow;
-            PlayTransitionAnimation();
-        }
-
-        // Refresh the selected control immediately if it's not the first one (Appearance)
-        if (selectedItem.Key != "Appearance")
-        {
-            switch (selectedItem.Key)
+            UserControl? controlToShow = selectedItem.Key switch
             {
-                case "Application":
-                    if (_applicationBehaviorControl != null)
-                        await _applicationBehaviorControl.RefreshAsync();
-                    break;
-                case "SmartKeys":
-                    if (_smartKeysControl != null)
-                        await _smartKeysControl.RefreshAsync();
-                    break;
-                case "Display":
-                    if (_displayControl != null)
-                        await _displayControl.RefreshAsync();
-                    break;
-                case "Update":
-                    if (_updateControl != null)
-                        _updateControl.Refresh();
-                    break;
-                case "Power":
-                    if (_powerControl != null)
-                        await _powerControl.RefreshAsync();
-                    break;
-                case "Integrations":
-                    if (_integrationsControl != null)
-                        await _integrationsControl.RefreshAsync();
-                    break;
+                "Appearance" => _appearanceControl,
+                "Application" => _applicationBehaviorControl,
+                "SmartKeys" => _smartKeysControl,
+                "Display" => _displayControl,
+                "Update" => _updateControl,
+                "Power" => _powerControl,
+                "Integrations" => _integrationsControl,
+                _ => null
+            };
+
+            if (controlToShow != null)
+            {
+                _contentControl.Content = controlToShow;
+                PlayTransitionAnimation();
             }
+
+            // Refresh the selected control immediately if it's not the first one (Appearance)
+            if (selectedItem.Key != "Appearance")
+            {
+                switch (selectedItem.Key)
+                {
+                    case "Application":
+                        if (_applicationBehaviorControl != null)
+                            await _applicationBehaviorControl.RefreshAsync();
+                        break;
+                    case "SmartKeys":
+                        if (_smartKeysControl != null)
+                            await _smartKeysControl.RefreshAsync();
+                        break;
+                    case "Display":
+                        if (_displayControl != null)
+                            await _displayControl.RefreshAsync();
+                        break;
+                    case "Update":
+                        if (_updateControl != null)
+                            _updateControl.Refresh();
+                        break;
+                    case "Power":
+                        if (_powerControl != null)
+                            await _powerControl.RefreshAsync();
+                        break;
+                    case "Integrations":
+                        if (_integrationsControl != null)
+                            await _integrationsControl.RefreshAsync();
+                        break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error navigating settings page.", ex);
         }
     }
 

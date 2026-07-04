@@ -380,20 +380,28 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
     private async void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
     {
-        IsSelected = true;
+        try
+        {
+            IsSelected = true;
 
-        // If already completed, do nothing
-        if (Status == PackageStatus.Completed)
-            return;
+            // If already completed, do nothing
+            if (Status == PackageStatus.Completed)
+                return;
 
-        // If already downloading or installing, don't repeat
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            // If already downloading or installing, don't repeat
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        if (!AutoStartOnSelection)
-            return;
+            if (!AutoStartOnSelection)
+                return;
 
-        await StartAsync();
+            await StartAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SelectCheckBox_Checked)}.", ex);
+        }
     }
 
     private void SelectCheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -847,26 +855,42 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
     private async void DownloadButton_Click(object sender, RoutedEventArgs e)
     {
-        if (Status == PackageStatus.Completed)
-            return;
+        try
+        {
+            if (Status == PackageStatus.Completed)
+                return;
 
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        await DownloadAndInstallPackageAsync();
+            await DownloadAndInstallPackageAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DownloadButton_Click)}.", ex);
+        }
     }
 
     private void CancelDownloadButton_Click(object sender, RoutedEventArgs e) => _downloadPackageTokenSource?.Cancel();
 
     private async void InstallButton_Click(object sender, RoutedEventArgs e)
     {
-        if (Status == PackageStatus.Completed)
-            return;
+        try
+        {
+            if (Status == PackageStatus.Completed)
+                return;
 
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        await InstallPackageAsync();
+            await InstallPackageAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(InstallButton_Click)}.", ex);
+        }
     }
 }
 }

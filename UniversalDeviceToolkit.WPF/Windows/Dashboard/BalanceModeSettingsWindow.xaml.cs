@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using System;
+using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
@@ -27,15 +28,19 @@ public partial class BalanceModeSettingsWindow
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        var isAiModeChecked = _aiModeCheckBox.IsChecked ?? false;
+        try
+        {
+            var isAiModeChecked = _aiModeCheckBox.IsChecked ?? false;
 
-        _aiController.IsAIModeEnabled = isAiModeChecked;
+            _aiController.IsAIModeEnabled = isAiModeChecked;
 
-        await _aiController.StopAsync();
-        await _powerModeFeature.SetStateAsync(PowerModeState.Balance);
-        await _aiController.StartIfNeededAsync();
+            await _aiController.StopAsync();
+            await _powerModeFeature.SetStateAsync(PowerModeState.Balance);
+            await _aiController.StartIfNeededAsync();
 
-        Close();
+            Close();
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

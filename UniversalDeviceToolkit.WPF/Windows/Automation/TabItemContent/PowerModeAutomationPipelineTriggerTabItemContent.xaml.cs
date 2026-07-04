@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
@@ -36,19 +36,23 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
 
     private async void PowerModeAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs eventArgs)
     {
-        var states = await _feature.GetAllStatesAsync();
-
-        foreach (var state in states)
+        try
         {
-            var radio = new RadioButton
+            var states = await _feature.GetAllStatesAsync();
+
+            foreach (var state in states)
             {
-                Content = state.GetDisplayName(),
-                Tag = state,
-                IsChecked = state == _powerModeState,
-                Margin = new(0, 0, 0, 8)
-            };
-            _content.Children.Add(radio);
+                var radio = new RadioButton
+                {
+                    Content = state.GetDisplayName(),
+                    Tag = state,
+                    IsChecked = state == _powerModeState,
+                    Margin = new(0, 0, 0, 8)
+                };
+                _content.Children.Add(radio);
+            }
         }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 }
 }

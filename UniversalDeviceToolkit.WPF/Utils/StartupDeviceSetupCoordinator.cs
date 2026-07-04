@@ -49,6 +49,11 @@ public sealed class StartupDeviceSetupCoordinator
 
     public async Task RunIfNeededAsync(MachineInformation machineInformation)
     {
+        if (System.Windows.Application.Current?.Dispatcher is not null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+        {
+            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() => RunIfNeededAsync(machineInformation));
+            return;
+        }
         LoadInstalledCatalog();
 
         if (_isSetupComplete())

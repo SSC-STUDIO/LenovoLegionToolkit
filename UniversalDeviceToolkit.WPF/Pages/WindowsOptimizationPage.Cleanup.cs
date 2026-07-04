@@ -19,7 +19,15 @@ public partial class WindowsOptimizationPage
 {
     private async void ScanCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        await ViewModel.ScanCleanupAsync(CancellationToken.None);
+        try
+        {
+            await ViewModel.ScanCleanupAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error scanning cleanup.", ex);
+        }
     }
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)

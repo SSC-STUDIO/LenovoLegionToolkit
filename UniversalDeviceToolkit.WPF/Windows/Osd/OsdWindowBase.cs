@@ -297,26 +297,34 @@ public abstract class OsdWindowBase : Window
 
     private async void OnVisibilityChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
+        try
         {
-            _sensorsGroupControllers.ShowAverageCpuFrequency = _hardwareSensorSettings.Store.ShowCpuAverageFrequency;
+            if (IsVisible)
+            {
+                _sensorsGroupControllers.ShowAverageCpuFrequency = _hardwareSensorSettings.Store.ShowCpuAverageFrequency;
 
-            _cts?.Cancel();
-            _cts?.Dispose();
-            _cts = new CancellationTokenSource();
+                _cts?.Cancel();
+                _cts?.Dispose();
+                _cts = new CancellationTokenSource();
 
-            await CheckAndUpdateFpsMonitoring();
-            UpdateMeasurementControlsVisibility();
+                await CheckAndUpdateFpsMonitoring();
+                UpdateMeasurementControlsVisibility();
 
-            _sensorsGroupControllers.Start(this, TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval));
+                _sensorsGroupControllers.Start(this, TimeSpan.FromSeconds(_OsdSettings.Store.OsdRefreshInterval));
 
-            await TheRing(_cts.Token);
+                await TheRing(_cts.Token);
+            }
+            else
+            {
+                _cts?.Cancel();
+                _sensorsGroupControllers.Stop(this);
+                await CheckAndUpdateFpsMonitoring();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            _cts?.Cancel();
-            _sensorsGroupControllers.Stop(this);
-            await CheckAndUpdateFpsMonitoring();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(OnVisibilityChanged)}.", ex);
         }
     }
 

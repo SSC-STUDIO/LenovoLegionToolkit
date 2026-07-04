@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,8 +50,12 @@ public partial class SelectSmartKeyPipelinesWindow
 
     private async void SelectSmartKeyPipelinesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync();
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RefreshAsync()

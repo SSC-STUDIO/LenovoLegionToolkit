@@ -100,19 +100,27 @@ public partial class SettingsPowerControl
 
     private async void PowerModeMappingComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        if (!_powerModeMappingComboBox.TryGetSelectedItem(out PowerModeMappingMode powerModeMappingMode))
-            return;
+            if (!_powerModeMappingComboBox.TryGetSelectedItem(out PowerModeMappingMode powerModeMappingMode))
+                return;
 
-        _settings.Store.PowerModeMappingMode = powerModeMappingMode;
-        _settings.SynchronizeStore();
+            _settings.Store.PowerModeMappingMode = powerModeMappingMode;
+            _settings.SynchronizeStore();
 
-        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
-        _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
-        _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
-        _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
+            _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeMappingComboBox_SelectionChanged)}.", ex);
+        }
     }
 
     private void WindowsPowerPlans_Click(object sender, RoutedEventArgs e)

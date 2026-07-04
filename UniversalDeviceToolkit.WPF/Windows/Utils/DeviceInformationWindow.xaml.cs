@@ -49,7 +49,18 @@ public partial class DeviceInformationWindow
         };
     }
 
-    private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync();
+    private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DeviceInformationWindow_Loaded)}.", ex);
+        }
+    }
 
     protected override void OnSourceInitialized(EventArgs e)
     {
@@ -125,7 +136,18 @@ public partial class DeviceInformationWindow
         }
     }
 
-    private async void RefreshWarrantyButton_OnClick(object sender, RoutedEventArgs e) => await RefreshAsync(true);
+    private async void RefreshWarrantyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await RefreshAsync(true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshWarrantyButton_OnClick)}.", ex);
+        }
+    }
 
     private void SetHardwareInformation(HardwareInventory? hardware)
     {

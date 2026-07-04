@@ -103,12 +103,20 @@ public class DashboardGroupControl : UserControl
 
     protected override async void OnContentChanged(object oldContent, object newContent)
     {
-        base.OnContentChanged(oldContent, newContent);
+        try
+        {
+            base.OnContentChanged(oldContent, newContent);
 
-        if (newContent is not StackPanel)
-            return;
+            if (newContent is not StackPanel)
+                return;
 
-        await TryCompleteFirstVisibleContentReadyAsync();
+            await TryCompleteFirstVisibleContentReadyAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(OnContentChanged)}.", ex);
+        }
     }
 
     private async Task TryCompleteFirstVisibleContentReadyAsync()

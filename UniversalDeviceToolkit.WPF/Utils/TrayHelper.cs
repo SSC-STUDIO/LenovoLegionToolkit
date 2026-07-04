@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
@@ -58,18 +59,24 @@ public class TrayHelper : IDisposable
         notifyIcon.OnClick += (_, _) => _bringToForeground();
         _notifyIcon = notifyIcon;
 
-        _contextMenu.Opened += async (_, _) => await UpdateStatusItemsAsync();
+        _contextMenu.Opened += (_, _) => _ = Application.Current?.Dispatcher?.InvokeAsync(() => UpdateStatusItemsAsync());
 
-        _themeManager.ThemeApplied += (_, _) => _contextMenu.Resources = App.Current.Resources;
+        _themeManager.ThemeApplied += (_, _) => _ = Application.Current?.Dispatcher?.InvokeAsync(() => _contextMenu.Resources = App.Current.Resources);
     }
 
     public async Task InitializeAsync()
     {
+        if (Application.Current?.Dispatcher is not null && !Application.Current.Dispatcher.CheckAccess())
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() => InitializeAsync());
+            return;
+        }
+
         var pipelines = await _automationProcessor.GetPipelinesAsync();
         pipelines = pipelines.Where(p => p.Trigger is null).ToList();
         await SetAutomationItemsAsync(pipelines);
 
-        _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p);
+        _automationProcessor.PipelinesChanged += (_, p) => _ = Application.Current?.Dispatcher?.InvokeAsync(() => SetAutomationItemsAsync(p));
     }
 
     private void InitializeStaticItems(NavigationStore navigation)
@@ -114,6 +121,11 @@ public class TrayHelper : IDisposable
 
     private async Task UpdateStatusItemsAsync()
     {
+        if (Application.Current?.Dispatcher is not null && !Application.Current.Dispatcher.CheckAccess())
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() => UpdateStatusItemsAsync());
+            return;
+        }
         // Remove existing status items
         foreach (var item in _contextMenu.Items.OfType<Control>().Where(mi => STATUS_TAG.Equals(mi.Tag)).ToArray())
             _contextMenu.Items.Remove(item);
@@ -303,6 +315,11 @@ public class TrayHelper : IDisposable
 
     private async Task SetAutomationItemsAsync(List<AutomationPipeline> pipelines)
     {
+        if (Application.Current?.Dispatcher is not null && !Application.Current.Dispatcher.CheckAccess())
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() => SetAutomationItemsAsync(pipelines));
+            return;
+        }
         foreach (var item in _contextMenu.Items.OfType<Control>().Where(mi => AUTOMATION_TAG.Equals(mi.Tag)).ToArray())
             _contextMenu.Items.Remove(item);
 

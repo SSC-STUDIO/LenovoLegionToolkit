@@ -110,12 +110,20 @@ public partial class App
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
-        var orchestrator = new StartupOrchestrator(this, e);
-        _orchestrator = orchestrator;
-        var exitCode = await orchestrator.RunAsync();
+        try
+        {
+            var orchestrator = new StartupOrchestrator(this, e);
+            _orchestrator = orchestrator;
+            var exitCode = await orchestrator.RunAsync();
 
-        if (exitCode != 0)
-            Environment.Exit(exitCode);
+            if (exitCode != 0)
+                Environment.Exit(exitCode);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Application_Startup)}.", ex);
+        }
     }
 
     internal void RegisterExceptionHandlers()

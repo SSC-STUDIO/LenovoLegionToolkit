@@ -84,7 +84,15 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        await OnStateChangeAsync(_comboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>());
+        try
+        {
+            await OnStateChangeAsync(_comboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>());
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ComboBox_SelectionChanged)}.", ex);
+        }
     }
 
     protected bool TryGetSelectedItem(out T value) => _comboBox.TryGetSelectedItem(out value);

@@ -39,14 +39,30 @@ public partial class AutomationPage
 
     private async void AutomationPage_Initialized(object? sender, EventArgs e)
     {
-        await RefreshAsync();
+        try
+        {
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing automation page.", ex);
+        }
     }
 
     private async void EnableAutomaticPipelinesToggle_Click(object sender, RoutedEventArgs e)
     {
-        var isChecked = _enableAutomaticPipelinesToggle.IsChecked;
-        if (isChecked.HasValue)
-            await _automationProcessor.SetEnabledAsync(isChecked.Value);
+        try
+        {
+            var isChecked = _enableAutomaticPipelinesToggle.IsChecked;
+            if (isChecked.HasValue)
+                await _automationProcessor.SetEnabledAsync(isChecked.Value);
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error toggling automatic pipelines.", ex);
+        }
     }
 
     private void NewAutomaticPipelineButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +80,15 @@ public partial class AutomationPage
 
     private async void NewManualPipelineButton_Click(object sender, RoutedEventArgs e)
     {
-        await AddManualPipelineAsync();
+        try
+        {
+            await AddManualPipelineAsync();
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error adding manual pipeline.", ex);
+        }
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -102,9 +126,17 @@ public partial class AutomationPage
 
     private async void RevertButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshAsync();
+        try
+        {
+            await RefreshAsync();
 
-        await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message);
+            await SnackbarHelper.ShowAsync(Resource.AutomationPage_Reverted_Title, Resource.AutomationPage_Reverted_Message);
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error reverting automation page.", ex);
+        }
     }
 
     private async Task RefreshAsync()

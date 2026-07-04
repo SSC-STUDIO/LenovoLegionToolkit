@@ -95,11 +95,19 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
-            return;
+        try
+        {
+            if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
+                return;
 
-        Visibility = Visibility.Visible;
-        await RefreshAsync();
+            Visibility = Visibility.Visible;
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NativeWindowsMessageListener_Changed)}.", ex);
+        }
     }
 
     private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>

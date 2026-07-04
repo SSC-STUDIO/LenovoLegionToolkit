@@ -76,32 +76,44 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 
     private async void PresetButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Button presetButton || presetButton.Appearance == ControlAppearance.Primary)
-            return;
+        try
+        {
+            if (sender is not Button presetButton || presetButton.Appearance == ControlAppearance.Primary)
+                return;
 
-        var selectedPreset = (RGBKeyboardBacklightPreset)presetButton.Tag;
-        var state = await _controller.GetStateAsync();
-        await _controller.SetStateAsync(new(selectedPreset, state.Presets));
+            var selectedPreset = (RGBKeyboardBacklightPreset)presetButton.Tag;
+            var state = await _controller.GetStateAsync();
+            await _controller.SetStateAsync(new(selectedPreset, state.Presets));
 
-        await RefreshAsync();
+            await RefreshAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void SynchroniseZonesMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not MenuItem { Parent: ContextMenu { PlacementTarget: CardControl { Content: ColorPickerControl pickerControl } } })
-            return;
+        try
+        {
+            if (sender is not MenuItem { Parent: ContextMenu { PlacementTarget: CardControl { Content: ColorPickerControl pickerControl } } })
+                return;
 
-        foreach (var zone in Zones)
-            zone.SelectedColor = pickerControl.SelectedColor;
+            foreach (var zone in Zones)
+                zone.SelectedColor = pickerControl.SelectedColor;
 
-        await SaveState();
-        await RefreshAsync();
+            await SaveState();
+            await RefreshAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void CardControl_Changed(object? sender, EventArgs e)
     {
-        await SaveState();
-        await RefreshAsync();
+        try
+        {
+            await SaveState();
+            await RefreshAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     protected override async Task OnRefreshAsync()

@@ -119,7 +119,15 @@ public partial class WindowsOptimizationPage
 
     private async void DriverSearchButton_Click(object sender, RoutedEventArgs e)
     {
-        await DriverDownloadPackagesButton_Click(sender, e);
+        try
+        {
+            await DriverDownloadPackagesButton_Click(sender, e);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during driver search.", ex);
+        }
     }
 
     private void DriverScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

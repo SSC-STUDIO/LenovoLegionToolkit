@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,8 +31,12 @@ public partial class EditDashboardWindow
 
     private async void EditDashboardWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync();
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RefreshAsync()
@@ -64,16 +68,20 @@ public partial class EditDashboardWindow
 
     private async void AddButton_Click(object sender, RoutedEventArgs e)
     {
-        var result = await MessageBoxHelper.ShowInputAsync(this,
-            Resource.EditDashboardWindow_CreateGroup_Title,
-            Resource.EditDashboardWindow_CreateGroup_Message,
-            primaryButton: Resource.OK,
-            secondaryButton: Resource.Cancel);
+        try
+        {
+            var result = await MessageBoxHelper.ShowInputAsync(this,
+                Resource.EditDashboardWindow_CreateGroup_Title,
+                Resource.EditDashboardWindow_CreateGroup_Message,
+                primaryButton: Resource.OK,
+                secondaryButton: Resource.Cancel);
 
-        if (string.IsNullOrEmpty(result))
-            return;
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        _groupsStackPanel.Children.Add(CreateGroupControl(new(DashboardGroupType.Custom, result)));
+            _groupsStackPanel.Children.Add(CreateGroupControl(new(DashboardGroupType.Custom, result)));
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void DefaultButton_Click(object sender, RoutedEventArgs e)

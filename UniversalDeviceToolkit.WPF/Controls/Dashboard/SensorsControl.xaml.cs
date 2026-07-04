@@ -449,34 +449,42 @@ public partial class SensorsControl : IDisposable
 
     private async void SensorsControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
+        try
         {
-            Refresh();
-            RefreshBattery();
-            return;
-        }
+            if (IsVisible)
+            {
+                Refresh();
+                RefreshBattery();
+                return;
+            }
 
-        if (_cts is not null)
+            if (_cts is not null)
+            {
+                await _cts.CancelAsync();
+                _cts.Dispose();
+            }
+            _cts = null;
+
+            if (_refreshTask is not null)
+                await _refreshTask;
+            _refreshTask = null;
+
+            if (_batteryCts is not null)
+            {
+                await _batteryCts.CancelAsync();
+                _batteryCts.Dispose();
+            }
+            _batteryCts = null;
+
+            if (_batteryRefreshTask is not null)
+                await _batteryRefreshTask;
+            _batteryRefreshTask = null;
+        }
+        catch (Exception ex)
         {
-            await _cts.CancelAsync();
-            _cts.Dispose();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SensorsControl_IsVisibleChanged)}.", ex);
         }
-        _cts = null;
-
-        if (_refreshTask is not null)
-            await _refreshTask;
-        _refreshTask = null;
-
-        if (_batteryCts is not null)
-        {
-            await _batteryCts.CancelAsync();
-            _batteryCts.Dispose();
-        }
-        _batteryCts = null;
-
-        if (_batteryRefreshTask is not null)
-            await _batteryRefreshTask;
-        _batteryRefreshTask = null;
     }
 
     private void RefreshBattery()

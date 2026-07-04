@@ -504,137 +504,166 @@ public partial class GodModeSettingsWindow
 
     private async void PresetsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_isRefreshing || !_state.HasValue)
-            return;
-
-        if (!_presetsComboBox.TryGetSelectedItem<KeyValuePair<Guid, GodModePreset>>(out var item))
-            return;
-
-        if (_state.Value.ActivePresetId == item.Key)
-            return;
-
-        FlushActivePresetToState();
-        _state = _state.Value with { ActivePresetId = item.Key };
-
         try
         {
-            await PersistStateAsync();
+            if (_isRefreshing || !_state.HasValue)
+                return;
 
-            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
-                await _godModeController.ApplyStateAsync();
+            if (!_presetsComboBox.TryGetSelectedItem<KeyValuePair<Guid, GodModePreset>>(out var item))
+                return;
+
+            if (_state.Value.ActivePresetId == item.Key)
+                return;
+
+            FlushActivePresetToState();
+            _state = _state.Value with { ActivePresetId = item.Key };
+
+            try
+            {
+                await PersistStateAsync();
+
+                if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
+                    await _godModeController.ApplyStateAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Couldn't switch preset.", ex);
+
+                await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+                return;
+            }
+
+            await SetStateAsync(_state.Value);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't switch preset.", ex);
-
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
-            return;
+                Log.Instance.Trace($"Error in {nameof(PresetsComboBox_SelectionChanged)}: {ex.Message}", ex);
         }
-
-        await SetStateAsync(_state.Value);
     }
 
     private async void EditPresetsButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_state.HasValue)
-            return;
-
-        FlushActivePresetToState();
-
-        var activePresetId = _state.Value.ActivePresetId;
-        var presets = _state.Value.Presets;
-        var preset = presets[activePresetId];
-
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name);
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Edit preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={activePresetId}]");
-        if (string.IsNullOrWhiteSpace(result))
-            return;
-
-        _state = RenameActivePreset(_state.Value, result);
-
         try
         {
-            await PersistAndRefreshPresetListAsync();
+            if (!_state.HasValue)
+                return;
+
+            FlushActivePresetToState();
+
+            var activePresetId = _state.Value.ActivePresetId;
+            var presets = _state.Value.Presets;
+            var preset = presets[activePresetId];
+
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, preset.Name);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Edit preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={activePresetId}]");
+            if (string.IsNullOrWhiteSpace(result))
+                return;
+
+            _state = RenameActivePreset(_state.Value, result);
+
+            try
+            {
+                await PersistAndRefreshPresetListAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Couldn't rename preset.", ex);
+
+                await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+                return;
+            }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't rename preset.", ex);
-
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
-            return;
+                Log.Instance.Trace($"Error in {nameof(EditPresetsButton_Click)}: {ex.Message}", ex);
         }
-
     }
 
     private async void DeletePresetsButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_state.HasValue)
-            return;
-
-        if (_state.Value.Presets.Count <= 1)
-            return;
-
-        var activePresetId = _state.Value.ActivePresetId;
-        _state = DeleteActivePreset(_state.Value);
-
         try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={_state.Value.Presets.Count}, newActivePresetId={_state.Value.ActivePresetId}]");
+            if (!_state.HasValue)
+                return;
 
-            await PersistAndRefreshPresetListAsync();
+            if (_state.Value.Presets.Count <= 1)
+                return;
 
-            if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
-                await _godModeController.ApplyStateAsync();
+            var activePresetId = _state.Value.ActivePresetId;
+            _state = DeleteActivePreset(_state.Value);
+
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Deleting God Mode preset. [deletedPresetId={activePresetId}, remainingPresetCount={_state.Value.Presets.Count}, newActivePresetId={_state.Value.ActivePresetId}]");
+
+                await PersistAndRefreshPresetListAsync();
+
+                if (await _powerModeFeature.GetStateAsync() == PowerModeState.GodMode)
+                    await _godModeController.ApplyStateAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Couldn't delete preset.", ex);
+
+                await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+                return;
+            }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't delete preset.", ex);
-
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
-            return;
+                Log.Instance.Trace($"Error in {nameof(DeletePresetsButton_Click)}: {ex.Message}", ex);
         }
-
     }
 
     private async void AddPresetsButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_state.HasValue)
-            return;
-
-        var defaultName = GetUniquePresetName(GetDefaultPresetName(), _state.Value.Presets);
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, defaultName);
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Add preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
-        if (string.IsNullOrWhiteSpace(result))
-            return;
-
-        FlushActivePresetToState();
-
-        _state = AddPreset(_state.Value, result);
-
         try
         {
-            var newActivePresetId = _state.Value.ActivePresetId;
-            var newPreset = _state.Value.Presets[newActivePresetId];
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={_state.Value.Presets.Count}]");
+            if (!_state.HasValue)
+                return;
 
-            await PersistAndRefreshPresetListAsync();
+            var defaultName = GetUniquePresetName(GetDefaultPresetName(), _state.Value.Presets);
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.GodModeSettingsWindow_EditPreset_Title, Resource.GodModeSettingsWindow_EditPreset_Message, defaultName);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Add preset dialog completed. [result={(result is null ? "<null>" : result)}, activePresetId={_state.Value.ActivePresetId}, presetCount={_state.Value.Presets.Count}]");
+            if (string.IsNullOrWhiteSpace(result))
+                return;
+
+            FlushActivePresetToState();
+
+            _state = AddPreset(_state.Value, result);
+
+            try
+            {
+                var newActivePresetId = _state.Value.ActivePresetId;
+                var newPreset = _state.Value.Presets[newActivePresetId];
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Adding God Mode preset. [newPresetId={newActivePresetId}, newPresetName={newPreset.Name}, presetCount={_state.Value.Presets.Count}]");
+
+                await PersistAndRefreshPresetListAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Couldn't add preset.", ex);
+
+                await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+                return;
+            }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't add preset.", ex);
-
-            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
-            return;
+                Log.Instance.Trace($"Error in {nameof(AddPresetsButton_Click)}: {ex.Message}", ex);
         }
-
     }
 
     private async void DefaultFanCurve_Click(object sender, RoutedEventArgs e)

@@ -119,9 +119,17 @@ public static class HybridModeControlFactory
 
         private async void InfoButton_Click(object sender, RoutedEventArgs e)
         {
-            var states = await Feature.GetAllStatesAsync();
-            var window = new ExtendedHybridModeInfoWindow(states) { Owner = Window.GetWindow(this) };
-            window.ShowDialog();
+            try
+            {
+                var states = await Feature.GetAllStatesAsync();
+                var window = new ExtendedHybridModeInfoWindow(states) { Owner = Window.GetWindow(this) };
+                window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Exception in {nameof(InfoButton_Click)}.", ex);
+            }
         }
     }
 

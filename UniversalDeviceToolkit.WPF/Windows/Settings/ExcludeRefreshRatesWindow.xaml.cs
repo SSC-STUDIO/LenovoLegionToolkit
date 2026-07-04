@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -26,8 +27,12 @@ public partial class ExcludeRefreshRatesWindow
 
     private async void PickProcessesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync();
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RefreshAsync()

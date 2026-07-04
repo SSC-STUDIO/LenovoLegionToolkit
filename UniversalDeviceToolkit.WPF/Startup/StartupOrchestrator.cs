@@ -192,7 +192,12 @@ namespace UniversalDeviceToolkit.WPF.Startup
 
         private async Task CheckCompatibilityAsync()
         {
-            await LocalizationHelper.SetLanguageAsync(true, App.CreateStartupLanguagePackManager(_flags));
+            // Set language from local settings only.  We deliberately do NOT pass a
+            // LanguagePackManager here because that would trigger an online catalog
+            // download (GetCatalogAsync) that can block for 30+ seconds over RDP or
+            // slow networks.  The language selector will show the built-in list, and
+            // the language pack manager runs lazily through IoC when first needed.
+            await LocalizationHelper.SetLanguageAsync(true);
 
             var applicationSettings = new ApplicationSettings();
             _settings = applicationSettings;

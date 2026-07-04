@@ -349,13 +349,21 @@ public partial class WindowsOptimizationPage : Page
 
     private async void ClearSelectionButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
+        try
         {
-            await StartOrPauseSelectedDriversAsync();
+            if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
+            {
+                await StartOrPauseSelectedDriversAsync();
+            }
+            else
+            {
+                ViewModel.ClearSelection();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ViewModel.ClearSelection();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error clearing selection.", ex);
         }
     }
 }

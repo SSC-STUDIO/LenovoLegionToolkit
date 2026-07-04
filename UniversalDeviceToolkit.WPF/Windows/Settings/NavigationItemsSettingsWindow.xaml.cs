@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
@@ -20,23 +21,27 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
 
     private async void NavigationItemsSettingsWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        _isInitializing = true;
+        try
+        {
+            _isInitializing = true;
         
-        // Initialize the toggle states of all navigation items
-        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
+            // Initialize the toggle states of all navigation items
+            var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-        var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync();
-        _keyboardCard.Visibility = keyboardSupported ? Visibility.Visible : Visibility.Collapsed;
-        _keyboardToggle.IsChecked = keyboardSupported && GetNavigationItemVisibility("keyboard", visibilitySettings);
-        _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
-        _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
-        _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
+            var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync();
+            _keyboardCard.Visibility = keyboardSupported ? Visibility.Visible : Visibility.Collapsed;
+            _keyboardToggle.IsChecked = keyboardSupported && GetNavigationItemVisibility("keyboard", visibilitySettings);
+            _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
+            _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
+            _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
 
-        _pluginExtensionsToggle.IsChecked = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
+            _pluginExtensionsToggle.IsChecked = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
 
-        _aboutToggle.IsChecked = GetNavigationItemVisibility("about", visibilitySettings);
+            _aboutToggle.IsChecked = GetNavigationItemVisibility("about", visibilitySettings);
         
-        _isInitializing = false;
+            _isInitializing = false;
+        }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)

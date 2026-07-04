@@ -62,7 +62,9 @@ public partial class PackagesPage : IProgress<float>
 
     private async void PackagesPage_Initialized(object? sender, EventArgs e)
     {
-        _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
+        try
+        {
+            _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
         _osComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
 
         var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
@@ -76,6 +78,12 @@ public partial class PackagesPage : IProgress<float>
 
         _sourcePrimaryRadio.Tag = PackageDownloaderFactory.Type.Vantage;
         _sourceSecondaryRadio.Tag = PackageDownloaderFactory.Type.PCSupport;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error initializing packages page.", ex);
+        }
     }
 
     public void Report(float value) => Dispatcher.Invoke(() =>
@@ -268,33 +276,49 @@ public partial class PackagesPage : IProgress<float>
 
     private async void OnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
-            return;
+        try
+        {
+            if (!await ShouldInterruptDownloadsIfRunning())
+                return;
 
-        if (_packages is null)
-            return;
+            if (_packages is null)
+                return;
 
-        _packageDownloaderSettings.Store.OnlyShowUpdates = _onlyShowUpdatesCheckBox.IsChecked ?? false;
-        _packageDownloaderSettings.SynchronizeStore();
+            _packageDownloaderSettings.Store.OnlyShowUpdates = _onlyShowUpdatesCheckBox.IsChecked ?? false;
+            _packageDownloaderSettings.SynchronizeStore();
 
-        _packagesStackPanel.Children.Clear();
-        _scrollViewer.ScrollToHome();
+            _packagesStackPanel.Children.Clear();
+            _scrollViewer.ScrollToHome();
 
-        Reload();
+            Reload();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error updating show updates filter.", ex);
+        }
     }
 
     private async void SortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
-            return;
+        try
+        {
+            if (!await ShouldInterruptDownloadsIfRunning())
+                return;
 
-        if (_packages is null)
-            return;
+            if (_packages is null)
+                return;
 
-        _packagesStackPanel.Children.Clear();
-        _scrollViewer.ScrollToHome();
+            _packagesStackPanel.Children.Clear();
+            _scrollViewer.ScrollToHome();
 
-        Reload();
+            Reload();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error changing sorting.", ex);
+        }
     }
 
     private string GetDownloadLocation()

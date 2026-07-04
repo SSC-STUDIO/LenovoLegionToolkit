@@ -92,7 +92,18 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
         Content = _cardControl;
     }
 
-    private async void Toggle_Click(object sender, RoutedEventArgs e) => await OnStateChange(_toggle, Feature);
+    private async void Toggle_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await OnStateChange(_toggle, Feature);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Toggle_Click)}.", ex);
+        }
+    }
 
     protected override async Task OnRefreshAsync()
     {

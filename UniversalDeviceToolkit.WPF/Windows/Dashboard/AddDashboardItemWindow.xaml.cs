@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,8 +26,12 @@ public partial class AddDashboardItemWindow
 
     private async void AddAutomationStepWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync();
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

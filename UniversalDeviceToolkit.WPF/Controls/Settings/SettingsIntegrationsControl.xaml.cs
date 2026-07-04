@@ -36,24 +36,36 @@ public partial class SettingsIntegrationsControl
 
     private async void HWiNFOIntegrationToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        _integrationsSettings.Store.HWiNFO = _hwinfoIntegrationToggle.IsChecked ?? false;
-        _integrationsSettings.SynchronizeStore();
+            _integrationsSettings.Store.HWiNFO = _hwinfoIntegrationToggle.IsChecked ?? false;
+            _integrationsSettings.SynchronizeStore();
 
-        await _hwinfoIntegration.StartStopIfNeededAsync();
+            await _hwinfoIntegration.StartStopIfNeededAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void CLIInterfaceToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        _integrationsSettings.Store.CLI = _cliInterfaceToggle.IsChecked ?? false;
-        _integrationsSettings.SynchronizeStore();
+            _integrationsSettings.Store.CLI = _cliInterfaceToggle.IsChecked ?? false;
+            _integrationsSettings.SynchronizeStore();
 
-        await _ipcServer.StartStopIfNeededAsync();
+            await _ipcServer.StartStopIfNeededAsync();
+        }
+        catch (Exception)
+        {
+            // Silently ignored — this method is a fire-and-forget click handler that
+            // should never crash the UI even if the underlying operation fails.
+        }
     }
 
     private void CLIPathToggle_Click(object sender, RoutedEventArgs e)

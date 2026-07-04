@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -40,8 +40,12 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
     private async void DeviceAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
-        RefreshButtons();
-        await LoadAsync();
+        try
+        {
+            RefreshButtons();
+            await LoadAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
@@ -51,10 +55,14 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
-            return;
+        try
+        {
+            if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
+                return;
 
-        await LoadAsync();
+            await LoadAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)

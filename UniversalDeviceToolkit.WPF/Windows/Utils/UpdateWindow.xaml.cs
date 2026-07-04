@@ -39,20 +39,28 @@ public partial class UpdateWindow : IProgress<float>
 
     private async void UpdateWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        var updates = await _updateChecker.GetUpdatesAsync();
-
-        var stringBuilder = new StringBuilder();
-        foreach (var update in updates)
+        try
         {
-            stringBuilder.AppendLine("**" + update.Title + "**   _(" + update.Date.ToString("D") + ")_")
-                .AppendLine()
-                .AppendLine(update.Description)
-                .AppendLine();
+            var updates = await _updateChecker.GetUpdatesAsync();
+
+            var stringBuilder = new StringBuilder();
+            foreach (var update in updates)
+            {
+                stringBuilder.AppendLine("**" + update.Title + "**   _(" + update.Date.ToString("D") + ")_")
+                    .AppendLine()
+                    .AppendLine(update.Description)
+                    .AppendLine();
+            }
+
+            _markdownViewer.Markdown = stringBuilder.ToString();
+
+            HasUpdates = true;
         }
-
-        _markdownViewer.Markdown = stringBuilder.ToString();
-
-        HasUpdates = true;
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(UpdateWindow_Loaded)}.", ex);
+        }
     }
 
     private void UpdateWindow_Closing(object? sender, CancelEventArgs e)

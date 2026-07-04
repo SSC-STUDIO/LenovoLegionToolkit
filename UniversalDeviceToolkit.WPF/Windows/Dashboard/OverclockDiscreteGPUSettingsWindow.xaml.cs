@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -61,15 +61,19 @@ public partial class OverclockDiscreteGPUSettingsWindow
 
     private async void RenameProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!TryGetActiveProfile(out var profile))
-            return;
+        try
+        {
+            if (!TryGetActiveProfile(out var profile))
+                return;
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name);
-        if (string.IsNullOrEmpty(result))
-            return;
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name);
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        _gpuOverclockController.RenameProfile(_activeProfileId, result);
-        RefreshProfiles();
+            _gpuOverclockController.RenameProfile(_activeProfileId, result);
+            RefreshProfiles();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
@@ -83,28 +87,40 @@ public partial class OverclockDiscreteGPUSettingsWindow
 
     private async void AddProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        SaveProfile();
+        try
+        {
+            SaveProfile();
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder);
-        if (string.IsNullOrEmpty(result))
-            return;
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder);
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        var profileId = _gpuOverclockController.AddProfile(result, GetCurrentInfo());
-        _activeProfileId = profileId;
-        RefreshProfiles();
+            var profileId = _gpuOverclockController.AddProfile(result, GetCurrentInfo());
+            _activeProfileId = profileId;
+            RefreshProfiles();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        Save();
-        await ApplyAsync();
+        try
+        {
+            Save();
+            await ApplyAsync();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
     {
-        Save();
-        await ApplyAsync();
-        Close();
+        try
+        {
+            Save();
+            await ApplyAsync();
+            Close();
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)

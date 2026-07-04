@@ -123,10 +123,14 @@ public partial class MacroSequenceControl
 
     private async void RecordButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
-            return;
+        try
+        {
+            if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
+                return;
 
-        await RecordAsync(settings);
+            await RecordAsync(settings);
+        }
+        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)

@@ -44,16 +44,24 @@ public partial class LanguageSelectorWindow
 
     private async void OK_Click(object sender, RoutedEventArgs e)
     {
-        if (_isInstalling)
-            return;
+        try
+        {
+            if (_isInstalling)
+                return;
 
-        _languageComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo);
+            _languageComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo);
 
-        if (cultureInfo is not null && !await EnsureLanguageInstalledAsync(cultureInfo))
-            return;
+            if (cultureInfo is not null && !await EnsureLanguageInstalledAsync(cultureInfo))
+                return;
 
-        _taskCompletionSource.TrySetResult(cultureInfo);
-        Close();
+            _taskCompletionSource.TrySetResult(cultureInfo);
+            Close();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(OK_Click)}.", ex);
+        }
     }
 
     private async Task<bool> EnsureLanguageInstalledAsync(CultureInfo cultureInfo)

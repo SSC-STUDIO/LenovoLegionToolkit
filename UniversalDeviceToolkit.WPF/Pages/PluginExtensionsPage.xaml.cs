@@ -52,6 +52,7 @@ private string _currentSearchText = string.Empty;
     private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pluginIdsReloadedForUi = new(StringComparer.OrdinalIgnoreCase);
     private bool _isPluginInstallCoordinatorSubscribed;
+    private readonly DebounceDispatcher _searchDebouncer = new();
 
     public PluginExtensionsPage()
     {
@@ -106,7 +107,7 @@ private string _currentSearchText = string.Empty;
         if (sender is Wpf.Ui.Controls.TextBox textBox)
         {
             _currentSearchText = textBox.Text ?? string.Empty;
-            ApplyFilters();
+            _searchDebouncer.Debounce(300, ApplyFilters);
         }
     }
 
@@ -1388,32 +1389,31 @@ private string _currentSearchText = string.Empty;
             await FetchOnlinePluginsAsync();
         }
     }
-
     private async void PluginInstallButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-        {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginInstallButton_Click called for {pluginId}");
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled before install: {_pluginManager.IsInstalled(pluginId)}");
-        }
-
-        // Check if this is an online plugin installation
-        var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
-        if (onlinePlugin != null)
+        try
         {
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginInstallButton_Click called for {pluginId}");
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled before install: {_pluginManager.IsInstalled(pluginId)}");
             }
-            await InstallOnlinePluginAsync(onlinePlugin);
-            return;
-        }
 
-        try
-        {
+            // Check if this is an online plugin installation
+            var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
+            if (onlinePlugin != null)
+            {
+                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
+                }
+                await InstallOnlinePluginAsync(onlinePlugin);
+                return;
+            }
+
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing local plugin: {pluginId}");
@@ -1422,6 +1422,7 @@ private string _currentSearchText = string.Empty;
             // If plugin is already installed, uninstall it first to release file locks
             if (_pluginManager.IsInstalled(pluginId))
             {
+
                 if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
                     LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is already installed, uninstalling first to release file locks");
@@ -1443,7 +1444,6 @@ private string _currentSearchText = string.Empty;
 
             await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
             await ShowInstalledPluginFeedbackAsync(pluginId);
-
         }
         catch (Exception ex)
         {

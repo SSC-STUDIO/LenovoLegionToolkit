@@ -242,7 +242,13 @@ public sealed class PluginInstallCoordinator(
         return Resource.PluginExtensionsPage_Downloading;
     }
 
-    private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+    private void RaiseChanged()
+    {
+        if (System.Windows.Application.Current?.Dispatcher is not null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+            System.Windows.Application.Current.Dispatcher.InvokeAsync(() => Changed?.Invoke(this, EventArgs.Empty));
+        else
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
 
     private sealed class InstallRequest(PluginManifest manifest, CancellationToken cancellationToken)
     {
