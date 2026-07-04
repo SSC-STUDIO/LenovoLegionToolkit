@@ -137,12 +137,13 @@ public partial class PackagesPage : IProgress<float>
 
     private async void DownloadPackagesButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
-            return;
-
         var errorOccurred = false;
+
         try
         {
+            if (!await ShouldInterruptDownloadsIfRunning())
+                return;
+
             _downloadPackagesButton.Visibility = Visibility.Collapsed;
             _cancelDownloadPackagesButton.Visibility = Visibility.Visible;
             _loader.Visibility = Visibility.Visible;
@@ -248,11 +249,10 @@ public partial class PackagesPage : IProgress<float>
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (!await ShouldInterruptDownloadsIfRunning())
-            return;
-
         try
         {
+            if (!await ShouldInterruptDownloadsIfRunning())
+                return;
             if (_packages is null)
                 return;
 
@@ -271,6 +271,11 @@ public partial class PackagesPage : IProgress<float>
         catch (OperationCanceledException)
         {
             // Expected when filter is debounced, no action needed
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error filtering packages.", ex);
         }
     }
 

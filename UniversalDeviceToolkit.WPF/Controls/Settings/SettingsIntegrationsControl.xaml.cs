@@ -46,7 +46,7 @@ public partial class SettingsIntegrationsControl
 
             await _hwinfoIntegration.StartStopIfNeededAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void CLIInterfaceToggle_Click(object sender, RoutedEventArgs e)

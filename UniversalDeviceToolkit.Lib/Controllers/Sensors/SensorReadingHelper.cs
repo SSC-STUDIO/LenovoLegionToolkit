@@ -64,15 +64,22 @@ internal static class SensorReadingHelper
         }
     }
 
+    private static DateTime _gpuUtilizationCooldownUntil = DateTime.MinValue;
+    private static readonly TimeSpan GpuUtilizationCooldown = TimeSpan.FromSeconds(30);
+
     public static async Task<int> GetGpuUtilizationFromPerformanceCountersAsync()
     {
-        await Task.Yield();
+        if (DateTime.UtcNow < _gpuUtilizationCooldownUntil)
+            return -1;
 
         try
         {
             const string categoryName = "GPU Engine";
             if (!PerformanceCounterCategory.Exists(categoryName))
+            {
+                _gpuUtilizationCooldownUntil = DateTime.UtcNow.Add(GpuUtilizationCooldown);
                 return -1;
+            }
 
             var category = new PerformanceCounterCategory(categoryName);
             return category
@@ -85,6 +92,7 @@ internal static class SensorReadingHelper
         }
         catch
         {
+            _gpuUtilizationCooldownUntil = DateTime.UtcNow.Add(GpuUtilizationCooldown);
             return -1;
         }
     }
@@ -112,12 +120,9 @@ internal static class SensorReadingHelper
         }
     }
 
-    private static DateTime _lastGpuUtilizationFailTime = DateTime.MinValue;
-    private static readonly TimeSpan GpuUtilizationCooldown = TimeSpan.FromSeconds(30);
-
     private static int ReadGpuEngineUtilization(string instanceName)
     {
-        if (DateTime.UtcNow - _lastGpuUtilizationFailTime < GpuUtilizationCooldown)
+        if (DateTime.UtcNow < _gpuUtilizationCooldownUntil)
             return -1;
 
         try
@@ -131,7 +136,7 @@ internal static class SensorReadingHelper
         }
         catch
         {
-            _lastGpuUtilizationFailTime = DateTime.UtcNow;
+            _gpuUtilizationCooldownUntil = DateTime.UtcNow.Add(GpuUtilizationCooldown);
             return -1;
         }
     }

@@ -87,7 +87,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 
             await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void SynchroniseZonesMenuItem_Click(object sender, RoutedEventArgs e)
@@ -103,7 +103,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             await SaveState();
             await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void CardControl_Changed(object? sender, EventArgs e)
@@ -113,7 +113,7 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             await SaveState();
             await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     protected override async Task OnRefreshAsync()

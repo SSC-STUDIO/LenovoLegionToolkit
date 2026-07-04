@@ -72,7 +72,7 @@ public partial class CreateAutomationPipelineWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -140,7 +140,7 @@ public partial class CreateAutomationPipelineWindow
             _multiSelect = true;
             await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private CardControl CreateCardControl(IAutomationPipelineTrigger trigger)

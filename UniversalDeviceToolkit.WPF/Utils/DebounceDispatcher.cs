@@ -19,7 +19,7 @@ internal sealed class DebounceDispatcher
         {
             try
             {
-                await Task.Delay(delayMs, token).ConfigureAwait(false);
+                await Task.Delay(delayMs, token);
                 if (!token.IsCancellationRequested)
                     Application.Current.Dispatcher.Invoke(action);
             }
@@ -42,7 +42,7 @@ internal sealed class DebounceDispatcher
         {
             try
             {
-                await Task.Delay(intervalMs, token).ConfigureAwait(false);
+                await Task.Delay(intervalMs, token);
                 if (!token.IsCancellationRequested)
                     Application.Current.Dispatcher.Invoke(action);
             }

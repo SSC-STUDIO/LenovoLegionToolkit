@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Utils;
 using Color = System.Windows.Media.Color;
 
 namespace UniversalDeviceToolkit.WPF.Controls
@@ -19,6 +20,7 @@ public partial class ColorPickerControl
 
     private bool _isEditing;
     private readonly SolidColorBrush _buttonBrush = new(Colors.Aqua);
+    private readonly DebounceDispatcher _debouncer = new();
 
     public Color SelectedColor
     {
@@ -82,25 +84,28 @@ public partial class ColorPickerControl
         if (!CanHandleEvent)
             return;
 
-        _isEditing = true;
-
-        var r = ToByte(_redNumberBox.Text);
-        var g = ToByte(_greenNumberBox.Text);
-        var b = ToByte(_blueNumberBox.Text);
-        var color = Color.FromRgb(r, g, b);
-
-        _buttonBrush.Color = color;
-
-        _hexTextBox.Text = $"#{r:X2}{g:X2}{b:X2}";
-
-        if (Mouse.LeftButton != MouseButtonState.Pressed && Mouse.RightButton != MouseButtonState.Pressed)
+        _debouncer.Debounce(300, () =>
         {
-            _colorPicker.SelectedColor = color;
+            _isEditing = true;
 
-            ColorChangedDelayed?.Invoke(this, EventArgs.Empty);
-        }
+            var r = ToByte(_redNumberBox.Text);
+            var g = ToByte(_greenNumberBox.Text);
+            var b = ToByte(_blueNumberBox.Text);
+            var color = Color.FromRgb(r, g, b);
 
-        _isEditing = false;
+            _buttonBrush.Color = color;
+
+            _hexTextBox.Text = $"#{r:X2}{g:X2}{b:X2}";
+
+            if (Mouse.LeftButton != MouseButtonState.Pressed && Mouse.RightButton != MouseButtonState.Pressed)
+            {
+                _colorPicker.SelectedColor = color;
+
+                ColorChangedDelayed?.Invoke(this, EventArgs.Empty);
+            }
+
+            _isEditing = false;
+        });
     }
 
     private void HexTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -111,33 +116,36 @@ public partial class ColorPickerControl
         if (!HexTextRegex().Match(_hexTextBox.Text).Success)
             return;
 
-        _isEditing = true;
-
-        try
+        _debouncer.Debounce(300, () =>
         {
-            var c = ColorTranslator.FromHtml(_hexTextBox.Text);
-            var color = Color.FromRgb(c.R, c.G, c.B);
+            _isEditing = true;
 
-            _buttonBrush.Color = color;
-
-            _redNumberBox.Text = color.R.ToString();
-            _greenNumberBox.Text = color.G.ToString();
-            _blueNumberBox.Text = color.B.ToString();
-
-            if (Mouse.LeftButton != MouseButtonState.Pressed && Mouse.RightButton != MouseButtonState.Pressed)
+            try
             {
-                _colorPicker.SelectedColor = color;
+                var c = ColorTranslator.FromHtml(_hexTextBox.Text);
+                var color = Color.FromRgb(c.R, c.G, c.B);
 
-                ColorChangedDelayed?.Invoke(this, EventArgs.Empty);
+                _buttonBrush.Color = color;
+
+                _redNumberBox.Text = color.R.ToString();
+                _greenNumberBox.Text = color.G.ToString();
+                _blueNumberBox.Text = color.B.ToString();
+
+                if (Mouse.LeftButton != MouseButtonState.Pressed && Mouse.RightButton != MouseButtonState.Pressed)
+                {
+                    _colorPicker.SelectedColor = color;
+
+                    ColorChangedDelayed?.Invoke(this, EventArgs.Empty);
+                }
             }
-        }
-        catch
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to update color picker");
-        }
+            catch
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to update color picker");
+            }
 
-        _isEditing = false;
+            _isEditing = false;
+        });
     }
 
     private void OK_Click(object sender, RoutedEventArgs e) => _popup.IsOpen = false;

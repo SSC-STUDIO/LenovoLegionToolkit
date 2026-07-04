@@ -18,6 +18,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
     private const string MHZ = "MHz";
 
     private readonly GPUOverclockController _gpuOverclockController = IoCContainer.Resolve<GPUOverclockController>();
+    private readonly DebounceDispatcher _debouncer = new();
     private Guid _activeProfileId;
     private bool _isRefreshingProfiles;
 
@@ -37,9 +38,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
         SetSliders(info);
     }
 
-    private void CoreSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => _coreLabel.Content = $"{(int)_coreSlider.Value:+0;-0;0} {MHZ}";
+    private void CoreSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        => _debouncer.Throttle(100, () => _coreLabel.Content = $"{(int)_coreSlider.Value:+0;-0;0} {MHZ}");
 
-    private void MemorySlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => _memoryLabel.Content = $"{(int)_memorySlider.Value:+0;-0;0} {MHZ}";
+    private void MemorySlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        => _debouncer.Throttle(100, () => _memoryLabel.Content = $"{(int)_memorySlider.Value:+0;-0;0} {MHZ}");
 
     private void ProfilesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -73,7 +76,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
             _gpuOverclockController.RenameProfile(_activeProfileId, result);
             RefreshProfiles();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
@@ -99,7 +102,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
             _activeProfileId = profileId;
             RefreshProfiles();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -109,7 +112,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
             Save();
             await ApplyAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
@@ -120,7 +123,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
             await ApplyAsync();
             Close();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)

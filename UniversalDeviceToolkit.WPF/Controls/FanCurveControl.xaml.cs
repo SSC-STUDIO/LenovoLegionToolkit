@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Controls
 {
@@ -20,6 +21,7 @@ public partial class FanCurveControl : UserControl
 
     private readonly List<Slider> _sliders = [];
     private readonly InfoTooltip _customToolTip = new();
+    private readonly DebounceDispatcher _debouncer = new();
     private Path? _cachedLinePath;
     private Polygon? _cachedFillPolygon;
     private SolidColorBrush? _cachedLineBrush;
@@ -137,29 +139,32 @@ public partial class FanCurveControl : UserControl
 
     private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (_sliders.Count < 10)
-            return;
-
-        if (sender is not Slider currentSlider)
-            return;
-
-        if (currentSlider is { IsKeyboardFocusWithin: false, IsMouseCaptureWithin: false })
-            return;
-
-        if (_minimumFanTable.HasValue)
+        _debouncer.Throttle(100, () =>
         {
-            var index = (int)currentSlider.Tag;
-            var minimum = _minimumFanTable.Value.GetTable();
-
-            if (currentSlider.Value < minimum[index])
-            {
-                currentSlider.Value = minimum[index];
+            if (_sliders.Count < 10)
                 return;
-            }
-        }
 
-        VerifyValues(currentSlider);
-        DrawGraph();
+            if (sender is not Slider currentSlider)
+                return;
+
+            if (currentSlider is { IsKeyboardFocusWithin: false, IsMouseCaptureWithin: false })
+                return;
+
+            if (_minimumFanTable.HasValue)
+            {
+                var index = (int)currentSlider.Tag;
+                var minimum = _minimumFanTable.Value.GetTable();
+
+                if (currentSlider.Value < minimum[index])
+                {
+                    currentSlider.Value = minimum[index];
+                    return;
+                }
+            }
+
+            VerifyValues(currentSlider);
+            DrawGraph();
+        });
     }
 
     private static CustomPopupPlacement[] ToolTipCustomPopupPlacementCallback(Size size, Size targetSize, Point _)

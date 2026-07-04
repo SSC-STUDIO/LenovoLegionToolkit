@@ -45,7 +45,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             RefreshButtons();
             await LoadAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
             await LoadAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -85,6 +85,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         {
             // Expected when filter is debounced, no action needed
         }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void OnlySelected_Click(object sender, RoutedEventArgs e)

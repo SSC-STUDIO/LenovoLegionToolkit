@@ -74,17 +74,17 @@ public partial class SettingsPowerControl
 
     private async void GodModeFnQSwitchableToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
-
-        var state = _godModeFnQSwitchableToggle.IsChecked;
-        if (state is null)
-            return;
-
-        _godModeFnQSwitchableToggle.IsEnabled = false;
-
         try
         {
+            if (_isRefreshing)
+                return;
+
+            var state = _godModeFnQSwitchableToggle.IsChecked;
+            if (state is null)
+                return;
+
+            _godModeFnQSwitchableToggle.IsEnabled = false;
+
             await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
         }
         catch (Exception ex)

@@ -175,12 +175,20 @@ public class AutomationPipelineControl : UserControl
 
             _addStepButton.Click += async (_, _) =>
             {
-                var stepControls = new List<AbstractAutomationStepControl>();
-                foreach (var step in _supportedAutomationSteps)
-                    stepControls.Add(await GenerateStepControlAsync(step));
+                try
+                {
+                    var stepControls = new List<AbstractAutomationStepControl>();
+                    foreach (var step in _supportedAutomationSteps)
+                        stepControls.Add(await GenerateStepControlAsync(step));
 
-                var window = new AddAutomationStepWindow(stepControls, AddStep) { Owner = Window.GetWindow(this) };
-                window.ShowDialog();
+                    var window = new AddAutomationStepWindow(stepControls, AddStep) { Owner = Window.GetWindow(this) };
+                    window.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to open add automation step dialog.", ex);
+                }
             };
 
             _deletePipelineButton.Click += (_, _) => OnDelete?.Invoke(this, EventArgs.Empty);
@@ -356,19 +364,35 @@ public class AutomationPipelineControl : UserControl
         };
         button.Click += async (_, _) =>
         {
-            _godModePresets = await LoadGodModePresetsAsync();
-
-            var window = new AutomationPipelineTriggerConfigurationWindow(triggers) { Owner = Window.GetWindow(this) };
-            window.OnSave += async (_, e) =>
+            try
             {
-                AutomationPipeline.Trigger = e;
                 _godModePresets = await LoadGodModePresetsAsync();
-                _cardHeaderControl.Subtitle = GenerateSubtitle();
-                _cardHeaderControl.Accessory = GenerateAccessory();
-                _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
-                OnChanged?.Invoke(this, EventArgs.Empty);
-            };
-            window.ShowDialog();
+
+                var window = new AutomationPipelineTriggerConfigurationWindow(triggers) { Owner = Window.GetWindow(this) };
+                window.OnSave += async (_, e) =>
+                {
+                    try
+                    {
+                        AutomationPipeline.Trigger = e;
+                        _godModePresets = await LoadGodModePresetsAsync();
+                        _cardHeaderControl.Subtitle = GenerateSubtitle();
+                        _cardHeaderControl.Accessory = GenerateAccessory();
+                        _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
+                        OnChanged?.Invoke(this, EventArgs.Empty);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Failed to save automation pipeline trigger configuration.", ex);
+                    }
+                };
+                window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to open automation pipeline trigger configuration.", ex);
+            }
         };
         return button;
     }

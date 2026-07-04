@@ -64,23 +64,45 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
         _throttleDispatcher.Dispose();
     }
 
-    private async void ThermalModeListener_Changed(object? sender, ThermalModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
+    private async void ThermalModeListener_Changed(object? sender, ThermalModeListener.ChangedEventArgs e)
     {
-        await Dispatcher.InvokeTaskAsync(async () =>
+        try
         {
-            if (IsLoaded && IsVisible)
-                await RefreshAsync();
-        });
-    });
+            await _throttleDispatcher.DispatchAsync(async () =>
+            {
+                await Dispatcher.InvokeTaskAsync(async () =>
+                {
+                    if (IsLoaded && IsVisible)
+                        await RefreshAsync();
+                });
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ThermalModeListener_Changed)}.", ex);
+        }
+    }
 
-    private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
+    private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e)
     {
-        await Dispatcher.InvokeTaskAsync(async () =>
+        try
         {
-            if (IsLoaded && IsVisible)
-                await RefreshAsync();
-        });
-    });
+            await _throttleDispatcher.DispatchAsync(async () =>
+            {
+                await Dispatcher.InvokeTaskAsync(async () =>
+                {
+                    if (IsLoaded && IsVisible)
+                        await RefreshAsync();
+                });
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeListener_Changed)}.", ex);
+        }
+    }
 
     protected override async Task OnRefreshAsync()
     {

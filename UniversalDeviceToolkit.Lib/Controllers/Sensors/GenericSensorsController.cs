@@ -160,11 +160,8 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
                 ParseInt(values[6]),
                 ParseVoltage(values[7]));
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to read GPU info from nvidia-smi.", ex);
-
             return GPUInfo.Empty;
         }
     }

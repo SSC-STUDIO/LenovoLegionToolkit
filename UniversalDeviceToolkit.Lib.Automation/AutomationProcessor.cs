@@ -118,7 +118,19 @@ public class AutomationProcessor(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Pipeline run on startup pending...");
 
-        Task.Run(() => ProcessEvent(new StartupAutomationEvent()));
+        _ = RunOnStartupAsync();
+    }
+
+    private async Task RunOnStartupAsync()
+    {
+        try
+        {
+            await ProcessEvent(new StartupAutomationEvent()).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error processing startup automation event: {ex.Message}", ex);
+        }
     }
 
     public async Task RunNowAsync(AutomationPipeline pipeline)

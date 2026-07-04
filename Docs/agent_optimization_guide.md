@@ -196,7 +196,7 @@ Agent 必须优先使用高精度工具 `grep_search`（绝对不要在终端用
 
 ### 2. 判定所属分层边界
 * 读取文件绝对路径与顶层命名空间。
-* 判定为 **WPF UI 层** (`*.WPF/Pages`, `*.WPF/Windows`, `*.WPF/Controls`, `*.WPF/ViewModels`) 还是 **底层类库** (`*.Lib`, `*.CLI`, `*.Macro`, `*.Automation`)。
+* 判定为 **WPF UI 层** (`*.WPF/Pages`, `*.WPF/Windows`, `*.WPF/Controls`, `*.WPF/ViewModels`) 还是 **底层类库** (`*.Lib`, `*.CLI`, `*.Macro`, `*.Automation`).
 
 ### 3. 施加异步改造规则
 * 如果在 UI 层且调用方直接操作 UI 元素、依赖属性或触发数据绑定：使用 `replace_file_content` 或 `multi_replace_file_content` 批量移除 `.ConfigureAwait(false)`。

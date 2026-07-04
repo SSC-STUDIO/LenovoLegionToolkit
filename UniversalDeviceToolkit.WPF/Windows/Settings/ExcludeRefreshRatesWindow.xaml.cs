@@ -32,7 +32,7 @@ public partial class ExcludeRefreshRatesWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RefreshAsync()

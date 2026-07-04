@@ -232,10 +232,11 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private async void KillAppsMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var originalCanDeactivate = CanDeactivateGpu;
-        CanDeactivateGpu = false;
 
         try
         {
+            CanDeactivateGpu = false;
+
             await _gpuController.KillGPUProcessesAsync();
         }
         catch (Exception ex)
@@ -252,10 +253,11 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private async void RestartGPUMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var originalCanDeactivate = CanDeactivateGpu;
-        CanDeactivateGpu = false;
 
         try
         {
+            CanDeactivateGpu = false;
+
             await _gpuController.RestartGPUAsync();
         }
         catch (Exception ex)

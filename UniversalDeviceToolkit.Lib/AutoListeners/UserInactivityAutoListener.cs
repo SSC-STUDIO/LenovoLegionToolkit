@@ -131,9 +131,6 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
             {
                 _tickCount++;
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"User is not active [time={_timerResolution * _tickCount}]");
-
                 RaiseChanged(new ChangedEventArgs(_timerResolution, _tickCount));
             }
         }

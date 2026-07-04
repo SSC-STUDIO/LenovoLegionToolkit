@@ -52,7 +52,7 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
                 _content.Children.Add(radio);
             }
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 }
 }

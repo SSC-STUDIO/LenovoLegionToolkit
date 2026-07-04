@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
 using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
@@ -22,23 +21,10 @@ public class ProcessesStopRunningAutomationPipelineTrigger(ProcessInfo[]? proces
         if (automationEvent is not ProcessAutomationEvent { Type: ProcessEventInfoType.Stopped } e)
             return Task.FromResult(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Checking for {e.ProcessInfo.Name}... [processes={string.Join(", ", Processes.Select(p => p.Name))}]");
-
         if (!Processes.Contains(e.ProcessInfo) && !Processes.Select(p => p.Name).Contains(e.ProcessInfo.Name))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Process name {e.ProcessInfo.Name} not in the list.");
-
             return Task.FromResult(false);
-        }
 
-        var result = Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).IsEmpty();
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Process name {e.ProcessInfo.Name} found in process list: {!result}.");
-
-        return Task.FromResult(result);
+        return Task.FromResult(Processes.SelectMany(p => Process.GetProcessesByName(p.Name)).IsEmpty());
     }
 
     public Task<bool> IsMatchingState()

@@ -110,7 +110,7 @@ public abstract class AbstractAutomationStepControl : UserControl
             await RefreshAsync();
             OnFinishedLoading();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     public abstract IAutomationStep CreateAutomationStep();

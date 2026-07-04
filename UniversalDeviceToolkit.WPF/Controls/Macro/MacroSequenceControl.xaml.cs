@@ -130,7 +130,7 @@ public partial class MacroSequenceControl
 
             await RecordAsync(settings);
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)

@@ -31,7 +31,7 @@ public partial class AddDashboardItemWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception ex) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

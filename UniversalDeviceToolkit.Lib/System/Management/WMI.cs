@@ -154,7 +154,7 @@ public static partial class WMI
                     return await invokeTask.ConfigureAwait(false);
                 }
 
-                throw new TimeoutException($"WMI method {methodName} invocation timed out after 3000ms.");
+                throw new TimeoutException($"WMI method {methodName} invocation timed out after 10000ms.");
             }
             catch (ManagementException ex) when (attempt < 2 && IsInvalidObject(ex))
             {

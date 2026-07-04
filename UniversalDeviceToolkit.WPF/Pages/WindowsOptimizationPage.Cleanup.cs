@@ -32,23 +32,23 @@ public partial class WindowsOptimizationPage
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        var selectedActions = ViewModel.CleanupCategories
-            .SelectMany(c => c.Actions)
-            .Where(a => a.IsEnabled && a.IsSelected)
-            .ToList();
-
-        if (selectedActions.Count == 0)
-        {
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
-                SnackbarType.Warning);
-            return;
-        }
-
-        // Logic for running cleanup with progress reporting
         try
         {
+            var selectedActions = ViewModel.CleanupCategories
+                .SelectMany(c => c.Actions)
+                .Where(a => a.IsEnabled && a.IsSelected)
+                .ToList();
+
+            if (selectedActions.Count == 0)
+            {
+                await SnackbarHelper.ShowAsync(
+                    Resource.SettingsPage_WindowsOptimization_Title,
+                    LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
+                    SnackbarType.Warning);
+                return;
+            }
+
+            // Logic for running cleanup with progress reporting
             ViewModel.IsBusy = true;
             ViewModel.IsCleaning = true;
             var swOverall = Stopwatch.StartNew();

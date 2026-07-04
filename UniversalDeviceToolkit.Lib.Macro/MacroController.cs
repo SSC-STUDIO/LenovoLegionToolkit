@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Macro.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -134,7 +135,19 @@ public class MacroController : IDisposable
         return new LRESULT(96);
     }
 
-    private void Play(MacroSequence sequence) => Task.Run(() => _player.StartPlayingAsync(sequence));
+    private void Play(MacroSequence sequence) => _ = PlayAsync(sequence);
+
+    private async Task PlayAsync(MacroSequence sequence)
+    {
+        try
+        {
+            await _player.StartPlayingAsync(sequence).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error playing macro sequence: {ex.Message}", ex);
+        }
+    }
 
     private static void CleanUp(ref Dictionary<MacroIdentifier, MacroSequence> sequences)
     {

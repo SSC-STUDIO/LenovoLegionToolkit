@@ -2156,12 +2156,6 @@ public class SensorsGroupController : IDisposable
                         var resolvedCpuPower = ResolveCpuPower(cpuPackagePower, cpuComponentPower);
                         (_snapshotCpuCoresPower, _snapshotCpuMemoryPower, _snapshotCpuPlatformPower) = ResolveCpuComponentPowers(cpuComponentReadings);
 
-                        if (Log.Instance.IsTraceEnabled)
-                        {
-                            Log.Instance.Trace(
-                                $"LibreHardwareMonitor CPU power raw values: package={cpuPackagePower}, components=[{string.Join(", ", cpuComponentReadings.Select(reading => $"{reading.Name}={reading.value}"))}], resolved={resolvedCpuPower}");
-                        }
-
                         if (resolvedCpuPower > MAX_VALID_CPU_POWER) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
                         else if (resolvedCpuPower <= MIN_VALID_POWER_READING) { _snapshotCpuPower = INVALID_VALUE_FLOAT; }
                         else

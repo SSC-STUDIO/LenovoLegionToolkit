@@ -250,9 +250,9 @@ public partial class App
                 var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await step().ConfigureAwait(false);
+                    await step();
                 })).ToArray();
-                await Task.WhenAll(initializationTasks).ConfigureAwait(false);
+                await Task.WhenAll(initializationTasks);
 
                 cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
@@ -260,9 +260,9 @@ public partial class App
                 var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await step().ConfigureAwait(false);
+                    await step();
                 })).ToArray();
-                await Task.WhenAll(serviceStartTasks).ConfigureAwait(false);
+                await Task.WhenAll(serviceStartTasks);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -563,9 +563,9 @@ public partial class App
             StopSingleInstanceThreadSafely();
             CleanupSingleInstanceResources();
 
-            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+            await AwaitBackgroundInitializationAsync();
 
-            await StopPluginsAsync().ConfigureAwait(false);
+            await StopPluginsAsync();
 
             var stopServicesTask = Task.WhenAll(
                 StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
@@ -577,14 +577,14 @@ public partial class App
                 StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller")
             );
 
-            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
+            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2)));
             if (completedTask != stopServicesTask)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("Service stop timed out after 2 seconds.");
             }
 
-            await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
+            await FinalizeRuntimeProfilesAsync();
 
             StopMacroControllerSafely();
             StopSingleInstanceThreadSafely();
@@ -618,12 +618,12 @@ public partial class App
                 catch { /* Plugin shutdown failed - continue with other plugins */ }
             })).ToList();
 
-            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
+            await Task.WhenAll(shutdownTasks);
 
-            await Task.Delay(200).ConfigureAwait(false);
+            await Task.Delay(200);
 
             if (pluginManager is PluginManager manager)
-                await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
+                await manager.PerformPendingDeletionsAsync();
         }
         catch { /* Plugin shutdown process failed - continue with app shutdown */ }
     }
@@ -883,9 +883,9 @@ public partial class App
             }
 
             if (TryGetCachedService<FanCurveManager>() is { } fanManager &&
-                await fanManager.IsSupportedAsync().ConfigureAwait(false))
+                await fanManager.IsSupportedAsync())
             {
-                await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
+                await fanManager.SetRegisterAsync(false);
             }
 
             if (TryGetCachedService<LampArrayController>() is { } lampArrayController &&
