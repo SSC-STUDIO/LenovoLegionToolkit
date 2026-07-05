@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Toolchain
+- **Plugin Toolchain Stabilization**: Replaced direct `dotnet run` plugin-tooling entry points with a cached `Build/tooling` CLI shim, made the legacy build workflow package-only, and hardened selected-plugin `store.json` generation so release jobs merge existing entries and fail when expected ZIP assets are missing.
+- **Workbench Visual Smoke Evidence**: Extended `PluginWorkbench.Smoke` with screenshot capture and luminance checks so Light/Dark plugin reviews produce PNG and JSON evidence instead of UI Automation checks only.
+- **All-Plugin Release Batch**: Prepared `network-acceleration 1.1.9`, `shell-integration 1.0.12`, and `vive-tool 1.2.2` after full unit, official-candidate, and visual smoke validation.
+
 ### Changed / 变更
 - **Network Acceleration UI/UX Redesign / 网络加速界面重设计**: Completely redesigned `NetworkAccelerationControl.xaml` with a TabControl-based dual-tab layout (Dashboard + Optimization), hero status banner, telemetry metric cards with large 28px fonts, peak traffic and active adapter cards, quick actions panel, and a fully programmatic fallback UI that mirrors the XAML structure. All colors use DynamicResource (zero hardcoded), all text uses x:Static localization, and the fallback UI is entirely self-contained / 完全重设计 `NetworkAccelerationControl.xaml`，采用基于 TabControl 的双标签页布局（仪表盘 + 优化），新增顶部 Hero 状态横幅、28px 大字体的遥测指标卡片、峰值流量与活跃适配器卡片、快速操作面板，以及完全镜像 XAML 结构的编程式 fallback UI。所有颜色使用 DynamicResource（零硬编码），所有文本使用 x:Static 本地化，fallback UI 完全自包含
 - **WPF-UI 4.3.0 Migration / WPF-UI 4.3.0 迁移**: Updated official plugins and the standalone PluginWorkbench to WPF-UI `4.3.0`, migrated WPF UI icon/theme API usages, hardened SDK host-window type probing for the removed `UiWindow` type, and ensured the new `Wpf.Ui.Abstractions.dll` sidecar is copied into plugin build outputs / 将官方插件与独立 PluginWorkbench 更新到 WPF-UI `4.3.0`，迁移 WPF UI 图标与主题 API 用法，增强 SDK 对已移除 `UiWindow` 类型的宿主窗口探测兼容性，并确保新的 `Wpf.Ui.Abstractions.dll` sidecar 进入插件构建输出
