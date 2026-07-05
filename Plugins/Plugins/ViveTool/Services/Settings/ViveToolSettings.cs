@@ -51,8 +51,12 @@ public class ViveToolSettings
         CancellationTokenSource cts;
         lock (_saveLock)
         {
-            // Cancel previous save operation
-            _saveCancellationTokenSource?.Cancel();
+            // Cancel and dispose previous save operation
+            if (_saveCancellationTokenSource is not null)
+            {
+                _saveCancellationTokenSource.Cancel();
+                _saveCancellationTokenSource.Dispose();
+            }
             _saveCancellationTokenSource = new CancellationTokenSource();
             cts = _saveCancellationTokenSource;
         }
@@ -61,7 +65,7 @@ public class ViveToolSettings
         {
             // Wait a bit to batch multiple property changes
             await Task.Delay(500, cts.Token);
-            
+
             // Save if not cancelled
             if (!cts.Token.IsCancellationRequested)
             {
@@ -75,6 +79,18 @@ public class ViveToolSettings
         catch (Exception ex)
         {
             PluginLog.Trace($"Error in delayed save: {ex.Message}", ex);
+        }
+        finally
+        {
+            // Clear and dispose our CTS reference now that the delay has completed
+            lock (_saveLock)
+            {
+                if (ReferenceEquals(_saveCancellationTokenSource, cts))
+                {
+                    _saveCancellationTokenSource.Dispose();
+                    _saveCancellationTokenSource = null;
+                }
+            }
         }
     }
 
