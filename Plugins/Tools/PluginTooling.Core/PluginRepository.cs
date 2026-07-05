@@ -54,6 +54,9 @@ public sealed class PluginRepository
 
     public IReadOnlyList<string> ResolveTargetPluginIds(RepositoryContext repository, IReadOnlyList<string> pluginIds)
     {
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(pluginIds);
+
         if (pluginIds.Count == 0)
             return repository.Plugins.Keys.OrderBy(id => id, StringComparer.OrdinalIgnoreCase).ToArray();
 
@@ -99,6 +102,8 @@ public sealed class PluginRepository
 
     public IReadOnlyList<string> InferSupportedLanguages(PluginContext plugin)
     {
+        ArgumentNullException.ThrowIfNull(plugin);
+
         var resourcesDirectory = Path.Combine(plugin.DirectoryPath, "Resources");
         if (!Directory.Exists(resourcesDirectory))
             return ["en"];
@@ -170,6 +175,8 @@ public sealed class PluginRepository
 
     public static string NormalizeIdentifier(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         var parts = value
             .Split(['-', '_', '.', ' '], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Select(part => char.ToUpperInvariant(part[0]) + part[1..])
@@ -184,11 +191,15 @@ public sealed class PluginRepository
 
     public static string NormalizeLineEndings(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         return value.Replace("\r\n", "\n", StringComparison.Ordinal).Replace("\n", Environment.NewLine, StringComparison.Ordinal);
     }
 
     public static PluginManifest ToLegacyManifest(UnifiedPluginManifest manifest)
     {
+        ArgumentNullException.ThrowIfNull(manifest);
+
         return new PluginManifest(
             manifest.Id,
             manifest.Name,
@@ -202,6 +213,8 @@ public sealed class PluginRepository
 
     public static OfficialStoreEntry ToStoreEntry(UnifiedPluginManifest manifest)
     {
+        ArgumentNullException.ThrowIfNull(manifest);
+
         return new OfficialStoreEntry(
             manifest.Store.Description,
             manifest.Store.Icon,
@@ -218,6 +231,9 @@ public sealed class PluginRepository
         string folderName,
         ArchetypeDefinition? archetype = null)
     {
+        ArgumentNullException.ThrowIfNull(manifest);
+        ArgumentNullException.ThrowIfNull(folderName);
+
         var namespaceSegment = NormalizeIdentifier(folderName);
         var packageAssetName = $"{manifest.Id}-v{manifest.Version}.zip";
         var unified = new UnifiedPluginManifest

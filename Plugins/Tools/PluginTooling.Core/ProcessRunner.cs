@@ -11,6 +11,10 @@ public sealed class ProcessRunner
         Action<string>? log = null,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(fileName);
+        ArgumentNullException.ThrowIfNull(arguments);
+        ArgumentNullException.ThrowIfNull(workingDirectory);
+
         var startInfo = new ProcessStartInfo
         {
             FileName = fileName,
@@ -51,11 +55,12 @@ public sealed class ProcessRunner
 
     private static async Task PumpAsync(StreamReader reader, Action<string>? log, CancellationToken cancellationToken)
     {
-        while (!reader.EndOfStream)
+        while (true)
         {
             var line = await reader.ReadLineAsync(cancellationToken);
-            if (line is not null)
-                log?.Invoke(line);
+            if (line is null)
+                break;
+            log?.Invoke(line);
         }
     }
 }
