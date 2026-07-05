@@ -92,6 +92,8 @@ public class ProcessRunner
 
             if (process.WaitForExit(effectiveTimeoutSeconds * 1000))
             {
+                // Drain async readers completely before reading StringBuilder output
+                process.WaitForExit();
                 result = outputBuilder.ToString();
                 var error = errorBuilder.ToString();
 
