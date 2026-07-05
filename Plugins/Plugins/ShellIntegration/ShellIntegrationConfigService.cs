@@ -26,6 +26,9 @@ public sealed class ShellIntegrationConfigService
     private const string ManagedBlockEnd = "# endregion LenovoLegionToolkit.Managed";
     private const string ManagedLanguageFileName = "language.nss";
 
+    private readonly object _fileLock = new();
+    private static readonly object _staticFileLock = new();
+
     private static readonly IReadOnlyDictionary<string, string[]> LanguageAliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
     {
         ["zh-hans"] = ["zh-CN", "zh"],
@@ -63,55 +66,61 @@ public sealed class ShellIntegrationConfigService
 
     public bool TryLoadProfile(out ShellIntegrationProfile profile, out string? errorMessage)
     {
-        try
+        lock (_fileLock)
         {
-            if (!File.Exists(LocalProfilePath))
+            try
             {
-                profile = ShellIntegrationProfile.CreateDefault();
+                if (!File.Exists(LocalProfilePath))
+                {
+                    profile = ShellIntegrationProfile.CreateDefault();
+                    errorMessage = null;
+                    return true;
+                }
+
+                var json = File.ReadAllText(LocalProfilePath, Encoding.UTF8);
+                var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
+                profile = loaded?.Normalize() ?? ShellIntegrationProfile.CreateDefault();
                 errorMessage = null;
                 return true;
             }
-
-            var json = File.ReadAllText(LocalProfilePath, Encoding.UTF8);
-            var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
-            profile = loaded?.Normalize() ?? ShellIntegrationProfile.CreateDefault();
-            errorMessage = null;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"ShellIntegration: Failed to load profile from '{LocalProfilePath}': {ex.Message}", ex);
-            profile = ShellIntegrationProfile.CreateDefault();
-            errorMessage = ex.Message;
-            return false;
+            catch (Exception ex)
+            {
+                PluginLog.Trace($"ShellIntegration: Failed to load profile from '{LocalProfilePath}': {ex.Message}", ex);
+                profile = ShellIntegrationProfile.CreateDefault();
+                errorMessage = ex.Message;
+                return false;
+            }
         }
     }
 
     public bool TryLoadProfileFromFile(string filePath, out ShellIntegrationProfile profile, out string? errorMessage)
     {
-        try
+        lock (_fileLock)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentException("Profile file path is required.", nameof(filePath));
+            try
+            {
+                if (string.IsNullOrWhiteSpace(filePath))
+                    throw new ArgumentException("Profile file path is required.", nameof(filePath));
 
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException("Profile file was not found.", filePath);
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException("Profile file was not found.", filePath);
 
-            var json = File.ReadAllText(filePath, Encoding.UTF8);
-            var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
-            if (loaded is null)
-                throw new InvalidDataException("Profile file is empty or invalid.");
+                var json = File.ReadAllText(filePath, Encoding.UTF8);
+                var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
+                if (loaded is null)
+                    throw new InvalidDataException("Profile file is empty or invalid.");
 
-            profile = loaded.Normalize();
-            errorMessage = null;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"ShellIntegration: Failed to load profile from '{filePath}': {ex.Message}", ex);
-            profile = ShellIntegrationProfile.CreateDefault();
-            errorMessage = ex.Message;
-            return false;
+                profile = loaded.Normalize();
+                errorMessage = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                PluginLog.Trace($"ShellIntegration: Failed to load profile from '{filePath}': {ex.Message}", ex);
+                profile = ShellIntegrationProfile.CreateDefault();
+                errorMessage = ex.Message;
+                return false;
+            }
         }
     }
 
@@ -119,9 +128,12 @@ public sealed class ShellIntegrationConfigService
     {
         ArgumentNullException.ThrowIfNull(profile);
 
-        Directory.CreateDirectory(LocalProfileRoot);
-        var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
-        File.WriteAllText(LocalProfilePath, json, new UTF8Encoding(false));
+        lock (_fileLock)
+        {
+            Directory.CreateDirectory(LocalProfileRoot);
+            var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
+            File.WriteAllText(LocalProfilePath, json, new UTF8Encoding(false));
+        }
     }
 
     public ShellIntegrationProfile ResetProfile()
@@ -142,26 +154,29 @@ public sealed class ShellIntegrationConfigService
     {
         ArgumentNullException.ThrowIfNull(profile);
 
-        try
+        lock (_fileLock)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentException("Export file path is required.", nameof(filePath));
+            try
+            {
+                if (string.IsNullOrWhiteSpace(filePath))
+                    throw new ArgumentException("Export file path is required.", nameof(filePath));
 
-            var directoryPath = Path.GetDirectoryName(filePath);
-            if (string.IsNullOrWhiteSpace(directoryPath))
-                throw new ArgumentException("Export file path must include a directory.", nameof(filePath));
+                var directoryPath = Path.GetDirectoryName(filePath);
+                if (string.IsNullOrWhiteSpace(directoryPath))
+                    throw new ArgumentException("Export file path must include a directory.", nameof(filePath));
 
-            Directory.CreateDirectory(directoryPath);
-            var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
-            File.WriteAllText(filePath, json, new UTF8Encoding(false));
-            errorMessage = null;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"ShellIntegration: Failed to export profile to '{filePath}': {ex.Message}", ex);
-            errorMessage = ex.Message;
-            return false;
+                Directory.CreateDirectory(directoryPath);
+                var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
+                File.WriteAllText(filePath, json, new UTF8Encoding(false));
+                errorMessage = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                PluginLog.Trace($"ShellIntegration: Failed to export profile to '{filePath}': {ex.Message}", ex);
+                errorMessage = ex.Message;
+                return false;
+            }
         }
     }
 
@@ -215,11 +230,15 @@ public sealed class ShellIntegrationConfigService
             return null;
 
         var normalizedProfile = profile.Normalize();
-        Directory.CreateDirectory(paths.ManagedDirectory);
-        WriteFileIfChanged(paths.SettingsPath, RenderSettings(normalizedProfile));
-        WriteFileIfChanged(paths.ThemePath, RenderTheme(normalizedProfile));
-        WriteFileIfChanged(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture));
-        EnsureManagedImportBlock(paths);
+
+        lock (_staticFileLock)
+        {
+            Directory.CreateDirectory(paths.ManagedDirectory);
+            WriteFileIfChanged(paths.SettingsPath, RenderSettings(normalizedProfile));
+            WriteFileIfChanged(paths.ThemePath, RenderTheme(normalizedProfile));
+            WriteFileIfChanged(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture));
+            EnsureManagedImportBlock(paths);
+        }
 
         return paths;
     }
@@ -443,32 +462,38 @@ theme
 
     private static void EnsureManagedImportBlock(ShellManagedConfigPaths paths)
     {
-        var existingContent = File.Exists(paths.ShellConfigPath)
-            ? File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8)
-            : string.Empty;
+        lock (_staticFileLock)
+        {
+            var existingContent = File.Exists(paths.ShellConfigPath)
+                ? File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8)
+                : string.Empty;
 
-        var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
-        var directory = Path.GetDirectoryName(paths.ShellConfigPath);
-        if (!string.IsNullOrWhiteSpace(directory))
-            Directory.CreateDirectory(directory);
+            var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
+            var directory = Path.GetDirectoryName(paths.ShellConfigPath);
+            if (!string.IsNullOrWhiteSpace(directory))
+                Directory.CreateDirectory(directory);
 
-        WriteFileIfChanged(paths.ShellConfigPath, updated);
+            WriteFileIfChanged(paths.ShellConfigPath, updated);
+        }
     }
 
     private static void WriteFileIfChanged(string path, string content)
     {
-        var existingContent = File.Exists(path)
-            ? File.ReadAllText(path, Encoding.UTF8)
-            : null;
+        lock (_staticFileLock)
+        {
+            var existingContent = File.Exists(path)
+                ? File.ReadAllText(path, Encoding.UTF8)
+                : null;
 
-        if (string.Equals(existingContent, content, StringComparison.Ordinal))
-            return;
+            if (string.Equals(existingContent, content, StringComparison.Ordinal))
+                return;
 
-        var directory = Path.GetDirectoryName(path);
-        if (!string.IsNullOrWhiteSpace(directory))
-            Directory.CreateDirectory(directory);
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrWhiteSpace(directory))
+                Directory.CreateDirectory(directory);
 
-        File.WriteAllText(path, content, new UTF8Encoding(false));
+            File.WriteAllText(path, content, new UTF8Encoding(false));
+        }
     }
 
     private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)
