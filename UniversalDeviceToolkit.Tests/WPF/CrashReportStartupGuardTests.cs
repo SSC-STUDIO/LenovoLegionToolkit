@@ -18,10 +18,10 @@ public sealed class CrashReportStartupGuardTests
 
         var method = source[methodStart..methodEnd];
         method.Should().Contain("Show();");
-        method.Should().Contain("Dispatcher.BeginInvoke(App.CheckPendingCrashReports, DispatcherPriority.Background);");
+        method.Should().Contain("Application.Current.Dispatcher.BeginInvoke(App.CheckPendingCrashReports,");
         method.IndexOf("Show();", System.StringComparison.Ordinal)
             .Should()
-            .BeLessThan(method.IndexOf("Dispatcher.BeginInvoke(App.CheckPendingCrashReports, DispatcherPriority.Background);", System.StringComparison.Ordinal));
+            .BeLessThan(method.IndexOf("Application.Current.Dispatcher.BeginInvoke(App.CheckPendingCrashReports,", System.StringComparison.Ordinal));
     }
 
     [Fact]

@@ -32,7 +32,7 @@ public sealed class SingleInstanceMutexTests
     public void EnsureSingleInstance_WhenMutexNotOwned_ShouldExit()
     {
         var source = ReadOrchestratorSource();
-        var method = ExtractMethodBody(source, "Task<bool> EnsureSingleInstanceAsync");
+        var method = ExtractMethodBody(source, "private async Task<bool> InitializeSingleInstanceAsync");
         method.Should().Contain("App.Current.EnsureSingleInstance()");
         method.Should().Contain("App.ExitDuplicateInstance()");
     }
@@ -41,7 +41,7 @@ public sealed class SingleInstanceMutexTests
     public void ExitDuplicateInstance_ShouldPrecedeEnsureSingleInstanceInStartup()
     {
         var source = ReadOrchestratorSource();
-        var method = ExtractMethodBody(source, "Task<bool> EnsureSingleInstanceAsync");
+        var method = ExtractMethodBody(source, "private async Task<bool> InitializeSingleInstanceAsync");
 
         var callSite = "if (!App.Current.EnsureSingleInstance())";
         var exitCall = "App.ExitDuplicateInstance()";

@@ -20,7 +20,7 @@ public sealed class WindowsOptimizationViewModelGuardTests
         initializeCore.Should().Contain("StartOptimizationStateScan();");
 
         var observer = ExtractMethod(source, "private async Task ObserveOptimizationStateScanAsync()");
-        observer.Should().Contain("await ScanOptimizationStatesAsync().ConfigureAwait(false);");
+        observer.Should().Contain("await ScanOptimizationStatesAsync();");
         observer.Should().Contain("catch (Exception ex)");
         observer.Should().Contain("Log.Instance.Trace(\"Failed to scan Windows optimization states.\", ex);");
     }
@@ -29,13 +29,13 @@ public sealed class WindowsOptimizationViewModelGuardTests
     public void ScanOptimizationStatesAsync_ShouldUseUiThreadActionSnapshot()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
-        var scanMethod = ExtractMethod(source, "public async Task ScanOptimizationStatesAsync()");
+        var scanMethod = ExtractMethod(source, "public async Task ScanOptimizationStatesAsync(");
         var snapshotMethod = ExtractMethod(source, "private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()");
         var snapshotBuilder = ExtractMethod(source, "private List<OptimizationActionViewModel> SnapshotOptimizationActions()");
 
         source.Should().Contain("private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);");
-        scanMethod.Should().Contain("await _optimizationStateScanLock.WaitAsync(cancellationToken).ConfigureAwait(false);");
-        scanMethod.Should().Contain("var actions = await GetOptimizationActionSnapshotAsync().ConfigureAwait(false);");
+        scanMethod.Should().Contain("await _optimizationStateScanLock.WaitAsync(cancellationToken);");
+        scanMethod.Should().Contain("var actions = await GetOptimizationActionSnapshotAsync();");
         scanMethod.Should().Contain("foreach (var action in actions)");
         scanMethod.Should().NotContain("foreach (var category in OptimizationCategories)");
         scanMethod.Should().Contain("_optimizationStateScanLock.Release();");

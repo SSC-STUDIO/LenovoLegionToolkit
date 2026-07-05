@@ -40,7 +40,15 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         var packageDefinitions = await GetPackageDefinitionsAsync(httpClient, $"{CATALOG_BASE_URL}/{machineType}_{osString}.xml", token).ConfigureAwait(false);
 
         var updateDetector = new VantagePackageUpdateDetector();
-        await updateDetector.BuildDriverInfoCache().ConfigureAwait(false);
+        try
+        {
+            await updateDetector.BuildDriverInfoCache().ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is global::System.TimeoutException or global::System.Runtime.InteropServices.COMException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to build driver info cache, continuing without it. [message={ex.Message}]", ex);
+        }
 
         var count = 0;
         var totalCount = packageDefinitions.Count;

@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin Extensions install/configure/open/uninstall icon buttons now render explicit symbols and stay vertically centered in each card in Dark/Light themes / 插件扩展页安装/配置/打开/卸载图标按钮在深浅色主题下正确显示符号并在卡片内垂直居中
 - Packages page readme/download/cancel action buttons no longer render as empty boxes in light mode; icons use explicit `SymbolIcon` foreground like Plugin Extensions / 驱动包列表页 readme/下载/取消操作按钮在浅色模式下不再显示为空白方框，图标改用与插件扩展页一致的显式 `SymbolIcon` 前景色
 - Macro event card titles for mouse actions (MOVE, WHEEL DOWN/UP/LEFT/RIGHT, XBUTTON, LBUTTON, RBUTTON, MBUTTON) are now localized via `Lib.Macro.Resources.Resource` instead of hardcoded English strings / 宏事件卡片中鼠标操作的标题（MOVE、WHEEL DOWN/UP/LEFT/RIGHT、XBUTTON、LBUTTON、RBUTTON、MBUTTON）现通过 `Lib.Macro.Resources.Resource` 本地化，不再硬编码英文
+- Fixed 7 pre-existing test failures (source-code structure tests outdated after refactors, WMI timeout in VantagePackageDownloaderTests); all 2343 tests now pass / 修复 7 个预存的测试失败（源代码结构测试在重构后未同步更新、VantagePackageDownloaderTests 中 WMI 超时），现在 2343 个测试全部通过
 
 ### Improved / 改进
 
