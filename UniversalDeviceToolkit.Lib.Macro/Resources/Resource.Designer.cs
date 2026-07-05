@@ -77,5 +77,95 @@ namespace UniversalDeviceToolkit.Lib.Macro.Resources {
                 return ResourceManager.GetString("MacroSource_Mouse", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MOVE.
+        /// </summary>
+        public static string MacroEventControl_MouseMove_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseMove_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WHEEL DOWN.
+        /// </summary>
+        public static string MacroEventControl_MouseWheelDown_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseWheelDown_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WHEEL UP.
+        /// </summary>
+        public static string MacroEventControl_MouseWheelUp_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseWheelUp_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WHEEL LEFT.
+        /// </summary>
+        public static string MacroEventControl_MouseWheelLeft_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseWheelLeft_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to WHEEL RIGHT.
+        /// </summary>
+        public static string MacroEventControl_MouseWheelRight_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseWheelRight_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to XBUTTON{0}.
+        /// </summary>
+        public static string MacroEventControl_MouseXButton_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseXButton_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to LBUTTON.
+        /// </summary>
+        public static string MacroEventControl_MouseLButton_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseLButton_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to RBUTTON.
+        /// </summary>
+        public static string MacroEventControl_MouseRButton_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseRButton_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MBUTTON.
+        /// </summary>
+        public static string MacroEventControl_MouseMButton_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseMButton_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to BUTTON{0}.
+        /// </summary>
+        public static string MacroEventControl_MouseButton_Title {
+            get {
+                return ResourceManager.GetString("MacroEventControl_MouseButton_Title", resourceCulture);
+            }
+        }
     }
 }

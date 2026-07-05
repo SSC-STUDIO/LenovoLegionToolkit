@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backfilled simplified Chinese (`zh-Hans`) UI strings for Plugin Extensions, Windows Optimization, sensors, and large-file cleanup by syncing from `zh-Hant` and manually translating newly added keys, so Chinese UI no longer mixes English labels like `Available`, `Configure`, or `Preparing download...` / 从 `zh-Hant` 同步并补全新增键的简体中文翻译，修复插件扩展、Windows 优化、传感器与大文件清理等界面中英混排（如 `Available`、`Configure`、`Preparing download...`）
 - Plugin Extensions install/configure/open/uninstall icon buttons now render explicit symbols and stay vertically centered in each card in Dark/Light themes / 插件扩展页安装/配置/打开/卸载图标按钮在深浅色主题下正确显示符号并在卡片内垂直居中
 - Packages page readme/download/cancel action buttons no longer render as empty boxes in light mode; icons use explicit `SymbolIcon` foreground like Plugin Extensions / 驱动包列表页 readme/下载/取消操作按钮在浅色模式下不再显示为空白方框，图标改用与插件扩展页一致的显式 `SymbolIcon` 前景色
+- Macro event card titles for mouse actions (MOVE, WHEEL DOWN/UP/LEFT/RIGHT, XBUTTON, LBUTTON, RBUTTON, MBUTTON) are now localized via `Lib.Macro.Resources.Resource` instead of hardcoded English strings / 宏事件卡片中鼠标操作的标题（MOVE、WHEEL DOWN/UP/LEFT/RIGHT、XBUTTON、LBUTTON、RBUTTON、MBUTTON）现通过 `Lib.Macro.Resources.Resource` 本地化，不再硬编码英文
 
 ### Improved / 改进
 
