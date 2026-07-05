@@ -97,7 +97,7 @@ public partial class NetworkAccelerationControl : UserControl
         _presetListBox = new ListBox
         {
             BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent,
+            Background = null,
             ItemContainerStyle = CreatePresetItemContainerStyle()
         };
         _presetListBox.SelectionChanged += PresetListBox_SelectionChanged;
@@ -189,7 +189,7 @@ public partial class NetworkAccelerationControl : UserControl
         var tabControl = new TabControl
         {
             BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent
+            Background = null
         };
         AutomationProperties.SetAutomationId(tabControl, "NetworkAcceleration_TabControl");
 
@@ -543,7 +543,7 @@ public partial class NetworkAccelerationControl : UserControl
         style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch));
         style.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(0)));
         style.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0, 0, 0, 8)));
-        style.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+        style.Setters.Add(new Setter(Control.BackgroundProperty, null));
         style.Setters.Add(new Setter(Control.BorderBrushProperty, new DynamicResourceExtension("ControlStrokeColorDefaultBrush")));
         style.Setters.Add(new Setter(Control.TemplateProperty, CreatePresetItemContainerTemplate()));
 

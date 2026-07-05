@@ -283,7 +283,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             HeadersVisibility = DataGridHeadersVisibility.Column,
             GridLinesVisibility = DataGridGridLinesVisibility.None,
             BorderThickness = new Thickness(1),
-            Background = Brushes.Transparent,
+            Background = null,
             AlternationCount = 2,
             CanUserReorderColumns = false
         };

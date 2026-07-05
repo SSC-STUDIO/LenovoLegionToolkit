@@ -51,7 +51,7 @@ public static class WpfFallbackHelper
         var panel = new StackPanel
         {
             Width = Constants.FallbackPanelWidth,
-            Background = Brushes.White,
+            Background = ResolveFallbackBrush("ApplicationBackgroundBrush", Brushes.White),
             Margin = new Thickness(Constants.DefaultSpacing)
         };
 
@@ -60,7 +60,7 @@ public static class WpfFallbackHelper
             Text = message,
             TextWrapping = TextWrapping.Wrap,
             FontSize = 14,
-            Foreground = Brushes.Black,
+            Foreground = ResolveFallbackBrush("TextFillColorPrimaryBrush", Brushes.Black),
             Margin = new Thickness(0, 0, 0, Constants.DefaultSpacing)
         };
         panel.Children.Add(messageText);
@@ -72,13 +72,19 @@ public static class WpfFallbackHelper
                 Text = details,
                 TextWrapping = TextWrapping.Wrap,
                 FontSize = 12,
-                Foreground = Brushes.Gray,
+                Foreground = ResolveFallbackBrush("TextFillColorSecondaryBrush", Brushes.Gray),
                 Margin = new Thickness(0, 0, 0, Constants.DefaultSpacing)
             };
             panel.Children.Add(detailsText);
         }
 
         return panel;
+    }
+
+    private static Brush ResolveFallbackBrush(string resourceKey, Brush fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
+    }
     }
 
     /// <summary>
