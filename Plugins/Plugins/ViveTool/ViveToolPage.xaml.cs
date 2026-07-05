@@ -855,7 +855,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             // Show import options - first ask if user wants to import from file or URL
             var fromFile = await WpfHostNotifications.ShowConfirmAsync(
-                this,
+                null,
                 Resource.ViveTool_Import,
                 Resource.ViveTool_ImportDescription + "\n\n" + Resource.ViveTool_ImportFromFile + " / " + Resource.ViveTool_ImportFromUrl,
                 Resource.ViveTool_ImportFromFile,
@@ -932,7 +932,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             // Show URL input dialog
             var url = await WpfHostNotifications.ShowInputAsync(
-                this,
+                null,
                 Resource.ViveTool_ImportFromUrl,
                 "https://example.com/features.json",
                 null,

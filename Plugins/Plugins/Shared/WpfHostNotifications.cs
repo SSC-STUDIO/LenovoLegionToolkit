@@ -12,7 +12,7 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 /// Falls back to basic <see cref="System.Windows.MessageBox"/> when the host helpers are unavailable.
 /// This eliminates the hard compile-time dependency on LenovoLegionToolkit.WPF assembly.
 /// </summary>
-internal static class WpfHostNotifications
+public static class WpfHostNotifications
 {
     private static class ReflectionCache
     {
@@ -71,7 +71,7 @@ internal static class WpfHostNotifications
     /// Shows a snackbar notification with the specified title and message.
     /// Falls back to System.Windows.MessageBox for errors, or PluginLog.Trace for info.
     /// </summary>
-    internal static void ShowSnackbar(string title, string message)
+    public static void ShowSnackbar(string title, string message)
     {
         if (TrySnackbarShow(title, message, null))
             return;
@@ -82,7 +82,7 @@ internal static class WpfHostNotifications
     /// <summary>
     /// Shows an error snackbar notification.
     /// </summary>
-    internal static void ShowSnackbarError(string title, string message)
+    public static void ShowSnackbarError(string title, string message)
     {
         if (TrySnackbarShow(title, message, ReflectionCache.SnackbarTypeErrorValue))
             return;
@@ -126,7 +126,7 @@ internal static class WpfHostNotifications
     /// Shows a confirmation dialog with primary and secondary buttons.
     /// Returns true if the primary button is clicked, false for secondary/cancel.
     /// </summary>
-    internal static async Task<bool> ShowConfirmAsync(Window? owner, string title, string message, string primaryText, string secondaryText)
+    public static async Task<bool> ShowConfirmAsync(Window? owner, string title, string message, string primaryText, string secondaryText)
     {
         if (ReflectionCache.MessageBoxHelperType is { } helperType)
         {
@@ -155,7 +155,7 @@ internal static class WpfHostNotifications
     /// <summary>
     /// Shows an input dialog and returns the user's input, or null if canceled.
     /// </summary>
-    internal static async Task<string?> ShowInputAsync(Window? owner, string title, string placeholder, string? defaultValue, string primaryText, string secondaryText, bool isMultiline = false)
+    public static async Task<string?> ShowInputAsync(Window? owner, string title, string placeholder, string? defaultValue, string primaryText, string secondaryText, bool isMultiline = false)
     {
         if (ReflectionCache.MessageBoxHelperType is { } helperType)
         {
@@ -185,7 +185,7 @@ internal static class WpfHostNotifications
     /// Applies plugin resource cultures for proper localization.
     /// No-op if the host helper is unavailable.
     /// </summary>
-    internal static void SetPluginResourceCultures()
+    public static void SetPluginResourceCultures()
     {
         if (ReflectionCache.LocalizationHelperType is not { } helperType)
             return;

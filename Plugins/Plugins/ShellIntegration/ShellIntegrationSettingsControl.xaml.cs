@@ -296,7 +296,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private void SyncManagedConfigButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = _plugin.SyncManagedConfiguration();
+        var success = _plugin.SyncManagedConfigurationAsync().GetAwaiter().GetResult();
         RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigSyncCompleted : ShellIntegrationText.StatusManagedConfigSyncFailed, !success);
     }
 
