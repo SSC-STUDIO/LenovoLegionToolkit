@@ -1,11 +1,14 @@
 {
-  "Description": "Customize mouse cursor style behavior and mouse settings",
+  "Description": "Personalize your mouse experience with theme-aware cursor styles, DPI profiles, and seamless Windows integration.",
   "Icon": "Pen24",
   "IconBackground": "#2563EB",
   "Tags": [
     "mouse",
     "customization",
-    "gaming"
+    "gaming",
+    "cursor",
+    "dpi",
+    "productivity"
   ],
   "Dependencies": [],
   "SupportedLanguages": [

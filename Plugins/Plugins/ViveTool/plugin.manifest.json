@@ -30,13 +30,16 @@
     ]
   },
   "store": {
-    "description": "Manage Windows feature flags using ViVeTool",
+    "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
     "icon": "Code24",
     "iconBackground": "#7C3AED",
     "tags": [
       "windows",
       "feature-flags",
-      "vivetool"
+      "vivetool",
+      "customization",
+      "tweaks",
+      "insider"
     ],
     "dependencies": [],
     "supportedLanguages": [

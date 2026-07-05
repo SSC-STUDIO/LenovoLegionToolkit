@@ -32,12 +32,16 @@
     ]
   },
   "store": {
-    "description": "Real-time network acceleration and optimization features",
+    "description": "Boost your network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work.",
     "icon": "Rocket24",
     "iconBackground": "#DC2626",
     "tags": [
       "network",
-      "optimization"
+      "optimization",
+      "gaming",
+      "telemetry",
+      "acceleration",
+      "performance"
     ],
     "dependencies": [],
     "supportedLanguages": [

@@ -50,13 +50,16 @@
     ]
   },
   "store": {
-    "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+    "description": "Seamlessly integrate Universal Device Toolkit into your Windows shell context menu for instant access to power features.",
     "icon": "Folder24",
     "iconBackground": "#0F766E",
     "tags": [
       "system",
       "shell",
-      "integration"
+      "integration",
+      "context-menu",
+      "productivity",
+      "windows"
     ],
     "dependencies": [],
     "supportedLanguages": [
