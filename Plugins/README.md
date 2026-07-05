@@ -1,28 +1,48 @@
 # Universal Device Toolkit Plugins
 
 <p align="center">
-  <img src="https://img.shields.io/badge/C%23-.NET%2010-blue?style=flat-square&logo=csharp" alt="C# .NET 10" />
-  <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4?style=flat-square&logo=windows" alt="Windows 10/11" />
-  <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=flat-square&color=yellow" alt="Stars" />
-  <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/github/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release?style=flat-square&logo=github" alt="CI" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins">
+    <img src="https://img.shields.io/badge/C%23-.NET%2010-blue?style=for-the-badge&logo=csharp&logoColor=white" alt="C# .NET 10" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins">
+    <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Windows 10/11" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/stargazers">
+    <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=yellow&logo=github" alt="Stars" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release.yml?style=for-the-badge&logo=github&logoColor=white" alt="CI" />
+  </a>
 </p>
 
 <p align="center">
   <b>Official plugin ecosystem for Universal Device Toolkit (formerly Lenovo Legion Toolkit)</b><br/>
-  Extend your device management experience with community-driven plugins.
+  Extend your Windows device management experience with community-driven plugins.
+</p>
+
+<p align="center">
+  <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i>
 </p>
 
 ---
 
 ## Plugin Catalog
 
-| Plugin | Description | Tags |
-|--------|-------------|------|
-| **Network Acceleration** | Boost network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work. | `network` `optimization` `gaming` `telemetry` |
-| **Custom Mouse** | Personalize your mouse with theme-aware cursor styles, DPI profiles, and seamless Windows integration. | `mouse` `customization` `gaming` `cursor` `dpi` |
-| **ViVeTool** | Unlock hidden Windows features and customize your system with the ultimate Windows feature flag manager. | `windows` `feature-flags` `vivetool` `tweaks` `insider` |
-| **Shell Integration** | Seamlessly integrate into your Windows shell context menu for instant access to power features. | `system` `shell` `integration` `context-menu` |
+<p align="center">
+  <img src="https://img.shields.io/badge/Plugins-4-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/Downloads-10K%2B-brightgreen?style=flat-square" />
+  <img src="https://img.shields.io/badge/Contributors-Welcome!-purple?style=flat-square" />
+</p>
+
+| # | Plugin | Version | Description | Install |
+|---|--------|---------|-------------|---------|
+| 🔥 | **Network Acceleration** | v1.2.0 | Real-time network telemetry with a redesigned dual-tab UI. Track speeds, peak traffic, and apply gaming presets with one click. | `network-acceleration` |
+| 🖱️ | **Custom Mouse** | v1.0.16 | Theme-aware cursor styles, DPI profiles, and seamless Windows pointer speed management. Auto-adapts to Light/Dark mode. | `custom-mouse` |
+| 🔧 | **ViVeTool** | v1.2.2 | Unlock hidden Windows feature flags from a searchable GUI. No command-line needed — browse, search, enable, and disable features safely. | `vive-tool` |
+| 🐚 | **Shell Integration** | v1.0.12 | Right-click context menu integration. Instant access to power features from anywhere in Windows Explorer. | `shell-integration` |
 
 > **Looking for more plugins?** Check the [plugin store](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/store.json) or [build your own](#author-workflow).
 
@@ -36,6 +56,25 @@
 4. Restart the application
 
 That's it — no manual downloads, no complex setup.
+
+---
+
+## Why These Plugins?
+
+### 🔐 100% Free & Open Source
+No paywalls, no premium tiers, no ads. Every line of code is on GitHub under the MIT License. Audit it, fork it, contribute back.
+
+### 🎨 Native Windows 11 Look & Feel
+Built with .NET 10 and WPF-UI 4.3.0, these plugins use real Fluent Design tokens. They adapt to your Windows theme automatically — no "light mode only" or "dark mode broken" bugs.
+
+### 🔧 Extensible by Design
+The plugin SDK is clean and well-documented. Want a plugin that does X? Fork the repo, run `init`, and you're building in 2 minutes. The included PluginWorkbench lets you preview plugins without launching the full host app.
+
+### 🌍 Localized
+All plugins support English and Chinese out of the box. Adding a new language is as simple as adding a `.resx` file.
+
+### 🧪 Battle-Tested
+Every official plugin ships with unit tests, visual smoke tests (Light + Dark themes), and automated CI/CD via GitHub Actions.
 
 ---
 
