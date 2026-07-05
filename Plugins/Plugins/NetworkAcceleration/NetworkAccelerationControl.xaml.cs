@@ -61,6 +61,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void BuildFallbackUi()
     {
+        // Initialize all field references first
         _serviceStateTextBlock = CreateValueTextBlock();
         _savedModeSummaryTextBlock = CreateValueTextBlock();
         _sessionValueTextBlock = CreateValueTextBlock();
@@ -89,9 +90,9 @@ public partial class NetworkAccelerationControl : UserControl
         };
         _statusIcon.SetResourceReference(Control.ForegroundProperty, "TextFillColorSecondaryBrush");
 
-        _serviceToggleButton = CreateButton(174, null, "NetworkAcceleration_ServiceToggleButton", ServiceToggleButton_Click);
-        var refreshButton = CreateButton(122, NetworkAccelerationText.RefreshButton, "NetworkAcceleration_RefreshButton", RefreshButton_Click);
-        var menuButton = CreateButton(112, NetworkAccelerationText.MenuButton, "NetworkAcceleration_MenuButton", MenuButton_Click);
+        _serviceToggleButton = CreateButton(140, null, "NetworkAcceleration_ServiceToggleButton", ServiceToggleButton_Click);
+        var refreshButton = CreateButton(36, string.Empty, "NetworkAcceleration_RefreshButton", RefreshButton_Click);
+        var menuButton = CreateButton(36, string.Empty, "NetworkAcceleration_MenuButton", MenuButton_Click);
 
         _presetListBox = new ListBox
         {
@@ -105,26 +106,22 @@ public partial class NetworkAccelerationControl : UserControl
             "Balanced",
             NetworkAccelerationText.ModeBalancedTargetTitle,
             NetworkAccelerationText.ModeBalancedTargetDescription,
-            NetworkAccelerationText.ModeBalanced,
-            addBottomBorder: true));
+            NetworkAccelerationText.ModeBalanced));
         _presetListBox.Items.Add(CreatePresetItem(
             "Gaming",
             NetworkAccelerationText.ModeGamingTargetTitle,
             NetworkAccelerationText.ModeGamingTargetDescription,
-            NetworkAccelerationText.ModeGaming,
-            addBottomBorder: true));
+            NetworkAccelerationText.ModeGaming));
         _presetListBox.Items.Add(CreatePresetItem(
             "Streaming",
             NetworkAccelerationText.ModeStreamingTargetTitle,
             NetworkAccelerationText.ModeStreamingTargetDescription,
-            NetworkAccelerationText.ModeStreaming,
-            addBottomBorder: false));
+            NetworkAccelerationText.ModeStreaming));
 
         _modeComboBox = new ComboBox
         {
-            Width = 230,
-            Margin = new Thickness(0, 14, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Left
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 0, 0, 12)
         };
         _modeComboBox.Items.Add(new ComboBoxItem { Content = NetworkAccelerationText.ModeBalanced, Tag = "Balanced" });
         _modeComboBox.Items.Add(new ComboBoxItem { Content = NetworkAccelerationText.ModeGaming, Tag = "Gaming" });
@@ -135,52 +132,45 @@ public partial class NetworkAccelerationControl : UserControl
         _autoOptimizeOnStartupCheckBox = CreateSettingsCheckBox(
             NetworkAccelerationText.AutoOptimizeOnStartup,
             "NetworkAcceleration_AutoOptimizeCheckBox",
-            new Thickness(0, 14, 0, 10));
+            new Thickness(0, 0, 0, 12));
         _resetWinsockCheckBox = CreateSettingsCheckBox(
             NetworkAccelerationText.ResetWinsockOnOptimize,
             "NetworkAcceleration_ResetWinsockCheckBox",
-            new Thickness(0, 0, 0, 10));
+            new Thickness(0, 0, 0, 12));
         _resetTcpIpCheckBox = CreateSettingsCheckBox(
             NetworkAccelerationText.ResetTcpIpOnOptimize,
             "NetworkAcceleration_ResetTcpIpCheckBox",
             new Thickness(0));
 
+        // Build root Grid with 3 rows: Hero, TabControl, StatusBar
         var root = new Grid();
         AutomationProperties.SetAutomationId(root, "NetworkAcceleration_FeatureRoot");
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-        root.Children.Add(BuildFallbackStatusStrip(refreshButton, menuButton));
-        root.Children.Add(BuildFallbackPresetAndSettingsArea());
-        root.Children.Add(BuildFallbackTelemetryArea());
-        root.Children.Add(BuildFallbackStatusFooter());
+        root.Children.Add(BuildFallbackHeroBanner(refreshButton, menuButton));
+        root.Children.Add(BuildFallbackTabControl());
+        root.Children.Add(BuildFallbackStatusBar());
 
-        Content = new ScrollViewer
-        {
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-            Content = root
-        };
+        Content = root;
     }
 
-    private Border BuildFallbackStatusStrip(params Wpf.Ui.Controls.Button[] buttons)
+    private Border BuildFallbackHeroBanner(params Wpf.Ui.Controls.Button[] buttons)
     {
-        var border = CreateStripBorder(new Thickness(0, 0, 0, 20));
+        var border = CreateStripBorder(new Thickness(0, 0, 0, 16));
         var grid = new Grid();
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
         var summary = new WrapPanel { VerticalAlignment = VerticalAlignment.Center };
-        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.ServiceStateLabel, _serviceStateTextBlock, new Thickness(0, 0, 24, 0)));
-        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.CurrentModeLabel, _savedModeSummaryTextBlock, new Thickness(0, 0, 24, 0)));
-        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.SessionLabel, _sessionValueTextBlock, new Thickness(0)));
+        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.ServiceStateLabel, _serviceStateTextBlock, new Thickness(0, 0, 18, 4)));
+        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.CurrentModeLabel, _savedModeSummaryTextBlock, new Thickness(0, 0, 18, 4)));
+        summary.Children.Add(CreateLabelValue(NetworkAccelerationText.SessionLabel, _sessionValueTextBlock, new Thickness(0, 0, 18, 4)));
         grid.Children.Add(summary);
 
         var commandRow = new WrapPanel
         {
-            Margin = new Thickness(20, 0, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -194,174 +184,286 @@ public partial class NetworkAccelerationControl : UserControl
         return border;
     }
 
-    private Grid BuildFallbackPresetAndSettingsArea()
+    private TabControl BuildFallbackTabControl()
     {
-        var grid = new Grid { Margin = new Thickness(0, 0, 0, 20) };
-        Grid.SetRow(grid, 1);
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.05, GridUnitType.Star) });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(28) });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.95, GridUnitType.Star) });
-
-        var presetStack = new StackPanel();
-        presetStack.Children.Add(CreateSectionTextBlock(NetworkAccelerationText.AccelerationTargetsTitle));
-        presetStack.Children.Add(CreateDescriptionTextBlock(
-            NetworkAccelerationText.AccelerationTargetsDescription,
-            new Thickness(0, 6, 0, 14)));
-        presetStack.Children.Add(_presetListBox);
-        grid.Children.Add(presetStack);
-
-        var divider = new Border
+        var tabControl = new TabControl
         {
-            Width = 1,
-            HorizontalAlignment = HorizontalAlignment.Center
+            BorderThickness = new Thickness(0),
+            Background = Brushes.Transparent
         };
-        divider.SetResourceReference(Border.BackgroundProperty, "ControlStrokeColorDefaultBrush");
-        Grid.SetColumn(divider, 1);
-        grid.Children.Add(divider);
+        AutomationProperties.SetAutomationId(tabControl, "NetworkAcceleration_TabControl");
 
-        var detailStack = new StackPanel();
-        Grid.SetColumn(detailStack, 2);
-        detailStack.Children.Add(BuildFallbackPresetDetailHeader());
-        detailStack.Children.Add(BuildFallbackPresetDetailRows());
-        detailStack.Children.Add(BuildFallbackActionButtons());
+        tabControl.Items.Add(BuildFallbackDashboardTab());
+        tabControl.Items.Add(BuildFallbackOptimizationTab());
 
-        _settingsExpander = new Expander
+        Grid.SetRow(tabControl, 1);
+        return tabControl;
+    }
+
+    private TabItem BuildFallbackDashboardTab()
+    {
+        var tab = new TabItem();
+        tab.Header = NetworkAccelerationText.FeatureOverviewTitle;
+        AutomationProperties.SetAutomationId(tab, "NetworkAcceleration_DashboardTab");
+
+        var scrollViewer = new ScrollViewer
         {
-            Margin = new Thickness(0, 16, 0, 0),
-            IsExpanded = true,
-            Header = new TextBlock
-            {
-                Text = NetworkAccelerationText.SettingsTitle
-            }
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
         };
-        ((TextBlock)_settingsExpander.Header).SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-        _settingsExpander.Content = BuildFallbackSettingsStack();
-        detailStack.Children.Add(_settingsExpander);
-        grid.Children.Add(detailStack);
 
-        return grid;
+        var stack = new StackPanel { Margin = new Thickness(0) };
+
+        // Overview card
+        stack.Children.Add(BuildFallbackOverviewCard());
+
+        // Download + Upload metric cards
+        stack.Children.Add(BuildFallbackMetricCardsGrid());
+
+        // Peak + Adapter cards
+        stack.Children.Add(BuildFallbackPeakAndAdapterGrid());
+
+        // Quick actions card
+        stack.Children.Add(BuildFallbackQuickActionsCard());
+
+        scrollViewer.Content = stack;
+        tab.Content = scrollViewer;
+        return tab;
     }
 
-    private Grid BuildFallbackPresetDetailHeader()
+    private Border BuildFallbackOverviewCard()
     {
-        var grid = new Grid();
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-        var textStack = new StackPanel { Margin = new Thickness(0, 0, 18, 0) };
-        textStack.Children.Add(_presetTitleTextBlock);
-        _presetSubtitleTextBlock.Margin = new Thickness(0, 6, 0, 0);
-        textStack.Children.Add(_presetSubtitleTextBlock);
-        grid.Children.Add(textStack);
-
-        _presetStateTextBlock.FontWeight = FontWeights.SemiBold;
-        _presetStateTextBlock.VerticalAlignment = VerticalAlignment.Top;
-        Grid.SetColumn(_presetStateTextBlock, 1);
-        grid.Children.Add(_presetStateTextBlock);
-        return grid;
-    }
-
-    private Grid BuildFallbackPresetDetailRows()
-    {
-        var grid = CreateTwoColumnRowsGrid(rowCount: 3, new Thickness(0, 18, 0, 0));
-        AddTwoColumnRow(grid, 0, NetworkAccelerationText.RecommendedForLabel, _presetRecommendationTextBlock);
-        AddTwoColumnRow(grid, 1, NetworkAccelerationText.OptimizationFocusLabel, _presetActionsTextBlock);
-        AddTwoColumnRow(grid, 2, NetworkAccelerationText.SessionLabel, _detailSessionTextBlock);
-        return grid;
-    }
-
-    private WrapPanel BuildFallbackActionButtons()
-    {
-        var panel = new WrapPanel { Margin = new Thickness(0, 18, 0, 0) };
-        panel.Children.Add(CreateButton(
-            196,
-            NetworkAccelerationText.RunQuickOptimizationButton,
-            "NetworkAcceleration_QuickOptimizeButton",
-            QuickOptimizeButton_Click));
-        panel.Children.Add(CreateButton(
-            178,
-            NetworkAccelerationText.ResetNetworkStackButton,
-            "NetworkAcceleration_ResetStackButton",
-            ResetStackButton_Click));
-        panel.Children.Add(CreateButton(
-            124,
-            NetworkAccelerationText.SaveModeButton,
-            "NetworkAcceleration_SaveModeButton",
-            SaveModeButton_Click,
-            new Thickness(0, 0, 0, 8)));
-        return panel;
-    }
-
-    private StackPanel BuildFallbackSettingsStack()
-    {
-        var stack = new StackPanel { Margin = new Thickness(0, 12, 0, 0) };
-        stack.Children.Add(CreateDescriptionTextBlock(NetworkAccelerationText.SettingsDescription));
-        stack.Children.Add(_modeComboBox);
-        _modeDescriptionTextBlock.Margin = new Thickness(0, 10, 0, 0);
-        stack.Children.Add(_modeDescriptionTextBlock);
-        stack.Children.Add(_autoOptimizeOnStartupCheckBox);
-        stack.Children.Add(_resetWinsockCheckBox);
-        stack.Children.Add(_resetTcpIpCheckBox);
-        stack.Children.Add(CreateDescriptionTextBlock(NetworkAccelerationText.PlannedStepsTitle, new Thickness(0, 14, 0, 6)));
-        _plannedStepsTextBlock.Margin = new Thickness(0, 0, 0, 0);
-        stack.Children.Add(_plannedStepsTextBlock);
-        return stack;
-    }
-
-    private Border BuildFallbackTelemetryArea()
-    {
-        var border = new Border
-        {
-            BorderThickness = new Thickness(0, 1, 0, 1),
-            Padding = new Thickness(0, 16, 0, 16),
-            Margin = new Thickness(0, 0, 0, 16)
-        };
-        border.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
-        Grid.SetRow(border, 2);
-
+        var border = CreateCardBorder();
         var stack = new StackPanel();
-        var header = new Grid();
-        header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-        var titleStack = new StackPanel { Margin = new Thickness(0, 0, 24, 0) };
-        titleStack.Children.Add(CreateSectionTextBlock(NetworkAccelerationText.LiveTelemetryTitle));
-        titleStack.Children.Add(CreateDescriptionTextBlock(
-            NetworkAccelerationText.LiveTelemetryDescription,
+        stack.Children.Add(CreateSectionTextBlock(NetworkAccelerationText.FeatureOverviewTitle));
+        stack.Children.Add(CreateDescriptionTextBlock(
+            NetworkAccelerationText.FeatureOverviewDescription,
             new Thickness(0, 6, 0, 0)));
-        header.Children.Add(titleStack);
-
-        var updated = CreateLabelValue(NetworkAccelerationText.UpdatedLabel, _updatedValueTextBlock, new Thickness(0));
-        Grid.SetColumn(updated, 1);
-        header.Children.Add(updated);
-        stack.Children.Add(header);
-
-        var metrics = new Grid { Margin = new Thickness(0, 18, 0, 0) };
-        metrics.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        metrics.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        metrics.ColumnDefinitions.Add(new ColumnDefinition());
-        metrics.ColumnDefinitions.Add(new ColumnDefinition());
-        metrics.ColumnDefinitions.Add(new ColumnDefinition());
-        AddMetric(metrics, 0, 0, NetworkAccelerationText.CurrentDownloadLabel, _downloadValueTextBlock, new Thickness(0, 0, 18, 16));
-        AddMetric(metrics, 0, 1, NetworkAccelerationText.CurrentUploadLabel, _uploadValueTextBlock, new Thickness(0, 0, 18, 16));
-        AddMetric(metrics, 0, 2, NetworkAccelerationText.PeakTrafficLabel, _peakValueTextBlock, new Thickness(0, 0, 0, 16));
-        AddMetric(metrics, 1, 0, NetworkAccelerationText.DownloadTotalLabel, _downloadTotalTextBlock, new Thickness(0, 0, 18, 0));
-        AddMetric(metrics, 1, 1, NetworkAccelerationText.UploadTotalLabel, _uploadTotalTextBlock, new Thickness(0, 0, 18, 0));
-        AddMetric(metrics, 1, 2, NetworkAccelerationText.ActiveAdapterLabel, _adapterValueTextBlock, new Thickness(0));
-        stack.Children.Add(metrics);
-
         border.Child = stack;
         return border;
     }
 
-    private StackPanel BuildFallbackStatusFooter()
+    private Grid BuildFallbackMetricCardsGrid()
     {
+        var grid = new Grid { Margin = new Thickness(0, 0, 0, 14) };
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        // Download card
+        var dlBorder = CreateCardBorder();
+        var dlStack = new StackPanel();
+        var dlHeader = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 12) };
+        dlHeader.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.CurrentDownloadLabel));
+        dlStack.Children.Add(dlHeader);
+        _downloadValueTextBlock.FontSize = 28;
+        dlStack.Children.Add(_downloadValueTextBlock);
+        dlStack.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.DownloadTotalLabel, new Thickness(0, 10, 0, 0)));
+        _downloadTotalTextBlock.FontSize = 14;
+        _downloadTotalTextBlock.FontWeight = FontWeights.SemiBold;
+        dlStack.Children.Add(_downloadTotalTextBlock);
+        dlBorder.Child = dlStack;
+        Grid.SetColumn(dlBorder, 0);
+        grid.Children.Add(dlBorder);
+
+        // Upload card
+        var ulBorder = CreateCardBorder();
+        var ulStack = new StackPanel();
+        var ulHeader = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 12) };
+        ulHeader.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.CurrentUploadLabel));
+        ulStack.Children.Add(ulHeader);
+        _uploadValueTextBlock.FontSize = 28;
+        ulStack.Children.Add(_uploadValueTextBlock);
+        ulStack.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.UploadTotalLabel, new Thickness(0, 10, 0, 0)));
+        _uploadTotalTextBlock.FontSize = 14;
+        _uploadTotalTextBlock.FontWeight = FontWeights.SemiBold;
+        ulStack.Children.Add(_uploadTotalTextBlock);
+        ulBorder.Child = ulStack;
+        Grid.SetColumn(ulBorder, 2);
+        grid.Children.Add(ulBorder);
+
+        return grid;
+    }
+
+    private Grid BuildFallbackPeakAndAdapterGrid()
+    {
+        var grid = new Grid { Margin = new Thickness(0, 0, 0, 14) };
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        // Peak card
+        var peakBorder = CreateCardBorder();
+        var peakStack = new StackPanel();
+        peakStack.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.PeakTrafficLabel, new Thickness(0, 0, 0, 10)));
+        _peakValueTextBlock.FontSize = 28;
+        peakStack.Children.Add(_peakValueTextBlock);
+        peakStack.Children.Add(CreateLabelValue(NetworkAccelerationText.UpdatedLabel, _updatedValueTextBlock, new Thickness(0, 10, 0, 0)));
+        peakBorder.Child = peakStack;
+        Grid.SetColumn(peakBorder, 0);
+        grid.Children.Add(peakBorder);
+
+        // Adapter card
+        var adapterBorder = CreateCardBorder();
+        var adapterStack = new StackPanel();
+        adapterStack.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.ActiveAdapterLabel, new Thickness(0, 0, 0, 10)));
+        _adapterValueTextBlock.FontSize = 18;
+        _adapterValueTextBlock.FontWeight = FontWeights.SemiBold;
+        adapterStack.Children.Add(_adapterValueTextBlock);
+        adapterStack.Children.Add(CreateSecondaryTextBlock(NetworkAccelerationText.LiveTelemetryDescription, new Thickness(0, 10, 0, 0)));
+        adapterBorder.Child = adapterStack;
+        Grid.SetColumn(adapterBorder, 2);
+        grid.Children.Add(adapterBorder);
+
+        return grid;
+    }
+
+    private Border BuildFallbackQuickActionsCard()
+    {
+        var border = CreateCardBorder();
+        var stack = new StackPanel();
+        stack.Children.Add(CreateSectionTextBlock(NetworkAccelerationText.QuickActionsTitle));
+        stack.Children.Add(CreateDescriptionTextBlock(
+            NetworkAccelerationText.QuickActionsDescription,
+            new Thickness(0, 6, 0, 14)));
+        var wrap = new WrapPanel();
+        wrap.Children.Add(CreateButton(
+            170,
+            NetworkAccelerationText.RunQuickOptimizationButton,
+            "NetworkAcceleration_QuickOptimizeButton",
+            QuickOptimizeButton_Click,
+            new Thickness(0, 0, 8, 8)));
+        wrap.Children.Add(CreateButton(
+            170,
+            NetworkAccelerationText.ResetNetworkStackButton,
+            "NetworkAcceleration_ResetStackButton",
+            ResetStackButton_Click,
+            new Thickness(0, 0, 8, 8)));
+        stack.Children.Add(wrap);
+        border.Child = stack;
+        return border;
+    }
+
+    private TabItem BuildFallbackOptimizationTab()
+    {
+        var tab = new TabItem();
+        tab.Header = NetworkAccelerationText.AccelerationTargetsTitle;
+        AutomationProperties.SetAutomationId(tab, "NetworkAcceleration_OptimizationTab");
+
+        var scrollViewer = new ScrollViewer
+        {
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+        };
+
+        var grid = new Grid { Margin = new Thickness(0) };
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        // Left: Targets
+        var leftBorder = CreateCardBorder();
+        var leftStack = new StackPanel();
+        leftStack.Children.Add(CreateSectionTextBlock(NetworkAccelerationText.AccelerationTargetsTitle));
+        leftStack.Children.Add(CreateDescriptionTextBlock(
+            NetworkAccelerationText.AccelerationTargetsDescription,
+            new Thickness(0, 6, 0, 12)));
+        leftStack.Children.Add(_presetListBox);
+        leftBorder.Child = leftStack;
+        Grid.SetColumn(leftBorder, 0);
+        grid.Children.Add(leftBorder);
+
+        // Right: Details
+        var rightBorder = CreateCardBorder();
+        var rightStack = new StackPanel();
+
+        // Preset detail header
+        var detailHeaderGrid = new Grid();
+        detailHeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        detailHeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        var detailTextStack = new StackPanel { Margin = new Thickness(0, 0, 18, 0) };
+        detailTextStack.Children.Add(_presetTitleTextBlock);
+        _presetSubtitleTextBlock.Margin = new Thickness(0, 4, 0, 0);
+        detailTextStack.Children.Add(_presetSubtitleTextBlock);
+        detailHeaderGrid.Children.Add(detailTextStack);
+        _presetStateTextBlock.FontWeight = FontWeights.SemiBold;
+        _presetStateTextBlock.VerticalAlignment = VerticalAlignment.Top;
+        Grid.SetColumn(_presetStateTextBlock, 1);
+        detailHeaderGrid.Children.Add(_presetStateTextBlock);
+        rightStack.Children.Add(detailHeaderGrid);
+
+        // Preset detail rows
+        var detailRowsGrid = CreateTwoColumnRowsGrid(3, new Thickness(0, 14, 0, 0));
+        AddTwoColumnRow(detailRowsGrid, 0, NetworkAccelerationText.RecommendedForLabel, _presetRecommendationTextBlock);
+        AddTwoColumnRow(detailRowsGrid, 1, NetworkAccelerationText.OptimizationFocusLabel, _presetActionsTextBlock);
+        AddTwoColumnRow(detailRowsGrid, 2, NetworkAccelerationText.SessionLabel, _detailSessionTextBlock);
+        rightStack.Children.Add(detailRowsGrid);
+
+        // Action buttons
+        var actionWrap = new WrapPanel { Margin = new Thickness(0, 14, 0, 0) };
+        actionWrap.Children.Add(CreateButton(
+            170,
+            NetworkAccelerationText.RunQuickOptimizationButton,
+            "NetworkAcceleration_QuickOptimizeButton_Fallback",
+            QuickOptimizeButton_Click,
+            new Thickness(0, 0, 8, 8)));
+        actionWrap.Children.Add(CreateButton(
+            170,
+            NetworkAccelerationText.ResetNetworkStackButton,
+            "NetworkAcceleration_ResetStackButton_Fallback",
+            ResetStackButton_Click,
+            new Thickness(0, 0, 8, 8)));
+        actionWrap.Children.Add(CreateButton(
+            120,
+            NetworkAccelerationText.SaveModeButton,
+            "NetworkAcceleration_SaveModeButton_Fallback",
+            SaveModeButton_Click));
+        rightStack.Children.Add(actionWrap);
+
+        // Settings expander
+        _settingsExpander = new Expander
+        {
+            Margin = new Thickness(0, 16, 0, 0),
+            IsExpanded = false
+        };
+        _settingsExpander.Header = new TextBlock { Text = NetworkAccelerationText.SettingsTitle };
+        ((TextBlock)_settingsExpander.Header).SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
+        _settingsExpander.Content = BuildFallbackSettingsStack();
+        rightStack.Children.Add(_settingsExpander);
+
+        rightBorder.Child = rightStack;
+        Grid.SetColumn(rightBorder, 2);
+        grid.Children.Add(rightBorder);
+
+        scrollViewer.Content = grid;
+        tab.Content = scrollViewer;
+        return tab;
+    }
+
+    private Border BuildFallbackStatusBar()
+    {
+        var border = CreateStripBorder(new Thickness(0));
         var panel = new StackPanel { Orientation = Orientation.Horizontal };
-        Grid.SetRow(panel, 3);
         panel.Children.Add(_statusIcon);
         panel.Children.Add(_statusTextBlock);
         AutomationProperties.SetAutomationId(_statusTextBlock, "NetworkAcceleration_StatusText");
-        return panel;
+        border.Child = panel;
+        Grid.SetRow(border, 2);
+        return border;
+    }
+
+    private static Border CreateCardBorder()
+    {
+        var border = new Border
+        {
+            Padding = new Thickness(18, 16, 18, 16),
+            CornerRadius = new CornerRadius(10),
+            BorderThickness = new Thickness(1),
+            Margin = new Thickness(0, 0, 0, 14)
+        };
+        border.SetResourceReference(Border.BackgroundProperty, "ControlFillColorDefaultBrush");
+        border.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        return border;
     }
 
     private static Border CreateStripBorder(Thickness margin)
@@ -393,12 +495,12 @@ public partial class NetworkAccelerationControl : UserControl
         return panel;
     }
 
-    private static ListBoxItem CreatePresetItem(string tag, string title, string description, string label, bool addBottomBorder)
+    private static ListBoxItem CreatePresetItem(string tag, string title, string description, string label)
     {
         var row = new Border
         {
-            Padding = new Thickness(10, 9, 10, 10),
-            CornerRadius = new CornerRadius(7),
+            Padding = new Thickness(12, 10, 12, 10),
+            CornerRadius = new CornerRadius(8),
             BorderThickness = new Thickness(1)
         };
         row.SetBinding(Border.BackgroundProperty, new Binding(nameof(Control.Background))
@@ -414,9 +516,9 @@ public partial class NetworkAccelerationControl : UserControl
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        var textStack = new StackPanel { Margin = new Thickness(0, 0, 18, 0) };
+        var textStack = new StackPanel { Margin = new Thickness(0, 0, 12, 0) };
         textStack.Children.Add(CreatePrimaryTextBlock(title));
-        textStack.Children.Add(CreateSecondaryTextBlock(description, new Thickness(0, 5, 0, 0)));
+        textStack.Children.Add(CreateSecondaryTextBlock(description, new Thickness(0, 4, 0, 0)));
         grid.Children.Add(textStack);
 
         var labelText = CreateSecondaryTextBlock(label);
@@ -431,8 +533,7 @@ public partial class NetworkAccelerationControl : UserControl
             Tag = tag,
             Content = row,
             HorizontalContentAlignment = HorizontalAlignment.Stretch,
-            Padding = new Thickness(0),
-            Margin = new Thickness(0)
+            Margin = new Thickness(0, 0, 0, 8)
         };
     }
 
@@ -502,16 +603,20 @@ public partial class NetworkAccelerationControl : UserControl
         grid.Children.Add(value);
     }
 
-    private static void AddMetric(Grid grid, int row, int column, string label, TextBlock value, Thickness margin)
+    private StackPanel BuildFallbackSettingsStack()
     {
-        var panel = new StackPanel { Margin = margin };
-        panel.Children.Add(CreateSecondaryTextBlock(label));
-        value.Margin = new Thickness(0, 5, 0, 0);
-        value.FontWeight = FontWeights.SemiBold;
-        panel.Children.Add(value);
-        Grid.SetRow(panel, row);
-        Grid.SetColumn(panel, column);
-        grid.Children.Add(panel);
+        var stack = new StackPanel { Margin = new Thickness(12, 10, 12, 0) };
+        stack.Children.Add(_modeComboBox);
+        _modeDescriptionTextBlock.Margin = new Thickness(0, 10, 0, 12);
+        stack.Children.Add(_modeDescriptionTextBlock);
+        stack.Children.Add(_autoOptimizeOnStartupCheckBox);
+        stack.Children.Add(_resetWinsockCheckBox);
+        stack.Children.Add(_resetTcpIpCheckBox);
+        var plannedLabel = CreateSecondaryTextBlock(NetworkAccelerationText.PlannedStepsTitle, new Thickness(0, 14, 0, 6));
+        stack.Children.Add(plannedLabel);
+        _plannedStepsTextBlock.Margin = new Thickness(0);
+        stack.Children.Add(_plannedStepsTextBlock);
+        return stack;
     }
 
     private CheckBox CreateSettingsCheckBox(string content, string automationId, Thickness margin)
@@ -994,7 +1099,7 @@ public partial class NetworkAccelerationControl : UserControl
             _statusIcon.Symbol = isError
                 ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
                 : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
-            _statusIcon.Foreground = _statusTextBlock?.Foreground;
+            _statusIcon.Foreground = _statusTextBlock?.Foreground ?? SystemColors.ControlTextBrush;
         }
     }
 
