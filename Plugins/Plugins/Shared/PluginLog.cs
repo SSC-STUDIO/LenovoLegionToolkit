@@ -39,13 +39,11 @@ public static class PluginLog
     }
 
     /// <summary>
-    /// Logs an error-level message. Currently routes through the configured trace sink;
-    /// callers reserve it for genuinely unexpected failures so we can split severities later.
+    /// Logs an error-level message. Error messages are always logged regardless of trace level,
+    /// because errors represent genuine failures that must be visible in production.
     /// </summary>
     public static void Error(string message, Exception? exception = null)
     {
-        if (!_isTraceEnabled())
-            return;
         _trace(message, exception);
     }
 }
