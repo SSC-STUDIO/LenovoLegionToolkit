@@ -85,7 +85,6 @@ public static class WpfFallbackHelper
     {
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
-    }
 
     /// <summary>
     /// Creates a fallback error UI for display when a plugin fails to load.
