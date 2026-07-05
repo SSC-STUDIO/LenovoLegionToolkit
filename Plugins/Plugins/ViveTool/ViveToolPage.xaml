@@ -70,7 +70,7 @@
                                           FontSize="20"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
-                                          Foreground="White" />
+                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -281,7 +281,7 @@
                 <DataGrid x:Name="_featuresDataGrid"
                           AutomationProperties.AutomationId="ViveToolFeaturesDataGrid"
                           AutoGenerateColumns="False"
-                          Background="Transparent"
+                          Background="{x:Null}"
                           BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                           BorderThickness="1"
                           CanUserReorderColumns="False"

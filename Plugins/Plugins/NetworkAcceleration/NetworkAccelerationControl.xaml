@@ -75,7 +75,7 @@
                                       FontSize="20"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
-                                      Foreground="White" />
+                                      Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                 </Border>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -143,7 +143,7 @@
         <!-- TabControl: Dashboard | Optimization -->
         <TabControl Grid.Row="1"
                     BorderThickness="0"
-                    Background="Transparent"
+                    Background="{x:Null}"
                     AutomationProperties.AutomationId="NetworkAcceleration_TabControl">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
@@ -459,120 +459,108 @@
 
                                     <ListBox x:Name="_presetListBox"
                                              BorderThickness="0"
-                                             Background="Transparent"
+                                             Background="{x:Null}"
                                              ItemContainerStyle="{StaticResource NetworkAccelerationPresetItemStyle}"
                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                              SelectionChanged="PresetListBox_SelectionChanged"
                                              AutomationProperties.AutomationId="NetworkAcceleration_TargetsList">
                                         <ListBoxItem Tag="Balanced">
-                                            <Border Padding="12,10"
-                                                    CornerRadius="8"
-                                                    BorderThickness="1"
-                                                    Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                    BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Border Width="3"
-                                                            CornerRadius="2"
-                                                            Margin="0,1,10,1"
-                                                            Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                                                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                                        <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeBalancedTargetTitle}"
-                                                                   FontSize="13"
-                                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                                        <TextBlock Margin="0,4,0,0"
-                                                                   Text="{x:Static text:NetworkAccelerationText.ModeBalancedTargetDescription}"
-                                                                   TextWrapping="Wrap"
-                                                                   FontSize="11"
-                                                                   MaxWidth="340"
-                                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                                    </StackPanel>
-                                                    <TextBlock Grid.Column="1"
-                                                               VerticalAlignment="Top"
-                                                               FontSize="11"
-                                                               FontWeight="SemiBold"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{x:Static text:NetworkAccelerationText.ModeBalanced}"
-                                                               Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                                </Grid>
-                                            </Border>
-                                        </ListBoxItem>
-
-                                        <ListBoxItem Tag="Gaming">
-                                            <Border Padding="12,10"
-                                                    CornerRadius="8"
-                                                    BorderThickness="1"
-                                                    Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                    BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Border Width="3"
-                                                            CornerRadius="2"
-                                                            Margin="0,1,10,1"
-                                                            Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                                                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                                        <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetTitle}"
-                                                                   FontSize="13"
-                                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                                        <TextBlock Margin="0,4,0,0"
-                                                                   Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetDescription}"
-                                                                   TextWrapping="Wrap"
-                                                                   FontSize="11"
-                                                                   MaxWidth="340"
-                                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                                    </StackPanel>
-                                                    <TextBlock Grid.Column="1"
-                                                               VerticalAlignment="Top"
-                                                               FontSize="11"
-                                                               FontWeight="SemiBold"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{x:Static text:NetworkAccelerationText.ModeGaming}"
-                                                               Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                                </Grid>
-                                            </Border>
+                                            <ListBoxItem Tag="Gaming">
+                                            <ListBoxItem.Template>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border Padding="12,10"
+                                                            CornerRadius="8"
+                                                            BorderThickness="1"
+                                                            Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Width="3"
+                                                                    CornerRadius="2"
+                                                                    Margin="0,1,10,1"
+                                                                    Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                                            <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                                                <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetTitle}"
+                                                                           FontSize="13"
+                                                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                                <TextBlock Margin="0,4,0,0"
+                                                                           Text="{x:Static text:NetworkAccelerationText.ModeGamingTargetDescription}"
+                                                                           TextWrapping="Wrap"
+                                                                           FontSize="11"
+                                                                           MaxWidth="340"
+                                                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                            </StackPanel>
+                                                            <TextBlock Grid.Column="1"
+                                                                       VerticalAlignment="Top"
+                                                                       FontSize="11"
+                                                                       FontWeight="SemiBold"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       Text="{x:Static text:NetworkAccelerationText.ModeGaming}"
+                                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        </Grid>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ListBoxItem.Template>
                                         </ListBoxItem>
 
                                         <ListBoxItem Tag="Streaming">
-                                            <Border Padding="12,10"
-                                                    CornerRadius="8"
-                                                    BorderThickness="1"
-                                                    Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                    BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Border Width="3"
-                                                            CornerRadius="2"
-                                                            Margin="0,1,10,1"
-                                                            Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                                                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                                        <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetTitle}"
-                                                                   FontSize="13"
-                                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                                        <TextBlock Margin="0,4,0,0"
-                                                                   Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetDescription}"
-                                                                   TextWrapping="Wrap"
-                                                                   FontSize="11"
-                                                                   MaxWidth="340"
-                                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                                    </StackPanel>
-                                                    <TextBlock Grid.Column="1"
-                                                               VerticalAlignment="Top"
-                                                               FontSize="11"
-                                                               FontWeight="SemiBold"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{x:Static text:NetworkAccelerationText.ModeStreaming}"
-                                                               Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                                </Grid>
-                                            </Border>
+                                            <ListBoxItem.Template>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border Padding="12,10"
+                                                            CornerRadius="8"
+                                                            BorderThickness="1"
+                                                            Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Width="3"
+                                                                    CornerRadius="2"
+                                                                    Margin="0,1,10,1"
+                                                                    Background="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                                            <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                                                <TextBlock Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetTitle}"
+                                                                           FontSize="13"
+                                                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                                <TextBlock Margin="0,4,0,0"
+                                                                           Text="{x:Static text:NetworkAccelerationText.ModeStreamingTargetDescription}"
+                                                                           TextWrapping="Wrap"
+                                                                           FontSize="11"
+                                                                           MaxWidth="340"
+                                                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                            </StackPanel>
+                                                            <TextBlock Grid.Column="1"
+                                                                       VerticalAlignment="Top"
+                                                                       FontSize="11"
+                                                                       FontWeight="SemiBold"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       Text="{x:Static text:NetworkAccelerationText.ModeStreaming}"
+                                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        </Grid>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ListBoxItem.Template>
                                         </ListBoxItem>
                                     </ListBox>
                                 </StackPanel>

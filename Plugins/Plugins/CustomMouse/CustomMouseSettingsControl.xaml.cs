@@ -336,7 +336,7 @@ public partial class CustomMouseSettingsControl : UserControl
             FontSize = 21,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = Brushes.White
+            Foreground = ResolveBrush("TextOnAccentFillColorPrimaryBrush", Brushes.White)
         };
 
         return new Border
@@ -408,7 +408,7 @@ public partial class CustomMouseSettingsControl : UserControl
         if (primary)
         {
             button.SetResourceReference(Control.BackgroundProperty, "SystemAccentColorPrimaryBrush");
-            button.Foreground = Brushes.White;
+            button.SetResourceReference(Control.ForegroundProperty, "TextOnAccentFillColorPrimaryBrush");
         }
         button.Click += handler;
         return button;

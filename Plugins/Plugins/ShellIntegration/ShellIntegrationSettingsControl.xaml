@@ -37,7 +37,7 @@
                                           FontSize="20"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
-                                          Foreground="White" />
+                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
