@@ -820,8 +820,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     private static string GetDefaultPluginsDirectory()
     {
-        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        return Path.Combine(appDataPath, "LenovoLegionToolkit", "plugins");
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(appDataPath, "UniversalDeviceToolkit", "plugins");
     }
 
     private static bool IsCursorResourceRoot(string resourceRoot)

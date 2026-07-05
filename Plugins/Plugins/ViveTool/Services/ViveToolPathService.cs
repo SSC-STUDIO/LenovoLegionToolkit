@@ -135,8 +135,8 @@ public class ViveToolPathService
 
     private static string GetDefaultPluginsDirectory()
     {
-        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        return Path.Combine(appDataPath, "LenovoLegionToolkit", "plugins");
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return Path.Combine(appDataPath, "UniversalDeviceToolkit", "plugins");
     }
 
     public async Task<bool> SetViveToolPathAsync(string filePath)
