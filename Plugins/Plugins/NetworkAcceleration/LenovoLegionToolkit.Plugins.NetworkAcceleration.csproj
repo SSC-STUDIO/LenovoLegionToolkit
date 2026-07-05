@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Version>1.1.9</Version>
-    <FileVersion>1.1.9</FileVersion>
-    <AssemblyVersion>1.1.9</AssemblyVersion>
+    <Version>1.2.0</Version>
+    <FileVersion>1.2.0</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.NetworkAcceleration</AssemblyName>
   </PropertyGroup>
 

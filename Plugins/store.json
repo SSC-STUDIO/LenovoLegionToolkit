@@ -1,10 +1,10 @@
 {
-  "lastUpdated": "2026-05-19T22:44:18.5928892\u002B00:00",
+  "lastUpdated": "2026-07-05T12:00:00.0000000+00:00",
   "plugins": [
     {
       "id": "custom-mouse",
       "name": "Custom Mouse",
-      "description": "Customize mouse cursor style behavior and mouse settings",
+      "description": "Personalize your mouse experience with theme-aware cursor styles, DPI profiles, and seamless Windows integration.",
       "author": "SSC-STUDIO",
       "version": "1.0.16",
       "minLLTVersion": "3.6.1",
@@ -12,7 +12,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.16",
       "fileSize": 4275141,
-      "releaseDate": "2026-05-19T10:30:37.0000000\u002B00:00",
+      "releaseDate": "2026-05-19T10:30:37.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -54,21 +54,24 @@
       "tags": [
         "mouse",
         "customization",
-        "gaming"
+        "gaming",
+        "cursor",
+        "dpi",
+        "productivity"
       ]
     },
     {
       "id": "network-acceleration",
       "name": "Network Acceleration",
-      "description": "Real-time network acceleration and optimization features",
+      "description": "Boost your network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work.",
       "author": "SSC-STUDIO",
-      "version": "1.1.9",
+      "version": "1.2.0",
       "minLLTVersion": "3.6.1",
       "isSystemPlugin": false,
-      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.1.9/network-acceleration-v1.1.9.zip",
-      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.1.9",
-      "fileSize": 2869732,
-      "releaseDate": "2026-05-19T22:44:18.5928892\u002B00:00",
+      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.2.0/network-acceleration-v1.2.0.zip",
+      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.2.0",
+      "fileSize": 2820215,
+      "releaseDate": "2026-07-05T12:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -109,13 +112,17 @@
       "dependencies": [],
       "tags": [
         "network",
-        "optimization"
+        "optimization",
+        "gaming",
+        "telemetry",
+        "acceleration",
+        "performance"
       ]
     },
     {
       "id": "shell-integration",
       "name": "Shell Integration",
-      "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+      "description": "Seamlessly integrate Universal Device Toolkit into your Windows shell context menu for instant access to power features.",
       "author": "SSC-STUDIO",
       "version": "1.0.12",
       "minLLTVersion": "3.6.1",
@@ -123,7 +130,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.12/shell-integration-v1.0.12.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.12",
       "fileSize": 3649985,
-      "releaseDate": "2026-05-19T22:44:18.5928892\u002B00:00",
+      "releaseDate": "2026-05-19T22:44:18.5928892+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -165,13 +172,16 @@
       "tags": [
         "system",
         "shell",
-        "integration"
+        "integration",
+        "context-menu",
+        "productivity",
+        "windows"
       ]
     },
     {
       "id": "vive-tool",
       "name": "ViVeTool",
-      "description": "Manage Windows feature flags using ViVeTool",
+      "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
       "author": "SSC-STUDIO",
       "version": "1.2.2",
       "minLLTVersion": "3.6.1",
@@ -179,7 +189,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.2/vive-tool-v1.2.2.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.2",
       "fileSize": 3424806,
-      "releaseDate": "2026-05-19T22:44:18.5928892\u002B00:00",
+      "releaseDate": "2026-05-19T22:44:18.5928892+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -221,7 +231,10 @@
       "tags": [
         "windows",
         "feature-flags",
-        "vivetool"
+        "vivetool",
+        "customization",
+        "tweaks",
+        "insider"
       ]
     }
   ]
