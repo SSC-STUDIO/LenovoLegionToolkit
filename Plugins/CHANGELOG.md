@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / 添加
+- **Social Preview Banner / 社交预览横幅**: Added `Assets/social-preview.svg` — a 1280x640 promotional banner featuring the plugin catalog, tech stack badges (.NET 10, C#, WPF, Windows 10/11), and key value propositions (100% Free, Open Source, No Ads/Telemetry/Paywalls) for use as GitHub social preview (og:image) and README header / 新增 `Assets/social-preview.svg` — 1280x640 推广横幅，展示插件目录、技术栈标签（.NET 10、C#、WPF、Windows 10/11）及核心价值主张（100% 免费、开源、无广告/遥测/付费墙），用于 GitHub 社交预览 (og:image) 和 README 页首
+
+### Changed / 变更
+- **README Enhancement / README 增强**: Reorganized badges with better visual hierarchy (Stars, License, CI, Discussions), added social preview banner as README header, simplified tagline / 重新组织徽章以提升视觉层次感（Stars、License、CI、Discussions），将社交预览横幅作为 README 页首，简化标语
+- **UI Theming Fix / 界面主题修复**: Replaced `Brushes.Transparent` with `null` (WPF default, inherits parent background) in `NetworkAccelerationControl.xaml.cs` (3 locations) and `ViveToolPage.xaml.cs` (1 location), and updated `WpfFallbackHelper.cs` to use theme-aware brush resolution (`ResolveFallbackBrush`) instead of hardcoded `Brushes.White`/`Brushes.Black`/`Brushes.Gray` — ensures fallback UI adapts to Light/Dark theme / 将 `NetworkAccelerationControl.xaml.cs`（3 处）和 `ViveToolPage.xaml.cs`（1 处）中的 `Brushes.Transparent` 替换为 `null`（WPF 默认值，继承父背景），更新 `WpfFallbackHelper.cs` 使用主题感知的画笔解析（`ResolveFallbackBrush`）替代硬编码的 `Brushes.White`/`Brushes.Black`/`Brushes.Gray` — 确保 fallback UI 能适配浅色/深色主题
+
 ### Toolchain
 - **Plugin Toolchain Stabilization**: Replaced direct `dotnet run` plugin-tooling entry points with a cached `Build/tooling` CLI shim, made the legacy build workflow package-only, and hardened selected-plugin `store.json` generation so release jobs merge existing entries and fail when expected ZIP assets are missing.
 - **Workbench Visual Smoke Evidence**: Extended `PluginWorkbench.Smoke` with screenshot capture and luminance checks so Light/Dark plugin reviews produce PNG and JSON evidence instead of UI Automation checks only.
