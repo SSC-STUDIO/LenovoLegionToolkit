@@ -284,7 +284,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             _configService.ResetProfile();
-            return SyncManagedConfiguration();
+            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -298,7 +298,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             _configService.ApplyPreset(preset);
-            return SyncManagedConfiguration();
+            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -365,32 +365,32 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     private async Task EnableShellAsync(CancellationToken cancellationToken)
     {
-        EnsureManagedConfigurationSynchronized();
+        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
 
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-register -treat -restart", cancellationToken).ConfigureAwait(false);
-            EnsureManagedConfigurationSynchronized();
+            await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: true, cancellationToken).ConfigureAwait(false);
-        EnsureManagedConfigurationSynchronized();
+        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
     }
 
     private async Task DisableShellAsync(CancellationToken cancellationToken)
     {
-        EnsureManagedConfigurationSynchronized();
+        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
 
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-unregister -restart", cancellationToken).ConfigureAwait(false);
-            EnsureManagedConfigurationSynchronized();
+            await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
-        EnsureManagedConfigurationSynchronized();
+        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
     }
 
     private async Task<bool> IsShellRegisteredAsync(CancellationToken cancellationToken)
@@ -620,7 +620,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 
-    public bool SyncManagedConfiguration()
+    public async Task<bool> SyncManagedConfigurationAsync()
     {
         var shellInstallPath = GetShellInstallPath();
         if (string.IsNullOrWhiteSpace(shellInstallPath))
@@ -643,9 +643,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 
-    private void EnsureManagedConfigurationSynchronized()
+    private async Task EnsureManagedConfigurationSynchronizedAsync()
     {
-        if (!SyncManagedConfiguration())
+        if (!await SyncManagedConfigurationAsync().ConfigureAwait(false))
             throw new InvalidOperationException("Failed to synchronize managed shell configuration.");
     }
 
