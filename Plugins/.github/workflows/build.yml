@@ -1,18 +1,189 @@
-name: Build Plugins
+name: Legacy Plugin Build
 
 on:
   workflow_dispatch:
     inputs:
+      plugin:
+        description: 'Legacy single-plugin selection (folder name or plugin id); leave empty for all/manual validation only'
+        required: false
+        default: ''
       plugin_ids:
-        description: 'Comma-separated plugin ids to build and package; leave empty for all official plugins'
+        description: 'Preferred comma-separated plugin ids to publish together (for example: custom-mouse,shell-integration)'
+        required: false
+        default: ''
+      version:
+        description: 'Legacy single-plugin release version assertion; must match plugin.manifest.json and cannot be combined with plugin_ids'
         required: false
         default: ''
 
+env:
+  PLUGIN_REPO: ${{ github.repository }}
+
 permissions:
   contents: read
+  actions: read
+  attestations: read
+  checks: read
+  deployments: read
+  id-token: none
+  issues: read
+  discussions: read
+  packages: read
+  pages: read
+  pull-requests: read
+  repository-projects: read
+  security-events: read
 
 jobs:
+  validate-completion:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 1
+
+      - name: Validate published store metadata
+        if: github.event_name != 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $storePath = Join-Path $PWD 'store.json'
+          $store = Get-Content $storePath -Raw | ConvertFrom-Json -AsHashtable
+
+          foreach ($plugin in @($store.plugins)) {
+            $pluginId = [string]$plugin.id
+            $pluginVersion = [string]$plugin.version
+            $downloadUrl = [string]$plugin.downloadUrl
+            $changelogUrl = [string]$plugin.changelog
+
+            if (-not $pluginId) {
+              throw "store.json contains a plugin entry without an id."
+            }
+
+            if (-not $pluginVersion) {
+              throw "store.json entry '$pluginId' is missing version metadata."
+            }
+
+            $expectedTagName = "$pluginId-v$pluginVersion"
+            $expectedAssetName = "$expectedTagName.zip"
+
+            $release = gh api "repos/${{ env.PLUGIN_REPO }}/releases/tags/$expectedTagName" | ConvertFrom-Json -AsHashtable
+            if ($LASTEXITCODE -ne 0) {
+              throw "store.json entry '$pluginId' points at missing release '$expectedTagName'."
+            }
+
+            $asset = @($release.assets) | Where-Object { $_.name -eq $expectedAssetName } | Select-Object -First 1
+            if (-not $asset) {
+              throw "Release '$expectedTagName' does not contain expected asset '$expectedAssetName'."
+            }
+
+            if ([string]$asset.state -ne 'uploaded') {
+              throw "Release asset '$expectedAssetName' for '$expectedTagName' is not uploaded."
+            }
+
+            if ([string]$asset.browser_download_url -ne $downloadUrl) {
+              throw "store.json downloadUrl mismatch for '$pluginId'. Expected '$([string]$asset.browser_download_url)', found '$downloadUrl'."
+            }
+
+            if ([string]$release.html_url -ne $changelogUrl) {
+              throw "store.json changelog mismatch for '$pluginId'. Expected '$([string]$release.html_url)', found '$changelogUrl'."
+            }
+          }
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build native plugin completion checker
+        shell: pwsh
+        run: |
+          dotnet build .\Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release --nologo
+
+      - name: Run native plugin completion checker
+        shell: pwsh
+        run: |
+          $reportPath = "artifacts/plugin-completion-report.json"
+          $toolPath = Resolve-Path '.\Tools\PluginCompletionUiTool\bin\Release\PluginCompletionUiTool.exe'
+          $legacyPluginInput = "${{ github.event.inputs.plugin }}".Trim()
+          $pluginIdsInput = "${{ github.event.inputs.plugin_ids }}".Trim()
+
+          if ($legacyPluginInput -and $pluginIdsInput) {
+            throw "Use either 'plugin' or 'plugin_ids', not both."
+          }
+
+          $selectedPluginIds = @()
+          if ($pluginIdsInput) {
+            $selectedPluginIds = $pluginIdsInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique
+          } elseif ($legacyPluginInput) {
+            $pluginDirectories = Get-ChildItem -Path Plugins -Directory | Where-Object {
+              $_.Name -ne 'Template' -and
+              $_.Name -ne 'Shared' -and
+              $_.Name -ne 'TestCommon' -and
+              $_.Name -notlike '*.Tests'
+            }
+
+            $pluginsByFolder = @{}
+            $pluginsById = @{}
+
+            foreach ($pluginDirectory in $pluginDirectories) {
+              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+              if (-not (Test-Path $manifestPath)) {
+                $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+              }
+              if (-not (Test-Path $manifestPath)) {
+                continue
+              }
+
+              $pluginManifest = Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable
+              $pluginId = [string]$pluginManifest.id
+              if (-not $pluginId) {
+                throw "Plugin manifest '$manifestPath' is missing id."
+              }
+
+              $pluginsByFolder[$pluginDirectory.Name] = $pluginId
+              $pluginsById[$pluginId] = $pluginId
+            }
+
+            foreach ($requestedSelection in ($legacyPluginInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)) {
+              if ($pluginsById.ContainsKey($requestedSelection)) {
+                $selectedPluginIds += $pluginsById[$requestedSelection]
+              } elseif ($pluginsByFolder.ContainsKey($requestedSelection)) {
+                $selectedPluginIds += $pluginsByFolder[$requestedSelection]
+              } else {
+                throw "Unknown plugin selection '$requestedSelection'."
+              }
+            }
+          }
+
+          $arguments = @(
+            '--headless',
+            '--repository-root', $PWD.Path,
+            '--json-report-path', $reportPath,
+            '--skip-build',
+            '--skip-tests'
+          )
+
+          if ($selectedPluginIds.Count -gt 0) {
+            $arguments += @('--plugin-ids', ($selectedPluginIds -join ','))
+          }
+
+          & $toolPath @arguments
+
+      - name: Upload plugin completion report
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: plugin-completion-report
+          path: artifacts/plugin-completion-report.json
+          if-no-files-found: error
+          retention-days: 7
+
   build:
+    needs: validate-completion
     runs-on: windows-latest
 
     steps:
@@ -26,64 +197,517 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Resolve plugin selection
-        id: plugins
+      - name: Resolve selected plugins
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $inputIds = "${{ github.event.inputs.plugin_ids }}".Trim()
 
-          if ($inputIds) {
-            $selection = $inputIds.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique
+          $legacyPluginInput = "${{ github.event.inputs.plugin }}".Trim()
+          $pluginIdsInput = "${{ github.event.inputs.plugin_ids }}".Trim()
+          $requestedVersion = "${{ github.event.inputs.version }}".Trim()
+          $isWorkflowDispatch = "${{ github.event_name }}" -eq 'workflow_dispatch'
+
+          if ($legacyPluginInput -and $pluginIdsInput) {
+            throw "Use either 'plugin' or 'plugin_ids', not both."
+          }
+
+          $pluginDirectories = Get-ChildItem -Path Plugins -Directory | Where-Object {
+            $_.Name -ne 'Template' -and
+            $_.Name -ne 'Shared' -and
+            $_.Name -ne 'TestCommon' -and
+            $_.Name -notlike '*.Tests'
+          } | Sort-Object Name
+
+          $pluginsByFolder = @{}
+          $pluginsById = @{}
+          $allPlugins = @()
+
+          foreach ($pluginDirectory in $pluginDirectories) {
+            $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+            if (-not (Test-Path $manifestPath)) {
+              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+            }
+            if (-not (Test-Path $manifestPath)) {
+              continue
+            }
+
+            $pluginManifest = Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable
+            $pluginId = [string]$pluginManifest.id
+            $pluginVersion = [string]$pluginManifest.version
+
+            if (-not $pluginId) {
+              throw "Plugin manifest '$manifestPath' is missing id."
+            }
+
+            if (-not $pluginVersion) {
+              throw "Plugin manifest '$manifestPath' is missing version."
+            }
+
+            if ($pluginsById.ContainsKey($pluginId)) {
+              throw "Duplicate plugin id '$pluginId' detected in '$manifestPath'."
+            }
+
+            $pluginEntry = [ordered]@{
+              folderName = $pluginDirectory.Name
+              pluginId = $pluginId
+              version = $pluginVersion
+              tagName = "$pluginId-v$pluginVersion"
+              zipName = "$pluginId-v$pluginVersion.zip"
+            }
+
+            $pluginsByFolder[$pluginDirectory.Name] = $pluginEntry
+            $pluginsById[$pluginId] = $pluginEntry
+            $allPlugins += $pluginEntry
+          }
+
+          $selectedPlugins = @()
+
+          if ($pluginIdsInput) {
+            foreach ($requestedPluginId in ($pluginIdsInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)) {
+              if (-not $pluginsById.ContainsKey($requestedPluginId)) {
+                throw "Unknown plugin id '$requestedPluginId'."
+              }
+
+              $selectedPlugins += $pluginsById[$requestedPluginId]
+            }
+          } elseif ($legacyPluginInput) {
+            foreach ($requestedSelection in ($legacyPluginInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)) {
+              if ($pluginsById.ContainsKey($requestedSelection)) {
+                $selectedPlugins += $pluginsById[$requestedSelection]
+              } elseif ($pluginsByFolder.ContainsKey($requestedSelection)) {
+                $selectedPlugins += $pluginsByFolder[$requestedSelection]
+              } else {
+                throw "Unknown plugin selection '$requestedSelection'."
+              }
+            }
           } else {
-            $selection = Get-ChildItem -Path .\Plugins -Directory |
-              Where-Object { $_.Name -notin @('Shared', 'TestCommon') -and $_.Name -notlike '*.Tests' } |
-              ForEach-Object {
-                $manifestPath = Join-Path $_.FullName 'plugin.manifest.json'
-                if (-not (Test-Path $manifestPath)) {
-                  $manifestPath = Join-Path $_.FullName 'plugin.json'
-                }
-                if (Test-Path $manifestPath) {
-                  (Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable).id
-                }
-              } |
-              Where-Object { $_ } |
-              Sort-Object -Unique
+            $selectedPlugins = @($allPlugins)
           }
 
-          if (-not @($selection).Count) {
-            throw "No plugins selected for build."
+          if ($requestedVersion -and $pluginIdsInput) {
+            throw "The 'version' input is only supported with the legacy single-plugin dispatch path. Omit 'version' when using 'plugin_ids'."
           }
 
-          $pluginIds = @($selection) -join ','
-          "plugin_ids=$pluginIds" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          Write-Host "Selected plugin ids: $pluginIds"
+          if ($requestedVersion -and $selectedPlugins.Count -ne 1) {
+            throw "The 'version' input is only supported when exactly one plugin is selected."
+          }
 
-      - name: Validate selected plugins
+          if ($requestedVersion -and [string]$selectedPlugins[0].version -ne $requestedVersion) {
+            throw "Requested version '$requestedVersion' does not match selected plugin version '$([string]$selectedPlugins[0].version)'."
+          }
+
+          $releaseRequested = $false
+          if ($isWorkflowDispatch -and ($pluginIdsInput -or $requestedVersion)) {
+            $releaseRequested = $true
+          }
+
+          $dispatchDir = Join-Path $PWD 'Build/dispatch'
+          New-Item -ItemType Directory -Path $dispatchDir -Force | Out-Null
+
+          $selectionPath = Join-Path $dispatchDir 'selected-plugins.json'
+          $selectedPlugins | ConvertTo-Json -Depth 5 | Out-File $selectionPath -Encoding utf8
+
+          $selectedFolders = @($selectedPlugins | ForEach-Object { [string]$_.folderName })
+          $selectedPluginIds = @($selectedPlugins | ForEach-Object { [string]$_.pluginId })
+
+          Write-Host "Selected plugin folders: $($selectedFolders -join ', ')"
+          Write-Host "Selected plugin ids: $($selectedPluginIds -join ', ')"
+          Write-Host "Release requested: $releaseRequested"
+
+          "PLUGIN_SELECTION=$($selectedFolders -join ',')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PLUGIN_ID_SELECTION=$($selectedPluginIds -join ',')" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Upload selected plugin manifest
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: selected-plugins
+          path: Build/dispatch/selected-plugins.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Build plugins
         shell: pwsh
         run: |
-          .\Scripts\Invoke-PluginTooling.ps1 `
-            validate `
-            --plugin-ids "${{ steps.plugins.outputs.plugin_ids }}" `
-            --profile contributor
-
-      - name: Package selected plugins
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Path .\Build\artifacts -Force | Out-Null
-          $pluginIds = "${{ steps.plugins.outputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-
-          foreach ($pluginId in $pluginIds) {
-            .\Scripts\Invoke-PluginTooling.ps1 `
-              package `
-              --plugin $pluginId `
-              --output-dir .\Build\artifacts
+          $plugins = "$env:PLUGIN_SELECTION".Split(',')
+          foreach ($plugin in $plugins) {
+            $plugin = $plugin.Trim()
+            if (-not $plugin) { continue }
+            
+            $csproj = Get-ChildItem -Path "Plugins/$plugin" -Filter *.csproj -Recurse | Select-Object -First 1
+            if ($csproj) {
+              Write-Host "Building $plugin..."
+              dotnet build $csproj.FullName -c Release --nologo -v q
+              if ($LASTEXITCODE -ne 0) {
+                Write-Error "Failed to build $plugin"
+                exit 1
+              }
+              Write-Host "Successfully built $plugin"
+            } else {
+              Write-Warning "No csproj found for $plugin"
+            }
           }
 
-      - name: Upload plugin packages
+      - name: Create ZIP packages
+        shell: pwsh
+        run: |
+          $selectionPath = Join-Path $PWD 'Build/dispatch/selected-plugins.json'
+          $requestedVersion = "${{ github.event.inputs.version }}".Trim()
+          $pluginIdsInput = "${{ github.event.inputs.plugin_ids }}".Trim()
+          $artifactDir = Join-Path $PWD "Build/artifacts"
+
+          if (Test-Path $artifactDir) {
+            Remove-Item $artifactDir -Recurse -Force
+          }
+          New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null
+
+          if (-not (Test-Path $selectionPath)) {
+            throw "Missing selected plugin manifest at $selectionPath"
+          }
+
+          $selectedPlugins = Get-Content $selectionPath -Raw | ConvertFrom-Json -AsHashtable
+          if (-not @($selectedPlugins)) {
+            throw "Selected plugin manifest does not contain any plugins."
+          }
+
+          if ($requestedVersion -and $pluginIdsInput) {
+            throw "The 'version' input cannot be combined with 'plugin_ids'."
+          }
+
+          if ($requestedVersion -and @($selectedPlugins).Count -ne 1) {
+            throw "The 'version' input is only supported when building a single plugin."
+          }
+
+          foreach ($selectedPlugin in @($selectedPlugins)) {
+            $plugin = [string]$selectedPlugin.folderName
+            $pluginDir = "Plugins/$plugin"
+            $pluginJson = Join-Path $pluginDir "plugin.manifest.json"
+            if (-not (Test-Path $pluginJson)) {
+              $pluginJson = Join-Path $pluginDir "plugin.json"
+            }
+            if (-not (Test-Path $pluginJson)) {
+              throw "Missing plugin manifest for $plugin"
+            }
+
+            $pluginManifest = Get-Content $pluginJson -Raw | ConvertFrom-Json
+            $pluginId = [string]$pluginManifest.id
+            $pluginVersion = [string]$pluginManifest.version
+
+            if (-not $pluginId) {
+              throw "Missing plugin id for $plugin"
+            }
+
+            if (-not $pluginVersion) {
+              throw "Missing plugin version for $plugin"
+            }
+
+            if ($requestedVersion -and $pluginVersion -ne $requestedVersion) {
+              throw "Requested version '$requestedVersion' does not match $plugin id version '$pluginVersion'."
+            }
+
+            $buildDir = "Build/plugins/LenovoLegionToolkit.Plugins.$plugin"
+            if (-not (Test-Path $buildDir)) {
+              throw "Expected build output not found for $plugin at $buildDir"
+            }
+            
+            $zipName = "$pluginId-v$pluginVersion.zip"
+            $zipPath = Join-Path $artifactDir $zipName
+            
+            # Package the actual compiled plugin output so DLLs/resources stay in sync.
+            Compress-Archive -Path "$buildDir/*" -DestinationPath $zipPath -Force
+            Write-Host "Created $zipPath"
+          }
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v7.0.0
         with:
           name: plugin-zips
           path: Build/artifacts/*.zip
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 1
+
+  release:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && (github.event.inputs.plugin_ids != '' || github.event.inputs.version != '')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download selected plugin manifest
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: selected-plugins
+          path: dispatch-metadata
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: plugin-zips
+          path: .
+
+      - name: Publish per-plugin releases
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $selectionPath = Join-Path $PWD 'dispatch-metadata/selected-plugins.json'
+          if (-not (Test-Path $selectionPath)) {
+            throw "Missing selected plugin manifest at $selectionPath"
+          }
+
+          $selectedPlugins = Get-Content $selectionPath -Raw | ConvertFrom-Json -AsHashtable
+          if (-not @($selectedPlugins)) {
+            throw "Selected plugin manifest does not contain any plugins."
+          }
+
+          $zips = Get-ChildItem *.zip
+          if (-not $zips) {
+            throw "No ZIP artifacts found for release publishing."
+          }
+
+          $expectedZipNames = @($selectedPlugins | ForEach-Object { [string]$_.zipName })
+          foreach ($expectedZipName in $expectedZipNames) {
+            if (-not ($zips.Name -contains $expectedZipName)) {
+              throw "Missing expected ZIP artifact '$expectedZipName' for the selected publish set."
+            }
+          }
+
+          $releaseMetadataDir = Join-Path $PWD "release-metadata"
+          New-Item -ItemType Directory -Path $releaseMetadataDir -Force | Out-Null
+
+          $publishedReleases = @()
+
+          foreach ($zip in $zips) {
+            $tagName = $zip.BaseName
+            $delimiterIndex = $tagName.LastIndexOf('-v')
+            if ($delimiterIndex -lt 1) {
+              throw "Unexpected ZIP name '$($zip.Name)'; expected '<plugin-id>-v<version>.zip'."
+            }
+
+            $pluginId = $tagName.Substring(0, $delimiterIndex)
+            $pluginVersion = $tagName.Substring($delimiterIndex + 2)
+
+            gh release view $tagName --repo "${{ env.PLUGIN_REPO }}" *> $null
+            if ($LASTEXITCODE -eq 0) {
+              gh release upload $tagName $zip.FullName --repo "${{ env.PLUGIN_REPO }}" --clobber
+              if ($LASTEXITCODE -ne 0) {
+                throw "Failed to upload asset '$($zip.Name)' to release '$tagName'."
+              }
+            } else {
+              gh release create $tagName $zip.FullName --repo "${{ env.PLUGIN_REPO }}" --title $tagName --generate-notes
+              if ($LASTEXITCODE -ne 0) {
+                throw "Failed to create release '$tagName' with asset '$($zip.Name)'."
+              }
+            }
+
+            $release = gh api "repos/${{ env.PLUGIN_REPO }}/releases/tags/$tagName" | ConvertFrom-Json -AsHashtable
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to query release metadata for '$tagName' after publishing."
+            }
+
+            $asset = @($release.assets) | Where-Object { $_.name -eq $zip.Name } | Select-Object -First 1
+            if (-not $asset) {
+              throw "Release '$tagName' does not contain expected asset '$($zip.Name)'."
+            }
+
+            if ([string]$asset.state -ne 'uploaded') {
+              throw "Release asset '$($zip.Name)' for '$tagName' is not in uploaded state."
+            }
+
+            $publishedReleases += [ordered]@{
+              pluginId = $pluginId
+              version = $pluginVersion
+              tagName = $tagName
+              assetName = [string]$asset.name
+              assetSize = [int64]$asset.size
+              downloadUrl = [string]$asset.browser_download_url
+              releaseUrl = [string]$release.html_url
+            }
+          }
+
+          $metadataPath = Join-Path $releaseMetadataDir "published-release-assets.json"
+          $publishedReleases | Sort-Object pluginId | ConvertTo-Json -Depth 5 | Out-File $metadataPath -Encoding utf8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload verified release metadata
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: published-release-assets
+          path: release-metadata/published-release-assets.json
+          if-no-files-found: error
+          retention-days: 1
+
+  update-store-json:
+    needs: release
+    if: github.event_name == 'workflow_dispatch' && (github.event.inputs.plugin_ids != '' || github.event.inputs.version != '')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 1
+
+      - name: Download verified release metadata
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: published-release-assets
+          path: release-metadata
+
+      - name: Download selected plugin manifest
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: selected-plugins
+          path: dispatch-metadata
+
+      - name: Generate store.json
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $storePath = Join-Path $PWD "store.json"
+          $existingStore = Get-Content $storePath -Raw | ConvertFrom-Json -AsHashtable
+          $existingPlugins = @{}
+          foreach ($plugin in $existingStore.plugins) {
+            $existingPlugins[$plugin.id] = $plugin
+          }
+
+          $releaseMetadataPath = Join-Path $PWD "release-metadata/published-release-assets.json"
+          if (-not (Test-Path $releaseMetadataPath)) {
+            throw "Missing verified release metadata artifact at $releaseMetadataPath"
+          }
+
+          $publishedReleases = Get-Content $releaseMetadataPath -Raw | ConvertFrom-Json -AsHashtable
+          $publishedReleaseMap = @{}
+          foreach ($publishedRelease in @($publishedReleases)) {
+            $publishedReleaseMap[[string]$publishedRelease.pluginId] = $publishedRelease
+          }
+
+          $selectionPath = Join-Path $PWD 'dispatch-metadata/selected-plugins.json'
+          if (-not (Test-Path $selectionPath)) {
+            throw "Missing selected plugin manifest at $selectionPath"
+          }
+
+          $selectedPlugins = Get-Content $selectionPath -Raw | ConvertFrom-Json -AsHashtable
+          if (-not @($selectedPlugins)) {
+            throw "Selected plugin manifest does not contain any plugins."
+          }
+
+          $releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+          $publishedCommitSummary = New-Object System.Collections.Generic.List[string]
+
+          foreach ($selectedPlugin in @($selectedPlugins)) {
+            $pluginFolder = [string]$selectedPlugin.folderName
+            $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.manifest.json"
+            if (-not (Test-Path $pluginJsonPath)) {
+              $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.json"
+            }
+            if (-not (Test-Path $pluginJsonPath)) {
+              throw "Missing plugin manifest for $pluginFolder"
+            }
+
+            $pluginManifest = Get-Content $pluginJsonPath -Raw | ConvertFrom-Json -AsHashtable
+            $pluginId = [string]$pluginManifest.id
+            $pluginVersion = [string]$pluginManifest.version
+
+            if (-not $publishedReleaseMap.ContainsKey($pluginId)) {
+              throw "Missing verified published release metadata for plugin '$pluginId'."
+            }
+
+            $publishedRelease = $publishedReleaseMap[$pluginId]
+            $expectedTagName = "$pluginId-v$pluginVersion"
+            $expectedZipName = "$expectedTagName.zip"
+
+            if ([string]$publishedRelease.version -ne $pluginVersion) {
+              throw "Published release version '$($publishedRelease.version)' does not match plugin manifest version '$pluginVersion' for '$pluginId'."
+            }
+
+            if ([string]$publishedRelease.tagName -ne $expectedTagName) {
+              throw "Published release tag '$($publishedRelease.tagName)' does not match expected tag '$expectedTagName' for '$pluginId'."
+            }
+
+            if ([string]$publishedRelease.assetName -ne $expectedZipName) {
+              throw "Published asset '$($publishedRelease.assetName)' does not match expected asset '$expectedZipName' for '$pluginId'."
+            }
+
+            $existingPlugin = $existingPlugins[$pluginId]
+            $publishedCommitSummary.Add("$pluginId v$pluginVersion")
+
+            $updatedPlugin = [ordered]@{
+              id = $pluginId
+              name = if ($existingPlugin) { $existingPlugin.name } else { [string]$pluginManifest.name }
+              version = $pluginVersion
+              description = if ($existingPlugin) { $existingPlugin.description } else { "" }
+              author = if ($existingPlugin) { $existingPlugin.author } else { [string]$pluginManifest.author }
+              repositoryUrl = if ($existingPlugin) { $existingPlugin.repositoryUrl } else { [string]$pluginManifest.repository }
+              downloadUrl = [string]$publishedRelease.downloadUrl
+              changelog = [string]$publishedRelease.releaseUrl
+              icon = if ($existingPlugin -and $existingPlugin.ContainsKey("icon")) { $existingPlugin.icon } else { "" }
+              iconBackground = if ($existingPlugin) { $existingPlugin.iconBackground } else { "" }
+              isSystemPlugin = [bool]$pluginManifest.isSystemPlugin
+              dependencies = if ($existingPlugin) { @($existingPlugin.dependencies) } else { @() }
+              minLLTVersion = if ($pluginManifest.ContainsKey("minHostVersion")) { [string]$pluginManifest.minHostVersion } else { [string]$pluginManifest.minLLTVersion }
+              releaseDate = $releaseDate
+              fileSize = [int64]$publishedRelease.assetSize
+              tags = if ($existingPlugin) { @($existingPlugin.tags) } else { @() }
+              supportedLanguages = if ($existingPlugin) { @($existingPlugin.supportedLanguages) } else { @("en") }
+            }
+
+            $existingPlugins[$pluginId] = $updatedPlugin
+          }
+
+          $orderedPlugins = foreach ($plugin in $existingStore.plugins) {
+            $pluginId = [string]$plugin.id
+            if ($existingPlugins.ContainsKey($pluginId)) {
+              $existingPlugins[$pluginId]
+            }
+          }
+
+          $newPlugins = foreach ($pluginId in $existingPlugins.Keys) {
+            if ($existingStore.plugins.id -notcontains $pluginId) {
+              $existingPlugins[$pluginId]
+            }
+          }
+
+          $storeVersion = if ($existingStore.ContainsKey("storeVersion")) {
+            [string]$existingStore.storeVersion
+          } elseif ($existingStore.ContainsKey("version")) {
+            [string]$existingStore.version
+          } else {
+            "1.0.0"
+          }
+
+          $store = [ordered]@{
+            plugins = @($orderedPlugins + ($newPlugins | Sort-Object id))
+            lastUpdated = $releaseDate
+            storeVersion = $storeVersion
+            version = $storeVersion
+          }
+
+          $store | ConvertTo-Json -Depth 10 | Out-File store.json -Encoding utf8
+          Get-Content store.json
+
+          if ($publishedCommitSummary.Count -eq 1) {
+            $storeCommitMessage = "Update store.json for $($publishedCommitSummary[0])"
+          } else {
+            $storeCommitMessage = "Update store.json for published plugin releases"
+          }
+
+          "STORE_COMMIT_MESSAGE=$storeCommitMessage" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Commit store.json update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add store.json
+          if git diff --cached --quiet; then
+            echo "store.json is already up to date."
+            exit 0
+          fi
+          git commit -m "${STORE_COMMIT_MESSAGE:-Update store.json for published plugin releases}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

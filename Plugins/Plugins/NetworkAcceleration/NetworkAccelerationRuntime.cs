@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.Shared;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
@@ -70,39 +70,9 @@ public sealed class NetworkAccelerationRuntime
 
     public void Stop()
     {
-        CancellationTokenSource? capturedCts;
-        Task? capturedTask;
-
-        lock (_gate)
-        {
-            capturedCts = _cts;
-            capturedTask = _loopTask;
-            _cts = null;
-            _loopTask = null;
-        }
-
-        if (capturedCts == null)
-            return;
-
         try
         {
-            capturedCts.Cancel();
-
-            if (capturedTask != null)
-            {
-                try
-                {
-                    capturedTask.Wait(TimeSpan.FromSeconds(2));
-                }
-                catch (TimeoutException)
-                {
-                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
-                }
-                catch (AggregateException)
-                {
-                    // Expected when the task is cancelled.
-                }
-            }
+            StopAsync().GetAwaiter().GetResult();
         }
         catch (OperationCanceledException)
         {
@@ -111,10 +81,6 @@ public sealed class NetworkAccelerationRuntime
         catch
         {
             // Ignore stop exceptions to keep shutdown resilient.
-        }
-        finally
-        {
-            capturedCts.Dispose();
         }
     }
 
@@ -149,7 +115,8 @@ public sealed class NetworkAccelerationRuntime
                 catch (TimeoutException)
                 {
                     // Loop task didn't complete within timeout - log but don't block shutdown
-                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
                 }
             }
         }
@@ -273,7 +240,8 @@ public sealed class NetworkAccelerationRuntime
         }
         catch (Exception ex)
         {
-            PluginLog.Trace($"NetworkAcceleration: Failed to read network totals: {ex.Message}", ex);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"NetworkAcceleration: Failed to read network totals: {ex.Message}", ex);
 
             totals = default;
             return false;
@@ -302,7 +270,8 @@ public sealed class NetworkAccelerationRuntime
 
             if (interfaceSnapshot.Error is not null)
             {
-                PluginLog.Trace($"NetworkAcceleration: Failed to read stats for interface '{interfaceSnapshot.Name}': {interfaceSnapshot.Error.Message}", interfaceSnapshot.Error);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"NetworkAcceleration: Failed to read stats for interface '{interfaceSnapshot.Name}': {interfaceSnapshot.Error.Message}", interfaceSnapshot.Error);
                 continue;
             }
 

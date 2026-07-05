@@ -1,6 +1,6 @@
-# Universal Device Toolkit Plugins
+# Lenovo Legion Toolkit Plugins
 
-Official plugins and contributor tooling for Universal Device Toolkit.
+Official plugins and contributor tooling for Lenovo Legion Toolkit (LLT).
 
 ## What Changed
 
@@ -162,7 +162,7 @@ The workflow now mirrors VS Code extension development:
 - `package` creates the installable ZIP, similar to `vsce package`
 - `generate-store` derives release metadata instead of hand-editing root `store.json`
 
-The remaining difference is host compatibility: Universal Device Toolkit still ships `plugin.json` in plugin outputs until the main app loader moves to the unified manifest.
+The remaining difference is host compatibility: LLT still ships `plugin.json` in plugin outputs until the main app loader moves to the unified manifest.
 
 ## Common Commands
 
