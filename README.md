@@ -3,11 +3,15 @@
 # Universal Device Toolkit
 
 [![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
+[![GitHub release](https://img.shields.io/github/v/release/SSC-STUDIO/UniversalDeviceToolkit?color=blue)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![GitHub stars](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![GitHub downloads](https://img.shields.io/github/downloads/SSC-STUDIO/UniversalDeviceToolkit/total)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 > **Open source · No account · No telemetry**
 >
-> Legion owners can ditch Vantage and still get Fn+Q + RGB; other Windows PCs can use plugins in basic mode.
+> The lightweight Windows utility for Legion laptops &amp; beyond. Fn+Q, RGB, fan curves, dGPU control — without Vantage bloat. Runs on other PCs too via basic mode.
 
 ---
 
@@ -47,9 +51,26 @@ Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COM
 
 <img src="Assets/Screenshot_main.png" width="700" />
 
+### Key Features at a Glance
+
+| Feature | Description |
+|:---|:---|
+| 🔥 **Power & Performance** | Fn+Q power modes, Custom Mode with fan curves, CPU/GPU power limits |
+| 🌈 **RGB & Lighting** | Spectrum per-key RGB, 4-zone RGB, white backlight, boot logo |
+| 🎮 **GPU Control** | dGPU/discrete GPU toggle, MUX switch, overclock, deactivate dGPU |
+| 🔌 **Battery Care** | Conservation mode, battery thresholds, charge stop at 60%/80% |
+| ⚡ **Actions & Macros** | Automate tasks on AC connect, app launch, lid close, time schedule |
+| 🖥️ **Sensors** | Real-time CPU/GPU temp, fan speed, clock monitoring |
+| 🔧 **Plugin Extensions** | CPU tools, GPU tools, network acceleration, shell integration, mouse |
+| 🌍 **78+ Languages** | Full localization with community translations |
+| 📦 **No Bloat** | Zero background service, <30MB RAM, no telemetry, no account |
+
 &nbsp;
 
+---
+
 # Table of Contents
+  - [Key Features at a Glance](#key-features-at-a-glance)
   - [Why choose UDT?](#why-choose-udt)
   - [Disclaimer](#disclaimer)
   - [Download](#download)
@@ -789,3 +810,9 @@ Captured at **1300×850** logical window size via `Tools/VisualRegression.Smoke`
 Universal Device Toolkit is distributed under the GNU GPL v3.0. See [LICENSE](LICENSE).
 
 This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit&Date)
