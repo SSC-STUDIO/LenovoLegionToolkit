@@ -51,7 +51,7 @@ public abstract partial class AbstractMacroEventControl
             _ => string.Empty
         };
 
-        _header.Subtitle = macroEvent.Source.GetDisplayName() + $" �?{TotalDelay.Humanize(maxUnit: TimeUnit.Millisecond)}";
+        _header.Subtitle = macroEvent.Source.GetDisplayName() + $" → {TotalDelay.Humanize(maxUnit: TimeUnit.Millisecond, culture: Resource.Culture)}";
     }
 }
 }

@@ -27,7 +27,7 @@ public partial class UserInactivityPipelineTriggerTabItemContent : IAutomationPi
         _trigger = trigger;
         InitializeComponent();
 
-        _timeoutComboBox.SetItems(TimeSpans, trigger.InactivityTimeSpan, t => t.Humanize());
+        _timeoutComboBox.SetItems(TimeSpans, trigger.InactivityTimeSpan, t => t.Humanize(culture: System.Globalization.CultureInfo.CurrentUICulture));
     }
 
     public IUserInactivityPipelineTrigger GetTrigger()
