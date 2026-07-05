@@ -24,7 +24,7 @@ public class IoCModule : Module
         builder.Register<ThemeManager>().AutoActivate();
         builder.Register<NotificationsManager>().AutoActivate();
 
-        builder.Register<DashboardSettings>();
+        builder.Register<DashboardSettings>().SingleInstance();
         builder.Register<HardwareSensorSettings>();
 
         builder.Register<IpcServer>();
