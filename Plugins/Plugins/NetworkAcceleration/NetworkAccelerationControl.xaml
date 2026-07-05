@@ -465,7 +465,6 @@
                                              SelectionChanged="PresetListBox_SelectionChanged"
                                              AutomationProperties.AutomationId="NetworkAcceleration_TargetsList">
                                         <ListBoxItem Tag="Balanced">
-                                            <ListBoxItem Tag="Gaming">
                                             <ListBoxItem.Template>
                                                 <ControlTemplate TargetType="ListBoxItem">
                                                     <Border Padding="12,10"
