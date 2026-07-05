@@ -33,7 +33,7 @@
   },
   "store": {
     "description": "Real-time network acceleration and optimization features",
-    "icon": "Globe24",
+    "icon": "Rocket24",
     "iconBackground": "#DC2626",
     "tags": [
       "network",
