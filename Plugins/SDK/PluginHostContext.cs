@@ -6,29 +6,42 @@ namespace LenovoLegionToolkit.Plugins.SDK;
 
 /// <summary>
 /// Provides access to the current plugin host and preserves compatibility with both
-/// the new host-context API and older released LLT builds.
+/// the new host-context API and older released LLT/UDT builds.
 /// </summary>
 public static class PluginHostContext
 {
     private const string HostLibAssemblyName = "LenovoLegionToolkit.Lib";
+    private const string HostUdtLibAssemblyName = "UniversalDeviceToolkit.Lib";
     private const string HostWpfAssemblyName = "Lenovo Legion Toolkit";
+    private const string HostUdtWpfAssemblyName = "Universal Device Toolkit";
     private const string HostPluginHostContextTypeName = "LenovoLegionToolkit.Lib.Plugins.PluginHostContext";
     private const string HostPluginSettingsWindowTypeName = "LenovoLegionToolkit.WPF.Windows.Settings.PluginSettingsWindow";
+    private const string HostUdtPluginSettingsWindowTypeName = "UniversalDeviceToolkit.WPF.Windows.Settings.PluginSettingsWindow";
     private const string WpfApplicationTypeName = "System.Windows.Application";
     private const string WpfWindowTypeName = "System.Windows.Window";
     private const string WpfWindowStartupLocationTypeName = "System.Windows.WindowStartupLocation";
 
     private static readonly IPluginHostContext DefaultContext = new DefaultPluginHostContext();
+    private static readonly object _contextLock = new object();
     private static IPluginHostContext _current = DefaultContext;
 
     public static IPluginHostContext Current
     {
         get
         {
-            if (!ReferenceEquals(_current, DefaultContext))
-                return _current;
+            lock (_contextLock)
+            {
+                if (!ReferenceEquals(_current, DefaultContext))
+                    return _current;
 
-            return TryResolveHostBridge() ?? DefaultContext;
+                var bridge = TryResolveHostBridge();
+                if (bridge is not null)
+                {
+                    _current = bridge;
+                    return bridge;
+                }
+                return DefaultContext;
+            }
         }
         set => _current = value ?? throw new ArgumentNullException(nameof(value));
     }
@@ -51,13 +64,19 @@ public static class PluginHostContext
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fullTypeName);
 
-        var type = ResolveType(fullTypeName, HostWpfAssemblyName);
+        // Try UDT assembly first, then fall back to LLT assembly
+        var type = ResolveType(fullTypeName, HostUdtWpfAssemblyName)
+                   ?? ResolveType(fullTypeName, HostWpfAssemblyName);
         if (type is null)
             return null;
 
         try
         {
             return Activator.CreateInstance(type, constructorArguments);
+        }
+        catch (MissingMethodException)
+        {
+            return null;
         }
         catch
         {
@@ -67,7 +86,9 @@ public static class PluginHostContext
 
     private static IPluginHostContext? TryResolveHostBridge()
     {
-        var hostContextType = ResolveType(HostPluginHostContextTypeName, HostLibAssemblyName);
+        // Try UDT host first, then fall back to LLT host
+        var hostContextType = ResolveType(HostPluginHostContextTypeName, HostUdtLibAssemblyName)
+                              ?? ResolveType(HostPluginHostContextTypeName, HostLibAssemblyName);
         if (hostContextType is null)
             return null;
 
@@ -117,6 +138,37 @@ public static class PluginHostContext
         var windowType = ResolveType(WpfWindowTypeName, "PresentationFramework");
         if (windowType is null || !windowType.IsInstanceOfType(dialog))
             return false;
+
+        // Marshal to the UI thread if needed — WPF dialogs require Dispatcher affinity
+        var dispatcherType = ResolveType("System.Windows.Threading.Dispatcher", "WindowsBase");
+        if (dispatcherType is not null)
+        {
+            try
+            {
+                var applicationType = ResolveType(WpfApplicationTypeName, "PresentationFramework");
+                var currentApp = applicationType?.GetProperty("Current", BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
+                if (currentApp is not null)
+                {
+                    var dispatcherProperty = applicationType?.GetProperty("Dispatcher", BindingFlags.Public | BindingFlags.Instance);
+                    var dispatcher = dispatcherProperty?.GetValue(currentApp);
+                    if (dispatcher is not null)
+                    {
+                        var checkAccessMethod = dispatcherType.GetMethod("CheckAccess", BindingFlags.Public | BindingFlags.Instance);
+                        var checkResult = checkAccessMethod?.Invoke(dispatcher, null);
+                        if (checkResult is false)
+                        {
+                            var invokeMethod = dispatcherType.GetMethod("Invoke", [typeof(Action)]);
+                            invokeMethod?.Invoke(dispatcher, [new Action(() => TryShowDialog(dialog))]);
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Fall through to direct attempt
+            }
+        }
 
         try
         {
@@ -195,8 +247,9 @@ public static class PluginHostContext
 
     private sealed class DefaultPluginHostContext : IPluginHostContext
     {
-        private bool HasLegacyHostRuntime => ResolveType(HostPluginSettingsWindowTypeName, HostWpfAssemblyName) is not null &&
-                                             ResolveCurrentApplication(ResolveType(WpfApplicationTypeName, "PresentationFramework")) is not null;
+        private bool HasLegacyHostRuntime =>
+            ResolveType(HostUdtPluginSettingsWindowTypeName, HostUdtWpfAssemblyName) is not null &&
+            ResolveCurrentApplication(ResolveType(WpfApplicationTypeName, "PresentationFramework")) is not null;
 
         public PluginHostMode Mode => HasLegacyHostRuntime ? PluginHostMode.RealRuntime : PluginHostMode.Preview;
 
@@ -216,7 +269,8 @@ public static class PluginHostContext
             if (!HasLegacyHostRuntime || string.IsNullOrWhiteSpace(pluginId))
                 return false;
 
-            var dialog = CreateHostWindow(HostPluginSettingsWindowTypeName, pluginId);
+            var dialog = CreateHostWindow(HostUdtPluginSettingsWindowTypeName, pluginId)
+                         ?? CreateHostWindow(HostPluginSettingsWindowTypeName, pluginId);
             return dialog is not null && TryShowDialog(dialog);
         }
 
@@ -266,10 +320,17 @@ public static class PluginHostContext
         {
             get
             {
-                var modeValue = TryReadProperty(_hostContext, "Mode")?.ToString();
-                return string.Equals(modeValue, "RealRuntime", StringComparison.OrdinalIgnoreCase)
-                    ? PluginHostMode.RealRuntime
-                    : PluginHostMode.Preview;
+                try
+                {
+                    var modeValue = TryReadProperty(_hostContext, "Mode")?.ToString();
+                    return string.Equals(modeValue, "RealRuntime", StringComparison.OrdinalIgnoreCase)
+                        ? PluginHostMode.RealRuntime
+                        : PluginHostMode.Preview;
+                }
+                catch
+                {
+                    return PluginHostMode.Preview;
+                }
             }
         }
 
