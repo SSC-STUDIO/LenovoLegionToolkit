@@ -605,6 +605,8 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        _telemetryTimer.Tick -= TelemetryTimer_Tick;
+        _telemetryTimer.Tick += TelemetryTimer_Tick;
         SynchronizeRuntimeState();
         RefreshTelemetry();
         _telemetryTimer.Start();
@@ -979,15 +981,21 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void SetStatus(string text, bool isError)
     {
-        _statusTextBlock.Text = text;
-        _statusTextBlock.Foreground = isError
-            ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
-            : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
+        if (_statusTextBlock is not null)
+        {
+            _statusTextBlock.Text = text;
+            _statusTextBlock.Foreground = isError
+                ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
+                : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
+        }
 
-        _statusIcon.Symbol = isError
-            ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
-            : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
-        _statusIcon.Foreground = _statusTextBlock.Foreground;
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = isError
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock?.Foreground;
+        }
     }
 
     private static Brush ResolveBrush(string resourceKey, Brush fallback)
