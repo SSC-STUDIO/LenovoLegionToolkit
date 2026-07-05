@@ -1,131 +1,109 @@
 # Universal Device Toolkit Plugins
 
-Official plugins and contributor tooling for Universal Device Toolkit.
+<p align="center">
+  <img src="https://img.shields.io/badge/C%23-.NET%2010-blue?style=flat-square&logo=csharp" alt="C# .NET 10" />
+  <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4?style=flat-square&logo=windows" alt="Windows 10/11" />
+  <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=flat-square&color=yellow" alt="Stars" />
+  <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/github/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release?style=flat-square&logo=github" alt="CI" />
+</p>
 
-## What Changed
+<p align="center">
+  <b>Official plugin ecosystem for Universal Device Toolkit (formerly Lenovo Legion Toolkit)</b><br/>
+  Extend your device management experience with community-driven plugins.
+</p>
 
-This repository now has one standard author workflow:
+---
 
-1. `doctor`
-2. `init`
-3. `dev`
-4. `test`
-5. `validate`
-6. `package`
-7. `promote` only when a plugin should enter the official store
+## Plugin Catalog
 
-The standard entry point is `llt-plugin.cmd`, which delegates to `Tools/PluginTooling.Cli`.
+| Plugin | Description | Tags |
+|--------|-------------|------|
+| **Network Acceleration** | Boost network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work. | `network` `optimization` `gaming` `telemetry` |
+| **Custom Mouse** | Personalize your mouse with theme-aware cursor styles, DPI profiles, and seamless Windows integration. | `mouse` `customization` `gaming` `cursor` `dpi` |
+| **ViVeTool** | Unlock hidden Windows features and customize your system with the ultimate Windows feature flag manager. | `windows` `feature-flags` `vivetool` `tweaks` `insider` |
+| **Shell Integration** | Seamlessly integrate into your Windows shell context menu for instant access to power features. | `system` `shell` `integration` `context-menu` |
 
-## Prerequisites
+> **Looking for more plugins?** Check the [plugin store](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/store.json) or [build your own](#author-workflow).
 
-- Windows 10/11 x64
-- .NET 10 SDK
-- A valid host baseline under `Dependencies/Host`
+---
 
-Bootstrap host references when needed:
+## Quick Install
+
+1. Open **Universal Device Toolkit**
+2. Navigate to **Plugins** → **Browse Store**
+3. Click **Install** on any plugin
+4. Restart the application
+
+That's it — no manual downloads, no complex setup.
+
+---
+
+## Feature Highlights
+
+### Network Acceleration
+- Real-time download/upload telemetry with a beautiful dashboard
+- Adaptive acceleration presets for gaming, streaming, and work
+- One-click network optimization
+- Peak traffic monitoring and active adapter detection
+
+### Custom Mouse
+- Theme-aware cursor styles (auto-switch with Windows Dark/Light mode)
+- Per-application DPI profiles
+- Seamless Windows integration via the optimization panel
+
+### ViVeTool
+- Browse and toggle hidden Windows feature flags
+- Insider-build style tweaks without joining Insider
+- Clean table UI with search and filtering
+- Safe defaults — nothing breaks on toggle
+
+### Shell Integration
+- Add Universal Device Toolkit actions to the Windows right-click context menu
+- Quick access to power plans, RGB control, and fan profiles
+- Minimal footprint, no background services
+
+---
+
+## Author Workflow
+
+This repository includes a complete plugin authoring toolchain:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
-```
-
-`Dependencies/Host/host-release.json` is the pinned host baseline for standalone plugin development.
-
-## Standard Author Workflow
-
-Check the environment:
-
-```powershell
+# Check your environment
 .\llt-plugin.cmd doctor
-```
 
-Create machine-readable agent reports:
+# Create a new plugin
+.\llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
 
-```powershell
-.\llt-plugin.cmd `
-  doctor `
-  --json-report-path artifacts\agent\doctor.json
-
-.\llt-plugin.cmd `
-  inspect `
-  --json-report-path artifacts\agent\inspect.json
-```
-
-Create a new plugin:
-
-```powershell
-.\llt-plugin.cmd `
-  init `
-  --template feature-settings `
-  --folder MyPlugin `
-  --id my-plugin `
-  --name "My Plugin"
-```
-
-Build and preview in one loop:
-
-```powershell
+# Develop with live preview
 .\llt-plugin.cmd dev --plugin my-plugin --theme system --view feature
-```
 
-Run only the build, test, or preview step when needed:
-
-```powershell
-.\llt-plugin.cmd build --plugin my-plugin
+# Test, validate, package
 .\llt-plugin.cmd test --plugin my-plugin
-.\llt-plugin.cmd preview --plugin my-plugin --theme system --view feature
-```
-
-Validate author requirements:
-
-```powershell
 .\llt-plugin.cmd validate --plugin my-plugin --profile contributor
-```
-
-Create a local ZIP:
-
-```powershell
 .\llt-plugin.cmd package --plugin my-plugin --build-first
 ```
 
-## Official Store Flow
+### Plugin Tooling Commands
 
-Official store metadata lives in `Plugins/<Plugin>/plugin.manifest.json` under the `store` object.
-`store-entry.json` is still emitted as a compatibility file for older release scripts.
+| Command | Description |
+|---------|-------------|
+| `doctor` | Diagnose environment and dependencies |
+| `init` | Scaffold a new plugin from a template |
+| `dev` | Build + live preview loop |
+| `test` | Run unit tests |
+| `validate` | Check authoring and store metadata |
+| `package` | Produce installable ZIP |
+| `promote` | Prepare official store entry |
 
-Create the official metadata scaffold:
+> The toolchain mirrors the **VS Code extension development model**: `plugin.manifest.json` is your `package.json`, `dev` is your `npm run dev`, and `package` is your `vsce package`.
 
-```powershell
-.\llt-plugin.cmd promote --plugin my-plugin
-```
+---
 
-Then fill in the final store-facing metadata:
+## PluginWorkbench — Standalone Preview
 
-- `description`
-- `icon`
-- `iconBackground`
-- `tags`
-- `dependencies`
-- `supportedLanguages`
-
-Validation profiles:
-
-- `contributor`: local author checks
-- `official-candidate`: official `store` metadata required
-- `official-release`: release/store alignment checks
-
-## PluginWorkbench
-
-`PluginWorkbench` is the standard preview UI for authors.
-
-It now:
-
-- loads built plugin outputs or local ZIPs
-- uses a host-style preview shell for feature/settings/optimization content
-- supports `System / Light / Dark`
-- defaults to safe `Preview` mode
-- requires explicit confirmation before `Real Runtime`
-
-Direct launch:
+Don't want to launch the full host app? Use **PluginWorkbench**:
 
 ```powershell
 dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
@@ -135,67 +113,73 @@ dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
   --view settings
 ```
 
-Smoke:
+Features:
+- Loads built plugin outputs or local ZIPs
+- Host-style preview shell (matches the real UI)
+- `System` / `Light` / `Dark` theme switching
+- Safe `Preview` mode (no real actions) with explicit `Real Runtime` confirmation
 
-```powershell
-make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
+---
+
+## Repository Structure
+
+```
+UniversalDeviceToolkit-Plugins/
+├── Plugins/              # Official plugin projects
+│   ├── CustomMouse/
+│   ├── NetworkAcceleration/
+│   ├── ShellIntegration/
+│   └── ViveTool/
+├── SDK/                  # Plugin SDK (interfaces & helpers)
+├── Dependencies/         # Shared dependencies
+├── Tools/                # PluginWorkbench + PluginTooling.CLI
+├── Scripts/              # Automation scripts
+├── Docs/                 # Architecture & authoring guides
+├── store.json            # Plugin store catalog (release output)
+└── Make.bat             # Convenience wrapper for common tasks
 ```
 
-## Store Metadata Model
+---
 
-`plugin.manifest.json` is the authoring source of truth. It combines:
+## Contributing
 
-- runtime identity and compatibility
-- feature/settings/runtime contributions
-- package contents and asset name
-- official store metadata
+We welcome contributions! Whether you're fixing a bug, adding a feature, or creating a brand-new plugin:
 
-`plugin.json` is generated or synchronized for current host compatibility. Root `store.json` is generated release output, not a normal authoring file.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-plugin`)
+3. Run `.\llt-plugin.cmd doctor` to validate your environment
+4. Develop your plugin with `.\llt-plugin.cmd dev`
+5. Submit a pull request
 
-## VS Code Workflow Parity
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Plugin Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) before getting started.
 
-The workflow now mirrors VS Code extension development:
+---
 
-- `plugin.manifest.json` plays the role of VS Code's `package.json`
-- `contributes` declares plugin entry points
-- `dev` is the build-and-open preview loop
-- `package` creates the installable ZIP, similar to `vsce package`
-- `generate-store` derives release metadata instead of hand-editing root `store.json`
+## Documentation
 
-The remaining difference is host compatibility: Universal Device Toolkit still ships `plugin.json` in plugin outputs until the main app loader moves to the unified manifest.
+- [Quick Start](./Docs/PLUGIN_QUICKSTART.md) — Get your first plugin running in 5 minutes
+- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) — Deep dive into the plugin API
+- [Architecture](./Docs/ARCHITECTURE.md) — System design and dependency map
+- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) — Automation-friendly workflow docs
+- [Coding Standards](./Docs/CODING_STANDARDS.md) — Naming, patterns, and forbidden anti-patterns
+- [Changelog](./CHANGELOG.md) — Release history
 
-## Common Commands
+---
 
-Short wrapper commands are available through `make.bat`:
+## Community & Support
 
-- `make.bat doctor`
-- `make.bat workbench-smoke --plugin-id custom-mouse --theme Dark`
-- `make.bat init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"`
-- `make.bat dev --plugin my-plugin --theme system`
-- `make.bat validate --plugin my-plugin --profile contributor`
-- `make.bat preview --plugin my-plugin --theme system`
-- `make.bat package --plugin my-plugin --build-first`
-- `make.bat migrate`
-- `make.bat promote --plugin my-plugin`
+- **Issues**: [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions)
+- **Main Application**: [Universal Device Toolkit](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)
 
-`new` and `pack` remain compatibility aliases for `init` and `package`.
+---
 
-## Release Model
+## License
 
-Preferred CI model:
+This project is open-source. See individual plugin licenses for details.
 
-- `validate.yml` for PR/push validation
-- `release.yml` for manual official publishing
+---
 
-Official release assets must keep the stable naming contract:
-
-- `<plugin-id>-v<version>.zip`
-
-## Documents
-
-- [Quick Start](./Docs/PLUGIN_QUICKSTART.md)
-- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md)
-- [Architecture](./Docs/ARCHITECTURE.md)
-- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md)
-- [Contributing](./CONTRIBUTING.md)
-- [CHANGELOG](./CHANGELOG.md)
+<p align="center">
+  Built with ❤️ by the SSC-STUDIO team and the Universal Device Toolkit community.
+</p>
