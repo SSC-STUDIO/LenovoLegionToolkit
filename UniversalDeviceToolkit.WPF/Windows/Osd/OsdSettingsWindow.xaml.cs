@@ -14,6 +14,7 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Osd;
 
@@ -29,6 +30,7 @@ public partial class OsdSettingsWindow
 
     private readonly OsdSettings _OsdSettings = IoCContainer.Resolve<OsdSettings>();
     private readonly SensorsGroupController _controller = IoCContainer.Resolve<SensorsGroupController>();
+    private readonly DebounceDispatcher _appearancePersistDebouncer = new();
     private bool _isInitializing = true;
 
     public OsdSettingsWindow()
@@ -328,8 +330,7 @@ public partial class OsdSettingsWindow
 
         _OsdSettings.Store.BackgroundOpacity = _osdOpacitySlider.Value;
         _opacityValueText.Text = $"{(_osdOpacitySlider.Value * 100):0}{Resource.Percent}";
-        _OsdSettings.SynchronizeStore();
-        MessagingCenter.Publish(new OsdAppearanceChangedMessage());
+        _appearancePersistDebouncer.Throttle(100, PersistOsdAppearance);
     }
 
     private void OsdBackgroundColorPicker_ColorChangedDelayed(object? sender, EventArgs e)
@@ -372,8 +373,7 @@ public partial class OsdSettingsWindow
 
         _OsdSettings.Store.CornerRadiusTop = (int)_osdCornerRadiusTopSlider.Value;
         _cornerRadiusValueText.Text = $"{(int)_osdCornerRadiusTopSlider.Value} / {(int)_osdCornerRadiusBottomSlider.Value}";
-        _OsdSettings.SynchronizeStore();
-        MessagingCenter.Publish(new OsdAppearanceChangedMessage());
+        _appearancePersistDebouncer.Throttle(100, PersistOsdAppearance);
     }
 
     private void OsdCornerRadiusBottomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -383,6 +383,11 @@ public partial class OsdSettingsWindow
 
         _OsdSettings.Store.CornerRadiusBottom = (int)_osdCornerRadiusBottomSlider.Value;
         _cornerRadiusValueText.Text = $"{(int)_osdCornerRadiusTopSlider.Value} / {(int)_osdCornerRadiusBottomSlider.Value}";
+        _appearancePersistDebouncer.Throttle(100, PersistOsdAppearance);
+    }
+
+    private void PersistOsdAppearance()
+    {
         _OsdSettings.SynchronizeStore();
         MessagingCenter.Publish(new OsdAppearanceChangedMessage());
     }

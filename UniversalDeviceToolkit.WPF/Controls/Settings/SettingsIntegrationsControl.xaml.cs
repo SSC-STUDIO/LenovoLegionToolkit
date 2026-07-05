@@ -5,6 +5,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.CLI;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
@@ -46,7 +47,11 @@ public partial class SettingsIntegrationsControl
 
             await _hwinfoIntegration.StartStopIfNeededAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(HWiNFOIntegrationToggle_Click)}.", ex);
+        }
     }
 
     private async void CLIInterfaceToggle_Click(object sender, RoutedEventArgs e)
@@ -61,10 +66,10 @@ public partial class SettingsIntegrationsControl
 
             await _ipcServer.StartStopIfNeededAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Silently ignored — this method is a fire-and-forget click handler that
-            // should never crash the UI even if the underlying operation fails.
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(CLIInterfaceToggle_Click)}.", ex);
         }
     }
 

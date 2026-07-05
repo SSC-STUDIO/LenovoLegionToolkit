@@ -21,6 +21,7 @@ namespace UniversalDeviceToolkit.WPF.Pages
     {
         private readonly PackagesViewModel _viewModel;
         private readonly PackageDownloaderSettings _packageDownloaderSettings;
+        private readonly DebounceDispatcher _downloadPathDebouncer = new();
         private bool _initialized;
 
         public PackagesPage()
@@ -54,7 +55,7 @@ namespace UniversalDeviceToolkit.WPF.Pages
         {
             try
             {
-                _viewModel.MachineType = (await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false)).MachineType;
+                _viewModel.MachineType = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
 
                 var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
                 _downloadToText.PlaceholderText = downloadsFolder;
@@ -95,6 +96,9 @@ namespace UniversalDeviceToolkit.WPF.Pages
         }
 
         private void DownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)
+            => _downloadPathDebouncer.Debounce(400, PersistDownloadPath);
+
+        private void PersistDownloadPath()
         {
             var location = _downloadToText.Text;
 

@@ -28,7 +28,7 @@ public static partial class WMI
         try
         {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+            var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
             return managementObjects.Any();
         }
         catch (ManagementException ex) when (IsAccessDenied(ex))
@@ -93,7 +93,7 @@ public static partial class WMI
         try
         {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+            var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
             var result = managementObjects.Select(mo => mo.Properties).Select(converter).ToArray();
             return result;
         }
@@ -137,7 +137,7 @@ public static partial class WMI
             try
             {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+            var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
             var managementObject = managementObjects.Cast<ManagementObject>().FirstOrDefault() ?? throw ExceptionHelper.WmiNoResults();
 
                 var mo = (ManagementObject)managementObject;

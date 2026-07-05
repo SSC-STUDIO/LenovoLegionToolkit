@@ -8,6 +8,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -32,7 +33,11 @@ public partial class ExcludeRefreshRatesWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PickProcessesWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()

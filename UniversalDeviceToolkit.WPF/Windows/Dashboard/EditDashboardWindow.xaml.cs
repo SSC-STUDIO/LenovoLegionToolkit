@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard.Edit;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
@@ -36,7 +37,11 @@ public partial class EditDashboardWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(EditDashboardWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()
@@ -81,7 +86,11 @@ public partial class EditDashboardWindow
 
             _groupsStackPanel.Children.Add(CreateGroupControl(new(DashboardGroupType.Custom, result)));
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(AddButton_Click)}.", ex);
+        }
     }
 
     private void DefaultButton_Click(object sender, RoutedEventArgs e)

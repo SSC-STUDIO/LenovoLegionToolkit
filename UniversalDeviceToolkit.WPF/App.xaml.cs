@@ -577,6 +577,20 @@ public partial class App
             try
             {
                 _backgroundInitializationCancellationTokenSource?.Cancel();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error cancelling background initialization during shutdown: {ex.Message}");
+            }
+
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
+
+            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+
+            try
+            {
                 _backgroundInitializationCancellationTokenSource?.Dispose();
                 _backgroundInitializationCancellationTokenSource = null;
             }
@@ -585,11 +599,6 @@ public partial class App
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Error disposing cancellation token source during shutdown: {ex.Message}");
             }
-
-            StopSingleInstanceThreadSafely();
-            CleanupSingleInstanceResources();
-
-            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
             await StopPluginsAsync().ConfigureAwait(false);
 

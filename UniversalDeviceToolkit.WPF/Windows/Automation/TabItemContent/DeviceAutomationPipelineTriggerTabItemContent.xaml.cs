@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -45,7 +46,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             RefreshButtons();
             await LoadAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DeviceAutomationPipelineTriggerTabItemContent_Initialized)}.", ex);
+        }
     }
 
     private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
@@ -62,7 +67,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
             await LoadAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NativeWindowsMessageListener_Changed)}.", ex);
+        }
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -85,7 +94,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         {
             // Expected when filter is debounced, no action needed
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(FilterTextBox_TextChanged)}.", ex);
+        }
     }
 
     private void OnlySelected_Click(object sender, RoutedEventArgs e)

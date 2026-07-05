@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
@@ -110,7 +111,11 @@ public abstract class AbstractAutomationStepControl : UserControl
             await RefreshAsync();
             OnFinishedLoading();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshingControl_Loaded)}.", ex);
+        }
     }
 
     public abstract IAutomationStep CreateAutomationStep();

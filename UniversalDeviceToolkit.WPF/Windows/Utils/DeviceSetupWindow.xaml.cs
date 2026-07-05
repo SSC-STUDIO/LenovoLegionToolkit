@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.DeviceSupport;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -67,7 +68,11 @@ public partial class DeviceSetupWindow
 
             _taskCompletionSource.TrySetResult(new DeviceSetupResult(true, _recommendedPack?.Id, this));
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Confirm_Click)}.", ex);
+        }
     }
 
     private void Skip_Click(object sender, RoutedEventArgs e)

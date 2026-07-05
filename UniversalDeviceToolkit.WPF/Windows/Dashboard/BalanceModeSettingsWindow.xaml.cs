@@ -3,6 +3,7 @@ using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Dashboard
 {
@@ -40,7 +41,11 @@ public partial class BalanceModeSettingsWindow
 
             Close();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SaveButton_Click)}.", ex);
+        }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

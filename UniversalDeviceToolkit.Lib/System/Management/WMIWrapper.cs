@@ -25,7 +25,7 @@ public class WMIWrapper : IWMIWrapper
             // and call the appropriate WMI methods
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, query);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+            var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
 
             foreach (var mo in managementObjects)
             {
@@ -112,7 +112,7 @@ public class WMIWrapper : IWMIWrapper
             // Try to create a simple WMI query to test availability
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, "SELECT * FROM Win32_OperatingSystem");
-            var results = await mos.GetAsync().ConfigureAwait(false);
+            var results = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
             return true;
         }
         catch (Exception ex)

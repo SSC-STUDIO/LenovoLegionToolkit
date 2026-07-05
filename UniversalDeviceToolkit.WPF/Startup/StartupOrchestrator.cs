@@ -457,7 +457,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
                     if (!settings.Store.EnableHardwareSensors)
                         return;
 
-                    _ = await controller.IsSupportedAsync().ConfigureAwait(false);
+                    _ = await controller.IsSupportedAsync();
                 },
                 "sensors group controller",
                 false
@@ -492,8 +492,8 @@ namespace UniversalDeviceToolkit.WPF.Startup
             await RunWithErrorHandlingAsync(
                 async () =>
                 {
-                    if (await feature.IsSupportedAsync().ConfigureAwait(false))
-                        await feature.SetStateAsync(await feature.GetStateAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                    if (await feature.IsSupportedAsync())
+                        await feature.SetStateAsync(await feature.GetStateAsync());
                 },
                 "ITS mode feature",
                 false
@@ -623,22 +623,22 @@ namespace UniversalDeviceToolkit.WPF.Startup
             await RunWithErrorHandlingAsync(
                 async () =>
                 {
-                    if (!await fanManager.IsSupportedAsync().ConfigureAwait(false))
+                    if (!await fanManager.IsSupportedAsync())
                         return;
 
-                    await fanManager.InitializeAsync().ConfigureAwait(false);
+                    await fanManager.InitializeAsync();
 
-                    var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                    var mi = await Compatibility.GetMachineInformationAsync();
                     if (mi.LegionSeries <= LegionSeries.Legion_Legacy)
                     {
-                        if (await powerMode.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
+                        if (await powerMode.GetStateAsync() != PowerModeState.GodMode)
                             return;
                     }
 
                     if (fanSettings.Store.Entries.Count == 0)
-                        await fanSettings.SynchronizeStoreAsync().ConfigureAwait(false);
+                        await fanSettings.SynchronizeStoreAsync();
 
-                    await fanManager.LoadAndApply(fanSettings.Store.Entries).ConfigureAwait(false);
+                    await fanManager.LoadAndApply(fanSettings.Store.Entries);
                 },
                 "fan manager",
                 false
@@ -653,10 +653,10 @@ namespace UniversalDeviceToolkit.WPF.Startup
                     if (!controller.IsActive())
                         return;
 
-                    await controller.InitializeAsync().ConfigureAwait(false);
+                    await controller.InitializeAsync();
 
                     if (!controller.DoNotApply)
-                        await controller.ApplyInternalProfileAsync().ConfigureAwait(false);
+                        await controller.ApplyInternalProfileAsync();
                 },
                 "AMD overclocking",
                 false

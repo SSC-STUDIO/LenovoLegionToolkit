@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.ViewModels;
 using UniversalDeviceToolkit.WPF.Windows;
 
@@ -41,7 +42,11 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         
             _isInitializing = false;
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NavigationItemsSettingsWindow_Loaded)}.", ex);
+        }
     }
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)

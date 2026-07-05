@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls;
 using UniversalDeviceToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
@@ -31,7 +32,11 @@ public partial class AddDashboardItemWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(AddAutomationStepWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

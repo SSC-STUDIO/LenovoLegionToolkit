@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Settings
@@ -55,7 +56,11 @@ public partial class SelectSmartKeyPipelinesWindow
             if (IsVisible)
                 await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SelectSmartKeyPipelinesWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()

@@ -13,7 +13,7 @@ public static class ManagementObjectSearcherExtensions
     public static Task<IEnumerable<ManagementBaseObject>> GetAsyncWithTimeout(this ManagementObjectSearcher searcher, int timeoutMs = 5000) =>
         searcher.GetAsync(timeoutMs);
 
-    public static async Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos, int timeoutMs = 10000)
+    public static async Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos, int timeoutMs = 5000)
     {
         var scopePath = mos.Scope?.Path?.Path ?? string.Empty;
         var queryString = mos.Query?.QueryString ?? throw new ArgumentException("Query is required.", nameof(mos));
@@ -35,8 +35,7 @@ public static class ManagementObjectSearcherExtensions
             return await task.ConfigureAwait(false);
         }
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"WMI query timed out after {timeoutMs}ms: {queryString}");
+        Log.Instance.Warning($"WMI query timed out after {timeoutMs}ms: {queryString}");
 
         throw new TimeoutException($"WMI query timed out after {timeoutMs}ms.");
     }

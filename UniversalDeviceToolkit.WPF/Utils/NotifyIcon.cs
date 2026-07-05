@@ -140,7 +140,7 @@ public class NotifyIcon : NativeWindow, IDisposable
 
         if (_showToolTipCancellationTokenSource is not null)
         {
-            try { await _showToolTipCancellationTokenSource.CancelAsync().ConfigureAwait(false); }
+            try { await _showToolTipCancellationTokenSource.CancelAsync(); }
             catch (ObjectDisposedException) { /* already disposed */ }
 
             try { _showToolTipCancellationTokenSource.Dispose(); }
@@ -153,13 +153,13 @@ public class NotifyIcon : NativeWindow, IDisposable
 
         try
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(500), token).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(500), token);
 
             if (ContextMenu is not null && ContextMenu.IsOpen)
                 return;
 
             _currentToolTipWindow?.Close();
-            _currentToolTipWindow = await _toolTipWindow().ConfigureAwait(false);
+            _currentToolTipWindow = await _toolTipWindow();
 
             token.ThrowIfCancellationRequested();
 

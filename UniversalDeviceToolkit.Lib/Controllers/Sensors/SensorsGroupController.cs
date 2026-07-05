@@ -633,6 +633,7 @@ public class SensorsGroupController : IDisposable
     private readonly Dictionary<object, TimeSpan> _subscribers = [];
     private CancellationTokenSource? _producerCts;
     private Task? _producerTask;
+    private bool _producerLoopErrorLogged;
     public event EventHandler? SensorsUpdated;
 
     private readonly GPUController _gpuController = IoCContainer.Resolve<GPUController>();
@@ -2367,6 +2368,7 @@ public class SensorsGroupController : IDisposable
             try
             {
                 await UpdateAsync().ConfigureAwait(false);
+                _producerLoopErrorLogged = false;
                 SensorsUpdated?.Invoke(this, EventArgs.Empty);
 
                 await _delayProvider.Delay(minInterval, token).ConfigureAwait(false);
@@ -2377,7 +2379,12 @@ public class SensorsGroupController : IDisposable
             }
             catch (Exception ex)
             {
-                Log.Instance.Trace($"ProducerLoop error: {ex}");
+                if (Log.Instance.IsTraceEnabled && !_producerLoopErrorLogged)
+                {
+                    Log.Instance.Trace($"ProducerLoop error: {ex}");
+                    _producerLoopErrorLogged = true;
+                }
+
                 await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
             }
         }

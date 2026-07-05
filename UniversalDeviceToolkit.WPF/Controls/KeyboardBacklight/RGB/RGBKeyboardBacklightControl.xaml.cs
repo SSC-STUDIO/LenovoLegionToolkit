@@ -10,6 +10,7 @@ using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
@@ -87,7 +88,11 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 
             await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PresetButton_Click)}.", ex);
+        }
     }
 
     private async void SynchroniseZonesMenuItem_Click(object sender, RoutedEventArgs e)
@@ -103,7 +108,11 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             await SaveState();
             await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SynchroniseZonesMenuItem_Click)}.", ex);
+        }
     }
 
     private async void CardControl_Changed(object? sender, EventArgs e)
@@ -113,7 +122,11 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
             await SaveState();
             await RefreshAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(CardControl_Changed)}.", ex);
+        }
     }
 
     protected override async Task OnRefreshAsync()

@@ -5,6 +5,7 @@ using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent
 {
@@ -52,7 +53,11 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
                 _content.Children.Add(radio);
             }
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeAutomationPipelineTriggerTabItemContent_Initialized)}.", ex);
+        }
     }
 }
 }

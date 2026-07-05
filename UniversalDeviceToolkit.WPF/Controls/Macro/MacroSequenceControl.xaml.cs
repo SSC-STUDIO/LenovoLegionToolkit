@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -130,7 +131,11 @@ public partial class MacroSequenceControl
 
             await RecordAsync(settings);
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RecordButton_Click)}.", ex);
+        }
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)

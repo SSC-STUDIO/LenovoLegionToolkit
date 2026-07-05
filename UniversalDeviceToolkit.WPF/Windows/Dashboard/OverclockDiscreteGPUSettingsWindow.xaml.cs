@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -76,7 +77,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
             _gpuOverclockController.RenameProfile(_activeProfileId, result);
             RefreshProfiles();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RenameProfileButton_Click)}.", ex);
+        }
     }
 
     private void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
@@ -102,7 +107,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
             _activeProfileId = profileId;
             RefreshProfiles();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(AddProfileButton_Click)}.", ex);
+        }
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -112,7 +121,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
             Save();
             await ApplyAsync();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ApplyButton_Click)}.", ex);
+        }
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
@@ -123,7 +136,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
             await ApplyAsync();
             Close();
         }
-        catch (Exception) { /* Logging excluded — no Log access in this scope */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ApplyAndCloseButton_Click)}.", ex);
+        }
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)

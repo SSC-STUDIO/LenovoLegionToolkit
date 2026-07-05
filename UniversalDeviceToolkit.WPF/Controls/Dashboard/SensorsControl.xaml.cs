@@ -58,6 +58,7 @@ public partial class SensorsControl : IDisposable
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
+    private bool _sensorsRefreshFailureLogged;
 
     private CancellationTokenSource? _batteryCts;
     private Task? _batteryRefreshTask;
@@ -744,6 +745,7 @@ public partial class SensorsControl : IDisposable
                     if (detailed)
                         _forceDetailedRefresh = false;
                     await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
+                    _sensorsRefreshFailureLogged = false;
                     await _delayProvider.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
                 catch (OperationCanceledException)
@@ -752,8 +754,11 @@ public partial class SensorsControl : IDisposable
                 }
                 catch (Exception ex)
                 {
-                    if (Log.Instance.IsTraceEnabled)
+                    if (Log.Instance.IsTraceEnabled && !_sensorsRefreshFailureLogged)
+                    {
                         Log.Instance.Trace($"Sensors refresh failed.", ex);
+                        _sensorsRefreshFailureLogged = true;
+                    }
 
                     var cached = TryGetSessionSensorDataForDisplay();
                     if (cached.HasValue)

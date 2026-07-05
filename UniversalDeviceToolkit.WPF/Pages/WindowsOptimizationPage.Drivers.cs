@@ -30,6 +30,7 @@ namespace UniversalDeviceToolkit.WPF.Pages;
 
 public partial class WindowsOptimizationPage
 {
+    private readonly DebounceDispatcher _driverDownloadPathDebouncer = new();
     private IPackageDownloader? _driverPackageDownloader;
     private List<Package>? _driverPackages;
     private static CultureInfo ActiveDriverCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
@@ -176,6 +177,11 @@ public partial class WindowsOptimizationPage
         catch (ObjectDisposedException)
         {
             // Token source was disposed, ignore
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(DriverFilterTextBox_TextChanged)}.", ex);
         }
     }
 
@@ -653,6 +659,9 @@ public partial class WindowsOptimizationPage
     }
 
     private void DriverDownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)
+        => _driverDownloadPathDebouncer.Debounce(400, PersistDriverDownloadPath);
+
+    private void PersistDriverDownloadPath()
     {
         if (_driverDownloadToText != null && Directory.Exists(_driverDownloadToText.Text))
         {

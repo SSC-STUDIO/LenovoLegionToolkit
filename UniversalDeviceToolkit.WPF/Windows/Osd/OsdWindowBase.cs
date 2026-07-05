@@ -71,6 +71,7 @@ public abstract class OsdWindowBase : Window
     protected bool _positionSet;
     private volatile bool _fpsMonitoringStarted;
     private bool _hasLenovoController;
+    private bool _theRingErrorLogged;
 
     protected HashSet<OsdItem> _activeItems = [];
     protected Dictionary<OsdItem, FrameworkElement> _itemsMap = [];
@@ -685,11 +686,17 @@ public abstract class OsdWindowBase : Window
                 try
                 {
                     await RefreshSensorsDataAsync(token);
+                    _theRingErrorLogged = false;
                 }
                 catch (OperationCanceledException) { break; }
                 catch (Exception ex)
                 {
-                    Log.Instance.Trace($"Exception occurred when executing TheRing()", ex);
+                    if (Log.Instance.IsTraceEnabled && !_theRingErrorLogged)
+                    {
+                        Log.Instance.Trace($"Exception occurred when executing TheRing()", ex);
+                        _theRingErrorLogged = true;
+                    }
+
                     await Task.Delay(1000, token);
                 }
 

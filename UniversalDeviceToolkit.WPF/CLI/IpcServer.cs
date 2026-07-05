@@ -89,7 +89,14 @@ public class IpcServer(
 
         try
         {
-            await cts.CancelAsync().ConfigureAwait(false);
+            try
+            {
+                await cts.CancelAsync().ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Already stopped and disposed by a prior StopAsync call.
+            }
 
             var completed = await Task.WhenAny(handler, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             if (completed != handler && Log.Instance.IsTraceEnabled)
@@ -104,6 +111,7 @@ public class IpcServer(
                     try { cts.Dispose(); }
                     catch (ObjectDisposedException) { /* already disposed */ }
 
+                    _cancellationTokenSource = new CancellationTokenSource();
                     _handler = Task.CompletedTask;
                 }
             }

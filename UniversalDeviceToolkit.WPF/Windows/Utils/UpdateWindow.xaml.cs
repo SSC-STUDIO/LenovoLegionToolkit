@@ -106,8 +106,11 @@ public partial class UpdateWindow : IProgress<float>
         {
             SetDownloading(false);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DownloadButton_Click)}.", ex);
+
             SetDownloading(false);
 
             Constants.LatestReleaseUri.Open();

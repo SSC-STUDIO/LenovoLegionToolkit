@@ -27,7 +27,7 @@ public class IoCModule : Module
         builder.Register<DashboardSettings>();
         builder.Register<HardwareSensorSettings>();
 
-        builder.Register<IpcServer>();
+        builder.Register<IpcServer>().SingleInstance();
 
         builder.Register<WindowsOptimizationViewModel>();
     }

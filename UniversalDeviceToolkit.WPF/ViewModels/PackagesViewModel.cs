@@ -23,6 +23,7 @@ public partial class PackagesViewModel : ObservableObject
     private readonly PackageDownloaderSettings _settings;
     private readonly PackageDownloaderFactory _factory;
     private CancellationTokenSource? _loadCts;
+    private CancellationTokenSource? _filterDebounceCts;
 
     [ObservableProperty]
     private ObservableCollection<Package> _packages = new();
@@ -75,7 +76,24 @@ public partial class PackagesViewModel : ObservableObject
         CancelLoadCommand.NotifyCanExecuteChanged();
     }
 
-    partial void OnFilterTextChanged(string value) => RefreshFilteredPackages();
+    partial void OnFilterTextChanged(string value)
+    {
+        var cts = CtsSwap.Replace(ref _filterDebounceCts, new CancellationTokenSource());
+        _ = DebouncedRefreshFilteredPackagesAsync(cts.Token);
+    }
+
+    private async Task DebouncedRefreshFilteredPackagesAsync(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(300, token);
+            if (!token.IsCancellationRequested)
+                RefreshFilteredPackages();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
 
     partial void OnSortingIndexChanged(int value) => RefreshFilteredPackages();
 
@@ -114,7 +132,7 @@ public partial class PackagesViewModel : ObservableObject
                 MachineType,
                 SelectedOS,
                 new Progress<float>(p => Progress = p),
-                token).ConfigureAwait(false);
+                token);
 
             Packages = new ObservableCollection<Package>(packages);
             Packages.CollectionChanged += OnPackagesCollectionChanged;
