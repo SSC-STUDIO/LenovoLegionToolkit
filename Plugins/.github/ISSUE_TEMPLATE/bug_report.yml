@@ -1,0 +1,75 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in a plugin
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Which plugin is affected?
+      options:
+        - Network Acceleration
+        - Custom Mouse
+        - ViVeTool GUI
+        - Shell Integration
+        - Plugin SDK / Tooling
+        - Other (not plugin-specific)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Plugin version
+      options:
+        - Latest release
+        - Development build
+        - I don't know
+    validations:
+      required: true
+
+  - type: input
+    id: udt_version
+    attributes:
+      label: Universal Device Toolkit version
+      description: "Found in UDT → Settings → About"
+      placeholder: "e.g., v1.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows 11
+        - Windows 10
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly and concisely.
+      placeholder: "Steps to reproduce, expected behavior, actual behavior..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag and drop screenshots here if applicable.
+      placeholder: "Optional but helpful!"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to make sure this bug has not already been reported.
+          required: true
