@@ -31,6 +31,6 @@ public class HDRAutomationStepControl : AbstractComboBoxAutomationStepCardContro
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh HDR automation step");
 }

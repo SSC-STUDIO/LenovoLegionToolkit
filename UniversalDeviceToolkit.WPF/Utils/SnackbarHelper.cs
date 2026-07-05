@@ -56,7 +56,7 @@ public static class SnackbarHelper
                         break;
                     nextMsg = _queue.Dequeue();
                 }
-                await ProcessSnackbar(nextMsg).ConfigureAwait(false);
+                await ProcessSnackbar(nextMsg);
             }
         }
         finally
@@ -80,7 +80,7 @@ public static class SnackbarHelper
         await Application.Current.Dispatcher.InvokeAsync(() =>
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
-        }).Task.ConfigureAwait(false);
+        }).Task;
 
         var snackBar = mainWindow?.Snackbar;
 
@@ -93,12 +93,12 @@ public static class SnackbarHelper
             SetTitleAndMessage(snackBar, msg.Title, msg.Message);
 
             return snackBar.Timeout;
-        }).Task.ConfigureAwait(false);
-        await Application.Current.Dispatcher.InvokeAsync(() => snackBar.ShowAsync()).Task.Unwrap().ConfigureAwait(false);
+        }).Task;
+        await Application.Current.Dispatcher.InvokeAsync(() => snackBar.ShowAsync()).Task.Unwrap();
 
         // Wait for the snackbar to close before showing the next one
         // Snackbar has a Timeout property, we should wait at least that long
-        await Task.Delay(timeout + TimeSpan.FromMilliseconds(500)).ConfigureAwait(false); // Add a small buffer for animation
+        await Task.Delay(timeout + TimeSpan.FromMilliseconds(500)); // Add a small buffer for animation
     }
 
     private static void SetupSnackbarAppearance(Snackbar snackBar, string title, string? message, SnackbarType type)

@@ -119,4 +119,40 @@
   <data name="GamesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>Când jocul rulează</value>
   </data>
-<data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve"><value>Când utilizatorul devine activ</value></data><data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când utilizatorul devine inactiv</value></data><data name="DeactivateGpuQuickAction_Title" xml:space="preserve"><value>Dezactivați GPU</value></data><data name="OverclockDiscreteGPUAutomationStepState_Off" xml:space="preserve"><value>Oprit</value></data><data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve"><value>Pornit</value></data><data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când presetarea modului personalizat se schimbă</value></data><data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve"><value>Acțiune periodică</value></data><data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când Wi-Fi este conectat</value></data><data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când Wi-Fi este deconectat</value></data><data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>La reluare</value></data><data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când HDR se oprește</value></data><data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când HDR se activează</value></data><data name="MacroAutomationStepState_Off" xml:space="preserve"><value>Oprit</value></data><data name="MacroAutomationStepState_On" xml:space="preserve"><value>Pornit</value></data><data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când dispozitivul este deconectat</value></data><data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când dispozitivul este conectat</value></data><data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesiune blocată</value></data><data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesiune deblocată</value></data><data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve"><value>Când utilizatorul devine activ</value></data>
+<data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când utilizatorul devine inactiv</value></data>
+<data name="DeactivateGpuQuickAction_Title" xml:space="preserve"><value>Dezactivați GPU</value></data>
+<data name="OverclockDiscreteGPUAutomationStepState_Off" xml:space="preserve"><value>Oprit</value></data>
+<data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve"><value>Pornit</value></data>
+<data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când presetarea modului personalizat se schimbă</value></data>
+<data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve"><value>Acțiune periodică</value></data>
+<data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când Wi-Fi este conectat</value></data>
+<data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când Wi-Fi este deconectat</value></data>
+<data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>La reluare</value></data>
+<data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când HDR se oprește</value></data>
+<data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când HDR se activează</value></data>
+<data name="MacroAutomationStepState_Off" xml:space="preserve"><value>Oprit</value></data>
+<data name="MacroAutomationStepState_On" xml:space="preserve"><value>Pornit</value></data>
+<data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când dispozitivul este deconectat</value></data>
+<data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Când dispozitivul este conectat</value></data>
+  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
+    <value>Command exited with non-zero code {0}. Output: {1}</value>
+  </data>
+  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
+    <value>Optimization action with identifier {0} was not found.</value>
+  </data>
+  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
+    <value>Rollback is not available for this optimization action.</value>
+  </data>
+
+
+<data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesiune blocată</value></data>
+<data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesiune deblocată</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

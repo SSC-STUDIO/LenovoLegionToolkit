@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -67,8 +68,16 @@ public partial class CreateAutomationPipelineWindow
 
     private async void CreateAutomationPipelineWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(CreateAutomationPipelineWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -131,8 +140,16 @@ public partial class CreateAutomationPipelineWindow
 
     private async void MultipleSelectCardControl_Click(object? sender, RoutedEventArgs e)
     {
-        _multiSelect = true;
-        await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            _multiSelect = true;
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(MultipleSelectCardControl_Click)}.", ex);
+        }
     }
 
     private CardControl CreateCardControl(IAutomationPipelineTrigger trigger)
@@ -213,3 +230,4 @@ public partial class CreateAutomationPipelineWindow
     }
 }
 }
+

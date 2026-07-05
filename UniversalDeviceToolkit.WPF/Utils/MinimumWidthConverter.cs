@@ -4,7 +4,11 @@ using System.Windows.Data;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
-public class MinimumWidthConverter : IValueConverter
+    /// <summary>
+    /// Returns <c>true</c> if the bound <see cref="double"/> value is greater than or equal to the
+    /// configured <see cref="MinimumWidth"/>; otherwise <c>false</c>.
+    /// </summary>
+    public class MinimumWidthConverter : IValueConverter
 {
     public double MinimumWidth { get; set; } = 1200;
 

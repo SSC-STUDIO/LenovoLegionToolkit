@@ -569,6 +569,10 @@
   <data name="Exception_DevicePropertyNotString" xml:space="preserve"><value>设备属性不是字符串</value><comment>Exception message for non-string device property</comment></data>
   <data name="Exception_InvalidFileName" xml:space="preserve"><value>无效的文件名</value><comment>Exception message for invalid file name parameter</comment></data>
   <data name="Exception_CantManageWithVantage" xml:space="preserve"><value>启用 Vantage 时无法管理 RGB 键盘</value><comment>Exception message when Lenovo Vantage conflicts</comment></data>
+  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
+    <value>Command exited with non-zero code {0}. Output: {1}</value>
+  </data>
+
   <data name="Exception_HandleInvalid" xml:space="preserve"><value>句柄无效</value><comment>Exception message for invalid handle</comment></data>
   <data name="Exception_PowerModeUnavailableWithoutAC" xml:space="preserve"><value>未连接交流适配器时不可使用电源模式“{0}”。</value><comment>Exception message format for AC-restricted power mode</comment></data>
   <data name="Exception_DeviceIoControlError" xml:space="preserve"><value>DeviceIoControl 返回 0，最后错误：{0}</value><comment>Exception message format for driver IO control failure</comment></data>
@@ -588,4 +592,19 @@
   <data name="Exception_GodModePresetNotFound" xml:space="preserve"><value>未找到 ID 为 {0} 的预设</value><comment>Exception message format for missing God Mode preset</comment></data>
   <data name="Exception_CurrentUserValueNull" xml:space="preserve"><value>当前用户值为空</value><comment>Exception message when Windows identity is null</comment></data>
   <data name="Exception_DeviceHandleNotAvailable" xml:space="preserve"><value>设备句柄不可用</value><comment>Exception message when device handle is null</comment></data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
+    <value>Optimization action with identifier {0} was not found.</value>
+  </data>
+  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
+    <value>Rollback is not available for this optimization action.</value>
+  </data>
+
+
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

@@ -91,7 +91,7 @@ internal readonly struct ExternalDetectionRule : IPackageRule
                 return false;
             }
 
-            await using var fileStream = File.OpenWrite(filePath);
+            using var fileStream = File.OpenWrite(filePath);
             await httpClient.DownloadAsync(Url, fileStream, null, token).ConfigureAwait(false);
         }
 

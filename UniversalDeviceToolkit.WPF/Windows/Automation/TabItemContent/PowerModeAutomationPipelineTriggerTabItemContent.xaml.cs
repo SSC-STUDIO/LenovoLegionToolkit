@@ -5,6 +5,7 @@ using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent
 {
@@ -36,19 +37,28 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
 
     private async void PowerModeAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs eventArgs)
     {
-        var states = await _feature.GetAllStatesAsync().ConfigureAwait(false);
-
-        foreach (var state in states)
+        try
         {
-            var radio = new RadioButton
+            var states = await _feature.GetAllStatesAsync();
+
+            foreach (var state in states)
             {
-                Content = state.GetDisplayName(),
-                Tag = state,
-                IsChecked = state == _powerModeState,
-                Margin = new(0, 0, 0, 8)
-            };
-            _content.Children.Add(radio);
+                var radio = new RadioButton
+                {
+                    Content = state.GetDisplayName(),
+                    Tag = state,
+                    IsChecked = state == _powerModeState,
+                    Margin = new(0, 0, 0, 8)
+                };
+                _content.Children.Add(radio);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeAutomationPipelineTriggerTabItemContent_Initialized)}.", ex);
         }
     }
 }
 }
+

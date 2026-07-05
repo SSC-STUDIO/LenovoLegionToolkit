@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -18,6 +19,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
     private const string MHZ = "MHz";
 
     private readonly GPUOverclockController _gpuOverclockController = IoCContainer.Resolve<GPUOverclockController>();
+    private readonly DebounceDispatcher _debouncer = new();
     private Guid _activeProfileId;
     private bool _isRefreshingProfiles;
 
@@ -37,9 +39,11 @@ public partial class OverclockDiscreteGPUSettingsWindow
         SetSliders(info);
     }
 
-    private void CoreSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => _coreLabel.Content = $"{(int)_coreSlider.Value:+0;-0;0} {MHZ}";
+    private void CoreSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        => _debouncer.Throttle(100, () => _coreLabel.Content = $"{(int)_coreSlider.Value:+0;-0;0} {MHZ}");
 
-    private void MemorySlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => _memoryLabel.Content = $"{(int)_memorySlider.Value:+0;-0;0} {MHZ}";
+    private void MemorySlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        => _debouncer.Throttle(100, () => _memoryLabel.Content = $"{(int)_memorySlider.Value:+0;-0;0} {MHZ}");
 
     private void ProfilesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -61,15 +65,23 @@ public partial class OverclockDiscreteGPUSettingsWindow
 
     private async void RenameProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!TryGetActiveProfile(out var profile))
-            return;
+        try
+        {
+            if (!TryGetActiveProfile(out var profile))
+                return;
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name).ConfigureAwait(false);
-        if (string.IsNullOrEmpty(result))
-            return;
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Rename, Resource.AutomationPage_RenamePipeline_Placeholder, profile.Name);
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        _gpuOverclockController.RenameProfile(_activeProfileId, result);
-        RefreshProfiles();
+            _gpuOverclockController.RenameProfile(_activeProfileId, result);
+            RefreshProfiles();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RenameProfileButton_Click)}.", ex);
+        }
     }
 
     private void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
@@ -83,28 +95,52 @@ public partial class OverclockDiscreteGPUSettingsWindow
 
     private async void AddProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        SaveProfile();
+        try
+        {
+            SaveProfile();
 
-        var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder).ConfigureAwait(false);
-        if (string.IsNullOrEmpty(result))
-            return;
+            var result = await MessageBoxHelper.ShowInputAsync(this, Resource.Add, Resource.AutomationPage_AddManualPipeline_Placeholder);
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        var profileId = _gpuOverclockController.AddProfile(result, GetCurrentInfo());
-        _activeProfileId = profileId;
-        RefreshProfiles();
+            var profileId = _gpuOverclockController.AddProfile(result, GetCurrentInfo());
+            _activeProfileId = profileId;
+            RefreshProfiles();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(AddProfileButton_Click)}.", ex);
+        }
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        Save();
-        await ApplyAsync().ConfigureAwait(false);
+        try
+        {
+            Save();
+            await ApplyAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ApplyButton_Click)}.", ex);
+        }
     }
 
     private async void ApplyAndCloseButton_Click(object sender, RoutedEventArgs e)
     {
-        Save();
-        await ApplyAsync().ConfigureAwait(false);
-        Close();
+        try
+        {
+            Save();
+            await ApplyAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(ApplyAndCloseButton_Click)}.", ex);
+        }
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -119,7 +155,7 @@ public partial class OverclockDiscreteGPUSettingsWindow
         _gpuOverclockController.SaveState(enabled, _activeProfileId, GetCurrentInfo());
     }
 
-    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync().ConfigureAwait(false);
+    private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync();
 
     private void SaveProfile() => _gpuOverclockController.SaveProfile(_activeProfileId, GetCurrentInfo());
 
@@ -164,3 +200,4 @@ public partial class OverclockDiscreteGPUSettingsWindow
     }
 }
 }
+

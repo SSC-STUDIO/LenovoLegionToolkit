@@ -33,6 +33,14 @@ public class RadialGaugeControl : Control
     private double _animFrom;
     private double _animTo;
 
+    private Brush? _cachedRingColor;
+    private LinearGradientBrush? _cachedArcStroke;
+    private SolidColorBrush? _cachedGlowBrush;
+    private SolidColorBrush? _cachedTipBrush;
+    private Geometry? _cachedTrackGeometry;
+    private Size _cachedTrackSize;
+    private double _cachedTrackThickness;
+
     static RadialGaugeControl()
     {
         DefaultStyleKeyProperty.OverrideMetadata(
@@ -156,6 +164,13 @@ public class RadialGaugeControl : Control
     private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var gauge = (RadialGaugeControl)d;
+        if (e.Property == RingBrushProperty)
+        {
+            gauge._cachedRingColor = null;
+            gauge._cachedArcStroke = null;
+            gauge._cachedGlowBrush = null;
+            gauge._cachedTipBrush = null;
+        }
         gauge.RedrawAll();
     }
 
@@ -249,10 +264,21 @@ public class RadialGaugeControl : Control
         if (radius <= 0)
         {
             _trackPath.Data = null;
+            _cachedTrackGeometry = null;
             return;
         }
 
-        _trackPath.Data = BuildArc(center, radius, StartAngle, SweepAngle);
+        var size = new Size(ActualWidth, ActualHeight);
+        if (_cachedTrackGeometry is null
+            || _cachedTrackSize != size
+            || Math.Abs(_cachedTrackThickness - RingThickness) > double.Epsilon)
+        {
+            _cachedTrackGeometry = BuildArc(center, radius, StartAngle, SweepAngle);
+            _cachedTrackSize = size;
+            _cachedTrackThickness = RingThickness;
+        }
+
+        _trackPath.Data = _cachedTrackGeometry;
         _trackPath.StrokeThickness = RingThickness;
         _trackPath.Stroke = TrackBrush ?? (TryFindResource("ChartTrackBrush") as Brush) ?? Brushes.Gray;
         _trackPath.StrokeStartLineCap = PenLineCap.Round;
@@ -344,17 +370,19 @@ public class RadialGaugeControl : Control
         var end = PointOnCircle(center, radius, startAngle + sweepAngle);
         var isLargeArc = sweepAngle > 180.0;
 
-        var figure = new PathFigure { StartPoint = start, IsClosed = false, IsFilled = false };
-        figure.Segments.Add(new ArcSegment(
-            end,
-            new Size(radius, radius),
-            0.0,
-            isLargeArc,
-            SweepDirection.Clockwise,
-            true));
-
-        var geometry = new PathGeometry();
-        geometry.Figures.Add(figure);
+        var geometry = new StreamGeometry();
+        using (var ctx = geometry.Open())
+        {
+            ctx.BeginFigure(start, false, false);
+            ctx.ArcTo(
+                end,
+                new Size(radius, radius),
+                0.0,
+                isLargeArc,
+                SweepDirection.Clockwise,
+                true,
+                false);
+        }
         geometry.Freeze();
         return geometry;
     }
@@ -369,6 +397,9 @@ public class RadialGaugeControl : Control
     private Brush BuildArcStroke()
     {
         var baseColor = ExtractRingColor();
+        if (_cachedArcStroke is not null && ReferenceEquals(_cachedRingColor, RingBrush))
+            return _cachedArcStroke;
+
         var brush = new LinearGradientBrush
         {
             StartPoint = new Point(0, 0),
@@ -377,14 +408,36 @@ public class RadialGaugeControl : Control
         brush.GradientStops.Add(new GradientStop(Lighten(baseColor, 0.35), 0.0));
         brush.GradientStops.Add(new GradientStop(baseColor, 1.0));
         brush.Freeze();
+
+        _cachedArcStroke = brush;
+        _cachedRingColor = RingBrush;
         return brush;
     }
 
     private SolidColorBrush ExtractRingColorBrush(byte alpha)
     {
         var color = ExtractRingColor();
+
+        if (alpha == 96 && _cachedGlowBrush is not null && ReferenceEquals(_cachedRingColor, RingBrush))
+            return _cachedGlowBrush;
+
+        if (alpha == 255 && _cachedTipBrush is not null && ReferenceEquals(_cachedRingColor, RingBrush))
+            return _cachedTipBrush;
+
         var brush = new SolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
         brush.Freeze();
+
+        if (alpha == 96)
+        {
+            _cachedGlowBrush = brush;
+            _cachedRingColor = RingBrush;
+        }
+        else if (alpha == 255)
+        {
+            _cachedTipBrush = brush;
+            _cachedRingColor = RingBrush;
+        }
+
         return brush;
     }
 

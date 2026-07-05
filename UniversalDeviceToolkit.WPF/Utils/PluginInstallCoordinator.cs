@@ -130,7 +130,7 @@ public sealed class PluginInstallCoordinator(
             var success = false;
             try
             {
-                success = await RunInstallAsync(request.Manifest, request.CancellationToken).ConfigureAwait(false);
+                success = await RunInstallAsync(request.Manifest, request.CancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -171,7 +171,7 @@ public sealed class PluginInstallCoordinator(
                 pluginManager.StopPlugin(manifest.Id);
 
             AttachProgressHandler();
-            return await pluginRepositoryService.DownloadAndInstallPluginAsync(manifest).ConfigureAwait(false);
+            return await pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
         }
         finally
         {
@@ -242,7 +242,13 @@ public sealed class PluginInstallCoordinator(
         return Resource.PluginExtensionsPage_Downloading;
     }
 
-    private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+    private void RaiseChanged()
+    {
+        if (System.Windows.Application.Current?.Dispatcher is not null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+            System.Windows.Application.Current.Dispatcher.InvokeAsync(() => Changed?.Invoke(this, EventArgs.Empty));
+        else
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
 
     private sealed class InstallRequest(PluginManifest manifest, CancellationToken cancellationToken)
     {

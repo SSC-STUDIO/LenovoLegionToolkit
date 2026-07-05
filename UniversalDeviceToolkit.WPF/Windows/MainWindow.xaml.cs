@@ -206,7 +206,7 @@ public partial class MainWindow
         _contentGrid.Visibility = Visibility.Visible;
         ShellChromeHelper.ApplyContentSurfaceEffects(_contentSurfaceBorder, _applicationSettings);
 
-        LoadDeviceInfo();
+        _ = LoadDeviceInfo();
         UpdateIndicators();
         _ = CheckForUpdates();
 
@@ -234,12 +234,12 @@ public partial class MainWindow
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
 
             var hideKeyboardBacklight =
                 deviceAvailability.HiddenFeatures.Contains("keyboard-backlight") ||
-                !await KeyboardBacklightPage.IsSupportedAsync().ConfigureAwait(false);
+                !await KeyboardBacklightPage.IsSupportedAsync();
 
             if (hideKeyboardBacklight)
             {
@@ -249,7 +249,7 @@ public partial class MainWindow
                         _navigationStore.Items.Remove(_keyboardItem);
 
                     UpdateNavigationVisibility();
-                }).Task.ConfigureAwait(false);
+                }).Task;
             }
         }
         catch (Exception ex)
@@ -264,7 +264,7 @@ public partial class MainWindow
         try
         {
             var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
-            await trayHelper.InitializeAsync().ConfigureAwait(false);
+            await trayHelper.InitializeAsync();
             trayHelper.MakeVisible();
             _trayHelper = trayHelper;
         }
@@ -291,7 +291,7 @@ public partial class MainWindow
 
         try
         {
-            await SaveSizeAsync().ConfigureAwait(false);
+            await SaveSizeAsync();
         }
         catch (Exception ex)
         {
@@ -323,7 +323,7 @@ public partial class MainWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Closing...");
 
-            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
+            await App.Current.ShutdownAsync(true);
         }
         catch (Exception ex)
         {
@@ -442,11 +442,11 @@ public partial class MainWindow
         ShowUpdateWindow();
     }
 
-    private async void LoadDeviceInfo()
+    private async Task LoadDeviceInfo()
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
             _deviceInfoIndicatorText.Text = mi.Model;
             _deviceInfoIndicator.Visibility = Visibility.Visible;
         }
@@ -467,9 +467,9 @@ public partial class MainWindow
         {
             try
             {
-                _ = await _vantageDisabler.GetStatusAsync().ConfigureAwait(false);
-                _ = await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false);
-                _ = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+                _ = await _vantageDisabler.GetStatusAsync();
+                _ = await _legionZoneDisabler.GetStatusAsync();
+                _ = await _fnKeysDisabler.GetStatusAsync();
             }
             catch (Exception ex)
             {
@@ -504,7 +504,7 @@ public partial class MainWindow
     {
         try
         {
-            var result = await _updateChecker.CheckAsync(manualCheck).ConfigureAwait(false);
+            var result = await _updateChecker.CheckAsync(manualCheck);
             if (result is null)
             {
                 _updateIndicator.Visibility = Visibility.Collapsed;
@@ -514,13 +514,13 @@ public partial class MainWindow
                     switch (_updateChecker.Status)
                     {
                         case UpdateCheckStatus.Success:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title).ConfigureAwait(false);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
                             break;
                         case UpdateCheckStatus.RateLimitReached:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error).ConfigureAwait(false);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
                             break;
                         case UpdateCheckStatus.Error:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error).ConfigureAwait(false);
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
                             break;
                     }
                 }
@@ -582,7 +582,7 @@ public partial class MainWindow
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Saving window size asynchronously...");
 
-        await _applicationSettings.SynchronizeStoreAsync().ConfigureAwait(false);
+        await _applicationSettings.SynchronizeStoreAsync();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Window size saved asynchronously.");

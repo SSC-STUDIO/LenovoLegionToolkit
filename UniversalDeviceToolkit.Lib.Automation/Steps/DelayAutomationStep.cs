@@ -22,5 +22,8 @@ public class DelayAutomationStep(Delay state)
 
     public IAutomationStep DeepCopy() => new DelayAutomationStep(State);
 
-    public Task RunAsync(AutomationContext context, AutomationEnvironment environment, CancellationToken token) => Task.Delay(TimeSpan.FromSeconds(State.DelaySeconds), token);
+    public async Task RunAsync(AutomationContext context, AutomationEnvironment environment, CancellationToken token)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(State.DelaySeconds), token).ConfigureAwait(false);
+    }
 }

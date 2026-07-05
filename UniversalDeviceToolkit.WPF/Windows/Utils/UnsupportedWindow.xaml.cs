@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -62,27 +62,35 @@ public partial class UnsupportedWindow : FluentWindow
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        // Ensure theme is applied when window is loaded
-        ApplyTheme();
+        try
+        {
+            // Ensure theme is applied when window is loaded
+            ApplyTheme();
 
-        var continueButton = GetContinueButton();
-        if (continueButton is null)
+            var continueButton = GetContinueButton();
+            if (continueButton is null)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("UnsupportedWindow continue button was not initialized.");
+
+                return;
+            }
+        
+            var continueText = Resource.Continue;
+            for (var i = 5; i > 0; i--)
+            {
+                continueButton.Content = $"{continueText} ({i})";
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+
+            continueButton.Content = continueText;
+            IsCountdownComplete = true;
+        }
+        catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("UnsupportedWindow continue button was not initialized.");
-
-            return;
+                Log.Instance.Trace($"Exception in {nameof(Window_Loaded)}.", ex);
         }
-        
-        var continueText = Resource.Continue;
-        for (var i = 5; i > 0; i--)
-        {
-            continueButton.Content = $"{continueText} ({i})";
-            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
-        }
-
-        continueButton.Content = continueText;
-        IsCountdownComplete = true;
     }
 
     private Wpf.Ui.Controls.Button? GetContinueButton()
@@ -135,3 +143,4 @@ public partial class UnsupportedWindow : FluentWindow
     }
 }
 }
+

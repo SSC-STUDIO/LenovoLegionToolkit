@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Settings
@@ -50,8 +51,16 @@ public partial class SelectSmartKeyPipelinesWindow
 
     private async void SelectSmartKeyPipelinesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SelectSmartKeyPipelinesWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()
@@ -60,7 +69,7 @@ public partial class SelectSmartKeyPipelinesWindow
 
         _showThisAppToggle.IsChecked = SettingsStoreGuid is null;
 
-        var allPipelines = await _automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
+        var allPipelines = await _automationProcessor.GetPipelinesAsync();
         var pipelines = allPipelines.Where(p => p.Trigger is null).OrderBy(p => p.Name).ToArray();
 
         _list.Items.Clear();
@@ -165,3 +174,4 @@ public partial class SelectSmartKeyPipelinesWindow
     }
 }
 }
+

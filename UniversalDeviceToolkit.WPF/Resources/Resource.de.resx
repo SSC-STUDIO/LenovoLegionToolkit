@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion-Toolkit</value>
+    <value>Universal Device Toolkit</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Build</value>
@@ -105,7 +105,7 @@
     <value>Immer an USB</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion-Toolkit</value>
+    <value>Universal Device Toolkit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Anwenden</value>
@@ -3339,9 +3339,6 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
     <value>Software-Rendering erzwingen</value>
   </data>
-  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Software-Rendering verwenden, wenn ein Remote-Desktop oder eine kopflose Anzeige erkannt wird. Neustart empfohlen.</value>
-  </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
     <value>Installer wurde mit Code {0} beendet</value>
   </data>
@@ -3542,9 +3539,6 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   </data>
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
     <value>Wählen Sie die visuelle Stilvorgabe für die App. Designmodus und Akzentfarbe gelten weiterhin.</value>
-  </data>
-  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
-    <value>Designstil</value>
   </data>
   <data name="SettingsPage_Language_Installing_Applying" xml:space="preserve">
     <value>Wird entpackt und installiert…</value>
@@ -3855,6 +3849,10 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SensorsControl_VramUsage_Title" xml:space="preserve">
     <value>VRAM-Nutzung</value>
   </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+  </data>
+
   <data name="SettingsPage_HardwareSensors_Message" xml:space="preserve">
     <value>Aktiviert erweiterte Hardware-Überwachung zur Anzeige detaillierter Temperaturen, Frequenzen und Leistungsgrenzen.</value>
   </data>
@@ -3879,7 +3877,18 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SettingsPage_Osd_Title" xml:space="preserve">
     <value>OSD aktivieren</value>
   </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Theme style</value>
+  </data>
+
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell-Integration verwalten</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shell aktivieren</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Aktiviert die Nilesoft Shell-Integration</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shell deaktivieren</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Deaktiviert die Nilesoft Shell-Integration</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Nicht verifiziert</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Bitte warten…</value></data></root>

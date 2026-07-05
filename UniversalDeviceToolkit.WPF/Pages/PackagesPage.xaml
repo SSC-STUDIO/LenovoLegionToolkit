@@ -7,8 +7,14 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
     Title="{x:Static resources:Resource.PackagesPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <Page.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter" />
+    </Page.Resources>
 
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
@@ -87,14 +93,16 @@
                             Margin="8,0,0,0"
                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                             ClearButtonEnabled="False"
-                            PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />
+                            PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}"
+                            Text="{Binding MachineType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox
                             x:Name="_osComboBox"
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="8,8,0,0"
                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_OperatingSystem}"
-                            MaxDropDownHeight="Auto" />
+                            MaxDropDownHeight="Auto"
+                            SelectionChanged="OsComboBox_SelectionChanged" />
                         <Grid
                             Grid.Row="2"
                             Grid.Column="1"
@@ -146,6 +154,7 @@
                                 x:Name="_sourcePrimaryRadio"
                                 AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_PrimarySource}"
+                                Checked="SourceRadio_Checked"
                                 Focusable="True"
                                 GroupName="source"
                                 IsChecked="True">
@@ -161,6 +170,7 @@
                                 x:Name="_sourceSecondaryRadio"
                                 AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_SecondarySource}"
+                                Checked="SourceRadio_Checked"
                                 GroupName="source">
                                 <StackPanel>
                                     <TextBlock Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
@@ -174,37 +184,33 @@
                         </StackPanel>
 
                         <wpfui:Button
-                            x:Name="_downloadPackagesButton"
                             Grid.Row="3"
                             Grid.Column="3"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"
                             Appearance="Primary"
-                            Click="DownloadPackagesButton_Click"
-                            Content="{x:Static resources:Resource.Refresh}"
-                            IsEnabled="false" />
+                            Command="{Binding LoadPackagesCommand}"
+                            Content="{x:Static resources:Resource.Refresh}" />
 
                         <wpfui:Button
-                            x:Name="_cancelDownloadPackagesButton"
                             Grid.Row="3"
                             Grid.Column="3"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"
                             Appearance="Secondary"
-                            Click="CancelDownloadPackagesButton_Click"
+                            Command="{Binding CancelLoadCommand}"
                             Content="{x:Static resources:Resource.Cancel}"
-                            IsEnabled="false"
-                            Visibility="Collapsed" />
+                            Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+
                     </Grid>
                 </custom:CardControl.Header>
             </custom:CardControl>
 
             <controls:LoadableControl
-                x:Name="_loader"
                 Grid.Row="2"
                 ContentVisibilityWhileLoading="Collapsed"
                 IndicatorVerticalAlignment="Center"
-                Visibility="Hidden">
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
                 <controls:LoadableControl.LoadingContent>
                     <StackPanel
                         Margin="0,0,16,12"
@@ -259,12 +265,11 @@
                         </Border>
                     </StackPanel>
                 </controls:LoadableControl.LoadingContent>
-                <wpfui:DynamicScrollViewer x:Name="_scrollViewer">
+                <wpfui:DynamicScrollViewer>
 
                     <StackPanel>
 
                         <custom:InfoBar
-                            x:Name="_infoBar"
                             Title="{x:Static resources:Resource.PackagesPage_Disclaimer_Message}"
                             Margin="0,0,16,8"
                             IsClosable="False"
@@ -280,28 +285,23 @@
                             </Grid.ColumnDefinitions>
 
                             <wpfui:TextBox
-                                x:Name="_filterTextBox"
                                 Grid.Column="0"
                                 AutomationProperties.Name="{x:Static resources:Resource.Filter}"
                                 Icon="Search24"
                                 PlaceholderEnabled="True"
                                 PlaceholderText="{x:Static resources:Resource.Filter}"
-                                TextChanged="FilterTextBox_TextChanged" />
+                                Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <CheckBox
-                                x:Name="_onlyShowUpdatesCheckBox"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
-                                Checked="OnlyShowUpdatesCheckBox_OnChecked"
                                 Content="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
-                                Unchecked="OnlyShowUpdatesCheckBox_OnChecked" />
+                                IsChecked="{Binding OnlyShowUpdates, Mode=TwoWay}" />
 
                             <ComboBox
-                                x:Name="_sortingComboBox"
                                 Grid.Column="3"
                                 MaxDropDownHeight="Auto"
-                                SelectedIndex="2"
-                                SelectionChanged="SortingComboBox_SelectionChanged">
+                                SelectedIndex="{Binding SortingIndex, Mode=TwoWay}">
                                 <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Name}" />
                                 <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Category}" />
                                 <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Date}" />
@@ -309,7 +309,51 @@
 
                         </Grid>
 
-                        <StackPanel x:Name="_packagesStackPanel" Margin="0,0,16,12" />
+                        <ItemsControl
+                            Margin="0,0,16,12"
+                            ItemsSource="{Binding FilteredPackages}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <custom:CardControl Margin="0,0,0,8">
+                                        <StackPanel Margin="8">
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Title}"
+                                                TextTrimming="CharacterEllipsis" />
+                                            <TextBlock
+                                                Margin="0,4,0,0"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                Text="{Binding Category}" />
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                Text="{Binding Description}"
+                                                TextWrapping="Wrap"
+                                                Visibility="{Binding Description, Converter={StaticResource TextToVisibilityConverter}}" />
+                                        </StackPanel>
+                                    </custom:CardControl>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock
+                            Margin="0,32,16,32"
+                            HorizontalAlignment="Center"
+                            Focusable="True"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{x:Static resources:Resource.PackagesPage_NoMatchingDownloads}"
+                            Visibility="{Binding HasNoFilteredPackages, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <wpfui:HyperlinkButton
+                            Margin="0,8,16,12"
+                            HorizontalAlignment="Right"
+                            Command="{Binding ClearHiddenPackagesCommand}"
+                            Content="{x:Static resources:Resource.PackagesPage_ShowHiddenDownloads}"
+                            Icon="Eye24"
+                            Visibility="{Binding HasHiddenPackages, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                     </StackPanel>
 
@@ -319,5 +363,3 @@
         </Grid>
     </Grid>
 </Page>
-
-

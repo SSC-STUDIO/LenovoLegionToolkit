@@ -34,6 +34,8 @@ public class LampArrayController : IDisposable
     private bool _isDisposed;
     private CancellationTokenSource? _renderCts;
     private CancellationTokenSource? _screenCaptureCts;
+    private bool _renderLoopErrorLogged;
+    private bool _updateEffectErrorLogged;
     private IScreenCaptureProvider? _screenCaptureProvider;
     private RGBColor[,] _screenBuffer = new RGBColor[32, 18];
     private bool _auroraActive;
@@ -192,10 +194,15 @@ public class LampArrayController : IDisposable
                 {
                     CheckAuroraSyncState();
                     UpdateEffect();
+                    _renderLoopErrorLogged = false;
                 }
                 catch (Exception ex)
                 {
-                    Log.Instance.Trace($"Render loop error: {ex.Message}");
+                    if (Log.Instance.IsTraceEnabled && !_renderLoopErrorLogged)
+                    {
+                        Log.Instance.Trace($"Render loop error: {ex.Message}");
+                        _renderLoopErrorLogged = true;
+                    }
                 }
                     await _delayProvider.Delay(TimeSpan.FromMilliseconds(33), token).ConfigureAwait(false);
             }
@@ -204,7 +211,11 @@ public class LampArrayController : IDisposable
 
     private void StopRenderLoop()
     {
-        _renderCts?.Cancel();
+        if (_renderCts is not null)
+        {
+            _renderCts.Cancel();
+            _renderCts.Dispose();
+        }
         _renderCts = null;
         StopScreenCapture();
     }
@@ -311,7 +322,11 @@ public class LampArrayController : IDisposable
 
     private void StopScreenCapture()
     {
-        _screenCaptureCts?.Cancel();
+        if (_screenCaptureCts is not null)
+        {
+            _screenCaptureCts.Cancel();
+            _screenCaptureCts.Dispose();
+        }
         _screenCaptureCts = null;
     }
 
@@ -477,10 +492,16 @@ public class LampArrayController : IDisposable
                 }
                 catch (Exception ex)
                 {
-                    Log.Instance.Trace($"Error updating lights on {kvp.Key}: {ex.Message}");
+                    if (Log.Instance.IsTraceEnabled && !_updateEffectErrorLogged)
+                    {
+                        Log.Instance.Trace($"Error updating lights on {kvp.Key}: {ex.Message}");
+                        _updateEffectErrorLogged = true;
+                    }
                 }
             }
         }
+
+        _updateEffectErrorLogged = false;
     }
 
     public void SetEffectForIndices(IEnumerable<int> indices, ILampEffect? effect)

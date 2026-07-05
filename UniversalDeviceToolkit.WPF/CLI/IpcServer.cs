@@ -42,6 +42,7 @@ public class IpcServer(
     private static readonly SemaphoreSlim SupportedFeaturesCacheSemaphore = new(1, 1);
     private static string? _supportedFeaturesCache;
 
+    private readonly object _gate = new();
     private CancellationTokenSource _cancellationTokenSource = new();
     private Task _handler = Task.CompletedTask;
 
@@ -55,10 +56,18 @@ public class IpcServer(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Starting...");
 
-        _cancellationTokenSource = new();
-
-        var token = _cancellationTokenSource.Token;
-        _handler = Task.Run(() => Handler(token), token);
+        CancellationTokenSource newCts;
+        lock (_gate)
+        {
+            if (_cancellationTokenSource is not null)
+            {
+                try { _cancellationTokenSource.Dispose(); }
+                catch (ObjectDisposedException) { /* already disposed */ }
+            }
+            newCts = new CancellationTokenSource();
+            _cancellationTokenSource = newCts;
+            _handler = Task.Run(() => Handler(newCts.Token), newCts.Token);
+        }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Started");
@@ -66,11 +75,47 @@ public class IpcServer(
 
     public async Task StopAsync()
     {
+        CancellationTokenSource cts;
+        Task handler;
+
+        lock (_gate)
+        {
+            cts = _cancellationTokenSource;
+            handler = _handler;
+        }
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Stopping...");
 
-        await _cancellationTokenSource.CancelAsync();
-        await _handler;
+        try
+        {
+            try
+            {
+                await cts.CancelAsync().ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Already stopped and disposed by a prior StopAsync call.
+            }
+
+            var completed = await Task.WhenAny(handler, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            if (completed != handler && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IPC server handler did not stop within timeout.");
+        }
+        finally
+        {
+            lock (_gate)
+            {
+                if (ReferenceEquals(_cancellationTokenSource, cts))
+                {
+                    try { cts.Dispose(); }
+                    catch (ObjectDisposedException) { /* already disposed */ }
+
+                    _cancellationTokenSource = new CancellationTokenSource();
+                    _handler = Task.CompletedTask;
+                }
+            }
+        }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Stopped");
@@ -200,34 +245,34 @@ public class IpcServer(
                 await RunQuickActionAsync(req.Name).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.ListFeatures:
-                message = await ListFeaturesAsync();
+                message = await ListFeaturesAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.ListFeatureValues when req is { Name: not null }:
-                message = await ListFeatureValuesAsync(req.Name);
+                message = await ListFeatureValuesAsync(req.Name).ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.GetFeatureValue when req is { Name: not null }:
-                message = await GetFeatureValueAsync(req.Name);
+                message = await GetFeatureValueAsync(req.Name).ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.SetFeatureValue when req is { Name: not null, Value: not null }:
                 await SetFeatureValueAsync(req.Name, req.Value).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.GetSpectrumProfile:
-                message = await GetSpectrumProfileAsync();
+                message = await GetSpectrumProfileAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.SetSpectrumProfile when req is { Value: not null }:
-                await SetSpectrumProfileAsync(req.Value);
+                await SetSpectrumProfileAsync(req.Value).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.GetSpectrumBrightness:
-                message = await GetSpectrumBrightnessAsync();
+                message = await GetSpectrumBrightnessAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.SetSpectrumBrightness when req is { Value: not null }:
-                await SetSpectrumBrightnessAsync(req.Value);
+                await SetSpectrumBrightnessAsync(req.Value).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.GetRGBPreset:
-                message = await GetRGBPresetAsync();
+                message = await GetRGBPresetAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.SetRGBPreset when req is { Value: not null }:
-                await SetRGBPresetAsync(req.Value);
+                await SetRGBPresetAsync(req.Value).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.IsShellRegistered:
                 message = await IsShellRegisteredAsync().ConfigureAwait(false);
@@ -288,7 +333,7 @@ public class IpcServer(
                               .FirstOrDefault(p => p.Name == name)
                           ?? throw new InvalidOperationException($"Quick Action \"{name}\" not found");
 
-        await automationProcessor.RunNowAsync(quickAction.Id);
+        await automationProcessor.RunNowAsync(quickAction.Id).ConfigureAwait(false);
     }
 
     private static async Task<string?> ListFeaturesAsync(CancellationToken cancellationToken = default)
@@ -479,6 +524,6 @@ public class IpcServer(
     private static Task UninstallShellAsync()
     {
         // Shell integration is now handled by plugin. Use GUI for shell management.
-        throw new IpcException("Shell uninstallation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application.");
+        return Task.FromException(new IpcException("Shell uninstallation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application."));
     }
 }

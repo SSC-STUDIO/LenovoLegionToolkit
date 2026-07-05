@@ -30,6 +30,6 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
             return;
 
         if (e.SpecialKey is SpecialKey.FnLockOn or SpecialKey.FnLockOff)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh FnLock control");
 }

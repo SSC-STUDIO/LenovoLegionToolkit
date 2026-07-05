@@ -1,5 +1,10 @@
 name: Visual Regression Smoke
 
+# RECOMMENDATION: Consider integrating this visual regression smoke test into the
+# CI pipeline as a PR gate once self-hosted runners with interactive desktop/GUI
+# capability are available. Currently this runs on a schedule only.
+# See: https://github.com/actions/runner-images/issues/1073
+
 on:
   schedule:
     - cron: '0 2 * * 1-5'

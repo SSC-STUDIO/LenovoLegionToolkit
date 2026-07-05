@@ -34,6 +34,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
         private Process? _currentMonitoredProcess;
         private readonly Lock _lockObject = new Lock();
         private bool _isRunning = false;
+        private bool _monitoringLoopErrorLogged;
         private CancellationTokenSource? _currentProcessTokenSource;
         private readonly IDelayProvider _delayProvider;
 
@@ -98,6 +99,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                             lastProcess = null;
                         }
 
+                        _monitoringLoopErrorLogged = false;
                         await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
                     }
                     catch (TaskCanceledException)
@@ -106,7 +108,12 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                     }
                     catch (Exception ex)
                     {
-                        Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
+                        if (!_monitoringLoopErrorLogged)
+                        {
+                            Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
+                            _monitoringLoopErrorLogged = true;
+                        }
+
                         await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
                     }
                 }

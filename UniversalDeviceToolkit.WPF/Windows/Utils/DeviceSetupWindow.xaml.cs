@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.DeviceSupport;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -52,18 +53,26 @@ public partial class DeviceSetupWindow
 
     private async void Confirm_Click(object sender, RoutedEventArgs e)
     {
-        if (_isPreparing)
-            return;
+        try
+        {
+            if (_isPreparing)
+                return;
 
-        _isPreparing = true;
-        _confirmButton.IsEnabled = false;
-        _skipButton.IsEnabled = false;
-        _statusText.Text = T("DeviceSetupWindow_Preparing", "Preparing device setup...");
-        _statusText.Visibility = Visibility.Visible;
+            _isPreparing = true;
+            _confirmButton.IsEnabled = false;
+            _skipButton.IsEnabled = false;
+            _statusText.Text = T("DeviceSetupWindow_Preparing", "Preparing device setup...");
+            _statusText.Visibility = Visibility.Visible;
 
-        await Task.Yield();
+            await Task.Yield();
 
-        _taskCompletionSource.TrySetResult(new DeviceSetupResult(true, _recommendedPack?.Id, this));
+            _taskCompletionSource.TrySetResult(new DeviceSetupResult(true, _recommendedPack?.Id, this));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Confirm_Click)}.", ex);
+        }
     }
 
     private void Skip_Click(object sender, RoutedEventArgs e)

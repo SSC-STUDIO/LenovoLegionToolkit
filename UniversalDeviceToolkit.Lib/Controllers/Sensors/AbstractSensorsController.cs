@@ -67,6 +67,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     // Sensor data cache, cache time is 100ms
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
+    private bool _sensorReadFailureLogged;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 100;
     private const int SENSOR_READ_TIMEOUT_SECONDS = 2;
@@ -164,6 +165,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var (cpu, gpu) = await GetSensorSnapshotAsync(detailed, timeoutCts.Token).ConfigureAwait(false);
 
             var result = new SensorsData(cpu, gpu);
+            _sensorReadFailureLogged = false;
 
             // Update cache only for the fast summary path.
             if (!detailed)
@@ -179,8 +181,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
         catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
         {
-            if (Log.Instance.IsTraceEnabled)
+            if (Log.Instance.IsTraceEnabled && !_sensorReadFailureLogged)
+            {
                 Log.Instance.Trace($"Sensor read timed out after {SENSOR_READ_TIMEOUT_SECONDS}s, falling back to cache. [type={GetType().Name}]");
+                _sensorReadFailureLogged = true;
+            }
 
             lock (_cacheLock)
             {
@@ -192,8 +197,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
+            if (Log.Instance.IsTraceEnabled && !_sensorReadFailureLogged)
+            {
                 Log.Instance.Trace($"Sensor read failed. [type={GetType().Name}]", ex);
+                _sensorReadFailureLogged = true;
+            }
 
             lock (_cacheLock)
             {
@@ -243,9 +251,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         if (cpuCurrentTemperature < 0)
         {
             var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
-            if (fallback > 0 && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"CPU temperature from ACPI thermal zone fallback: {fallback}C");
-
             cpuCurrentTemperature = fallback > 0 ? fallback : -1;
         }
 
@@ -520,35 +525,22 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected virtual async Task<int> GetCpuWattageAsync()
     {
-        await Task.Yield();
+        await Task.Delay(0, CancellationToken.None).ConfigureAwait(false);
 
         // Try method 1: Performance counter (if available)
         var performanceCounterWattage = GetCpuWattageFromPerformanceCounter();
         if (performanceCounterWattage > 0)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"CPU power from performance counter: {performanceCounterWattage}W");
             return performanceCounterWattage;
-        }
 
         // Try method 2: WMI query for power meter (if available)
         try
         {
             var wattage = await GetCpuWattageFromWmiAsync().ConfigureAwait(false);
             if (wattage > 0)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"CPU power from WMI: {wattage}W");
                 return wattage;
-            }
-
-            if (wattage == 0 && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("CPU power from WMI was 0W; continuing to LibreHardwareMonitor fallback.");
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get CPU power from WMI: {ex.Message}");
         }
 
         // Try method 3: reuse LibreHardwareMonitor package power if that path is already available
@@ -568,16 +560,10 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         try
         {
             var powerValue = _cpuPowerCounter.NextValue();
-            var wattage = SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
-            if (wattage > 0 && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"CPU power performance counter raw value: {powerValue}");
-
-            return wattage;
+            return SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get CPU power from performance counter: {ex.Message}");
             return -1;
         }
     }
@@ -600,19 +586,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
                     var cpuPower = await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false);
                     if (cpuPower > 0)
-                    {
-                        var wattage = (int)Math.Round(cpuPower);
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"CPU power from LibreHardwareMonitor: {wattage}W (raw: {cpuPower})");
-                        return wattage;
-                    }
+                        return (int)Math.Round(cpuPower);
                 }
             }
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get CPU power from LibreHardwareMonitor: {ex.Message}");
         }
 
         return -1;
@@ -640,6 +619,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
             var output = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
             await process.WaitForExitAsync().ConfigureAwait(false);
+            process.Kill(true);
 
             int wattage = -1;
             double voltage = 0;
@@ -747,19 +727,13 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             try
             {
                 var stateIdString = gpu.PerformanceStatesInfo.CurrentPerformanceState.StateId.ToString();
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"GPU performance state: {stateIdString}");
-                    
-                // Try to parse the current performance state
                 if (Enum.TryParse<PerformanceStateId>(stateIdString, out var parsedState))
                 {
                     currentPerformanceState = parsedState;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get current performance state: {ex.Message}");
             }
 
             var states = GPUApi.GetPerformanceStates20(gpu.Handle);
@@ -771,9 +745,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             {
                 maxCoreClockOffset = states.Clocks[currentPerformanceState][0].FrequencyDeltaInkHz.DeltaValue / 1000;
                 maxMemoryClockOffset = states.Clocks[currentPerformanceState][1].FrequencyDeltaInkHz.DeltaValue / 1000;
-                
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Using overclock offsets from {currentPerformanceState}: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
             }
             catch
             {
@@ -782,15 +753,10 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 {
                     maxCoreClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
                     maxMemoryClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
-                    
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Falling back to P0_3DPerformance offsets: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
                 }
                 catch
                 {
                     // No overclock offsets available
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"No overclock offsets available");
                 }
             }
 
@@ -837,10 +803,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to get NVML data: {ex.Message}", ex);
                 }
             }
             
@@ -886,19 +850,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                                     {
                                         currentVoltage = Convert.ToDouble(voltageValue);
                                     }
-                                    
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"GPU voltage: {currentVoltage}V (raw: {voltageValue})");
                                 }
                             }
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get GPU voltage: {ex.Message}");
             }
 
             // Try to get Wattage via PrivatePowerTopologiesStatusV1 (Reflection)
@@ -972,9 +931,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                                                 // It is ambiguous.
                                                 
                                                 // Let's assume it is mW.
-                                                var val = Convert.ToUInt32(usageProp.GetValue(entry));
-                                                if (Log.Instance.IsTraceEnabled && val > 0)
-                                                    Log.Instance.Trace($"Ignoring ambiguous GPU PowerUsageInPCM reading: {val}");
+                                                _ = Convert.ToUInt32(usageProp.GetValue(entry));
                                             }
                                         }
                                     }
@@ -985,10 +942,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 }
             }
             
-            catch (Exception ex)
+            catch
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get GPU info: {ex.Message}", ex);
             }
 
             // Final fallback: nvidia-smi
@@ -999,16 +954,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     currentWattage = smiWattage;
                 if (currentVoltage == 0 && smiVoltage > 0)
                     currentVoltage = smiVoltage;
-            }
-
-            // Debug logging
-            if (Log.Instance.IsTraceEnabled)
-            {
-                Log.Instance.Trace($"GPU frequencies - Utilization: {utilization}%");
-                Log.Instance.Trace($"  Current: core={currentCoreClock}MHz, memory={currentMemoryClock}MHz");
-                Log.Instance.Trace($"  Boost: core={maxCoreClock}MHz, memory={maxMemoryClock}MHz");
-                Log.Instance.Trace($"  Offsets: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
-                Log.Instance.Trace($"  Final max: core={maxCoreClock + maxCoreClockOffset}MHz, memory={maxMemoryClock + maxMemoryClockOffset}MHz");
             }
 
             return new(utilization,
@@ -1027,32 +972,26 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
     }
 
-    private static T SafeRead<T>(Func<T> operation, T fallback, string metricName)
+    private static T SafeRead<T>(Func<T> operation, T fallback, string _)
     {
         try
         {
             return operation();
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to read {metricName}.", ex);
-
             return fallback;
         }
     }
 
-    private static async Task<T> SafeReadAsync<T>(Func<Task<T>> operation, T fallback, string metricName)
+    private static async Task<T> SafeReadAsync<T>(Func<Task<T>> operation, T fallback, string _)
     {
         try
         {
             return await operation().ConfigureAwait(false);
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to read {metricName}.", ex);
-
             return fallback;
         }
     }

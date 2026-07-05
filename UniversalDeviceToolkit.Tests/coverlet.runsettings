@@ -12,7 +12,7 @@
           </Include>
           <Exclude>[LenovoLegionToolkit.Tests]*</Exclude>
           <SkipAutoProps>true</SkipAutoProps>
-          <Threshold>20</Threshold>
+          <Threshold>50</Threshold>
           <ThresholdType>line</ThresholdType>
         </Configuration>
       </DataCollector>

@@ -1,7 +1,9 @@
+using System;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Dashboard
 {
@@ -27,17 +29,26 @@ public partial class BalanceModeSettingsWindow
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        var isAiModeChecked = _aiModeCheckBox.IsChecked ?? false;
+        try
+        {
+            var isAiModeChecked = _aiModeCheckBox.IsChecked ?? false;
 
-        _aiController.IsAIModeEnabled = isAiModeChecked;
+            _aiController.IsAIModeEnabled = isAiModeChecked;
 
-        await _aiController.StopAsync().ConfigureAwait(false);
-        await _powerModeFeature.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
-        await _aiController.StartIfNeededAsync().ConfigureAwait(false);
+            await _aiController.StopAsync();
+            await _powerModeFeature.SetStateAsync(PowerModeState.Balance);
+            await _aiController.StartIfNeededAsync();
 
-        Close();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SaveButton_Click)}.", ex);
+        }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
 }
 }
+

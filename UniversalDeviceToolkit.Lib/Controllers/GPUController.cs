@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -13,21 +13,18 @@ using NeoSmart.AsyncLock;
 namespace LenovoLegionToolkit.Lib.Controllers;
 
 /// <summary>
-/// GPU控制器，用于监控和管理NVIDIA独立GPU状态。
-/// </summary>
+/// GPU鎺у埗鍣紝鐢ㄤ簬鐩戞帶鍜岀鐞哊VIDIA鐙珛GPU鐘舵€併€?/// </summary>
 /// <remarks>
 /// <para>
-/// 此控制器提供以下功能：
-/// </para>
+/// 姝ゆ帶鍒跺櫒鎻愪緵浠ヤ笅鍔熻兘锛?/// </para>
 /// <list type="bullet">
-///   <item><description>GPU状态监控（激活、非激活、已关机等）</description></item>
-///   <item><description>GPU进程管理</description></item>
-///   <item><description>GPU重启和进程终止</description></item>
-///   <item><description>自适应刷新间隔（活跃时2秒，非活跃时10秒）</description></item>
+///   <item><description>GPU鐘舵€佺洃鎺э紙婵€娲汇€侀潪婵€娲汇€佸凡鍏虫満绛夛級</description></item>
+///   <item><description>GPU杩涚▼绠＄悊</description></item>
+///   <item><description>GPU閲嶅惎鍜岃繘绋嬬粓姝?/description></item>
+///   <item><description>鑷€傚簲鍒锋柊闂撮殧锛堟椿璺冩椂2绉掞紝闈炴椿璺冩椂10绉掞級</description></item>
 /// </list>
 /// <para>
-/// 使用NVAPI与NVIDIA驱动通信，需要NVIDIA GPU支持。
-/// </para>
+/// 浣跨敤NVAPI涓嶯VIDIA椹卞姩閫氫俊锛岄渶瑕丯VIDIA GPU鏀寔銆?/// </para>
 /// </remarks>
 public class GPUController : IDisposable
 {
@@ -52,13 +49,11 @@ public class GPUController : IDisposable
     private const int StabilizationDelay = 5000;
 
     /// <summary>
-    /// 当GPU状态刷新时触发的事件。
-    /// </summary>
+    /// 褰揋PU鐘舵€佸埛鏂版椂瑙﹀彂鐨勪簨浠躲€?    /// </summary>
     public event EventHandler<GPUStatus>? Refreshed;
 
     /// <summary>
-    /// 获取GPU监控服务是否已启动。
-    /// </summary>
+    /// 鑾峰彇GPU鐩戞帶鏈嶅姟鏄惁宸插惎鍔ㄣ€?    /// </summary>
     public bool IsStarted
     {
         get
@@ -69,10 +64,9 @@ public class GPUController : IDisposable
     }
 
     /// <summary>
-    /// 初始化GPUController的新实例。
-    /// </summary>
-    /// <param name="processManager">GPU进程管理器。</param>
-    /// <param name="hardwareManager">GPU硬件管理器。</param>
+    /// 鍒濆鍖朑PUController鐨勬柊瀹炰緥銆?    /// </summary>
+    /// <param name="processManager">GPU杩涚▼绠＄悊鍣ㄣ€?/param>
+    /// <param name="hardwareManager">GPU纭欢绠＄悊鍣ㄣ€?/param>
     public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager, IDelayProvider delayProvider)
     {
         _processManager = processManager;
@@ -318,23 +312,15 @@ public class GPUController : IDisposable
     private static async Task<string?> TryGetGpuInstanceIdAsync(string? pnpDeviceIdPart)
     {
         if (string.IsNullOrWhiteSpace(pnpDeviceIdPart))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("GPU PNP device ID part is unavailable.");
-
             return null;
-        }
 
         try
         {
             var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
             return string.IsNullOrWhiteSpace(gpuInstanceId) ? null : gpuInstanceId;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to resolve GPU PNP device ID [part={pnpDeviceIdPart}].", ex);
-
             return null;
         }
     }
@@ -350,10 +336,6 @@ public class GPUController : IDisposable
     private void HandleGpuNotFound(GPUState previousState)
     {
         _state = GPUState.NvidiaGpuNotFound;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Nvidia GPU not found");
-
         CheckStateChange(previousState);
     }
 
@@ -370,17 +352,10 @@ public class GPUController : IDisposable
         {
             _state = GPUState.PoweredOff;
             _performanceState = Resource.GPUController_PoweredOff;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"GPU powered off");
-
             CheckStateChange(_state);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"GPU status exception.", ex);
-
             _performanceState = "Unknown";
         }
     }
@@ -405,10 +380,6 @@ public class GPUController : IDisposable
     {
         _processes = processNames;
         _state = GPUState.MonitorConnected;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Monitor connected");
-
         CheckStateChange(previousState);
     }
 
@@ -417,10 +388,6 @@ public class GPUController : IDisposable
         _processes = processNames;
         _state = GPUState.Active;
         _gpuInstanceId = gpuInstanceId;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"GPU active [{_processes.Count} processes]");
-
         CheckStateChange(previousState);
     }
 
@@ -428,10 +395,6 @@ public class GPUController : IDisposable
     {
         _state = GPUState.Inactive;
         _gpuInstanceId = gpuInstanceId;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"GPU inactive");
-
         CheckStateChange(previousState);
     }
 

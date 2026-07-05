@@ -22,7 +22,7 @@ public static class HybridModeControlFactory
 {
     public static async Task<AbstractRefreshingControl> GetControlAsync()
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync().WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+        var mi = await MachineCompatibility.GetMachineInformationAsync().WaitAsync(TimeSpan.FromSeconds(5));
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeControl()
             : new ToggleHybridModeControl();
@@ -76,17 +76,17 @@ public static class HybridModeControlFactory
                     Resource.ComboBoxHybridModeControl_RestartRequired_Title,
                     string.Format(Resource.ComboBoxHybridModeControl_RestartRequired_Message, newValue.GetDisplayName()),
                     Resource.RestartNow,
-                    Resource.RestartLater).ConfigureAwait(false);
+                    Resource.RestartLater);
 
-            await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue).ConfigureAwait(false);
+            await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
 
             if (reboot)
             {
-                await Power.RestartAsync().ConfigureAwait(false);
+                await Power.RestartAsync();
                 return;
             }
 
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
         }
 
         protected override void OnStateChangeException(Exception exception)
@@ -119,9 +119,17 @@ public static class HybridModeControlFactory
 
         private async void InfoButton_Click(object sender, RoutedEventArgs e)
         {
-            var states = await Feature.GetAllStatesAsync().ConfigureAwait(false);
-            var window = new ExtendedHybridModeInfoWindow(states) { Owner = Window.GetWindow(this) };
-            window.ShowDialog();
+            try
+            {
+                var states = await Feature.GetAllStatesAsync();
+                var window = new ExtendedHybridModeInfoWindow(states) { Owner = Window.GetWindow(this) };
+                window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Exception in {nameof(InfoButton_Click)}.", ex);
+            }
         }
     }
 
@@ -140,17 +148,17 @@ public static class HybridModeControlFactory
 
         protected override async Task OnStateChange(ToggleSwitch toggle, IFeature<HybridModeState> feature)
         {
-            await base.OnStateChange(toggle, feature).ConfigureAwait(false);
+            await base.OnStateChange(toggle, feature);
 
             var result = await MessageBoxHelper.ShowAsync(
                 this,
                 Resource.ToggleHybridModeControl_RestartRequired_Title,
                 Resource.ToggleHybridModeControl_RestartRequired_Message,
                 Resource.RestartNow,
-                Resource.RestartLater).ConfigureAwait(false);
+                Resource.RestartLater);
 
             if (result)
-                await Power.RestartAsync().ConfigureAwait(false);
+                await Power.RestartAsync();
         }
     }
 }

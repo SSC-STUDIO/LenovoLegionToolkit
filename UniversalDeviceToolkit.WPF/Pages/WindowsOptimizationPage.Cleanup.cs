@@ -19,28 +19,36 @@ public partial class WindowsOptimizationPage
 {
     private async void ScanCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        await ViewModel.ScanCleanupAsync(CancellationToken.None).ConfigureAwait(false);
+        try
+        {
+            await ViewModel.ScanCleanupAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error scanning cleanup.", ex);
+        }
     }
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        var selectedActions = ViewModel.CleanupCategories
-            .SelectMany(c => c.Actions)
-            .Where(a => a.IsEnabled && a.IsSelected)
-            .ToList();
-
-        if (selectedActions.Count == 0)
-        {
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
-                SnackbarType.Warning).ConfigureAwait(false);
-            return;
-        }
-
-        // Logic for running cleanup with progress reporting
         try
         {
+            var selectedActions = ViewModel.CleanupCategories
+                .SelectMany(c => c.Actions)
+                .Where(a => a.IsEnabled && a.IsSelected)
+                .ToList();
+
+            if (selectedActions.Count == 0)
+            {
+                await SnackbarHelper.ShowAsync(
+                    Resource.SettingsPage_WindowsOptimization_Title,
+                    LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
+                    SnackbarType.Warning);
+                return;
+            }
+
+            // Logic for running cleanup with progress reporting
             ViewModel.IsBusy = true;
             ViewModel.IsCleaning = true;
             var swOverall = Stopwatch.StartNew();
@@ -61,7 +69,7 @@ public partial class WindowsOptimizationPage
                 long sizeBefore = 0;
                 try
                 {
-                    sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -69,12 +77,12 @@ public partial class WindowsOptimizationPage
                         Log.Instance.Trace($"Failed to estimate size before cleanup for {action.Key}", ex);
                 }
 
-                await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None).ConfigureAwait(false);
+                await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None);
 
                 long sizeAfter = 0;
                 try
                 {
-                    sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.Key, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -100,16 +108,24 @@ public partial class WindowsOptimizationPage
         }
         finally
         {
-            // Update UI on UI thread
-            await Dispatcher.BeginInvoke(() =>
+            try
             {
-                ViewModel.IsBusy = false;
-                ViewModel.IsCleaning = false;
-                ViewModel.CurrentOperationText = string.Empty;
-                ViewModel.RunCleanupButtonText = string.Empty;
-            });
-            
-            await ViewModel.UpdateEstimatedCleanupSizeAsync().ConfigureAwait(false);
+                // Update UI on UI thread
+                await Dispatcher.BeginInvoke(() =>
+                {
+                    ViewModel.IsBusy = false;
+                    ViewModel.IsCleaning = false;
+                    ViewModel.CurrentOperationText = string.Empty;
+                    ViewModel.RunCleanupButtonText = string.Empty;
+                });
+
+                await ViewModel.UpdateEstimatedCleanupSizeAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Cleanup finally block failed.", ex);
+            }
         }
     }
 

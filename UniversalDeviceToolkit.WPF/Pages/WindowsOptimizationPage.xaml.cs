@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -104,8 +104,8 @@ public partial class WindowsOptimizationPage : Page
         // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
         UnsubscribeFromPackageControlHandlers();
 
-        // Clean up CancellationTokenSource instances to prevent memory leaks
-        CleanupCancellationTokenSources();
+        // Dispose the ViewModel which releases any CTS instances held by it
+        _viewModel.Dispose();
     }
 
     private void TryApplyPendingPluginFocusRequest()
@@ -156,7 +156,7 @@ public partial class WindowsOptimizationPage : Page
         Dispatcher.InvokeAsync(async () =>
         {
             if (e.IsInstalled)
-                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true);
 
             ViewModel.Initialize();
 
@@ -190,47 +190,6 @@ public partial class WindowsOptimizationPage : Page
         }
     }
 
-    private void CleanupCancellationTokenSources()
-    {
-        // Clean up driver filter debounce token source
-        if (_driverFilterDebounceCancellationTokenSource != null)
-        {
-            try
-            {
-                if (!_driverFilterDebounceCancellationTokenSource.Token.IsCancellationRequested)
-                    _driverFilterDebounceCancellationTokenSource.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Already disposed, ignore
-            }
-            finally
-            {
-                _driverFilterDebounceCancellationTokenSource?.Dispose();
-                _driverFilterDebounceCancellationTokenSource = null;
-            }
-        }
-
-        // Clean up driver get packages token source
-        if (_driverGetPackagesTokenSource != null)
-        {
-            try
-            {
-                if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                    _driverGetPackagesTokenSource.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                // Already disposed, ignore
-            }
-            finally
-            {
-                _driverGetPackagesTokenSource?.Dispose();
-                _driverGetPackagesTokenSource = null;
-            }
-        }
-    }
-
     private void NavButton_Checked(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement element) return;
@@ -250,7 +209,7 @@ public partial class WindowsOptimizationPage : Page
         else if (element == _driverDownloadNavButton)
         {
             ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.DriverDownload;
-            InitializeDriverDownloadPage();
+            _ = InitializeDriverDownloadPage();
         }
     }
 
@@ -349,14 +308,23 @@ public partial class WindowsOptimizationPage : Page
 
     private async void ClearSelectionButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
+        try
         {
-            await StartOrPauseSelectedDriversAsync().ConfigureAwait(false);
+            if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
+            {
+                await StartOrPauseSelectedDriversAsync();
+            }
+            else
+            {
+                ViewModel.ClearSelection();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ViewModel.ClearSelection();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error clearing selection.", ex);
         }
     }
 }
 }
+

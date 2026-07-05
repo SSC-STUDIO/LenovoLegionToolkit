@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -123,10 +124,18 @@ public partial class MacroSequenceControl
 
     private async void RecordButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
-            return;
+        try
+        {
+            if (!_settingsComboBox.TryGetSelectedItem(out MacroRecorderSettings settings))
+                return;
 
-        await RecordAsync(settings).ConfigureAwait(false);
+            await RecordAsync(settings);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RecordButton_Click)}.", ex);
+        }
     }
 
     private async Task RecordAsync(MacroRecorderSettings settings)
@@ -143,7 +152,7 @@ public partial class MacroSequenceControl
             _recordingWindow.Owner = Window.GetWindow(this);
             _recordingWindow.Show();
 
-            await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             _recordingWindow.Close();
         }

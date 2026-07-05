@@ -30,16 +30,15 @@ namespace UniversalDeviceToolkit.WPF.Pages;
 
 public partial class WindowsOptimizationPage
 {
+    private readonly DebounceDispatcher _driverDownloadPathDebouncer = new();
     private IPackageDownloader? _driverPackageDownloader;
-    private CancellationTokenSource? _driverGetPackagesTokenSource;
-    private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private List<Package>? _driverPackages;
     private static CultureInfo ActiveDriverCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
 
     private static string DriverText(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveDriverCulture);
 
-    private async void InitializeDriverDownloadPage()
+    private async Task InitializeDriverDownloadPage()
     {
         if (_driverOsComboBox != null && _driverOsComboBox.Items.Count == 0)
                 _driverOsComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
@@ -48,7 +47,7 @@ public partial class WindowsOptimizationPage
             {
                 try
                 {
-                    var machineInfo = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                    var machineInfo = await MachineCompatibility.GetMachineInformationAsync();
                     _driverMachineTypeTextBox.Text = machineInfo.MachineType;
                 }
                 catch (Exception ex)
@@ -119,7 +118,15 @@ public partial class WindowsOptimizationPage
 
     private async void DriverSearchButton_Click(object sender, RoutedEventArgs e)
     {
-        await DriverDownloadPackagesButton_Click(sender, e).ConfigureAwait(false);
+        try
+        {
+            await DriverDownloadPackagesButton_Click(sender, e);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during driver search.", ex);
+        }
     }
 
     private void DriverScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
@@ -134,11 +141,11 @@ public partial class WindowsOptimizationPage
     private async void DriverFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         // Cancel and dispose previous token source
-        if (_driverFilterDebounceCancellationTokenSource != null)
+        if (ViewModel.DriverFilterDebounceCancellationTokenSource != null)
         {
             try
             {
-                await _driverFilterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await ViewModel.DriverFilterDebounceCancellationTokenSource.CancelAsync();
             }
             catch (ObjectDisposedException)
             {
@@ -146,21 +153,21 @@ public partial class WindowsOptimizationPage
             }
             finally
             {
-                _driverFilterDebounceCancellationTokenSource.Dispose();
-                _driverFilterDebounceCancellationTokenSource = null;
+                ViewModel.DriverFilterDebounceCancellationTokenSource.Dispose();
+                ViewModel.DriverFilterDebounceCancellationTokenSource = null;
             }
         }
 
-        _driverFilterDebounceCancellationTokenSource = new CancellationTokenSource();
-        var token = _driverFilterDebounceCancellationTokenSource.Token;
+        ViewModel.DriverFilterDebounceCancellationTokenSource = new CancellationTokenSource();
+        var token = ViewModel.DriverFilterDebounceCancellationTokenSource.Token;
 
         try
         {
-            await Task.Delay(300, token).ConfigureAwait(false);
+            await Task.Delay(300, token);
             if (!token.IsCancellationRequested)
             {
                 // Ensure UI update happens on UI thread
-                Dispatcher.BeginInvoke(() => DriverReload());
+                _ = Dispatcher.BeginInvoke(() => DriverReload());
             }
         }
         catch (TaskCanceledException)
@@ -170,6 +177,11 @@ public partial class WindowsOptimizationPage
         catch (ObjectDisposedException)
         {
             // Token source was disposed, ignore
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in {nameof(DriverFilterTextBox_TextChanged)}.", ex);
         }
     }
 
@@ -208,7 +220,7 @@ public partial class WindowsOptimizationPage
             if (control is null)
                 continue;
 
-            await control.StartAsync().ConfigureAwait(false);
+            await control.StartAsync();
             UpdateDriverRunningState();
             ViewModel.NotifyDriverSelectionChanged();
         }
@@ -267,7 +279,7 @@ public partial class WindowsOptimizationPage
 
     private async Task DriverDownloadPackagesButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!await ShouldInterruptDriverDownloadsIfRunning().ConfigureAwait(false))
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
             return;
 
         var errorOccurred = false;
@@ -303,7 +315,7 @@ public partial class WindowsOptimizationPage
                 _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem(out OS os))
             {
                 await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
-                    Resource.PackagesPage_DownloadFailed_Message).ConfigureAwait(false);
+                    Resource.PackagesPage_DownloadFailed_Message);
                 return;
             }
 
@@ -311,11 +323,11 @@ public partial class WindowsOptimizationPage
                 _driverLoadingIndicator.Visibility = Visibility.Visible;
 
             // Cancel and dispose previous token source
-            if (_driverGetPackagesTokenSource is not null)
+            if (ViewModel.DriverGetPackagesTokenSource is not null)
             {
                 try
                 {
-                    await _driverGetPackagesTokenSource.CancelAsync().ConfigureAwait(false);
+                    await ViewModel.DriverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -323,14 +335,14 @@ public partial class WindowsOptimizationPage
                 }
                 finally
                 {
-                    _driverGetPackagesTokenSource.Dispose();
-                    _driverGetPackagesTokenSource = null;
+                    ViewModel.DriverGetPackagesTokenSource.Dispose();
+                    ViewModel.DriverGetPackagesTokenSource = null;
                 }
             }
 
-            _driverGetPackagesTokenSource = new CancellationTokenSource();
+            ViewModel.DriverGetPackagesTokenSource = new CancellationTokenSource();
 
-            var token = _driverGetPackagesTokenSource.Token;
+            var token = ViewModel.DriverGetPackagesTokenSource.Token;
 
             var packageDownloaderType = new[] { _driverSourcePrimaryRadio, _driverSourceSecondaryRadio }
                 .Where(r => r != null && r.IsChecked == true)
@@ -347,12 +359,12 @@ public partial class WindowsOptimizationPage
             }
 
             _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
-            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token).ConfigureAwait(false);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
 
             _driverPackages = packages;
 
             // Ensure UI update happens on UI thread
-            Dispatcher.BeginInvoke(() => DriverReload());
+            _ = Dispatcher.BeginInvoke(() => DriverReload());
 
             StopDriverRetryTimer();
 
@@ -367,18 +379,18 @@ public partial class WindowsOptimizationPage
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading packages.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
             errorOccurred = true;
         }
         finally
         {
             // Clean up token source
-            if (_driverGetPackagesTokenSource != null)
+            if (ViewModel.DriverGetPackagesTokenSource != null)
             {
                 try
                 {
-                    if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                        await _driverGetPackagesTokenSource.CancelAsync().ConfigureAwait(false);
+                    if (!ViewModel.DriverGetPackagesTokenSource.Token.IsCancellationRequested)
+                        await ViewModel.DriverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -386,13 +398,13 @@ public partial class WindowsOptimizationPage
                 }
                 finally
                 {
-                    _driverGetPackagesTokenSource?.Dispose();
-                    _driverGetPackagesTokenSource = null;
+                    ViewModel.DriverGetPackagesTokenSource?.Dispose();
+                    ViewModel.DriverGetPackagesTokenSource = null;
                 }
             }
 
             // UI updates must be on UI thread
-            Dispatcher.BeginInvoke(() =>
+            _ = Dispatcher.BeginInvoke(() =>
             {
                 if (!errorOccurred && _driverLoadingIndicator != null)
                     _driverLoadingIndicator.Visibility = Visibility.Collapsed;
@@ -643,10 +655,13 @@ public partial class WindowsOptimizationPage
                 pc.Status is PackageControl.PackageStatus.Downloading or PackageControl.PackageStatus.Installing))
             return true;
 
-        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message).ConfigureAwait(false);
+        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);
     }
 
     private void DriverDownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)
+        => _driverDownloadPathDebouncer.Debounce(400, PersistDriverDownloadPath);
+
+    private void PersistDriverDownloadPath()
     {
         if (_driverDownloadToText != null && Directory.Exists(_driverDownloadToText.Text))
         {

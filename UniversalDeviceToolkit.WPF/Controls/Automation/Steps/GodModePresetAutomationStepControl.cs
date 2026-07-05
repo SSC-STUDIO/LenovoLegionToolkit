@@ -46,7 +46,7 @@ public class GodModePresetAutomationStepControl : AbstractAutomationStepControl<
 
     protected override async Task RefreshAsync()
     {
-        var state = await AutomationStep.GetStateAsync().ConfigureAwait(false);
+        var state = await AutomationStep.GetStateAsync();
         var presets = state.Presets
             .OrderBy(kv => kv.Value.Name)
             .ToArray();

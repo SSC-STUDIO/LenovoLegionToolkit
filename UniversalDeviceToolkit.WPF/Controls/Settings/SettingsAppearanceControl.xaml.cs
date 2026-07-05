@@ -73,7 +73,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.Visibility = Visibility.Visible;
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
 
-        var language = await languageTask.ConfigureAwait(false);
+        var language = await languageTask;
         _currentLanguage = language;
         if (languages.Length > 1)
         {
@@ -101,82 +101,106 @@ public partial class SettingsAppearanceControl
 
     private async void LangComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
-
-        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
-            return;
-
-        UpdateLanguagePackButtons();
-
-        if (!_languagePackManager.IsInstalled(cultureInfo))
+        try
         {
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_Language_NotInstalled_Title,
-                Resource.SettingsPage_Language_NotInstalled_Message,
-                SnackbarType.Info).ConfigureAwait(false);
-            return;
-        }
+            if (_isRefreshing)
+                return;
 
-        await LocalizationHelper.SetLanguageAsync(cultureInfo).ConfigureAwait(false);
-        App.Current.RestartMainWindow();
+            if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+                return;
+
+            UpdateLanguagePackButtons();
+
+            if (!_languagePackManager.IsInstalled(cultureInfo))
+            {
+                await SnackbarHelper.ShowAsync(
+                    Resource.SettingsPage_Language_NotInstalled_Title,
+                    Resource.SettingsPage_Language_NotInstalled_Message,
+                    SnackbarType.Info);
+                return;
+            }
+
+            await LocalizationHelper.SetLanguageAsync(cultureInfo);
+            App.Current.RestartMainWindow();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(LangComboBox_SelectionChanged)}.", ex);
+        }
     }
 
     private async void InstallLanguageButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isLanguagePackOperationInProgress || _languagePackInstallCoordinator.IsActive)
-            return;
+        try
+        {
+            if (_isLanguagePackOperationInProgress || _languagePackInstallCoordinator.IsActive)
+                return;
 
-        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
-            return;
+            if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+                return;
 
-        if (_languagePackManager.IsInstalled(cultureInfo))
-            return;
+            if (_languagePackManager.IsInstalled(cultureInfo))
+                return;
 
-        await RunLanguagePackOperationAsync(
-            cultureInfo,
-            Resource.SettingsPage_Language_Installing,
-            async (_, token) =>
-            {
-                await _languagePackInstallCoordinator.InstallAsync(cultureInfo, token).ConfigureAwait(false);
-                _currentLanguage = cultureInfo;
-                await LocalizationHelper.SetLanguageAsync(cultureInfo).ConfigureAwait(false);
-                UpdateLanguagePackButtons();
-                App.Current.RestartMainWindow();
-            },
-            Resource.SettingsPage_Language_InstallFailed,
-            reportInstallProgress: true).ConfigureAwait(false);
+            await RunLanguagePackOperationAsync(
+                cultureInfo,
+                Resource.SettingsPage_Language_Installing,
+                async (_, token) =>
+                {
+                    await _languagePackInstallCoordinator.InstallAsync(cultureInfo, token);
+                    _currentLanguage = cultureInfo;
+                    await LocalizationHelper.SetLanguageAsync(cultureInfo);
+                    UpdateLanguagePackButtons();
+                    App.Current.RestartMainWindow();
+                },
+                Resource.SettingsPage_Language_InstallFailed,
+                reportInstallProgress: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(InstallLanguageButton_Click)}.", ex);
+        }
     }
 
     private async void UninstallLanguageButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isLanguagePackOperationInProgress)
-            return;
+        try
+        {
+            if (_isLanguagePackOperationInProgress)
+                return;
 
-        if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
-            return;
+            if (!_langComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo) || cultureInfo is null)
+                return;
 
-        if (_languagePackManager.IsEnglish(cultureInfo) || !_languagePackManager.IsInstalled(cultureInfo))
-            return;
+            if (_languagePackManager.IsEnglish(cultureInfo) || !_languagePackManager.IsInstalled(cultureInfo))
+                return;
 
-        await RunLanguagePackOperationAsync(
-            cultureInfo,
-            Resource.SettingsPage_Language_Uninstalling,
-            async (_, _) =>
-            {
-                if (_currentLanguage is not null && _currentLanguage.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase))
+            await RunLanguagePackOperationAsync(
+                cultureInfo,
+                Resource.SettingsPage_Language_Uninstalling,
+                async (_, _) =>
                 {
-                    _languagePackManager.QueueUninstall(cultureInfo);
-                    await LocalizationHelper.SetLanguageAsync(new CultureInfo("en")).ConfigureAwait(false);
-                    App.Current.RestartMainWindow();
-                    return;
-                }
+                    if (_currentLanguage is not null && _currentLanguage.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _languagePackManager.QueueUninstall(cultureInfo);
+                        await LocalizationHelper.SetLanguageAsync(new CultureInfo("en"));
+                        App.Current.RestartMainWindow();
+                        return;
+                    }
 
-                _languagePackManager.Uninstall(cultureInfo);
-                await RefreshAsync().ConfigureAwait(false);
-            },
-            Resource.SettingsPage_Language_UninstallFailed,
-            reportInstallProgress: false).ConfigureAwait(false);
+                    _languagePackManager.Uninstall(cultureInfo);
+                    await RefreshAsync();
+                },
+                Resource.SettingsPage_Language_UninstallFailed,
+                reportInstallProgress: false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(UninstallLanguageButton_Click)}.", ex);
+        }
     }
 
     private void TemperatureComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -266,11 +290,11 @@ public partial class SettingsAppearanceControl
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-            await operation(progress, cts.Token).ConfigureAwait(false);
+            await operation(progress, cts.Token);
         }
         catch (Exception ex)
         {
-            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(errorTitle, FormatExceptionMessage(ex), SnackbarType.Error);
             RestoreCurrentLanguageSelection();
         }
         finally

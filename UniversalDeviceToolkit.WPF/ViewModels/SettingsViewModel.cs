@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
@@ -42,7 +42,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task InitializeNavigationAsync()
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
         IsSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
         var items = new List<NavigationItemViewModel>
@@ -75,11 +75,12 @@ public partial class SettingsViewModel : ObservableObject
             return;
 
         IsInitialized = true;
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public FnKeysDisabler FnKeysDisabler => _fnKeysDisabler;
 }
 
 public record NavigationItemViewModel(string Key, string Title, SymbolRegular Icon);
+
 

@@ -47,9 +47,6 @@ internal unsafe class EffectiveGameModeDetector
 
     private void Callback(EFFECTIVE_POWER_MODE mode, void* context)
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Effective power mode is {mode}.");
-
         var state = mode == EFFECTIVE_POWER_MODE.EffectivePowerModeGameMode;
 
         _lastState ??= state;
@@ -58,6 +55,9 @@ internal unsafe class EffectiveGameModeDetector
             return;
 
         _lastState = state;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Effective power mode changed to {mode}.");
 
         Changed?.Invoke(this, state);
     }

@@ -1042,7 +1042,6 @@
                                                 <Setter Property="Margin" Value="0,0,0,8" />
                                                 <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
                                                 <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="ListViewItem">

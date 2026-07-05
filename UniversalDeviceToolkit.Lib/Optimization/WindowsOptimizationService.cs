@@ -477,18 +477,38 @@ public class WindowsOptimizationService
             // Build process start info with parameterized arguments
             var startInfo = BuildProcessStartInfo(fileName, arguments, command);
 
-            using var process = new Process { StartInfo = startInfo };
-            process.Start();
-
-            var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-            var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
-
-            await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
-
-            if (process.ExitCode != 0)
+            Process? process = null;
+            try
             {
-                var errorOutput = (await errorTask.ConfigureAwait(false)).Trim();
-                throw ExceptionHelper.CommandExitedNonZero(fileName, process.ExitCode, errorOutput);
+                process = new Process { StartInfo = startInfo };
+                process.Start();
+
+                var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+                var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+                await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
+
+                if (process.ExitCode != 0)
+                {
+                    var errorOutput = (await errorTask.ConfigureAwait(false)).Trim();
+                    throw ExceptionHelper.CommandExitedNonZero(fileName, process.ExitCode, errorOutput);
+                }
+            }
+            finally
+            {
+                if (process is not null)
+                {
+                    try
+                    {
+                        if (!process.HasExited)
+                            process.Kill(true);
+                    }
+                    catch
+                    {
+                        // Ignore process kill failures; process may already have exited or been disposed.
+                    }
+                    process.Dispose();
+                }
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -755,7 +775,21 @@ public class WindowsOptimizationService
             var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
             var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
-            await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
+            try
+            {
+                await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
+            }
+            finally
+            {
+                try
+                {
+                    if (!process.HasExited)
+                        process.Kill(true);
+                }
+                catch
+                {
+                }
+            }
 
             var output = await outputTask.ConfigureAwait(false);
             return process.ExitCode == 0

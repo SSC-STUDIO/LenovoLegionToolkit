@@ -84,37 +84,53 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _gpuController.IsSupportedAsync().ConfigureAwait(false))
+        if (!await _gpuController.IsSupportedAsync())
         {
             Visibility = Visibility.Collapsed;
             IsGpuContentReady = false;
-            await _gpuController.StopAsync().ConfigureAwait(false);
+            await _gpuController.StopAsync();
             return;
         }
 
         Visibility = Visibility.Visible;
         IsGpuContentReady = true;
 
-        await _gpuController.StartAsync().ConfigureAwait(false);
+        await _gpuController.StartAsync();
     }
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
-            return;
+        try
+        {
+            if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
+                return;
 
-        Visibility = Visibility.Visible;
-        await RefreshAsync().ConfigureAwait(false);
+            Visibility = Visibility.Visible;
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NativeWindowsMessageListener_Changed)}.", ex);
+        }
     }
 
     private async void DiscreteGPUControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            return;
+        try
+        {
+            if (IsVisible)
+                return;
 
-        IsGpuContentReady = false;
+            IsGpuContentReady = false;
 
-        await _gpuController.StopAsync().ConfigureAwait(false);
+            await _gpuController.StopAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DiscreteGPUControl_IsVisibleChanged)}.", ex);
+        }
     }
 
     private void GpuController_Refreshed(object? sender, GPUStatus e) => Dispatcher.BeginInvoke(() =>
@@ -216,11 +232,12 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private async void KillAppsMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var originalCanDeactivate = CanDeactivateGpu;
-        CanDeactivateGpu = false;
 
         try
         {
-            await _gpuController.KillGPUProcessesAsync().ConfigureAwait(false);
+            CanDeactivateGpu = false;
+
+            await _gpuController.KillGPUProcessesAsync();
         }
         catch (Exception ex)
         {
@@ -236,11 +253,12 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private async void RestartGPUMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var originalCanDeactivate = CanDeactivateGpu;
-        CanDeactivateGpu = false;
 
         try
         {
-            await _gpuController.RestartGPUAsync().ConfigureAwait(false);
+            CanDeactivateGpu = false;
+
+            await _gpuController.RestartGPUAsync();
         }
         catch (Exception ex)
         {

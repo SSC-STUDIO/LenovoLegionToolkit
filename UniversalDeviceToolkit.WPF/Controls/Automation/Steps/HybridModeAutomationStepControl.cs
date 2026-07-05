@@ -11,7 +11,7 @@ public static class HybridModeAutomationStepControlFactory
 {
     public static async Task<AbstractAutomationStepControl<IAutomationStep<HybridModeState>>> GetControlAsync(IAutomationStep<HybridModeState> step)
     {
-        var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeAutomationStepControl(step)
             : new ToggleHybridModeAutomationStepControl(step);

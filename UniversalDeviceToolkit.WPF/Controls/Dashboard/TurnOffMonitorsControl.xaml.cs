@@ -14,11 +14,11 @@ public partial class TurnOffMonitorsControl : AbstractRefreshingControl
 
     private async void TurnOffButton_Click(object sender, RoutedEventArgs e)
     {
-        _turnOffButton.IsEnabled = false;
-
         try
         {
-            await _nativeWindowsMessageListener.TurnOffMonitorAsync().ConfigureAwait(false);
+            _turnOffButton.IsEnabled = false;
+
+            await _nativeWindowsMessageListener.TurnOffMonitorAsync();
         }
         catch (System.Exception ex)
         {

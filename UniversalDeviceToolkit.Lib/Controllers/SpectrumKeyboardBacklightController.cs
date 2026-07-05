@@ -50,6 +50,8 @@ public class SpectrumKeyboardBacklightController : IDisposable
 
     private CancellationTokenSource? _auroraRefreshCancellationTokenSource;
     private Task? _auroraRefreshTask;
+    private bool _auroraCaptureFailureLogged;
+    private readonly List<LENOVO_SPECTRUM_AURORA_ITEM> _auroraItemsBuffer = new();
 
     private static readonly JsonSerializerOptions SpectrumProfileJsonOptions = LltJson.CreateSettingsOptions();
 
@@ -342,6 +344,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
             var orphanedTask = _auroraRefreshTask;
             _auroraRefreshTask = null;
 
+            if (_auroraRefreshCancellationTokenSource is not null)
+            {
+                _auroraRefreshCancellationTokenSource.Dispose();
+                _auroraRefreshCancellationTokenSource = null;
+            }
+
             if (orphanedTask is not null)
             {
                 try
@@ -488,18 +496,25 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 try
                 {
                     _screenCapture.CaptureScreen(ref colorBuffer, width, height, token);
+                    _auroraCaptureFailureLogged = false;
                 }
                 catch (Exception ex)
                 {
-                    if (Log.Instance.IsTraceEnabled)
+                    if (Log.Instance.IsTraceEnabled && !_auroraCaptureFailureLogged)
+                    {
                         Log.Instance.Trace($"Screen capture failed. Delaying before next refresh...", ex);
+                        _auroraCaptureFailureLogged = true;
+                    }
 
                     await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
                 }
 
                 token.ThrowIfCancellationRequested();
 
-                var items = new List<LENOVO_SPECTRUM_AURORA_ITEM>(width * height);
+                _auroraItemsBuffer.Clear();
+                if (_auroraItemsBuffer.Capacity < width * height)
+                    _auroraItemsBuffer.Capacity = width * height;
+                var items = _auroraItemsBuffer;
 
                 var avgR = 0;
                 var avgG = 0;
@@ -1005,7 +1020,7 @@ var result = new LENOVO_SPECTRUM_EFFECT(header, index + 1, colors, keys);
                 {
                     _auroraRefreshCancellationTokenSource?.Cancel();
                     _auroraRefreshCancellationTokenSource?.Dispose();
-                    _auroraRefreshTask?.Dispose();
+                    _auroraRefreshCancellationTokenSource = null;
                     _deviceHandle?.Dispose();
                 }
                 catch (Exception ex)

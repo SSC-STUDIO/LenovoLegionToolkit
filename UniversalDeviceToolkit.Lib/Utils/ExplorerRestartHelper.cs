@@ -46,6 +46,7 @@ public static class ExplorerRestartHelper
             return;
 
         await killProcess.WaitForExitAsync().ConfigureAwait(false);
+        killProcess.Kill(true);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace("Explorer termination command completed.");

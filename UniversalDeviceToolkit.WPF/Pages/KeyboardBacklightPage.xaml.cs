@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.RGB;
@@ -25,31 +25,40 @@ public partial class KeyboardBacklightPage
 
     private async void KeyboardBacklightPage_Initialized(object? sender, EventArgs e)
     {
-        _titleTextBlock.Visibility = Visibility.Collapsed;
-
-        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null).ConfigureAwait(false);
-
-        if (_viewModel.IsSpectrumSupported)
-        {
-            _titleTextBlock.Visibility = Visibility.Visible;
-            var control = new SpectrumKeyboardBacklightControl();
-            _content.Children.Add(control);
-        }
-        else if (_viewModel.IsRGBSupported)
-        {
-            _titleTextBlock.Visibility = Visibility.Visible;
-            var control = new RGBKeyboardBacklightControl();
-            _content.Children.Add(control);
-        }
-        else
+        try
         {
             _titleTextBlock.Visibility = Visibility.Collapsed;
-            _content.Visibility = Visibility.Collapsed;
-        }
 
-        _loader.IsLoading = false;
+            await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
+
+            if (_viewModel.IsSpectrumSupported)
+            {
+                _titleTextBlock.Visibility = Visibility.Visible;
+                var control = new SpectrumKeyboardBacklightControl();
+                _content.Children.Add(control);
+            }
+            else if (_viewModel.IsRGBSupported)
+            {
+                _titleTextBlock.Visibility = Visibility.Visible;
+                var control = new RGBKeyboardBacklightControl();
+                _content.Children.Add(control);
+            }
+            else
+            {
+                _titleTextBlock.Visibility = Visibility.Collapsed;
+                _content.Visibility = Visibility.Collapsed;
+            }
+
+            _loader.IsLoading = false;
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing keyboard backlight page.", ex);
+        }
     }
 
-    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync().ConfigureAwait(false);
+    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
 }
 }
+

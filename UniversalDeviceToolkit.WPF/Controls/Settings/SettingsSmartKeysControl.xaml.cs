@@ -30,7 +30,7 @@ public partial class SettingsSmartKeysControl
             _settings.Store.SmartFnLockFlags,
             m => m is ModifierKey.None ? Resource.Off : m.GetFlagsDisplayName(ModifierKey.None));
 
-        var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+        var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
         _smartKeySinglePressActionCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _smartKeyDoublePressActionCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
 

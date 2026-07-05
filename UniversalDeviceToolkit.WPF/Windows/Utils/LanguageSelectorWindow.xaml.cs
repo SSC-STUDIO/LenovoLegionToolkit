@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -44,16 +44,24 @@ public partial class LanguageSelectorWindow
 
     private async void OK_Click(object sender, RoutedEventArgs e)
     {
-        if (_isInstalling)
-            return;
+        try
+        {
+            if (_isInstalling)
+                return;
 
-        _languageComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo);
+            _languageComboBox.TryGetSelectedItem(out CultureInfo? cultureInfo);
 
-        if (cultureInfo is not null && !await EnsureLanguageInstalledAsync(cultureInfo).ConfigureAwait(false))
-            return;
+            if (cultureInfo is not null && !await EnsureLanguageInstalledAsync(cultureInfo))
+                return;
 
-        _taskCompletionSource.TrySetResult(cultureInfo);
-        Close();
+            _taskCompletionSource.TrySetResult(cultureInfo);
+            Close();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(OK_Click)}.", ex);
+        }
     }
 
     private async Task<bool> EnsureLanguageInstalledAsync(CultureInfo cultureInfo)
@@ -76,7 +84,7 @@ public partial class LanguageSelectorWindow
         try
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-            await _languagePackManager.InstallAsync(cultureInfo, progress, cts.Token).ConfigureAwait(false);
+            await _languagePackManager.InstallAsync(cultureInfo, progress, cts.Token);
             return true;
         }
         catch (Exception ex)
@@ -139,3 +147,4 @@ public partial class LanguageSelectorWindow
     }
 }
 }
+

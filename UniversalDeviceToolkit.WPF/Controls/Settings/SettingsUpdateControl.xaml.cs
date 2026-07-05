@@ -16,6 +16,7 @@ public partial class SettingsUpdateControl
 {
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
     private readonly UpdateCheckSettings _updateCheckSettings = IoCContainer.Resolve<UpdateCheckSettings>();
+    private readonly DebounceDispatcher _repositorySettingsDebouncer = new();
     private bool _isRefreshing;
 
     private static string T(string key, string fallback) =>
@@ -58,14 +59,22 @@ public partial class SettingsUpdateControl
 
     private async void CheckUpdates_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        if (App.Current.MainWindow is not MainWindow mainWindow)
-            return;
+            if (App.Current.MainWindow is not MainWindow mainWindow)
+                return;
 
-        await mainWindow.CheckForUpdates(true).ConfigureAwait(false);
-        await SnackbarHelper.ShowAsync(Resource.SettingsPage_CheckUpdates_Started_Title, type: SnackbarType.Info).ConfigureAwait(false);
+            await mainWindow.CheckForUpdates(true);
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_CheckUpdates_Started_Title, type: SnackbarType.Info);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(CheckUpdates_Click)}.", ex);
+        }
     }
 
     private void UpdateCheckFrequencyComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -86,12 +95,7 @@ public partial class SettingsUpdateControl
         if (_isRefreshing)
             return;
 
-        if (sender is not Wpf.Ui.Controls.TextBox textBox)
-            return;
-
-        var text = textBox.Text?.Trim();
-        _updateCheckSettings.Store.UpdateRepositoryOwner = string.IsNullOrWhiteSpace(text) ? null : text;
-        _updateCheckSettings.SynchronizeStore();
+        _repositorySettingsDebouncer.Debounce(400, PersistRepositorySettings);
     }
 
     private void UpdateRepositoryNameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -99,11 +103,17 @@ public partial class SettingsUpdateControl
         if (_isRefreshing)
             return;
 
-        if (sender is not Wpf.Ui.Controls.TextBox textBox)
-            return;
+        _repositorySettingsDebouncer.Debounce(400, PersistRepositorySettings);
+    }
 
-        var text = textBox.Text?.Trim();
-        _updateCheckSettings.Store.UpdateRepositoryName = string.IsNullOrWhiteSpace(text) ? null : text;
+    private void PersistRepositorySettings()
+    {
+        var ownerText = _updateRepositoryOwnerTextBox.Text?.Trim();
+        _updateCheckSettings.Store.UpdateRepositoryOwner = string.IsNullOrWhiteSpace(ownerText) ? null : ownerText;
+
+        var nameText = _updateRepositoryNameTextBox.Text?.Trim();
+        _updateCheckSettings.Store.UpdateRepositoryName = string.IsNullOrWhiteSpace(nameText) ? null : nameText;
+
         _updateCheckSettings.SynchronizeStore();
     }
 }

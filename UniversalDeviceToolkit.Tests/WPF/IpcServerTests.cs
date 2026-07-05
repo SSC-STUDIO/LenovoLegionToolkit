@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using UniversalDeviceToolkit.WPF.CLI;
@@ -125,7 +126,7 @@ public class IpcServerTests
         cacheField.SetValue(null, "power-mode\nbattery");
         try
         {
-            var resultTask = method!.Invoke(null, []) as Task<string?>;
+            var resultTask = method!.Invoke(null, [CancellationToken.None]) as Task<string?>;
             resultTask.Should().NotBeNull();
 
             var result = await resultTask!;

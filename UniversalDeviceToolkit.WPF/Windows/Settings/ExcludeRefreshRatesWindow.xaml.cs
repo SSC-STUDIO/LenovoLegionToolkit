@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,6 +8,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -26,8 +28,16 @@ public partial class ExcludeRefreshRatesWindow
 
     private async void PickProcessesWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PickProcessesWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()
@@ -36,21 +46,21 @@ public partial class ExcludeRefreshRatesWindow
 
         var loadingTask = Task.Delay(500);
 
-        var refreshRates = await _feature.GetAllStatesAsync().ConfigureAwait(false);
+        var refreshRates = await _feature.GetAllStatesAsync();
         var excluded = _settings.Store.ExcludedRefreshRates;
 
         if (refreshRates.IsEmpty())
         {
-            await Task.Delay(500).ConfigureAwait(false);
+            await Task.Delay(500);
 
             var result = await MessageBoxHelper.ShowAsync(this,
                 Resource.ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title,
                 Resource.ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message,
                 Resource.TryAgain,
-                Resource.Cancel).ConfigureAwait(false);
+                Resource.Cancel);
 
             if (result)
-                await RefreshAsync().ConfigureAwait(false);
+                await RefreshAsync();
             else
                 Close();
 
@@ -73,7 +83,7 @@ public partial class ExcludeRefreshRatesWindow
             _list.Items.Add(item);
         }
 
-        await loadingTask.ConfigureAwait(false);
+        await loadingTask;
 
         _loader.IsLoading = false;
     }
@@ -149,3 +159,4 @@ public partial class ExcludeRefreshRatesWindow
     }
 }
 }
+

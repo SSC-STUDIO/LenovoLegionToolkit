@@ -5,6 +5,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.CLI;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
@@ -36,24 +37,40 @@ public partial class SettingsIntegrationsControl
 
     private async void HWiNFOIntegrationToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        _integrationsSettings.Store.HWiNFO = _hwinfoIntegrationToggle.IsChecked ?? false;
-        _integrationsSettings.SynchronizeStore();
+            _integrationsSettings.Store.HWiNFO = _hwinfoIntegrationToggle.IsChecked ?? false;
+            _integrationsSettings.SynchronizeStore();
 
-        await _hwinfoIntegration.StartStopIfNeededAsync().ConfigureAwait(false);
+            await _hwinfoIntegration.StartStopIfNeededAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(HWiNFOIntegrationToggle_Click)}.", ex);
+        }
     }
 
     private async void CLIInterfaceToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        _integrationsSettings.Store.CLI = _cliInterfaceToggle.IsChecked ?? false;
-        _integrationsSettings.SynchronizeStore();
+            _integrationsSettings.Store.CLI = _cliInterfaceToggle.IsChecked ?? false;
+            _integrationsSettings.SynchronizeStore();
 
-        await _ipcServer.StartStopIfNeededAsync().ConfigureAwait(false);
+            await _ipcServer.StartStopIfNeededAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(CLIInterfaceToggle_Click)}.", ex);
+        }
     }
 
     private void CLIPathToggle_Click(object sender, RoutedEventArgs e)

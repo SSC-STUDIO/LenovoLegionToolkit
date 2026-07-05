@@ -1,5 +1,7 @@
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Input;
+using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
@@ -17,6 +19,11 @@ public partial class ErrorDialogWindow
             Owner = owner;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
         }
+
+        _continueButton.Content = Resource.Continue;
+        _exitButton.Content = Resource.Exit;
+        AutomationProperties.SetName(_continueButton, Resource.Continue);
+        AutomationProperties.SetName(_exitButton, Resource.Exit);
 
         _exceptionText.Text = exceptionMessage;
 

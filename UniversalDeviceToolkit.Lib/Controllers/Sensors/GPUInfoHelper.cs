@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using LenovoLegionToolkit.Lib.Utils;
 using NvAPIWrapper.Native.GPU;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -35,10 +34,8 @@ public static class GPUInfoHelper
 
             return (int)(Convert.ToDouble(powerValue) / 1000.0);
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get NVML data: {ex.Message}", ex);
             return -1;
         }
     }
@@ -65,7 +62,7 @@ public static class GPUInfoHelper
             var voltageValue = currentVoltageProp.GetValue(voltageSensor);
             if (voltageValue == null) return 0;
 
-            var currentVoltage = voltageValue switch
+            return voltageValue switch
             {
                 uint voltageUint => voltageUint / 1000.0,
                 int voltageInt => voltageInt / 1000.0,
@@ -73,16 +70,9 @@ public static class GPUInfoHelper
                 double voltageDouble => voltageDouble,
                 _ => Convert.ToDouble(voltageValue)
             };
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"GPU voltage: {currentVoltage}V (raw: {voltageValue})");
-
-            return currentVoltage;
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get GPU voltage: {ex.Message}");
             return 0;
         }
     }
@@ -127,10 +117,8 @@ public static class GPUInfoHelper
 
             return -1;
         }
-        catch (Exception ex)
+        catch
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get GPU info: {ex.Message}", ex);
             return -1;
         }
     }

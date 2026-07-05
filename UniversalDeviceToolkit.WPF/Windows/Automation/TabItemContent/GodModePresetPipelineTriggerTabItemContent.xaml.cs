@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -35,30 +35,39 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
 
     private async void GodModePresetPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
-        IReadOnlyDictionary<Guid, GodModePreset> presets;
         try
         {
-            presets = (await _godModeController.GetStateAsync().ConfigureAwait(false)).Presets;
+            IReadOnlyDictionary<Guid, GodModePreset> presets;
+            try
+            {
+                presets = (await _godModeController.GetStateAsync()).Presets;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to load God Mode presets for automation trigger configuration.", ex);
+                presets = new Dictionary<Guid, GodModePreset>();
+            }
+
+            _content.Children.Clear();
+            foreach (var (guid, preset) in presets.OrderBy(kv => kv.Value.Name))
+            {
+                var radio = new RadioButton
+                {
+                    Content = preset.Name,
+                    Tag = guid,
+                    IsChecked = guid == _trigger.PresetId,
+                    Margin = new(0, 0, 0, 8)
+                };
+                _content.Children.Add(radio);
+            }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to load God Mode presets for automation trigger configuration.", ex);
-            presets = new Dictionary<Guid, GodModePreset>();
-        }
-
-        _content.Children.Clear();
-        foreach (var (guid, preset) in presets.OrderBy(kv => kv.Value.Name))
-        {
-            var radio = new RadioButton
-            {
-                Content = preset.Name,
-                Tag = guid,
-                IsChecked = guid == _trigger.PresetId,
-                Margin = new(0, 0, 0, 8)
-            };
-            _content.Children.Add(radio);
+                Log.Instance.Trace("Failed to initialize God Mode preset automation trigger tab.", ex);
         }
     }
 }
 }
+

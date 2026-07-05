@@ -93,7 +93,7 @@ public partial class App
             if (Log.Instance.IsTraceEnabled && logOnSuccess)
                 Log.Instance.Trace($"Initializing {operationName}...");
 
-            await action();
+            await action().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -110,39 +110,26 @@ public partial class App
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
-#if DEBUG
-        if (Debugger.IsAttached)
+        try
         {
-            Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)
-                .Where(p => p.Id != Environment.ProcessId)
-                .ForEach(p =>
-                {
-                    p.Kill();
-                    p.WaitForExit();
-                });
+            var orchestrator = new StartupOrchestrator(this, e);
+            _orchestrator = orchestrator;
+            var exitCode = await orchestrator.RunAsync();
+
+            if (exitCode != 0)
+                Environment.Exit(exitCode);
         }
-#endif
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Application_Startup)}.", ex);
+        }
+    }
 
-        var flags = new Flags(e.Args);
-
-        Log.Instance.IsTraceEnabled = flags.IsTraceEnabled;
-
-        ApplyStartupOverrides(flags);
-
-        Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
-
+    internal void RegisterExceptionHandlers()
+    {
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Flags: {flags}");
-
-        var orchestrator = new StartupOrchestrator(flags);
-        _orchestrator = orchestrator;
-        var exitCode = await orchestrator.RunAsync(e);
-
-        if (exitCode != 0)
-            Environment.Exit(exitCode);
     }
 
     internal static async Task InitializePluginsAsync()
@@ -157,7 +144,7 @@ public partial class App
 
             // Scan and load plugins from the plugins directory
             // This will automatically discover and register external plugins
-            await pluginManager.ScanAndLoadPluginsAsync();
+            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugins initialized successfully.");
@@ -173,7 +160,7 @@ public partial class App
     {
         try
         {
-            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation);
+            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -312,17 +299,17 @@ public partial class App
 
         if (!task.IsCompleted)
         {
-            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS));
+            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS)).ConfigureAwait(false);
             if (completedTask != task)
             {
                 _backgroundInitializationCancellationTokenSource?.Cancel();
-                try { await Task.WhenAny(task, Task.Delay(500)); }
+                try { await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false); }
                 catch { /* Background task cancellation failed - app startup continues */ }
                 return;
             }
         }
 
-        try { await task; }
+        try { await task.ConfigureAwait(false); }
         catch { /* Background initialization failed - app continues startup */ }
     }
 
@@ -345,7 +332,7 @@ public partial class App
             {
                 try
                 {
-                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000));
+                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000)).ConfigureAwait(false);
                     if (completedTask != _backgroundInitializationTask)
                     {
                         if (Log.Instance.IsTraceEnabled)
@@ -423,21 +410,36 @@ public partial class App
 
     private async void Application_Exit(object sender, ExitEventArgs e)
     {
-        lock (_shutdownLock)
-            _inExitHandler = true;
+        try
+        {
+            lock (_shutdownLock)
+                _inExitHandler = true;
 
-        PluginHostContext.Reset();
+            PluginHostContext.Reset();
 
-        try { await ShutdownAsync(true); }
-        catch { /* Shutdown failed - continue with exit anyway */ }
+            try { await ShutdownAsync(true); }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Shutdown failed during Application_Exit.", ex);
+            }
 
-        try { Log.Instance.Shutdown(); }
-        catch { /* Log shutdown failed - continue with exit */ }
+            try { Log.Instance.Shutdown(); }
+            catch { /* Log shutdown failed - continue with exit */ }
 
-        StopMacroControllerSafely();
-        StopSingleInstanceThreadSafely();
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
 
-        ForceExit((uint)e.ApplicationExitCode);
+            await ForceExitAsync((uint)e.ApplicationExitCode);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Application_Exit)}.", ex);
+
+            try { ExitProcess((uint)e.ApplicationExitCode); }
+            catch { /* last-resort exit */ }
+        }
     }
 
     public void RestartMainWindow()
@@ -504,15 +506,12 @@ public partial class App
         _singleInstanceGuard = null;
     }
 
-    private void ForceExit(uint exitCode)
+    private Task ForceExitAsync(uint exitCode)
     {
-        ThreadPool.QueueUserWorkItem(_ =>
-        {
-            Thread.Sleep(100);
-            try { Environment.Exit((int)exitCode); }
-            catch { /* Environment.Exit failed - use fallback exit method */ }
-            ExitProcess(exitCode);
-        });
+        try { Environment.Exit((int)exitCode); }
+        catch { /* Environment.Exit failed - use fallback exit method */ }
+        ExitProcess(exitCode);
+        return Task.CompletedTask;
     }
 
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
@@ -522,7 +521,7 @@ public partial class App
             if (TryGetCachedService<T>() is not { } service)
                 return;
 
-            await stopAction(service);
+            await stopAction(service).ConfigureAwait(false);
         }
         catch { /* Service stop failed during shutdown - continue cleanup */ }
     }
@@ -542,7 +541,7 @@ public partial class App
             shutdownTask = _shutdownTask;
         }
 
-        await shutdownTask;
+        await shutdownTask.ConfigureAwait(false);
 
         bool shouldInvokeShutdown;
 
@@ -575,11 +574,31 @@ public partial class App
 
         try
         {
-            _backgroundInitializationCancellationTokenSource?.Cancel();
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error cancelling background initialization during shutdown: {ex.Message}");
+            }
+
             StopSingleInstanceThreadSafely();
             CleanupSingleInstanceResources();
 
             await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Dispose();
+                _backgroundInitializationCancellationTokenSource = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing cancellation token source during shutdown: {ex.Message}");
+            }
 
             await StopPluginsAsync().ConfigureAwait(false);
 
@@ -849,27 +868,35 @@ public partial class App
         {
             Current.Dispatcher.BeginInvoke(async () =>
             {
-                if (Current.MainWindow is { } window)
+                try
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
-
-                    try
-                    {
-                        window.BringToForeground();
-                    }
-                    catch (Exception ex)
+                    if (Current.MainWindow is { } window)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                            Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
+
+                        try
+                        {
+                            window.BringToForeground();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                        }
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
+
+                        await ShutdownAsync(true);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
-
-                    await ShutdownAsync(true);
+                        Log.Instance.Trace($"Error handling single-instance foreground request.", ex);
                 }
             });
         }

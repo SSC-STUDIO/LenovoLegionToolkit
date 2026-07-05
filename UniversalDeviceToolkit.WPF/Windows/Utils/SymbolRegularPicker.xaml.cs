@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
 public partial class SymbolRegularPicker
 {
-    private readonly ThrottleLastDispatcher _throttleDispatcher = new(TimeSpan.FromMilliseconds(500));
+    private readonly DebounceDispatcher _debouncer = new();
 
     private readonly TaskCompletionSource<SymbolRegular?> _tcs = new();
 
@@ -28,11 +28,10 @@ public partial class SymbolRegularPicker
 
     private void SymbolRegularPicker_Closing(object? sender, CancelEventArgs e) => _tcs.TrySetCanceled();
 
-    private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(() =>
+    private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        Dispatcher.Invoke(Refresh);
-        return Task.CompletedTask;
-    }).ConfigureAwait(false);
+        _debouncer.Debounce(300, Refresh);
+    }
 
     private void ItemButton_Click(object sender, RoutedEventArgs e)
     {
@@ -75,4 +74,5 @@ public partial class SymbolRegularPicker
     }
 }
 }
+
 

@@ -34,21 +34,37 @@ public abstract class AbstractRefreshingControl : UserControl
 
     private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (!_hasFinishedLoading)
+        try
         {
-            _hasFinishedLoading = true;
-            OnFinishedLoading();
-        }
+            if (!_hasFinishedLoading)
+            {
+                _hasFinishedLoading = true;
+                OnFinishedLoading();
+            }
 
-        await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshingControl_Loaded)}.", ex);
+        }
     }
 
     protected abstract void OnFinishedLoading();
 
     private async void RefreshingControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshingControl_IsVisibleChanged)}.", ex);
+        }
     }
 
     protected async Task RefreshAsync()
@@ -64,7 +80,7 @@ public abstract class AbstractRefreshingControl : UserControl
                 IsEnabled = false;
 
             _refreshTask ??= OnRefreshAsync();
-            await _refreshTask.ConfigureAwait(false);
+            await _refreshTask;
         }
         catch (NotSupportedException)
         {

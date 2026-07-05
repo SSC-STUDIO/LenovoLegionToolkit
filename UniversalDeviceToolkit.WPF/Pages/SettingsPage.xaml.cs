@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,14 +41,14 @@ public partial class SettingsPage
 
         IsVisibleChanged += SettingsPage_IsVisibleChanged;
 
-        InitializeNavigationItems();
+        _ = InitializeNavigationItems();
     }
 
-    private async void InitializeNavigationItems()
+    private async Task InitializeNavigationItems()
     {
         try
         {
-            var mi = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
             var deviceAvailability = MachineCompatibility.GetDeviceFeatureAvailability(mi);
             _supportsLenovoHardwareControls = !deviceAvailability.HiddenFeatures.Contains("lenovo-hardware-controls");
 
@@ -85,10 +85,18 @@ public partial class SettingsPage
 
     private async void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible && !_isInitialized)
+        try
         {
-            _isInitialized = true;
-            await RefreshAsync().ConfigureAwait(false);
+            if (IsVisible && !_isInitialized)
+            {
+                _isInitialized = true;
+                await RefreshAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error initializing settings page.", ex);
         }
     }
 
@@ -127,14 +135,14 @@ public partial class SettingsPage
         {
             _contentControl.Content = _appearanceControl;
             PlayTransitionAnimation();
-            await _appearanceControl.RefreshAsync().ConfigureAwait(false);
+            await _appearanceControl.RefreshAsync();
         }
         else
         {
             _contentControl.Content = _applicationBehaviorControl;
             PlayTransitionAnimation();
             SelectNavigationItem("Application");
-            await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
+            await _applicationBehaviorControl.RefreshAsync();
         }
 
         // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
@@ -151,12 +159,12 @@ public partial class SettingsPage
             _displayControl?.RefreshAsync() ?? Task.CompletedTask,
             _powerControl?.RefreshAsync() ?? Task.CompletedTask,
             _integrationsControl!.RefreshAsync()
-        ).ConfigureAwait(false);
+        );
 
             _updateControl?.Refresh();
 
             // Update visibility based on FnKeys status
-            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
             _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
             _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
         }
@@ -169,57 +177,65 @@ public partial class SettingsPage
 
     private async void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)
     {
-        if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
-            return;
-
-        UserControl? controlToShow = selectedItem.Key switch
+        try
         {
-            "Appearance" => _appearanceControl,
-            "Application" => _applicationBehaviorControl,
-            "SmartKeys" => _smartKeysControl,
-            "Display" => _displayControl,
-            "Update" => _updateControl,
-            "Power" => _powerControl,
-            "Integrations" => _integrationsControl,
-            _ => null
-        };
+            if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
+                return;
 
-        if (controlToShow != null)
-        {
-            _contentControl.Content = controlToShow;
-            PlayTransitionAnimation();
-        }
-
-        // Refresh the selected control immediately if it's not the first one (Appearance)
-        if (selectedItem.Key != "Appearance")
-        {
-            switch (selectedItem.Key)
+            UserControl? controlToShow = selectedItem.Key switch
             {
-                case "Application":
-                    if (_applicationBehaviorControl != null)
-                        await _applicationBehaviorControl.RefreshAsync().ConfigureAwait(false);
-                    break;
-                case "SmartKeys":
-                    if (_smartKeysControl != null)
-                        await _smartKeysControl.RefreshAsync().ConfigureAwait(false);
-                    break;
-                case "Display":
-                    if (_displayControl != null)
-                        await _displayControl.RefreshAsync().ConfigureAwait(false);
-                    break;
-                case "Update":
-                    if (_updateControl != null)
-                        _updateControl.Refresh();
-                    break;
-                case "Power":
-                    if (_powerControl != null)
-                        await _powerControl.RefreshAsync().ConfigureAwait(false);
-                    break;
-                case "Integrations":
-                    if (_integrationsControl != null)
-                        await _integrationsControl.RefreshAsync().ConfigureAwait(false);
-                    break;
+                "Appearance" => _appearanceControl,
+                "Application" => _applicationBehaviorControl,
+                "SmartKeys" => _smartKeysControl,
+                "Display" => _displayControl,
+                "Update" => _updateControl,
+                "Power" => _powerControl,
+                "Integrations" => _integrationsControl,
+                _ => null
+            };
+
+            if (controlToShow != null)
+            {
+                _contentControl.Content = controlToShow;
+                PlayTransitionAnimation();
             }
+
+            // Refresh the selected control immediately if it's not the first one (Appearance)
+            if (selectedItem.Key != "Appearance")
+            {
+                switch (selectedItem.Key)
+                {
+                    case "Application":
+                        if (_applicationBehaviorControl != null)
+                            await _applicationBehaviorControl.RefreshAsync();
+                        break;
+                    case "SmartKeys":
+                        if (_smartKeysControl != null)
+                            await _smartKeysControl.RefreshAsync();
+                        break;
+                    case "Display":
+                        if (_displayControl != null)
+                            await _displayControl.RefreshAsync();
+                        break;
+                    case "Update":
+                        if (_updateControl != null)
+                            _updateControl.Refresh();
+                        break;
+                    case "Power":
+                        if (_powerControl != null)
+                            await _powerControl.RefreshAsync();
+                        break;
+                    case "Integrations":
+                        if (_integrationsControl != null)
+                            await _integrationsControl.RefreshAsync();
+                        break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error navigating settings page.", ex);
         }
     }
 
@@ -271,3 +287,4 @@ public partial class SettingsPage
     }
 }
 }
+

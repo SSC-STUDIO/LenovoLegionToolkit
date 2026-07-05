@@ -356,11 +356,11 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
         if (File.Exists(filePath))
         {
-            await InstallPackageAsync().ConfigureAwait(false);
+            await InstallPackageAsync();
         }
         else
         {
-            await DownloadAndInstallPackageAsync().ConfigureAwait(false);
+            await DownloadAndInstallPackageAsync();
         }
     }
 
@@ -380,20 +380,28 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
     private async void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
     {
-        IsSelected = true;
+        try
+        {
+            IsSelected = true;
 
-        // If already completed, do nothing
-        if (Status == PackageStatus.Completed)
-            return;
+            // If already completed, do nothing
+            if (Status == PackageStatus.Completed)
+                return;
 
-        // If already downloading or installing, don't repeat
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            // If already downloading or installing, don't repeat
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        if (!AutoStartOnSelection)
-            return;
+            if (!AutoStartOnSelection)
+                return;
 
-        await StartAsync().ConfigureAwait(false);
+            await StartAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(SelectCheckBox_Checked)}.", ex);
+        }
     }
 
     private void SelectCheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -444,13 +452,13 @@ public partial class PackageControl : IProgress<float>, IDisposable
             _downloadingStackPanel.Visibility = Visibility.Visible;
 
             if (_downloadPackageTokenSource is not null)
-                await _downloadPackageTokenSource.CancelAsync().ConfigureAwait(false);
+                await _downloadPackageTokenSource.CancelAsync();
 
             _downloadPackageTokenSource = new();
 
             var token = _downloadPackageTokenSource.Token;
 
-            _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token).ConfigureAwait(false);
+            _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token);
 
             result = true;
         }
@@ -463,7 +471,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Not found 404.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackageControl_Http404Error_Title, Resource.PackageControl_Http404Error_Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackageControl_Http404Error_Title, Resource.PackageControl_Http404Error_Message, SnackbarType.Error);
             ResetPendingStatus();
         }
         catch (HttpRequestException ex)
@@ -471,7 +479,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading package file.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackageControl_HttpGeneralError_Title, Resource.PackageControl_HttpGeneralError_Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackageControl_HttpGeneralError_Title, Resource.PackageControl_HttpGeneralError_Message, SnackbarType.Error);
             ResetPendingStatus();
         }
         catch (Exception ex)
@@ -479,7 +487,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading package file.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackageControl_GeneralError_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackageControl_GeneralError_Title, ex.Message, SnackbarType.Error);
             ResetPendingStatus();
         }
         finally
@@ -494,7 +502,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
         if (result)
         {
-            await SnackbarHelper.ShowAsync(Resource.PackageControl_DownloadComplete_Title, string.Format(Resource.PackageControl_DownloadComplete_Message, _package.FileName)).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackageControl_DownloadComplete_Title, string.Format(Resource.PackageControl_DownloadComplete_Message, _package.FileName));
             CheckAndUpdateDownloadButtonState();
 
             // Use actual downloaded file path, if it doesn't exist use constructed path
@@ -529,13 +537,13 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 }
 
                 if (i < maxRetries - 1)
-                    await Task.Delay(retryDelay).ConfigureAwait(false);
+                    await Task.Delay(retryDelay);
             }
 
             // Confirm file exists before installation
             if (File.Exists(filePath))
             {
-                await InstallPackageAsync().ConfigureAwait(false);
+                await InstallPackageAsync();
             }
             else
             {
@@ -557,14 +565,14 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
                 if (File.Exists(filePath))
                 {
-                    await InstallPackageAsync().ConfigureAwait(false);
+                    await InstallPackageAsync();
                 }
                 else
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"File not found. Expected: {filePath}, Actual downloaded: {_actualDownloadedFilePath}");
 
-                    await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error).ConfigureAwait(false);
+                    await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error);
                     ResetPendingStatus();
                 }
             }
@@ -593,7 +601,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
             // Wait up to 2 seconds, checking every 200ms
             for (int i = 0; i < 10; i++)
             {
-                await Task.Delay(200).ConfigureAwait(false);
+                await Task.Delay(200);
                 if (File.Exists(filePath))
                     break;
             }
@@ -623,7 +631,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"File not found in InstallPackageAsync. Expected: {filePath}, Actual downloaded: {_actualDownloadedFilePath}");
 
-                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error).ConfigureAwait(false);
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error);
                 ResetPendingStatus();
                 UpdateStatusDisplay();
                 return;
@@ -636,7 +644,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Installer path validation failed. [filePath={filePath}, downloadPath={configuredDownloadPath}, reason={validationError}]");
 
-                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, validationError, SnackbarType.Error).ConfigureAwait(false);
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, validationError, SnackbarType.Error);
                 ResetPendingStatus();
                 UpdateStatusDisplay();
                 return;
@@ -660,21 +668,21 @@ public partial class PackageControl : IProgress<float>, IDisposable
                     installProcess.EnableRaisingEvents = true;
                     installProcess.Exited += async (s, e) =>
                     {
-                        await HandleInstallProcessExitAsync(installProcess).ConfigureAwait(false);
+                        await HandleInstallProcessExitAsync(installProcess);
                     };
                 }
 
-                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallStarted_Title, string.Format(Resource.PackageControl_InstallStarted_Message, _package.FileName), SnackbarType.Success).ConfigureAwait(false);
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallStarted_Title, string.Format(Resource.PackageControl_InstallStarted_Message, _package.FileName), SnackbarType.Success);
 
                 // 如果进程立即退出，认为安装完成
                 if (installProcess != null && installProcess.HasExited)
-                    await HandleInstallProcessExitAsync(installProcess).ConfigureAwait(false);
+                    await HandleInstallProcessExitAsync(installProcess);
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to start installer.", ex);
-                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
                 ResetPendingStatus();
             }
         }
@@ -682,7 +690,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when installing package.", ex);
-            await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
             ResetPendingStatus();
         }
     }
@@ -714,7 +722,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 return;
 
             if (failureMessage is not null)
-                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error).ConfigureAwait(false);
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error);
         }
         catch (Exception ex)
         {
@@ -746,7 +754,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
         {
             try
             {
-                _installProcess.Kill();
+                _installProcess.Kill(true);
             }
             catch (Exception ex)
             {
@@ -828,7 +836,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
         try
         {
             System.Windows.Clipboard.SetText(str);
-            await SnackbarHelper.ShowAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str)).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
         }
         catch (Exception ex)
         {
@@ -847,26 +855,42 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
     private async void DownloadButton_Click(object sender, RoutedEventArgs e)
     {
-        if (Status == PackageStatus.Completed)
-            return;
+        try
+        {
+            if (Status == PackageStatus.Completed)
+                return;
 
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        await DownloadAndInstallPackageAsync().ConfigureAwait(false);
+            await DownloadAndInstallPackageAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DownloadButton_Click)}.", ex);
+        }
     }
 
     private void CancelDownloadButton_Click(object sender, RoutedEventArgs e) => _downloadPackageTokenSource?.Cancel();
 
     private async void InstallButton_Click(object sender, RoutedEventArgs e)
     {
-        if (Status == PackageStatus.Completed)
-            return;
+        try
+        {
+            if (Status == PackageStatus.Completed)
+                return;
 
-        if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
-            return;
+            if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+                return;
 
-        await InstallPackageAsync().ConfigureAwait(false);
+            await InstallPackageAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(InstallButton_Click)}.", ex);
+        }
     }
 }
 }

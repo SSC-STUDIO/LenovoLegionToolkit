@@ -1,11 +1,13 @@
 using System.Windows;
 using System.Windows.Input;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils;
 
 public partial class InputDialogWindow : BaseWindow
 {
     private readonly bool _allowEmpty;
+    private readonly DebounceDispatcher _debouncer = new();
 
     public string? InputText { get; private set; }
 
@@ -38,7 +40,7 @@ public partial class InputDialogWindow : BaseWindow
         _confirmButton.Content = primaryButton;
         _cancelButton.Content = secondaryButton;
 
-        _textBox.TextChanged += (_, _) => RefreshConfirmButtonState();
+        _textBox.TextChanged += (_, _) => _debouncer.Debounce(300, RefreshConfirmButtonState);
         RefreshConfirmButtonState();
     }
 

@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -40,8 +41,16 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
     private async void DeviceAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs e)
     {
-        RefreshButtons();
-        await LoadAsync().ConfigureAwait(false);
+        try
+        {
+            RefreshButtons();
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DeviceAutomationPipelineTriggerTabItemContent_Initialized)}.", ex);
+        }
     }
 
     private void DeviceAutomationPipelineTriggerTabItemContent_Unloaded(object sender, RoutedEventArgs e)
@@ -51,10 +60,18 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
     private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
-            return;
+        try
+        {
+            if (e.Message is not NativeWindowsMessage.DeviceConnected and not NativeWindowsMessage.DeviceDisconnected)
+                return;
 
-        await LoadAsync().ConfigureAwait(false);
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(NativeWindowsMessageListener_Changed)}.", ex);
+        }
     }
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -62,11 +79,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         try
         {
             if (_filterDebounceCancellationTokenSource is not null)
-                await _filterDebounceCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await _filterDebounceCancellationTokenSource.CancelAsync();
 
             _filterDebounceCancellationTokenSource = new();
 
-            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token).ConfigureAwait(false);
+            await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
 
             _content.Children.Clear();
             _scrollViewer.ScrollToHome();
@@ -76,6 +93,11 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         catch (OperationCanceledException)
         {
             // Expected when filter is debounced, no action needed
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(FilterTextBox_TextChanged)}.", ex);
         }
     }
 
@@ -105,7 +127,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
         _listener.Changed -= NativeWindowsMessageListener_Changed;
 
         _devices.Clear();
-        _devices.AddRange(await Task.Run(Devices.GetAll).ConfigureAwait(false));
+        _devices.AddRange(await Task.Run(Devices.GetAll));
 
         _listener.Changed += NativeWindowsMessageListener_Changed;
 
@@ -281,3 +303,4 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
     }
 }
 }
+

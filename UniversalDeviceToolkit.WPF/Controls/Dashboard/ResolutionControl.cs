@@ -26,7 +26,7 @@ public class ResolutionControl : AbstractComboBoxFeatureCardControl<Resolution>
 
     protected override async Task OnRefreshAsync()
     {
-        await base.OnRefreshAsync().ConfigureAwait(false);
+        await base.OnRefreshAsync();
 
         Visibility = ItemsCount < 2 ? Visibility.Collapsed : Visibility.Visible;
     }
@@ -40,6 +40,6 @@ public class ResolutionControl : AbstractComboBoxFeatureCardControl<Resolution>
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh resolution control");
 }

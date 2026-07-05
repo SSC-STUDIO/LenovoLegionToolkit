@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard.Edit;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
@@ -31,8 +32,16 @@ public partial class EditDashboardWindow
 
     private async void EditDashboardWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (IsVisible)
-            await RefreshAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(EditDashboardWindow_IsVisibleChanged)}.", ex);
+        }
     }
 
     private async Task RefreshAsync()
@@ -55,7 +64,7 @@ public partial class EditDashboardWindow
 
         GroupsChanged();
 
-        await loadingTask.ConfigureAwait(false);
+        await loadingTask;
 
         _applyRevertStackPanel.Visibility = Visibility.Visible;
         _infoBar.Visibility = Visibility.Visible;
@@ -64,16 +73,24 @@ public partial class EditDashboardWindow
 
     private async void AddButton_Click(object sender, RoutedEventArgs e)
     {
-        var result = await MessageBoxHelper.ShowInputAsync(this,
-            Resource.EditDashboardWindow_CreateGroup_Title,
-            Resource.EditDashboardWindow_CreateGroup_Message,
-            primaryButton: Resource.OK,
-            secondaryButton: Resource.Cancel).ConfigureAwait(false);
+        try
+        {
+            var result = await MessageBoxHelper.ShowInputAsync(this,
+                Resource.EditDashboardWindow_CreateGroup_Title,
+                Resource.EditDashboardWindow_CreateGroup_Message,
+                primaryButton: Resource.OK,
+                secondaryButton: Resource.Cancel);
 
-        if (string.IsNullOrEmpty(result))
-            return;
+            if (string.IsNullOrEmpty(result))
+                return;
 
-        _groupsStackPanel.Children.Add(CreateGroupControl(new(DashboardGroupType.Custom, result)));
+            _groupsStackPanel.Children.Add(CreateGroupControl(new(DashboardGroupType.Custom, result)));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(AddButton_Click)}.", ex);
+        }
     }
 
     private void DefaultButton_Click(object sender, RoutedEventArgs e)
@@ -176,3 +193,4 @@ public partial class EditDashboardWindow
     }
 }
 }
+

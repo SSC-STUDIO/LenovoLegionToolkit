@@ -33,10 +33,10 @@ public partial class SettingsPowerControl
         var miTask = MachineCompatibility.GetMachineInformationAsync();
         var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
 
-        await Task.WhenAll(miTask, powerModeSupportedTask).ConfigureAwait(false);
+        await Task.WhenAll(miTask, powerModeSupportedTask);
 
-        var mi = await miTask.ConfigureAwait(false);
-        var isPowerModeFeatureSupported = await powerModeSupportedTask.ConfigureAwait(false);
+        var mi = await miTask;
+        var isPowerModeFeatureSupported = await powerModeSupportedTask;
 
         // Check GodModeFnQSwitchable capability and get value if supported
         // Note: If WMI call fails, the card will be hidden to avoid showing broken UI
@@ -47,7 +47,7 @@ public partial class SettingsPowerControl
         {
             try
             {
-                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable).ConfigureAwait(false);
+                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
             }
             catch (Exception ex)
             {
@@ -74,18 +74,18 @@ public partial class SettingsPowerControl
 
     private async void GodModeFnQSwitchableToggle_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
-
-        var state = _godModeFnQSwitchableToggle.IsChecked;
-        if (state is null)
-            return;
-
-        _godModeFnQSwitchableToggle.IsEnabled = false;
-
         try
         {
-            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0).ConfigureAwait(false);
+            if (_isRefreshing)
+                return;
+
+            var state = _godModeFnQSwitchableToggle.IsChecked;
+            if (state is null)
+                return;
+
+            _godModeFnQSwitchableToggle.IsEnabled = false;
+
+            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
         }
         catch (Exception ex)
         {
@@ -100,19 +100,27 @@ public partial class SettingsPowerControl
 
     private async void PowerModeMappingComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        if (_isRefreshing)
-            return;
+        try
+        {
+            if (_isRefreshing)
+                return;
 
-        if (!_powerModeMappingComboBox.TryGetSelectedItem(out PowerModeMappingMode powerModeMappingMode))
-            return;
+            if (!_powerModeMappingComboBox.TryGetSelectedItem(out PowerModeMappingMode powerModeMappingMode))
+                return;
 
-        _settings.Store.PowerModeMappingMode = powerModeMappingMode;
-        _settings.SynchronizeStore();
+            _settings.Store.PowerModeMappingMode = powerModeMappingMode;
+            _settings.SynchronizeStore();
 
-        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync().ConfigureAwait(false);
-        _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
-        _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
-        _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
+            _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+            _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeMappingComboBox_SelectionChanged)}.", ex);
+        }
     }
 
     private void WindowsPowerPlans_Click(object sender, RoutedEventArgs e)

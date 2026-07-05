@@ -48,9 +48,6 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
 
             newTask = Task.Run(async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Battery monitoring service started");
-
                 var iterationCount = 0;
 
                 while (!token.IsCancellationRequested)
@@ -72,8 +69,7 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                     }
                     catch (OperationCanceledException)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Battery monitoring service cancelled");
+                        break;
                     }
                     catch (Exception ex)
                     {
@@ -83,9 +79,6 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                         break;
                     }
                 }
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Battery monitoring service stopped");
             }, token);
 
             _refreshTask = newTask;

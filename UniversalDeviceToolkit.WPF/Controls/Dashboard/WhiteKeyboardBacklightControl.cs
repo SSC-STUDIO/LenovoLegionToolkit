@@ -26,6 +26,6 @@ public class WhiteKeyboardBacklightControl : AbstractComboBoxFeatureCardControl<
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnSpace))
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh white keyboard backlight control");
 }

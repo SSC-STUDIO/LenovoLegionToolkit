@@ -3816,6 +3816,14 @@ Zahtijeva ponovno pokretanje.</value>
   <data name="DeviceInformationWindow_Memory_Title" xml:space="preserve">
     <value>Memorija</value>
   </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>Sensors</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>Overclock GPU Settings</value>
+  </data>
+
+
   <data name="PluginExtensionsPage_Available" xml:space="preserve">
     <value>Dostupno</value>
   </data>
@@ -3867,10 +3875,21 @@ Zahtijeva ponovno pokretanje.</value>
   <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
     <value>Deinstaliranje jezika</value>
   </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+  </data>
+
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
     <value>Odaberite unaprijed postavljeni vizualni stil aplikacije. Način teme kontrolira kako se boje kombinuju.</value>
   </data>
   <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
     <value>Stil teme</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

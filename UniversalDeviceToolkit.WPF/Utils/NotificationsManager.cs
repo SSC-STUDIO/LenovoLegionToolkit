@@ -42,7 +42,7 @@ public class NotificationsManager : IDisposable
         {
             try
             {
-                await HandleNotificationAsync(notification).ConfigureAwait(false);
+                await HandleNotificationAsync(notification);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ public class NotificationsManager : IDisposable
                 var nextNotification = _queue.Dequeue();
                 try
                 {
-                    await ProcessNotification(nextNotification).ConfigureAwait(false);
+                    await ProcessNotification(nextNotification);
                 }
                 catch (Exception ex)
                 {
@@ -282,7 +282,7 @@ public class NotificationsManager : IDisposable
             symbolTransform = si =>
                 si.SetResourceReference(Control.ForegroundProperty, "TextFillColorSecondaryBrush");
 
-        await ShowNotification(symbol, overlaySymbol, symbolTransform, text, clickAction).ConfigureAwait(false);
+        await ShowNotification(symbol, overlaySymbol, symbolTransform, text, clickAction);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Notification {notification} shown.");
@@ -322,7 +322,7 @@ public class NotificationsManager : IDisposable
             }
         }
 
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        await Task.WhenAll(tasks);
     }
 
     private async Task ShowOnScreen(SymbolRegular symbol, SymbolRegular? overlaySymbol, Action<SymbolIcon>? symbolTransform, string text, Action? clickAction, ScreenInfo screen, MainWindow mainWindow, int duration)
@@ -345,7 +345,7 @@ public class NotificationsManager : IDisposable
             _windows.Add(nw);
         }
 
-        await tcs.Task.ConfigureAwait(false);
+        await tcs.Task;
     }
 
 private static void UpdateAvailableAction()

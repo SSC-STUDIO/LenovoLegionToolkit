@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
@@ -39,20 +41,28 @@ public partial class UpdateWindow : IProgress<float>
 
     private async void UpdateWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        var updates = await _updateChecker.GetUpdatesAsync().ConfigureAwait(false);
-
-        var stringBuilder = new StringBuilder();
-        foreach (var update in updates)
+        try
         {
-            stringBuilder.AppendLine("**" + update.Title + "**   _(" + update.Date.ToString("D") + ")_")
-                .AppendLine()
-                .AppendLine(update.Description)
-                .AppendLine();
+            var updates = await _updateChecker.GetUpdatesAsync();
+
+            var stringBuilder = new StringBuilder();
+            foreach (var update in updates)
+            {
+                stringBuilder.AppendLine("**" + update.Title + "**   _(" + update.Date.ToString("D") + ")_")
+                    .AppendLine()
+                    .AppendLine(update.Description)
+                    .AppendLine();
+            }
+
+            _markdownViewer.Markdown = stringBuilder.ToString();
+
+            HasUpdates = true;
         }
-
-        _markdownViewer.Markdown = stringBuilder.ToString();
-
-        HasUpdates = true;
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(UpdateWindow_Loaded)}.", ex);
+        }
     }
 
     private void UpdateWindow_Closing(object? sender, CancelEventArgs e)
@@ -67,7 +77,7 @@ public partial class UpdateWindow : IProgress<float>
         {
             if (_downloadCancellationTokenSource is not null)
             {
-                await _downloadCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                await _downloadCancellationTokenSource.CancelAsync();
                 _downloadCancellationTokenSource.Dispose();
             }
 
@@ -75,23 +85,59 @@ public partial class UpdateWindow : IProgress<float>
 
             SetDownloading(true);
 
-            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token).ConfigureAwait(false);
+            var path = await _updateChecker.DownloadLatestUpdateAsync(this, _downloadCancellationTokenSource.Token);
 
             _downloadCancellationTokenSource = null;
 
+            if (!IsAllowedInstallerPath(path))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Refusing to launch installer with disallowed path or name: {path}");
+                SetDownloading(false);
+                Constants.LatestReleaseUri.Open();
+                Close();
+                return;
+            }
+
             using var process = Process.Start(path, $"/SILENT /RESTARTAPPLICATIONS /LANG={Resource.Culture.Name.Replace("-", string.Empty)}");
-            await App.Current.ShutdownAsync(true).ConfigureAwait(false);
+            await App.Current.ShutdownAsync(true);
         }
         catch (OperationCanceledException)
         {
             SetDownloading(false);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(DownloadButton_Click)}.", ex);
+
             SetDownloading(false);
 
             Constants.LatestReleaseUri.Open();
             Close();
+        }
+    }
+
+    private static readonly Regex InstallerNamePattern = new(@"^UniversalDeviceToolkitSetup.*\.exe$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static bool IsAllowedInstallerPath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        try
+        {
+            var fullPath = Path.GetFullPath(path);
+            var fileName = Path.GetFileName(fullPath);
+
+            if (!InstallerNamePattern.IsMatch(fileName))
+                return false;
+
+            return string.Equals(Path.GetExtension(fileName), ".exe", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
         }
     }
 
@@ -115,3 +161,4 @@ public partial class UpdateWindow : IProgress<float>
     });
 }
 }
+

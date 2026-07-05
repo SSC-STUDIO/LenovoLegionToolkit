@@ -25,7 +25,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
         var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
-        await using (var fileStream = File.OpenWrite(tempPath))
+        using (var fileStream = File.OpenWrite(tempPath))
             await httpClient.DownloadAsync(package.FileLocation, fileStream, progress, token).ConfigureAwait(false);
 
         await TryValidateChecksum(package, tempPath, httpClient, token).ConfigureAwait(false);
@@ -40,7 +40,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
     private static async Task TryValidateChecksum(Package package, string tempPath, HttpClient httpClient, CancellationToken token)
     {
-        await using var fileStream = File.OpenRead(tempPath);
+        using var fileStream = File.OpenRead(tempPath);
         using var managedSha256 = SHA256.Create();
 
         var fileSha256Bytes = await managedSha256.ComputeHashAsync(fileStream, token).ConfigureAwait(false);

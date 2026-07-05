@@ -92,14 +92,25 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
         Content = _cardControl;
     }
 
-    private async void Toggle_Click(object sender, RoutedEventArgs e) => await OnStateChange(_toggle, Feature).ConfigureAwait(false);
+    private async void Toggle_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await OnStateChange(_toggle, Feature);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Toggle_Click)}.", ex);
+        }
+    }
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await Feature.IsSupportedAsync().ConfigureAwait(false))
+        if (!await Feature.IsSupportedAsync())
             throw new NotSupportedException();
 
-        _toggle.IsChecked = OnState.Equals(await Feature.GetStateAsync().ConfigureAwait(false));
+        _toggle.IsChecked = OnState.Equals(await Feature.GetStateAsync());
         _toggle.Visibility = Visibility.Visible;
     }
 
@@ -110,7 +121,7 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
             if (!IsVisible)
                 return;
 
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
         }));
     }
 
@@ -126,10 +137,10 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
             _toggle.IsEnabled = false;
 
             var state = toggle.IsChecked.Value ? OnState : OffState;
-            if (state.Equals(await feature.GetStateAsync().ConfigureAwait(false)))
+            if (state.Equals(await feature.GetStateAsync()))
                 return;
 
-            await feature.SetStateAsync(state).ConfigureAwait(false);
+            await feature.SetStateAsync(state);
         }
         catch (Exception ex)
         {
@@ -143,13 +154,13 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
         finally
         {
             if (AdditionalStateChangeDelay > TimeSpan.Zero)
-                await Task.Delay(AdditionalStateChangeDelay).ConfigureAwait(false);
+                await Task.Delay(AdditionalStateChangeDelay);
 
             _toggle.IsEnabled = true;
         }
 
         if (exceptionOccurred)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }
 
     protected virtual void OnStateChangeException(Exception exception) { }

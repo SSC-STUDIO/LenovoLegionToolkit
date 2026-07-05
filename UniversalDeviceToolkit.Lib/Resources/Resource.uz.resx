@@ -499,6 +499,10 @@
     <value>Buyruq bo'sh bo'lmasligi kerak.</value>
     <comment>Exception message for empty command parameter</comment>
   </data>
+  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
+    <value>Command exited with non-zero code {0}. Output: {1}</value>
+  </data>
+
   <data name="Exception_CommandFailedSecurity" xml:space="preserve">
     <value>Buyruq xavfsizlik tekshiruvidan o'tmadi: {0}</value>
     <comment>Exception message format for command security failure</comment>
@@ -755,6 +759,14 @@
     <value>Xizmat boshqaruvchisini ochishda xato</value>
     <comment>Exception message for service manager open failure</comment>
   </data>
+  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
+    <value>Optimization action with identifier {0} was not found.</value>
+  </data>
+  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
+    <value>Rollback is not available for this optimization action.</value>
+  </data>
+
+
   <data name="Exception_ProfileFileNotFound" xml:space="preserve">
     <value>Profil fayli topilmadi.</value>
     <comment>Exception message for missing profile file</comment>
@@ -953,4 +965,11 @@
   <data name="SpeakerState_Unmute" xml:space="preserve">
     <value>Ovoz yoqish</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>

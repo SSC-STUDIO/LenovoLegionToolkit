@@ -118,7 +118,19 @@ public class AutomationProcessor(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Pipeline run on startup pending...");
 
-        Task.Run(() => ProcessEvent(new StartupAutomationEvent()));
+        _ = RunOnStartupAsync();
+    }
+
+    private async Task RunOnStartupAsync()
+    {
+        try
+        {
+            await ProcessEvent(new StartupAutomationEvent()).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error processing startup automation event: {ex.Message}", ex);
+        }
     }
 
     public async Task RunNowAsync(AutomationPipeline pipeline)
@@ -167,14 +179,8 @@ public class AutomationProcessor(
 
     private async Task RunAsync(IAutomationEvent automationEvent)
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Run pending...");
-
         using (await _runLock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Run starting...");
-
             CancellationTokenSource? oldCts;
             lock (_ioLock)
             {
@@ -217,11 +223,7 @@ public class AutomationProcessor(
                 try
                 {
                     if (pipeline.Trigger is null || !await pipeline.Trigger.IsMatchingEvent(automationEvent).ConfigureAwait(false))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Pipeline triggers not satisfied. [name={pipeline.Name}, trigger={pipeline.Trigger}, steps.Count={pipeline.Steps.Count}]");
                         continue;
-                    }
 
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Running pipeline... [name={pipeline.Name}, trigger={pipeline.Trigger}, steps.Count={pipeline.Steps.Count}]");
@@ -245,9 +247,6 @@ public class AutomationProcessor(
                     break;
                 }
             }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Run finished successfully.");
         }
     }
 

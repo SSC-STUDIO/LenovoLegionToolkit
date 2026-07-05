@@ -137,7 +137,7 @@ public static class LocalizationHelper
 
     public static async Task SetLanguageAsync(bool interactive, LanguagePackManager? languagePackManager)
     {
-        var savedCultureInfo = await GetLanguageFromFile().ConfigureAwait(false);
+        var savedCultureInfo = await GetLanguageFromFile();
         CultureInfo? cultureInfo = savedCultureInfo;
         var deviceSetupExists = IsDeviceSetupComplete();
         var showLanguageSelector = interactive && (savedCultureInfo is null || !deviceSetupExists);
@@ -151,13 +151,13 @@ public static class LocalizationHelper
                 : new LanguageSelectorWindow(Languages, preferred, languagePackManager);
             ApplyStartupTheme(window);
             window.Show();
-            cultureInfo = await window.ShouldContinue.ConfigureAwait(false);
+            cultureInfo = await window.ShouldContinue;
 
             if (cultureInfo is not null)
-                await SaveLanguageToFileAsync(cultureInfo).ConfigureAwait(false);
+                await SaveLanguageToFileAsync(cultureInfo);
         }
 
-        cultureInfo ??= await GetLanguageAsync().ConfigureAwait(false);
+        cultureInfo ??= await GetLanguageAsync();
 
         SetLanguageInternal(cultureInfo);
     }
@@ -269,17 +269,17 @@ public static class LocalizationHelper
 
     public static async Task SetLanguageAsync(CultureInfo cultureInfo)
     {
-        await SaveLanguageToFileAsync(cultureInfo).ConfigureAwait(false);
+        await SaveLanguageToFileAsync(cultureInfo);
         SetLanguageInternal(cultureInfo);
     }
 
     public static async Task<CultureInfo> GetLanguageAsync()
     {
-        var cultureInfo = await GetLanguageFromFile().ConfigureAwait(false);
+        var cultureInfo = await GetLanguageFromFile();
         if (cultureInfo is null)
         {
             cultureInfo = DefaultLanguage;
-            await SaveLanguageToFileAsync(cultureInfo).ConfigureAwait(false);
+            await SaveLanguageToFileAsync(cultureInfo);
         }
         return cultureInfo;
     }
@@ -288,7 +288,7 @@ public static class LocalizationHelper
     {
         try
         {
-            var name = await File.ReadAllTextAsync(LanguagePath).ConfigureAwait(false);
+            var name = await File.ReadAllTextAsync(LanguagePath);
             var cultureInfo = new CultureInfo(name);
             if (!Languages.Contains(cultureInfo))
                 throw new InvalidOperationException("Unknown language");

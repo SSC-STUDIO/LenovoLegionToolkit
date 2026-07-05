@@ -79,9 +79,6 @@ public class ThrottleLastDispatcher : IDisposable
                     return;
             }
 
-            if (_tag is not null && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Allowing... [tag={_tag}]");
-
             await task().ConfigureAwait(false);
         }
         catch (OperationCanceledException)

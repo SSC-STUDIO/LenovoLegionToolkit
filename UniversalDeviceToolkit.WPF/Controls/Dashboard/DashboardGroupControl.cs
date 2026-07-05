@@ -53,7 +53,7 @@ public class DashboardGroupControl : UserControl
             {
                 try
                 {
-                    var itemControls = await item.GetControlAsync().WaitAsync(TimeSpan.FromSeconds(6)).ConfigureAwait(false);
+                    var itemControls = await item.GetControlAsync().WaitAsync(TimeSpan.FromSeconds(6));
                     controls.AddRange(itemControls);
                 }
                 catch (TimeoutException ex)
@@ -103,12 +103,20 @@ public class DashboardGroupControl : UserControl
 
     protected override async void OnContentChanged(object oldContent, object newContent)
     {
-        base.OnContentChanged(oldContent, newContent);
+        try
+        {
+            base.OnContentChanged(oldContent, newContent);
 
-        if (newContent is not StackPanel)
-            return;
+            if (newContent is not StackPanel)
+                return;
 
-        await TryCompleteFirstVisibleContentReadyAsync().ConfigureAwait(false);
+            await TryCompleteFirstVisibleContentReadyAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(OnContentChanged)}.", ex);
+        }
     }
 
     private async Task TryCompleteFirstVisibleContentReadyAsync()
@@ -129,7 +137,7 @@ public class DashboardGroupControl : UserControl
                 return;
             }
 
-            await Task.WhenAll(visibleRefreshingControls.Select(control => control.InitialRefreshCompletedTask)).ConfigureAwait(false);
+            await Task.WhenAll(visibleRefreshingControls.Select(control => control.InitialRefreshCompletedTask));
             _firstVisibleContentReadyTaskCompletionSource.TrySetResult();
         }
         catch (Exception ex)

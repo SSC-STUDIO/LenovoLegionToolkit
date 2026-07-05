@@ -30,11 +30,11 @@ public class HDRControl : AbstractToggleFeatureCardControl<HDRState>
 
     protected override async Task OnRefreshAsync()
     {
-        await base.OnRefreshAsync().ConfigureAwait(false);
+        await base.OnRefreshAsync();
 
         try
         {
-            var isHdrBlocked = await ((HDRFeature)Feature).IsHdrBlockedAsync().ConfigureAwait(false);
+            var isHdrBlocked = await ((HDRFeature)Feature).IsHdrBlockedAsync();
 
             IsToggleEnabled = !isHdrBlocked;
             Warning = isHdrBlocked ? Resource.HDRControl_Warning : string.Empty;
@@ -51,6 +51,6 @@ public class HDRControl : AbstractToggleFeatureCardControl<HDRState>
     private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
-            await RefreshAsync().ConfigureAwait(false);
+            await RefreshAsync();
     }, "refresh HDR control");
 }
