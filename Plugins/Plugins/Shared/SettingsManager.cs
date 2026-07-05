@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
@@ -103,6 +104,7 @@ public class SettingsManager<T> where T : class, new()
             return false;
         }
 
+        EventHandler<T>? handler;
         lock (_lock)
         {
             try
@@ -114,11 +116,12 @@ public class SettingsManager<T> where T : class, new()
                     WriteIndented = true
                 });
 
-                File.WriteAllText(_settingsFilePath, json);
+                var tempPath = _settingsFilePath + ".tmp";
+                File.WriteAllText(tempPath, json, Encoding.UTF8);
+                File.Move(tempPath, _settingsFilePath, overwrite: true);
                 _cachedSettings = settings;
 
-                SettingsChanged?.Invoke(this, settings);
-                return true;
+                handler = SettingsChanged;
             }
             catch (Exception ex)
             {
@@ -126,6 +129,9 @@ public class SettingsManager<T> where T : class, new()
                 return false;
             }
         }
+
+        handler?.Invoke(this, settings);
+        return true;
     }
 
     /// <summary>
