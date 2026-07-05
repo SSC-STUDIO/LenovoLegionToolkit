@@ -4,14 +4,25 @@
 
 [![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
 [![GitHub release](https://img.shields.io/github/v/release/SSC-STUDIO/UniversalDeviceToolkit?color=blue)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
-[![GitHub stars](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![GitHub downloads](https://img.shields.io/github/downloads/SSC-STUDIO/UniversalDeviceToolkit/total)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
+[![Last commit](https://img.shields.io/github/last-commit/SSC-STUDIO/UniversalDeviceToolkit)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/commits/master)
+[![Contributors welcome](https://img.shields.io/badge/Contributors-welcome-brightgreen.svg)](CONTRIBUTING.md)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 > **Open source · No account · No telemetry**
 >
 > The lightweight Windows utility for Legion laptops &amp; beyond. Fn+Q, RGB, fan curves, dGPU control — without Vantage bloat. Runs on other PCs too via basic mode.
+
+<div align="center">
+
+**⭐ Star this repo if UDT helps you — it really helps the project grow! ⭐**
+
+[![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![Get it from winget](https://img.shields.io/badge/Get%20it%20from-winget-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://winstall.app/apps/SSC-STUDIO.LenovoLegionToolkit)
+
+</div>
 
 ---
 
@@ -49,7 +60,16 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 
 Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
-<img src="Assets/Screenshot_main.png" width="700" />
+<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT Main Interface" /></a>
+
+<details>
+<summary>🎮 Want to see more screenshots?</summary>
+
+| English (Dark) | Chinese Simplified (Dark) |
+|---|---|
+| ![Main](Assets/Screenshot_main.png) | ![Chinese](Assets/Screenshot_zh-hans.png) |
+
+</details>
 
 ### Key Features at a Glance
 
@@ -816,3 +836,15 @@ This project is a modified continuation derived from [Lenovo Legion Toolkit](htt
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit&Date)
+
+<div align="center">
+
+### ⭐ Help us reach 100+ stars! ⭐
+
+If Universal Device Toolkit makes your gaming laptop experience better, please consider giving us a star!
+
+[![Star this repo](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social&label=Star%20UDT)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
+
+**Contributors welcome!** Check out [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
+
+</div>
