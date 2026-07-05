@@ -70,9 +70,39 @@ public sealed class NetworkAccelerationRuntime
 
     public void Stop()
     {
+        CancellationTokenSource? capturedCts;
+        Task? capturedTask;
+
+        lock (_gate)
+        {
+            capturedCts = _cts;
+            capturedTask = _loopTask;
+            _cts = null;
+            _loopTask = null;
+        }
+
+        if (capturedCts == null)
+            return;
+
         try
         {
-            StopAsync().GetAwaiter().GetResult();
+            capturedCts.Cancel();
+
+            if (capturedTask != null)
+            {
+                try
+                {
+                    capturedTask.Wait(TimeSpan.FromSeconds(2));
+                }
+                catch (TimeoutException)
+                {
+                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
+                }
+                catch (AggregateException)
+                {
+                    // Expected when the task is cancelled.
+                }
+            }
         }
         catch (OperationCanceledException)
         {
@@ -81,6 +111,10 @@ public sealed class NetworkAccelerationRuntime
         catch
         {
             // Ignore stop exceptions to keep shutdown resilient.
+        }
+        finally
+        {
+            capturedCts.Dispose();
         }
     }
 
