@@ -506,12 +506,12 @@ public partial class App
         _singleInstanceGuard = null;
     }
 
-    private async Task ForceExitAsync(uint exitCode)
+    private Task ForceExitAsync(uint exitCode)
     {
-        await Task.Delay(100).ConfigureAwait(false);
         try { Environment.Exit((int)exitCode); }
         catch { /* Environment.Exit failed - use fallback exit method */ }
         ExitProcess(exitCode);
+        return Task.CompletedTask;
     }
 
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class

@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 
+- Update flow no longer falls back to GitHub because the installer file-name pattern required a hyphen that the actual installer never has; relaxed pattern matches `UniversalDeviceToolkitSetup*.exe` so in-app updates run again / 更新流程不再因安装包文件名匹配规则错误（要求连字符）而回退到 GitHub；现已改为匹配实际的 `UniversalDeviceToolkitSetup*.exe` 命名，恢复应用内自动更新
+- Clicking external links (release page, device info link, etc.) no longer fails with `Win32Exception`; URL opening keeps `UseShellExecute=true` (required for protocol handlers) behind a strict HTTP/HTTPS scheme allow-list / 打开外部链接（发行页、设备信息链接等）不再因 `Win32Exception` 失败；URL 开启保留 `UseShellExecute=true`（协议处理器需要），并由严格的 HTTP/HTTPS 协议白名单保护
+
 - Dashboard sensors card no longer shows overlapping shimmer and live gauge animations; removed the duplicate page-level sensor skeleton and keep only the layout-matched `SensorsControl` overlay, which now tracks compact/wide layout on resize / 控制台传感器卡片不再叠加两套 shimmer 与仪表动画；移除仪表盘页重复的传感器骨架层，仅保留与布局贴合的 `SensorsControl` 覆盖层，并在窗口缩放时同步紧凑/宽屏布局
 - About Device window cards no longer show empty white blocks on the left; row content is placed in `CardControl.Header` per WPF-UI template / 关于设备窗口卡片左侧不再出现空白色块；行内容已按 WPF-UI 模板放入 `CardControl.Header`
 - Windows Optimization checkboxes now surface apply failures (registry access denied, command exit codes, verification mismatch) via snackbar instead of silently reverting; unchecking uses rollback where available / Windows 优化勾选项在应用失败（注册表拒绝访问、命令非零退出、验证不匹配）时会通过 Snackbar 提示，不再静默回退；取消勾选时在支持的情况下执行回滚

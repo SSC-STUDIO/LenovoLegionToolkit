@@ -650,3 +650,7 @@ all_strings.txt
 !*.resx
 _work/
 output/
+
+.backup_async_fix/
+.cursor/
+*.tmp

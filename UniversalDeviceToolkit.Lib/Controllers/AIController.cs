@@ -294,6 +294,21 @@ public class AIController(
             {
                 try
                 {
+                    if (powerModeListener is not null)
+                        powerModeListener.Changed -= PowerModeListener_Changed;
+                    if (powerStateListener is not null)
+                        powerStateListener.Changed -= PowerStateListener_Changed;
+                    if (gameAutoListener is not null)
+                        gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"AIController handler unsubscription error", ex);
+                }
+
+                try
+                {
                     _dispatcher?.Dispose();
                 }
                 catch (Exception ex)

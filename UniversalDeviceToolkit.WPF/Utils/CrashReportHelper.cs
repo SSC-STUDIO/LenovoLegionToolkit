@@ -62,7 +62,7 @@ public static class CrashReportHelper
             var fileName = $"crash_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.json";
             var filePath = Path.Combine(CrashReportFolder, fileName);
 
-            File.WriteAllText(filePath, json, Encoding.UTF8);
+            File.WriteAllText(filePath, json, new UTF8Encoding(false));
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Crash report saved to: {filePath}");

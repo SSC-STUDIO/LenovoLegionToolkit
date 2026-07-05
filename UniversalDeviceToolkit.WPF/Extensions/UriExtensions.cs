@@ -45,9 +45,13 @@ public static class UriExtensions
 
         try
         {
-            // SECURITY: UseShellExecute=false invokes CreateProcess directly with the literal URL,
-            // which prevents accidental parsing of command-line arguments inside the URI string.
-            using var process = Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = false });
+            // SECURITY: The HTTP/HTTPS allow-list above prevents shell-injection from
+            // file://, ms-*, javascript and other dangerous schemes. We must keep
+            // UseShellExecute=true because Process.Start needs the shell to resolve the
+            // URL to the registered browser handler; with UseShellExecute=false the
+            // literal URL is handed to CreateProcess which does not understand URLs.
+            using var process = Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
+            _ = process;
         }
         catch (Exception ex)
         {

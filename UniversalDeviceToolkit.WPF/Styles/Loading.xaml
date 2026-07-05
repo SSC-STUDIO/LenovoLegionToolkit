@@ -38,9 +38,6 @@
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" PresentationOptions:Freeze="True">
-                    <LinearGradientBrush.RelativeTransform>
-                        <TranslateTransform X="-1.2" />
-                    </LinearGradientBrush.RelativeTransform>
                     <GradientStop Color="#268891A0" Offset="0" />
                     <GradientStop Color="#4A8891A0" Offset="0.48" />
                     <GradientStop Color="#268891A0" Offset="1" />
@@ -49,7 +46,7 @@
         </Setter>
         <Setter Property="RenderTransform">
             <Setter.Value>
-                <TranslateTransform X="-1.2" />
+                <TranslateTransform X="-1.2" PresentationOptions:Freeze="True" />
             </Setter.Value>
         </Setter>
         <Style.Triggers>

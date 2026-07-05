@@ -775,8 +775,21 @@ public class WindowsOptimizationService
             var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
             var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
-            await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
-            process.Kill(true);
+            try
+            {
+                await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
+            }
+            finally
+            {
+                try
+                {
+                    if (!process.HasExited)
+                        process.Kill(true);
+                }
+                catch
+                {
+                }
+            }
 
             var output = await outputTask.ConfigureAwait(false);
             return process.ExitCode == 0

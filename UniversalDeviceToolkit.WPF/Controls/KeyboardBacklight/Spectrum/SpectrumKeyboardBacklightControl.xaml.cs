@@ -124,6 +124,13 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
     public void Dispose()
     {
         _changeBrightnessDispatcher.Dispose();
+        try
+        {
+            _refreshStateCancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
         _refreshStateCancellationTokenSource?.Dispose();
         _refreshStateCancellationTokenSource = null;
     }

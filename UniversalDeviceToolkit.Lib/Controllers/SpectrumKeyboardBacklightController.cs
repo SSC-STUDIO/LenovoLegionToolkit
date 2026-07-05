@@ -344,6 +344,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
             var orphanedTask = _auroraRefreshTask;
             _auroraRefreshTask = null;
 
+            if (_auroraRefreshCancellationTokenSource is not null)
+            {
+                _auroraRefreshCancellationTokenSource.Dispose();
+                _auroraRefreshCancellationTokenSource = null;
+            }
+
             if (orphanedTask is not null)
             {
                 try
@@ -1014,7 +1020,7 @@ var result = new LENOVO_SPECTRUM_EFFECT(header, index + 1, colors, keys);
                 {
                     _auroraRefreshCancellationTokenSource?.Cancel();
                     _auroraRefreshCancellationTokenSource?.Dispose();
-                    _auroraRefreshTask?.Dispose();
+                    _auroraRefreshCancellationTokenSource = null;
                     _deviceHandle?.Dispose();
                 }
                 catch (Exception ex)

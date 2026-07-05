@@ -118,7 +118,7 @@ public partial class UpdateWindow : IProgress<float>
         }
     }
 
-    private static readonly Regex InstallerNamePattern = new(@"^UniversalDeviceToolkit-Setup.*\.exe$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex InstallerNamePattern = new(@"^UniversalDeviceToolkitSetup.*\.exe$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static bool IsAllowedInstallerPath(string path)
     {
