@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 
+- Dashboard layout customizations (groups, items order, sensors toggle) are now persisted across app restarts; `DashboardSettings` IoC registration changed from transient to `SingleInstance()` so EditDashboardWindow and DashboardPage share the same in-memory cache and `SynchronizeStore()` writes are immediately visible to all consumers / 控制台自定义布局（分组、项目顺序、传感器开关）现在可在应用重启后持久化保留；`DashboardSettings` 的 IoC 注册从瞬时改为 `SingleInstance()`，确保 EditDashboardWindow 与 DashboardPage 共享同一内存缓存，`SynchronizeStore()` 写入对所有消费者立即可见
 - Dashboard sensors card no longer shows overlapping shimmer and live gauge animations; removed the duplicate page-level sensor skeleton and keep only the layout-matched `SensorsControl` overlay, which now tracks compact/wide layout on resize / 控制台传感器卡片不再叠加两套 shimmer 与仪表动画；移除仪表盘页重复的传感器骨架层，仅保留与布局贴合的 `SensorsControl` 覆盖层，并在窗口缩放时同步紧凑/宽屏布局
 - About Device window cards no longer show empty white blocks on the left; row content is placed in `CardControl.Header` per WPF-UI template / 关于设备窗口卡片左侧不再出现空白色块；行内容已按 WPF-UI 模板放入 `CardControl.Header`
 - Windows Optimization checkboxes now surface apply failures (registry access denied, command exit codes, verification mismatch) via snackbar instead of silently reverting; unchecking uses rollback where available / Windows 优化勾选项在应用失败（注册表拒绝访问、命令非零退出、验证不匹配）时会通过 Snackbar 提示，不再静默回退；取消勾选时在支持的情况下执行回滚
