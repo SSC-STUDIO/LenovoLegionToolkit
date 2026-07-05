@@ -13,7 +13,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 /// <summary>
 /// Manages feature flag operations.
 /// </summary>
-public class ViveToolFeatureService
+public class ViveToolFeatureService : IDisposable
 {
     private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
 
@@ -576,5 +576,11 @@ public class ViveToolFeatureService
             _cachedFeatures = new List<FeatureFlagInfo>(features);
             _cachedFeaturesTimestamp = timestamp;
         }
+    }
+
+    public void Dispose()
+    {
+        _featureLoadGate.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

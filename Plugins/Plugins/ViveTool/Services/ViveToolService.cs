@@ -10,7 +10,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 /// ViVeTool service implementation that aggregates specialized services.
 /// This class delegates operations to focused services following Single Responsibility Principle.
 /// </summary>
-public class ViveToolService : IViveToolService
+public class ViveToolService : IViveToolService, IDisposable
 {
     private readonly ViveToolPathService _pathService;
     private readonly ViveToolFeatureService _featureService;
@@ -193,5 +193,11 @@ public class ViveToolService : IViveToolService
         PluginLog.Trace($"ViveTool: Exported {features.Count} features to '{filePath}', success: {success}");
 
         return success;
+    }
+
+    public void Dispose()
+    {
+        _featureService.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
