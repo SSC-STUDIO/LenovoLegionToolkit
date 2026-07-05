@@ -15,7 +15,30 @@
       "title": "Shell Integration"
     },
     "runtime": null,
-    "optimizationActions": []
+    "optimizationActions": [
+      {
+        "id": "shell.integration",
+        "key": "WindowsOptimization_Category_NilesoftShell_Title",
+        "title": "Shell Integration",
+        "description": "WindowsOptimization_Category_NilesoftShell_Description",
+        "actions": [
+          {
+            "id": "shell.integration.enable",
+            "key": "WindowsOptimization_Action_NilesoftShell_Enable_Title",
+            "title": "Enable shell integration",
+            "description": "WindowsOptimization_Action_NilesoftShell_Enable_Description",
+            "recommended": true
+          },
+          {
+            "id": "shell.integration.disable",
+            "key": "WindowsOptimization_Action_NilesoftShell_Disable_Title",
+            "title": "Disable shell integration",
+            "description": "WindowsOptimization_Action_NilesoftShell_Disable_Description",
+            "recommended": false
+          }
+        ]
+      }
+    ]
   },
   "package": {
     "assetName": "shell-integration-v1.0.12.zip",

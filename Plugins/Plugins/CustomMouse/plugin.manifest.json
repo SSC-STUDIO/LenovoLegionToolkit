@@ -17,7 +17,30 @@
     "runtime": {
       "class": "LenovoLegionToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
     },
-    "optimizationActions": []
+    "optimizationActions": [
+      {
+        "id": "custom.mouse",
+        "key": "WindowsOptimization_Category_CustomMouse_Title",
+        "title": "Custom Mouse",
+        "description": "WindowsOptimization_Category_CustomMouse_Description",
+        "actions": [
+          {
+            "id": "custom.mouse.cursor.auto-theme.enable",
+            "key": "WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title",
+            "title": "Enable auto theme cursor style",
+            "description": "WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description",
+            "recommended": true
+          },
+          {
+            "id": "custom.mouse.cursor.auto-theme.disable",
+            "key": "WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title",
+            "title": "Disable auto theme cursor style",
+            "description": "WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description",
+            "recommended": false
+          }
+        ]
+      }
+    ]
   },
   "package": {
     "assetName": "custom-mouse-v1.0.16.zip",

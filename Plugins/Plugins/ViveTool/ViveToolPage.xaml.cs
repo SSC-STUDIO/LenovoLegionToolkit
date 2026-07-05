@@ -20,9 +20,6 @@ using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.Plugins.ViveTool.Utils;
-using LenovoLegionToolkit.WPF;
-using LenovoLegionToolkit.WPF.Utils;
-using MessageBoxHelper = LenovoLegionToolkit.WPF.Utils.MessageBoxHelper;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;
 
@@ -616,7 +613,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            LocalizationHelper.SetPluginResourceCultures();
+            WpfHostNotifications.SetPluginResourceCultures();
         }
         catch (Exception ex)
         {
@@ -774,12 +771,12 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     var path = await _viveToolService.GetViveToolPathAsync();
                     if (!string.IsNullOrEmpty(path))
                     {
-                        SnackbarHelper.Show(Resource.ViveTool_DownloadComplete, string.Format(Resource.ViveTool_DownloadCompleteMessage, path));
+                        WpfHostNotifications.ShowSnackbar(Resource.ViveTool_DownloadComplete, string.Format(Resource.ViveTool_DownloadCompleteMessage, path));
                     }
                 }
                 else
                 {
-                    SnackbarHelper.Show(Resource.ViveTool_Error, Resource.ViveTool_DownloadFailed, SnackbarType.Error);
+                    WpfHostNotifications.ShowSnackbarError(Resource.ViveTool_Error, Resource.ViveTool_DownloadFailed);
                 }
             });
         }
@@ -794,10 +791,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 DownloadProgress = 0;
                 DownloadProgressText = string.Empty;
                 
-                SnackbarHelper.Show(
+                WpfHostNotifications.ShowSnackbarError(
                     Resource.ViveTool_Error,
-                    string.Format(Resource.ViveTool_DownloadFailed, ex.Message),
-                    SnackbarType.Error);
+                    string.Format(Resource.ViveTool_DownloadFailed, ex.Message));
             });
         }
     }
@@ -858,7 +854,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             // Show import options - first ask if user wants to import from file or URL
-            var fromFile = await MessageBoxHelper.ShowAsync(
+            var fromFile = await WpfHostNotifications.ShowConfirmAsync(
                 this,
                 Resource.ViveTool_Import,
                 Resource.ViveTool_ImportDescription + "\n\n" + Resource.ViveTool_ImportFromFile + " / " + Resource.ViveTool_ImportFromUrl,
@@ -910,7 +906,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     UpdateFeaturesVisibility();
                     IsLoading = false;
 
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbar(
                         Resource.ViveTool_ImportSuccess,
                         string.Format(Resource.ViveTool_ImportSuccessMessage, importedFeatures.Count));
                 });
@@ -923,10 +919,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsLoading = false;
-                SnackbarHelper.Show(
+                WpfHostNotifications.ShowSnackbarError(
                     Resource.ViveTool_Error,
-                    string.Format(Resource.ViveTool_ImportFailed, ex.Message),
-                    SnackbarType.Error);
+                    string.Format(Resource.ViveTool_ImportFailed, ex.Message));
             });
         }
     }
@@ -936,7 +931,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             // Show URL input dialog
-            var url = await MessageBoxHelper.ShowInputAsync(
+            var url = await WpfHostNotifications.ShowInputAsync(
                 this,
                 Resource.ViveTool_ImportFromUrl,
                 "https://example.com/features.json",
@@ -962,7 +957,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 UpdateFeaturesVisibility();
                 IsLoading = false;
 
-                SnackbarHelper.Show(
+                WpfHostNotifications.ShowSnackbar(
                     Resource.ViveTool_ImportSuccess,
                     string.Format(Resource.ViveTool_ImportSuccessMessage, importedFeatures.Count));
             });
@@ -974,10 +969,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsLoading = false;
-                SnackbarHelper.Show(
+                WpfHostNotifications.ShowSnackbarError(
                     Resource.ViveTool_Error,
-                    string.Format(Resource.ViveTool_ImportFailed, ex.Message),
-                    SnackbarType.Error);
+                    string.Format(Resource.ViveTool_ImportFailed, ex.Message));
             });
         }
     }
@@ -989,7 +983,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             var featuresToExport = Features.ToList();
             if (featuresToExport.Count == 0)
             {
-                SnackbarHelper.Show(Resource.ViveTool_Error, Resource.ViveTool_ExportNoFeatures, SnackbarType.Error);
+                WpfHostNotifications.ShowSnackbarError(Resource.ViveTool_Error, Resource.ViveTool_ExportNoFeatures);
                 return;
             }
 
@@ -1017,16 +1011,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
                 if (exported)
                 {
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_ExportSuccess,
                         string.Format(Resource.ViveTool_ExportSuccessMessage, featuresToExport.Count, saveFileDialog.FileName));
                 }
                 else
                 {
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_Error,
-                        Resource.ViveTool_ExportFailed,
-                        SnackbarType.Error);
+                        Resource.ViveTool_ExportFailed);
                 }
             });
         }
@@ -1037,10 +1030,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsLoading = false;
-                SnackbarHelper.Show(
+                WpfHostNotifications.ShowSnackbarError(
                     Resource.ViveTool_Error,
-                    string.Format(Resource.ViveTool_ExportFailedWithMessage, ex.Message),
-                    SnackbarType.Error);
+                    string.Format(Resource.ViveTool_ExportFailedWithMessage, ex.Message));
             });
         }
     }
@@ -1141,16 +1133,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
                     
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_FeatureEnabled,
                         string.Format(Resource.ViveTool_FeatureEnabledMessage, featureId));
                 }
                 else
                 {
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_Error,
-                        string.Format(Resource.ViveTool_EnableFeatureFailed, featureId),
-                        SnackbarType.Error);
+                        string.Format(Resource.ViveTool_EnableFeatureFailed, featureId));
                 }
             });
         }
@@ -1176,16 +1167,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
                     
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_FeatureDisabled,
                         string.Format(Resource.ViveTool_FeatureDisabledMessage, featureId));
                 }
                 else
                 {
-                    SnackbarHelper.Show(
+                    WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_Error,
-                        string.Format(Resource.ViveTool_DisableFeatureFailed, featureId),
-                        SnackbarType.Error);
+                        string.Format(Resource.ViveTool_DisableFeatureFailed, featureId));
                 }
             });
         }

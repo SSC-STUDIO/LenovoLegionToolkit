@@ -248,11 +248,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public void OpenStyleSettingsWindow()
     {
-        var dialog = SDK.PluginHostContext.CreateHostWindow("LenovoLegionToolkit.WPF.Windows.Utils.MenuStyleSettingsWindow");
-        if (dialog is not null && SDK.PluginHostContext.Current.ShowDialog(dialog, ShellIntegrationText.SettingsPageTitle))
-            return;
-
-        SDK.PluginHostContext.Current.ShowDialog(new ShellIntegrationStyleSettingsWindow(this), ShellIntegrationText.SettingsPageTitle);
+        SDK.PluginHostContext.Current.ShowDialog(
+            new ShellIntegrationStyleSettingsWindow(this),
+            ShellIntegrationText.SettingsPageTitle);
     }
 
     public bool OpenShellFolder()
@@ -333,7 +331,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             if (!_configService.ImportProfile(filePath, out _, out errorMessage))
                 return false;
 
-            return SyncManagedConfiguration();
+            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
