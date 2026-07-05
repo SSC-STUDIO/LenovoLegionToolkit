@@ -28,9 +28,19 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     public override bool IsSystemPlugin => false;
 
     private NetworkAccelerationSettings _settings;
+    private readonly object _settingsLock = new();
     private readonly NetworkAccelerationRuntime _runtime = new();
 
-    public NetworkAccelerationSettings Settings => _settings.Clone();
+    public NetworkAccelerationSettings Settings
+    {
+        get
+        {
+            lock (_settingsLock)
+            {
+                return _settings.Clone();
+            }
+        }
+    }
     public NetworkAccelerationRuntime Runtime => _runtime;
 
     public NetworkAccelerationPlugin()
@@ -39,7 +49,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             isTraceEnabled: () => LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
             trace: (message, exception) => LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
 
-        _settings = LoadSettings();
+        lock (_settingsLock)
+        {
+            _settings = LoadSettings();
+        }
     }
 
     public override object? GetFeatureExtension()
@@ -54,7 +67,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public override void OnInstalled()
     {
-        _settings = NetworkAccelerationSettings.CreateDefault();
+        lock (_settingsLock)
+        {
+            _settings = NetworkAccelerationSettings.CreateDefault();
+        }
         RunBackgroundTask(nameof(OnInstalled), SaveSettingsAsync);
     }
 
@@ -62,7 +78,13 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     {
         _runtime.Start();
 
-        if (_settings.AutoOptimizeOnStartup)
+        bool autoOptimize;
+        lock (_settingsLock)
+        {
+            autoOptimize = _settings.AutoOptimizeOnStartup;
+        }
+
+        if (autoOptimize)
             RunBackgroundTask(nameof(OnAppStarted), () => RunQuickOptimizationAsync(GetRuntimeCancellationToken()));
     }
 
@@ -83,31 +105,46 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public bool SetPreferredMode(NetworkAccelerationMode mode)
     {
-        _settings = _settings.With(preferredMode: mode);
+        lock (_settingsLock)
+        {
+            _settings = _settings.With(preferredMode: mode);
+        }
         return true;
     }
 
     public bool SetAutoOptimizeOnStartup(bool value)
     {
-        _settings = _settings.With(autoOptimizeOnStartup: value);
+        lock (_settingsLock)
+        {
+            _settings = _settings.With(autoOptimizeOnStartup: value);
+        }
         return true;
     }
 
     public bool SetResetWinsockOnOptimize(bool value)
     {
-        _settings = _settings.With(resetWinsockOnOptimize: value);
+        lock (_settingsLock)
+        {
+            _settings = _settings.With(resetWinsockOnOptimize: value);
+        }
         return true;
     }
 
     public bool SetResetTcpIpOnOptimize(bool value)
     {
-        _settings = _settings.With(resetTcpIpOnOptimize: value);
+        lock (_settingsLock)
+        {
+            _settings = _settings.With(resetTcpIpOnOptimize: value);
+        }
         return true;
     }
 
     public NetworkOptimizationPlan GetOptimizationPlan()
     {
-        return GetOptimizationPlan(_settings);
+        lock (_settingsLock)
+        {
+            return GetOptimizationPlan(_settings);
+        }
     }
 
     internal static NetworkOptimizationPlan GetOptimizationPlan(NetworkAccelerationSettings settings)
@@ -159,7 +196,11 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public async Task SaveSettingsAsync()
     {
-        var settingsToPersist = _settings.Clone();
+        NetworkAccelerationSettings settingsToPersist;
+        lock (_settingsLock)
+        {
+            settingsToPersist = _settings.Clone();
+        }
         Configuration.SetValue(nameof(NetworkAccelerationSettings.PreferredMode), settingsToPersist.PreferredMode.ToString());
         Configuration.SetValue(nameof(NetworkAccelerationSettings.AutoOptimizeOnStartup), settingsToPersist.AutoOptimizeOnStartup);
         Configuration.SetValue(nameof(NetworkAccelerationSettings.ResetWinsockOnOptimize), settingsToPersist.ResetWinsockOnOptimize);
@@ -171,7 +212,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        _settings = settings.Clone();
+        lock (_settingsLock)
+        {
+            _settings = settings.Clone();
+        }
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
