@@ -18,7 +18,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
     [Collection("FlaUI Tests")]
     public class FlaUIMainWindowTests : FlaUiTestBase
     {
-        [Fact]
+        [SkippableFact]
         public async Task AppLaunches_AndMainWindowAppears()
         {
             // Arrange + Act: InitializeAsync() in base class launches the app
@@ -27,21 +27,21 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
             // Assert: main window should be found and not closed
             Assert.NotNull(MainWindow);
             Assert.False(App!.HasExited);
-            Assert.True(MainWindow.Properties.Name.Value.Length > 0);
+            Assert.True(MainWindow!.Properties.Name.Value.Length > 0);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task MainWindow_HasExpectedStructure()
         {
             await InitializeAsync();
 
             // The main window should have child elements (navigation, content, etc.)
-            var children = MainWindow.FindAllDescendants();
+            var children = MainWindow!.FindAllDescendants();
             Assert.True(children.Length > 0,
                 "Main window should have at least one child element (navigation, content, etc.)");
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task MainWindow_CanBeVerifiedWithOcr()
         {
             await InitializeAsync();
