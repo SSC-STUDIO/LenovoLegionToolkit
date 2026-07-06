@@ -29,6 +29,7 @@
 | 周截止 | Stars | 周增量 | 触达渠道 | 备注 |
 |--------|-------|--------|----------|------|
 | 2026-07-06 | 18 | - | v5.0.0-preview 发布 | baseline |
+| 2026-07-07 | 18 | 0 | (尚未发帖) | OG 分享卡修复已上线；star-growth 工作流审计通过；OpenAI 申请文案 [VERIFY] 用真实数据填好 |
 
 每周日在 `Docs/SUBMISSIONS.md` 的周表里同步增一行；任何时候查 star 计数：
 
@@ -91,4 +92,4 @@ gh api repos/SSC-STUDIO/UniversalDeviceToolkit --jq .stargazers_count
 4. 提交 awesome-dotnet PR（见 SUBMISSIONS.md）
 5. 周日回来更新本表 + SUBMISSIONS.md 周表
 
-最后更新: 2026-07-06
+最后更新: 2026-07-07
