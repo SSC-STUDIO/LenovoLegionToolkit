@@ -67,7 +67,7 @@ public class PluginLogTests : IDisposable
     }
 
     [Fact]
-    public void Error_WhenTraceGateIsFalse_DoesNotInvokeSink()
+    public void Error_AlwaysInvokesSink_EvenWhenTraceGateIsFalse()
     {
         var sinkCalls = 0;
         PluginLog.Configure(
@@ -77,7 +77,7 @@ public class PluginLogTests : IDisposable
         PluginLog.Error("msg");
         PluginLog.Error("msg", new InvalidOperationException());
 
-        Assert.Equal(0, sinkCalls);
+        Assert.Equal(2, sinkCalls);  // Error() ALWAYS logs, regardless of trace gate
     }
 
     [Fact]
