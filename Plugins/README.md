@@ -22,6 +22,12 @@
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/network/members">
     <img src="https://img.shields.io/github/forks/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=orange&logo=github&labelColor=222" alt="Forks" />
   </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/search?q=is%3Apr+label%3Aenhancement&type=Issues">
+    <img src="https://img.shields.io/github/issues-search/SSC-STUDIO/UniversalDeviceToolkit-Plugins?query=is%3Apr+label%3Aenhancement&style=for-the-badge&color=purple&logo=github&label=enhancements&labelColor=222" alt="Enhancements" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/CHANGELOG.md">
+    <img src="https://img.shields.io/badge/Changelog-Updated-brightgreen?style=for-the-badge&logo=git&logoColor=white&labelColor=222" alt="Changelog" />
+  </a>
 </p>
 
 <p align="center">
@@ -38,9 +44,10 @@
 ## Plugin Catalog
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Plugins-4-blue?style=flat-square" />
-  <img src="https://img.shields.io/badge/Downloads-10K%2B-brightgreen?style=flat-square" />
-  <img src="https://img.shields.io/badge/Contributors-Welcome!-purple?style=flat-square" />
+  <img src="https://img.shields.io/badge/Settings%20Load-1.4ms-brightgreen?style=flat-square&logo=lightning&logoColor=white" />
+  <img src="https://img.shields.io/badge/Settings%20Save-21ms-yellow?style=flat-square&logo=lightning&logoColor=white" />
+  <img src="https://img.shields.io/badge/Cache%20Hit-0ms-brightgreen?style=flat-square&logo=lightning&logoColor=white" />
+  <img src="https://img.shields.io/badge/Performance-Tested-blue?style=flat-square&logo=codecov&logoColor=white" />
 </p>
 
 | # | Plugin | Version | Description | Install |

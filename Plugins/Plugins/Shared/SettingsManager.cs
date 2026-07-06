@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace LenovoLegionToolkit.Plugins.Shared;
@@ -23,6 +25,7 @@ public class SettingsManager<T> where T : class, new()
     private readonly string _legacySettingsFilePath;
     private readonly ILogger? _logger;
     private readonly object _lock = new object();
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
     private T? _cachedSettings;
 
     /// <summary>
@@ -94,6 +97,51 @@ public class SettingsManager<T> where T : class, new()
                 _logger?.LogError(ex, "Failed to load settings from {FilePath}", _settingsFilePath);
                 return _cachedSettings = new T();
             }
+        }
+    }
+
+    /// <summary>
+    /// Saves settings to file asynchronously.
+    /// </summary>
+    public async Task<bool> SaveAsync(T settings, CancellationToken cancellationToken = default)
+    {
+        if (settings == null)
+        {
+            _logger?.LogError("Cannot save null settings");
+            return false;
+        }
+
+        await _semaphore.WaitAsync(cancellationToken);
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
+
+            var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            var tempPath = _settingsFilePath + ".tmp";
+            await using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+            {
+                var bytes = Encoding.UTF8.GetBytes(json);
+                await fileStream.WriteAsync(bytes, cancellationToken);
+            }
+            File.Move(tempPath, _settingsFilePath, overwrite: true);
+            _cachedSettings = settings;
+
+            var handler = SettingsChanged;
+            handler?.Invoke(this, settings);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to save settings to {FilePath}", _settingsFilePath);
+            return false;
+        }
+        finally
+        {
+            _semaphore.Release();
         }
     }
 
