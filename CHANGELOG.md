@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / 新增
+- FlaUI + WinRT OCR automated UI verification pipeline (Pillar C) — base class `FlaUiTestBase`, collection definition, setup tests, and main window tests for automated UI validation / FlaUI + WinRT OCR 自动化 UI 验证管道（Pillar C）—— 基类 `FlaUiTestBase`、集合定义、安装测试、主窗口测试，用于自动化 UI 验证
+- Admin test runner script (`run_flaui_tests_admin.ps1`) for easy FlaUI test execution with auto-elevation / 管理员测试运行脚本（`run_flaui_tests_admin.ps1`），支持自动提权，简化 FlaUI 测试执行
+- FlaUI testing guide (`Docs/FlaUI_Testing.md`) with prerequisites, quick start, troubleshooting, and writing new tests / FlaUI 测试指南（`Docs/FlaUI_Testing.md`），包含先决条件、快速开始、故障排除和编写新测试
+
 ### Fixed / 修复
 
 - Dashboard layout customizations (groups, items order, sensors toggle) are now persisted across app restarts; `DashboardSettings` IoC registration changed from transient to `SingleInstance()` so EditDashboardWindow and DashboardPage share the same in-memory cache and `SynchronizeStore()` writes are immediately visible to all consumers / 控制台自定义布局（分组、项目顺序、传感器开关）现在可在应用重启后持久化保留；`DashboardSettings` 的 IoC 注册从瞬时改为 `SingleInstance()`，确保 EditDashboardWindow 与 DashboardPage 共享同一内存缓存，`SynchronizeStore()` 写入对所有消费者立即可见
