@@ -196,7 +196,31 @@ public class UpdateCheckerTests : TemporaryFileTestBase
         // Arrange
         const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
         var tempFile = CreateTempFile();
-        await File.WriteAllBytesAsync(tempFile, "unsigned payload"u8.ToArray());
+       await File.WriteAllBytesAsync(tempFile, "unsigned payload"u8.ToArray());
+
+       var update = new Update(CreateRelease(
+           body: string.Empty,
+           ("LenovoLegionToolkitSetup.exe", packageUrl)));
+
+       using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
+
+       // Act
+        // The test name documents the skip path. An explicit integrity-check waiver makes the
+        // skip path run consistently in both Debug and Release, rather than relying on the
+        // #if !DEBUG security gate being compiled out under DEBUG.
+        await InvokeValidateUpdatePackageAsync(tempFile, update, httpClient, isIntegrityCheckRequired: false);
+
+       // Assert
+       File.Exists(tempFile).Should().BeTrue();
+   }
+
+    [Fact]
+    public async Task ValidateUpdatePackageAsync_WhenNoHashIsAvailableAndIntegrityRequired_EnforcesReleaseSecurityGate()
+    {
+        // Arrange
+        const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
+        var tempFile = CreateTempFile();
+        await File.WriteAllBytesAsync(tempFile, "unverified payload"u8.ToArray());
 
         var update = new Update(CreateRelease(
             body: string.Empty,
@@ -204,16 +228,25 @@ public class UpdateCheckerTests : TemporaryFileTestBase
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
 
-        // Act
-        await InvokeValidateUpdatePackageAsync(tempFile, update, httpClient);
-
-        // Assert
+        // The production security gate (UpdateChecker.ValidateUpdatePackageAsync, guarded by
+        // #if !DEBUG) only throws when integrity is required and no hash resolves. Debug compiles
+        // the throw out, so the same invocation skips validation and keeps the file; Release enforces it.
+        var action = () => InvokeValidateUpdatePackageAsync(tempFile, update, httpClient, isIntegrityCheckRequired: true);
+#if DEBUG
+        await action();
         File.Exists(tempFile).Should().BeTrue();
+#else
+        await action.Should().ThrowAsync<InvalidDataException>();
+        File.Exists(tempFile).Should().BeFalse();
+#endif
     }
 
-    private static async Task InvokeValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient)
+   private static async Task InvokeValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient)
+        => await InvokeValidateUpdatePackageAsync(filePath, update, httpClient, isIntegrityCheckRequired: true);
+
+    private static async Task InvokeValidateUpdatePackageAsync(string filePath, Update update, HttpClient httpClient, bool isIntegrityCheckRequired)
     {
-        var task = (Task)ValidateUpdatePackageAsyncMethod.Invoke(null, [filePath, update, httpClient, CancellationToken.None, true])!;
+        var task = (Task)ValidateUpdatePackageAsyncMethod.Invoke(null, [filePath, update, httpClient, CancellationToken.None, isIntegrityCheckRequired])!;
         await task;
     }
 

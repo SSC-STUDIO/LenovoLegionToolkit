@@ -449,12 +449,16 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
-    private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
-    {
-        var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));
-        var httpClientFactory = new StubHttpClientFactory(httpClient);
-        return new PluginRepositoryService(_pluginManager.Object, httpClientFactory);
-    }
+   private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
+   {
+       var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));
+       var httpClientFactory = new StubHttpClientFactory(httpClient);
+        // Tests stage plugin packages as file:// URIs to exercise the install/scan contract
+        // without a network download. forceAllowFileUrls is the explicit dev/test opt-in that
+        // bypasses the production-mode security gate in PluginRepositoryService which otherwise
+        // blocks file:// downloads in Release builds (CI runs --configuration Release).
+        return new PluginRepositoryService(_pluginManager.Object, httpClientFactory, forceAllowFileUrls: true);
+   }
 
     private string CreatePluginPackage(string pluginId, bool includeOptimizationAction)
     {
