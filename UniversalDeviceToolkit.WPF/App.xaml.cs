@@ -24,6 +24,7 @@ using LenovoLegionToolkit.Lib.Features.PanelLogo;
 using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Macro;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Services;
@@ -129,7 +130,31 @@ public partial class App
     internal void RegisterExceptionHandlers()
     {
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
+        AppDomain.CurrentDomain.ProcessExit += AppDomain_ProcessExit;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+    }
+
+    private void AppDomain_ProcessExit(object? sender, EventArgs e)
+    {
+        // Last-resort cleanup: if Application_Exit was not called (e.g. process killed externally),
+        // try to release global hooks here. This is a best-effort attempt because by the time
+        // ProcessExit fires, the finalizer thread may have already started.
+        try
+        {
+            StopMacroControllerSafely();
+
+            if (TryGetCachedService<NativeWindowsMessageListener>() is { } nwml)
+                nwml.StopAsync().GetAwaiter().GetResult();
+
+            // UserInactivityAutoListener.StopAsync() is protected; dispose instead
+            // (AbstractAutoListener.Dispose() calls StopAsync() internally)
+            if (TryGetCachedService<UserInactivityAutoListener>() is { } uial)
+                ((IDisposable)uial).Dispose();
+        }
+        catch
+        {
+            // Best effort only — process is exiting anyway
+        }
     }
 
     internal static async Task InitializePluginsAsync()
@@ -609,8 +634,13 @@ public partial class App
                 StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
                 StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
                 StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor"),
-                StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller")
+                StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller"),
+                StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native Windows message listener")
             );
+
+            // UserInactivityAutoListener.StopAsync() is protected; dispose it instead
+            // (AbstractAutoListener.Dispose() calls StopAsync() internally)
+            await StopUserInactivityListenerAsync().ConfigureAwait(false);
 
             var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
             if (completedTask != stopServicesTask)
@@ -661,6 +691,25 @@ public partial class App
                 await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
         }
         catch { /* Plugin shutdown process failed - continue with app shutdown */ }
+    }
+
+    /// <summary>
+    /// Stops the UserInactivityAutoListener by disposing it.
+    /// UserInactivityAutoListener.StopAsync() is protected (called internally by AbstractAutoListener),
+    /// so we dispose it instead — Dispose() calls StopAsync() internally and releases keyboard/mouse hooks.
+    /// CRITICAL: If these global hooks are not released, the process cannot exit cleanly and the system stutters.
+    /// </summary>
+    private static async Task StopUserInactivityListenerAsync()
+    {
+        try
+        {
+            if (TryGetCachedService<UserInactivityAutoListener>() is not { } listener)
+                return;
+
+            // AbstractAutoListener.Dispose() calls StopAsync() which releases WH_KEYBOARD_LL/WH_MOUSE_LL hooks
+            await Task.Run(() => ((IDisposable)listener).Dispose()).ConfigureAwait(false);
+        }
+        catch { /* Listener stop failed during shutdown - continue cleanup */ }
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
