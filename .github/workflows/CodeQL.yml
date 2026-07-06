@@ -46,7 +46,9 @@ jobs:
         run: dotnet restore UniversalDeviceToolkit.sln
 
       - name: Build solution
-        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
+        env:
+          MSBUILDDISABLENODEREUSE: 1
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1 --disable-build-servers
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
