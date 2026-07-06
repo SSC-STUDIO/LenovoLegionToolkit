@@ -210,29 +210,29 @@ Star on GitHub</a>
 <div class="sec-head reveal">
 <span class="kicker">Install in one line</span>
 <h2>Three ways to get UDT</h2>
-<p>Some package identifiers keep the legacy LenovoLegionToolkit name so old installs upgrade in place.</p>
+<p>Some package identifiers keep the legacy LenovoLegionToolkit name so old installs upgrade in place. The installer and Scoop work today; winget is pending review in winget-pkgs.</p>
 </div>
 <div class="install">
 <div class="card reveal">
-<div class="tag">winget</div>
-<h3>Windows Package Manager</h3>
-<div class="cmd"><code>winget install SSC-STUDIO.LenovoLegionToolkit</code>
-<button class="cp" data-copy="winget install SSC-STUDIO.LenovoLegionToolkit" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
-<p class="note">Easiest. Use winget upgrade to stay current.</p>
+<div class="tag">Releases</div>
+<h3>Installer or portable ZIP</h3>
+<div class="cmd"><code>github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest</code>
+<button class="cp" data-copy="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
+<p class="note">Recommended. Each release ships SHA256.txt - verify before mirroring.</p>
 </div>
 <div class="card reveal">
 <div class="tag">Scoop</div>
 <h3>Scoop manifest</h3>
 <div class="cmd"><code>scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit</code>
 <button class="cp" data-copy="scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
-<p class="note">Pulls the .NET runtime as a dependency.</p>
+<p class="note">On v4.2.1. Pulls the .NET runtime as a dependency.</p>
 </div>
 <div class="card reveal">
-<div class="tag">Releases</div>
-<h3>Installer or portable ZIP</h3>
-<div class="cmd"><code>github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest</code>
-<button class="cp" data-copy="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
-<p class="note">Each release ships SHA256.txt - verify before mirroring.</p>
+<div class="tag">winget &middot; pending</div>
+<h3>Windows Package Manager</h3>
+<div class="cmd"><code>winget install SSC-STUDIO.LenovoLegionToolkit</code>
+</div>
+<p class="note">Not yet published to winget-pkgs - submission is pending. Use Scoop or the installer for now, and follow <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues/158" target="_blank" rel="noopener">#158</a>.</p>
 </div>
 </div>
 </div>

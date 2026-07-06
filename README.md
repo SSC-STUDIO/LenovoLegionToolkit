@@ -20,8 +20,8 @@
 **⭐ Star this repo if UDT helps you — it really helps the project grow! ⭐**
 
 [![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
-[![Get it from winget](https://img.shields.io/badge/Get%20it%20from-winget-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://winstall.app/apps/SSC-STUDIO.LenovoLegionToolkit)
-**One-line install:** `winget install SSC-STUDIO.LenovoLegionToolkit` -- installer and portable zip also on [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![Install via Scoop](https://img.shields.io/badge/Install-via%20Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
+**Install:** download the installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest), or use Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`
 
 > **Goal: 1,000 stars.** If UDT keeps your laptop running lean, a star helps more people find it -- and tells us the plugin model is worth building out.
 
@@ -124,9 +124,10 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 
 > [!NOTE]
 > **Two release tracks.** Stable: v4.2.1 (default on winget/Releases). Pre-release: v5.0.0-preview (rebuilt plugin system -- hot-reload, sandbox, dependency resolution; 2,343 tests green; global hook-leak fix). Grab the preview zip from [v5.0.0-preview](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v5.0.0-preview.20260706001) to try plugins early; stable users stay on v4.2.1 until 5.x final.
+> **Note on winget:** the package id `SSC-STUDIO.LenovoLegionToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
-- **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
+ - ~~**winget** (pending)~~: the `PackageIdentifier` `SSC-STUDIO.LenovoLegionToolkit` is reserved for in-place upgrade from the legacy Lenovo Legion Toolkit, but the manifest has not been submitted to microsoft/winget-pkgs yet -- `winget install` will fail until it ships. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
@@ -137,7 +138,7 @@ During the rename from Lenovo Legion Toolkit, several identifiers intentionally 
 | What you see | Legacy identifier | Why it remains |
 |---|---|---|
 | Product name in UI / Releases | Universal Device Toolkit (UDT) | Current public branding |
-| winget / Scoop package ID | `SSC-STUDIO.LenovoLegionToolkit`, `lenovolegiontoolkit` | In-place upgrade from old installs |
+| winget ID (pending) / Scoop ID | `SSC-STUDIO.LenovoLegionToolkit` (not yet in winget-pkgs) / `lenovolegiontoolkit` | Upgrade continuity once winget publishes; Scoop works now |
 | CLI executable | `llt.exe` | Scripts and automation compatibility |
 | Data directory | `%LOCALAPPDATA%\LenovoLegionToolkit` | Settings/plugins migrate automatically |
 | Action env vars | `LLT_*` | Existing user scripts |
