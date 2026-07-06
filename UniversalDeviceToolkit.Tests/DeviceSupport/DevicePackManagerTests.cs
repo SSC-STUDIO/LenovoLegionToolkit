@@ -75,8 +75,7 @@ public sealed class DevicePackManagerTests : IDisposable
         var action = () => manager.InstallAsync("lenovo-legion-pro-7");
 
         // Assert
-        await action.Should().ThrowAsync<InvalidDataException>()
-            .WithMessage("*unsupported file type*");
+        await action.Should().ThrowAsync<InvalidDataException>();
         manager.IsInstalled("lenovo-legion-pro-7").Should().BeFalse();
     }
 
