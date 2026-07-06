@@ -82,5 +82,29 @@ public class SavePerformanceDiagnostics
         sw.Stop();
         Console.WriteLine($"  Save(): {sw.ElapsedMilliseconds} ms");
         Console.WriteLine();
+
+        Console.WriteLine("## Full Save() with MessagePack (after warm-up)");
+        var settingsManagerMpck = new SettingsManager<TestSettings>("PerfDiagPluginMpck", null, null, true);
+        // Warm-up: serialize once to cache reflection
+        settingsManagerMpck.Save(settings);
+        // Actual measurement
+        sw.Restart();
+        settingsManagerMpck.Save(settings);
+        sw.Stop();
+        Console.WriteLine($"  Save() [MessagePack, warmed up]: {sw.ElapsedMilliseconds} ms");
+        Console.WriteLine();
+
+        // Compare file sizes
+        var jsonFile = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "LenovoLegionToolkit", "plugins", _testPluginName, "settings.json");
+        var mpckFile = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "LenovoLegionToolkit", "plugins", "PerfDiagPluginMpck", "settings.mpack");
+        if (File.Exists(jsonFile))
+            Console.WriteLine($"  JSON file size: {new FileInfo(jsonFile).Length} bytes");
+        if (File.Exists(mpckFile))
+            Console.WriteLine($"  MessagePack file size: {new FileInfo(mpckFile).Length} bytes");
+        Console.WriteLine();
     }
 }

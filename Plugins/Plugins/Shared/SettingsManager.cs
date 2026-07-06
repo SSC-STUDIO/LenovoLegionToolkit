@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using MessagePack;
 using Microsoft.Extensions.Logging;
 
 namespace LenovoLegionToolkit.Plugins.Shared;
@@ -16,18 +17,21 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 public class SettingsManager<T> where T : class, new()
 {
     private const string _settingsFileName = "settings.json";
+    private const string _settingsFileNameMpck = "settings.mpack";
     private static readonly string _defaultSettingsRoot = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "LenovoLegionToolkit",
         "plugins");
 
     private readonly string _settingsFilePath;
+    private readonly string _settingsFilePathMpck;
     private readonly string _legacySettingsFilePath;
     private readonly ILogger? _logger;
     private readonly object _lock = new object();
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
     private T? _cachedSettings;
     private string? _lastSavedJson; // Track last saved settings JSON for memory transaction
+    private readonly bool _useMessagePack; // Use MessagePack for faster serialization
 
     /// <summary>
     /// Event raised when settings are changed.
@@ -40,8 +44,9 @@ public class SettingsManager<T> where T : class, new()
     /// <param name="pluginName">The name of the plugin (used to determine settings file location)</param>
     /// <param name="logger">Optional logger for diagnostic messages</param>
     /// <param name="settingsRoot">Optional override for the settings root directory. Defaults to the current user's local application data.</param>
+    /// <param name="useMessagePack">Use MessagePack for faster serialization (default: false, uses JSON)</param>
     /// <exception cref="ArgumentException">Thrown when pluginName is null or empty</exception>
-    public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null)
+    public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null, bool useMessagePack = false)
     {
         if (string.IsNullOrWhiteSpace(pluginName))
         {
@@ -49,6 +54,7 @@ public class SettingsManager<T> where T : class, new()
         }
 
         _logger = logger;
+        _useMessagePack = useMessagePack;
 
         var effectiveSettingsRoot = string.IsNullOrWhiteSpace(settingsRoot)
             ? _defaultSettingsRoot
@@ -56,11 +62,13 @@ public class SettingsManager<T> where T : class, new()
         var pluginDirectory = Path.Combine(effectiveSettingsRoot, pluginName);
         Directory.CreateDirectory(pluginDirectory);
         _settingsFilePath = Path.Combine(pluginDirectory, _settingsFileName);
+        _settingsFilePathMpck = Path.Combine(pluginDirectory, _settingsFileNameMpck);
         _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, _settingsFileName);
     }
 
     /// <summary>
     /// Loads settings from file, or creates default settings if file doesn't exist.
+    /// Uses MessagePack or JSON based on _useMessagePack flag.
     /// </summary>
     public T Load()
     {
@@ -75,27 +83,29 @@ public class SettingsManager<T> where T : class, new()
 
                 EnsureLegacySettingsMigrated();
 
-                if (!File.Exists(_settingsFilePath))
+                var settingsFilePath = _useMessagePack ? _settingsFilePathMpck : _settingsFilePath;
+                if (!File.Exists(settingsFilePath))
                 {
                     _logger?.LogInformation("Settings file not found, creating default settings");
                     return _cachedSettings = new T();
                 }
 
-                var json = File.ReadAllText(_settingsFilePath);
-
-                // Validate file size
-                if (json.Length > Constants.MaxConfigFileSizeBytes)
+                if (_useMessagePack)
                 {
-                    _logger?.LogError("Settings file exceeds maximum size limit");
-                    return _cachedSettings = new T();
+                    using var stream = File.OpenRead(_settingsFilePathMpck);
+                    var settings = MessagePackSerializer.Deserialize<T>(stream);
+                    return _cachedSettings = settings ?? new T();
                 }
-
-                var settings = JsonSerializer.Deserialize<T>(json);
-                return _cachedSettings = settings ?? new T();
+                else
+                {
+                    var json = File.ReadAllText(_settingsFilePath);
+                    var settings = JsonSerializer.Deserialize<T>(json);
+                    return _cachedSettings = settings ?? new T();
+                }
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Failed to load settings from {FilePath}", _settingsFilePath);
+                _logger?.LogError(ex, "Failed to load settings from {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
                 return _cachedSettings = new T();
             }
         }
@@ -181,17 +191,27 @@ public class SettingsManager<T> where T : class, new()
 
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
 
-                var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-                _lastSavedJson = json; // Cache for memory transaction
-
                 var tempPath = _settingsFilePath + ".tmp";
-                File.WriteAllText(tempPath, json, Encoding.UTF8);
-                File.Move(tempPath, _settingsFilePath, overwrite: true);
+                if (_useMessagePack)
+                {
+                    // MessagePack serialization (binary, faster)
+                    var bytes = MessagePackSerializer.Serialize(settings);
+                    File.WriteAllBytes(tempPath, bytes);
+                    File.Move(tempPath, _settingsFilePathMpck, overwrite: true);
+                    _lastSavedJson = Convert.ToBase64String(bytes); // Cache as base64 for memory transaction
+                }
+                else
+                {
+                    // JSON serialization (text, human-readable)
+                    var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    _lastSavedJson = json; // Cache for memory transaction
+                    File.WriteAllText(tempPath, json, Encoding.UTF8);
+                    File.Move(tempPath, _settingsFilePath, overwrite: true);
+                }
                 _cachedSettings = settings;
-                _lastSavedJson = json; // Cache for memory transaction
 
                 handler = SettingsChanged;
             }
