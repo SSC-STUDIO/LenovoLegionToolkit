@@ -25,6 +25,8 @@
 
 > **Goal: 1,000 stars.** If UDT keeps your laptop running lean, a star helps more people find it -- and tells us the plugin model is worth building out.
 
+<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT Main Interface" /></a>
+
 </div>
 
 ---
@@ -62,8 +64,6 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 - Tinkerers: `llt.exe` CLI, macros, GPL source you can actually read
 
 Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
-
-<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT Main Interface" /></a>
 
 <details>
 <summary>🎮 Want to see more screenshots?</summary>
