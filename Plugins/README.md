@@ -16,6 +16,12 @@
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/actions">
     <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release.yml?style=for-the-badge&logo=github&logoColor=white" alt="CI" />
   </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/watchers">
+    <img src="https://img.shields.io/github/watchers/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=green&logo=github&labelColor=222" alt="Watchers" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/network/members">
+    <img src="https://img.shields.io/github/forks/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=orange&logo=github&labelColor=222" alt="Forks" />
+  </a>
 </p>
 
 <p align="center">
@@ -202,6 +208,14 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Plugin Development Gui
 - [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) — Automation-friendly workflow docs
 - [Coding Standards](./Docs/CODING_STANDARDS.md) — Naming, patterns, and forbidden anti-patterns
 - [Changelog](./CHANGELOG.md) — Release history
+
+---
+
+## 📈 Star History
+
+If you find this project useful, please consider giving it a ⭐! It helps us reach more developers and grow the plugin ecosystem.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)
 
 ---
 
