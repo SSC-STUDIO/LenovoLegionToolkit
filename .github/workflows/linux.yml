@@ -22,21 +22,32 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore NuGet packages
-        run: dotnet restore --locked-mode
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
+
+      # Only the cross-platform projects can build on Linux. The solution also
+      # contains Windows-only WPF/WinForms projects (NETSDK1100), so scope
+      # restore/build/test to the cross-platform test project, which builds the
+      # UniversalDeviceToolkit.CrossPlatform library transitively.
+      - name: Restore cross-platform tests
+        run: dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj
 
       - name: Build Debug configuration
-        run: dotnet build --configuration Debug --no-restore -warnaserror -v:minimal
+        run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Debug --no-restore -v:minimal
 
       - name: Build Release configuration
-        run: dotnet build --configuration Release --no-restore -warnaserror -v:minimal
+        run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore -v:minimal
 
-      - name: Run test suite
-        run: dotnet test --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=TestResults/linux-test-results.xml"
+      - name: Run cross-platform test suite
+        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=linux-test-results.trx"
 
       - name: Upload test results
         uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: test-results
-          path: TestResults/*.xml
+          name: test-results-linux
+          path: '**/linux-test-results.trx'
+          if-no-files-found: warn

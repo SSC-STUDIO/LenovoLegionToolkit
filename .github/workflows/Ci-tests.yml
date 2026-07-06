@@ -33,7 +33,9 @@ jobs:
         run: dotnet restore UniversalDeviceToolkit.sln
 
       - name: Build solution
-        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore
+        # --disable-build-servers kills the VBCSCompiler (Roslyn shared compiler)
+        # that otherwise locks obj/*.dll during parallel solution builds (CS2012).
+        run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore --disable-build-servers
 
       # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
       - name: Test (Unit category — fail fast)
