@@ -21,6 +21,9 @@
 
 [![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
 [![Get it from winget](https://img.shields.io/badge/Get%20it%20from-winget-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://winstall.app/apps/SSC-STUDIO.LenovoLegionToolkit)
+**One-line install:** `winget install SSC-STUDIO.LenovoLegionToolkit` -- installer and portable zip also on [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+
+> **Goal: 1,000 stars.** If UDT keeps your laptop running lean, a star helps more people find it -- and tells us the plugin model is worth building out.
 
 </div>
 
@@ -118,6 +121,9 @@ Please be patient and read through this readme carefully - it contains important
 ## Download
 
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
+
+> [!NOTE]
+> **Two release tracks.** Stable: v4.2.1 (default on winget/Releases). Pre-release: v5.0.0-preview (rebuilt plugin system -- hot-reload, sandbox, dependency resolution; 2,343 tests green; global hook-leak fix). Grab the preview zip from [v5.0.0-preview](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v5.0.0-preview.20260706001) to try plugins early; stable users stay on v4.2.1 until 5.x final.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
 - **winget**: Install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`. The winget `PackageIdentifier` intentionally remains `SSC-STUDIO.LenovoLegionToolkit` for now so old Lenovo Legion Toolkit installations can upgrade in place.
@@ -839,9 +845,9 @@ This project is a modified continuation derived from [Lenovo Legion Toolkit](htt
 
 <div align="center">
 
-### ⭐ Help us reach 100+ stars! ⭐
+### ⭐ Help us reach 1,000 stars! ⭐
 
-If Universal Device Toolkit makes your gaming laptop experience better, please consider giving us a star!
+If UDT makes your Legion (or any Windows PC) run leaner -- Fn+Q, RGB, dGPU, plugins, no Vantage bloat -- please give us a star. Every star helps us reach 1,000 and signals that the plugin model is worth building out.
 
 [![Star this repo](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social&label=Star%20UDT)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
 

@@ -1,128 +1,94 @@
-# Pillar D: 开源推广计划 (Target: 100+ stars)
+# Pillar D: 开源推广计划 (Target: 1,000 stars)
 
-## 📊 当前状态
-- **当前 stars**: 18 ⭐
-- **目标**: 100+ stars（还差 82）
-- **GitHub Release**: v5.0.0-preview.20260706001 ✅
+## 现状 (2026-07-06)
 
----
+- 当前 stars: 18
+- 目标: 1,000 stars（还差 982）
+- GitHub Release: v5.0.0-preview.20260706001 已发布；稳定版 v4.2.1
 
-## 🎯 推广策略
+## 诚实说明（先读这条）
 
-### Phase 1: 社区发布 (Week 1)
-- [x] 创建 GitHub Release (v5.0.0-preview)
-- [ ] 在 Reddit 发布（r/Lenovo, r/Laptop, r/Windows10, r/OpenSource）
-- [ ] 在 Discord 社区分享（Lenovo Legion Discord, Windows Discord）
-- [ ] 在 Hacker News 提交（Show HN: Universal Device Toolkit）
-- [ ] 在 Product Hunt 发布
+- Star 来自真实用户，不能买、不能刷、不能 star-for-star。GitHub 反作弊会把项目降权，信誉也回不来。
+- 推广是长期工程，不是一次性发帖。最有效的不是首发，是发帖后 48h 内认真回复 + 持续小版本。
+- 配套文档（都已就绪）：
+  - 现成可发文案（每渠道一版）：`Docs/OUTREACH_PACK.md`
+  - 目录 / awesome-list 提交跟踪：`Docs/SUBMISSIONS.md`
+  - OpenAI 程序诚实分析 + 申请文案：`Docs/OPENAI_PROGRAMS.md`
 
-### Phase 2: 内容营销 (Week 2-3)
-- [ ] 创建演示视频（YouTube, Bilibili）
-- [ ] 写技术博客（Dev.to, Medium, 掘金）
-- [ ] 制作截图 + 功能介绍图（Twitter/X, LinkedIn）
-- [ ] 在中文社区发布（V2EX, 少数派, HiPDA）
+## 阶段里程碑
 
-### Phase 3: 合作推广 (Week 4+)
-- [ ] 联系科技博主/YouTuber（Linus Tech Tips, Dave2D, 极客湾）
-- [ ] 提交到软件推荐网站（AlternativeTo, Slant）
-- [ ] 在大学/企业内推（IT 管理员社区）
+| 阶段 | 目标 | 关键动作 |
+|------|------|----------|
+| Phase 0 | 0 -> 100 | HN（Show HN）+ 1 个 subreddit + V2EX + X 7 连推 + B站；提交 awesome-dotnet / AlternativeTo |
+| Phase 1 | 100 -> 300 | Dev.to + 掘金 + 少数派 + 第 2 个 subreddit；每 2 周一个小版本保持 trending |
+| Phase 2 | 300 -> 700 | Linux.do / Chiphell / NGA + 微博 / 小红书；联系 2-3 个科技博主 / UP 主 |
+| Phase 3 | 700 -> 1000 | 持续 2 周一版；帮真实用户解决机型适配；把 issue 回复做到最快 |
 
----
+## 每周增长跟踪
 
-## 📝 推广文案模板
+| 周截止 | Stars | 周增量 | 触达渠道 | 备注 |
+|--------|-------|--------|----------|------|
+| 2026-07-06 | 18 | - | v5.0.0-preview 发布 | baseline |
 
-### Reddit 帖子模板
+每周日在 `Docs/SUBMISSIONS.md` 的周表里同步增一行；任何时候查 star 计数：
+
 ```
-Title: [Soft Launch] Universal Device Toolkit — Open-source Lenovo Legion toolkit (formerly LLT), now with plugin extensions
-
-Body:
-Hi r/Lenovo!
-
-I'm the maintainer of Universal Device Toolkit (UDT), an open-source Windows utility for Lenovo Legion laptops. It's the spiritual successor to Lenovo Legion Toolkit (which is now unmaintained).
-
-🎮 What it does:
-- Fn+Q, RGB, fan curves, dGPU control — without Vantage bloat
-- Plugin extensions — install CPU/GPU/network tools without bloating the base app
-- Zero telemetry, zero account, zero background service
-- Basic mode for non-Lenovo PCs (plugins still work)
-
-🆕 What's new in v5.0.0:
-- Plugin system overhaul (hot-reload, sandbox, dependency resolution)
-- 2300+ unit tests passing (0 failures!)
-- FlaUI automated UI tests (WinRT OCR verification)
-- Global hook leak fixed — no more system stutter after app exit
-- 25+ languages (help wanted: translators!)
-
-📥 Download: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
-⭐ Star us: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
-
-Feedback welcome! And if UDT helps you, please consider starring the repo — it really helps the project grow.
+gh api repos/SSC-STUDIO/UniversalDeviceToolkit --jq .stargazers_count
 ```
 
-### Twitter/X 推文模板
-```
-🎮 Tired of Lenovo Vantage bloat? 
+## 推广动作清单（实战）
 
-Universal Device Toolkit (UDT) is the open-source alternative:
-✅ Fn+Q, RGB, fan curves, dGPU control
-✅ Plugin extensions (CPU/GPU/network tools)
-✅ Zero telemetry, zero account, zero background service
-✅ 25+ languages, 2300+ tests
+### Phase 0（本周）
 
-Download: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
+- [x] 创建 GitHub Release v5.0.0-preview
+- [x] README 优化（hero 一键安装 + Goal: 1,000 stars + Star History CTA）
+- [x] 仓库可发现性（topics / description / Discussions 开启）
+- [x] 准备 OUTREACH_PACK.md / SUBMISSIONS.md / OPENAI_PROGRAMS.md
+- [ ] 在 Hacker News 发布 Show HN（见 OUTREACH_PACK.md A）
+- [ ] 在 1 个 subreddit 发布（见 OUTREACH_PACK.md B，按优先级选）
+- [ ] 在 V2EX 分享创造 发布（见 OUTREACH_PACK.md C）
+- [ ] X 7 连推（见 OUTREACH_PACK.md G）
+- [ ] B站 90s 录屏（见 OUTREACH_PACK.md H）
+- [ ] 提交 awesome-dotnet PR（见 SUBMISSIONS.md）
+- [ ] AlternativeTo 建条目（见 SUBMISSIONS.md）
 
-Please ⭐ if UDT helps you!
-```
+### Phase 1（接下来 2-3 周）
 
-### 中文社区帖子模板
-```
-标题：【开源】Universal Device Toolkit —  Legion 笔记本神器（原 LLT 继任者）
+- [ ] Dev.to 长文 + 掘金长文（技术拆解，见 OUTREACH_PACK.md D/F）
+- [ ] 少数派投稿（见 OUTREACH_PACK.md E）
+- [ ] 第 2 个 subreddit（与第一个不同）
+- [ ] 每两周一个小版本，发版即转一条短推 + 仓库 Discussion 公告
+- [ ] 跟踪 star 增长，周日更新本表
 
-大家好！我是 Universal Device Toolkit (UDT) 的维护者。UDT 是开源的 Windows 设备工具，前身是 Lenovo Legion Toolkit（已停止维护）。
+### Phase 2 / 3
 
-🎮 主要功能：
-• Fn+Q、RGB 灯效、风扇曲线、独显控制 — 无需 Vantage
-• 插件扩展 — 安装 CPU/GPU/网络工具，不臃肿基础应用
-• 零遥测、零账号、零后台服务
-• 非联想电脑也可用（基础模式 + 插件）
+- [ ] Linux.do / Chiphell / NGA
+- [ ] 微博 / 小红书
+- [ ] 联系科技博主 / UP 主（提供现成素材：截图 + 脚本 + 一句话简介）
+- [ ] 真实机型适配 issue 响应（把"作者秒回 + 修了"做成营销亮点）
 
-🆕 v5.0.0 更新：
-• 插件系统重构（热重载、沙箱、依赖管理）
-• 2300+ 单元测试全部通过
-• 修复全局钩子泄漏（关闭应用后系统不再卡顿！）
-• 25+ 语言支持（招募译者！）
+## 增长黑客（合规前提下）
 
-📥 下载：https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
-⭐ 开源项目需要你的 Star：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
+1. 朋友网络: 让真用得上的朋友/同事 star（一次，真诚地，不是群发）
+2. 技术会议: .NET Conf / 本地开源聚会分享插件沙箱 + 钩子泄漏排查故事
+3. 大学合作: 计算机社团、开源社团体验插件开发
+4. 企业友好: 无遥测 -> 推到 IT 管理员 / 内网系统社区
+5. 内容 SEO: README 关键词 "lenovo legion toolkit" "open source Vantage alternative" 已就位
+6. 译者优先权: 招募 25+ 语言译者，译者即推广者（自己的语言圈最容易带量）
 
-欢迎反馈！如果这个工具对你有帮助，请点个 Star ⭐ — 对开源项目意义重大！
-```
+## 真实节奏 + 反指标
 
----
+- 不要每天发同一篇到多个社区 -- 平台限流 + 显得 spam。
+- 不要在每个回复下求 star -- 求 1 次，温暖地，说清"为什么对开源项目有意义"。
+- 不要为追 1000 去 star farms 或买量 -- 19 个真 star 的项目，远胜 1000 个水军。
+- 真实 1000 star 的项目共同点：发版稳定 + 作者响应快 + 真解决一个痛点 + 有人自发转发。盯住这四点。
 
-## 📈 跟踪指标
+## 下一步行动（今天）
 
-| 日期 | Stars | 访问量 | 下载量 | 备注 |
-|------|-------|--------|--------|------|
-| 2026-07-06 | 18 | - | - | 初始状态 |
-| 2026-07-06 | 18 | - | 1 | v5.0.0 Release 发布 |
+1. 按 OUTREACH_PACK.md A 发 Hacker News，发完盯 2 小时回复
+2. 按 OUTREACH_PACK.md C 发 V2EX
+3. 按 OUTREACH_PACK.md G 发 X 7 连推
+4. 提交 awesome-dotnet PR（见 SUBMISSIONS.md）
+5. 周日回来更新本表 + SUBMISSIONS.md 周表
 
----
-
-## 💡 增长黑客技巧
-
-1. **好友网络**: 让朋友/同事 star（合规的社交推广）
-2. **技术会议**: 在 .NET Conf、OSCON 等会议分享
-3. **大学合作**: 联系计算机社团、开源社区
-4. **企业应用**: 推广到 IT 管理员社区（无遥测 = 企业友好）
-5. **内容 SEO**: 优化 README 关键词（"Lenovo Legion toolkit", "open source Vantage alternative"）
-
----
-
-## 🎯 下一步行动
-
-1. [ ] 今天：在 Reddit r/Lenovo 发布
-2. [ ] 今天：在 Twitter/X 发布（@dotnet, @VisualStudio, @Windows）
-3. [ ] 本周：创建演示视频脚本
-4. [ ] 下周：写技术博客（Dev.to + 掘金）
-5. [ ] 持续：每周检查 star 增长，调整策略
+最后更新: 2026-07-06
