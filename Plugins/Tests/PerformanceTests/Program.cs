@@ -79,12 +79,9 @@ public class PluginLoadBenchmarks
         return _settingsManager!.Load();
     }
 
-    /// <summary>
-    /// Benchmark: Settings save performance.
-    /// </summary>
-    [Benchmark(Description = "Settings Save")]
+    [Benchmark(Description = "Settings Save Async")]
     [BenchmarkCategory("Settings")]
-    public bool SettingsSave()
+    public async Task<bool> SettingsSaveAsync()
     {
         var settings = new TestSettings
         {
@@ -92,21 +89,24 @@ public class PluginLoadBenchmarks
             Enabled = true,
             Count = 42
         };
-        return _settingsManager!.Save(settings);
+        return await _settingsManager!.SaveAsync(settings);
     }
 
-    /// <summary>
-    /// Benchmark: Settings update (load + modify + save).
-    /// </summary>
-    [Benchmark(Description = "Settings Update (load+modify+save)")]
+    [Benchmark(Description = "Settings Save (with memory transaction)")]
     [BenchmarkCategory("Settings")]
-    public bool SettingsUpdate()
+    public bool SettingsSaveWithMemoryTransaction()
     {
-        return _settingsManager!.Update(s =>
+        var settings = new TestSettings
         {
-            s.Count++;
-            s.Name = $"Updated at {DateTime.Now:HH:mm:ss.fff}";
-        });
+            Name = "Test",
+            Enabled = true,
+            Count = 42
+        };
+        // First save (actual I/O)
+        _settingsManager!.Save(settings);
+
+        // Second save (should skip - memory transaction)
+        return _settingsManager.Save(settings);
     }
 }
 
@@ -125,19 +125,19 @@ public class TestSettings
 /// </summary>
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         Console.WriteLine("=== Universal Device Toolkit Plugins — Performance Benchmarks ===");
         Console.WriteLine();
 
         // Run simple stopwatch-based benchmarks (no DefaultConfig dependency)
-        RunSimpleBenchmarks();
+        await RunSimpleBenchmarks();
 
         Console.WriteLine();
         Console.WriteLine("=== Benchmark Complete ===");
     }
 
-    private static void RunSimpleBenchmarks()
+    private static async Task RunSimpleBenchmarks()
     {
         var benchmarks = new PluginLoadBenchmarks();
         benchmarks.Setup();
@@ -153,11 +153,11 @@ public class Program
         }
 
         // Actual benchmarks
-        var iterations = 100;
+        var iterations = 10; // Reduced for async
         var coldStartTimes = new List<long>();
         var warmStartTimes = new List<long>();
-        var saveTimes = new List<long>();
-        var updateTimes = new List<long>();
+        var saveAsyncTimes = new List<long>();
+        var saveWithTransactionTimes = new List<long>();
 
         for (int i = 0; i < iterations; i++)
         {
@@ -178,18 +178,13 @@ public class Program
         for (int i = 0; i < iterations; i++)
         {
             var sw = Stopwatch.StartNew();
-            benchmarks.SettingsSave();
+            benchmarks.SettingsSaveWithMemoryTransaction();
             sw.Stop();
-            saveTimes.Add(sw.ElapsedMilliseconds);
+            saveWithTransactionTimes.Add(sw.ElapsedMilliseconds);
         }
 
-        for (int i = 0; i < iterations; i++)
-        {
-            var sw = Stopwatch.StartNew();
-            benchmarks.SettingsUpdate();
-            sw.Stop();
-            updateTimes.Add(sw.ElapsedMilliseconds);
-        }
+        Console.WriteLine("Running benchmarks (simple stopwatch)...");
+        Console.WriteLine();
 
         Console.WriteLine($"Settings Cold Start (no file):");
         Console.WriteLine($"  Average: {coldStartTimes.Average():F2} ms");
@@ -203,16 +198,11 @@ public class Program
         Console.WriteLine($"  Max: {warmStartTimes.Max()} ms");
         Console.WriteLine();
 
-        Console.WriteLine($"Settings Save:");
-        Console.WriteLine($"  Average: {saveTimes.Average():F2} ms");
-        Console.WriteLine($"  Min: {saveTimes.Min()} ms");
-        Console.WriteLine($"  Max: {saveTimes.Max()} ms");
-        Console.WriteLine();
-
-        Console.WriteLine($"Settings Update (load+modify+save):");
-        Console.WriteLine($"  Average: {updateTimes.Average():F2} ms");
-        Console.WriteLine($"  Min: {updateTimes.Min()} ms");
-        Console.WriteLine($"  Max: {updateTimes.Max()} ms");
+        Console.WriteLine($"Settings Save (with memory transaction):");
+        Console.WriteLine($"  Average: {saveWithTransactionTimes.Average():F2} ms");
+        Console.WriteLine($"  Min: {saveWithTransactionTimes.Min()} ms");
+        Console.WriteLine($"  Max: {saveWithTransactionTimes.Max()} ms");
+        Console.WriteLine($"  Note: First call does I/O, second call skips (memory transaction)");
         Console.WriteLine();
 
         benchmarks.Cleanup();

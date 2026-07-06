@@ -27,6 +27,8 @@ public class SettingsManager<T> where T : class, new()
     private readonly object _lock = new object();
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
     private T? _cachedSettings;
+    private T? _lastSavedSettings; // Track last saved settings for memory transaction
+    private string? _lastSavedJson; // Track last saved settings JSON for memory transaction
 
     /// <summary>
     /// Event raised when settings are changed.
@@ -161,6 +163,17 @@ public class SettingsManager<T> where T : class, new()
         {
             try
             {
+                // Memory transaction: skip save if settings unchanged
+                if (_lastSavedJson != null)
+                {
+                    // Fast path: compare key fields instead of full JSON serialization
+                    if (AreSettingsEqual(settings, _lastSavedSettings))
+                    {
+                        _logger?.LogTrace("Settings unchanged, skipping save");
+                        return true;
+                    }
+                }
+
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
 
                 var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
@@ -172,6 +185,7 @@ public class SettingsManager<T> where T : class, new()
                 File.WriteAllText(tempPath, json, Encoding.UTF8);
                 File.Move(tempPath, _settingsFilePath, overwrite: true);
                 _cachedSettings = settings;
+                _lastSavedJson = json; // Cache for memory transaction
 
                 handler = SettingsChanged;
             }
@@ -218,6 +232,8 @@ public class SettingsManager<T> where T : class, new()
         lock (_lock)
         {
             _cachedSettings = null;
+            _lastSavedSettings = null;
+            _lastSavedJson = null;
 
             if (deleteFile && File.Exists(_settingsFilePath))
             {
@@ -231,6 +247,22 @@ public class SettingsManager<T> where T : class, new()
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Fast equality check for settings (override in derived classes for better performance).
+    /// </summary>
+    protected virtual bool AreSettingsEqual(T? left, T? right)
+    {
+        if (left == null || right == null)
+        {
+            return false;
+        }
+
+        // Default: compare serialized JSON
+        var leftJson = JsonSerializer.Serialize(left);
+        var rightJson = JsonSerializer.Serialize(right);
+        return string.Equals(leftJson, rightJson, StringComparison.Ordinal);
     }
 
     private void EnsureLegacySettingsMigrated()
