@@ -11,7 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 添加
+- **Zero-Warnings Build / 零警告构建**: Achieved 0 warnings, 0 errors across all 6 projects (CustomMouse, ViveTool, ShellIntegration, SDK, Shared, PluginTooling.Core). Enforced `TreatWarningsAsErrors=true` globally with `LangVersion=preview` for all projects / 所有 6 个项目实现零警告零错误构建，全局启用 `TreatWarningsAsErrors=true` 和 `LangVersion=preview`
 - **Social Preview Banner / 社交预览横幅**: Added `Assets/social-preview.svg` — a 1280x640 promotional banner featuring the plugin catalog, tech stack badges (.NET 10, C#, WPF, Windows 10/11), and key value propositions (100% Free, Open Source, No Ads/Telemetry/Paywalls) for use as GitHub social preview (og:image) and README header / 新增 `Assets/social-preview.svg` — 1280x640 推广横幅，展示插件目录、技术栈标签（.NET 10、C#、WPF、Windows 10/11）及核心价值主张（100% 免费、开源、无广告/遥测/付费墙），用于 GitHub 社交预览 (og:image) 和 README 页首
+- **Star History Chart / Star 历史图表**: Added star-history.com chart to README to attract community attention / 在 README 中添加 star-history.com 图表吸引社区关注
+- **Enhanced Badges / 增强徽章**: Added Watchers, Forks, and Discussions badges to README / 在 README 中添加 Watchers、Forks 和 Discussions 徽章
+
+### Fixed / 修复
+- **CA1062 Warnings**: Added `ArgumentNullException.ThrowIfNull` to all public methods in PluginRepository, PluginScaffolder, PluginPackager, and FeatureMerger / 为所有公共方法添加参数空值验证
+- **CA2024 Warnings**: Fixed `ProcessRunner.PumpAsync` to avoid `EndOfStream` in async context / 修复异步上下文中 EndOfStream 使用问题
+- **Version Mismatch**: Fixed NetworkAcceleration plugin.json version (1.1.9 → 1.2.0) to match plugin.manifest.json / 修复 NetworkAcceleration 版本不匹配
+- **CS1591 Warnings**: Added XML documentation to PluginLog public API / 为 PluginLog 公共 API 添加 XML 文档注释
 
 ### Changed / 变更
 - **README Enhancement / README 增强**: Reorganized badges with better visual hierarchy (Stars, License, CI, Discussions), added social preview banner as README header, simplified tagline / 重新组织徽章以提升视觉层次感（Stars、License、CI、Discussions），将社交预览横幅作为 README 页首，简化标语
