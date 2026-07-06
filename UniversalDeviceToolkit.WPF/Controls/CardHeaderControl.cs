@@ -20,6 +20,7 @@ public class CardHeaderControl : UserControl
         Margin = new(0, 4, 0, 0),
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
+        MaxHeight = 60, // Limit subtitle to about 3 lines to prevent card bloat
     };
 
     private readonly TextBlock _warningTextBlock = new()

@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Packages page readme/download/cancel action buttons no longer render as empty boxes in light mode; icons use explicit `SymbolIcon` foreground like Plugin Extensions / 驱动包列表页 readme/下载/取消操作按钮在浅色模式下不再显示为空白方框，图标改用与插件扩展页一致的显式 `SymbolIcon` 前景色
 - Macro event card titles for mouse actions (MOVE, WHEEL DOWN/UP/LEFT/RIGHT, XBUTTON, LBUTTON, RBUTTON, MBUTTON) are now localized via `Lib.Macro.Resources.Resource` instead of hardcoded English strings / 宏事件卡片中鼠标操作的标题（MOVE、WHEEL DOWN/UP/LEFT/RIGHT、XBUTTON、LBUTTON、RBUTTON、MBUTTON）现通过 `Lib.Macro.Resources.Resource` 本地化，不再硬编码英文
 - Fixed 7 pre-existing test failures (source-code structure tests outdated after refactors, WMI timeout in VantagePackageDownloaderTests); all 2343 tests now pass / 修复 7 个预存的测试失败（源代码结构测试在重构后未同步更新、VantagePackageDownloaderTests 中 WMI 超时），现在 2343 个测试全部通过
+- Language selector and main window no longer pop up simultaneously on first launch; `LocalizationHelper.cs` changed `window.Show()` to `window.ShowDialog()` so language selection blocks until complete / 首次启动时语言选择窗口与主窗口不再同时弹出；`LocalizationHelper.cs` 将 `window.Show()` 改为 `window.ShowDialog()`，语言选择完成前阻塞后续流程
+- Card subtitle text (Chinese localization) no longer overflows and bloats card height; `CardHeaderControl` now enforces `MaxHeight=60` (≈3 lines) on subtitle `TextBlock`, and 25+ overly long Chinese `Message`-suffixed resource strings in `Resource.zh-hans.resx` were shortened to ≤45 chars per line with intentional `\n` breaks / 卡片副标题文本（中文本地化）不再溢出并撑高卡片；`CardHeaderControl` 现在对副标题 `TextBlock` 强制 `MaxHeight=60`（约 3 行），`Resource.zh-hans.resx` 中 25+ 条过长的 `Message` 后缀中文资源字符串已缩短至每行 ≤45 字符并添加必要的 `\n` 换行
 
 ### Improved / 改进
 

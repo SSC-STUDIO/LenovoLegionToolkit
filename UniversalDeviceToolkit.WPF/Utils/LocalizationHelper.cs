@@ -150,7 +150,7 @@ public static class LocalizationHelper
                 ? new LanguageSelectorWindow(Languages, preferred)
                 : new LanguageSelectorWindow(Languages, preferred, languagePackManager);
             ApplyStartupTheme(window);
-            window.Show();
+            window.ShowDialog();
             cultureInfo = await window.ShouldContinue;
 
             if (cultureInfo is not null)

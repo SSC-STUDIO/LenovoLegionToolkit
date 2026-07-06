@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -79,7 +79,8 @@
     <value>当前没有自动化脚本，请点击 "新建" 来新建一项。</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
-    <value>启用自动化后，当设备的状态发生改变时，本应用将会按顺序检查各项自动化是否符合条件后，执行相关操作。</value>
+    <value>启用自动化后，当设备状态改变时，
+本应用将按顺序检查并执行符合条件的操作。</value>
   </data>
   <data name="AutomationPage_Actions_Title" xml:space="preserve">
     <value>自动化</value>
@@ -175,7 +176,10 @@
     <value>未命名</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>启用 Legion AI 引擎以自动检测游戏并调整 CPU/GPU 性能。可能会增加机身温度和风扇噪音。</value>
+    <value>启用 Legion AI 引擎，
+自动检测游戏并调整
+CPU/GPU 性能。
+可能增加温度和风扇噪音。</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
     <value>启用 Legion AI 引擎</value>
@@ -422,8 +426,8 @@
     <value>关闭占用应用</value>
   </data>
   <data name="DiscreteGPUControl_Message" xml:space="preserve">
-    <value>在不需要时强制休眠显卡，可能会导致应用崩溃。
-请尽可能通过手动关闭占用进程来解除独立显卡占用。</value>
+    <value>不需要时强制休眠显卡，可能导致应用崩溃。
+建议手动关闭占用进程来解除显卡占用。</value>
   </data>
   <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
     <value>有显示器正在使用此显卡。</value>
@@ -448,9 +452,8 @@
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>更改内置屏幕亮度。
-在部分设备上，切换性能模式后屏幕亮度也会变化，因此请确保把这一步放到最后，否则可能无法正常执行。
-
-警告：当内置显示器关闭时此操作将不起作用。</value>
+部分设备切换性能模式后亮度会变化，建议将此步骤放最后。
+警告：内置屏幕关闭时此操作无效。</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>显示器亮度</value>
@@ -477,7 +480,9 @@
     <value>导出</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>使用电池时只使用核显，连接电源适配器时同时使用核显与独显。当连接非标准（较低功率）电源适配器时，系统会切换到混合核显模式。</value>
+    <value>使用电池时只用核显，
+连接电源时同时使用核显与独显。
+非标准电源下切换到混合核显模式。</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
     <value>混合自动模式</value>
@@ -557,19 +562,25 @@
     <value>锁定 Fn 键</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>允许把可设的最小功耗限制继续下探。很多人会把这里当作「降压」入口，但它调整的是功耗限制范围，不是电压；不了解含义时请保持为 0。</value>
+    <value>降低最小功耗限制偏移。
+调整功耗范围而非电压。
+不了解时请保持为 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>更低功耗限制偏移量</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>允许把可设的最大功耗限制继续上探。这个选项可能导致不稳定或额外发热；不了解含义时请保持为 0。</value>
+    <value>提升最大功耗限制偏移。
+可能导致不稳定或额外发热。
+不了解时请保持为 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>更高功耗限制偏移量</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>这里包含功耗限制下探/上探偏移。你想找的「降压」入口就在这里；不了解含义时请保持为 0。</value>
+    <value>功耗限制下探/上探偏移设置。
+降压入口在此处。
+不了解时请保持为 0。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
     <value>高级功耗调校</value>
@@ -596,7 +607,9 @@
     <value>无法加载设置</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>风扇速度不是仅仅由一个温度传感器决定的。它将根据 CPU、GPU 和散热器温度之间的最高值决定转速。把鼠标悬停在滑块上时，可以看到准确的数值。</value>
+    <value>风扇转速由 CPU、GPU 和
+散热器中的最高温度决定。
+悬停滑块查看准确数值。</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
     <value>风扇曲线</value>
@@ -834,8 +847,10 @@
     <value>Caps Lock 和 Num Lock</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>禁用麦克风静音等 Fn 键操作的弹窗。
-如果弹窗与全屏应用有冲突，请启用此选项。</value>
+    <value>禁用 Fn 键相关操作的
+弹窗。如果弹窗与
+全屏应用有冲突，
+请启用此选项。</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
     <value>不要显示弹窗</value>
@@ -917,9 +932,11 @@
     <value>版本</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>下面是根据你的电脑型号获取的软件列表，
-请确保你安装的软件对应型号与版本正确。
-注：下列软件与驱动来自联想国际站点，不一定适用于在中国大陆销售的机型。</value>
+    <value>以下软件列表根据您的
+电脑型号获取。请确保
+安装的版本与型号正确。
+注：来自联想国际站点，
+不一定适用于中国大陆机型。</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
     <value>请确保机器类型与系统类型设置正确！</value>
@@ -1148,7 +1165,8 @@
     <value>外观</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>自定义语言、温度单位、主题和主题色。</value>
+    <value>自定义语言、温度单位、
+主题和主题色。</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>开机启动</value>
@@ -1163,7 +1181,8 @@
     <value>无法禁用 Legion Zone</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>禁用 Legion Zone 服务且无需卸载。
+    <value>禁用 Legion Zone 服务
+且无需卸载。
 修改此项后推荐重启电脑。</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
@@ -1176,9 +1195,11 @@
     <value>无法禁用 Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>禁用 Lenovo Hotkeys 且无需卸载。
-禁用后本应用将接管 Fn 快捷功能。
-修改此项后建议重启电脑。</value>
+    <value>禁用 Lenovo Hotkeys
+且无需卸载。
+禁用后本应用将
+接管 Fn 快捷功能。
+修改后建议重启电脑。</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>系统优化</value>
@@ -1328,7 +1349,9 @@
     <value>注册表 MRU/历史记录清理</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>清理常见的用户注册表历史记录（运行 MRU、最近文档、打开/保存对话框、已输入路径）。这不会删除系统关键条目。</value>
+    <value>清理常见的用户注册表历史记录
+（运行 MRU、最近文档、打开/保存对话框、已输入路径）
+这不会删除系统关键条目。</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>操作列表</value>
@@ -1631,8 +1654,10 @@
     <value>无法禁用 Lenovo Vantage 与 ImController</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>禁用 Lenovo Vantage 与 ImController 且无需卸载。
-修改此项后推荐重启电脑。</value>
+    <value>禁用 Lenovo Vantage
+与 ImController
+且无需卸载。
+修改后推荐重启电脑。</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
     <value>禁用 Lenovo Vantage 与 ImController</value>
@@ -1650,13 +1675,16 @@
     <value>无法启用 Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage 与/或 ImController 可能未被正确启用。</value>
+    <value>Lenovo Vantage 与/或
+ImController 可能
+未被正确启用。</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
     <value>无法启用 Lenovo Vantage 与 ImController</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>你可以排除某个刷新率，使 Fn+R 快捷键切换更快速。</value>
+    <value>排除刷新率，
+使 Fn+R 切换更快速。</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
     <value>排除刷新率</value>
@@ -1704,7 +1732,9 @@
     <value>正在卸载语言</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>总是最小化到托盘。开启后需右键点击托盘图标点击关闭以关闭软件。</value>
+    <value>总是最小化到托盘。
+开启后需右键托盘图标
+点击关闭以退出软件。</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>关闭时最小化</value>
@@ -1725,19 +1755,22 @@
     <value>Windows 电源计划</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
-    <value>选择双击 Fn + F9 触发的快捷操作。</value>
+    <value>选择双击 Fn+F9
+触发的快捷操作。</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
     <value>Smart Key 第二快捷动作</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
-    <value>选择单击 Fn + F9 触发的快捷操作。</value>
+    <value>选择单击 Fn+F9
+触发的快捷操作。</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
     <value>Smart Key 快捷动作</value>
   </data>
   <data name="SettingsPage_Theme_Description" xml:space="preserve">
-    <value>选择浅色或深色模式，亦或者跟随系统。</value>
+    <value>选择浅色或深色模式，
+或跟随系统。</value>
   </data>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
     <value>主题</value>
@@ -1922,9 +1955,13 @@
     <value>未命名</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
-    <value>你可以选择继续，风险自负，但请谨记，一些功能可能无法正常使用。
+    <value>你可以选择继续，
+风险自负。
+请注意部分功能
+可能无法正常使用。
 
-如果你选择继续，将自动启动日志记录。</value>
+如继续将自动
+启动日志记录。</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>请查看 GitHub 上的项目页面以了解更多信息。</value>
@@ -2185,7 +2222,8 @@
     <value>固定显示亮度</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>启用后在不同电源计划间切换将保持亮度不变。</value>
+    <value>启用后在不同电源计划间
+切换将保持亮度不变。</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
     <value>发现新版本 {0}！</value>
@@ -2296,7 +2334,10 @@
     <value>检测到 S0 低功耗空闲模型</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>检测到本设备支持新式待机（Modern Standby）。使用 "平衡" 以外的电源计划可能会导致意外问题。</value>
+    <value>检测到本设备支持
+新式待机（Modern Standby）。
+使用"平衡"以外的
+电源计划可能导致问题。</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
     <value>选择在电源模式改变时应用的 Windows 电源计划。</value>
@@ -2522,7 +2563,10 @@
     <value>GPU 至 CPU Dynamic Boost</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>此为根据 CPU 的使用情况，能从 GPU 借用给 CPU 的额外功率。值越大，则使用 CPU 计算较多的应用性能越好。</value>
+    <value>根据 CPU 使用情况，
+能从 GPU 借用给 CPU 的
+额外功率。值越大，
+CPU 计算性能越好。</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
     <value>自定义开机画面</value>
@@ -2564,26 +2608,31 @@
     <value>智能锁定 Fn 键</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>按下 Alt、Ctrl 或 Shift 键时，Fn 将会暂时解除锁定。</value>
+    <value>按下 Alt、Ctrl 或 Shift 时，
+Fn 将会暂时解除锁定。</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>关闭</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>替换的自定义开机画面图标的图片文件分辨率必须准确地为 {0} 。
-支持的图片文件格式为：{1}。</value>
+    <value>替换的自定义开机画面
+图片分辨率必须准确为
+{0}。
+支持的格式：{1}。</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
     <value>隔夜电池充电</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>启用该功能后，当您插上电源过夜时，该设备将充电至 80%，并在您早上使用该设备时充电至 100%。</value>
+    <value>启用后，夜间充电至 80%，
+早上使用时充至 100%。</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
     <value>隔夜电池充电</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>启用该功能后，当您插上电源过夜时，该设备将充电至 80%，并在您早上使用该设备时充电至 100%。</value>
+    <value>启用后，夜间充电至 80%，
+早上使用时充至 100%。</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
     <value>无效的图像分辨率。</value>
@@ -2625,7 +2674,9 @@
     <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>将风扇速度，电池温度等数据和 HWiNFO64 共享。切换此选项后也许需要重启 HWiNFO64。</value>
+    <value>将风扇速度、电池温度等
+数据与 HWiNFO64 共享。
+切换后可能需要重启 HWiNFO64。</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
     <value>应用集成</value>
@@ -2752,7 +2803,10 @@
     <value>故障排除步骤</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
-    <value>确保 Windows Management Instrumentation (WMI) 服务正在运行：打开服务 (services.msc) 并检查"Windows Management Instrumentation"是否正在运行。</value>
+    <value>确保 WMI 服务正在运行：
+打开服务 (services.msc) 并检查
+"Windows Management Instrumentation"
+是否正在运行。</value>
   </data>
   <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
     <value>以管理员身份运行应用程序，以确保有足够的权限访问系统注册表和 WMI。</value>
@@ -2902,7 +2956,10 @@
     <value>本次会话已禁用更新检查</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit 启动时带有 {0} 参数。本次会话中自动和手动更新检查以及下方更新设置都会禁用；去掉该启动参数后重新启动即可恢复。</value>
+    <value>应用程序启动时带有 {0} 参数。
+本次会话中自动和手动更新检查
+以及下方更新设置都会禁用；
+去掉该启动参数后重新启动即可恢复。</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>已达到 API 访问频率上限，请稍后再试。</value>
@@ -3841,4 +3898,28 @@
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>插件 {0} 已安装，但未提供用户可用的入口。它可能仅提供后台服务或清单数据。</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>管理 Nilesoft Shell 上下文菜单的注册与集成。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>启用 Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>将 Nilesoft Shell 注册为 Windows 上下文菜单处理程序。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>禁用 Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>取消注册 Nilesoft Shell 并恢复默认上下文菜单。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>更改无法验证，可能需要管理员权限。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>请等待当前优化操作完成。</value>
+  </data>
+</root>
