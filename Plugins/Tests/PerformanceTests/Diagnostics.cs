@@ -83,28 +83,25 @@ public class SavePerformanceDiagnostics
         Console.WriteLine($"  Save(): {sw.ElapsedMilliseconds} ms");
         Console.WriteLine();
 
-        Console.WriteLine("## Full Save() with MessagePack (after warm-up)");
-        var settingsManagerMpck = new SettingsManager<TestSettings>("PerfDiagPluginMpck", null, null, true);
-        // Warm-up: serialize once to cache reflection
-        settingsManagerMpck.Save(settings);
-        // Actual measurement
-        sw.Restart();
-        settingsManagerMpck.Save(settings);
-        sw.Stop();
-        Console.WriteLine($"  Save() [MessagePack, warmed up]: {sw.ElapsedMilliseconds} ms");
+        Console.WriteLine("## SaveWithDebounce (3 rapid calls)");
+        var debounceManager = new SettingsManager<TestSettings>("PerfDiagPluginDebounce", null, null, false, true, 500);
+        var saveTimes = new List<long>();
+        for (int i = 0; i < 3; i++)
+        {
+            sw.Restart();
+            debounceManager.SaveWithDebounce(settings);
+            sw.Stop();
+            saveTimes.Add(sw.ElapsedMilliseconds);
+        }
+        Console.WriteLine($"  Call 1: {saveTimes[0]}ms (queued)");
+        Console.WriteLine($"  Call 2: {saveTimes[1]}ms (queued)");
+        Console.WriteLine($"  Call 3: {saveTimes[2]}ms (queued)");
+        Console.WriteLine("  Actual save will happen 500ms after last call");
         Console.WriteLine();
 
-        // Compare file sizes
-        var jsonFile = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LenovoLegionToolkit", "plugins", _testPluginName, "settings.json");
-        var mpckFile = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LenovoLegionToolkit", "plugins", "PerfDiagPluginMpck", "settings.mpack");
-        if (File.Exists(jsonFile))
-            Console.WriteLine($"  JSON file size: {new FileInfo(jsonFile).Length} bytes");
-        if (File.Exists(mpckFile))
-            Console.WriteLine($"  MessagePack file size: {new FileInfo(mpckFile).Length} bytes");
+        // Wait for debounce to execute
+        Thread.Sleep(1000);
+        Console.WriteLine("  Debounce save completed");
         Console.WriteLine();
     }
 }

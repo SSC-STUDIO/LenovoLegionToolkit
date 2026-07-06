@@ -29,9 +29,12 @@ public class SettingsManager<T> where T : class, new()
     private readonly ILogger? _logger;
     private readonly object _lock = new object();
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private readonly Timer? _saveDebounceTimer; // Debounce timer for batching rapid saves
     private T? _cachedSettings;
     private string? _lastSavedJson; // Track last saved settings JSON for memory transaction
     private readonly bool _useMessagePack; // Use MessagePack for faster serialization
+    private T? _pendingSettings; // Settings waiting to be saved (debounce)
+    private readonly int _debounceDelayMs; // Debounce delay in milliseconds
 
     /// <summary>
     /// Event raised when settings are changed.
@@ -45,8 +48,10 @@ public class SettingsManager<T> where T : class, new()
     /// <param name="logger">Optional logger for diagnostic messages</param>
     /// <param name="settingsRoot">Optional override for the settings root directory. Defaults to the current user's local application data.</param>
     /// <param name="useMessagePack">Use MessagePack for faster serialization (default: false, uses JSON)</param>
+    /// <param name="enableDebounce">Enable save debounce (batch rapid saves, default: false)</param>
+    /// <param name="debounceDelayMs">Debounce delay in milliseconds (default: 500ms)</param>
     /// <exception cref="ArgumentException">Thrown when pluginName is null or empty</exception>
-    public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null, bool useMessagePack = false)
+    public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null, bool useMessagePack = false, bool enableDebounce = false, int debounceDelayMs = 500)
     {
         if (string.IsNullOrWhiteSpace(pluginName))
         {
@@ -64,6 +69,12 @@ public class SettingsManager<T> where T : class, new()
         _settingsFilePath = Path.Combine(pluginDirectory, _settingsFileName);
         _settingsFilePathMpck = Path.Combine(pluginDirectory, _settingsFileNameMpck);
         _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, _settingsFileName);
+
+        if (enableDebounce)
+        {
+            _saveDebounceTimer = new Timer(OnSaveDebounceTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
+            _debounceDelayMs = debounceDelayMs;
+        }
     }
 
     /// <summary>
@@ -154,6 +165,27 @@ public class SettingsManager<T> where T : class, new()
         {
             _semaphore.Release();
         }
+    }
+
+    /// <summary>
+    /// Saves settings to file with optional debounce (batch rapid saves).
+    /// If debounce is enabled, saves are delayed by _debounceDelayMs and batched.
+    /// </summary>
+    public bool SaveWithDebounce(T settings)
+    {
+        if (!(_saveDebounceTimer != null))
+        {
+            // Debounce not enabled, save immediately
+            return Save(settings);
+        }
+
+        lock (_lock)
+        {
+            _pendingSettings = settings;
+            _saveDebounceTimer.Change(_debounceDelayMs, Timeout.Infinite);
+            _logger?.LogTrace("Save debounced, will execute in {Delay}ms", _debounceDelayMs);
+        }
+        return true;
     }
 
     /// <summary>
@@ -259,6 +291,7 @@ public class SettingsManager<T> where T : class, new()
         {
             _cachedSettings = null;
             _lastSavedJson = null;
+            _pendingSettings = null;
 
             if (deleteFile && File.Exists(_settingsFilePath))
             {
@@ -270,6 +303,41 @@ public class SettingsManager<T> where T : class, new()
                 {
                     _logger?.LogError(ex, "Failed to delete settings file");
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Disposes the SettingsManager and flushes any pending debounced save.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_saveDebounceTimer != null)
+        {
+            _saveDebounceTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            _saveDebounceTimer.Dispose();
+            // Flush pending save
+            if (_pendingSettings != null)
+            {
+                Save(_pendingSettings);
+                _pendingSettings = null;
+            }
+        }
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Handles debounce timer elapsed event.
+    /// </summary>
+    private void OnSaveDebounceTimerElapsed(object? state)
+    {
+        lock (_lock)
+        {
+            if (_pendingSettings != null)
+            {
+                var settings = _pendingSettings;
+                _pendingSettings = null;
+                Save(settings);
             }
         }
     }
