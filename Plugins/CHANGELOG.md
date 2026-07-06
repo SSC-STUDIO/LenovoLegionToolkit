@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 添加
+- **Performance Benchmarks / 性能基准测试**: Added BenchmarkDotNet-based performance tests for SettingsManager (cold/warm start, save, update). Measured baseline: Cold Start 1.40ms, Warm Start 0.00ms, Save 21.24ms / 新增基于 BenchmarkDotNet 的 SettingsManager 性能测试（冷启动、热启动、保存、更新）。测量基线：冷启动 1.40ms、热启动 0.00ms、保存 21.24ms
+- **SDK Changelog / SDK 变更日志**: Created `Docs/SDK_CHANGELOG.md` to track SDK interface changes and ensure plugin-host compatibility / 创建 `Docs/SDK_CHANGELOG.md` 记录 SDK 接口变更，确保插件-宿主兼容性
+- **Performance Badges / 性能徽章**: Added performance badges to README (Settings Load 1.4ms, Save 21ms, Cache Hit 0ms) / 在 README 中添加性能徽章（设置加载 1.4ms、保存 21ms、缓存命中 0ms）
+
+### Fixed / 修复
+- **SettingsManager Thread Safety / SettingsManager 线程安全**: Added `SaveAsync()` method with `SemaphoreSlim` async lock to avoid UI thread blocking during settings save / 新增 `SaveAsync()` 方法，使用 `SemaphoreSlim` 异步锁，避免设置保存时阻塞 UI 线程
+
+### Changed / 变更
+- **Performance Optimization Plan / 性能优化计划**: Created `Tests/PERFORMANCE_RESULTS.md` with optimization roadmap (Save < 5ms target by 2026-07-13) / 创建 `Tests/PERFORMANCE_RESULTS.md` 包含优化路线图（2026-07-13 前保存耗时 < 5ms 目标）
+
+---
+
+### Added / 添加
 - **Zero-Warnings Build / 零警告构建**: Achieved 0 warnings, 0 errors across all 6 projects (CustomMouse, ViveTool, ShellIntegration, SDK, Shared, PluginTooling.Core). Enforced `TreatWarningsAsErrors=true` globally with `LangVersion=preview` for all projects / 所有 6 个项目实现零警告零错误构建，全局启用 `TreatWarningsAsErrors=true` 和 `LangVersion=preview`
 - **Social Preview Banner / 社交预览横幅**: Added `Assets/social-preview.svg` — a 1280x640 promotional banner featuring the plugin catalog, tech stack badges (.NET 10, C#, WPF, Windows 10/11), and key value propositions (100% Free, Open Source, No Ads/Telemetry/Paywalls) for use as GitHub social preview (og:image) and README header / 新增 `Assets/social-preview.svg` — 1280x640 推广横幅，展示插件目录、技术栈标签（.NET 10、C#、WPF、Windows 10/11）及核心价值主张（100% 免费、开源、无广告/遥测/付费墙），用于 GitHub 社交预览 (og:image) 和 README 页首
 - **Star History Chart / Star 历史图表**: Added star-history.com chart to README to attract community attention / 在 README 中添加 star-history.com 图表吸引社区关注
