@@ -1,0 +1,43 @@
+﻿name: Deploy Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+      - 'Assets/Logo.png'
+      - 'Assets/Screenshot_main.png'
+      - 'Assets/og-preview.png'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: windows-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy assets into site
+        shell: pwsh
+        run: |
+          Copy-Item Assets\Logo.png site\
+          Copy-Item Assets\Screenshot_main.png site\
+          Copy-Item Assets\og-preview.png site\
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
