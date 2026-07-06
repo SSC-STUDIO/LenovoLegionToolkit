@@ -92,4 +92,11 @@ gh api repos/SSC-STUDIO/UniversalDeviceToolkit --jq .stargazers_count
 4. 提交 awesome-dotnet PR（见 SUBMISSIONS.md）
 5. 周日回来更新本表 + SUBMISSIONS.md 周表
 
+## 里程碑 2026-07-07（winget 缺口闭环）
+
+- **winget 缺口确认**：包名 SSC-STUDIO.LenovoLegionToolkit 是保留的，但从未真正进 winget-pkgs；三个 winget-pkgs PR 都 closed 未合并，manifest 目录 404。
+- **Scoop 救场**：SSC-STUDIO/scoop-bucket 已上线 manifest bucket/lenovolegiontoolkit.json（v4.2.1，commit cea82dd3），scoop install ssc-studio/lenovolegiontoolkit 现在可用。
+- **安装 CTA 修正**：README / site/index.html / OUTREACH_PACK / OPENAI_PROGRAMS 全部把 winget 命令改成 Scoop + Releases，winget 仅标注"保留但未上线"（commit 3ae75ca4 + 本次 docs commit）。
+- **下一步候选**：评估向 microsoft/winget-pkgs 提一个干净的 manifest PR（非紧急，Scoop 已覆盖装机路径）。
+
 最后更新: 2026-07-07

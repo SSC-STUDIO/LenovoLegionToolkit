@@ -9,7 +9,8 @@ swap, or bot them (GitHub deranks repos that do, and it kills credibility).
 
 - Repo: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - Download: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
-- Install: `winget install SSC-STUDIO.LenovoLegionToolkit` (winget name kept for upgrade continuity; product name is UDT)
+- Install (Scoop, works now): `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket; scoop install ssc-studio/lenovolegiontoolkit`
+- Install (winget): id `SSC-STUDIO.LenovoLegionToolkit` is reserved but NOT yet published to winget-pkgs -- use Scoop or the installer until it ships (auto-upgrade from old LLT installs once it lands)
 - License: GPL-3.0  Language: C# / WPF  Platform: Windows
 - Latest: v5.0.0-preview.20260706001  Stable: v4.2.1
 - Stars today: 18  Goal: 1,000
@@ -77,7 +78,8 @@ Technical notes:
 
 Repo: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 Releases: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
-Install: winget install SSC-STUDIO.LenovoLegionToolkit
+Install (Scoop, works now): scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket; scoop install ssc-studio/lenovolegiontoolkit
+(winget id SSC-STUDIO.LenovoLegionToolkit is reserved but not yet published to winget-pkgs -- use Scoop or the installer)
 
 I'd value feedback on the plugin boundary and on whether "Universal" is honest
 given that full hardware control is Lenovo-specific. Constructive roasting welcome.
@@ -86,10 +88,11 @@ given that full hardware control is Lenovo-specific. Constructive roasting welco
 **First self-comment (post immediately after publishing):**
 
 ```
-A note on the name: it was "Lenovo Legion Toolkit" upstream; we kept the winget
-package ID for upgrade continuity but renamed to UDT once basic-mode + plugins
-made it more than a Lenovo-only tool. If that framing reads as misleading I'd
-genuinely like to hear it.
+A note on the name: it was "Lenovo Legion Toolkit" upstream; the winget
+package ID SSC-STUDIO.LenovoLegionToolkit is reserved for upgrade continuity but
+is not yet published to winget-pkgs, so install via Scoop or the Releases
+installer for now. Renamed to UDT once basic-mode + plugins made it more than a
+Lenovo-only tool. If that framing reads as misleading I'd genuinely like to hear it.
 ```
 
 **HN etiquette reminders:** no "upvote please", no asking friends to upvote (they
@@ -115,8 +118,9 @@ Hey -- maintainer here (full disclosure, it's my project, GPL-3.0).
 
 If you uninstalled Vantage because of the background service / account / popups,
 UDT is the open-source replacement I keep maintaining. It's the continuation of
-Lenovo Legion Toolkit -- same winget package (SSC-STUDIO.LenovoLegionToolkit) so
-it upgrades in place, settings stay.
+Lenovo Legion Toolkit -- we kept the winget package id (SSC-STUDIO.LenovoLegionToolkit)
+for continuity, but it's not on winget-pkgs yet; install via Scoop or the Releases
+installer (your existing Lenovo Legion Toolkit settings carry over).
 
 What works day to day:
 - Fn+Q performance/quiet/balanced modes
@@ -136,7 +140,8 @@ Not a Legion? There's a "basic mode" -- fewer hardware toggles, but plugins
 (CPU/GPU/network/shell/mouse), themes, optimization still work.
 
 Install:
-  winget install SSC-STUDIO.LenovoLegionToolkit
+  scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
+  scoop install ssc-studio/lenovolegiontoolkit
 or grab the installer/portable zip from
 https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
 
@@ -157,7 +162,7 @@ Posting for visibility for anyone who bans Vantage on managed fleets and wants a
 no-telemetry alternative for the hardware controls users actually expect (Fn+Q,
 fan curves, RGB, dGPU, battery threshold). Universal Device Toolkit, GPL-3.0,
 C#/WPF, runs no background service. There's a CLI (llt.exe) so you can fold it
-into scripts. Winget: winget install SSC-STUDIO.LenovoLegionToolkit.
+into scripts. Scoop: scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket; scoop install ssc-studio/lenovolegiontoolkit (winget id reserved, not yet on winget-pkgs).
 
 Repo: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 
@@ -204,7 +209,7 @@ account -- earn a little karma commenting first.
 ```
 闲聊一下自己做的东西。我是维护者（利益相关，说清楚）。
 
-Vantage 的后台服务、登录账号、弹窗实在烦，所以我一直在维护 Universal Device Toolkit（UDT），前身是 Lenovo Legion Toolkit，winget 包名还留着旧的 SSC-STUDIO.LenovoLegionToolkit 是为了原地升级、设置不丢。
+Vantage 的后台服务、登录账号、弹窗实在烦，所以我一直在维护 Universal Device Toolkit（UDT），前身是 Lenovo Legion Toolkit。winget 包名 SSC-STUDIO.LenovoLegionToolkit 是保留的，但还没上 winget-pkgs，暂时用 Scoop 或安装器；以后上了就能原地升级、设置不丢。
 
 日常够用的：
 - Fn+Q 性能 / 均衡 / 安静
@@ -222,7 +227,8 @@ v5.0.0-preview 今天发了：
 不是拯救者有「基础模式」，硬件项少一些，插件和系统工具还能用。
 
 安装：
-  winget install SSC-STUDIO.LenovoLegionToolkit
+  scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
+  scoop install ssc-studio/lenovolegiontoolkit
 或下载：https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
 
 项目地址：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
@@ -243,11 +249,11 @@ v5.0.0-preview 今天发了：
 
 ```
 开头：Vantage 烦在哪（后台服务 + 登录 + 遥测 + 弹窗），卸了之后 Fn+Q/RGB/独显没了怎么办。
-中段 1：UDT 是什么，和 Lenovo Legion Toolkit 的关系，为什么重命名、winget 包名为什么不动。
+中段 1：UDT 是什么，和 Lenovo Legion Toolkit 的关系，为什么重命名、winget 包名保留但还没上 winget-pkgs（暂时用 Scoop）。
 中段 2（技术重点）：插件系统怎么做沙箱与依赖解析，热重载遇到的坑。贴 1-2 段关键代码。
 中段 3（技术重点）：全局键盘钩子为什么会在退出后让系统卡顿，怎么定位（ETW/Performance
             Analyzer），最终怎么修的。这是最容易被技术读者认可的部分。
-结尾：怎么装（winget / 下载链接），招募插件作者和译者，Star 对开源的意义。
+结尾：怎么装（Scoop / 下载链接），招募插件作者和译者，Star 对开源的意义。
 配图：Assets/Screenshot_main.png、Screenshot_zh-hans.png、Star History 图。
 ```
 
@@ -280,7 +286,7 @@ Section 2: the plugin model -- sandbox, dependency resolution, hot reload, the
   repo/collection model. Code snippet of a minimal plugin.
 Section 3: the global hook leak detective story (system hitched after exit, how we
   traced it, the fix). This post-mortem is what technical readers star for.
-Outro: install (winget / releases), call for plugin + translation contributors,
+Outro: install (Scoop / releases; winget id is reserved but not yet on winget-pkgs), call for plugin + translation contributors,
   honest ask for a star.
 ```
 
@@ -325,8 +331,9 @@ What shipped in v5.0.0-preview today:
 - ~2500 unit tests passing, FlaUI UI smoke tests in CI
 
 6/7
-Install (winget name kept for upgrade continuity):
-  winget install SSC-STUDIO.LenovoLegionToolkit
+Install (Scoop, works now):
+  scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
+  scoop install ssc-studio/lenovolegiontoolkit
 Releases: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
 Stable: v4.2.1  Preview: v5.0.0-preview
 
@@ -357,10 +364,10 @@ milestone post.
 (20-45s) 重点看插件：像装手机插件一样装 CPU/GPU/网络工具，主程序不会越来越臃肿，
         而且能热重载、沙箱隔离。
 (45-70s) v5.0.0 刚修了个烦人的问题：以前退出应用后系统会卡一下，现在不会了。
-(70-90s) winget 一条命令装，链接在简介。觉得有用给个 Star，对开源项目意义重大。
+(70-90s) Scoop 一条命令装（winget 包名留着但还没上线），链接在简介。觉得有用给个 Star，对开源项目意义重大。
 ```
 
-**简介区放：** GitHub 链接、winget 命令，置顶自己的评论挂链接。封面用
+**简介区放：** GitHub 链接、Scoop 命令，置顶自己的评论挂链接。封面用
 `Assets/Screenshot_main.png` 配 Logo 合成。
 
 ---
@@ -376,7 +383,7 @@ milestone post.
 ## J. 微博 / 小红书
 
 - **微博:** 9 图倒序配文，标签 #拯救者# #开源# #Vantage平替#，挂 repo 链接。
-- **小红书:** 封面大字"拯救者别再装 Vantage"，内页截图，文末 winget 命令 + Star。
+- **小红书:** 封面大字"拯救者别再装 Vantage"，内页截图，文末 Scoop 命令 + Star。
 
 ---
 

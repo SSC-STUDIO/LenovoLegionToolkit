@@ -62,7 +62,7 @@ first-class plugin system so device-specific features live in plugins instead of
 bloating the core, and non-Lenovo PCs run a "basic mode" with plugins + themes.
 
 Traction so far: 18 stars, ~200 release-asset downloads across v4.2.1 (144
-installer + 57 zip; winget pulls these same GitHub assets), ~2,343 automated
+installer + 57 zip; Scoop pulls these same GitHub assets; winget id reserved but not yet on winget-pkgs), ~2,343 automated
 tests, a v5.0.0 plugin overhaul shipped 2026-07-06, active contributor base.
 
 What I'd use OpenAI/Azure OpenAI access for:
@@ -109,15 +109,15 @@ discrete-GPU toggle + MUX switch, battery conservation thresholds) without the
 vendor's telemetry-bearing companion app. Hardware control is a plugin system:
 device-specific features ship as plugins so the core stays small, and non-Lenovo
 PCs run a "basic mode" with the same plugins, themes, and system tools. It ships
-from GitHub Releases and winget (SSC-STUDIO.LenovoLegionToolkit) with a
+from GitHub Releases and Scoop (winget id SSC-STUDIO.LenovoLegionToolkit reserved, not yet on winget-pkgs) with a
 CI-gated release pipeline and a GitHub Pages landing page.
 
 ### 2. Traction (measured 2026-07-07 -- verify before sending)
 
 - GitHub stars 18, forks 1: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - Releases: v5.0.0-preview (plugin overhaul) shipped 2026-07-06; stable v4.2.1
-- Distribution: winget id SSC-STUDIO.LenovoLegionToolkit; v4.2.1 release assets
-  ~200 downloads (144 installer + 57 zip; winget pulls these same GitHub assets)
+- Distribution: Scoop bucket ssc-studio (winget id SSC-STUDIO.LenovoLegionToolkit reserved, not yet on winget-pkgs); v4.2.1 release assets
+  ~200 downloads (144 installer + 57 zip; Scoop pulls these same GitHub assets)
 - Localization: 25+ community-translated languages via Crowdin (78+ locales scaffolded)
 - CI: GitHub Actions Ci-tests.yml, automated test suite across the solution
   (2,343 test cases -- 2,323 passing / 20 skipped per v5.0.0-preview release notes)
