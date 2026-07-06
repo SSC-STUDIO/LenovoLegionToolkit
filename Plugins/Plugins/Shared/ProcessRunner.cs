@@ -83,8 +83,8 @@ public class ProcessRunner
 
             var outputBuilder = new StringBuilder();
             var errorBuilder = new StringBuilder();
-            process.OutputDataReceived += (sender, e) => { if (e.Data != null) outputBuilder.AppendLine(e.Data); };
-            process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errorBuilder.AppendLine(e.Data); };
+            process.OutputDataReceived += (sender, e) => { if (e.Data != null) { outputBuilder.AppendLine(e.Data); } };
+            process.ErrorDataReceived += (sender, e) => { if (e.Data != null) { errorBuilder.AppendLine(e.Data); } };
 
             process.Start();
             process.BeginOutputReadLine();
@@ -169,8 +169,8 @@ public class ProcessRunner
 
             var outputBuilder = new StringBuilder();
             var errorBuilder = new StringBuilder();
-            process.OutputDataReceived += (sender, e) => { if (e.Data != null) outputBuilder.AppendLine(e.Data); };
-            process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errorBuilder.AppendLine(e.Data); };
+            process.OutputDataReceived += (sender, e) => { if (e.Data != null) { outputBuilder.AppendLine(e.Data); } };
+            process.ErrorDataReceived += (sender, e) => { if (e.Data != null) { errorBuilder.AppendLine(e.Data); } };
 
             process.Start();
             process.BeginOutputReadLine();
@@ -219,19 +219,25 @@ public class ProcessRunner
     private static bool IsDangerousPath(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
+        {
             return true;
+        }
 
         // Check for command injection patterns
         var dangerousPatterns = new[] { "&", "|", ";", "`", "$", "(", ")", "<", ">", "\n", "\r" };
         foreach (var pattern in dangerousPatterns)
         {
             if (path.Contains(pattern))
+            {
                 return true;
+            }
         }
 
         // Check for parent directory traversal
         if (path.Contains(".."))
+        {
             return true;
+        }
 
         return false;
     }
@@ -242,14 +248,18 @@ public class ProcessRunner
     private static bool ContainsDangerousCharacters(string? arguments)
     {
         if (string.IsNullOrEmpty(arguments))
+        {
             return false;
+        }
 
         // Allow common argument characters but block shell metacharacters
         var dangerousPatterns = new[] { "&", "|", ";", "`", "$(", "${", "<", ">", "\n", "\r" };
         foreach (var pattern in dangerousPatterns)
         {
             if (arguments.Contains(pattern))
+            {
                 return true;
+            }
         }
 
         return false;
@@ -260,7 +270,9 @@ public class ProcessRunner
         try
         {
             if (process.HasExited)
+            {
                 return;
+            }
 
             process.Kill(entireProcessTree: true);
             process.WaitForExit();

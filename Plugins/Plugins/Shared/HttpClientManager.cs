@@ -43,7 +43,9 @@ public static class HttpClientManager
     public static HttpClient CreateClientWithTimeout(int timeoutSeconds)
     {
         if (timeoutSeconds <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(timeoutSeconds), "Timeout must be positive");
+        }
 
         return new HttpClient
         {

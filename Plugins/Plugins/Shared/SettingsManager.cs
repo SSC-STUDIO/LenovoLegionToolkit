@@ -13,8 +13,8 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 /// <typeparam name="T">The type of settings to manage</typeparam>
 public class SettingsManager<T> where T : class, new()
 {
-    private const string SettingsFileName = "settings.json";
-    private static readonly string DefaultSettingsRoot = Path.Combine(
+    private const string _settingsFileName = "settings.json";
+    private static readonly string _defaultSettingsRoot = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "LenovoLegionToolkit",
         "plugins");
@@ -40,17 +40,19 @@ public class SettingsManager<T> where T : class, new()
     public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null)
     {
         if (string.IsNullOrWhiteSpace(pluginName))
+        {
             throw new ArgumentException("Plugin name cannot be null or empty", nameof(pluginName));
+        }
 
         _logger = logger;
 
         var effectiveSettingsRoot = string.IsNullOrWhiteSpace(settingsRoot)
-            ? DefaultSettingsRoot
+            ? _defaultSettingsRoot
             : settingsRoot;
         var pluginDirectory = Path.Combine(effectiveSettingsRoot, pluginName);
         Directory.CreateDirectory(pluginDirectory);
-        _settingsFilePath = Path.Combine(pluginDirectory, SettingsFileName);
-        _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, SettingsFileName);
+        _settingsFilePath = Path.Combine(pluginDirectory, _settingsFileName);
+        _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, _settingsFileName);
     }
 
     /// <summary>
@@ -63,7 +65,9 @@ public class SettingsManager<T> where T : class, new()
             try
             {
                 if (_cachedSettings != null)
+                {
                     return _cachedSettings;
+                }
 
                 EnsureLegacySettingsMigrated();
 
@@ -184,13 +188,19 @@ public class SettingsManager<T> where T : class, new()
     private void EnsureLegacySettingsMigrated()
     {
         if (File.Exists(_settingsFilePath))
+        {
             return;
+        }
 
         if (string.Equals(_settingsFilePath, _legacySettingsFilePath, StringComparison.OrdinalIgnoreCase))
+        {
             return;
+        }
 
         if (!File.Exists(_legacySettingsFilePath))
+        {
             return;
+        }
 
         try
         {

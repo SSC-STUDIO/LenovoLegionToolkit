@@ -50,7 +50,9 @@ public static class PluginLog
     public static void Trace(string message, Exception? exception = null)
     {
         if (!_isTraceEnabled())
+        {
             return;
+        }
         _trace(message, exception);
     }
 

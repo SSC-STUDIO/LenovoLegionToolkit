@@ -26,7 +26,9 @@ public static class WpfHostNotifications
         {
             var hostAssembly = ResolveHostWpfAssembly();
             if (hostAssembly is null)
+            {
                 return;
+            }
 
             SnackbarHelperType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.SnackbarHelper", throwOnError: false, ignoreCase: false);
             MessageBoxHelperType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.MessageBoxHelper", throwOnError: false, ignoreCase: false);
@@ -53,7 +55,9 @@ public static class WpfHostNotifications
                 foreach (var name in wpfAssemblyNames)
                 {
                     if (string.Equals(assembly.GetName().Name, name, StringComparison.OrdinalIgnoreCase))
+                    {
                         return assembly;
+                    }
                 }
             }
 
@@ -74,7 +78,9 @@ public static class WpfHostNotifications
     public static void ShowSnackbar(string title, string message)
     {
         if (TrySnackbarShow(title, message, null))
+        {
             return;
+        }
 
         PluginLog.Trace($"[Snackbar] {title}: {message}");
     }
@@ -85,7 +91,9 @@ public static class WpfHostNotifications
     public static void ShowSnackbarError(string title, string message)
     {
         if (TrySnackbarShow(title, message, ReflectionCache.SnackbarTypeErrorValue))
+        {
             return;
+        }
 
         System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
     }
@@ -93,7 +101,9 @@ public static class WpfHostNotifications
     private static bool TrySnackbarShow(string title, string message, object? snackbarTypeErrorValue)
     {
         if (ReflectionCache.SnackbarHelperType is not { } helperType)
+        {
             return false;
+        }
 
         try
         {
@@ -188,7 +198,9 @@ public static class WpfHostNotifications
     public static void SetPluginResourceCultures()
     {
         if (ReflectionCache.LocalizationHelperType is not { } helperType)
+        {
             return;
+        }
 
         try
         {
