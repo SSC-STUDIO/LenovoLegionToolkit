@@ -9,6 +9,8 @@ public sealed class PluginPackager
 
     public async Task<PackResult> PackAsync(PackRequest request, Action<string>? log = null, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var repository = _repository.Load(request.RepositoryRoot);
         var pluginId = _repository.ResolveTargetPluginIds(repository, [request.PluginId]).Single();
         var plugin = repository.Plugins[pluginId];

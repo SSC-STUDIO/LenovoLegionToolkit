@@ -9,6 +9,8 @@ public sealed class PluginScaffolder
 
     public async Task<ScaffoldResult> CreateAsync(ScaffoldRequest request, Action<string>? log = null, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var repository = _repository.Load(request.RepositoryRoot);
         var archetype = _repository.LoadArchetypeDefinition(repository.RootPath, request.Template);
 
@@ -89,6 +91,8 @@ public sealed class PluginScaffolder
 
     public PromoteResult Promote(PromoteRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var repository = _repository.Load(request.RepositoryRoot);
         var pluginId = _repository.ResolveTargetPluginIds(repository, [request.PluginId]).Single();
         var plugin = repository.Plugins[pluginId];

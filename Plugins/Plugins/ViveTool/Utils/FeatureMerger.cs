@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
@@ -11,6 +12,10 @@ public static class FeatureMerger
         ICollection<FeatureFlagInfo> allFeatures,
         IEnumerable<FeatureFlagInfo> importedFeatures)
     {
+        ArgumentNullException.ThrowIfNull(visibleFeatures);
+        ArgumentNullException.ThrowIfNull(allFeatures);
+        ArgumentNullException.ThrowIfNull(importedFeatures);
+
         foreach (var feature in importedFeatures)
         {
             if (!visibleFeatures.Any(f => f.Id == feature.Id))
