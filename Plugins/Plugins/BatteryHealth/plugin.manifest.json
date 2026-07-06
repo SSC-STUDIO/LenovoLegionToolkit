@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "battery-health",
+  "name": "Battery Health",
+  "version": "1.0.0",
+  "minHostVersion": "3.6.15",
+  "author": "EliuaK_Csy",
+  "isSystemPlugin": false,
+  "repository": "",
+  "issues": "",
+  "contributes": {
+    "featurePage": {
+      "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
+      "title": "Battery Health"
+    },
+    "settingsPage": {
+      "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthSettingsPage",
+      "title": "Battery Health Settings"
+    },
+    "runtime": null,
+    "optimizationActions": []
+  },
+  "package": {
+    "assetName": "battery-health-v1.0.0.zip",
+    "requiredFiles": [
+      "LenovoLegionToolkit.Plugins.BatteryHealth.dll",
+      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Battery Health plugin for Lenovo Legion Toolkit",
+    "icon": "PuzzlePiece24",
+    "iconBackground": "#FFF1E2",
+    "tags": [],
+    "dependencies": [],
+    "supportedLanguages": [
+      "en",
+      "zh-Hans"
+    ],
+    "repositoryUrl": null
+  }
+}

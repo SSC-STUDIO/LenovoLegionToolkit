@@ -1,0 +1,19 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Padding="24"
+            CornerRadius="20"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1">
+        <StackPanel>
+            <TextBlock FontSize="24"
+                       FontWeight="SemiBold"
+                       Text="Battery Health" />
+            <TextBlock Margin="0,12,0,0"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Text="Feature preview" />
+        </StackPanel>
+    </Border>
+</UserControl>

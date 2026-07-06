@@ -1,0 +1,10 @@
+{
+  "Id": "battery-health",
+  "Name": "Battery Health",
+  "Version": "1.0.0",
+  "MinLltVersion": "3.6.15",
+  "Author": "EliuaK_Csy",
+  "IsSystemPlugin": false,
+  "Repository": "",
+  "Issues": ""
+}
