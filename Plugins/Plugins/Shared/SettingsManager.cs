@@ -27,7 +27,6 @@ public class SettingsManager<T> where T : class, new()
     private readonly object _lock = new object();
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
     private T? _cachedSettings;
-    private T? _lastSavedSettings; // Track last saved settings for memory transaction
     private string? _lastSavedJson; // Track last saved settings JSON for memory transaction
 
     /// <summary>
@@ -166,12 +165,18 @@ public class SettingsManager<T> where T : class, new()
                 // Memory transaction: skip save if settings unchanged
                 if (_lastSavedJson != null)
                 {
-                    // Fast path: compare key fields instead of full JSON serialization
-                    if (AreSettingsEqual(settings, _lastSavedSettings))
+                    // Fast path: compare serialized JSON directly
+                    var currentJson = JsonSerializer.Serialize(settings);
+                    if (string.Equals(currentJson, _lastSavedJson, StringComparison.Ordinal))
                     {
                         _logger?.LogTrace("Settings unchanged, skipping save");
                         return true;
                     }
+                    _lastSavedJson = currentJson; // Update cache
+                }
+                else
+                {
+                    _lastSavedJson = JsonSerializer.Serialize(settings);
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
@@ -180,6 +185,7 @@ public class SettingsManager<T> where T : class, new()
                 {
                     WriteIndented = true
                 });
+                _lastSavedJson = json; // Cache for memory transaction
 
                 var tempPath = _settingsFilePath + ".tmp";
                 File.WriteAllText(tempPath, json, Encoding.UTF8);
@@ -232,7 +238,6 @@ public class SettingsManager<T> where T : class, new()
         lock (_lock)
         {
             _cachedSettings = null;
-            _lastSavedSettings = null;
             _lastSavedJson = null;
 
             if (deleteFile && File.Exists(_settingsFilePath))

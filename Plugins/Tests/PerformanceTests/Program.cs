@@ -130,6 +130,11 @@ public class Program
         Console.WriteLine("=== Universal Device Toolkit Plugins — Performance Benchmarks ===");
         Console.WriteLine();
 
+        // Run performance diagnostics first
+        var diagnostics = new SavePerformanceDiagnostics();
+        diagnostics.RunDiagnostics();
+        Console.WriteLine();
+
         // Run simple stopwatch-based benchmarks (no DefaultConfig dependency)
         await RunSimpleBenchmarks();
 
