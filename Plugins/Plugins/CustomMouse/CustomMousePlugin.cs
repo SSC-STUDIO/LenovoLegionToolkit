@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #nullable enable
@@ -99,11 +99,15 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public void OnAppStarted()
     {
         if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+        {
             return;
+        }
 
         StartThemeWatcher();
         if (!IsCurrentThemeAlreadyApplied())
+        {
             RunBackgroundTask(nameof(OnAppStarted), () => ApplyCursorStyleForCurrentThemeAsync(GetRuntimeCancellationToken()));
+        }
     }
 
     public override object? GetFeatureExtension() => null;
@@ -142,7 +146,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public override void OnInstalled()
     {
         _settings = MouseSettings.CreateDefault();
-        RunLifecycleTask(nameof(OnInstalled), () => SaveSettingsAsync());
+        RunLifecycleTask(nameof(OnInstalled), SaveSettingsAsync);
     }
 
     public override void OnUninstalled()
@@ -150,7 +154,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         StopThemeWatcher();
         _settings.AutoThemeCursorStyle = false;
         _settings.CursorThemeMode = CursorThemeMode.Auto;
-        RunLifecycleTask(nameof(OnUninstalled), () => SaveSettingsAsync());
+        RunLifecycleTask(nameof(OnUninstalled), SaveSettingsAsync);
         RunLifecycleTask(nameof(OnUninstalled), () => RestoreBackedUpCursorSchemeAsync(CancellationToken.None));
     }
 
@@ -171,8 +175,10 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public bool SetDpi(int dpi)
     {
-        if (dpi < 100 || dpi > 16000)
+        if (dpi is < 100 or > 16000)
+        {
             return false;
+        }
 
         _settings.Dpi = dpi;
         return true;
@@ -182,7 +188,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         var validRates = new[] { 125, 250, 500, 1000 };
         if (Array.IndexOf(validRates, rate) < 0)
+        {
             return false;
+        }
 
         _settings.PollingRate = rate;
         return true;
@@ -190,11 +198,15 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public bool SetWindowsPointerSpeed(int speed)
     {
-        if (speed < 1 || speed > 20)
+        if (speed is < 1 or > 20)
+        {
             return false;
+        }
 
         if (!SystemParametersInfo(SpiSetMouseSpeed, 0, new IntPtr(speed), SpifUpdateIniFile | SpifSendChange))
+        {
             return false;
+        }
 
         _settings.WindowsPointerSpeed = speed;
         return true;
@@ -203,7 +215,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public bool SetSwapButtons(bool swapButtons)
     {
         if (!SystemParametersInfo(SpiSetMouseButtonSwap, swapButtons ? 1u : 0u, IntPtr.Zero, SpifSendChange))
+        {
             return false;
+        }
 
         _settings.SwapButtons = swapButtons;
         return true;
@@ -215,9 +229,13 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         _settings.CursorThemeMode = enabled ? CursorThemeMode.Auto : GetExplicitCursorThemeMode();
 
         if (enabled)
+        {
             StartThemeWatcher();
+        }
         else
+        {
             StopThemeWatcher();
+        }
 
         return true;
     }
@@ -244,16 +262,22 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
 
         if (applied)
+        {
             return true;
+        }
 
         _settings.CursorThemeMode = previousMode;
         _settings.AutoThemeCursorStyle = previousAutoThemeCursorStyle;
         _settings.LastAppliedTheme = previousLastAppliedTheme;
 
         if (previousAutoThemeCursorStyle)
+        {
             StartThemeWatcher();
+        }
         else
+        {
             StopThemeWatcher();
+        }
 
         return false;
     }
@@ -265,7 +289,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             cancellationToken.ThrowIfCancellationRequested();
             var restored = RestoreCursorScheme(WindowsDefaultCursorSchemeName);
             if (!restored)
+            {
                 return false;
+            }
 
             _settings.AutoThemeCursorStyle = false;
             _settings.CursorThemeMode = CursorThemeMode.WindowsDefault;
@@ -311,7 +337,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
+            {
                 ApplyCursorThemeFromResources(theme);
+            }
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -332,7 +360,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             var theme = IsSystemLightTheme() ? CursorTheme.Light : CursorTheme.Dark;
 
             if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
+            {
                 ApplyCursorThemeFromResources(theme);
+            }
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -354,7 +384,19 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         Configuration.SetValue(nameof(MouseSettings.AutoThemeCursorStyle), _settings.AutoThemeCursorStyle);
         Configuration.SetValue(nameof(MouseSettings.CursorThemeMode), (int)_settings.CursorThemeMode);
         Configuration.SetValue(nameof(MouseSettings.LastAppliedTheme), _settings.LastAppliedTheme ?? string.Empty);
-        await Configuration.SaveAsync().ConfigureAwait(false);
+        const int maxRetries = 3;
+        for (int attempt = 0; attempt < maxRetries; attempt++)
+        {
+            try
+            {
+                await Configuration.SaveAsync().ConfigureAwait(false);
+                return;
+            }
+            catch (System.IO.IOException) when (attempt < maxRetries - 1)
+            {
+                await System.Threading.Tasks.Task.Delay(50 * (attempt + 1)).ConfigureAwait(false);
+            }
+        }
     }
 
     private MouseSettings LoadSettings()
@@ -388,7 +430,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private async Task OnThemeChangedAsync(string newTheme, CancellationToken cancellationToken)
     {
         if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+        {
             return;
+        }
 
         await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -402,7 +446,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         await SaveSettingsAsync().ConfigureAwait(false);
 
         if (!await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false))
+        {
             throw new InvalidOperationException(CustomMouseText.StatusCursorApplyFailed);
+        }
     }
 
     private async Task DisableAutoThemeCursorStyleAsync(CancellationToken cancellationToken)
@@ -428,7 +474,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         {
             var infPath = GetInstallInfPath(theme);
             if (!File.Exists(infPath))
+            {
                 return false;
+            }
 
             var startInfo = new ProcessStartInfo
             {
@@ -443,7 +491,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
             using var process = Process.Start(startInfo);
             if (process == null)
+            {
                 return false;
+            }
 
             var waitTask = process.WaitForExitAsync(cancellationToken);
             var timeoutTask = Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
@@ -453,7 +503,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
                 try
                 {
                     if (!process.HasExited)
+                    {
                         process.Kill(entireProcessTree: true);
+                    }
                 }
                 catch
                 {
@@ -467,7 +519,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!process.HasExited || process.ExitCode != 0)
+            {
                 return false;
+            }
 
             ApplySystemCursorRefresh();
             return true;
@@ -505,7 +559,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
         var precisionPath = Path.Combine(basePath, "Precision.cur");
         foreach (var additionalKey in AdditionalCursorKeys)
+        {
             cursorKey.SetValue(additionalKey, precisionPath, RegistryValueKind.ExpandString);
+        }
 
         cursorKey.SetValue(string.Empty, schemeName, RegistryValueKind.String);
         schemesKey.SetValue(schemeName, string.Join(",", schemeEntries), RegistryValueKind.ExpandString);
@@ -518,7 +574,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         cancellationToken.ThrowIfCancellationRequested();
 
         if (!Configuration.GetValue(CursorBackupSavedFlag, false))
+        {
             return Task.CompletedTask;
+        }
 
         RestoreBackedUpCursorSchemeInternal();
         return Task.CompletedTask;
@@ -527,26 +585,36 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     internal bool RestoreCursorScheme(string schemeName)
     {
         if (string.IsNullOrWhiteSpace(schemeName))
+        {
             return false;
+        }
 
         using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true)
                              ?? throw new InvalidOperationException("Failed to open cursor registry path.");
         using var schemesKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes", false);
         var rawScheme = Convert.ToString(schemesKey?.GetValue(schemeName));
         if (string.IsNullOrWhiteSpace(rawScheme))
+        {
             return false;
+        }
 
         var parts = rawScheme.Split(',');
         if (parts.Length < CursorSchemeOrder.Length)
+        {
             return false;
+        }
 
         cursorKey.SetValue(string.Empty, schemeName, RegistryValueKind.String);
         for (var i = 0; i < CursorSchemeOrder.Length; i++)
+        {
             cursorKey.SetValue(CursorSchemeOrder[i].Key, parts[i], RegistryValueKind.ExpandString);
+        }
 
         var precisionPath = GetPrecisionCursorPath(parts);
         foreach (var additionalKey in AdditionalCursorKeys)
+        {
             cursorKey.SetValue(additionalKey, precisionPath, RegistryValueKind.ExpandString);
+        }
 
         cursorKey.SetValue("Scheme Source", 1, RegistryValueKind.DWord);
         ApplySystemCursorRefresh();
@@ -579,11 +647,15 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private void BackupCurrentCursorSchemeIfNeeded()
     {
         if (Configuration.GetValue(CursorBackupSavedFlag, false))
+        {
             return;
+        }
 
         using var cursorKey = Registry.CurrentUser.OpenSubKey(CursorRegistryPath, false);
         if (cursorKey == null)
+        {
             return;
+        }
 
         Configuration.SetValue(GetBackupConfigKey(string.Empty), Convert.ToString(cursorKey.GetValue(string.Empty)) ?? string.Empty);
         foreach (var (key, _) in CursorSchemeOrder)
@@ -597,7 +669,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
 
         Configuration.SetValue(CursorBackupSavedFlag, true);
-        RunLifecycleTask(nameof(BackupCurrentCursorSchemeIfNeeded), () => Configuration.SaveAsync());
+        RunLifecycleTask(nameof(BackupCurrentCursorSchemeIfNeeded), Configuration.SaveAsync);
     }
 
     private static void RunLifecycleTask(string operationName, Func<Task> action)
@@ -635,7 +707,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         var mode = _settings.CursorThemeMode;
         if (!Enum.IsDefined(typeof(CursorThemeMode), mode))
+        {
             mode = CursorThemeMode.Auto;
+        }
 
         _settings.CursorThemeMode = mode;
         _settings.AutoThemeCursorStyle = mode == CursorThemeMode.Auto;
@@ -650,10 +724,14 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private CursorThemeMode GetExplicitCursorThemeMode()
     {
         if (string.Equals(_settings.LastAppliedTheme, "light", StringComparison.OrdinalIgnoreCase))
+        {
             return CursorThemeMode.Light;
+        }
 
         if (string.Equals(_settings.LastAppliedTheme, "dark", StringComparison.OrdinalIgnoreCase))
+        {
             return CursorThemeMode.Dark;
+        }
 
         return IsSystemLightTheme() ? CursorThemeMode.Light : CursorThemeMode.Dark;
     }
@@ -662,16 +740,22 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         var currentSchemeName = ReadCurrentCursorSchemeName();
         if (string.Equals(currentSchemeName, WindowsDefaultCursorSchemeName, StringComparison.OrdinalIgnoreCase))
+        {
             return CursorThemeMode.WindowsDefault;
+        }
 
         var arrowPath = ReadCurrentCursorValue("Arrow");
         if (!string.IsNullOrWhiteSpace(arrowPath))
         {
             if (arrowPath.IndexOf(@"\Light\", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
                 return CursorThemeMode.Light;
+            }
 
             if (arrowPath.IndexOf(@"\Dark\", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
                 return CursorThemeMode.Dark;
+            }
         }
 
         return _settings.AutoThemeCursorStyle ? CursorThemeMode.Auto : GetExplicitCursorThemeMode();
@@ -680,7 +764,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private static string GetBackupConfigKey(string registryValueName)
     {
         if (string.IsNullOrEmpty(registryValueName))
+        {
             return "CursorBackup_Default";
+        }
 
         return $"CursorBackup_{registryValueName}";
     }
@@ -759,7 +845,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             "02. classic");
 
         if (Directory.Exists(candidate))
+        {
             return candidate;
+        }
 
         return Path.Combine(
             GetResourceRoot(),
@@ -807,7 +895,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             .Distinct(StringComparer.OrdinalIgnoreCase);
 
         foreach (var directory in distinctDirectories)
+        {
             yield return Path.Combine(directory, ResourcesDirectoryName);
+        }
     }
 
     private static string? GetPluginsDirectoryOverride()
@@ -833,7 +923,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private static string ResolveCursorFilePath(string basePath, string animationPath, string fileName)
     {
         if (fileName.EndsWith(".ani", StringComparison.OrdinalIgnoreCase))
+        {
             return Path.Combine(animationPath, fileName);
+        }
 
         return Path.Combine(basePath, fileName);
     }
@@ -844,7 +936,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         {
             var fullPath = ResolveCursorFilePath(basePath, animationPath, fileName);
             if (!File.Exists(fullPath))
+            {
                 throw new FileNotFoundException($"Cursor resource file not found: {fullPath}");
+            }
         }
     }
 
@@ -856,7 +950,9 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private static string GetPrecisionCursorPath(string[] schemeParts)
     {
         if (schemeParts.Length > 4 && !string.IsNullOrWhiteSpace(schemeParts[4]))
+        {
             return schemeParts[4];
+        }
 
         return schemeParts.Length > 0 ? schemeParts[0] : string.Empty;
     }
