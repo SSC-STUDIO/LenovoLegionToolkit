@@ -28,7 +28,7 @@ public class ShellIntegrationConfigServiceTests
     {
         var service = new ShellIntegrationConfigService();
         Assert.NotNull(service);
-        Assert.Contains("LenovoLegionToolkit", service.LocalProfileRoot);
+        Assert.Contains("UniversalDeviceToolkit", service.LocalProfileRoot);
     }
 
     [Fact]
@@ -1128,7 +1128,7 @@ old2
         Assert.NotNull(profile.ThemeName);
         Assert.NotNull(profile.BackgroundColor);
         Assert.NotNull(profile.AccentColor);
-        Assert.True(profile.BackgroundOpacity >= 0 && profile.BackgroundOpacity <= 100);
+        Assert.True(profile.BackgroundOpacity is >= 0 and <= 100);
         Assert.True(profile.BorderRadius >= 0);
     }
 
@@ -1165,7 +1165,7 @@ old2
         var expression = profile.GetViewExpression();
 
         Assert.NotNull(expression);
-        Assert.True(expression == "view.compact" || expression == "view.medium");
+        Assert.True(expression is "view.compact" or "view.medium");
     }
 
     [Fact]

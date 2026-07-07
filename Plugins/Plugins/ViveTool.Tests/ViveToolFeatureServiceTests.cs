@@ -829,7 +829,7 @@ Microsoft Windows [Version 10.0.26100.0]
         var tasks = new Task[10];
         for (int i = 0; i < 10; i++)
         {
-            tasks[i] = Task.Run(() => service.ClearFeatureCache());
+            tasks[i] = Task.Run(service.ClearFeatureCache);
         }
 
         await Task.WhenAll(tasks);

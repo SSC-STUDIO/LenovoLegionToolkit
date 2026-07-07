@@ -35,7 +35,9 @@ internal static class ViveToolTestRuntimeHelper
         {
             var commandProcessorPath = Environment.GetEnvironmentVariable("ComSpec");
             if (string.IsNullOrWhiteSpace(commandProcessorPath) || !File.Exists(commandProcessorPath))
+            {
                 throw new InvalidOperationException("ComSpec command processor is unavailable.");
+            }
 
             File.Copy(commandProcessorPath, runtimeScope.ExePath, overwrite: true);
 
@@ -79,7 +81,9 @@ internal static class ViveToolTestRuntimeHelper
         try
         {
             if (Directory.Exists(directoryPath))
+            {
                 Directory.Delete(directoryPath, true);
+            }
         }
         catch
         {
@@ -114,7 +118,9 @@ internal static class ViveToolTestFileHelper
         try
         {
             if (File.Exists(filePath))
+            {
                 File.Delete(filePath);
+            }
         }
         catch
         {

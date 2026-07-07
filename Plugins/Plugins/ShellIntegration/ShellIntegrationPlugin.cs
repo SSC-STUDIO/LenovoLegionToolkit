@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -19,7 +19,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
     id: "shell-integration",
     name: "Shell Integration",
     version: "1.0.12",
-    description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+    description: "Integrate Universal Device Toolkit with Windows shell context menu",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
     Icon = "Folder24"
@@ -30,7 +30,8 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private const string ShellClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
     private const string DisabledClsid = "{00000000-0000-0000-0000-000000000000}";
     private static readonly TimeSpan ShellCommandTimeout = TimeSpan.FromSeconds(Constants.ProcessTimeoutSeconds);
-    private static readonly string GlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LenovoLegionToolkit", "lang");
+    private static readonly string GlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UniversalDeviceToolkit", "lang");
+    private static readonly string LegacyGlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LenovoLegionToolkit", "lang");
 
     private static readonly string[] ShellExeCandidates =
     [
@@ -88,14 +89,14 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
                     "shell.integration.enable",
                     "WindowsOptimization_Action_NilesoftShell_Enable_Title",
                     "WindowsOptimization_Action_NilesoftShell_Enable_Description",
-                    ct => EnableShellAsync(ct),
+                    EnableShellAsync,
                     Recommended: true,
                     IsAppliedAsync: IsShellRegisteredAsync),
                 new WindowsOptimizationActionDefinition(
                     "shell.integration.disable",
                     "WindowsOptimization_Action_NilesoftShell_Disable_Title",
                     "WindowsOptimization_Action_NilesoftShell_Disable_Description",
-                    ct => DisableShellAsync(ct),
+                    DisableShellAsync,
                     Recommended: false,
                     IsAppliedAsync: async ct => !await IsShellRegisteredAsync(ct).ConfigureAwait(false))
             },
@@ -116,12 +117,16 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var bundled = GetBundledShellExePath();
         if (!string.IsNullOrWhiteSpace(bundled))
+        {
             return bundled;
+        }
 
         foreach (var candidate in ShellExeCandidates)
         {
             if (File.Exists(candidate))
+            {
                 return candidate;
+            }
         }
 
         return null;
@@ -131,12 +136,16 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var bundled = GetBundledShellDllPath();
         if (!string.IsNullOrWhiteSpace(bundled))
+        {
             return bundled;
+        }
 
         foreach (var candidate in ShellDllCandidates)
         {
             if (File.Exists(candidate))
+            {
                 return candidate;
+            }
         }
 
         return null;
@@ -151,7 +160,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var path = GetShellExePath() ?? GetShellDllPath();
         if (string.IsNullOrWhiteSpace(path))
+        {
             return null;
+        }
 
         return Path.GetDirectoryName(path);
     }
@@ -160,7 +171,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var folder = GetShellFolderPath();
         if (string.IsNullOrWhiteSpace(folder))
+        {
             return null;
+        }
 
         return Path.Combine(folder, "shell.nss");
     }
@@ -169,7 +182,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var path = GetShellExePath() ?? GetShellDllPath();
         if (string.IsNullOrWhiteSpace(path))
+        {
             return null;
+        }
 
         try
         {
@@ -186,7 +201,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var baseDir = GetPluginBaseDirectory();
         if (string.IsNullOrWhiteSpace(baseDir))
+        {
             return null;
+        }
 
         var candidate = Path.Combine(baseDir, "shell.exe");
         return File.Exists(candidate) ? candidate : null;
@@ -196,7 +213,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var baseDir = GetPluginBaseDirectory();
         if (string.IsNullOrWhiteSpace(baseDir))
+        {
             return null;
+        }
 
         var candidate = Path.Combine(baseDir, "shell.dll");
         return File.Exists(candidate) ? candidate : null;
@@ -208,7 +227,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         {
             var location = typeof(ShellIntegrationPlugin).Assembly.Location;
             if (string.IsNullOrWhiteSpace(location))
+            {
                 return null;
+            }
 
             return Path.GetDirectoryName(location);
         }
@@ -227,7 +248,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-                PluginLog.Trace($"ShellIntegration: Enable failed: {ex.Message}", ex);
+            PluginLog.Trace($"ShellIntegration: Enable failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -241,7 +262,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-                PluginLog.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
+            PluginLog.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -329,7 +350,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             if (!_configService.ImportProfile(filePath, out _, out errorMessage))
+            {
                 return false;
+            }
 
             return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
         }
@@ -344,7 +367,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private static bool TryOpenShellPath(string? path)
     {
         if (string.IsNullOrWhiteSpace(path))
+        {
             return false;
+        }
 
         try
         {
@@ -394,13 +419,19 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private async Task<bool> IsShellRegisteredAsync(CancellationToken cancellationToken)
     {
         if (!IsShellInstalled())
+        {
             return false;
+        }
 
         if (IsShellRegisteredInMergedClasses())
+        {
             return true;
+        }
 
         if (string.IsNullOrWhiteSpace(GetShellExePath()))
+        {
             return false;
+        }
 
         var commandResult = await RunShellCommandAsync("-query", cancellationToken, swallowErrors: true).ConfigureAwait(false);
         return ParseShellRegistrationStatus(commandResult) ?? IsShellRegisteredInMergedClasses();
@@ -412,7 +443,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         if (string.IsNullOrWhiteSpace(shellExePath))
         {
             if (swallowErrors)
+            {
                 return string.Empty;
+            }
 
             throw new InvalidOperationException("shell.exe was not found.");
         }
@@ -479,24 +512,34 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private static bool? ParseShellRegistrationStatus(string? commandResult)
     {
         if (string.IsNullOrWhiteSpace(commandResult))
+        {
             return null;
+        }
 
         var sawPositiveSignal = false;
         foreach (var rawLine in commandResult.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries))
         {
             var line = rawLine.Trim();
             if (line.Length == 0)
+            {
                 continue;
+            }
 
             var lowerLine = line.ToLowerInvariant();
             if (!ContainsRegistrationKeyword(lowerLine))
+            {
                 continue;
+            }
 
             if (ContainsNegativeRegistrationState(lowerLine))
+            {
                 return false;
+            }
 
             if (ContainsPositiveRegistrationState(lowerLine))
+            {
                 sawPositiveSignal = true;
+            }
         }
 
         return sawPositiveSignal ? true : null;
@@ -550,7 +593,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             if (!process.HasExited)
+            {
                 process.Kill(entireProcessTree: true);
+            }
         }
         catch
         {
@@ -622,11 +667,13 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         var shellInstallPath = GetShellInstallPath();
         if (string.IsNullOrWhiteSpace(shellInstallPath))
+        {
             return false;
+        }
 
         if (!_configService.TryLoadProfile(out var profile, out var errorMessage))
         {
-                PluginLog.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
+            PluginLog.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
             return false;
         }
 
@@ -636,7 +683,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-                PluginLog.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
+            PluginLog.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
             return false;
         }
     }
@@ -644,20 +691,31 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private async Task EnsureManagedConfigurationSynchronizedAsync()
     {
         if (!await SyncManagedConfigurationAsync().ConfigureAwait(false))
+        {
             throw new InvalidOperationException("Failed to synchronize managed shell configuration.");
+        }
     }
 
     private static CultureInfo? ResolveManagedCulture()
     {
         if (Resource.Culture is not null)
+        {
             return Resource.Culture;
+        }
 
         try
         {
-            if (!File.Exists(GlobalLanguagePath))
-                return null;
+            var languagePath = GlobalLanguagePath;
+            if (!File.Exists(languagePath))
+            {
+                languagePath = LegacyGlobalLanguagePath;
+                if (!File.Exists(languagePath))
+                {
+                    return null;
+                }
+            }
 
-            var name = File.ReadAllText(GlobalLanguagePath).Trim();
+            var name = File.ReadAllText(languagePath).Trim();
             return string.IsNullOrWhiteSpace(name) ? null : new CultureInfo(name);
         }
         catch

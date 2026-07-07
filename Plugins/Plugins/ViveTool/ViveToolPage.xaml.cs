@@ -30,7 +30,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 {
     private readonly IViveToolService _viveToolService;
     private ObservableCollection<FeatureFlagInfo> _features = new();
-    private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
+    private readonly List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
     private string _featureCountDescription = string.Empty;
     private string _featureSummaryDescription = string.Empty;
@@ -114,7 +114,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
     public string? ViveToolVersion
     {
         get => _viveToolVersion;
@@ -514,7 +514,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private void PopulateStatusFilterOptions()
     {
         if (_statusFilterComboBox is null)
+        {
             return;
+        }
 
         var selectedTag = (_statusFilterComboBox.SelectedItem as ComboBoxItem)?.Tag;
 
@@ -535,7 +537,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
 
         if (_statusFilterComboBox.SelectedItem is null)
+        {
             _statusFilterComboBox.SelectedIndex = 0;
+        }
     }
 
     private DataTemplate BuildFeatureActionsTemplate()
@@ -625,13 +629,13 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            var isAvailable = await _viveToolService.IsViveToolAvailableAsync().ConfigureAwait(false);
-            var path = await _viveToolService.GetViveToolPathAsync().ConfigureAwait(false);
+            var isAvailable = await _viveToolService.IsViveToolAvailableAsync();
+            var path = await _viveToolService.GetViveToolPathAsync();
             string? version = null;
-            
+
             if (isAvailable && !string.IsNullOrEmpty(path))
             {
-                version = await _viveToolService.GetViveToolVersionAsync().ConfigureAwait(false);
+                version = await _viveToolService.GetViveToolVersionAsync();
             }
 
             await Dispatcher.InvokeAsync(() =>
@@ -661,7 +665,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         catch (Exception ex)
         {
             PluginLog.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
-            
+
             await Dispatcher.InvokeAsync(() =>
             {
                 IsViveToolAvailable = false;
@@ -677,7 +681,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             if (!IsViveToolAvailable)
+            {
                 return;
+            }
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -685,7 +691,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 _emptyStatePanel.Visibility = Visibility.Collapsed;
             });
 
-            var features = await _viveToolService.ListFeaturesAsync().ConfigureAwait(false);
+            var features = await _viveToolService.ListFeaturesAsync();
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -708,7 +714,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         catch (Exception ex)
         {
             PluginLog.Trace($"Error loading features: {ex.Message}", ex);
-            
+
             await Dispatcher.InvokeAsync(() =>
             {
                 IsLoading = false;
@@ -746,14 +752,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 // ViVeTool is around 2-3 MB, so we'll assume 3 MB for estimation
                 const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 double percent = Math.Min(100, (bytesDownloaded * 100.0) / estimatedTotalBytes);
-                
+
                 DownloadProgress = percent;
                 DownloadProgressText = string.Format(Resource.ViveTool_DownloadProgress,
                     ByteFormatter.FormatBytes(bytesDownloaded), ByteFormatter.FormatBytes(estimatedTotalBytes), (int)percent);
             });
 
             // Download ViVeTool
-            var success = await _viveToolService.DownloadViveToolAsync(progress).ConfigureAwait(false);
+            var success = await _viveToolService.DownloadViveToolAsync(progress);
 
             await Dispatcher.InvokeAsync(async () =>
             {
@@ -767,7 +773,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     // Refresh status and load features
                     _ = RefreshViveToolStatusAsync();
                     _ = LoadFeaturesAsync();
-                    
+
                     var path = await _viveToolService.GetViveToolPathAsync();
                     if (!string.IsNullOrEmpty(path))
                     {
@@ -790,7 +796,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 IsDownloading = false;
                 DownloadProgress = 0;
                 DownloadProgressText = string.Empty;
-                
+
                 WpfHostNotifications.ShowSnackbarError(
                     Resource.ViveTool_Error,
                     string.Format(Resource.ViveTool_DownloadFailed, ex.Message));
@@ -815,8 +821,10 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             if (!SDK.PluginHostContext.Current.OpenPluginSettings(PluginConstants.ViveTool))
+            {
                 return;
-            
+            }
+
             // Refresh status after settings window is closed
             await RefreshPageAsync(clearFeatureCache: false).ConfigureAwait(true);
         }
@@ -829,7 +837,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private async Task RefreshPageAsync(bool clearFeatureCache)
     {
         if (clearFeatureCache)
+        {
             _viveToolService.ClearFeatureCache();
+        }
 
         await RefreshViveToolStatusAsync();
 
@@ -895,7 +905,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 IsLoading = true;
                 _emptyStatePanel.Visibility = Visibility.Collapsed;
 
-                var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName).ConfigureAwait(false);
+                var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName);
 
                 await Dispatcher.InvokeAsync(() =>
                 {
@@ -941,12 +951,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 false);
 
             if (string.IsNullOrWhiteSpace(url))
+            {
                 return;
+            }
 
             IsLoading = true;
             _emptyStatePanel.Visibility = Visibility.Collapsed;
 
-            var importedFeatures = await _viveToolService.ImportFeaturesFromUrlAsync(url).ConfigureAwait(false);
+            var importedFeatures = await _viveToolService.ImportFeaturesFromUrlAsync(url);
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -998,12 +1010,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
             };
 
             if (saveFileDialog.ShowDialog() != true)
+            {
                 return;
+            }
 
             IsLoading = true;
             _emptyStatePanel.Visibility = Visibility.Collapsed;
 
-            var exported = await _viveToolService.ExportFeaturesToFileAsync(saveFileDialog.FileName, featuresToExport).ConfigureAwait(false);
+            var exported = await _viveToolService.ExportFeaturesToFileAsync(saveFileDialog.FileName, featuresToExport);
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -1049,12 +1063,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             // Debounce search - wait a bit before searching
-            await Task.Delay(500, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(500, cancellationToken);
 
             if (cancellationToken.IsCancellationRequested)
+            {
                 return;
+            }
 
-            await SearchFeaturesAsync().ConfigureAwait(false);
+            await SearchFeaturesAsync();
         }
         catch (OperationCanceledException)
         {
@@ -1072,7 +1088,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             if (!_isFeatureUiReady)
+            {
                 return;
+            }
 
             // Use local cache for fast searching instead of service calls
             await Dispatcher.InvokeAsync(() =>
@@ -1096,43 +1114,48 @@ public partial class ViveToolPage : INotifyPropertyChanged
         catch (Exception ex)
         {
             PluginLog.Trace($"Error searching features: {ex.Message}", ex);
-            
-            await Dispatcher.InvokeAsync(() =>
-            {
-                UpdateFeaturesVisibility();
-            });
+
+            await Dispatcher.InvokeAsync(UpdateFeaturesVisibility);
         }
     }
 
     private async void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem item)
+        {
             _selectedStatusFilter = item.Tag is FeatureFlagStatus status ? status : null;
+        }
         else
+        {
             _selectedStatusFilter = null;
+        }
 
         if (!_isFeatureUiReady)
+        {
             return;
+        }
 
-        await SearchFeaturesAsync().ConfigureAwait(false);
+        await SearchFeaturesAsync();
     }
 
     private async void EnableFeatureButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not System.Windows.Controls.Button button || button.Tag is not int featureId)
+        {
             return;
+        }
 
         try
         {
-            var result = await _viveToolService.EnableFeatureAsync(featureId).ConfigureAwait(false);
-            
+            var result = await _viveToolService.EnableFeatureAsync(featureId);
+
             await Dispatcher.InvokeAsync(async () =>
             {
                 if (result)
                 {
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
-                    
+
                     WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_FeatureEnabled,
                         string.Format(Resource.ViveTool_FeatureEnabledMessage, featureId));
@@ -1154,19 +1177,21 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private async void DisableFeatureButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not System.Windows.Controls.Button button || button.Tag is not int featureId)
+        {
             return;
+        }
 
         try
         {
-            var result = await _viveToolService.DisableFeatureAsync(featureId).ConfigureAwait(false);
-            
+            var result = await _viveToolService.DisableFeatureAsync(featureId);
+
             await Dispatcher.InvokeAsync(async () =>
             {
                 if (result)
                 {
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
-                    
+
                     WpfHostNotifications.ShowSnackbarError(
                         Resource.ViveTool_FeatureDisabled,
                         string.Format(Resource.ViveTool_FeatureDisabledMessage, featureId));
@@ -1189,8 +1214,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            var status = await _viveToolService.GetFeatureStatusAsync(featureId).ConfigureAwait(false);
-            
+            var status = await _viveToolService.GetFeatureStatusAsync(featureId);
+
             await Dispatcher.InvokeAsync(() =>
             {
                 var feature = Features.FirstOrDefault(f => f.Id == featureId);
@@ -1217,7 +1242,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private void UpdateLoadingVisibility()
     {
         if (!_isFeatureUiReady)
+        {
             return;
+        }
 
         _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
         _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
@@ -1226,7 +1253,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private void UpdateFeatureSummary()
     {
         if (_featureCountTextBlock is null)
+        {
             return;
+        }
 
         if (!string.IsNullOrWhiteSpace(FeatureSummaryDescription))
         {
@@ -1258,7 +1287,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private void UpdateFeaturesVisibility()
     {
         if (!_isFeatureUiReady)
+        {
             return;
+        }
 
         if (Features.Count == 0 && !IsLoading)
         {

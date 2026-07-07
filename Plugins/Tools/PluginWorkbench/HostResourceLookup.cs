@@ -11,11 +11,15 @@ internal static class HostResourceLookup
     public static string Resolve(string resourceKey)
     {
         if (string.IsNullOrWhiteSpace(resourceKey))
+        {
             return string.Empty;
+        }
 
         var resourceType = ResolveResourceType();
         if (resourceType is null)
+        {
             return resourceKey;
+        }
 
         try
         {
@@ -37,20 +41,23 @@ internal static class HostResourceLookup
 
     private static Type? ResolveResourceType()
     {
+        var hostAssemblyNames = new[] { "Universal Device Toolkit", "Lenovo Legion Toolkit" };
+
         var assembly = AppDomain.CurrentDomain
             .GetAssemblies()
-            .FirstOrDefault(candidate => string.Equals(candidate.GetName().Name, "Lenovo Legion Toolkit", StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(candidate => hostAssemblyNames.Contains(candidate.GetName().Name, StringComparer.OrdinalIgnoreCase));
 
         if (assembly is null)
         {
-            try
+            foreach (var name in hostAssemblyNames)
             {
-                assembly = Assembly.Load(new AssemblyName("Lenovo Legion Toolkit"));
+                try { assembly = Assembly.Load(new AssemblyName(name)); }
+                catch { /* try next host name */ }
+                if (assembly is not null) break;
             }
-            catch
-            {
+
+            if (assembly is null)
                 return null;
-            }
         }
 
         return assembly.GetType("LenovoLegionToolkit.WPF.Resources.Resource", throwOnError: false, ignoreCase: false);

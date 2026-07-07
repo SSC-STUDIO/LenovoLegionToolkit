@@ -43,7 +43,9 @@ public class ViveToolPathService
     public async Task<string?> GetViveToolPathAsync()
     {
         if (IsTrustedViveToolPath(_cachedViveToolPath))
+        {
             return _cachedViveToolPath;
+        }
 
         // First check user-specified path from settings
         await _settings.LoadAsync().ConfigureAwait(false);
@@ -86,7 +88,9 @@ public class ViveToolPathService
             IsInstallComplete(Path.GetDirectoryName(path)));
 
         if (!string.IsNullOrWhiteSpace(bundledPath))
+        {
             return bundledPath;
+        }
 
         return EnumerateBundledViveToolPathCandidates().First();
     }
@@ -122,7 +126,9 @@ public class ViveToolPathService
             .Distinct(StringComparer.OrdinalIgnoreCase);
 
         foreach (var directory in distinctDirectories)
+        {
             yield return Path.Combine(directory, BundledViveToolDirectoryName, ViveToolExeName);
+        }
     }
 
     private static string? GetPluginsDirectoryOverride()
@@ -217,7 +223,9 @@ public class ViveToolPathService
     internal static bool IsInstallComplete(string? viveToolDirectoryPath)
     {
         if (string.IsNullOrWhiteSpace(viveToolDirectoryPath) || !Directory.Exists(viveToolDirectoryPath))
+        {
             return false;
+        }
 
         return BuiltInRequiredFileNames.All(fileName =>
             File.Exists(Path.Combine(viveToolDirectoryPath, fileName)));
@@ -226,10 +234,14 @@ public class ViveToolPathService
     private static bool IsTrustedViveToolPath(string? viveToolPath)
     {
         if (string.IsNullOrWhiteSpace(viveToolPath) || !File.Exists(viveToolPath))
+        {
             return false;
+        }
 
         if (!Path.GetFileName(viveToolPath).Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
+        {
             return false;
+        }
 
         return IsInstallComplete(Path.GetDirectoryName(viveToolPath));
     }

@@ -10,6 +10,7 @@ using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
 
+[Collection("ShellIntegrationResourceCulture")]
 public class ShellIntegrationPluginTests
 {
     private static bool? ParseShellRegistrationStatus(string commandOutput)
@@ -207,6 +208,8 @@ public class ShellIntegrationPluginTests
         thread.Join();
 
         if (failure is not null)
+        {
             ExceptionDispatchInfo.Capture(failure).Throw();
+        }
     }
 }

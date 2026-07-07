@@ -12,72 +12,72 @@ public interface IViveToolService
     /// <summary>
     /// Check if vivetool.exe is available
     /// </summary>
-    Task<bool> IsViveToolAvailableAsync();
+    public Task<bool> IsViveToolAvailableAsync();
 
     /// <summary>
     /// Get the path to vivetool.exe
     /// </summary>
-    Task<string?> GetViveToolPathAsync();
+    public Task<string?> GetViveToolPathAsync();
 
     /// <summary>
     /// Enable a feature flag by ID
     /// </summary>
-    Task<bool> EnableFeatureAsync(int featureId);
+    public Task<bool> EnableFeatureAsync(int featureId);
 
     /// <summary>
     /// Disable a feature flag by ID
     /// </summary>
-    Task<bool> DisableFeatureAsync(int featureId);
+    public Task<bool> DisableFeatureAsync(int featureId);
 
     /// <summary>
     /// Get the status of a feature flag
     /// </summary>
-    Task<FeatureFlagStatus?> GetFeatureStatusAsync(int featureId);
+    public Task<FeatureFlagStatus?> GetFeatureStatusAsync(int featureId);
 
     /// <summary>
     /// List all feature flags
     /// </summary>
-    Task<List<FeatureFlagInfo>> ListFeaturesAsync();
+    public Task<List<FeatureFlagInfo>> ListFeaturesAsync();
 
     /// <summary>
     /// Search for feature flags by keyword
     /// </summary>
-    Task<List<FeatureFlagInfo>> SearchFeaturesAsync(string keyword);
+    public Task<List<FeatureFlagInfo>> SearchFeaturesAsync(string keyword);
 
     /// <summary>
     /// Import feature flags from a file
     /// </summary>
-    Task<List<FeatureFlagInfo>> ImportFeaturesFromFileAsync(string filePath);
+    public Task<List<FeatureFlagInfo>> ImportFeaturesFromFileAsync(string filePath);
 
     /// <summary>
     /// Import feature flags from a URL
     /// </summary>
-    Task<List<FeatureFlagInfo>> ImportFeaturesFromUrlAsync(string url);
+    public Task<List<FeatureFlagInfo>> ImportFeaturesFromUrlAsync(string url);
 
     /// <summary>
     /// Set the path to vivetool.exe manually
     /// </summary>
-    Task<bool> SetViveToolPathAsync(string filePath);
+    public Task<bool> SetViveToolPathAsync(string filePath);
 
     /// <summary>
     /// Download and install ViVeTool with progress reporting
     /// </summary>
-    Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null);
-    
+    public Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null);
+
     /// <summary>
     /// Clear the feature cache to force reload on next request
     /// </summary>
-    void ClearFeatureCache();
-    
+    public void ClearFeatureCache();
+
     /// <summary>
     /// Get the ViVeTool version
     /// </summary>
-    Task<string?> GetViveToolVersionAsync();
+    public Task<string?> GetViveToolVersionAsync();
 
     /// <summary>
     /// Export feature flags to a file
     /// </summary>
-    Task<bool> ExportFeaturesToFileAsync(string filePath, IReadOnlyCollection<FeatureFlagInfo> features);
+    public Task<bool> ExportFeaturesToFileAsync(string filePath, IReadOnlyCollection<FeatureFlagInfo> features);
 }
 
 /// <summary>

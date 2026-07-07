@@ -22,7 +22,10 @@ public class PluginAttribute : Attribute
         Name = name;
 
         if (!System.Version.TryParse(version, out _))
+        {
             throw new ArgumentException($"'{version}' is not a valid version string.", nameof(version));
+        }
+
         Version = version;
 
         Description = description;

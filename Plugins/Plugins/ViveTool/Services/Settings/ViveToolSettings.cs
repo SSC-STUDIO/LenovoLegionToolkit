@@ -31,7 +31,9 @@ public class ViveToolSettings
         get
         {
             using (_dataLock.Lock())
+            {
                 return _data.ViveToolPath;
+            }
         }
         set
         {
@@ -42,7 +44,9 @@ public class ViveToolSettings
                 shouldSave = !_isLoading;
             }
             if (shouldSave)
+            {
                 _ = SaveAsyncDelayed();
+            }
         }
     }
 
@@ -118,7 +122,9 @@ public class ViveToolSettings
                 // Preserve user mutations that happened while the settings file was loading.
                 var viveToolPathChangedDuringLoad = !string.Equals(_data.ViveToolPath, viveToolPathBeforeLoad, StringComparison.Ordinal);
                 if (!viveToolPathChangedDuringLoad)
+                {
                     _data = loadedData ?? new SettingsData();
+                }
 
                 _isLoading = false;
             }
@@ -126,12 +132,14 @@ public class ViveToolSettings
         catch (Exception ex)
         {
             PluginLog.Trace($"Error loading settings: {ex.Message}", ex);
-            
+
             using (await _dataLock.LockAsync().ConfigureAwait(false))
             {
                 var viveToolPathChangedDuringLoad = !string.Equals(_data.ViveToolPath, viveToolPathBeforeLoad, StringComparison.Ordinal);
                 if (!viveToolPathChangedDuringLoad)
+                {
                     _data = new SettingsData();
+                }
 
                 _isLoading = false;
             }

@@ -105,7 +105,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
     public void Dispose()
     {
         if (_disposed)
+        {
             return;
+        }
 
         _disposed = true;
 
@@ -130,7 +132,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
         AppDomain.CurrentDomain.AssemblyResolve -= _assemblyResolveHandler;
 
         if (string.IsNullOrWhiteSpace(_temporaryDirectory) || !Directory.Exists(_temporaryDirectory))
+        {
             return;
+        }
 
         try
         {
@@ -160,12 +164,16 @@ internal sealed class PluginWorkbenchSession : IDisposable
             .ToList();
 
         if (candidates.Count == 0)
+        {
             throw new FileNotFoundException($"No plugin DLL candidates were found in '{pluginDirectory}'.");
+        }
 
         var exactDirectoryMatch = candidates.FirstOrDefault(path =>
             string.Equals(Path.GetFileNameWithoutExtension(path), directoryName, StringComparison.OrdinalIgnoreCase));
         if (!string.IsNullOrWhiteSpace(exactDirectoryMatch))
+        {
             return exactDirectoryMatch;
+        }
 
         var filteredCandidates = candidates
             .Where(path =>
@@ -183,7 +191,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
     {
         var assemblyName = new AssemblyName(args.Name).Name;
         if (string.IsNullOrWhiteSpace(assemblyName))
+        {
             return null;
+        }
 
         var assemblyPath = Path.Combine(pluginDirectory, $"{assemblyName}.dll");
         return File.Exists(assemblyPath) ? Assembly.LoadFrom(assemblyPath) : null;
@@ -194,7 +204,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
         EnsureInstalledState();
 
         if (mode != LenovoLegionToolkit.Plugins.SDK.PluginHostMode.RealRuntime)
+        {
             return;
+        }
 
         if (Plugin is LenovoLegionToolkit.Lib.Plugins.IAppStartupPlugin startupPlugin)
         {
@@ -216,7 +228,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
         }
 
         if (File.Exists(markerPath))
+        {
             return;
+        }
 
         Directory.CreateDirectory(Path.GetDirectoryName(markerPath)!);
         Plugin.OnInstalled();
@@ -227,7 +241,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
     {
         var root = Environment.GetEnvironmentVariable(PluginConfigurationRootEnvironmentVariable);
         if (string.IsNullOrWhiteSpace(root))
+        {
             return null;
+        }
 
         var safePluginId = string.Concat(Plugin.Id.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_'));
         return Path.Combine(root, ".plugin-workbench", $"{safePluginId}.installed");
@@ -251,7 +267,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
     private static WindowsOptimizationCategoryDefinition? GetOptimizationCategory(IPlugin plugin)
     {
         if (plugin is LenovoLegionToolkit.Lib.Plugins.PluginBase pluginBase)
+        {
             return pluginBase.GetOptimizationCategory();
+        }
 
         return plugin.GetType()
             .GetMethod("GetOptimizationCategory", BindingFlags.Instance | BindingFlags.Public)?
@@ -266,7 +284,9 @@ internal sealed class PluginWorkbenchSession : IDisposable
     private static UIElement? CreateContent(LenovoLegionToolkit.Lib.Plugins.IPluginPage? pluginPage)
     {
         if (pluginPage is null)
+        {
             return null;
+        }
 
         return pluginPage.CreatePage() as UIElement;
     }

@@ -7,7 +7,7 @@
 | Platform | Target | Audience | Approach |
 |----------|--------|----------|----------|
 | r/Windows11 | ~300k | Power users, tinkerers | Feature showcase |
-| r/Lenovo | ~30k | Legion/Legion Pro owners | Device-specific value |
+| r/pcmasterrace | ~8M | Gamers, power users | Performance & system tweaks |
 | r/opensource | ~200k | Devs, contributors | Call for contributions |
 | r/csharp | ~150k | .NET developers | Technical deep-dive |
 | r/pcmasterrace | ~8M | Gamers | Network acceleration for gaming |
@@ -48,15 +48,15 @@ Would love feedback from the community! What features would you want next?
 
 ---
 
-## Post 2: r/Lenovo
+## Post 2: r/pcmasterrace
 
-**Title:** Universal Device Toolkit Plugin Pack — unlock your Lenovo Legion's full potential with these free plugins
+**Title:** Universal Device Toolkit Plugin Pack — unlock your Windows setup's full potential with these free plugins
 
 **Body:**
 
-If you're using a Lenovo Legion laptop, you probably know about Universal Device Toolkit (the open-source alternative to Lenovo Vantage). I've been building the official plugin ecosystem for it, and just released a major UI overhaul.
+If you're a Windows power user or gamer, you've probably dealt with bloated OEM management suites (Lenovo Vantage, Armoury Crate, Synapse, iCUE) eating 500MB+ of RAM in the background. Universal Device Toolkit is the lightweight, open-source alternative — and I've been building its official plugin ecosystem.
 
-Here's what the plugins add to your Legion:
+Here's what the plugins add to your setup:
 
 - **Network Acceleration** — Real-time network telemetry with a redesigned Dashboard + Optimization tab layout. Track download/upload speeds, peak traffic, active adapter, and apply gaming presets with one click.
 - **ViVeTool GUI** — Unlock hidden Windows features on your Legion. Full searchable table with enable/disable buttons right in the toolkit.
@@ -69,7 +69,7 @@ Everything is free, open-source, and natively supports both Light and Dark theme
 
 **Install:** Open Universal Device Toolkit → Plugins → Browse Store → Install any plugin
 
-Fellow Legion users — what plugins would make your experience better?
+What plugins would make your Windows experience better?
 
 ---
 
@@ -97,7 +97,7 @@ I wanted to share the architecture of **UniversalDeviceToolkit-Plugins**, an ope
 
 ### Looking for Contributors!
 
-We have 4 official plugins and a SDK that makes it easy to build more. If you're into C#/WPF, this is a great project to contribute to.
+We have 5 official plugins and a SDK that makes it easy to build more. If you're into C#/WPF, this is a great project to contribute to.
 
 **GitHub:** [SSC-STUDIO/UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
 
@@ -160,7 +160,7 @@ Built a **Network Acceleration** plugin that gives you:
 - 🔄 Automatic adapter detection and optimization
 - 🌓 Native Light/Dark theme support
 
-Part of a larger plugin ecosystem (4 plugins total) — all free and open-source.
+Part of a larger plugin ecosystem (5 plugins total) — all free and open-source.
 
 **GitHub:** [SSC-STUDIO/UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
 
@@ -170,7 +170,7 @@ Part of a larger plugin ecosystem (4 plugins total) — all free and open-source
 
 ## Cross-Posting Schedule
 
-1. **Day 1**: Post 1 (r/Windows11) + Post 2 (r/Lenovo) — morning
+1. **Day 1**: Post 1 (r/Windows11) + Post 2 (r/pcmasterrace) — morning
 2. **Day 2**: Post 4 (r/csharp) — morning
 3. **Day 3**: Post 3 (r/opensource) — morning
 4. **Day 4**: Post 5 (r/pcmasterrace) — afternoon
@@ -178,7 +178,7 @@ Part of a larger plugin ecosystem (4 plugins total) — all free and open-source
 ## Additional Promotion Channels
 
 - **GitHub Social**: Star the repo, share on GitHub feeds
-- **Discord**: Share in Lenovo Legion Discord servers, .NET/WPF communities
+- **Discord**: Share in Windows, .NET/WPF, and open-source Discord communities
 - **V2EX** (v2ex.com): Post in Chinese about the plugin ecosystem
 - **Zhihu** (zhihu.com): Write a technical article about plugin architecture
 - **Bilibili**: Create a demo video showing the Network Acceleration UI

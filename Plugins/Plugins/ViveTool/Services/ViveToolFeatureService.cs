@@ -58,7 +58,10 @@ public class ViveToolFeatureService : IDisposable
         {
             var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/enable /id:{featureId}").ConfigureAwait(false);
             if (result.Success)
+            {
                 ClearFeatureCache();
+            }
+
             return result.Success;
         }
         catch (Exception ex)
@@ -81,7 +84,10 @@ public class ViveToolFeatureService : IDisposable
         {
             var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/disable /id:{featureId}").ConfigureAwait(false);
             if (result.Success)
+            {
                 ClearFeatureCache();
+            }
+
             return result.Success;
         }
         catch (Exception ex)
@@ -102,22 +108,34 @@ public class ViveToolFeatureService : IDisposable
 
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
+        {
             return null;
+        }
 
         try
         {
             var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/query /id:{featureId}").ConfigureAwait(false);
             if (!result.Success)
+            {
                 return null;
+            }
 
             // Parse output to determine status
             var output = result.Output?.ToLowerInvariant() ?? string.Empty;
             if (output.Contains("enabled") || output.Contains("state: 1"))
+            {
                 return FeatureFlagStatus.Enabled;
+            }
+
             if (output.Contains("disabled") || output.Contains("state: 0"))
+            {
                 return FeatureFlagStatus.Disabled;
+            }
+
             if (output.Contains("default") || output.Contains("state: 2"))
+            {
                 return FeatureFlagStatus.Default;
+            }
 
             return FeatureFlagStatus.Unknown;
         }
@@ -131,17 +149,23 @@ public class ViveToolFeatureService : IDisposable
     public async Task<List<FeatureFlagInfo>> ListFeaturesAsync()
     {
         if (TryGetCachedFeatures(out var cachedFeatures))
+        {
             return cachedFeatures;
+        }
 
         await _featureLoadGate.WaitAsync().ConfigureAwait(false);
         try
         {
             if (TryGetCachedFeatures(out cachedFeatures))
+            {
                 return cachedFeatures;
+            }
 
             var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
             if (string.IsNullOrEmpty(viveToolPath))
+            {
                 return [];
+            }
 
             var configuredFeatures = await QueryConfiguredFeaturesAsync(viveToolPath).ConfigureAwait(false);
             var features = LoadFeatureDictionary(viveToolPath);
@@ -155,7 +179,9 @@ public class ViveToolFeatureService : IDisposable
             }
 
             if (features.Count == 0)
+            {
                 return [];
+            }
 
             UpdateCachedFeatures(features, DateTime.UtcNow);
 
@@ -178,7 +204,9 @@ public class ViveToolFeatureService : IDisposable
     {
         var allFeatures = await ListFeaturesAsync().ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(keyword))
+        {
             return allFeatures;
+        }
 
         var lowerKeyword = keyword.ToLowerInvariant();
         return allFeatures.Where(f =>
@@ -249,7 +277,9 @@ public class ViveToolFeatureService : IDisposable
                 Path.GetDirectoryName(viveToolPath) ?? string.Empty,
                 "FeatureDictionary.pfs");
             if (!File.Exists(dictionaryPath))
+            {
                 return [];
+            }
 
             return ParseFeatureDictionaryLines(File.ReadLines(dictionaryPath));
         }
@@ -267,16 +297,22 @@ public class ViveToolFeatureService : IDisposable
         foreach (var rawLine in lines)
         {
             if (string.IsNullOrWhiteSpace(rawLine))
+            {
                 continue;
+            }
 
             var separatorIndex = rawLine.LastIndexOf(',');
             if (separatorIndex <= 0 || separatorIndex >= rawLine.Length - 1)
+            {
                 continue;
+            }
 
             var name = rawLine[..separatorIndex].Trim();
             var idText = rawLine[(separatorIndex + 1)..].Trim();
             if (!int.TryParse(idText, out var id) || id <= 0 || !seenIds.Add(id))
+            {
                 continue;
+            }
 
             features.Add(new FeatureFlagInfo
             {
@@ -293,20 +329,29 @@ public class ViveToolFeatureService : IDisposable
     private static void ApplyConfiguredStatuses(List<FeatureFlagInfo> features, List<FeatureFlagInfo>? configuredFeatures)
     {
         if (configuredFeatures is null || configuredFeatures.Count == 0)
+        {
             return;
+        }
 
         var configuredById = new Dictionary<int, FeatureFlagInfo>();
         foreach (var configuredFeature in configuredFeatures)
+        {
             configuredById[configuredFeature.Id] = configuredFeature;
+        }
 
         for (var i = 0; i < features.Count; i++)
         {
             if (!configuredById.TryGetValue(features[i].Id, out var configuredFeature))
+            {
                 continue;
+            }
 
             features[i].Status = configuredFeature.Status;
             if (!string.IsNullOrWhiteSpace(configuredFeature.Description))
+            {
                 features[i].Description = configuredFeature.Description;
+            }
+
             if (!string.IsNullOrWhiteSpace(configuredFeature.Name) &&
                 !configuredFeature.Name.Equals($"Feature {configuredFeature.Id}", StringComparison.OrdinalIgnoreCase))
             {
@@ -318,16 +363,22 @@ public class ViveToolFeatureService : IDisposable
     private string? ParseVersionFromOutput(string output)
     {
         if (string.IsNullOrWhiteSpace(output))
+        {
             return null;
+        }
 
         foreach (var line in output.Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (string.IsNullOrWhiteSpace(line))
+            {
                 continue;
+            }
 
             var version = TryParseVersionLine(line);
             if (!string.IsNullOrWhiteSpace(version))
+            {
                 return version;
+            }
         }
 
         return null;
@@ -348,7 +399,9 @@ public class ViveToolFeatureService : IDisposable
         {
             var match = Regex.Match(line, regex, RegexOptions.IgnoreCase);
             if (match.Success)
+            {
                 return match.Groups["version"].Value;
+            }
         }
 
         return null;
@@ -359,7 +412,9 @@ public class ViveToolFeatureService : IDisposable
         var features = new List<FeatureFlagInfo>();
 
         if (string.IsNullOrWhiteSpace(output))
+        {
             return features;
+        }
 
         PluginLog.Trace($"ViveTool: Parsing feature list output (length: {output.Length} chars)");
 
@@ -413,16 +468,22 @@ public class ViveToolFeatureService : IDisposable
         foreach (var line in lines)
         {
             if (string.IsNullOrWhiteSpace(line))
+            {
                 continue;
+            }
 
             // Skip header lines or help text
             if (line.Contains("Usage:", StringComparison.OrdinalIgnoreCase) ||
                 line.Contains("Options:", StringComparison.OrdinalIgnoreCase) ||
                 line.StartsWith("-", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             if (TryParseLegacyFeatureLine(line, out var feature))
+            {
                 yield return feature;
+            }
         }
     }
 
@@ -521,22 +582,40 @@ public class ViveToolFeatureService : IDisposable
     private FeatureFlagStatus ParseStatusFromLine(string line)
     {
         if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Enabled;
+        }
+
         if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Disabled;
+        }
+
         if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Default;
+        }
+
         return FeatureFlagStatus.Unknown;
     }
 
     private FeatureFlagStatus ParseStatusFromString(string statusStr)
     {
         if (statusStr.Equals("Enabled", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Enabled;
+        }
+
         if (statusStr.Equals("Disabled", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Disabled;
+        }
+
         if (statusStr.Equals("Default", StringComparison.OrdinalIgnoreCase))
+        {
             return FeatureFlagStatus.Default;
+        }
+
         return FeatureFlagStatus.Unknown;
     }
 

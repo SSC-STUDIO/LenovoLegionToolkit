@@ -10,11 +10,15 @@ $targetDir = Join-Path $repoRoot "Dependencies\\Host"
 
 $requiredFiles = @(
     "LenovoLegionToolkit.Lib.dll",
-    "Lenovo Legion Toolkit.dll"
+    "LenovoLegionToolkit.Lib.Plugins.dll",
+    "Universal Device Toolkit.dll",
+    "Serilog.dll",
+    "Serilog.Sinks.Async.dll",
+    "Serilog.Sinks.File.dll"
 )
 
 if ([string]::IsNullOrWhiteSpace($SourceDir) -and $UseSiblingRepoBuild) {
-    $SourceDir = Join-Path $repoRoot "..\\LenovoLegionToolkit\\LenovoLegionToolkit.WPF\\bin\\Release\\net10.0-windows\\win-x64"
+    $SourceDir = Join-Path $repoRoot "..\\UniversalDeviceToolkit\\Build"
 }
 
 if ([string]::IsNullOrWhiteSpace($SourceDir)) {

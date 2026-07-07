@@ -20,12 +20,13 @@ public class SettingsManager<T> where T : class, new()
     private const string _settingsFileNameMpck = "settings.mpack";
     private static readonly string _defaultSettingsRoot = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "LenovoLegionToolkit",
+        "UniversalDeviceToolkit",
         "plugins");
 
     private readonly string _settingsFilePath;
     private readonly string _settingsFilePathMpck;
     private readonly string _legacySettingsFilePath;
+    private readonly string _legacyAppDataSettingsFilePath; // Pre-rebrand %LocalAppData%\LenovoLegionToolkit\plugins\<name>
     private readonly ILogger? _logger;
     private readonly object _lock = new object();
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
@@ -69,6 +70,12 @@ public class SettingsManager<T> where T : class, new()
         _settingsFilePath = Path.Combine(pluginDirectory, _settingsFileName);
         _settingsFilePathMpck = Path.Combine(pluginDirectory, _settingsFileNameMpck);
         _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, _settingsFileName);
+        _legacyAppDataSettingsFilePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "LenovoLegionToolkit",
+            "plugins",
+            pluginName,
+            _settingsFileName);
 
         if (enableDebounce)
         {
@@ -365,12 +372,23 @@ public class SettingsManager<T> where T : class, new()
             return;
         }
 
-        if (string.Equals(_settingsFilePath, _legacySettingsFilePath, StringComparison.OrdinalIgnoreCase))
+        TryMigrateFromLegacySettings(_legacySettingsFilePath);
+        TryMigrateFromLegacySettings(_legacyAppDataSettingsFilePath);
+    }
+
+    private void TryMigrateFromLegacySettings(string legacySettingsFilePath)
+    {
+        if (File.Exists(_settingsFilePath))
         {
             return;
         }
 
-        if (!File.Exists(_legacySettingsFilePath))
+        if (string.Equals(_settingsFilePath, legacySettingsFilePath, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        if (!File.Exists(legacySettingsFilePath))
         {
             return;
         }
@@ -378,12 +396,12 @@ public class SettingsManager<T> where T : class, new()
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
-            File.Copy(_legacySettingsFilePath, _settingsFilePath, overwrite: false);
-            _logger?.LogInformation("Migrated settings from legacy path {LegacyPath} to {SettingsPath}", _legacySettingsFilePath, _settingsFilePath);
+            File.Copy(legacySettingsFilePath, _settingsFilePath, overwrite: false);
+            _logger?.LogInformation("Migrated settings from legacy path {LegacyPath} to {SettingsPath}", legacySettingsFilePath, _settingsFilePath);
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Failed to migrate settings from legacy path {LegacyPath} to {SettingsPath}", _legacySettingsFilePath, _settingsFilePath);
+            _logger?.LogError(ex, "Failed to migrate settings from legacy path {LegacyPath} to {SettingsPath}", legacySettingsFilePath, _settingsFilePath);
         }
     }
 }

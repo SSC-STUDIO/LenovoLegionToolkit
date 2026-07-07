@@ -16,10 +16,14 @@ public sealed class PluginManifestMigrator
             var unifiedManifest = plugin.UnifiedManifest;
 
             if (unifiedManifest.Store.SupportedLanguages.Count == 0)
+            {
                 unifiedManifest.Store.SupportedLanguages.AddRange(_repository.InferSupportedLanguages(plugin));
+            }
 
             if (string.IsNullOrWhiteSpace(unifiedManifest.Package.AssetName))
+            {
                 unifiedManifest.Package.AssetName = $"{unifiedManifest.Id}-v{unifiedManifest.Version}.zip";
+            }
 
             EnsureRequiredFile(unifiedManifest, $"{plugin.ExpectedAssemblyName}.dll");
             EnsureRequiredFile(unifiedManifest, "LenovoLegionToolkit.Plugins.SDK.dll");
@@ -29,7 +33,9 @@ public sealed class PluginManifestMigrator
             PluginRepository.WriteJsonFile(unifiedPath, unifiedManifest);
             PluginRepository.WriteJsonFile(Path.Combine(plugin.DirectoryPath, "plugin.json"), PluginRepository.ToLegacyManifest(unifiedManifest));
             if (HasStoreMetadata(unifiedManifest))
+            {
                 PluginRepository.WriteJsonFile(Path.Combine(plugin.DirectoryPath, "store-entry.json"), PluginRepository.ToStoreEntry(unifiedManifest));
+            }
 
             written.Add(unifiedPath);
             log?.Invoke($"Migrated {pluginId}: {unifiedPath}");
@@ -41,7 +47,9 @@ public sealed class PluginManifestMigrator
     private static void EnsureRequiredFile(UnifiedPluginManifest manifest, string fileName)
     {
         if (!manifest.Package.RequiredFiles.Contains(fileName, StringComparer.OrdinalIgnoreCase))
+        {
             manifest.Package.RequiredFiles.Add(fileName);
+        }
     }
 
     private static bool HasStoreMetadata(UnifiedPluginManifest manifest)

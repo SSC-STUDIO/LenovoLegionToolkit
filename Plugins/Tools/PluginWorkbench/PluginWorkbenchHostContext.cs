@@ -42,7 +42,9 @@ internal sealed class PluginWorkbenchHostContext : IPluginHostContext
         if (dialogOrContent is Window dialogWindow)
         {
             if (ownerWindow is not null && !ReferenceEquals(ownerWindow, dialogWindow))
+            {
                 dialogWindow.Owner = ownerWindow;
+            }
 
             dialogWindow.ShowDialog();
             return true;
@@ -52,7 +54,9 @@ internal sealed class PluginWorkbenchHostContext : IPluginHostContext
         {
             var hostWindow = new HostedPluginContentWindow(content, string.IsNullOrWhiteSpace(title) ? "Plugin Dialog" : title);
             if (ownerWindow is not null)
+            {
                 hostWindow.Owner = ownerWindow;
+            }
 
             hostWindow.ShowDialog();
             return true;

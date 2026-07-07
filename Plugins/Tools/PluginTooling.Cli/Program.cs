@@ -46,10 +46,14 @@ static async Task<int> ProgramMainAsync(string[] args)
         for (var i = 0; i < argv.Length; i++)
         {
             if (!string.Equals(argv[i], "--repository-root", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             if (i + 1 >= argv.Length)
+            {
                 throw new InvalidOperationException("Missing value for --repository-root.");
+            }
 
             return Path.GetFullPath(argv[i + 1]);
         }
@@ -62,11 +66,15 @@ static async Task<int> ProgramMainAsync(string[] args)
         var service = new DoctorService();
         var result = service.Run(repositoryRoot);
         foreach (var check in result.Checks)
+        {
             Console.WriteLine($"[{check.Status}] {check.Message}");
+        }
 
         var outputPath = OptionalValue(argv, "--json-report-path");
         if (!string.IsNullOrWhiteSpace(outputPath))
+        {
             await JsonReportFile.WriteAsync(Path.GetFullPath(outputPath), result);
+        }
 
         return result.FailureCount == 0 ? 0 : 1;
     }
@@ -97,7 +105,9 @@ static async Task<int> ProgramMainAsync(string[] args)
 
         var outputPath = OptionalValue(argv, "--json-report-path");
         if (!string.IsNullOrWhiteSpace(outputPath))
+        {
             await JsonReportFile.WriteAsync(Path.GetFullPath(outputPath), report);
+        }
 
         return 0;
     }
@@ -122,7 +132,10 @@ static async Task<int> ProgramMainAsync(string[] args)
         Console.WriteLine($"Plugin scaffold created: {result.PluginDirectory}");
         Console.WriteLine($"Test project created: {result.TestDirectory}");
         if (!string.IsNullOrWhiteSpace(result.StoreEntryPath))
+        {
             Console.WriteLine($"Official metadata scaffolded: {result.StoreEntryPath}");
+        }
+
         return 0;
     }
 
@@ -158,7 +171,9 @@ static async Task<int> ProgramMainAsync(string[] args)
         var configuration = OptionalValue(argv, "--configuration") ?? "Release";
         var buildExitCode = await RunBuildAsync(repositoryRoot, ["build", "--plugin", pluginId, "--configuration", configuration]);
         if (buildExitCode != 0)
+        {
             return buildExitCode;
+        }
 
         var previewArgs = new List<string>
         {
@@ -181,7 +196,9 @@ static async Task<int> ProgramMainAsync(string[] args)
         var plugin = repo.Plugins[pluginId];
         var configuration = OptionalValue(argv, "--configuration") ?? "Release";
         if (string.IsNullOrWhiteSpace(plugin.TestProjectPath))
+        {
             return Fail($"Plugin '{pluginId}' does not have a test project.");
+        }
 
         var runner = new ProcessRunner();
         return await runner.RunDotnetAsync(["test", plugin.TestProjectPath!, "-c", configuration, "--nologo"], repo.RootPath, Console.WriteLine);
@@ -209,7 +226,9 @@ static async Task<int> ProgramMainAsync(string[] args)
 
         var outputPath = OptionalValue(argv, "--json-report-path");
         if (!string.IsNullOrWhiteSpace(outputPath))
+        {
             await JsonReportFile.WriteAsync(Path.GetFullPath(outputPath), report);
+        }
 
         return report.Totals.Failures == 0 ? 0 : 1;
     }
@@ -327,10 +346,14 @@ static IReadOnlyList<string> ParsePluginSelection(string[] args)
 static DateTimeOffset? ParseReleaseDate(string? rawValue)
 {
     if (string.IsNullOrWhiteSpace(rawValue))
+    {
         return null;
+    }
 
     if (DateTimeOffset.TryParse(rawValue, out var releaseDate))
+    {
         return releaseDate;
+    }
 
     throw new InvalidOperationException($"Invalid ISO-8601 release date: {rawValue}");
 }
@@ -345,10 +368,14 @@ static string? OptionalValue(string[] args, string option)
     for (var i = 0; i < args.Length; i++)
     {
         if (!string.Equals(args[i], option, StringComparison.OrdinalIgnoreCase))
+        {
             continue;
+        }
 
         if (i + 1 >= args.Length)
+        {
             throw new InvalidOperationException($"Missing value for {option}.");
+        }
 
         return args[i + 1];
     }

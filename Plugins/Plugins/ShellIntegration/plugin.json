@@ -2,7 +2,7 @@
   "Id": "shell-integration",
   "Name": "Shell Integration",
   "Version": "1.0.12",
-  "MinLltVersion": "3.6.1",
+  "MinLltVersion": "4.2.1",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": true,
   "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

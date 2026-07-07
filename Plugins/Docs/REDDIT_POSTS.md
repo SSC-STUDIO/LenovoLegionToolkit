@@ -6,25 +6,25 @@
 
 ## 发布顺序（按优先级）
 
-1. **r/LenovoLegion** — 主贴（最适合，高度相关社区）
+1. **r/pcmasterrace** — 主贴（最适合，高度相关社区）
 2. **r/csharp** — 技术贴（代码质量焦点）
 3. **r/dotnet** — .NET 社区贴
 4. **r/Windows11** — 终端用户社区（简化版）
 
 ---
 
-## 1. Reddit — r/LenovoLegion（最适合）
+## 1. Reddit — r/pcmasterrace（最适合）
 
 ### 标题
 ```
-I built 5 open-source plugins to supercharge Lenovo Legion laptops (C# / .NET 10 / WPF)
+I built 5 open-source plugins to supercharge your Windows setup (C# / .NET 10 / WPF)
 ```
 
 ### 内容
 ```
-Hey Legion community! 
+Hey power users! 
 
-I've been working on **Universal Device Toolkit Plugins** — a collection of **5 free, open-source plugins** that extend Lenovo Legion Toolkit (LLT) with new features. Built with **C# .NET 10** and **WPF-UI 4.3.0**.
+I've been working on **Universal Device Toolkit Plugins** — a collection of **5 free, open-source plugins** that extend Universal Device Toolkit with new features. Built with **C# .NET 10** and **WPF-UI 4.3.0**.
 
 ## What's New in v1.2.0 (Quality Update)
 
@@ -44,7 +44,7 @@ We just completed a **10-day quality sprint** — here's what we achieved:
 - ✅ MessagePack serialization (opt-in, binary format)
 
 ### Code Quality (Zero Warnings Achievement)
-- ✅ **0 warnings**, **0 errors** across **6 projects**
+- ✅ **0 warnings**, **0 errors** across **7 projects**
 - ✅ **562+ unit tests** passing
 - ✅ Strict Roslyn analyzers (`TreatWarningsAsErrors=true`)
 - ✅ XML documentation for all public APIs
@@ -110,7 +110,7 @@ If you find this project useful, please consider giving it a ⭐! It helps us re
 ```
 
 ### 发布链接
-https://www.reddit.com/r/LenovoLegion/submit
+https://www.reddit.com/r/pcmasterrace/submit
 
 ### 预计效果
 ⭐⭐⭐⭐⭐ (高度相关社区，预计 50+ upvotes, 10+ stars)
@@ -121,19 +121,19 @@ https://www.reddit.com/r/LenovoLegion/submit
 
 ### 标题
 ```
-Achieved zero warnings across 6 C# projects — here's our journey (.NET 10, WPF, Win11)
+Achieved zero warnings across 7 C# projects — here's our journey (.NET 10, WPF, Win11)
 ```
 
 ### 内容
 ```
 Hey C# community! 
 
-I want to share our journey of enforcing **zero warnings** across a **6-project WPF solution** (C# .NET 10). 
+I want to share our journey of enforcing **zero warnings** across a **7-project WPF solution** (C# .NET 10). 
 
 ## The Challenge
 
-We have a plugin ecosystem for Lenovo Legion Toolkit with:
-- **6 projects**: Shared, 4 plugins, SDK
+We have a plugin ecosystem for Universal Device Toolkit with:
+- **7 projects**: Shared, 5 plugins, SDK
 - **562+ unit tests**
 - **~15,000 lines** of C# code
 
@@ -198,7 +198,7 @@ await SomeAsync().ConfigureAwait(false); // Wrong in WPF!
 
 ## The Result
 
-✅ **0 warnings, 0 errors** across all 6 projects  
+✅ **0 warnings, 0 errors** across all 7 projects  
 ✅ **562+ tests pass**  
 ✅ **CI/CD green** (GitHub Actions)  
 ✅ **Performance optimized** (Save(): 62ms → 0ms)  

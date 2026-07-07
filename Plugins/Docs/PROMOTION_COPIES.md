@@ -6,7 +6,7 @@
 
 ## 1. V2EX 分享创造 — 中文
 
-**标题:** [创造] 开源 Windows 设备管理插件生态系统 — 4个免费插件让 Windows 更好用
+**标题:** [创造] 开源 Windows 设备管理插件生态系统 — 5个免费插件让 Windows 更好用
 
 **正文:**
 
@@ -16,7 +16,7 @@
 
 - **100% 免费开源** (MIT License)
 - **原生 Windows 11 外观** (.NET 10 + WPF-UI 4.3.0 Fluent Design)
-- **4 个官方插件**，全部支持浅色/深色主题
+- **5 个官方插件**，全部支持浅色/深色主题
 
 ### 🔥 插件介绍
 
@@ -40,9 +40,13 @@
    - 右键菜单集成
    - 从资源管理器任何位置即时访问电源功能
 
+5. **电池健康** (Battery Health)
+   - 电池健康监控 + 循环计数
+   - 容量衰减检测
+
 ### 📦 安装
 
-需要有 Universal Device Toolkit（开源 Lenovo Vantage 替代品）：
+需要有 Universal Device Toolkit（轻量无后台的 OEM 管理套件替代品）：
 1. 打开 Universal Device Toolkit
 2. 进入 **插件** → **浏览商店**
 3. 点击 **安装**
@@ -97,12 +101,13 @@ GitHub: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins
 
 **简介:**
 
-一个开源的 Windows 设备管理插件生态系统，包含 4 个免费插件：
+一个开源的 Windows 设备管理插件生态系统，包含 5 个免费插件：
 
 ✅ 网络加速 — 实时流量监控 + 游戏优化
 ✅ ViVeTool GUI — 解锁 Windows 隐藏功能
 ✅ 自定义鼠标 — DPI 配置 + 光标主题
 ✅ Shell 集成 — 右键菜单集成
+✅ 电池健康 — 电池健康监控 + 循环计数
 
 🔗 GitHub: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins
 🔗 主应用: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
@@ -132,11 +137,12 @@ GitHub: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins
 **Tweet 2:**
 Built a plugin ecosystem for Windows device management 🛠️
 
-4 official plugins:
+5 official plugins:
 🔥 Network Acceleration
 🖱️ Custom Mouse
 🔧 ViVeTool GUI
 🐚 Shell Integration
+🔋 Battery Health
 
 .NET 10 + WPF — Native Fluent Design
 Zero hardcoded colors — full Dark/Light theme support
@@ -149,7 +155,7 @@ GitHub (⭐ appreciated!): https://github.com/SSC-STUDIO/UniversalDeviceToolkit-
 
 ## 5. Reddit — 通用短版（适用于多个 subreddit）
 
-**标题:** Free open-source Windows plugin ecosystem — 4 plugins, native Fluent Design, zero telemetry
+**标题:** Free open-source Windows plugin ecosystem — 5 plugins, native Fluent Design, zero telemetry
 
 **正文:**
 
@@ -157,11 +163,12 @@ Hey everyone! 👋
 
 I've been working on **Universal Device Toolkit Plugins** — a free, open-source plugin ecosystem for Windows device management.
 
-**4 official plugins:**
+**5 official plugins:**
 - 🔥 **Network Acceleration** — Real-time telemetry, gaming presets, one-click optimization
 - 🖱️ **Custom Mouse** — DPI profiles, theme-aware cursors, pointer speed management
 - 🔧 **ViVeTool GUI** — Unlock hidden Windows features from a searchable table
 - 🐚 **Shell Integration** — Right-click context menu access
+- 🔋 **Battery Health** — Battery health monitoring, cycle count, capacity degradation
 
 **Tech stack:**
 - .NET 10 + WPF
@@ -193,3 +200,4 @@ Would love feedback from the community! What plugins would you want to see next?
 - **Discussions**: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions
 - **详细推广计划**: `Docs/PROMOTION.md`
 - **发布清单**: `Docs/PROMOTION_CHECKLIST.md`
+

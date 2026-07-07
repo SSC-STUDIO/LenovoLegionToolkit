@@ -45,7 +45,9 @@ internal static class NetworkAccelerationPresentation
         ArgumentNullException.ThrowIfNull(plan);
 
         if (plan.Steps.Count == 0)
+        {
             return NetworkAccelerationText.NoPlannedOptimizationSteps;
+        }
 
         return string.Join(
             Environment.NewLine,

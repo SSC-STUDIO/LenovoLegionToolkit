@@ -316,7 +316,9 @@ public class ViveToolPathServiceTests
         Assert.NotNull(runtimeDirectory);
 
         foreach (var requiredFileName in RequiredRuntimeFileNames)
+        {
             Assert.True(File.Exists(Path.Combine(runtimeDirectory!, requiredFileName)), $"Missing runtime file: {requiredFileName}");
+        }
     }
 
     private static readonly string[] RequiredRuntimeFileNames =

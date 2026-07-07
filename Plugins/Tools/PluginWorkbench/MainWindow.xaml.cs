@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Plugins.SDK;
+using PluginHostMode = LenovoLegionToolkit.Plugins.SDK.PluginHostMode;
+using PluginHostContext = LenovoLegionToolkit.Plugins.SDK.PluginHostContext;
 using Microsoft.Win32;
 using PluginTooling.Core;
 
@@ -77,7 +79,9 @@ public partial class MainWindow : Window
         SelectInitialView();
 
         if (!string.IsNullOrWhiteSpace(_launchOptions.PluginId))
+        {
             await LoadPluginByIdAsync(_launchOptions.PluginId);
+        }
     }
 
     private void InitializeSelectors()
@@ -101,7 +105,9 @@ public partial class MainWindow : Window
     private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_suppressThemeSelectionChanged)
+        {
             return;
+        }
 
         ApplyTheme(CurrentTheme);
     }
@@ -109,7 +115,9 @@ public partial class MainWindow : Window
     private async void PluginListBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (PluginListBox.SelectedItem is PluginListEntry entry)
+        {
             await LoadPluginFromBuildEntryAsync(entry);
+        }
     }
 
     private async void LoadSelectedButton_Click(object sender, RoutedEventArgs e)
@@ -153,7 +161,9 @@ public partial class MainWindow : Window
         };
 
         if (dialog.ShowDialog(this) != true)
+        {
             return;
+        }
 
         await LoadPluginAsync(
             $"ZIP package: {Path.GetFileName(dialog.FileName)}",
@@ -178,7 +188,9 @@ public partial class MainWindow : Window
     private async void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_suppressModeSelectionChanged)
+        {
             return;
+        }
 
         await HandleModeSelectionChangedAsync();
     }
@@ -225,16 +237,22 @@ public partial class MainWindow : Window
         ApplyModeToHosts();
 
         if (_currentSession is not null && !string.IsNullOrWhiteSpace(_currentSourcePath))
+        {
             await ReloadCurrentAsync();
+        }
     }
 
     private async void RunOptimizationActionButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: OptimizationActionRow row })
+        {
             return;
+        }
 
         if (_currentSession is null || CurrentMode != PluginHostMode.RealRuntime)
+        {
             return;
+        }
 
         var confirmation = MessageBox.Show(
             this,
@@ -327,18 +345,24 @@ public partial class MainWindow : Window
 
         var repositoryRoot = RepositoryPathTextBox.Text.Trim();
         if (!Directory.Exists(repositoryRoot))
+        {
             return;
+        }
 
         foreach (var pluginDirectory in Directory.EnumerateDirectories(Path.Combine(repositoryRoot, "Plugins"))
                      .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
         {
             var folderName = Path.GetFileName(pluginDirectory);
             if (folderName is "Shared" or "TestCommon" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             var manifestPath = ResolveManifestPath(pluginDirectory);
             if (manifestPath is null)
+            {
                 continue;
+            }
 
             var manifest = ParsePluginManifest(manifestPath);
             var buildDirectory = ResolveBuildDirectory(repositoryRoot, folderName, manifest.Id);
@@ -414,7 +438,9 @@ public partial class MainWindow : Window
     private async Task ReloadCurrentAsync()
     {
         if (string.IsNullOrWhiteSpace(_currentSourcePath))
+        {
             return;
+        }
 
         if (_currentSourceIsArchive)
         {
@@ -480,7 +506,9 @@ public partial class MainWindow : Window
     {
         if (MainTabControl.SelectedItem is TabItem selectedItem &&
             selectedItem.Visibility == Visibility.Visible)
+        {
             return;
+        }
 
         MainTabControl.SelectedItem = GetFirstVisibleTab();
     }
@@ -488,13 +516,19 @@ public partial class MainWindow : Window
     private TabItem? GetFirstVisibleTab()
     {
         if (FeatureTabItem.Visibility == Visibility.Visible)
+        {
             return FeatureTabItem;
+        }
 
         if (SettingsTabItem.Visibility == Visibility.Visible)
+        {
             return SettingsTabItem;
+        }
 
         if (OptimizationTabItem.Visibility == Visibility.Visible)
+        {
             return OptimizationTabItem;
+        }
 
         return null;
     }
@@ -502,7 +536,9 @@ public partial class MainWindow : Window
     private async Task RefreshOptimizationStatesAsync()
     {
         foreach (var row in _optimizationActions)
+        {
             row.AppliedState = await ReadAppliedStateAsync(row.Action).ConfigureAwait(true);
+        }
 
         OptimizationListBox.Items.Refresh();
     }
@@ -510,7 +546,9 @@ public partial class MainWindow : Window
     private static async Task<string> ReadAppliedStateAsync(WindowsOptimizationActionDefinition action)
     {
         if (action.IsAppliedAsync is null)
+        {
             return "State probe unavailable";
+        }
 
         try
         {
@@ -537,7 +575,9 @@ public partial class MainWindow : Window
         SettingsContentHost.IsHitTestVisible = !isPreview;
 
         foreach (var row in _optimizationActions)
+        {
             row.CanExecute = !isPreview;
+        }
 
         OptimizationListBox.Items.Refresh();
     }
@@ -545,7 +585,9 @@ public partial class MainWindow : Window
     private bool TryOpenPluginSettings(string pluginId)
     {
         if (_currentSession is null || !string.Equals(_currentSession.Plugin.Id, pluginId, StringComparison.OrdinalIgnoreCase))
+        {
             return false;
+        }
 
         if (SettingsContentHost.Content is null)
         {
@@ -554,7 +596,9 @@ public partial class MainWindow : Window
         }
 
         if (SettingsContentHost.Content is null)
+        {
             return false;
+        }
 
         MainTabControl.SelectedItem = SettingsTabItem;
         return true;
@@ -618,7 +662,9 @@ public partial class MainWindow : Window
     {
         var unified = Path.Combine(directory, "plugin.manifest.json");
         if (File.Exists(unified))
+        {
             return unified;
+        }
 
         var legacy = Path.Combine(directory, "plugin.json");
         return File.Exists(legacy) ? legacy : null;
@@ -628,21 +674,29 @@ public partial class MainWindow : Window
     {
         var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"LenovoLegionToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
+        {
             return canonical;
+        }
 
         var buildRoot = Path.Combine(repositoryRoot, "Build", "plugins");
         if (!Directory.Exists(buildRoot))
+        {
             return null;
+        }
 
         foreach (var directory in Directory.EnumerateDirectories(buildRoot))
         {
             var manifestPath = ResolveManifestPath(directory);
             if (manifestPath is null)
+            {
                 continue;
+            }
 
             var manifest = ParsePluginManifest(manifestPath);
             if (string.Equals(manifest.Id, pluginId, StringComparison.OrdinalIgnoreCase))
+            {
                 return directory;
+            }
         }
 
         return null;
@@ -651,7 +705,9 @@ public partial class MainWindow : Window
     private static string ResolveRepositoryRoot(string? repositoryRoot)
     {
         if (!string.IsNullOrWhiteSpace(repositoryRoot) && Directory.Exists(repositoryRoot))
+        {
             return repositoryRoot;
+        }
 
         return DetectRepositoryRoot();
     }
@@ -770,10 +826,14 @@ public partial class MainWindow : Window
         var stderr = await stderrTask;
 
         if (!string.IsNullOrWhiteSpace(stdout))
+        {
             AppendLog(stdout.Trim());
+        }
 
         if (!string.IsNullOrWhiteSpace(stderr))
+        {
             AppendLog(stderr.Trim());
+        }
 
         AppendLog(process.ExitCode == 0
             ? "[bootstrap] Host dependencies ready."

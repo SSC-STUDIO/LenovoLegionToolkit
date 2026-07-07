@@ -1,7 +1,7 @@
-# Lenovo Legion Toolkit Plugins
+# Universal Device Toolkit Plugins
 
 ## Project Overview
-Official plugins for Lenovo Legion Toolkit (LLT). C# .NET solution with SDK and plugin architecture.
+Official plugins for Universal Device Toolkit (UDT). C# .NET solution with SDK and plugin architecture.
 
 ## Tech Stack
 - Language: C# (.NET)
@@ -9,7 +9,7 @@ Official plugins for Lenovo Legion Toolkit (LLT). C# .NET solution with SDK and 
 - Structure: Plugins/, SDK/, Dependencies/, Build/
 
 ## Development Rules
-- Branch convention: work on `codex/ai-LenovoLegionToolkit-Plugins` branch
+- Branch convention: work on feature branches off `master`
 - Always update CHANGELOG.md on releases
 - Build with `Make.bat` or Visual Studio
 - Follow SDK interfaces when creating new plugins

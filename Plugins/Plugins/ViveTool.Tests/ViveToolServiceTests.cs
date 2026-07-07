@@ -478,7 +478,9 @@ public class ViveToolServiceTests
             await settings.SaveAsync().ConfigureAwait(false);
 
             if (runtimeScope is not null)
+            {
                 await runtimeScope.DisposeAsync().ConfigureAwait(false);
+            }
         }
     }
 }

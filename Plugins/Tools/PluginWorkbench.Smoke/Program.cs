@@ -87,12 +87,16 @@ internal static class Program
                     : TryWaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(5));
 
                 if (runButton is null)
+                {
                     Console.WriteLine("[workbench-smoke] Optimization preview tab has no runnable action rows");
+                }
             }
             else
             {
                 if (requiresOptimizationAction)
+                {
                     throw new InvalidOperationException($"{plugin.Id} should expose an optimization preview tab.");
+                }
 
                 Console.WriteLine("[workbench-smoke] Plugin does not expose an optimization preview tab");
             }
@@ -108,7 +112,9 @@ internal static class Program
             }
 
             if (!ReadElementText(subtitle).Contains("Mode: Preview", StringComparison.OrdinalIgnoreCase))
+            {
                 throw new InvalidOperationException("Workbench did not start in Preview mode for the loaded plugin.");
+            }
 
             if (plugin.Id.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
             {
@@ -117,15 +123,21 @@ internal static class Program
                     TimeSpan.FromSeconds(5),
                     TimeSpan.FromMilliseconds(250));
                 if (!featureTabHidden)
+                {
                     throw new InvalidOperationException("custom-mouse should not expose a standalone feature preview tab.");
+                }
             }
 
             if (runButton is not null && runButton.Current.IsEnabled)
+            {
                 throw new InvalidOperationException("Optimization action button should be disabled in Preview mode.");
+            }
 
             var featureTab = TryWaitForAutomationId(window, "FeatureTabItem", TimeSpan.FromSeconds(2));
             if (IsInteractable(featureTab))
+            {
                 Select(featureTab!);
+            }
 
             Console.WriteLine("[workbench-smoke] Preview mode verified");
             CaptureAndValidateVisual(window, options, plugin, "preview");
@@ -215,7 +227,9 @@ internal static class Program
         finally
         {
             if (process is not null && !process.HasExited)
+            {
                 process.Kill(entireProcessTree: true);
+            }
         }
     }
 
@@ -230,7 +244,9 @@ internal static class Program
             if (string.Equals(args[i], "--plugin-id", StringComparison.OrdinalIgnoreCase))
             {
                 if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
+                {
                     pluginId = args[i + 1];
+                }
 
                 continue;
             }
@@ -238,7 +254,9 @@ internal static class Program
             if (string.Equals(args[i], "--theme", StringComparison.OrdinalIgnoreCase))
             {
                 if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
+                {
                     theme = args[i + 1];
+                }
             }
         }
 
@@ -250,7 +268,9 @@ internal static class Program
         for (var i = 0; i < args.Length; i++)
         {
             if (!string.Equals(args[i], "--repository-root", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             if (i + 1 < args.Length)
             {
@@ -264,7 +284,9 @@ internal static class Program
         for (var i = 0; i < 10 && current is not null; i++)
         {
             if (IsRepositoryRoot(current.FullName))
+            {
                 return current.FullName;
+            }
 
             current = current.Parent;
         }
@@ -275,7 +297,9 @@ internal static class Program
     private static void EnsureRepositoryRoot(string repositoryRoot)
     {
         if (!IsRepositoryRoot(repositoryRoot))
+        {
             throw new DirectoryNotFoundException($"Path is not plugin repository root: {repositoryRoot}");
+        }
     }
 
     private static bool IsRepositoryRoot(string repositoryRoot)
@@ -293,18 +317,24 @@ internal static class Program
         {
             var folderName = Path.GetFileName(pluginDirectory);
             if (folderName is "Shared" or "Template" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             var manifestPath = ResolveManifestPath(pluginDirectory);
             if (!File.Exists(manifestPath))
+            {
                 continue;
+            }
 
             using var stream = File.OpenRead(manifestPath);
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
             var id = root.GetProperty("id").GetString() ?? folderName;
             if (!string.Equals(id, pluginId, StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             return new PluginDescriptor(
                 folderName,
@@ -320,7 +350,9 @@ internal static class Program
     {
         var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"LenovoLegionToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
+        {
             return canonical;
+        }
 
         var buildRoot = Path.Combine(repositoryRoot, "Build", "plugins");
         if (Directory.Exists(buildRoot))
@@ -329,13 +361,17 @@ internal static class Program
             {
                 var manifestPath = ResolveManifestPath(directory);
                 if (!File.Exists(manifestPath))
+                {
                     continue;
+                }
 
                 using var stream = File.OpenRead(manifestPath);
                 using var document = JsonDocument.Parse(stream);
                 var id = document.RootElement.GetProperty("id").GetString();
                 if (string.Equals(id, pluginId, StringComparison.OrdinalIgnoreCase))
+                {
                     return directory;
+                }
             }
         }
 
@@ -346,7 +382,9 @@ internal static class Program
     {
         var unified = Path.Combine(directory, "plugin.manifest.json");
         if (File.Exists(unified))
+        {
             return unified;
+        }
 
         return Path.Combine(directory, "plugin.json");
     }
@@ -363,7 +401,9 @@ internal static class Program
         {
             var resolved = TryResolveWorkbenchStartInfo(candidateRoot);
             if (resolved is not null)
+            {
                 return resolved.Value;
+            }
         }
 
         throw new FileNotFoundException(
@@ -373,7 +413,9 @@ internal static class Program
     private static (ProcessStartInfo startInfo, string appDirectory)? TryResolveWorkbenchStartInfo(string buildRoot)
     {
         if (!Directory.Exists(buildRoot))
+        {
             return null;
+        }
 
         var exePath = FindArtifact(buildRoot, "PluginWorkbench.exe");
         if (!string.IsNullOrWhiteSpace(exePath))
@@ -434,7 +476,9 @@ internal static class Program
 
         var logTextBox = TryWaitForAutomationId(window, "LogTextBox", TimeSpan.FromSeconds(10));
         if (logTextBox is not null)
+        {
             Console.WriteLine($"[workbench-smoke] Workbench log:\n{ReadElementText(logTextBox)}");
+        }
     }
 
     private static void CaptureAndValidateVisual(AutomationElement window, SmokeOptions options, PluginDescriptor plugin, string stage)
@@ -443,7 +487,9 @@ internal static class Program
 
         var bounds = window.Current.BoundingRectangle;
         if (bounds.Width <= 0 || bounds.Height <= 0)
+        {
             throw new InvalidOperationException($"Visual capture target has invalid bounds for {plugin.Id}/{options.Theme}/{stage}: {bounds}.");
+        }
 
         var left = (int)Math.Floor(bounds.Left);
         var top = (int)Math.Floor(bounds.Top);
@@ -497,7 +543,9 @@ internal static class Program
     {
         var handle = window.Current.NativeWindowHandle;
         if (handle == 0)
+        {
             return;
+        }
 
         ShowWindow((IntPtr)handle, SwRestore);
         SetForegroundWindow((IntPtr)handle);
@@ -528,7 +576,9 @@ internal static class Program
         }
 
         if (count == 0)
+        {
             return new VisualStats(0, 0, 0, 0, 0);
+        }
 
         var mean = sum / count;
         var variance = Math.Max(0, (sumSquared / count) - (mean * mean));
@@ -548,7 +598,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             throw new TimeoutException($"Timed out waiting for window '{windowName}'.");
+        }
 
         return FindWindow(processId, windowName, automationId)
             ?? throw new InvalidOperationException($"Window '{windowName}' was not found.");
@@ -562,7 +614,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             throw new TimeoutException($"Timed out waiting for one of: {string.Join(", ", windowNames)}");
+        }
 
         return FindAnyWindow(processId, windowNames, excludedHandles)
             ?? throw new InvalidOperationException($"Window not found: {string.Join(", ", windowNames)}");
@@ -585,7 +639,9 @@ internal static class Program
             }
 
             if (string.Equals(window.Current.Name, windowName, StringComparison.OrdinalIgnoreCase))
+            {
                 return window;
+            }
         }
 
         return null;
@@ -603,10 +659,14 @@ internal static class Program
         foreach (AutomationElement window in windows)
         {
             if (excluded.Contains(window.Current.NativeWindowHandle))
+            {
                 continue;
+            }
 
             if (windowNames.Any(name => string.Equals(window.Current.Name, name, StringComparison.OrdinalIgnoreCase)))
+            {
                 return window;
+            }
         }
 
         return null;
@@ -620,7 +680,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             throw new TimeoutException($"Timed out waiting for automation element '{automationId}'.");
+        }
 
         return FindByAutomationId(root, automationId)
             ?? throw new InvalidOperationException($"Automation element '{automationId}' not found.");
@@ -643,7 +705,9 @@ internal static class Program
             .ToArray();
 
         if (matches.Length == 0)
+        {
             return null;
+        }
 
         return matches.FirstOrDefault(IsInteractable)
                ?? matches.FirstOrDefault(IsVisible)
@@ -653,7 +717,9 @@ internal static class Program
     private static bool IsVisible(AutomationElement? element)
     {
         if (element is null)
+        {
             return false;
+        }
 
         try
         {
@@ -668,7 +734,9 @@ internal static class Program
     private static bool IsInteractable(AutomationElement? element)
     {
         if (!IsVisible(element))
+        {
             return false;
+        }
 
         try
         {
@@ -691,7 +759,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             throw new TimeoutException($"Timed out waiting for plugin list item '{plugin.Id}'.");
+        }
 
         return FindPluginListItem(pluginList, plugin)
             ?? throw new InvalidOperationException($"Plugin list item '{plugin.Id}' not found.");
@@ -721,7 +791,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             throw new TimeoutException($"Timed out waiting for descendant '{name}'.");
+        }
 
         return FindDescendantByName(root, name, controlType)
                ?? throw new InvalidOperationException($"Descendant '{name}' not found.");
@@ -735,7 +807,9 @@ internal static class Program
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
+        {
             return null;
+        }
 
         return FindDescendantByName(root, name, controlType);
     }
@@ -751,7 +825,9 @@ internal static class Program
             .ToArray();
 
         if (matches.Length == 0)
+        {
             return null;
+        }
 
         return matches.FirstOrDefault(IsInteractable)
                ?? matches.FirstOrDefault(IsVisible)
@@ -772,13 +848,17 @@ internal static class Program
     private static void SelectComboBoxItem(AutomationElement rootWindow, AutomationElement comboBox, string itemName)
     {
         if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
+        {
             ((ExpandCollapsePattern)expandPattern).Expand();
+        }
 
         var item = WaitForDescendantByName(rootWindow, itemName, ControlType.ListItem, TimeSpan.FromSeconds(5));
         Select(item);
 
         if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out expandPattern))
+        {
             ((ExpandCollapsePattern)expandPattern).Collapse();
+        }
     }
 
     private static void Click(AutomationElement element)
@@ -807,7 +887,9 @@ internal static class Program
     private static string ReadElementText(AutomationElement element)
     {
         if (element.TryGetCurrentPattern(ValuePattern.Pattern, out var valuePattern))
+        {
             return ((ValuePattern)valuePattern).Current.Value ?? string.Empty;
+        }
 
         return element.Current.Name ?? string.Empty;
     }
@@ -818,7 +900,9 @@ internal static class Program
         while (stopwatch.Elapsed < timeout)
         {
             if (predicate())
+            {
                 return true;
+            }
 
             Thread.Sleep(pollInterval);
         }
@@ -829,7 +913,9 @@ internal static class Program
     private static void CloseWindow(AutomationElement window)
     {
         if (!window.TryGetCurrentPattern(WindowPattern.Pattern, out var pattern))
+        {
             throw new InvalidOperationException("WindowPattern unavailable for main window.");
+        }
 
         ((WindowPattern)pattern).Close();
     }

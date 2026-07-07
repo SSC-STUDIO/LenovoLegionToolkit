@@ -140,9 +140,13 @@ public class ViveToolProcessServiceTests
         var result = await service.ExecuteCommandAsync(viveToolPath!, "/query");
 
         if (result.Success)
+        {
             Assert.False(string.IsNullOrWhiteSpace(result.Output));
+        }
         else
+        {
             Assert.False(string.IsNullOrWhiteSpace(result.Error));
+        }
     }
 
     private static ViveToolProcessService CreateService()

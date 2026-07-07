@@ -5,13 +5,13 @@ namespace LenovoLegionToolkit.Plugins.SDK;
 /// </summary>
 public interface IPluginHostContext
 {
-    PluginHostMode Mode { get; }
+    public PluginHostMode Mode { get; }
 
-    bool AllowSystemActions { get; }
+    public bool AllowSystemActions { get; }
 
-    object? OwnerWindow { get; }
+    public object? OwnerWindow { get; }
 
-    bool OpenPluginSettings(string pluginId);
+    public bool OpenPluginSettings(string pluginId);
 
-    bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null);
+    public bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null);
 }

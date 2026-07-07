@@ -7,7 +7,7 @@ This is the **mandatory handover summary** generated at the end of an AI agent s
 ## ✅ What Was Just Completed
 
 ### 1. Zero-Warnings Build Achievement (Major Milestone!)
-- **All 6 projects** now build with **0 warnings, 0 errors**
+- **All 7 projects** now build with **0 warnings, 0 errors**
 - Enforced `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` globally
 - Fixed CA1062 (null validation), CA2024 (async streaming), CS1591 (missing XML comments)
 - **Evidence**: `Directory.Build.props` updated, CI passing ✅
@@ -37,7 +37,7 @@ This is the **mandatory handover summary** generated at the end of an AI agent s
 
 ### 🔥 Highest Priority (Task 1 — In Progress)
 **PUBLISH PROMOTION CONTENT TO DRIVE 100+ STARS!**
-- [ ] **Reddit**: Post to r/LenovoLegion, r/csharp, r/dotnet
+- [ ] **Reddit**: Post to r/pcmasterrace, r/csharp, r/dotnet
 - [ ] **Dev.to**: Publish "Building a WPF Plugin System with .NET 10"
 - [ ] **Chinese Communities**: V2EX, 知乎
 - [ ] **Track Growth**: Monitor stars/forks/watchers daily
@@ -77,7 +77,7 @@ This is the **mandatory handover summary** generated at the end of an AI agent s
 
 ### If Resuming Task 1 (Promotion):
 1. Read `Docs/REDDIT_POSTS.md`
-2. Copy-paste the Reddit post for r/LenovoLegion
+2. Copy-paste the Reddit post for r/pcmasterrace
 3. Create Reddit account (if not available) or use existing
 4. Post & track upvotes/comments
 5. Repeat for r/csharp, r/dotnet

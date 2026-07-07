@@ -23,9 +23,13 @@ internal static class PluginPageAssertions
     private static void AssertPageMetadata(IPluginPage page, string? expectedTitle, string? expectedIcon)
     {
         if (expectedTitle is not null)
+        {
             Assert.Equal(expectedTitle, page.PageTitle);
+        }
 
         if (expectedIcon is not null)
+        {
             Assert.Equal(expectedIcon, page.PageIcon);
+        }
     }
 }

@@ -24,7 +24,9 @@ public sealed class ThemeWatcherRuntime
         lock (_gate)
         {
             if (_cts != null)
+            {
                 return;
+            }
 
             _lastAppliedTheme = initialLastAppliedTheme;
             _cts = new CancellationTokenSource();
@@ -46,7 +48,9 @@ public sealed class ThemeWatcherRuntime
         }
 
         if (cts == null)
+        {
             return;
+        }
 
         SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
 
@@ -74,12 +78,16 @@ public sealed class ThemeWatcherRuntime
     private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
     {
         if (e.Category != UserPreferenceCategory.General)
+        {
             return;
+        }
 
         lock (_gate)
         {
             if (_cts == null || _cts.IsCancellationRequested)
+            {
                 return;
+            }
 
             _debounceTimer?.Dispose();
             _debounceTimer = new Timer(
@@ -97,7 +105,9 @@ public sealed class ThemeWatcherRuntime
         lock (_gate)
         {
             if (_cts == null || _cts.IsCancellationRequested)
+            {
                 return;
+            }
 
             token = _cts.Token;
         }
@@ -111,13 +121,17 @@ public sealed class ThemeWatcherRuntime
                 lock (_gate)
                 {
                     if (string.Equals(currentTheme, _lastAppliedTheme, StringComparison.OrdinalIgnoreCase))
+                    {
                         return;
+                    }
 
                     _lastAppliedTheme = currentTheme;
                 }
 
                 if (ThemeChanged != null)
+                {
                     await ThemeChanged.Invoke(currentTheme, token).ConfigureAwait(false);
+                }
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)

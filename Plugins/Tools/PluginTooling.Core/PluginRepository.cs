@@ -58,7 +58,9 @@ public sealed class PluginRepository
         ArgumentNullException.ThrowIfNull(pluginIds);
 
         if (pluginIds.Count == 0)
+        {
             return repository.Plugins.Keys.OrderBy(id => id, StringComparer.OrdinalIgnoreCase).ToArray();
+        }
 
         var resolved = new List<string>();
         foreach (var selection in pluginIds)
@@ -70,11 +72,7 @@ public sealed class PluginRepository
             }
 
             var byFolder = repository.Plugins.Values.FirstOrDefault(plugin =>
-                string.Equals(plugin.FolderName, selection, StringComparison.OrdinalIgnoreCase));
-
-            if (byFolder is null)
-                throw new InvalidOperationException($"Unknown plugin selection '{selection}'.");
-
+                string.Equals(plugin.FolderName, selection, StringComparison.OrdinalIgnoreCase)) ?? throw new InvalidOperationException($"Unknown plugin selection '{selection}'.");
             resolved.Add(byFolder.Manifest.Id);
         }
 
@@ -95,7 +93,9 @@ public sealed class PluginRepository
 
         var path = Path.Combine(repositoryRoot, "Templates", "PluginArchetypes", templateKey, "template.json");
         if (!File.Exists(path))
+        {
             throw new FileNotFoundException($"Template definition not found: {path}");
+        }
 
         return ReadJsonFile<ArchetypeDefinition>(path);
     }
@@ -106,14 +106,18 @@ public sealed class PluginRepository
 
         var resourcesDirectory = Path.Combine(plugin.DirectoryPath, "Resources");
         if (!Directory.Exists(resourcesDirectory))
+        {
             return ["en"];
+        }
 
         var languages = Directory.EnumerateFiles(resourcesDirectory, "Resource*.resx", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileNameWithoutExtension)
             .Select(static name =>
             {
                 if (string.Equals(name, "Resource", StringComparison.OrdinalIgnoreCase))
+                {
                     return "en";
+                }
 
                 const string prefix = "Resource.";
                 return name is not null && name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
@@ -142,7 +146,9 @@ public sealed class PluginRepository
     {
         var json = File.ReadAllText(path);
         if (!string.IsNullOrEmpty(json) && json[0] == '\uFEFF')
+        {
             json = json[1..];
+        }
 
         return JsonSerializer.Deserialize<T>(json, JsonOptions)
                ?? throw new InvalidOperationException($"Failed to deserialize '{path}' as {typeof(T).Name}.");
@@ -184,7 +190,9 @@ public sealed class PluginRepository
 
         var normalized = string.Concat(parts);
         if (string.IsNullOrWhiteSpace(normalized))
+        {
             throw new InvalidOperationException($"Unable to derive identifier from '{value}'.");
+        }
 
         return char.IsDigit(normalized[0]) ? $"Plugin{normalized}" : normalized;
     }
@@ -314,12 +322,16 @@ public sealed class PluginRepository
         {
             var folderName = Path.GetFileName(pluginDirectory);
             if (folderName is "Shared" or "TestCommon" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             var unifiedManifestPath = Path.Combine(pluginDirectory, "plugin.manifest.json");
             var legacyManifestPath = Path.Combine(pluginDirectory, "plugin.json");
             if (!File.Exists(unifiedManifestPath) && !File.Exists(legacyManifestPath))
+            {
                 continue;
+            }
 
             var storeEntryPath = Path.Combine(pluginDirectory, "store-entry.json");
             var storeEntry = File.Exists(storeEntryPath) ? ReadJsonFile<OfficialStoreEntry>(storeEntryPath) : null;

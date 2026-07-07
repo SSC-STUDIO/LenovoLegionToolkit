@@ -1,4 +1,4 @@
-﻿using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;

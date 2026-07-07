@@ -37,8 +37,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
-    <Reference Include="Lenovo Legion Toolkit">
-      <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
+    <Reference Include="Universal Device Toolkit">
+      <HintPath>..\..\Dependencies\Host\Universal Device Toolkit.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="LenovoLegionToolkit.Lib">

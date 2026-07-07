@@ -8,16 +8,16 @@
 
 ## 🎯 发布清单（按顺序执行）
 
-### 1. Reddit — r/LenovoLegion（最适合）✅ 内容已就绪
+### 1. Reddit — r/pcmasterrace（最适合）✅ 内容已就绪
 
 **标题**:
 ```
-I built 5 open-source plugins to supercharge Lenovo Legion laptops (C# / .NET 10 / WPF)
+I built 5 open-source plugins to supercharge your Windows setup (C# / .NET 10 / WPF)
 ```
 
-**内容**: 复制 `Docs/REDDIT_POSTS.md` 中的 "r/LenovoLegion — Main Post" 部分
+**内容**: 复制 `Docs/REDDIT_POSTS.md` 中的 "r/pcmasterrace — Main Post" 部分
 
-**发布链接**: https://www.reddit.com/r/LenovoLegion/submit
+**发布链接**: https://www.reddit.com/r/pcmasterrace/submit
 
 **预计效果**: ⭐⭐⭐⭐⭐ (高度相关社区，预计 50+ upvotes, 10+ stars)
 
@@ -25,7 +25,7 @@ I built 5 open-source plugins to supercharge Lenovo Legion laptops (C# / .NET 10
 1. 打开 Reddit 发布链接
 2. 复制标题（上面的标题）
 3. 打开 `Docs/REDDIT_POSTS.md`
-4. 复制 "r/LenovoLegion — Main Post" 部分的内容
+4. 复制 "r/pcmasterrace — Main Post" 部分的内容
 5. 粘贴到 Reddit 正文
 6. 点击 "Post" 提交
 
@@ -35,7 +35,7 @@ I built 5 open-source plugins to supercharge Lenovo Legion laptops (C# / .NET 10
 
 **标题**:
 ```
-Achieved zero warnings across 6 C# projects — here's our journey (.NET 10, WPF, Win11)
+Achieved zero warnings across 7 C# projects — here's our journey (.NET 10, WPF, Win11)
 ```
 
 **内容**: 复制 `Docs/REDDIT_POSTS.md` 中的 "r/csharp — Alternative Post" 部分
@@ -117,9 +117,9 @@ gh api repos/SSC-STUDIO/UniversalDeviceToolkit-Plugins --jq ".stargazers_count"
 
 ## 🔥 现在立即执行！
 
-**不要等待！** 立即发布第一个帖子（r/LenovoLegion）！
+**不要等待！** 立即发布第一个帖子（r/pcmasterrace）！
 
-1. 打开 https://www.reddit.com/r/LenovoLegion/submit
+1. 打开 https://www.reddit.com/r/pcmasterrace/submit
 2. 复制标题和内容（从 `Docs/REDDIT_POSTS.md`）
 3. 粘贴并提交
 4. 继续发布 r/csharp 和 r/dotnet

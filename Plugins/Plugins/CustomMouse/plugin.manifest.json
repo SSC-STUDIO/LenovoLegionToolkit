@@ -3,7 +3,7 @@
   "id": "custom-mouse",
   "name": "Custom Mouse",
   "version": "1.0.16",
-  "minHostVersion": "3.6.1",
+  "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
@@ -20,25 +20,7 @@
     "optimizationActions": [
       {
         "id": "custom.mouse",
-        "key": "WindowsOptimization_Category_CustomMouse_Title",
-        "title": "Custom Mouse",
-        "description": "WindowsOptimization_Category_CustomMouse_Description",
-        "actions": [
-          {
-            "id": "custom.mouse.cursor.auto-theme.enable",
-            "key": "WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title",
-            "title": "Enable auto theme cursor style",
-            "description": "WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description",
-            "recommended": true
-          },
-          {
-            "id": "custom.mouse.cursor.auto-theme.disable",
-            "key": "WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title",
-            "title": "Disable auto theme cursor style",
-            "description": "WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description",
-            "recommended": false
-          }
-        ]
+        "title": "Custom Mouse"
       }
     ]
   },

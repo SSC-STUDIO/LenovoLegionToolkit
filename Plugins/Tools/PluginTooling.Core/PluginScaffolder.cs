@@ -17,10 +17,14 @@ public sealed class PluginScaffolder
         var pluginDirectory = Path.Combine(repository.PluginsRoot, request.FolderName);
         var testsDirectory = Path.Combine(repository.PluginsRoot, $"{request.FolderName}.Tests");
         if (Directory.Exists(pluginDirectory))
+        {
             throw new InvalidOperationException($"Plugin directory already exists: {pluginDirectory}");
+        }
 
         if (Directory.Exists(testsDirectory))
+        {
             throw new InvalidOperationException($"Plugin test directory already exists: {testsDirectory}");
+        }
 
         Directory.CreateDirectory(pluginDirectory);
         Directory.CreateDirectory(testsDirectory);
@@ -67,7 +71,9 @@ public sealed class PluginScaffolder
         }
 
         if (archetype.HasRuntime)
+        {
             File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Runtime.cs"), PluginRepository.NormalizeLineEndings(BuildRuntimeClass(namespaceSegment, classPrefix)));
+        }
 
         WriteResxFiles(pluginDirectory, classPrefix, request.DisplayName);
         File.WriteAllText(Path.Combine(testsDirectory, $"{classPrefix}PluginTests.cs"), PluginRepository.NormalizeLineEndings(BuildPluginTests(namespaceSegment, classPrefix, request, archetype)));
@@ -99,7 +105,9 @@ public sealed class PluginScaffolder
         var storeEntryPath = Path.Combine(plugin.DirectoryPath, "store-entry.json");
 
         if (File.Exists(storeEntryPath) && !request.Overwrite)
+        {
             return new PromoteResult(storeEntryPath, Created: false);
+        }
 
         plugin.UnifiedManifest.Store.Description = string.IsNullOrWhiteSpace(plugin.UnifiedManifest.Store.Description)
             ? plugin.Manifest.Name
@@ -111,9 +119,15 @@ public sealed class PluginScaffolder
             ? "#FFF1E2"
             : plugin.UnifiedManifest.Store.IconBackground;
         if (plugin.UnifiedManifest.Store.Tags.Count == 0)
+        {
             plugin.UnifiedManifest.Store.Tags.Add("official-candidate");
+        }
+
         if (plugin.UnifiedManifest.Store.SupportedLanguages.Count == 0)
+        {
             plugin.UnifiedManifest.Store.SupportedLanguages.AddRange(_repository.InferSupportedLanguages(plugin));
+        }
+
         plugin.UnifiedManifest.Store.RepositoryUrl ??= string.IsNullOrWhiteSpace(plugin.Manifest.Repository) ? null : plugin.Manifest.Repository;
 
         var unifiedManifestPath = plugin.UnifiedManifestPath ?? Path.Combine(plugin.DirectoryPath, "plugin.manifest.json");

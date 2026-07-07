@@ -1,8 +1,8 @@
-# Lenovo Legion Toolkit Plugins 架构文档
+# Universal Device Toolkit Plugins 架构文档
 
 ## 概述
 
-LenovoLegionToolkit-Plugins 是联想拯救者工具包的官方插件系统，采用独立构建模式，编译产物以 ZIP 包形式发布。
+Universal Device Toolkit Plugins 是通用设备工具包的官方插件系统，采用独立构建模式，编译产物以 ZIP 包形式发布。
 
 当前工具链围绕两条路径设计：
 
@@ -12,7 +12,7 @@ LenovoLegionToolkit-Plugins 是联想拯救者工具包的官方插件系统，�
 ## 项目结构
 
 ```
-LenovoLegionToolkit-Plugins/
+UniversalDeviceToolkit-Plugins/
 ├── SDK/                          # 插件SDK接口层
 │   ├── PluginBase.cs             # 插件基类（提供生命周期方法）
 │   ├── PluginAttribute.cs         # 插件元数据特性
@@ -58,7 +58,7 @@ LenovoLegionToolkit-Plugins/
 - 插件项目不引用主应用源码
 - 使用 `Dependencies/Host` 中的预编译引用
 - 通过 `Scripts/ensure-host-dependencies.ps1` 刷新宿主引用
-- 若本机没有 sibling `LenovoLegionToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
+- 若本机没有 sibling `UniversalDeviceToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
 
 ### 2. SDK抽象层
 - 提供 `PluginBase` 作为所有插件的基类
@@ -215,7 +215,7 @@ Load → Start → [Runtime Loop] → Stop → Unload
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     LenovoLegionToolkit                      │
+│                   Universal Device Toolkit                   │
 │                       (Host App)                             │
 └─────────────────────────┬───────────────────────────────────┘
                           │ PluginBase, IPluginPage (SDK)

@@ -269,7 +269,7 @@ public class ThemeWatcherRuntimeTests
         var tasks = new Task[10];
         for (int i = 0; i < 10; i++)
         {
-            tasks[i] = Task.Run(() => runtime.Stop());
+            tasks[i] = Task.Run(runtime.Stop);
         }
 
         await Task.WhenAll(tasks);

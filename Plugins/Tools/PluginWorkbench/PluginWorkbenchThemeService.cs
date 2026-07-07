@@ -37,7 +37,9 @@ internal sealed class PluginWorkbenchThemeService
     public PluginWorkbenchUiState LoadState()
     {
         if (!File.Exists(_statePath))
+        {
             return new PluginWorkbenchUiState();
+        }
 
         try
         {
@@ -107,7 +109,9 @@ internal sealed class PluginWorkbenchThemeService
             foreach (var uri in HostDictionaryUris)
             {
                 if (Application.Current.Resources.MergedDictionaries.Any(dictionary => uri.Equals(dictionary.Source)))
+                {
                     continue;
+                }
 
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = uri });
             }

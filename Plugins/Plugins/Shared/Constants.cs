@@ -85,7 +85,7 @@ public static class Constants
     #region Version constraints
 
     /// <summary>
-    /// Minimum required version of Lenovo Legion Toolkit.
+    /// Minimum required version of Universal Device Toolkit.
     /// </summary>
     public const string MinLLTVersion = "3.6.1";
 

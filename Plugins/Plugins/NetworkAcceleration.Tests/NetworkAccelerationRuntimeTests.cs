@@ -304,7 +304,7 @@ public class NetworkAccelerationRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        var startTask = Task.Run(() => runtime.Start());
+        var startTask = Task.Run(runtime.Start);
         var stopTask = Task.Run(() =>
         {
             Thread.Sleep(100);

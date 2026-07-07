@@ -32,7 +32,9 @@ public static class PluginHostContext
             lock (_contextLock)
             {
                 if (!ReferenceEquals(_current, DefaultContext))
+                {
                     return _current;
+                }
 
                 var bridge = TryResolveHostBridge();
                 if (bridge is not null)
@@ -64,11 +66,13 @@ public static class PluginHostContext
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fullTypeName);
 
-        // Try UDT assembly first, then fall back to LLT assembly
+        // Try UDT assembly first, then fall back to legacy LLT assembly
         var type = ResolveType(fullTypeName, HostUdtWpfAssemblyName)
                    ?? ResolveType(fullTypeName, HostWpfAssemblyName);
         if (type is null)
+        {
             return null;
+        }
 
         try
         {
@@ -86,16 +90,20 @@ public static class PluginHostContext
 
     private static IPluginHostContext? TryResolveHostBridge()
     {
-        // Try UDT host first, then fall back to LLT host
+        // Try UDT host first, then fall back to legacy LLT host
         var hostContextType = ResolveType(HostPluginHostContextTypeName, HostUdtLibAssemblyName)
                               ?? ResolveType(HostPluginHostContextTypeName, HostLibAssemblyName);
         if (hostContextType is null)
+        {
             return null;
+        }
 
         var currentProperty = hostContextType.GetProperty("Current", BindingFlags.Public | BindingFlags.Static);
         var hostContext = currentProperty?.GetValue(null);
         if (hostContext is null)
+        {
             return null;
+        }
 
         var bridgedContext = new BridgedHostContext(hostContext);
         return bridgedContext.IsActive ? bridgedContext : null;
@@ -106,7 +114,9 @@ public static class PluginHostContext
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             if (!string.Equals(assembly.GetName().Name, assemblyName, StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
             try
             {
@@ -137,7 +147,9 @@ public static class PluginHostContext
     {
         var windowType = ResolveType(WpfWindowTypeName, "PresentationFramework");
         if (windowType is null || !windowType.IsInstanceOfType(dialog))
+        {
             return false;
+        }
 
         // Marshal to the UI thread if needed — WPF dialogs require Dispatcher affinity
         var dispatcherType = ResolveType("System.Windows.Threading.Dispatcher", "WindowsBase");
@@ -177,7 +189,9 @@ public static class PluginHostContext
             {
                 var ownerProperty = windowType.GetProperty("Owner", BindingFlags.Public | BindingFlags.Instance);
                 if (ownerProperty?.CanWrite == true)
+                {
                     ownerProperty.SetValue(dialog, ownerWindow);
+                }
             }
 
             var startupLocationType = ResolveType(WpfWindowStartupLocationTypeName, "PresentationFramework");
@@ -203,10 +217,14 @@ public static class PluginHostContext
         var applicationType = ResolveType(WpfApplicationTypeName, "PresentationFramework");
         var currentApplication = ResolveCurrentApplication(applicationType);
         if (currentApplication is null)
+        {
             return null;
+        }
 
         if (applicationType is null)
+        {
             return null;
+        }
 
         var mainWindowProperty = applicationType.GetProperty("MainWindow", BindingFlags.Public | BindingFlags.Instance);
         var mainWindow = mainWindowProperty?.GetValue(currentApplication);
@@ -229,13 +247,17 @@ public static class PluginHostContext
     {
         var method = target.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
         if (method is null)
+        {
             return false;
+        }
 
         try
         {
             var result = method.Invoke(target, arguments);
             if (result is bool boolResult)
+            {
                 return boolResult;
+            }
 
             return false;
         }
@@ -267,7 +289,9 @@ public static class PluginHostContext
         public bool OpenPluginSettings(string pluginId)
         {
             if (!HasLegacyHostRuntime || string.IsNullOrWhiteSpace(pluginId))
+            {
                 return false;
+            }
 
             var dialog = CreateHostWindow(HostUdtPluginSettingsWindowTypeName, pluginId)
                          ?? CreateHostWindow(HostPluginSettingsWindowTypeName, pluginId);
@@ -277,7 +301,9 @@ public static class PluginHostContext
         public bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
         {
             if (!HasLegacyHostRuntime || dialogOrContent is null)
+            {
                 return false;
+            }
 
             return TryShowDialog(dialogOrContent);
         }
@@ -298,7 +324,9 @@ public static class PluginHostContext
         public void Dispose()
         {
             if (_disposed)
+            {
                 return;
+            }
 
             Current = _previous;
             _disposed = true;

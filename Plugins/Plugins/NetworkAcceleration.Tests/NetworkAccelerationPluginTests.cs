@@ -6,6 +6,7 @@ using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
 
+[Collection("NetworkAccelerationResourceCulture")]
 public class NetworkAccelerationPluginTests
 {
     [Fact]

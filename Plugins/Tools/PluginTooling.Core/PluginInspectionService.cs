@@ -81,7 +81,9 @@ public sealed class PluginInspectionService
     private static bool HasUnreleasedChangelog(string? changelogPath)
     {
         if (string.IsNullOrWhiteSpace(changelogPath) || !File.Exists(changelogPath))
+        {
             return false;
+        }
 
         var text = File.ReadAllText(changelogPath);
         return text.Contains("## [Unreleased]", StringComparison.OrdinalIgnoreCase) ||

@@ -62,7 +62,7 @@
     <value>Shell 集成</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>将 Lenovo Legion Toolkit 集成到 Windows 右键菜单。</value>
+    <value>将 Universal Device Toolkit 集成到 Windows 右键菜单。</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Shell 集成</value>

@@ -39,7 +39,9 @@ public sealed class StoreJsonGenerator
         {
             var plugin = repository.Plugins[pluginId];
             if (!HasStoreMetadata(plugin))
+            {
                 continue;
+            }
 
             var storeMetadata = plugin.UnifiedManifest.Store;
             var tagName = $"{plugin.Manifest.Id}-v{plugin.Manifest.Version}";
@@ -47,7 +49,9 @@ public sealed class StoreJsonGenerator
             var assetPath = Path.Combine(assetRoot, assetName);
             var assetExists = File.Exists(assetPath);
             if (request.RequireAssets && !assetExists)
+            {
                 throw new FileNotFoundException($"Release asset is required for store generation but was not found: {assetPath}", assetPath);
+            }
 
             var generatedEntry = new StorePluginEntry
             {
@@ -84,7 +88,9 @@ public sealed class StoreJsonGenerator
             ReplaceOrAdd(store.Plugins, generatedEntry);
 
             if (!request.MergeExisting || !hasExistingEntry || existingEntry is null || !EntriesEqual(existingEntry, generatedEntry))
+            {
                 store.LastUpdated = releaseDate.ToString("O");
+            }
         }
 
         store.Plugins = store.Plugins
@@ -118,7 +124,9 @@ public sealed class StoreJsonGenerator
             : Path.GetFullPath(request.OutputPath);
 
         if (!File.Exists(storePath))
+        {
             return new StoreCheckResult(storePath, false, $"Store file not found: {storePath}");
+        }
 
         var generated = Generate(request);
         var expected = PluginRepository.ToJson(generated);
@@ -133,7 +141,9 @@ public sealed class StoreJsonGenerator
     private static string NormalizeForComparison(string value)
     {
         if (!string.IsNullOrEmpty(value) && value[0] == '\uFEFF')
+        {
             value = value[1..];
+        }
 
         return PluginRepository.NormalizeLineEndings(value).TrimEnd();
     }
@@ -152,9 +162,13 @@ public sealed class StoreJsonGenerator
     {
         var index = entries.FindIndex(existing => string.Equals(existing.Id, entry.Id, StringComparison.OrdinalIgnoreCase));
         if (index >= 0)
+        {
             entries[index] = entry;
+        }
         else
+        {
             entries.Add(entry);
+        }
     }
 
     private static StorePluginEntry Clone(StorePluginEntry entry)

@@ -5,7 +5,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+    <Copyright>© 2025-2026 SSC-STUDIO</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>

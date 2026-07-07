@@ -21,9 +21,11 @@
   <PropertyGroup>
     <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
     <HostLibPath Condition="'$(HostLibPath)' == ''">$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll</HostLibPath>
-    <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll</HostLibPath>
-    <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Lenovo Legion Toolkit.dll</HostWpfPath>
-    <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll</HostWpfPath>
+    <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\LenovoLegionToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\LenovoLegionToolkit.Lib.dll</HostLibPath>
+    <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == ''">$(HostDependenciesDir)LenovoLegionToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostLibPluginsPath Condition="!Exists('$(HostLibPluginsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\LenovoLegionToolkit.Lib.Plugins.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\LenovoLegionToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Universal Device Toolkit.dll</HostWpfPath>
+    <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll</HostWpfPath>
     <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' == 'Windows_NT'">powershell</PowerShellExecutable>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' != 'Windows_NT'">pwsh</PowerShellExecutable>
@@ -90,11 +92,15 @@
 
 
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>$(HostLibPath)</HintPath>
+   <Reference Include="LenovoLegionToolkit.Lib">
+     <HintPath>$(HostLibPath)</HintPath>
+     <Private>false</Private>
+   </Reference>
+    <Reference Include="LenovoLegionToolkit.Lib.Plugins">
+      <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>false</Private>
     </Reference>
-  </ItemGroup>
+ </ItemGroup>
 
 
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
@@ -109,7 +115,7 @@
 
   <Target Name="EnsureHostDependencies"
           BeforeTargets="ResolveReferences"
-          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll') OR !Exists('$(HostDependenciesDir)Lenovo Legion Toolkit.dll'))">
+          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll') OR !Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.Plugins.dll') OR !Exists('$(HostDependenciesDir)Universal Device Toolkit.dll') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
     <Message Importance="high" Text="Host dependencies are missing from Dependencies\Host. Bootstrapping required host binaries..." />
     <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
           WorkingDirectory="$(MSBuildThisFileDirectory)" />
@@ -120,7 +126,7 @@
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
       <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
-      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)Universal Device Toolkit.*" />
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />

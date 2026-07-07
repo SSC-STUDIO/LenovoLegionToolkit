@@ -24,11 +24,15 @@ public sealed class PluginPackager
                 cancellationToken);
 
             if (exitCode != 0)
+            {
                 throw new InvalidOperationException($"dotnet build failed for '{pluginId}'.");
+            }
         }
 
         if (!Directory.Exists(plugin.OutputDirectory))
+        {
             throw new DirectoryNotFoundException($"Plugin build output not found: {plugin.OutputDirectory}");
+        }
 
         EnsurePackageRequiredFiles(plugin);
 
@@ -43,7 +47,9 @@ public sealed class PluginPackager
             : plugin.UnifiedManifest.Package.AssetName;
         var zipPath = Path.Combine(outputDirectory, assetName);
         if (File.Exists(zipPath))
+        {
             File.Delete(zipPath);
+        }
 
         ZipFile.CreateFromDirectory(plugin.OutputDirectory, zipPath, CompressionLevel.Optimal, includeBaseDirectory: false);
         var fileSize = new FileInfo(zipPath).Length;
@@ -58,7 +64,9 @@ public sealed class PluginPackager
         {
             var path = Path.Combine(plugin.OutputDirectory, requiredFile);
             if (!File.Exists(path))
+            {
                 throw new FileNotFoundException($"Package required file is missing from build output: {requiredFile}", path);
+            }
         }
     }
 }

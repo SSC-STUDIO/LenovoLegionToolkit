@@ -97,7 +97,7 @@
 ## 🚀 推广状态
 
 ### Reddit 帖子准备 ✅
-- ✅ r/LenovoLegion 主帖
+- ✅ r/pcmasterrace 主帖
 - ✅ r/csharp 技术帖
 - ✅ r/dotnet 替代帖
 - ✅ Dev.to 文章大纲

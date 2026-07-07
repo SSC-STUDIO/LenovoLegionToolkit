@@ -9,6 +9,7 @@ using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
 
+[Collection("CustomMouseResourceCulture")]
 public class CustomMousePluginTests
 {
     [Fact]
@@ -147,7 +148,9 @@ public class CustomMousePluginTests
         {
             Environment.SetEnvironmentVariable(overrideEnvironmentVariable, originalOverride);
             if (Directory.Exists(pluginsDirectoryPath))
+            {
                 Directory.Delete(pluginsDirectoryPath, recursive: true);
+            }
         }
     }
 
@@ -204,7 +207,7 @@ public class CustomMousePluginTests
 
         try
         {
-            backupKey.SetValue(string.Empty, "LLT Custom Mouse Dark");
+            backupKey.SetValue(string.Empty, "UDT Custom Mouse Dark");
             backupKey.SetValue("Arrow", @"D:\fake\dark\Pointer.cur");
 
             var restored = await plugin.RestoreWindowsDefaultCursorThemeAsync();

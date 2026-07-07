@@ -1,8 +1,10 @@
 using System;
 using LenovoLegionToolkit.Plugins.TestCommon;
+using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
 
+[Collection("CustomMouseResourceCulture")]
 public class CustomMouseTextTests : LocalizedTextTestsBase
 {
     protected override Type TextType => typeof(CustomMouseText);

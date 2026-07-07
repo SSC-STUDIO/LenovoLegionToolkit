@@ -417,7 +417,9 @@ public partial class CustomMouseSettingsControl : UserControl
     private void LoadCurrentValues()
     {
         if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null)
+        {
             return;
+        }
 
         Interlocked.Increment(ref _cursorThemeSelectionChangeVersion);
         _isHydratingCursorThemeSelection = true;
@@ -438,7 +440,9 @@ public partial class CustomMouseSettingsControl : UserControl
     private void LoadCursorThemeMode()
     {
         if (_cursorThemeModeComboBox is null)
+        {
             return;
+        }
 
         var modeTag = _plugin.Settings.CursorThemeMode switch
         {
@@ -467,7 +471,9 @@ public partial class CustomMouseSettingsControl : UserControl
     private void UpdatePointerSpeedValueLabel()
     {
         if (_pointerSpeedValueLabel is null || _pointerSpeedSlider is null)
+        {
             return;
+        }
 
         _pointerSpeedValueLabel.Text = string.Format(Culture, "{0}/20", (int)Math.Round(_pointerSpeedSlider.Value));
     }
@@ -477,10 +483,14 @@ public partial class CustomMouseSettingsControl : UserControl
         try
         {
             if (_isHydratingCursorThemeSelection)
+            {
                 return;
+            }
 
             if (_cursorThemeModeComboBox?.SelectedItem is not ComboBoxItem selected)
+            {
                 return;
+            }
 
             var selectionVersion = Interlocked.Increment(ref _cursorThemeSelectionChangeVersion);
             var mode = (selected.Tag as string) switch
@@ -493,7 +503,9 @@ public partial class CustomMouseSettingsControl : UserControl
 
             var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
             if (selectionVersion != Volatile.Read(ref _cursorThemeSelectionChangeVersion))
+            {
                 return;
+            }
 
             if (applied)
             {
@@ -527,7 +539,9 @@ public partial class CustomMouseSettingsControl : UserControl
         try
         {
             if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _statusTextBlock is null)
+            {
                 return;
+            }
 
             var speed = (int)Math.Round(_pointerSpeedSlider.Value);
             var swapButtons = _swapButtonsCheckBox.IsChecked == true;
@@ -543,7 +557,9 @@ public partial class CustomMouseSettingsControl : UserControl
             if (!_plugin.SetSwapButtons(swapButtons))
             {
                 if (_plugin.Settings.WindowsPointerSpeed != originalSpeed)
+                {
                     _plugin.SetWindowsPointerSpeed(originalSpeed);
+                }
 
                 SetStatus(CustomMouseText.StatusApplySwapFail, true);
                 LoadCurrentValues();
@@ -566,7 +582,9 @@ public partial class CustomMouseSettingsControl : UserControl
         try
         {
             if (_statusTextBlock is null)
+            {
                 return;
+            }
 
             var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
             SetStatus(
@@ -584,7 +602,9 @@ public partial class CustomMouseSettingsControl : UserControl
     private void ReloadButton_Click(object sender, RoutedEventArgs e)
     {
         if (_statusTextBlock is null)
+        {
             return;
+        }
 
         LoadCurrentValues();
         SetStatus(CustomMouseText.StatusReloaded, false);
@@ -624,7 +644,9 @@ public partial class CustomMouseSettingsControl : UserControl
     private void SetStatus(string text, bool isError)
     {
         if (_statusTextBlock is null)
+        {
             return;
+        }
 
         _statusTextBlock.Text = text;
         _statusTextBlock.Foreground = isError
@@ -653,8 +675,7 @@ public partial class CustomMouseSettingsControl : UserControl
             _pointerPreviewValueTextBlock.Text = string.Format(Culture, "{0}/20", speed);
         }
 
-        if (_buttonLayoutValueTextBlock != null)
-            _buttonLayoutValueTextBlock.Text = _swapButtonsCheckBox?.IsChecked == true
+        _buttonLayoutValueTextBlock?.Text = _swapButtonsCheckBox?.IsChecked == true
                 ? CustomMouseText.SwappedButtonsState
                 : CustomMouseText.StandardButtonsState;
 

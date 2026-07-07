@@ -62,10 +62,10 @@
 
 ### 1. **发布 Reddit 帖子** 🚨 (最高优先级!)
 **内容已就绪** — 只需手动发布：
-1. **r/LenovoLegion** — 主帖（相关性最高）
-   - 标题: "I built 5 open-source plugins to supercharge Lenovo Legion laptops (C# / .NET 10 / WPF)"
-   - 内容: 复制 `Docs/REDDIT_POSTS.md` 中的 "r/LenovoLegion — Main Post" 部分
-   - 链接: https://www.reddit.com/r/LenovoLegion/submit
+1. **r/pcmasterrace** — 主帖（相关性最高）
+   - 标题: "I built 5 open-source plugins to supercharge your Windows setup (C# / .NET 10 / WPF)"
+   - 内容: 复制 `Docs/REDDIT_POSTS.md` 中的 "r/pcmasterrace — Main Post" 部分
+   - 链接: https://www.reddit.com/r/pcmasterrace/submit
 
 2. **r/csharp** — 技术帖（代码质量焦点）
 3. **r/dotnet** — .NET 社区帖

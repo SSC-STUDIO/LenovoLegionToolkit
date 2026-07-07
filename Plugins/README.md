@@ -52,6 +52,7 @@
 
 | # | Plugin | Version | Description | Install |
 |---|--------|---------|-------------|---------|
+| 🔋 | **Battery Health** | v1.0.0 | Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit. | `battery-health` |
 | 🔥 | **Network Acceleration** | v1.2.0 | Real-time network telemetry with a redesigned dual-tab UI. Track speeds, peak traffic, and apply gaming presets with one click. | `network-acceleration` |
 | 🖱️ | **Custom Mouse** | v1.0.16 | Theme-aware cursor styles, DPI profiles, and seamless Windows pointer speed management. Auto-adapts to Light/Dark mode. | `custom-mouse` |
 | 🔧 | **ViVeTool** | v1.2.2 | Unlock hidden Windows feature flags from a searchable GUI. No command-line needed — browse, search, enable, and disable features safely. | `vive-tool` |
@@ -84,7 +85,7 @@ Built with .NET 10 and WPF-UI 4.3.0, these plugins use real Fluent Design tokens
 The plugin SDK is clean and well-documented. Want a plugin that does X? Fork the repo, run `init`, and you're building in 2 minutes. The included PluginWorkbench lets you preview plugins without launching the full host app.
 
 ### 🌍 Localized
-All plugins support English and Chinese out of the box. Adding a new language is as simple as adding a `.resx` file.
+All plugins support 32 languages including English and Chinese out of the box. Adding a new language is as simple as adding a `.resx` file.
 
 ### 🧪 Battle-Tested
 Every official plugin ships with unit tests, visual smoke tests (Light + Dark themes), and automated CI/CD via GitHub Actions.
@@ -92,6 +93,12 @@ Every official plugin ships with unit tests, visual smoke tests (Light + Dark th
 ---
 
 ## Feature Highlights
+
+### Battery Health
+- Live battery health, design capacity, and cycle count
+- Wear estimates: full design vs current capacity
+- Clean dashboard with Light/Dark theme support
+- One-click refresh, zero background services
 
 ### Network Acceleration
 - Real-time download/upload telemetry with a beautiful dashboard
@@ -178,6 +185,7 @@ Features:
 ```
 UniversalDeviceToolkit-Plugins/
 ├── Plugins/              # Official plugin projects
+│   ├── BatteryHealth/
 │   ├── CustomMouse/
 │   ├── NetworkAcceleration/
 │   ├── ShellIntegration/

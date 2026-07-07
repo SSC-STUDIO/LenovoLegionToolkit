@@ -159,11 +159,8 @@ public partial class ViveToolSettingsPage
         {
             await _settings.LoadAsync();
             await RefreshStatusAsync();
-             
-            if (_viveToolPathTextBox != null)
-            {
-                _viveToolPathTextBox.Text = _settings.ViveToolPath ?? string.Empty;
-            }
+
+            _viveToolPathTextBox?.Text = _settings.ViveToolPath ?? string.Empty;
         }
         catch (Exception ex)
         {
@@ -195,7 +192,9 @@ public partial class ViveToolSettingsPage
     private void SetStatus(string text, bool isError)
     {
         if (_statusTextBlock is null)
+        {
             return;
+        }
 
         _statusTextBlock.Text = text;
         _statusTextBlock.Foreground = isError
@@ -230,39 +229,38 @@ public partial class ViveToolSettingsPage
             };
 
             if (openFileDialog.ShowDialog() == true)
-            {
-                var selectedPath = openFileDialog.FileName;
-                var fileName = Path.GetFileName(selectedPath);
-                
-                if (!fileName.Equals(ViveToolPathService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
-                {
-                    System.Windows.MessageBox.Show(Resource.ViveTool_InvalidViveToolFile, Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
+           {
+               var selectedPath = openFileDialog.FileName;
+               var fileName = Path.GetFileName(selectedPath);
+
+               if (!fileName.Equals(ViveToolPathService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
+               {
+                   SetStatus(Resource.ViveTool_InvalidViveToolFile, isError: true);
                     return;
-                }
+               }
 
                 var success = await _viveToolService.SetViveToolPathAsync(selectedPath).ConfigureAwait(true);
 
                 if (success)
                 {
-                    if (_viveToolPathTextBox != null)
-                        _viveToolPathTextBox.Text = selectedPath;
+                    _viveToolPathTextBox?.Text = selectedPath;
 
                     await RefreshStatusAsync().ConfigureAwait(true);
                 }
-                else
-                {
-                    System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_SetPathFailed, string.Empty), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
-            System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_BrowseError, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
+               else
+               {
+                   SetStatus(string.Format(Resource.ViveTool_SetPathFailed, string.Empty), isError: true);
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           PluginLog.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
+           SetStatus(string.Format(Resource.ViveTool_BrowseError, ex.Message), isError: true);
+       }
+   }
 
-    private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
+   private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
     {
         try
         {
@@ -295,7 +293,11 @@ public partial class ViveToolSettingsPage
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
     {
         if (_isDownloading)
-            return;
+        {
+           return;
+       }
+
+        var downloadError = false;
 
         try
         {
@@ -303,24 +305,22 @@ public partial class ViveToolSettingsPage
             _downloadProgress = 0;
 
             // Update UI
-            if (_downloadViveToolButton != null)
-                _downloadViveToolButton.IsEnabled = false;
-            if (_refreshStatusButton != null)
-                _refreshStatusButton.IsEnabled = false;
-            if (_downloadProgressGrid != null)
-                _downloadProgressGrid.Visibility = Visibility.Visible;
-            if (_downloadProgressBar != null)
-                _downloadProgressBar.Value = 0;
-            if (_downloadProgressText != null)
-                _downloadProgressText.Text = Resource.ViveTool_Downloading;
+            _downloadViveToolButton?.IsEnabled = false;
+
+            _refreshStatusButton?.IsEnabled = false;
+
+            _downloadProgressGrid?.Visibility = Visibility.Visible;
+
+            _downloadProgressBar?.Value = 0;
+
+            _downloadProgressText?.Text = Resource.ViveTool_Downloading;
 
             // Start download
             var progress = new Progress<long>(bytesDownloaded =>
             {
                 const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 _downloadProgress = (int)Math.Min(100, bytesDownloaded * 100 / estimatedTotalBytes);
-                if (_downloadProgressBar != null)
-                    _downloadProgressBar.Value = _downloadProgress;
+                _downloadProgressBar?.Value = _downloadProgress;
             });
 
             var downloadSuccess = await _viveToolService.DownloadViveToolAsync(progress);
@@ -328,11 +328,10 @@ public partial class ViveToolSettingsPage
             // Set the path and refresh status
             if (downloadSuccess)
             {
-                if (_downloadProgressText != null)
-                    _downloadProgressText.Text = Resource.ViveTool_DownloadComplete;
+                _downloadProgressText?.Text = Resource.ViveTool_DownloadComplete;
+
                 _downloadProgress = 100;
-                if (_downloadProgressBar != null)
-                    _downloadProgressBar.Value = 100;
+                _downloadProgressBar?.Value = 100;
 
                 // Get the downloaded path from the service
                 var viveToolPath = await _viveToolService.GetViveToolPathAsync();
@@ -345,39 +344,40 @@ public partial class ViveToolSettingsPage
             }
             else
             {
-                if (_downloadProgressText != null)
-                    _downloadProgressText.Text = Resource.ViveTool_DownloadFailed;
+                _downloadProgressText?.Text = Resource.ViveTool_DownloadFailed;
             }
 
             await Task.Delay(downloadSuccess ? 2000 : 1000);
         }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"Error downloading ViveTool: {ex.Message}", ex);
-            
-            System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_DownloadFailed, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        finally
-        {
-            _isDownloading = false;
-            
-            // Reset UI
-            if (_downloadViveToolButton != null)
-                _downloadViveToolButton.IsEnabled = true;
-            if (_refreshStatusButton != null)
-                _refreshStatusButton.IsEnabled = true;
-            
-            await Task.Delay(1000); // Brief pause before hiding progress
-            
-            if (_downloadProgressGrid != null)
-                _downloadProgressGrid.Visibility = Visibility.Collapsed;
-            
-            // Refresh status after download
-            await RefreshStatusAsync();
-        }
-    }
+       catch (Exception ex)
+       {
+           PluginLog.Trace($"Error downloading ViveTool: {ex.Message}", ex);
 
-    private async void ImportConfigButton_Click(object sender, RoutedEventArgs e)
+            downloadError = true;
+            SetStatus(string.Format(Resource.ViveTool_DownloadFailed, ex.Message), isError: true);
+       }
+       finally
+       {
+            _isDownloading = false;
+
+            // Reset UI
+            _downloadViveToolButton?.IsEnabled = true;
+
+            _refreshStatusButton?.IsEnabled = true;
+
+            await Task.Delay(1000); // Brief pause before hiding progress
+
+            _downloadProgressGrid?.Visibility = Visibility.Collapsed;
+
+           // Refresh status after download (skip on error so the inline message stays readable)
+           if (!downloadError)
+           {
+               await RefreshStatusAsync();
+           }
+       }
+   }
+
+   private async void ImportConfigButton_Click(object sender, RoutedEventArgs e)
     {
         try
         {
@@ -392,25 +392,21 @@ public partial class ViveToolSettingsPage
 
             if (openFileDialog.ShowDialog() == true)
             {
-                var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName).ConfigureAwait(true);
-                
-                System.Windows.MessageBox.Show(
-                    string.Format(Resource.ViveTool_ConfigImportSuccessMessage, importedFeatures.Count, openFileDialog.FileName),
-                    Resource.ViveTool_ConfigImportSuccess,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-            }
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"Error importing configuration: {ex.Message}", ex);
-            
-            System.Windows.MessageBox.Show(
-                string.Format(Resource.ViveTool_ConfigImportFailedMessage, ex.Message),
-                Resource.ViveTool_ConfigImportFailed,
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-        }
+               var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName).ConfigureAwait(true);
+
+               SetStatus(
+                   string.Format(Resource.ViveTool_ConfigImportSuccessMessage, importedFeatures.Count, openFileDialog.FileName),
+                   isError: false);
+           }
+       }
+       catch (Exception ex)
+       {
+           PluginLog.Trace($"Error importing configuration: {ex.Message}", ex);
+
+           SetStatus(
+               string.Format(Resource.ViveTool_ConfigImportFailedMessage, ex.Message),
+               isError: true);
+       }
     }
 
     private static string GetExecutableDialogFilter()

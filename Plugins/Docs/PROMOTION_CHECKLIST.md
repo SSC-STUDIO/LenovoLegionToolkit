@@ -20,9 +20,9 @@
 **发布后:** 需要留链接，在 GitHub Discussions 中分享
 
 ### r/Lenovo (~30k members)
-**标题:** Universal Device Toolkit Plugin Pack — unlock your Lenovo Legion's full potential with these free plugins
+**标题:** Universal Device Toolkit Plugin Pack — unlock your your Windows PC's full potential with these free plugins
 **内容:** 见 Docs/PROMOTION.md Post 2
-**注意:** 这是最有针对性的社区（Lenovo Legion 用户）
+**注意:** 这是最有针对性的社区（Windows 高级用户）
 
 ### r/csharp (~150k members)
 **标题:** How I built a plugin system for a WPF desktop app using .NET 10 — reflections, fallback UIs, and DynamicResource theming
@@ -41,7 +41,7 @@
 
 ### V2EX (v2ex.com)
 **版块:** 分享创造
-**主题:** 开源 Windows 插件生态系统 — 4个免费插件让你的 Windows 更好用
+**主题:** 开源 Windows 插件生态系统 — 5个免费插件让你的 Windows 更好用
 **内容要点:**
 - 网络加速（实时流量监控、游戏优化）
 - ViVeTool GUI（解锁 Windows 隐藏功能）
@@ -57,7 +57,7 @@
 
 ### Bilibili
 **类型:** 演示视频
-**内容:** 录一个 2-3 分钟的视频展示 4 个插件的功能（重点是 Network Acceleration 和 ViVeTool）
+**内容:** 录一个 2-3 分钟的视频展示 5 个插件的功能（重点是 Network Acceleration 和 ViVeTool）
 
 ## 🟡 Priority 3: 额外推广渠道
 

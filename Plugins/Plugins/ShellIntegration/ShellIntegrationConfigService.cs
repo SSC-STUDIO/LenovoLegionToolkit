@@ -50,13 +50,55 @@ public sealed class ShellIntegrationConfigService
         LocalProfileRoot = localProfileRoot ??
                            Path.Combine(
                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                               "LenovoLegionToolkit",
+                               "UniversalDeviceToolkit",
                                "Plugins",
                                "ShellIntegration");
+        LegacyLocalProfileRoot = string.IsNullOrWhiteSpace(localProfileRoot)
+            ? Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "LenovoLegionToolkit",
+                "Plugins",
+                "ShellIntegration")
+            : null;
     }
 
     public string LocalProfileRoot { get; }
+    public string? LegacyLocalProfileRoot { get; }
     public string LocalProfilePath => Path.Combine(LocalProfileRoot, "profile.json");
+
+    private void EnsureLegacyProfileMigrated()
+    {
+        if (File.Exists(LocalProfilePath))
+        {
+            return;
+        }
+
+        if (LegacyLocalProfileRoot is null)
+        {
+            return;
+        }
+
+        var legacyProfilePath = Path.Combine(LegacyLocalProfileRoot, "profile.json");
+        if (string.Equals(LocalProfilePath, legacyProfilePath, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        if (!File.Exists(legacyProfilePath))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(LocalProfileRoot);
+            File.Copy(legacyProfilePath, LocalProfilePath, overwrite: false);
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to migrate legacy profile from '{legacyProfilePath}': {ex.Message}", ex);
+        }
+    }
 
     public ShellIntegrationProfile LoadProfile()
     {
@@ -70,6 +112,7 @@ public sealed class ShellIntegrationConfigService
         {
             try
             {
+                EnsureLegacyProfileMigrated();
                 if (!File.Exists(LocalProfilePath))
                 {
                     profile = ShellIntegrationProfile.CreateDefault();
@@ -100,16 +143,17 @@ public sealed class ShellIntegrationConfigService
             try
             {
                 if (string.IsNullOrWhiteSpace(filePath))
+                {
                     throw new ArgumentException("Profile file path is required.", nameof(filePath));
+                }
 
                 if (!File.Exists(filePath))
+                {
                     throw new FileNotFoundException("Profile file was not found.", filePath);
+                }
 
                 var json = File.ReadAllText(filePath, Encoding.UTF8);
-                var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
-                if (loaded is null)
-                    throw new InvalidDataException("Profile file is empty or invalid.");
-
+                var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions) ?? throw new InvalidDataException("Profile file is empty or invalid.");
                 profile = loaded.Normalize();
                 errorMessage = null;
                 return true;
@@ -159,11 +203,15 @@ public sealed class ShellIntegrationConfigService
             try
             {
                 if (string.IsNullOrWhiteSpace(filePath))
+                {
                     throw new ArgumentException("Export file path is required.", nameof(filePath));
+                }
 
                 var directoryPath = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrWhiteSpace(directoryPath))
+                {
                     throw new ArgumentException("Export file path must include a directory.", nameof(filePath));
+                }
 
                 Directory.CreateDirectory(directoryPath);
                 var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
@@ -183,7 +231,9 @@ public sealed class ShellIntegrationConfigService
     public bool ImportProfile(string filePath, out ShellIntegrationProfile profile, out string? errorMessage)
     {
         if (!TryLoadProfileFromFile(filePath, out profile, out errorMessage))
+        {
             return false;
+        }
 
         try
         {
@@ -202,14 +252,18 @@ public sealed class ShellIntegrationConfigService
     public ShellManagedConfigPaths? ResolveManagedPaths(string? shellInstallPath)
     {
         if (string.IsNullOrWhiteSpace(shellInstallPath))
+        {
             return null;
+        }
 
         var installDirectory = Directory.Exists(shellInstallPath)
             ? shellInstallPath
             : Path.GetDirectoryName(shellInstallPath);
 
         if (string.IsNullOrWhiteSpace(installDirectory))
+        {
             return null;
+        }
 
         var managedDirectory = Path.Combine(LocalProfileRoot, ManagedOutputDirectoryName, ManagedDirectoryName);
         return new ShellManagedConfigPaths(
@@ -227,7 +281,9 @@ public sealed class ShellIntegrationConfigService
 
         var paths = ResolveManagedPaths(shellInstallPath);
         if (paths is null)
+        {
             return null;
+        }
 
         var normalizedProfile = profile.Normalize();
 
@@ -409,7 +465,9 @@ theme
             : Regex.Replace(existingContent, pattern, string.Empty).TrimEnd();
 
         if (string.IsNullOrWhiteSpace(cleaned))
+        {
             return $"{block}{Environment.NewLine}";
+        }
 
         var menuMatch = Regex.Match(cleaned, @"(?m)^\s*menu\(");
         if (menuMatch.Success)
@@ -430,7 +488,10 @@ theme
         var builder = new StringBuilder();
         builder.AppendLine(ManagedBlockStart);
         foreach (var statement in importStatements)
+        {
             builder.AppendLine(statement);
+        }
+
         builder.Append(ManagedBlockEnd);
         return builder.ToString();
     }
@@ -471,7 +532,9 @@ theme
             var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
             var directory = Path.GetDirectoryName(paths.ShellConfigPath);
             if (!string.IsNullOrWhiteSpace(directory))
+            {
                 Directory.CreateDirectory(directory);
+            }
 
             WriteFileIfChanged(paths.ShellConfigPath, updated);
         }
@@ -486,11 +549,15 @@ theme
                 : null;
 
             if (string.Equals(existingContent, content, StringComparison.Ordinal))
+            {
                 return;
+            }
 
             var directory = Path.GetDirectoryName(path);
             if (!string.IsNullOrWhiteSpace(directory))
+            {
                 Directory.CreateDirectory(directory);
+            }
 
             File.WriteAllText(path, content, new UTF8Encoding(false));
         }
@@ -500,7 +567,9 @@ theme
     {
         var sourcePath = ResolveLanguageSourcePath(installDirectory, preferredCulture);
         if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
+        {
             return "# Managed by Lenovo Legion Toolkit." + Environment.NewLine;
+        }
 
         return File.ReadAllText(sourcePath, Encoding.UTF8);
     }
@@ -509,13 +578,17 @@ theme
     {
         var languageDirectory = Path.Combine(installDirectory, "imports", "lang");
         if (!Directory.Exists(languageDirectory))
+        {
             return null;
+        }
 
         foreach (var candidate in GetLanguageFileCandidates(preferredCulture))
         {
             var path = Path.Combine(languageDirectory, candidate);
             if (File.Exists(path))
+            {
                 return path;
+            }
         }
 
         return null;
@@ -529,11 +602,15 @@ theme
         void AddCandidate(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 return;
+            }
 
             var candidate = name.EndsWith(".nss", StringComparison.OrdinalIgnoreCase) ? name : $"{name}.nss";
             if (seen.Add(candidate))
+            {
                 candidates.Add(candidate);
+            }
         }
 
         if (preferredCulture is not null)
@@ -544,17 +621,23 @@ theme
             if (LanguageAliases.TryGetValue(preferredCulture.Name, out var aliasesByName))
             {
                 foreach (var alias in aliasesByName)
+                {
                     AddCandidate(alias);
+                }
             }
 
             if (LanguageAliases.TryGetValue(preferredCulture.IetfLanguageTag, out var aliasesByTag))
             {
                 foreach (var alias in aliasesByTag)
+                {
                     AddCandidate(alias);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(preferredCulture.Parent?.Name))
+            {
                 AddCandidate(preferredCulture.Parent.Name);
+            }
         }
 
         AddCandidate("en");

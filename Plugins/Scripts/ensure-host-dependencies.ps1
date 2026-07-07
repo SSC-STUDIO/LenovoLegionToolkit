@@ -13,7 +13,11 @@ $refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
 
 $requiredFiles = @(
     "LenovoLegionToolkit.Lib.dll",
-    "Lenovo Legion Toolkit.dll"
+    "LenovoLegionToolkit.Lib.Plugins.dll",
+    "Universal Device Toolkit.dll",
+    "Serilog.dll",
+    "Serilog.Sinks.Async.dll",
+    "Serilog.Sinks.File.dll"
 )
 
 function Test-HostDependenciesComplete {
@@ -28,14 +32,17 @@ function Test-HostDependenciesComplete {
 
 function Resolve-SiblingSourceDir {
     $candidates = @(
-        (Join-Path $repoRoot "..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Release\net10.0-windows\win-x64"),
-        (Join-Path $repoRoot "..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64")
+        (Join-Path $repoRoot "..\UniversalDeviceToolkit\Build")
     )
 
     foreach ($candidate in $candidates) {
         $libCandidate = Join-Path $candidate "LenovoLegionToolkit.Lib.dll"
-        $wpfCandidate = Join-Path $candidate "Lenovo Legion Toolkit.dll"
-        if ((Test-Path $libCandidate) -and (Test-Path $wpfCandidate)) {
+        $libPluginsCandidate = Join-Path $candidate "LenovoLegionToolkit.Lib.Plugins.dll"
+        $wpfCandidate = Join-Path $candidate "Universal Device Toolkit.dll"
+        $serilogCandidate = Join-Path $candidate "Serilog.dll"
+        $serilogAsyncCandidate = Join-Path $candidate "Serilog.Sinks.Async.dll"
+        $serilogFileCandidate = Join-Path $candidate "Serilog.Sinks.File.dll"
+        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate)) {
             return $candidate
         }
     }
@@ -65,7 +72,7 @@ function Copy-FromReleaseZip {
         $packageName = [string]$manifest.artifacts.package
 
         if ([string]::IsNullOrWhiteSpace($packageName) -and -not [string]::IsNullOrWhiteSpace($hostVersion)) {
-            $packageName = "LenovoLegionToolkit_v$hostVersion`_win-x64.zip"
+            $packageName = "UniversalDeviceToolkit_v$hostVersion`_win-x64.zip"
         }
 
         if (-not [string]::IsNullOrWhiteSpace($hostTag) -and -not [string]::IsNullOrWhiteSpace($packageName)) {
@@ -124,7 +131,7 @@ if ($UseSiblingRepoBuild -or -not [string]::IsNullOrWhiteSpace($siblingSourceDir
         exit 0
     }
 
-    Write-Warning "UseSiblingRepoBuild was requested but no sibling LenovoLegionToolkit build output was found."
-}
+        Write-Warning "UseSiblingRepoBuild was requested but no sibling UniversalDeviceToolkit build output was found."
+    }
 
 Copy-FromReleaseZip

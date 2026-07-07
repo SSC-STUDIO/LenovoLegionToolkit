@@ -17,7 +17,9 @@ public static class ByteFormatter
         }
 
         if (bytes < 0)
+        {
             value = -value;
+        }
 
         return string.Format("{0:0.##} {1}", value, suffix[i]);
     }

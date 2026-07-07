@@ -141,13 +141,17 @@ public sealed class ShellIntegrationProfile
     public static string NormalizeHexColor(string? raw, string fallback)
     {
         if (string.IsNullOrWhiteSpace(raw))
+        {
             return fallback;
+        }
 
         var value = raw.Trim();
         if (!value.StartsWith("#", StringComparison.Ordinal))
+        {
             value = $"#{value}";
+        }
 
-        if (value.Length == 7 || value.Length == 9)
+        if (value.Length is 7 or 9)
         {
             var valid = true;
             foreach (var ch in value.AsSpan(1))
@@ -160,7 +164,9 @@ public sealed class ShellIntegrationProfile
             }
 
             if (valid)
+            {
                 return value.ToUpperInvariant();
+            }
         }
 
         return fallback;
@@ -178,7 +184,9 @@ public sealed class ShellIntegrationProfile
     public string GetEffectExpression()
     {
         if (!EnableMotionEffects)
+        {
             return "0";
+        }
 
         return BackgroundEffect switch
         {

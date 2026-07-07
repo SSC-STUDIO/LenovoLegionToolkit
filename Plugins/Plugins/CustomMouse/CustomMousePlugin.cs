@@ -540,7 +540,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
         var basePath = GetBaseCursorPath(theme);
         var animationPath = GetAnimationCursorPath(theme);
-        var schemeName = theme == CursorTheme.Light ? "LLT Custom Mouse Light" : "LLT Custom Mouse Dark";
+        var schemeName = theme == CursorTheme.Light ? "UDT Custom Mouse Light" : "UDT Custom Mouse Dark";
 
         EnsureCursorResourcesExist(basePath, animationPath);
 

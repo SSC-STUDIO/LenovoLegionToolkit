@@ -14,7 +14,9 @@ public static class JsonReportFile
     {
         var directory = Path.GetDirectoryName(path);
         if (!string.IsNullOrWhiteSpace(directory))
+        {
             Directory.CreateDirectory(directory);
+        }
 
         await using var stream = File.Create(path);
         await JsonSerializer.SerializeAsync(stream, report, JsonOptions, cancellationToken);

@@ -26,7 +26,9 @@ public sealed class ProcessRunner
         };
 
         foreach (var argument in arguments)
+        {
             startInfo.ArgumentList.Add(argument);
+        }
 
         using var process = new Process { StartInfo = startInfo };
         process.Start();
@@ -48,7 +50,9 @@ public sealed class ProcessRunner
     {
         var dotnetHost = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
         if (string.IsNullOrWhiteSpace(dotnetHost))
+        {
             dotnetHost = "dotnet";
+        }
 
         return RunAsync(dotnetHost, arguments, workingDirectory, log, cancellationToken);
     }
@@ -59,7 +63,10 @@ public sealed class ProcessRunner
         {
             var line = await reader.ReadLineAsync(cancellationToken);
             if (line is null)
+            {
                 break;
+            }
+
             log?.Invoke(line);
         }
     }

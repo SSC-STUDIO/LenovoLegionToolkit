@@ -3,7 +3,7 @@
   "id": "network-acceleration",
   "name": "Network Acceleration",
   "version": "1.2.0",
-  "minHostVersion": "3.6.1",
+  "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

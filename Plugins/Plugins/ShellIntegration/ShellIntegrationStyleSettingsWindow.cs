@@ -11,6 +11,8 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
 internal sealed class ShellIntegrationStyleSettingsWindow : Window
 {
+    private TextBlock? _statusTextBlock;
+
     public ShellIntegrationStyleSettingsWindow(ShellIntegrationPlugin plugin)
     {
         ArgumentNullException.ThrowIfNull(plugin);
@@ -26,7 +28,7 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         Content = BuildContent(plugin);
     }
 
-    private static UIElement BuildContent(ShellIntegrationPlugin plugin)
+    private UIElement BuildContent(ShellIntegrationPlugin plugin)
     {
         var shellFolder = plugin.GetShellFolderPath();
         var configPath = plugin.GetShellConfigPath();
@@ -51,6 +53,17 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         AutomationProperties.SetAutomationId(titleTextBlock, "ShellIntegrationStyleSettingsTitle");
         stack.Children.Add(titleTextBlock);
 
+        _statusTextBlock = new TextBlock
+        {
+            Margin = new Thickness(0, 0, 0, 18),
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = 12,
+            Visibility = Visibility.Collapsed,
+            Foreground = ResolveBrush("SystemFillColorCautionBrush", SystemColors.ControlTextBrush)
+        };
+        AutomationProperties.SetAutomationId(_statusTextBlock, "ShellIntegrationStyleSettingsStatusText");
+        stack.Children.Add(_statusTextBlock);
+
         stack.Children.Add(CreatePathRow("shell.nss", configPath, "Open File"));
         stack.Children.Add(CreatePathRow("theme.nss", themePath, "Open File"));
         stack.Children.Add(CreatePathRow("images.nss", imagesPath, "Open File"));
@@ -65,7 +78,7 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         };
     }
 
-    private static UIElement CreatePathRow(string title, string? path, string buttonLabel, bool isDirectory = false, bool isLast = false)
+    private UIElement CreatePathRow(string title, string? path, string buttonLabel, bool isDirectory = false, bool isLast = false)
     {
         var automationSegment = NormalizeAutomationSegment(title);
         var border = new Border
@@ -122,19 +135,19 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         return border;
     }
 
-    private static void OpenPath(string? path, bool isDirectory)
+    private void OpenPath(string? path, bool isDirectory)
     {
         if (string.IsNullOrWhiteSpace(path))
+        {
             return;
+        }
 
         var exists = isDirectory ? Directory.Exists(path) : File.Exists(path);
         if (!exists)
         {
-            MessageBox.Show(
+            ShowInlineStatus(
                 isDirectory ? ShellIntegrationText.StatusShellFolderNotFound : ShellIntegrationText.StatusConfigNotFound,
-                ShellIntegrationText.SettingsPageTitle,
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+                isError: true);
             return;
         }
 
@@ -143,6 +156,20 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
             FileName = path,
             UseShellExecute = true
         });
+    }
+
+    private void ShowInlineStatus(string text, bool isError)
+    {
+        if (_statusTextBlock is null)
+        {
+            return;
+        }
+
+        _statusTextBlock.Text = text;
+        _statusTextBlock.Foreground = isError
+            ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
+            : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
+        _statusTextBlock.Visibility = Visibility.Visible;
     }
 
     private static Brush ResolveBrush(string resourceKey, Brush fallback)

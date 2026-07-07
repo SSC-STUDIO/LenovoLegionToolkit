@@ -72,11 +72,15 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
 
         _lastCounters.Clear();
         foreach (var entry in currentCounters)
+        {
             _lastCounters[entry.Key] = entry.Value;
+        }
 
         _lastTimestamp = now;
         if (bestSnapshot is null)
+        {
             return new NetworkAccelerationTelemetrySnapshot(now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0);
+        }
 
         return bestSnapshot with
         {

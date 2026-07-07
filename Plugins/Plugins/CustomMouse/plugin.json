@@ -2,7 +2,7 @@
   "Id": "custom-mouse",
   "Name": "Custom Mouse",
   "Version": "1.0.16",
-  "MinLltVersion": "3.6.1",
+  "MinLltVersion": "4.2.1",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,
   "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

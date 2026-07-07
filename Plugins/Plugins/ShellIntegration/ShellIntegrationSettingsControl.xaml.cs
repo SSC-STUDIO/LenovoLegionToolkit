@@ -113,7 +113,9 @@ public partial class ShellIntegrationSettingsControl : UserControl
     private void RefreshStatus(string? suffix = null, bool? isError = null)
     {
         if (_statusTextBlock is null)
+        {
             return;
+        }
 
         var allowSystemActions = LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.AllowSystemActions;
         var installed = _plugin.IsShellInstalled();
@@ -135,19 +137,15 @@ public partial class ShellIntegrationSettingsControl : UserControl
         var canManageConfig = installed;
         var canOpenStyleSettings = canManageShell || LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.Mode == LenovoLegionToolkit.Plugins.SDK.PluginHostMode.Preview;
 
-        if (_registrationValueTextBlock != null)
-            _registrationValueTextBlock.Text = installed
+        _registrationValueTextBlock?.Text = installed
                 ? (isRegistered ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState)
                 : ShellIntegrationText.MissingState;
 
-        if (_versionValueTextBlock != null)
-            _versionValueTextBlock.Text = version;
+        _versionValueTextBlock?.Text = version;
 
-        if (_configValueTextBlock != null)
-            _configValueTextBlock.Text = configPath;
+        _configValueTextBlock?.Text = configPath;
 
-        if (_pathValueTextBlock != null)
-            _pathValueTextBlock.Text = path;
+        _pathValueTextBlock?.Text = path;
 
         // Toggle Enable/Disable visibility based on registration state
         if (_enableButton != null)
@@ -162,46 +160,43 @@ public partial class ShellIntegrationSettingsControl : UserControl
             _disableButton.Visibility = isRegistered ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        if (_openStyleSettingsButton != null)
-            _openStyleSettingsButton.IsEnabled = canOpenStyleSettings;
+        _openStyleSettingsButton?.IsEnabled = canOpenStyleSettings;
 
-        if (_openShellFolderButton != null)
-            _openShellFolderButton.IsEnabled = canOpenShellFolder;
+        _openShellFolderButton?.IsEnabled = canOpenShellFolder;
 
-        if (_openConfigButton != null)
-            _openConfigButton.IsEnabled = canOpenConfig;
+        _openConfigButton?.IsEnabled = canOpenConfig;
 
-        if (_syncManagedConfigButton != null)
-            _syncManagedConfigButton.IsEnabled = canManageConfig;
+        _syncManagedConfigButton?.IsEnabled = canManageConfig;
 
-        if (_resetManagedConfigButton != null)
-            _resetManagedConfigButton.IsEnabled = canManageConfig;
+        _resetManagedConfigButton?.IsEnabled = canManageConfig;
 
-        if (_openManagedConfigButton != null)
-            _openManagedConfigButton.IsEnabled = canManageConfig;
+        _openManagedConfigButton?.IsEnabled = canManageConfig;
 
-        if (_exportProfileButton != null)
-            _exportProfileButton.IsEnabled = true;
+        _exportProfileButton?.IsEnabled = true;
 
-        if (_importProfileButton != null)
-            _importProfileButton.IsEnabled = canManageConfig;
+        _importProfileButton?.IsEnabled = canManageConfig;
 
-        if (_applyDefaultPresetButton != null)
-            _applyDefaultPresetButton.IsEnabled = canManageConfig;
+        _applyDefaultPresetButton?.IsEnabled = canManageConfig;
 
-        if (_applyCompactDarkPresetButton != null)
-            _applyCompactDarkPresetButton.IsEnabled = canManageConfig;
+        _applyCompactDarkPresetButton?.IsEnabled = canManageConfig;
 
-        if (_applyMinimalLightPresetButton != null)
-            _applyMinimalLightPresetButton.IsEnabled = canManageConfig;
+        _applyMinimalLightPresetButton?.IsEnabled = canManageConfig;
 
         _statusTextBlock.Text = $"{prefix}\n{ShellIntegrationText.PathLabel}: {path}";
         if (!string.IsNullOrWhiteSpace(version) && version != ShellIntegrationText.NotFound)
+        {
             _statusTextBlock.Text += $"\n{ShellIntegrationText.VersionLabel}: {version}";
+        }
+
         if (!allowSystemActions)
+        {
             _statusTextBlock.Text += "\nPreview mode: runtime actions are disabled.";
+        }
+
         if (!string.IsNullOrWhiteSpace(suffix))
+        {
             _statusTextBlock.Text += $"\n{suffix}";
+        }
 
         var effectiveIsError = isError ?? !installed || !isRegistered;
         _statusTextBlock.Foreground = effectiveIsError
@@ -319,7 +314,9 @@ public partial class ShellIntegrationSettingsControl : UserControl
         };
 
         if (saveFileDialog.ShowDialog() != true)
+        {
             return;
+        }
 
         var success = _plugin.ExportProfile(saveFileDialog.FileName, out var errorMessage);
         RefreshStatus(
@@ -337,7 +334,9 @@ public partial class ShellIntegrationSettingsControl : UserControl
         };
 
         if (openFileDialog.ShowDialog() != true)
+        {
             return;
+        }
 
         var success = _plugin.ImportProfile(openFileDialog.FileName, out var errorMessage);
         RefreshStatus(

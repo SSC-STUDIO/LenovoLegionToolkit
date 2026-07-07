@@ -4,6 +4,7 @@ using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
 
+[Collection("NetworkAccelerationResourceCulture")]
 public class NetworkAccelerationTextTests : LocalizedTextTestsBase
 {
     protected override Type TextType => typeof(NetworkAccelerationText);

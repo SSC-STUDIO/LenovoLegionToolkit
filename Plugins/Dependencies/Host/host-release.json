@@ -1,12 +1,18 @@
 {
-  "hostVersion": "3.6.15",
-  "hostTag": "v3.6.15",
-  "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/download/v3.6.15/LenovoLegionToolkit_v3.6.15_win-x64.zip",
+  "hostVersion": "4.2.1",
+  "hostTag": "v4.2.1",
+  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.1/UniversalDeviceToolkit_v4.2.1_win-x64.zip",
   "artifacts": {
-    "package": "LenovoLegionToolkit_v3.6.15_win-x64.zip",
+    "package": "UniversalDeviceToolkit_v4.2.1_win-x64.zip",
     "lib": "LenovoLegionToolkit.Lib.dll",
-    "wpf": "Lenovo Legion Toolkit.dll"
+    "libPlugins": "LenovoLegionToolkit.Lib.Plugins.dll",
+    "wpf": "Universal Device Toolkit.dll",
+    "transitiveDependencies": [
+      "Serilog.dll",
+      "Serilog.Sinks.Async.dll",
+      "Serilog.Sinks.File.dll"
+    ]
   },
   "source": "vendored-host-build",
-  "notes": "Refresh these host references from a matching LenovoLegionToolkit build before shipping plugin changes that depend on new host APIs."
+  "notes": "Refresh these host references from a matching UniversalDeviceToolkit build before shipping plugin changes that depend on new host APIs. Serilog 4.3.0 is a transitive dependency of LenovoLegionToolkit.Lib v4.2.1 and must be vendored alongside the host binaries."
 }

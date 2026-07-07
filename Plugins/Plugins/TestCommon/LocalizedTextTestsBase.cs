@@ -33,7 +33,7 @@ public abstract class LocalizedTextTestsBase
                 var value = property.GetValue(null) as string;
                 Assert.NotNull(value);
 
-                var hasChinese = value.Any(c => c >= 0x4E00 && c <= 0x9FFF);
+                var hasChinese = value.Any(c => c is >= (char)0x4E00 and <= (char)0x9FFF);
                 Assert.False(hasChinese, $"Property {property.Name} contains hardcoded Chinese text in fallback: {value}");
             }
         }

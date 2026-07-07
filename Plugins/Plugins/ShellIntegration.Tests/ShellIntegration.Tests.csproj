@@ -34,8 +34,8 @@
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
-    <Reference Include="Lenovo Legion Toolkit">
-      <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
+    <Reference Include="Universal Device Toolkit">
+      <HintPath>..\..\Dependencies\Host\Universal Device Toolkit.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="LenovoLegionToolkit.Lib">

@@ -145,7 +145,9 @@ internal static class Program
     {
         var storePath = Path.Combine(repositoryRoot, "store.json");
         if (!File.Exists(storePath))
+        {
             return false;
+        }
 
         return File.Exists(Path.Combine(repositoryRoot, "LenovoLegionToolkit-Plugins.sln")) &&
                Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
@@ -155,7 +157,9 @@ internal static class Program
     private static (ProcessStartInfo startInfo, string appDirectory)? TryResolveUiAppStartInfo(string buildRoot)
     {
         if (!Directory.Exists(buildRoot))
+        {
             return null;
+        }
 
         var exePath = FindUiArtifact(buildRoot, "PluginCompletionUiTool.exe");
         if (!string.IsNullOrWhiteSpace(exePath))

@@ -64,7 +64,9 @@ public class ViveToolDownloadService
             }
 
             if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
+            {
                 Directory.CreateDirectory(builtInDir);
+            }
 
             // Download ZIP file to temporary location
             var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
@@ -109,14 +111,9 @@ public class ViveToolDownloadService
                 using var archive = ZipFile.OpenRead(tempZipPath);
 
                 // Verify ViVeTool.exe exists in the archive
-                var exeEntry = archive.GetEntry(ViveToolPathService.ViveToolExeName);
-                if (exeEntry == null)
-                {
-                    // Try case-insensitive search
-                    exeEntry = archive.Entries.FirstOrDefault(e =>
-                        e.Name.Equals(ViveToolPathService.ViveToolExeName, StringComparison.OrdinalIgnoreCase));
-                }
-
+                // Try case-insensitive search
+                var exeEntry = archive.GetEntry(ViveToolPathService.ViveToolExeName) ?? archive.Entries.FirstOrDefault(e =>
+                    e.Name.Equals(ViveToolPathService.ViveToolExeName, StringComparison.OrdinalIgnoreCase));
                 if (exeEntry == null)
                 {
                     PluginLog.Trace($"ViveTool: {ViveToolPathService.ViveToolExeName} not found in ZIP archive");
@@ -128,7 +125,9 @@ public class ViveToolDownloadService
                 {
                     // Skip directories
                     if (string.IsNullOrEmpty(entry.Name))
+                    {
                         continue;
+                    }
 
                     // SECURITY: Validate entry name to prevent path traversal in ZIP
                     if (entry.Name.Contains("..") || entry.Name.Contains('/') || entry.Name.Contains('\\'))
@@ -182,9 +181,14 @@ public class ViveToolDownloadService
                 try
                 {
                     if (File.Exists(tempZipPath))
+                    {
                         File.Delete(tempZipPath);
+                    }
+
                     if (Directory.Exists(stagingDirectory))
+                    {
                         Directory.Delete(stagingDirectory, recursive: true);
+                    }
                 }
                 catch
                 {
@@ -208,7 +212,9 @@ public class ViveToolDownloadService
         try
         {
             if (string.IsNullOrWhiteSpace(filePath))
+            {
                 return new List<FeatureFlagInfo>();
+            }
 
             if (!File.Exists(filePath))
             {
@@ -238,7 +244,9 @@ public class ViveToolDownloadService
         try
         {
             if (!TryValidateImportUri(url, out var uri))
+            {
                 return new List<FeatureFlagInfo>();
+            }
 
             using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
                 LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
@@ -267,13 +275,17 @@ public class ViveToolDownloadService
         try
         {
             if (string.IsNullOrWhiteSpace(filePath))
+            {
                 return false;
+            }
 
             ArgumentNullException.ThrowIfNull(features);
 
             var directoryPath = Path.GetDirectoryName(filePath);
             if (string.IsNullOrWhiteSpace(directoryPath))
+            {
                 return false;
+            }
 
             Directory.CreateDirectory(directoryPath);
 
@@ -311,7 +323,9 @@ public class ViveToolDownloadService
         var features = new List<FeatureFlagInfo>();
 
         if (string.IsNullOrWhiteSpace(content))
+        {
             return features;
+        }
 
         try
         {
@@ -323,7 +337,9 @@ public class ViveToolDownloadService
                 {
                     var feature = ParseJsonFeature(element);
                     if (feature != null)
+                    {
                         features.Add(feature);
+                    }
                 }
             }
             else if (jsonDoc.RootElement.ValueKind == JsonValueKind.Object)
@@ -335,14 +351,18 @@ public class ViveToolDownloadService
                     {
                         var feature = ParseJsonFeature(element);
                         if (feature != null)
+                        {
                             features.Add(feature);
+                        }
                     }
                 }
                 else
                 {
                     var feature = ParseJsonFeature(jsonDoc.RootElement);
                     if (feature != null)
+                    {
                         features.Add(feature);
+                    }
                 }
             }
         }
@@ -364,26 +384,44 @@ public class ViveToolDownloadService
             var description = string.Empty;
 
             if (element.TryGetProperty("id", out var idElement))
+            {
                 id = idElement.GetInt32();
+            }
             else if (element.TryGetProperty("Id", out var idElement2))
+            {
                 id = idElement2.GetInt32();
+            }
             else if (element.TryGetProperty("featureId", out var idElement3))
+            {
                 id = idElement3.GetInt32();
+            }
             else if (element.TryGetProperty("FeatureId", out var idElement4))
+            {
                 id = idElement4.GetInt32();
+            }
 
             if (id == 0)
+            {
                 return null;
+            }
 
             if (element.TryGetProperty("name", out var nameElement))
+            {
                 name = nameElement.GetString() ?? string.Empty;
+            }
             else if (element.TryGetProperty("Name", out var nameElement2))
+            {
                 name = nameElement2.GetString() ?? string.Empty;
+            }
 
             if (element.TryGetProperty("description", out var descElement))
+            {
                 description = descElement.GetString() ?? string.Empty;
+            }
             else if (element.TryGetProperty("Description", out var descElement2))
+            {
                 description = descElement2.GetString() ?? string.Empty;
+            }
 
             return new FeatureFlagInfo
             {
@@ -407,7 +445,9 @@ public class ViveToolDownloadService
         foreach (var line in lines)
         {
             if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
+            {
                 continue;
+            }
 
             // Try CSV format: ID,Name,Description
             var parts = line.Split(',');
@@ -446,18 +486,24 @@ public class ViveToolDownloadService
     private static bool VerifyKnownInstallHashes(string? directoryPath)
     {
         if (string.IsNullOrWhiteSpace(directoryPath))
+        {
             return false;
+        }
 
         foreach (var expectedFile in ExpectedBuiltInFileHashes)
         {
             var filePath = Path.Combine(directoryPath, expectedFile.Key);
             if (!File.Exists(filePath))
+            {
                 return false;
+            }
 
             using var stream = File.OpenRead(filePath);
             var actualHash = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
             if (!actualHash.Equals(expectedFile.Value, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -467,24 +513,36 @@ public class ViveToolDownloadService
     {
         uri = null!;
         if (string.IsNullOrWhiteSpace(url))
+        {
             return false;
+        }
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out var parsedUri))
+        {
             return false;
+        }
 
         uri = parsedUri;
 
         if (!uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+        {
             return false;
+        }
 
         if (string.IsNullOrWhiteSpace(uri.Host))
+        {
             return false;
+        }
 
         if (uri.IsLoopback || uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+        {
             return false;
+        }
 
         if (IPAddress.TryParse(uri.Host, out var address) && IsPrivateOrReservedAddress(address))
+        {
             return false;
+        }
 
         return true;
     }
@@ -492,7 +550,9 @@ public class ViveToolDownloadService
     private static bool IsPrivateOrReservedAddress(IPAddress address)
     {
         if (IPAddress.IsLoopback(address))
+        {
             return true;
+        }
 
         if (address.AddressFamily == AddressFamily.InterNetwork)
         {
@@ -526,10 +586,14 @@ public class ViveToolDownloadService
         {
             var bytesRead = await stream.ReadAsync(chunk, 0, chunk.Length).ConfigureAwait(false);
             if (bytesRead == 0)
+            {
                 break;
+            }
 
             if (buffer.Length + bytesRead > maxBytes)
+            {
                 throw new InvalidOperationException("Import content exceeds size limit.");
+            }
 
             await buffer.WriteAsync(chunk, 0, bytesRead).ConfigureAwait(false);
         }

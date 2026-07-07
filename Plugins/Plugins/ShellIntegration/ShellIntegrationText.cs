@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
@@ -6,7 +6,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 public static class ShellIntegrationText
 {
     public static string PluginName => T(nameof(PluginName), "Shell Integration");
-    public static string PluginDescription => T(nameof(PluginDescription), "Integrate Lenovo Legion Toolkit with Windows shell context menu.");
+    public static string PluginDescription => T(nameof(PluginDescription), "Integrate Universal Device Toolkit with Windows shell context menu.");
     public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Shell Integration");
     public static string Subtitle => T(nameof(Subtitle), "Manage Nilesoft Shell registration and open style editor.");
     public static string OverviewTitle => T(nameof(OverviewTitle), "Shell Integration Overview");

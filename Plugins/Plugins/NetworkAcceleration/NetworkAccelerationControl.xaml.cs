@@ -176,7 +176,10 @@ public partial class NetworkAccelerationControl : UserControl
         };
         commandRow.Children.Add(_serviceToggleButton);
         foreach (var button in buttons)
+        {
             commandRow.Children.Add(button);
+        }
+
         Grid.SetColumn(commandRow, 1);
         grid.Children.Add(commandRow);
 
@@ -583,7 +586,10 @@ public partial class NetworkAccelerationControl : UserControl
     {
         var grid = new Grid { Margin = margin };
         for (var i = 0; i < rowCount; i++)
+        {
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        }
+
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         return grid;
@@ -703,7 +709,10 @@ public partial class NetworkAccelerationControl : UserControl
             TextWrapping = TextWrapping.Wrap
         };
         if (margin is not null)
+        {
             textBlock.Margin = margin.Value;
+        }
+
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
         return textBlock;
     }
@@ -751,7 +760,9 @@ public partial class NetworkAccelerationControl : UserControl
         }
 
         if (_modeComboBox.Items.Count > 0)
+        {
             _modeComboBox.SelectedIndex = 0;
+        }
     }
 
     private void SetPresetSelectionFromMode(NetworkAccelerationMode mode)
@@ -816,7 +827,9 @@ public partial class NetworkAccelerationControl : UserControl
     private void PresetListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_isSelectionSyncInProgress)
+        {
             return;
+        }
 
         if (_presetListBox.SelectedItem is ListBoxItem item &&
             item.Tag is string modeTag &&
@@ -833,11 +846,15 @@ public partial class NetworkAccelerationControl : UserControl
     private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_isSelectionSyncInProgress)
+        {
             return;
+        }
 
         var mode = ParseSelectedMode();
         if (mode is not null)
+        {
             SetPresetSelectionFromMode(mode.Value);
+        }
 
         UpdateModeDescription();
         UpdatePresetDetails();
@@ -966,7 +983,9 @@ public partial class NetworkAccelerationControl : UserControl
         var snapshot = _telemetryService.Capture();
         _telemetrySamples.Add(snapshot);
         if (_telemetrySamples.Count > MaxTelemetrySamples)
+        {
             _telemetrySamples.RemoveAt(0);
+        }
 
         UpdateTelemetrySummary(snapshot);
     }
@@ -1013,7 +1032,9 @@ public partial class NetworkAccelerationControl : UserControl
     private void UpdateOptimizationPlanPreview()
     {
         if (_plannedStepsTextBlock is null)
+        {
             return;
+        }
 
         var mode = ParseSelectedMode() ?? _plugin.Settings.PreferredMode;
         var settings = NetworkAccelerationSettingsBinding.BuildUpdatedSettings(
@@ -1041,7 +1062,10 @@ public partial class NetworkAccelerationControl : UserControl
         {
             var elapsed = DateTimeOffset.Now - _sessionStartedAt.Value;
             if (elapsed < TimeSpan.Zero)
+            {
                 elapsed = TimeSpan.Zero;
+            }
+
             sessionText = FormatDuration(elapsed);
         }
 
@@ -1079,7 +1103,9 @@ public partial class NetworkAccelerationControl : UserControl
             .Min();
 
         if (earliestSampleUtc == default)
+        {
             return null;
+        }
 
         return new DateTimeOffset(DateTime.SpecifyKind(earliestSampleUtc, DateTimeKind.Utc));
     }
@@ -1135,12 +1161,14 @@ public partial class NetworkAccelerationControl : UserControl
     private static string FormatDuration(TimeSpan duration)
     {
         if (duration.TotalHours >= 1)
+        {
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0:00}:{1:00}:{2:00}",
                 (int)duration.TotalHours,
                 duration.Minutes,
                 duration.Seconds);
+        }
 
         return duration.ToString(@"mm\:ss", CultureInfo.InvariantCulture);
     }

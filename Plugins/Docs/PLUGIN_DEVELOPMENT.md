@@ -122,7 +122,7 @@ The tooling now follows the same shape as VS Code extension authoring:
 | `vsce package` creates `.vsix` | `package` creates `<plugin-id>-v<version>.zip` |
 | Marketplace metadata is derived from manifest/package fields | root `store.json` is generated from manifest store metadata and release assets |
 
-The current difference is host compatibility: LLT still needs `plugin.json` in build output because the main app loader consumes that runtime manifest today. The author-facing source of truth is `plugin.manifest.json`; `plugin.json` is synchronized compatibility output.
+The current difference is host compatibility: UDT still needs `plugin.json` in build output because the main app loader consumes that runtime manifest today. The author-facing source of truth is `plugin.manifest.json`; `plugin.json` is synchronized compatibility output.
 
 ## Generated Plugin Structure
 

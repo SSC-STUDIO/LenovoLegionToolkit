@@ -1,8 +1,8 @@
-# Lenovo Legion Toolkit Plugins 代码风格规范
+# Universal Device Toolkit Plugins 代码风格规范
 
 ## 概述
 
-本文档定义了 LenovoLegionToolkit-Plugins 项目的代码风格和最佳实践，确保代码质量、可维护性和团队协作一致性。
+本文档定义了 Universal Device Toolkit Plugins 项目的代码风格和最佳实践，确保代码质量、可维护性和团队协作一致性。
 
 ## 编辑器配置
 

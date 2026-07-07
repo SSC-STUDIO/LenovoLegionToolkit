@@ -100,7 +100,9 @@ public class ViveToolDownloadServiceTests
         using var tempFile = ViveToolTestFileHelper.CreateScope(".json");
 
         await using (var stream = File.Create(tempFile.FilePath))
+        {
             stream.SetLength((1024 * 1024) + 1);
+        }
 
         var result = await service.ImportFeaturesFromFileAsync(tempFile.FilePath);
 
@@ -328,7 +330,9 @@ public class ViveToolDownloadServiceTests
         Assert.NotNull(runtimeDirectory);
 
         foreach (var requiredFileName in RequiredRuntimeFileNames)
+        {
             Assert.True(File.Exists(Path.Combine(runtimeDirectory!, requiredFileName)), $"Missing bundled runtime file: {requiredFileName}");
+        }
     }
 
     private static readonly string[] RequiredRuntimeFileNames =

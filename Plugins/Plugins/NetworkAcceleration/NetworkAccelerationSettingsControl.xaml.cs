@@ -109,7 +109,10 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         leftStack.Children.Add(CreateTitleText(NetworkAccelerationText.SettingsTitle));
         leftStack.Children.Add(CreateSecondaryText(NetworkAccelerationText.SettingsDescription, new Thickness(0, 6, 0, 18)));
         foreach (var checkBox in GetSettingCheckBoxes())
+        {
             leftStack.Children.Add(checkBox);
+        }
+
         contentGrid.Children.Add(leftStack);
 
         var divider = new Border
@@ -198,7 +201,10 @@ public partial class NetworkAccelerationSettingsControl : UserControl
             TextWrapping = TextWrapping.Wrap
         };
         if (margin != null)
+        {
             textBlock.Margin = margin.Value;
+        }
+
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
         return textBlock;
     }
@@ -211,7 +217,10 @@ public partial class NetworkAccelerationSettingsControl : UserControl
             TextWrapping = TextWrapping.Wrap
         };
         if (margin != null)
+        {
             textBlock.Margin = margin.Value;
+        }
+
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
         return textBlock;
     }
@@ -252,7 +261,9 @@ public partial class NetworkAccelerationSettingsControl : UserControl
                 _autoOptimizeOnStartupCheckBox,
                 _resetWinsockCheckBox,
                 _resetTcpIpCheckBox))
+        {
             return;
+        }
 
         NetworkAccelerationSettingsBinding.ApplyToggleSettings(
             _plugin.Settings,
@@ -268,11 +279,12 @@ public partial class NetworkAccelerationSettingsControl : UserControl
 
     private void UpdateSummary()
     {
-        if (_modeSummaryTextBlock != null)
-            _modeSummaryTextBlock.Text = NetworkAccelerationPresentation.GetModePresentation(_plugin.Settings.PreferredMode).DisplayName;
+        _modeSummaryTextBlock?.Text = NetworkAccelerationPresentation.GetModePresentation(_plugin.Settings.PreferredMode).DisplayName;
 
         foreach (var toggleSummary in GetToggleSummaries())
+        {
             toggleSummary.SummaryTextBlock.Text = NetworkAccelerationPresentation.GetToggleLabel(toggleSummary.CheckBox?.IsChecked == true);
+        }
 
         if (_plannedStepsSummaryTextBlock != null)
         {
@@ -292,7 +304,9 @@ public partial class NetworkAccelerationSettingsControl : UserControl
                 _autoOptimizeOnStartupCheckBox,
                 _resetWinsockCheckBox,
                 _resetTcpIpCheckBox))
+        {
             return;
+        }
 
         try
         {
@@ -316,7 +330,9 @@ public partial class NetworkAccelerationSettingsControl : UserControl
     private void SetStatus(string text, bool isError)
     {
         if (_statusTextBlock is null)
+        {
             return;
+        }
 
         _statusTextBlock.Text = text;
         _statusTextBlock.Foreground = isError
