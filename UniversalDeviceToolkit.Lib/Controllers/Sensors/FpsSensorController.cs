@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -160,13 +160,21 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                     case 4:
                         return null;
                 }
-
-                using var process = Process.GetProcessById((int)processId);
+                var process = Process.GetProcessById((int)processId);
 
                 if (string.IsNullOrEmpty(process.ProcessName) || process.HasExited)
+                {
+                    process.Dispose();
                     return null;
+                }
 
-                return IsProcessBlacklisted(process.ProcessName) ? null : Process.GetProcessById((int)processId);
+                if (IsProcessBlacklisted(process.ProcessName))
+                {
+                    process.Dispose();
+                    return null;
+                }
+
+                return process;
             }
             catch (ArgumentException) { return null; }
             catch (InvalidOperationException) { return null; }
