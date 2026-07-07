@@ -43,6 +43,12 @@ public class SettingsManager<T> where T : class, new()
     public event EventHandler<T>? SettingsChanged;
 
     /// <summary>
+    /// Event raised when settings file is corrupted and defaults are returned.
+    /// The argument is the path of the corrupted file that was backed up.
+    /// </summary>
+    public event EventHandler<string>? SettingsCorrupted;
+
+    /// <summary>
     /// Initializes a new instance of the SettingsManager class.
     /// </summary>
     /// <param name="pluginName">The name of the plugin (used to determine settings file location)</param>
@@ -123,7 +129,22 @@ public class SettingsManager<T> where T : class, new()
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Failed to load settings from {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
+                var settingsFilePath = _useMessagePack ? _settingsFilePathMpck : _settingsFilePath;
+                _logger?.LogError(ex, "Failed to load settings from {FilePath} \u2014 returning defaults and backing up corrupted file", settingsFilePath);
+                try
+                {
+                    if (File.Exists(settingsFilePath))
+                    {
+                        var backupPath = settingsFilePath + $".corrupt.{DateTime.Now:yyyyMMdd-HHmmss}";
+                        File.Copy(settingsFilePath, backupPath, overwrite: true);
+                        _logger?.LogWarning("Corrupted settings backed up to {BackupPath}", backupPath);
+                        SettingsCorrupted?.Invoke(this, backupPath);
+                    }
+                }
+                catch (Exception backupEx)
+                {
+                    _logger?.LogError(backupEx, "Failed to backup corrupted settings file");
+                }
                 return _cachedSettings = new T();
             }
         }
@@ -276,16 +297,19 @@ public class SettingsManager<T> where T : class, new()
             return false;
         }
 
-        try
+        lock (_lock)
         {
-            var settings = Load();
-            updateAction(settings);
-            return Save(settings);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Failed to update settings");
-            return false;
+            try
+            {
+                var settings = Load();
+                updateAction(settings);
+                return Save(settings);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to update settings");
+                return false;
+            }
         }
     }
 

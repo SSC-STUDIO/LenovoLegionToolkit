@@ -229,7 +229,7 @@
 - **类别**: 线程安全
 - **描述**: `RunLifecycleTask` 调用 `action().GetAwaiter().GetResult()` 同步阻塞等待异步操作。如果 `action` 中包含 `await` 且需要捕获同步上下文（如涉及 UI 操作），在 UI 线程调用时会导致死锁。此方法被 `OnInstalled()` 和 `BackupCurrentCursorSchemeIfNeeded` 调用。
 - **建议修复**: 将 `RunLifecycleTask` 改为异步；或确保 `action` 内所有 `await` 都使用 `ConfigureAwait(false)`。
-- **状态**: 🔴 Confirmed（Day 11 验证为真实 bug）
+- **状态**: 🔴 Fixed（Day 12 — RunLifecycleTask 改为 Task.Run(async) 避免 SynchronizationContext 捕获死锁；PLG build 0 errors/0 warnings, 409/409 tests pass）（Day 11 验证为真实 bug）
 - **发现日期**: 2026-07-06
 
 ### 🟡 M-008: `ThemeWatcherRuntime.Stop()` 中 `SystemEvents.UserPreferenceChanged` 取消订阅竞态（Day 11 确认）
@@ -361,7 +361,7 @@
 - **类别**: 正确性 / 用户体验
 - **描述**: `Load()` 在 `catch (Exception ex)` 块中记录错误日志后返回 `_cachedSettings = new T()`（默认设置），但**不通知调用方**发生了错误。如果设置文件损坏，用户的所有设置静默丢失，且没有任何 UI 提示。
 - **建议修复**: 在异常时抛出自定义异常（如 `SettingsLoadException`）；或返回 `LoadResult<T>` 结构包含 `Value`、`IsDefault`、`Error` 字段。
-- **状态**: 🟡 Confirmed（Day 11 验证为真实问题）
+- **状态**: 🟡 Fixed（Day 12 — Load 失败时备份损坏文件到 .corrupt.{timestamp} 并触发 SettingsCorrupted 事件）（Day 11 验证为真实问题）
 - **发现日期**: 2026-07-06
 
 ### 🟢 L-008: `SettingsManager<T>` 无设置版本管理 — 字段变更不兼容

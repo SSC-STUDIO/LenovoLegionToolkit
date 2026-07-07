@@ -676,7 +676,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         try
         {
-            action().GetAwaiter().GetResult();
+            Task.Run(async () => await action().ConfigureAwait(false)).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {

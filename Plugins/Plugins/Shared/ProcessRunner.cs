@@ -223,18 +223,15 @@ public class ProcessRunner
             return true;
         }
 
-        // Check for command injection patterns
-        var dangerousPatterns = new[] { "&", "|", ";", "`", "$", "(", ")", "<", ">", "\n", "\r" };
-        foreach (var pattern in dangerousPatterns)
+        // M-005 fix: Only check for path traversal and null bytes.
+        // Shell metacharacters are harmless in file paths when
+        // UseShellExecute = false.
+        if (path.Contains(".."))
         {
-            if (path.Contains(pattern))
-            {
-                return true;
-            }
+            return true;
         }
 
-        // Check for parent directory traversal
-        if (path.Contains(".."))
+        if (path.Contains('\0'))
         {
             return true;
         }
