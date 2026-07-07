@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BatteryHealth\LenovoLegionToolkit.Plugins.BatteryHealth.csproj" />
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="LenovoLegionToolkit.Lib">

@@ -2,29 +2,59 @@
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
-  </resheader>
+</resheader>
   <resheader name="version">
     <value>2.0</value>
-  </resheader>
+</resheader>
   <resheader name="reader">
     <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
+</resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="PluginName" xml:space="preserve">
-    <value>Battery Health</value>
-  </data>
-  <data name="FeaturePageTitle" xml:space="preserve">
-    <value>Battery Health</value>
-  </data>
-  <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Battery Health 璁剧疆</value>
-  </data>
-  <data name="FeaturePageDescription" xml:space="preserve">
-    <value>Battery Health 鍔熻兘棰勮</value>
-  </data>
-  <data name="SettingsPageDescription" xml:space="preserve">
-    <value>Battery Health 璁剧疆棰勮</value>
-  </data>
+</resheader>
+  <data name="PluginName" xml:space="preserve"><value>电池健康</value></data>
+  <data name="PluginDescription" xml:space="preserve"><value>为通用设备工具箱监控电池健康度、循环次数和容量损耗。</value></data>
+  <data name="FeaturePageTitle" xml:space="preserve"><value>电池健康</value></data>
+  <data name="FeaturePageDescription" xml:space="preserve"><value>实时追踪电池损耗、循环次数和容量衰减。</value></data>
+  <data name="SettingsPageTitle" xml:space="preserve"><value>电池健康设置</value></data>
+  <data name="SettingsPageSubtitle" xml:space="preserve"><value>配置电池健康的监控阈值和通知。</value></data>
+  <data name="OverviewTitle" xml:space="preserve"><value>电池健康概览</value></data>
+  <data name="OverviewDescription" xml:space="preserve"><value>由 WMI 驱动的实时电池诊断。</value></data>
+  <data name="HealthPercentLabel" xml:space="preserve"><value>健康度</value></data>
+  <data name="CycleCountLabel" xml:space="preserve"><value>循环次数</value></data>
+  <data name="ChargeRemainingLabel" xml:space="preserve"><value>剩余电量</value></data>
+  <data name="WearPercentLabel" xml:space="preserve"><value>损耗</value></data>
+  <data name="DesignedCapacityLabel" xml:space="preserve"><value>设计容量</value></data>
+  <data name="FullChargeCapacityLabel" xml:space="preserve"><value>满充容量</value></data>
+  <data name="CapacityUnitMwh" xml:space="preserve"><value>mWh</value></data>
+  <data name="HealthStateLabel" xml:space="preserve"><value>状态</value></data>
+  <data name="StatusHealthy" xml:space="preserve"><value>健康</value></data>
+  <data name="StatusWarning" xml:space="preserve"><value>警告</value></data>
+  <data name="StatusCritical" xml:space="preserve"><value>严重</value></data>
+  <data name="StatusNoBattery" xml:space="preserve"><value>无电池</value></data>
+  <data name="StatusUnknown" xml:space="preserve"><value>未知</value></data>
+  <data name="NoBatteryMessage" xml:space="preserve"><value>此设备未检测到电池。</value></data>
+  <data name="LoadingMessage" xml:space="preserve"><value>正在加载电池数据...</value></data>
+  <data name="RefreshFailedMessage" xml:space="preserve"><value>读取电池数据失败。</value></data>
+  <data name="RefreshButton" xml:space="preserve"><value>刷新</value></data>
+  <data name="MonitoringCardTitle" xml:space="preserve"><value>监控</value></data>
+  <data name="MonitoringCardDescription" xml:space="preserve"><value>启用实时电池健康监控。</value></data>
+  <data name="EnableMonitoringLabel" xml:space="preserve"><value>启用实时监控</value></data>
+  <data name="ThresholdsCardTitle" xml:space="preserve"><value>健康阈值</value></data>
+  <data name="LowHealthThresholdLabel" xml:space="preserve"><value>低健康阈值</value></data>
+  <data name="CriticalHealthThresholdLabel" xml:space="preserve"><value>严重健康阈值</value></data>
+  <data name="NotificationsCardTitle" xml:space="preserve"><value>通知</value></data>
+  <data name="NotificationsCardDescription" xml:space="preserve"><value>当电池健康度低于阈值时显示通知。</value></data>
+  <data name="EnableNotificationLabel" xml:space="preserve"><value>启用通知</value></data>
+  <data name="SaveButton" xml:space="preserve"><value>保存</value></data>
+  <data name="ReloadButton" xml:space="preserve"><value>重新加载</value></data>
+  <data name="SettingsSaved" xml:space="preserve"><value>设置已保存。</value></data>
+  <data name="SettingsReloaded" xml:space="preserve"><value>设置已重新加载。</value></data>
+  <data name="SettingsInvalidThresholds" xml:space="preserve"><value>严重阈值必须低于低健康阈值。</value></data>
+  <data name="FormatHealthPercent" xml:space="preserve"><value>{0}%</value></data>
+  <data name="FormatWearPercent" xml:space="preserve"><value>{0}%</value></data>
+  <data name="FormatChargeRemaining" xml:space="preserve"><value>{0}%</value></data>
+  <data name="FormatCapacityMwh" xml:space="preserve"><value>{0} mWh</value></data>
+  <data name="FormatCycleCount" xml:space="preserve"><value>{0} 次</value></data>
+  <data name="FormatThresholdValue" xml:space="preserve"><value>{0}%</value></data>
 </root>

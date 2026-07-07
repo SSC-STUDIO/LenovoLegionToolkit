@@ -1,9 +1,12 @@
 using LenovoLegionToolkit.Plugins.BatteryHealth;
+using LenovoLegionToolkit.Plugins.SDK;
+using System.Linq;
 using LenovoLegionToolkit.Plugins.TestCommon;
 using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.BatteryHealth.Tests;
 
+[Collection("BatteryHealthResourceCulture")]
 public class BatteryHealthPluginTests
 {
     [Fact]
@@ -21,7 +24,7 @@ public class BatteryHealthPluginTests
     {
         var plugin = new BatteryHealthPlugin();
 
-        PluginPageAssertions.AssertPluginPage(plugin.GetFeatureExtension(), BatteryHealthText.FeaturePageTitle, "PuzzlePiece24");
+        PluginPageAssertions.AssertPluginPage(plugin.GetFeatureExtension(), BatteryHealthText.FeaturePageTitle, "BatteryCharge24");
         PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), BatteryHealthText.SettingsPageTitle, "Settings24");
     }
 }
