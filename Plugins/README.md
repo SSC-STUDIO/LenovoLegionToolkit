@@ -1,20 +1,24 @@
 # Universal Device Toolkit Plugins
 
 <p align="center">
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins">
-    <img src="https://img.shields.io/badge/C%23-.NET%2010-blue?style=for-the-badge&logo=csharp&logoColor=white" alt="C# .NET 10" />
-  </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins">
-    <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Windows 10/11" />
-  </a>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="Assets/social-preview.svg">
+    <img alt="Universal Device Toolkit Plugins - Extend your Windows device management" src="Assets/social-preview.svg" width="800">
+  </picture>
+</p>
+
+<p align="center">
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/stargazers">
-    <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=yellow&logo=github" alt="Stars" />
+    <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=yellow&logo=github&labelColor=222" alt="Stars" />
   </a>
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
+    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=blue&labelColor=222" alt="License: MIT" />
   </a>
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release.yml?style=for-the-badge&logo=github&logoColor=white" alt="CI" />
+    <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release.yml?style=for-the-badge&logo=github&logoColor=white&label=CI&labelColor=222" alt="CI" />
+  </a>
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions">
+    <img src="https://img.shields.io/badge/Discussions-Welcome!-blue?style=for-the-badge&logo=github&logoColor=white&labelColor=222" alt="Discussions" />
   </a>
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/watchers">
     <img src="https://img.shields.io/github/watchers/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=green&logo=github&labelColor=222" alt="Watchers" />
@@ -31,11 +35,7 @@
 </p>
 
 <p align="center">
-  <b>Official plugin ecosystem for Universal Device Toolkit (formerly Lenovo Legion Toolkit)</b><br/>
-  Extend your Windows device management experience with community-driven plugins.
-</p>
-
-<p align="center">
+  <b>Official plugin ecosystem for Universal Device Toolkit</b><br/>
   <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i>
 </p>
 
