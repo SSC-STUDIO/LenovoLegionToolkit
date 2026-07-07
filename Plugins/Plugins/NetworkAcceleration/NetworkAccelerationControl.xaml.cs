@@ -874,7 +874,7 @@ public partial class NetworkAccelerationControl : UserControl
         {
             if (IsRuntimeRunning())
             {
-                _plugin.Runtime.Stop();
+                await _plugin.Runtime.StopAsync();
                 _isServiceRunning = false;
                 _sessionStartedAt = null;
                 SetStatus(NetworkAccelerationText.StatusServiceStopped, false);

@@ -92,12 +92,12 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public override void OnShutdown()
     {
-        _runtime.Stop();
+        _ = _runtime.StopAsync();
     }
 
     public override void Stop()
     {
-        _runtime.Stop();
+        _ = _runtime.StopAsync();
     }
 
     protected override CancellationToken GetRuntimeCancellationToken()
