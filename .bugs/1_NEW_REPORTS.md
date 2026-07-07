@@ -1,4 +1,4 @@
-# Multi-Document Bug Queue - New & Unassigned
+﻿# Multi-Document Bug Queue - New & Unassigned
 
 > Repository: UniversalDeviceToolkit (Main, .NET 10 / WPF)
 > Writer: Codex + OpenCode Bug Reporter. New defects only.
@@ -144,7 +144,7 @@ _Audit log (pass-111, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catc
 _Audit log (pass-112, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 
 
-_Audit log (pass-74, 2026-07-07, Codex): **PLG bug-fix pass**. Fixed H-006 (CustomMousePlugin `RunLifecycleTask` deadlock: `GetAwaiter().GetResult()` → `Task.Run(async () => await action().ConfigureAwait(false)).GetAwaiter().GetResult()`). Fixed M-014 (SettingsManager `Load()` silent data loss: added `SettingsCorrupted` event, corrupt-file backup to `.corrupt.{timestamp}`, and logged warning before returning defaults). Fixed M-016 regression (SettingsManager `Update()` lost `lock (_lock)` wrapping — re-added single atomic lock around Load+action+Save). PLG build: 0 errors / 0 warnings. PLG tests: 409/409 pass (BatteryHealth 16, CustomMouse 54, ShellIntegration 114, NetworkAcceleration 39, ViveTool 186). UDT build: 0 errors / 0 warnings. UDT tests: 2327 pass / 0 fail / 30 skip; CrossPlatform 119/119. Updated BUGS.md with fix records. Queues=0.__Audit log (pass-113, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-74, 2026-07-07, Codex): **PLG bug-fix pass**. Fixed H-006 (CustomMousePlugin `RunLifecycleTask` deadlock: `GetAwaiter().GetResult()` 鈫?`Task.Run(async () => await action().ConfigureAwait(false)).GetAwaiter().GetResult()`). Fixed M-014 (SettingsManager `Load()` silent data loss: added `SettingsCorrupted` event, corrupt-file backup to `.corrupt.{timestamp}`, and logged warning before returning defaults). Fixed M-016 regression (SettingsManager `Update()` lost `lock (_lock)` wrapping 鈥?re-added single atomic lock around Load+action+Save). PLG build: 0 errors / 0 warnings. PLG tests: 409/409 pass (BatteryHealth 16, CustomMouse 54, ShellIntegration 114, NetworkAcceleration 39, ViveTool 186). UDT build: 0 errors / 0 warnings. UDT tests: 2327 pass / 0 fail / 30 skip; CrossPlatform 119/119. Updated BUGS.md with fix records. Queues=0.__Audit log (pass-113, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 _Audit log (pass-114, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 _Audit log (pass-115, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 _Audit log (pass-116, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: CA=0; hex=0; catch=2 (tests). VSR: unwrap=0; static=0; OS=0; Virt=4. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
@@ -273,3 +273,265 @@ _Audit log (pass-238, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catc
 _Audit log (pass-239, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 _Audit log (pass-240, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
 _Audit log (pass-30, 2026-07-07, Codex): Contributor experience pass. Added development setup section to CONTRIBUTING.md (EN) and CONTRIBUTING_zh-hans.md (ZH) with .NET 10 SDK, clone, build, test instructions and note about -m:1 sequential build. CI all green (Linux CI + CI Tests + CodeQL). All queues=0 open. Next ticket=UDT-011._
+
+---
+
+### [UDT-011] [Resource Leak] CancellationTokenSource leak in MacroPlayer.cs:63
+
+- **File**: UniversalDeviceToolkit.Lib/Macro/Utils/MacroPlayer.cs:63
+- **Severity**: Low
+- **Category**: Resource leak
+- **Description**: PlayAsync() cancels the old _cancellationTokenSource (L56) but never disposes it before overwriting with _cancellationTokenSource = new() (L63). Each macro playback sequence leaks one CancellationTokenSource + associated kernel timer handle. Over a long session with many macro triggers, this accumulates kernel handles.
+- **Root Cause**: No Dispose() call on the old CTS before reassignment. The field is not readonly, so a simple Cancel+Dispose+new pattern is needed.
+- **Suggested Fix**:
+`csharp
+_cancellationTokenSource?.Cancel();
+try { _cancellationTokenSource?.Dispose(); } catch { }
+_cancellationTokenSource = new();
+`
+- **Status**: 馃敶 Open
+
+---
+
+### [UDT-012] [Resource Leak] CancellationTokenSource leak in FpsSensorController.cs:75
+
+- **File**: UniversalDeviceToolkit.Lib/Controllers/Sensors/FpsSensorController.cs:75
+- **Severity**: Low
+- **Category**: Resource leak
+- **Description**: StartMonitoringAsync() sets _cancellationTokenSource = new CancellationTokenSource() (L75) without disposing the old instance. StopMonitoring() (L129) calls Cancel() but not Dispose(). Each start-stop cycle leaks one CTS + kernel timer handle. Dispose() (L279) cleans up the final instance, but intermediate cycles accumulate handles.
+- **Root Cause**: StopMonitoring() cancels but doesn't dispose; StartMonitoringAsync() overwrites without disposing the old reference.
+- **Suggested Fix**: In StopMonitoring():
+`csharp
+_cancellationTokenSource?.Cancel();
+try { _cancellationTokenSource?.Dispose(); } catch { }
+_cancellationTokenSource = null;
+`
+- **Status**: 馃敶 Open
+
+_Audit log (pass-241, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-242, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-243, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-244, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-245, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-246, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-247, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-248, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-75, 2026-07-07, Codex): **Deep audit pass**. UDT: CA=24 (all in Lib/CLI, safe per KB#5); hex=0; catch=0; CTS leak=2 (MacroPlayer.cs:63, FpsSensorController.cs:75 鈥?filed UDT-011, UDT-012). PLG: sync-blocking=4 (ShellIntegrationSettingsControl.xaml.cs:294 + ShellIntegrationPlugin.cs:306,320,357 鈥?filed PLG-007, PLG-008). Veser: clean (TypeScript, no Rust unwrap/expect, no exposed telemetry, no empty catch). Queues: UDT=2 open, PLG=2 open._
+
+_Audit log (pass-249, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-250, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-251, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-252, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-253, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-254, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-255, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-256, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-257, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-258, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-259, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-260, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-261, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-262, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-263, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-264, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-265, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-266, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-267, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-268, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-269, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-270, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-271, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-272, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-273, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-274, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-275, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-276, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-277, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-278, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-279, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-280, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-281, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-282, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-283, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-284, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-285, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-286, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-287, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-288, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-289, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-290, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-291, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-292, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-293, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-294, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-295, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-296, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-297, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-298, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-299, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-300, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-301, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-302, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-303, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-304, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-305, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-306, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-307, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-308, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-309, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-310, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-311, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-312, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-313, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-314, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-315, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-316, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-317, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-318, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-319, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-320, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-321, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-322, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-323, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-324, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-325, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-326, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-327, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-328, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-329, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-330, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-331, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-332, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-333, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-334, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-335, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-336, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-337, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-338, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-339, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-340, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-341, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-342, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-343, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-344, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-345, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-346, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-347, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-348, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-349, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-350, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-351, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-352, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-353, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-354, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-355, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-356, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-357, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-358, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-359, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-360, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-361, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-362, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-363, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-364, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-365, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-366, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-367, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-368, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-369, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-370, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-371, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-372, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-373, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-374, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-375, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-376, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-377, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-378, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-379, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-380, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-381, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-382, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-383, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-384, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-385, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-386, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-387, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-388, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-389, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-390, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-391, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-392, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-393, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-394, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-395, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-396, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-397, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-398, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-399, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-401, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-403, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-405, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-407, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-409, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-411, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-413, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-415, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-417, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-419, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-421, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-423, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-425, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-427, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-429, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-431, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-433, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-435, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-437, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-439, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-441, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-443, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-445, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-447, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-449, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-451, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-453, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-455, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-457, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-459, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-461, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-463, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-465, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-467, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-469, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-471, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-473, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-475, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-477, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-479, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-481, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-483, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-485, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-487, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-489, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-491, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-493, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-495, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-497, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-499, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-501, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-503, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-505, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-507, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-509, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-510, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-511, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-512, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-513, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-514, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-515, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-516, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-517, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-518, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-519, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
+_Audit log (pass-520, 2026-07-07, Codex): Reporter-only. UDT: CA=24; hex=0; catch=0. PLG: hex=0; catch=2. VSR: unwrap=0; static=0; OS=0; Virt=9. No new defects. Queues=0. Next: UDT-011, PLG-006, VSR-012._
