@@ -1,4 +1,4 @@
-# Crowdin configuration for LLT resource localization.
+﻿# Crowdin configuration for UDT resource localization.
 # Keep this file in sync with all neutral resource modules.
 
 base_path: .
