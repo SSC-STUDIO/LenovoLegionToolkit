@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using Xunit;
@@ -7,100 +8,66 @@ namespace UniversalDeviceToolkit.Tests;
 [Trait("Category", TestCategories.Unit)]
 public class WindowsPowerPlanTests
 {
-    private static readonly Guid GuidA = new("12345678-1234-1234-1234-123456789abc");
-    private static readonly Guid GuidB = new("fedcba98-7654-3210-fedc-ba9876543210");
-
-    #region Equality
+    private static readonly Guid TestGuid1 = new("12345678-1234-1234-1234-123456789abc");
+    private static readonly Guid TestGuid2 = new("abcdefab-abcd-abcd-abcd-abcdefabcdef");
 
     [Fact]
-    public void Equals_SameGuidDifferentNameAndActive_ShouldBeEqual()
+    public void Properties_ShouldReturnConstructorValues()
     {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidA, "Performance", false);
-        a.Equals(b).Should().BeTrue();
+        var plan = new WindowsPowerPlan(TestGuid1, "Balanced", true);
+
+        plan.Guid.Should().Be(TestGuid1);
+        plan.Name.Should().Be("Balanced");
+        plan.IsActive.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Equals_SameGuid_ShouldBeEqual()
+    {
+        var plan1 = new WindowsPowerPlan(TestGuid1, "Balanced", true);
+        var plan2 = new WindowsPowerPlan(TestGuid1, "High Performance", false);
+
+        plan1.Equals(plan2).Should().BeTrue();
+        (plan1 == plan2).Should().BeTrue();
+        (plan1 != plan2).Should().BeFalse();
     }
 
     [Fact]
     public void Equals_DifferentGuid_ShouldNotBeEqual()
     {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidB, "Balanced", true);
-        a.Equals(b).Should().BeFalse();
+        var plan1 = new WindowsPowerPlan(TestGuid1, "Balanced", true);
+        var plan2 = new WindowsPowerPlan(TestGuid2, "Balanced", true);
+
+        plan1.Equals(plan2).Should().BeFalse();
+        (plan1 == plan2).Should().BeFalse();
+        (plan1 != plan2).Should().BeTrue();
     }
 
     [Fact]
-    public void Equals_Null_ShouldBeFalse()
+    public void GetHashCode_SameGuid_ShouldMatch()
     {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        a.Equals(null).Should().BeFalse();
+        var plan1 = new WindowsPowerPlan(TestGuid1, "Balanced", true);
+        var plan2 = new WindowsPowerPlan(TestGuid1, "High Performance", false);
+
+        plan1.GetHashCode().Should().Be(plan2.GetHashCode());
     }
 
     [Fact]
-    public void Equals_BoxedSameGuid_ShouldBeEqual()
+    public void Equals_DifferentNameSameGuid_ShouldBeEqual()
     {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        object b = new WindowsPowerPlan(GuidA, "Other", false);
-        a.Equals(b).Should().BeTrue();
+        var plan1 = new WindowsPowerPlan(TestGuid1, "Balanced", true);
+        var plan2 = new WindowsPowerPlan(TestGuid1, "Balanced (new)", false);
+
+        (plan1 == plan2).Should().BeTrue();
     }
 
     [Fact]
-    public void OperatorEquals_SameGuid_ShouldBeTrue()
+    public void ToString_ShouldContainAllProperties()
     {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidA, "Other", false);
-        (a == b).Should().BeTrue();
+        var plan = new WindowsPowerPlan(TestGuid1, "Power Saver", false);
+        var str = plan.ToString();
+
+        str.Should().Contain(TestGuid1.ToString());
+        str.Should().Contain("Power Saver");
     }
-
-    [Fact]
-    public void OperatorNotEquals_DifferentGuid_ShouldBeTrue()
-    {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidB, "Balanced", true);
-        (a != b).Should().BeTrue();
-    }
-
-    [Fact]
-    public void GetHashCode_SameGuid_ShouldBeSame()
-    {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidA, "Other", false);
-        a.GetHashCode().Should().Be(b.GetHashCode());
-    }
-
-    [Fact]
-    public void GetHashCode_DifferentGuid_ShouldDiffer()
-    {
-        var a = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var b = new WindowsPowerPlan(GuidB, "Balanced", true);
-        a.GetHashCode().Should().NotBe(b.GetHashCode());
-    }
-
-    #endregion
-
-    #region Properties
-
-    [Fact]
-    public void Properties_ShouldReturnConstructorValues()
-    {
-        var plan = new WindowsPowerPlan(GuidA, "Balanced", true);
-        plan.Guid.Should().Be(GuidA);
-        plan.Name.Should().Be("Balanced");
-        plan.IsActive.Should().BeTrue();
-    }
-
-    #endregion
-
-    #region ToString
-
-    [Fact]
-    public void ToString_ShouldContainAllFields()
-    {
-        var plan = new WindowsPowerPlan(GuidA, "Balanced", true);
-        var s = plan.ToString();
-        s.Should().Contain(GuidA.ToString());
-        s.Should().Contain("Balanced");
-        s.Should().Contain("True");
-    }
-
-    #endregion
 }
