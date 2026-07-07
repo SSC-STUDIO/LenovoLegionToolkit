@@ -110,7 +110,7 @@ public class PluginRepositoryService : IDisposable
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 
         _pluginsDirectory = GetPluginsDirectory();
-        _tempDownloadDirectory = Path.Combine(Path.GetTempPath(), "LLTPluginDownloads");
+        _tempDownloadDirectory = Path.Combine(Path.GetTempPath(), "UDTPluginDownloads");
         _storeCachePath = Path.Combine(Folders.AppData, "plugin-store-cache.json");
 
         if (!Directory.Exists(_tempDownloadDirectory))

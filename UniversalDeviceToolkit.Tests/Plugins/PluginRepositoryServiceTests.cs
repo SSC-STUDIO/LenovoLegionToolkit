@@ -31,7 +31,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
           "id": "shell-integration",
           "name": "Shell Integration",
           "description": "Adds shell integration",
-          "author": "LLT Team",
+          "author": "UDT Team",
           "version": "1.0.9",
           "minimumHostVersion": "3.6.1",
           "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.9/shell-integration-v1.0.9.zip"

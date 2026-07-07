@@ -24,6 +24,19 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
         if (settings.Store.SmartFnLockFlags == 0)
             return;
 
+        // Fast synchronous filter: only modifier-key transitions and the
+        // non-modifier key that triggers FnLock restoration actually need
+        // asynchronous work. Spawning Task.Run on every keystroke floods the
+        // thread pool and serializes behind the AsyncLock, which makes the
+        // whole system feel sluggish while typing.
+        var vkKeyCode = (VIRTUAL_KEY)kbStruct.vkCode;
+        var isModifierKey = vkKeyCode is VIRTUAL_KEY.VK_LCONTROL or VIRTUAL_KEY.VK_RCONTROL
+            or VIRTUAL_KEY.VK_LSHIFT or VIRTUAL_KEY.VK_RSHIFT
+            or VIRTUAL_KEY.VK_LMENU or VIRTUAL_KEY.VK_RMENU;
+
+        if (!isModifierKey && !_restoreFnLock)
+            return;
+
         Task.Run(async () =>
         {
             try

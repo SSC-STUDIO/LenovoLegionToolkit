@@ -122,6 +122,10 @@ public partial class OsdBarWindow : OsdWindowBase
         _gpuLabel.Foreground = _categoryBrush;
         _memLabel.Foreground = _categoryBrush;
         _pchName.Foreground = _categoryBrush;
+        _separatorFps.Fill = _separatorBrush;
+        _separatorCpu.Fill = _separatorBrush;
+        _separatorGpu.Fill = _separatorBrush;
+        _separatorMemory.Fill = _separatorBrush;
 
         ApplyCornerRadius(_backgroundBorder);
     }

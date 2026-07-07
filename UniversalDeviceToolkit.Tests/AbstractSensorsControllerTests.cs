@@ -48,6 +48,11 @@ public class AbstractSensorsControllerTests
     {
         private int _temperatureReads;
 
+        // The detailed snapshot path performs real WMI/LibreHardwareMonitor reads that
+        // are not overridden by this mock; under load they can exceed the production 2s
+        // guard. Relax the outer cap so the cache-bypass contract is deterministic.
+        protected override int SensorReadTimeoutSeconds => 60;
+
         public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
         protected override int GetCpuUtilization(int maxUtilization) => 20;
         protected override int GetCpuCoreClock() => 3000;

@@ -54,7 +54,7 @@ public sealed class AmdOverclockingController : IDisposable
             _cpu = new Cpu();
 
             UpdateShutdownStatus();
-            FetchCommands();
+            await FetchCommandsAsync(cancellationToken).ConfigureAwait(false);
 
             _isInitialized = true;
         }
@@ -235,19 +235,26 @@ public sealed class AmdOverclockingController : IDisposable
         }
     }
 
-    public void FetchCommands()
+    public async Task FetchCommandsAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             _classInstance?.Dispose();
-            _classInstance = new ManagementObject(WMI_SCOPE, $"{WMI_AMD_ACPI}.InstanceName='{GetWmiInstanceName()}'", null);
+            // Blocking WMI construction offloaded to the thread pool with a 2500ms timeout
+            // per KNOWLEDGE_BASE.md WMI Timeout Protection rule.
+            _classInstance = await Task.Run(() =>
+                new ManagementObject(WMI_SCOPE, $"{WMI_AMD_ACPI}.InstanceName='{GetWmiInstanceName()}'", null),
+                cancellationToken).WaitAsync(TimeSpan.FromMilliseconds(2500), cancellationToken).ConfigureAwait(false);
 
             var commands = new List<AmdWmiCommand>();
             string[] methods = ["GetObjectID", "GetObjectID2"];
 
             foreach (var method in methods)
             {
-                var pack = WMI.InvokeMethodAndGetValue(_classInstance, method, "pack", null, 0);
+                // ZenStates-Core WMI invoke is synchronous; offload + bound with a 2500ms timeout.
+                var pack = await Task.Run(() =>
+                    WMI.InvokeMethodAndGetValue(_classInstance, method, "pack", null, 0),
+                    cancellationToken).WaitAsync(TimeSpan.FromMilliseconds(2500), cancellationToken).ConfigureAwait(false);
                 if (pack == null) continue;
 
                 if (pack.GetPropertyValue("ID") is uint[] ids &&

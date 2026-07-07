@@ -44,7 +44,7 @@ public class PluginInstallationService
             return false;
         }
 
-        var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
+        var tempDir = Path.Combine(Path.GetTempPath(), "UDTPluginImport", Guid.NewGuid().ToString());
         string? backupDir = null;
         string? targetDir = null;
         string? pluginId = null;

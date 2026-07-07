@@ -6,7 +6,7 @@ using Windows.Win32;
 // ReSharper disable all
 
 Console.WriteLine(@"How to use:
-  1. Make sure Vantage and LLT is closed.
+  1. Make sure Vantage and UDT is closed.
   2. Set the keyboard brightness to maximum.
 
 When ready, press any key to continue...

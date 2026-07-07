@@ -354,11 +354,20 @@
                                     <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CriticalColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                 </custom:CardControl.Header>
                                 <controls:ColorPickerControl
-                                    x:Name="_criticalColorPicker"
+                                   x:Name="_criticalColorPicker"
+                                   HorizontalAlignment="Right"
+                                   ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                           </custom:CardControl>
+                            <custom:CardControl Margin="0,0,0,8" Icon="LineStyle24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_SeparatorColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_separatorColorPicker"
                                     HorizontalAlignment="Right"
                                     ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
                             </custom:CardControl>
-                        </StackPanel>
+                       </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 

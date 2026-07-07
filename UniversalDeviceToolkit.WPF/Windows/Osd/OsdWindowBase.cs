@@ -38,6 +38,7 @@ public abstract class OsdWindowBase : Window
     protected Brush _valueBrush = Brushes.White;
     protected Brush _warningBrush = Brushes.Goldenrod;
     protected Brush _criticalBrush = Brushes.Red;
+    protected Brush _separatorBrush = Brushes.Gray;
 
     #endregion
 
@@ -358,6 +359,7 @@ public abstract class OsdWindowBase : Window
         _valueBrush = (Brush)converter.ConvertFromString(_OsdSettings.Store.ValueColor)!;
         _warningBrush = (Brush)converter.ConvertFromString(_OsdSettings.Store.WarningColor)!;
         _criticalBrush = (Brush)converter.ConvertFromString(_OsdSettings.Store.CriticalColor)!;
+        _separatorBrush = (Brush)converter.ConvertFromString(_OsdSettings.Store.SeparatorColor)!;
 
         this.SetClickThrough(_OsdSettings.Store.IsLocked);
 

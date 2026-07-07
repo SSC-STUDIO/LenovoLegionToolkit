@@ -8,7 +8,7 @@ namespace LenovoLegionToolkit.Lib.Extensions;
 
 public static class ManagementEventWatcherExtensions
 {
-    public static async Task StartAsyncWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 5000)
+    public static async Task StartAsyncWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 2500)
     {
         var startTask = Task.Run(() => watcher.Start());
         using var cts = new CancellationTokenSource();
@@ -34,6 +34,6 @@ public static class ManagementEventWatcherExtensions
         await startTask.ConfigureAwait(false);
     }
 
-    public static void StartWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 5000) =>
+    public static void StartWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 2500) =>
         StartAsyncWithTimeout(watcher, timeoutMs).GetAwaiter().GetResult();
 }

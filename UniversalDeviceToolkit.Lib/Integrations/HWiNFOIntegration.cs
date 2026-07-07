@@ -14,7 +14,8 @@ public class HWiNFOIntegration(SensorsController sensorController, IntegrationsS
     private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private const string CUSTOM_SENSOR_HIVE = "HKEY_CURRENT_USER";
     private const string CUSTOM_SENSOR_PATH = @"Software\HWiNFO64\Sensors\Custom";
-    private const string CUSTOM_SENSOR_GROUP_NAME = "Lenovo Legion Toolkit";
+    private const string CUSTOM_SENSOR_GROUP_NAME = "Universal Device Toolkit";
+    private const string LEGACY_CUSTOM_SENSOR_GROUP_NAME = "Lenovo Legion Toolkit";
     private const string SENSOR_TYPE_FAN = "Fan";
     private const string SENSOR_TYPE_TEMP = "Temp";
     private const string CPU_FAN_SENSOR_NAME = "CPU Fan";
@@ -118,6 +119,9 @@ public class HWiNFOIntegration(SensorsController sensorController, IntegrationsS
         try
         {
             Registry.Delete(CUSTOM_SENSOR_HIVE, $@"{CUSTOM_SENSOR_PATH}\{CUSTOM_SENSOR_GROUP_NAME}");
+            // Migrated from legacy brand: clean the old HWiNFO sensor group subtree so pre-rename
+            // registry entries do not linger as stale/dead sensors in HWiNFO. Delete is a no-op if absent.
+            Registry.Delete(CUSTOM_SENSOR_HIVE, $@"{CUSTOM_SENSOR_PATH}\{LEGACY_CUSTOM_SENSOR_GROUP_NAME}");
         }
         catch (Exception ex)
         {

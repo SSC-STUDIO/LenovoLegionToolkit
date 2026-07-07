@@ -128,7 +128,8 @@ public partial class OsdSettingsWindow
         _labelColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.LabelColor) ?? Colors.Transparent;
         _valueColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.ValueColor) ?? Colors.Transparent;
         _warningColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.WarningColor) ?? Colors.Transparent;
-        _criticalColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.CriticalColor) ?? Colors.Transparent;
+       _criticalColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.CriticalColor) ?? Colors.Transparent;
+        _separatorColorPicker.SelectedColor = GetColorFromHex(_OsdSettings.Store.SeparatorColor) ?? Colors.Transparent;
 
         _isInitializing = false;
     }
@@ -435,7 +436,8 @@ public partial class OsdSettingsWindow
         _OsdSettings.Store.LabelColor = $"#{_labelColorPicker.SelectedColor.R:X2}{_labelColorPicker.SelectedColor.G:X2}{_labelColorPicker.SelectedColor.B:X2}";
         _OsdSettings.Store.ValueColor = $"#{_valueColorPicker.SelectedColor.R:X2}{_valueColorPicker.SelectedColor.G:X2}{_valueColorPicker.SelectedColor.B:X2}";
         _OsdSettings.Store.WarningColor = $"#{_warningColorPicker.SelectedColor.R:X2}{_warningColorPicker.SelectedColor.G:X2}{_warningColorPicker.SelectedColor.B:X2}";
-        _OsdSettings.Store.CriticalColor = $"#{_criticalColorPicker.SelectedColor.R:X2}{_criticalColorPicker.SelectedColor.G:X2}{_criticalColorPicker.SelectedColor.B:X2}";
+       _OsdSettings.Store.CriticalColor = $"#{_criticalColorPicker.SelectedColor.R:X2}{_criticalColorPicker.SelectedColor.G:X2}{_criticalColorPicker.SelectedColor.B:X2}";
+        _OsdSettings.Store.SeparatorColor = $"#{_separatorColorPicker.SelectedColor.R:X2}{_separatorColorPicker.SelectedColor.G:X2}{_separatorColorPicker.SelectedColor.B:X2}";
 
         _OsdSettings.SynchronizeStore();
         MessagingCenter.Publish(new OsdAppearanceChangedMessage());

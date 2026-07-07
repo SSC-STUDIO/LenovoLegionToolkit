@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,7 +21,7 @@ internal sealed class DebounceDispatcher
             {
                 await Task.Delay(delayMs, token);
                 if (!token.IsCancellationRequested)
-                    Application.Current.Dispatcher.Invoke(action);
+                    _ = Application.Current.Dispatcher.InvokeAsync(action);
             }
             catch (OperationCanceledException)
             {
@@ -44,7 +44,7 @@ internal sealed class DebounceDispatcher
             {
                 await Task.Delay(intervalMs, token);
                 if (!token.IsCancellationRequested)
-                    Application.Current.Dispatcher.Invoke(action);
+                    _ = Application.Current.Dispatcher.InvokeAsync(action);
             }
             catch (OperationCanceledException)
             {

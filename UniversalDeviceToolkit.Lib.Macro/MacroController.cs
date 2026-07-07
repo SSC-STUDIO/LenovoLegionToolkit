@@ -32,6 +32,7 @@ public class MacroController : IDisposable
 
     private readonly HOOKPROC _kbProc;
     private readonly MacroSettings _settings;
+    private readonly IMainThreadDispatcher _mainThreadDispatcher;
 
     private HHOOK _kbHook;
     private bool _disposed;
@@ -41,9 +42,11 @@ public class MacroController : IDisposable
 
     public bool IsEnabled => _settings.Store.IsEnabled;
 
-    public MacroController(MacroSettings settings)
+    public MacroController(MacroSettings settings, IMainThreadDispatcher mainThreadDispatcher)
     {
         _settings = settings;
+
+        _mainThreadDispatcher = mainThreadDispatcher;
 
         _kbProc = LowLevelKeyboardProc;
 
@@ -59,6 +62,13 @@ public class MacroController : IDisposable
     {
         _settings.Store.IsEnabled = enabled;
         _settings.SynchronizeStore();
+
+        // Dynamically start/stop the hook when the macro feature is toggled at
+        // runtime so no global keyboard hook stays installed while disabled.
+        if (enabled)
+            Start();
+        else
+            Stop();
     }
 
     public Dictionary<MacroIdentifier, MacroSequence> GetSequences() => _settings.Store.Sequences;
@@ -73,10 +83,26 @@ public class MacroController : IDisposable
 
     public void Start()
     {
+        // Don't install a global keyboard hook when macros are disabled -- the
+        // callback would call CallNextHookEx for every keystroke for nothing.
+        if (!IsEnabled)
+            return;
+
         if (_kbHook != default)
             return;
 
-        _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
+        // WH_KEYBOARD_LL callbacks are dispatched via the installing thread's
+        // message loop. Installing from a background thread (e.g. the Task.Run
+        // inside App.InitMacroController) leaves the hook with no message pump,
+        // so Windows times out on every keystroke system-wide. Marshal to the UI
+        // thread which pumps messages for the hook's lifetime.
+        _mainThreadDispatcher.Dispatch(() =>
+        {
+            if (_kbHook != default)
+                return;
+
+            _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
+        });
     }
 
     public void Stop()
@@ -84,24 +110,43 @@ public class MacroController : IDisposable
         if (_kbHook == default)
             return;
 
+        // Capture the live hook handle and clear the field BEFORE teardown so a
+        // concurrent Start() cannot re-enter and double-install the hook.
+        var hook = _kbHook;
+        _kbHook = default;
+
+        // Unhook the system-wide WH_KEYBOARD_LL hook FIRST. A throw from the recorder
+        // or player teardown must never leave the hook installed (orphan + duplicate
+        // macro firing on next Start). Each teardown step is isolated and traced (KB #8).
         try
         {
-            // Stop recording if active
+            if (!PInvoke.UnhookWindowsHookEx(hook) && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.UnhookWindowsHookEx returned false (hook may already be invalid).");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.Stop() unhook failed.", ex);
+        }
+
+        try
+        {
             _recorder.StopRecording();
-            
-            // Stop player to cancel any running tasks
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.Stop() recorder teardown failed.", ex);
+        }
+
+        try
+        {
             _player.Stop();
-            
-            // Unhook keyboard hook
-            PInvoke.UnhookWindowsHookEx(_kbHook);
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignore errors during cleanup
-        }
-        finally
-        {
-            _kbHook = default;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.Stop() player teardown failed.", ex);
         }
     }
 

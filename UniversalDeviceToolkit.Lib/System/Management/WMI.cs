@@ -12,6 +12,11 @@ namespace LenovoLegionToolkit.Lib.System.Management;
 
 public static partial class WMI
 {
+    // WMI method invocations (ManagementObject.InvokeMethod) must honor the 2,500ms ceiling
+    // enforced by KNOWNLEDGE_BASE.md "WMI Timeout Protection" rule (#2). Never raise this
+    // above 3,000ms or the caller may stall well past the async contract.
+    private const int WmiInvokeTimeoutMs = 2500;
+
     private static bool IsAccessDenied(ManagementException ex) =>
         ex.ErrorCode == ManagementStatus.AccessDenied
         || ex.Message.Contains("Access denied", StringComparison.OrdinalIgnoreCase)
@@ -147,14 +152,14 @@ public static partial class WMI
 
                 var invokeTask = Task.Run(() => mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions()));
                 using var cts = new CancellationTokenSource();
-                var completedInvoke = await Task.WhenAny(invokeTask, Task.Delay(10000, cts.Token)).ConfigureAwait(false);
+                var completedInvoke = await Task.WhenAny(invokeTask, Task.Delay(WmiInvokeTimeoutMs, cts.Token)).ConfigureAwait(false);
                 if (completedInvoke == invokeTask)
                 {
                     cts.Cancel();
                     return await invokeTask.ConfigureAwait(false);
                 }
 
-                throw new TimeoutException($"WMI method {methodName} invocation timed out after 10000ms.");
+                throw new TimeoutException($"WMI method {methodName} invocation timed out after {WmiInvokeTimeoutMs}ms.");
             }
             catch (ManagementException ex) when (attempt < 2 && IsInvalidObject(ex))
             {

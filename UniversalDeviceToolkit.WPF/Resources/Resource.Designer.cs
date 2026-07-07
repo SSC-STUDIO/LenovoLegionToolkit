@@ -1504,6 +1504,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Hex.
+        /// </summary>
+        public static string Color_Hex {
+            get {
+                return ResourceManager.GetString("Color_Hex", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
         public static string Color_Red {
@@ -10672,6 +10681,14 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string OsdSettings_Appearance_Opacity {
             get {
                 return ResourceManager.GetString("OsdSettings_Appearance_Opacity", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Separator Color.
+        /// </summary>
+        public static string OsdSettings_Appearance_SeparatorColor {
+            get {
+                return ResourceManager.GetString("OsdSettings_Appearance_SeparatorColor", resourceCulture);
             }
         }
         /// <summary>

@@ -38,6 +38,7 @@ public class OsdSettings() : AbstractSettings<OsdSettings.OsdSettingsStore>("osd
         public string ValueColor { get; set; } = "#FFFFFF";
         public string WarningColor { get; set; } = "#FFFF00";
         public string CriticalColor { get; set; } = "#FF0000";
+        public string SeparatorColor { get; set; } = "#555555";
         public int SnapThreshold { get; set; } = 20;
     }
 

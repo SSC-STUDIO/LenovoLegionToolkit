@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1471,7 +1471,7 @@ internal static partial class Program
                   {
                     "id": "shell-integration",
                     "name": "Shell Integration",
-                    "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+                    "description": "Integrate Universal Device Toolkit with Windows shell context menu",
                     "author": "SSC-STUDIO",
                     "version": "1.0.11",
                     "minLLTVersion": "3.6.1",
@@ -1712,9 +1712,9 @@ internal static partial class Program
             Directory.CreateDirectory(outputRoot);
             WriteResult(outputRoot, appDataDirectory, process, process?.HasExited == true ? process.ExitCode : null, ex.ToString());
         }
-        catch (Exception ex)
+        catch (Exception innerEx)
         {
-            Debug.WriteLine($"[visual-smoke] WriteResult failed during crash handling: {ex.Message}");
+            Debug.WriteLine($"[visual-smoke] WriteResult failed during crash handling: {innerEx.Message}");
         }
     }
 

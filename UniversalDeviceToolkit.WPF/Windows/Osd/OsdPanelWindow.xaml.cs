@@ -135,6 +135,9 @@ public partial class OsdPanelWindow : OsdWindowBase
         _gpuHeader.Foreground = _categoryBrush;
         _memHeader.Foreground = _categoryBrush;
         _pchHeader.Foreground = _categoryBrush;
+        _separatorCpu.Background = _separatorBrush;
+        _separatorGpu.Background = _separatorBrush;
+        _separatorMemory.Background = _separatorBrush;
 
         ApplyCornerRadius(_rootBorder);
     }

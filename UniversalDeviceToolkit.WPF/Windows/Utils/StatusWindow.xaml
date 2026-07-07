@@ -197,7 +197,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#FF8BC34A" />
+                    Fill="{DynamicResource StatusSuccessBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -218,7 +218,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#F2A541" />
+                    Fill="{DynamicResource StatusWarningBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
@@ -239,7 +239,7 @@
                     Width="12"
                     Height="12"
                     Margin="0,0,0,2"
-                    Fill="#BF360C" />
+                    Fill="{DynamicResource StatusCriticalBrush}" />
                 <Label
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"

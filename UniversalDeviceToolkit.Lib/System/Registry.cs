@@ -130,9 +130,14 @@ public static class Registry
 
         return new LambdaDisposable(() =>
         {
-            cancellationTokenSource.Cancel();
-            try { task.Wait(1000); } catch { }
-            cancellationTokenSource.Dispose();
+           cancellationTokenSource.Cancel();
+            try { task.Wait(1000); }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Win32 registry listener dispose wait failed.", ex);
+            }
+           cancellationTokenSource.Dispose();
         });
     }
 

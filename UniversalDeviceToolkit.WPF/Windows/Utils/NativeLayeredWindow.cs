@@ -113,10 +113,10 @@ public class NativeLayeredWindow : NativeWindow, IDisposable
                                         WINDOW_EX_STYLE.WS_EX_LAYERED |
                                         WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
                                         WINDOW_EX_STYLE.WS_EX_TRANSPARENT;
-        CreateParams cp = new()
-        {
-            Caption = "LenovoLegionToolkit-NativeLayeredWindow",
-            X = Position.X,
+       CreateParams cp = new()
+       {
+            Caption = "UniversalDeviceToolkit-NativeLayeredWindow",
+           X = Position.X,
             Y = Position.Y,
             Height = Size.Height,
             Width = Size.Width,

@@ -453,7 +453,7 @@ public class PluginManifestTests
             .WithVersion("1.0.0")
             .WithMinimumHostVersion("2.14.0")
             .WithDownloadUrl("https://example.com/custom-mouse.zip")
-            .WithAuthor("LLT Team")
+            .WithAuthor("UDT Team")
             .AsSystemPlugin()
             .WithFileSize(2048)
             .WithTags("utility", "customization")
@@ -467,7 +467,7 @@ public class PluginManifestTests
         manifest.Version.Should().Be("1.0.0");
         manifest.MinimumHostVersion.Should().Be("2.14.0");
         manifest.DownloadUrl.Should().Be("https://example.com/custom-mouse.zip");
-        manifest.Author.Should().Be("LLT Team");
+        manifest.Author.Should().Be("UDT Team");
         manifest.IsSystemPlugin.Should().BeTrue();
         manifest.FileSize.Should().Be(2048);
         manifest.Tags.Should().Contain("utility");
@@ -508,7 +508,7 @@ public class PluginMetadataTests
             .AsSystemPlugin()
             .WithVersion("1.0.0")
             .WithMinimumHostVersion("2.14.0")
-            .WithAuthor("LLT Team")
+            .WithAuthor("UDT Team")
             .WithDependencies("dep1", "dep2")
             .WithFilePath("C:\\plugins\\shell-integration\\dll")
             .Build();
@@ -523,7 +523,7 @@ public class PluginMetadataTests
         metadata.IsSystemPlugin.Should().BeTrue();
         metadata.Version.Should().Be("1.0.0");
         metadata.MinimumHostVersion.Should().Be("2.14.0");
-        metadata.Author.Should().Be("LLT Team");
+        metadata.Author.Should().Be("UDT Team");
         metadata.Dependencies.Should().HaveCount(2);
         metadata.FilePath.Should().Be("C:\\plugins\\shell-integration\\dll");
         metadata.WpfUiVersion.Should().Be("2.1.0.0");
