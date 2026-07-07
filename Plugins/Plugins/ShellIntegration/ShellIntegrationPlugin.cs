@@ -303,7 +303,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             _configService.ResetProfile();
-            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
+            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -317,7 +317,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         try
         {
             _configService.ApplyPreset(preset);
-            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
+            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -354,7 +354,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
                 return false;
             }
 
-            return SyncManagedConfigurationAsync().GetAwaiter().GetResult();
+            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {

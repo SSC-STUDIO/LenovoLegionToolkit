@@ -38,7 +38,7 @@ public static class WpfHostNotifications
             if (SnackbarTypeType is not null)
             {
                 try { SnackbarTypeErrorValue = Enum.Parse(SnackbarTypeType, "Error"); }
-                catch { /* ignore */ }
+                catch (Exception ex) { PluginLog.Trace($"Failed to parse SnackbarType.Error: {ex.Message}"); }
             }
         }
 
@@ -64,7 +64,7 @@ public static class WpfHostNotifications
             foreach (var name in wpfAssemblyNames)
             {
                 try { return Assembly.Load(new AssemblyName(name)); }
-                catch { /* try next */ }
+                catch (Exception ex) { PluginLog.Trace($"Failed to load assembly '{name}': {ex.Message}"); }
             }
 
             return null;
@@ -124,9 +124,9 @@ public static class WpfHostNotifications
                 return true;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Reflection call failed — caller will use fallback
+            PluginLog.Trace($"Reflection call to SnackbarHelper.Show failed: {ex.Message}");
         }
 
         return false;
@@ -151,9 +151,9 @@ public static class WpfHostNotifications
                     return result;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall through to fallback
+                PluginLog.Trace($"Reflection call to MessageBoxHelper.ShowAsync failed: {ex.Message}");
             }
         }
 
@@ -180,9 +180,9 @@ public static class WpfHostNotifications
                     return result;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall through to fallback
+                PluginLog.Trace($"Reflection call to MessageBoxHelper.ShowAsync failed: {ex.Message}");
             }
         }
 
