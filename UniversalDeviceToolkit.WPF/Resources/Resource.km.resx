@@ -3226,6 +3226,9 @@
   </data>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve"><value>ភាពស្រអាប់</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve"><value>ពណ៌តម្លៃ</value>
   </data>
   <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve"><value>ពណ៌ការព្រមាន</value>

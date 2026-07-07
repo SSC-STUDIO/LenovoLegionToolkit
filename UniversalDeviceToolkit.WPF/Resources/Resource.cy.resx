@@ -1592,6 +1592,9 @@ Ni fydd yn effeithio ar ffenestri sgrin lawn eraill, ond ni fyddwch yn gallu cli
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>Tryloywder</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Lliw Gwerth</value>
   </data>

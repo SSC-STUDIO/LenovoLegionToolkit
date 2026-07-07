@@ -472,7 +472,7 @@ ESLETPE: Eger ishki displey óshirilgen bolsa, bul háreket durıs islemeydi.</v
     <value>Fn+R túymelerin qollanǵanda, esapqa alıw kerek emes bolǵan jańalanıw tezliklerinen belgini alıp taslań.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Noutbuk displeyi qosılǵanına isenim kámil etiń. Lenovo Legion Toolkit qosılmaǵan displey ushın jańalanıw tezligin júkley almaydı.</value>
+    <value>Noutbuk displeyi qosılǵanına isenim kámil etiń. Universal Device Toolkit qosılmaǵan displey ushın jańalanıw tezligin júkley almaydı.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
     <value>Jańalanıw tezligi anıqlanbadı</value>
@@ -3689,6 +3689,9 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   </data>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>Shaffoflik</value>
+  </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Qiymat rangi</value>

@@ -325,6 +325,9 @@
   <data name="Color_Green" xml:space="preserve">
     <value>緑</value>
   </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>16進数</value>
+  </data>
   <data name="Color_Red" xml:space="preserve">
     <value>赤</value>
   </data>
@@ -3689,6 +3692,9 @@
   </data>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>不透明度</value>
+  </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>値の色</value>

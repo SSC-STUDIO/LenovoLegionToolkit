@@ -3661,6 +3661,9 @@
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>透明度</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>数值颜色</value>
   </data>

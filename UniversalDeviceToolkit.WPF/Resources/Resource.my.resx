@@ -3736,6 +3736,9 @@ Mode ပြောင်းလဲခြင်းသည် ပြန်ဖွင�
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>ထိတွေ့မှု</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>တန်ဖိုးအရောင်</value>
   </data>

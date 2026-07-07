@@ -1371,6 +1371,9 @@
   <data name="OsdSettings_Appearance_FontSize" xml:space="preserve"><value>შრიფტის ზომა</value></data>
   <data name="OsdSettings_Appearance_LabelColor" xml:space="preserve"><value>ეტიკეტის ფერი</value></data>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve"><value>გამჭვირვალობა</value></data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve"><value>მნიშვნელობის ფერი</value></data>
   <data name="OsdSettings_Appearance_WarningColor" xml:space="preserve"><value>გაფრთხილების ფერი</value></data>
   <data name="OsdSettings_General_LockPosition" xml:space="preserve"><value>პოზიციის ბლოკირება</value></data>

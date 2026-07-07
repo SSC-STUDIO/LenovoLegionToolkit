@@ -3726,6 +3726,9 @@
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>ความทึบ</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>สีค่า</value>
   </data>

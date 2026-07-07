@@ -3582,6 +3582,9 @@ Zahtijeva ponovno pokretanje.</value>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>Neprozirnost</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Boja vrijednosti</value>
   </data>

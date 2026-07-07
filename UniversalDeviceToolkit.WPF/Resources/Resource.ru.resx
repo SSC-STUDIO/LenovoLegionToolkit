@@ -328,6 +328,9 @@
   <data name="Color_Green" xml:space="preserve">
     <value>Зеленый</value>
   </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>HEX</value>
+  </data>
   <data name="Color_Red" xml:space="preserve">
     <value>Красный</value>
   </data>
@@ -3637,6 +3640,9 @@
   </data>
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>Прозрачность</value>
+  </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Цвет значения</value>

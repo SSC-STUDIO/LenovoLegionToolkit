@@ -3696,6 +3696,9 @@ dGPU සම්පූර්ණයෙන් ප්‍රතිචාර නොද�
   <data name="OsdSettings_Appearance_Opacity" xml:space="preserve">
     <value>පාරභාණ්ඩය</value>
   </data>
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>අගය වර්ණය</value>
   </data>

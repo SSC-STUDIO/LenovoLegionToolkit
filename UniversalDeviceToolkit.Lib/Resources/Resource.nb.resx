@@ -992,4 +992,7 @@
     <value>Please wait for the current optimization to finish.</value>
   </data>
 
+  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
+    <value>Separator Color</value>
+  </data>
 </root>
