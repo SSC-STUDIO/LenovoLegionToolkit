@@ -397,4 +397,18 @@ milestone post.
 
 ---
 
+
+## Article drafts (ready to publish)
+
+| Platform | File | Status |
+|----------|------|--------|
+| Dev.to | `Docs/ARTICLES/devto_article.md` | Draft ready (~1800 words EN) |
+| Juejin | `Docs/ARTICLES/juejin_article.md` | Draft ready (~1200 words CN) |
+| Reddit r/dotnet | `Docs/ARTICLES/reddit_rdotnet_post.md` | Draft ready |
+| V2EX | `Docs/ARTICLES/v2ex_post.md` | Draft ready |
+
+All articles reference `Assets/Screenshot_main.png` as cover/attachment.
+
+---
+
 Last updated: 2026-07-07  Stars today: 18 (verified via GitHub API)  Goal: 1,000
