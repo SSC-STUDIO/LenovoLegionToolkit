@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added retry-with-backoff to `SaveSettingsAsync()` to handle transient file contention during parallel test execution
+
 ﻿# Network Acceleration Plugin Changelog
 
 All notable changes to this plugin will be documented in this file.

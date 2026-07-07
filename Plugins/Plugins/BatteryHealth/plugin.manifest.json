@@ -1,13 +1,13 @@
-{
+﻿{
   "schemaVersion": 1,
   "id": "battery-health",
   "name": "Battery Health",
   "version": "1.0.0",
-  "minHostVersion": "3.6.15",
-  "author": "EliuaK_Csy",
+  "minHostVersion": "4.2.1",
+  "author": "SSC-STUDIO",
   "isSystemPlugin": false,
-  "repository": "",
-  "issues": "",
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
@@ -30,15 +30,51 @@
     ]
   },
   "store": {
-    "description": "Battery Health plugin for Lenovo Legion Toolkit",
-    "icon": "PuzzlePiece24",
-    "iconBackground": "#FFF1E2",
-    "tags": [],
+    "description": "Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit.",
+    "icon": "BatteryCharge24",
+    "iconBackground": "#16A34A",
+    "tags": [
+      "battery",
+      "health",
+      "monitoring",
+      "diagnostics",
+      "power"
+    ],
     "dependencies": [],
     "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
       "en",
-      "zh-Hans"
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
     ],
-    "repositoryUrl": null
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   }
 }

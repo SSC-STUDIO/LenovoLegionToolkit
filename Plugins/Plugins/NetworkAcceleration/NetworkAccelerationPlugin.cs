@@ -11,7 +11,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 [Plugin(
     id: "network-acceleration",
     name: "Network Acceleration",
-    version: "1.1.9",
+    version: "1.2.0",
     description: "Real-time network acceleration and optimization features",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -85,7 +85,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         }
 
         if (autoOptimize)
+        {
             RunBackgroundTask(nameof(OnAppStarted), () => RunQuickOptimizationAsync(GetRuntimeCancellationToken()));
+        }
     }
 
     public override void OnShutdown()
@@ -157,10 +159,14 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         };
 
         if (settings.ResetWinsockOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Gaming)
+        {
             steps.Add(new("ResetWinsock", "netsh.exe", "winsock reset", settings.ResetWinsockOnOptimize));
+        }
 
         if (settings.ResetTcpIpOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Streaming)
+        {
             steps.Add(new("ResetTcpIp", "netsh.exe", "int ip reset", settings.ResetTcpIpOnOptimize));
+        }
 
         return new NetworkOptimizationPlan(settings.PreferredMode, steps);
     }
@@ -176,7 +182,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         {
             var result = await RunCommandAsync(step.ExecutableName, step.Arguments, cancellationToken).ConfigureAwait(false);
             if (!result)
+            {
                 return false;
+            }
         }
 
         return true;
@@ -196,16 +204,28 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public async Task SaveSettingsAsync()
     {
-        NetworkAccelerationSettings settingsToPersist;
-        lock (_settingsLock)
+        const int maxRetries = 3;
+        for (int attempt = 0; attempt < maxRetries; attempt++)
         {
-            settingsToPersist = _settings.Clone();
+            try
+            {
+                NetworkAccelerationSettings settingsToPersist;
+                lock (_settingsLock)
+                {
+                    settingsToPersist = _settings.Clone();
+                }
+                Configuration.SetValue(nameof(NetworkAccelerationSettings.PreferredMode), settingsToPersist.PreferredMode.ToString());
+                Configuration.SetValue(nameof(NetworkAccelerationSettings.AutoOptimizeOnStartup), settingsToPersist.AutoOptimizeOnStartup);
+                Configuration.SetValue(nameof(NetworkAccelerationSettings.ResetWinsockOnOptimize), settingsToPersist.ResetWinsockOnOptimize);
+                Configuration.SetValue(nameof(NetworkAccelerationSettings.ResetTcpIpOnOptimize), settingsToPersist.ResetTcpIpOnOptimize);
+                await Configuration.SaveAsync().ConfigureAwait(false);
+                return;
+            }
+            catch (IOException) when (attempt < maxRetries - 1)
+            {
+                await Task.Delay(50 * (attempt + 1)).ConfigureAwait(false);
+            }
         }
-        Configuration.SetValue(nameof(NetworkAccelerationSettings.PreferredMode), settingsToPersist.PreferredMode.ToString());
-        Configuration.SetValue(nameof(NetworkAccelerationSettings.AutoOptimizeOnStartup), settingsToPersist.AutoOptimizeOnStartup);
-        Configuration.SetValue(nameof(NetworkAccelerationSettings.ResetWinsockOnOptimize), settingsToPersist.ResetWinsockOnOptimize);
-        Configuration.SetValue(nameof(NetworkAccelerationSettings.ResetTcpIpOnOptimize), settingsToPersist.ResetTcpIpOnOptimize);
-        await Configuration.SaveAsync().ConfigureAwait(false);
     }
 
     public async Task ApplySettingsAsync(NetworkAccelerationSettings settings)
@@ -223,7 +243,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     {
         var modeRaw = Configuration.GetValue(nameof(NetworkAccelerationSettings.PreferredMode), NetworkAccelerationMode.Balanced.ToString());
         if (!Enum.TryParse(modeRaw, true, out NetworkAccelerationMode mode))
+        {
             mode = NetworkAccelerationMode.Balanced;
+        }
 
         return new NetworkAccelerationSettings
         {
@@ -261,7 +283,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     private static string? ResolveTrustedSystemExecutablePath(string executableName)
     {
         if (string.IsNullOrWhiteSpace(executableName))
+        {
             return null;
+        }
 
         var normalizedName = executableName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
             ? executableName
@@ -269,7 +293,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
         var systemDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
         if (string.IsNullOrWhiteSpace(systemDirectory))
+        {
             return null;
+        }
 
         var candidate = Path.Combine(systemDirectory, normalizedName);
         return File.Exists(candidate) ? candidate : null;
