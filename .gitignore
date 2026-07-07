@@ -654,3 +654,5 @@ output/
 .backup_async_fix/
 .cursor/
 *.tmp
+
+*.zip
