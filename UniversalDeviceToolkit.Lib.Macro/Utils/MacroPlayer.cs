@@ -60,7 +60,9 @@ internal class MacroPlayer
             // Expected when playback is cancelled, no action needed
         }
 
+        var oldCts = _cancellationTokenSource;
         _cancellationTokenSource = new();
+        try { oldCts?.Dispose(); } catch { }
         var token = _cancellationTokenSource.Token;
 
         _playTask = Task.Run(async () =>

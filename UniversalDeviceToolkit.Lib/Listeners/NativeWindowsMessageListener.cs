@@ -93,7 +93,20 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
     {
         try
         {
-            PInvoke.UnhookWindowsHookEx(_kbHook);
+        var kbHookLocal = _kbHook;
+        var deviceNotifLocal = _deviceNotificationHandle;
+        var consoleDisplayLocal = _consoleDisplayStateNotificationHandle;
+        var lidSwitchLocal = _lidSwitchStateChangeNotificationHandle;
+        var powerSavingLocal = _powerSavingStateChangeNotificationHandle;
+        _kbHook = default;
+        _deviceNotificationHandle = default;
+        _consoleDisplayStateNotificationHandle = default;
+        _lidSwitchStateChangeNotificationHandle = default;
+        _powerSavingStateChangeNotificationHandle = default;
+
+        try
+        {
+            PInvoke.UnhookWindowsHookEx(kbHookLocal);
         }
         catch (Exception ex)
         {
@@ -102,7 +115,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         try
         {
-            PInvoke.UnregisterDeviceNotification(_deviceNotificationHandle);
+            PInvoke.UnregisterDeviceNotification(deviceNotifLocal);
         }
         catch (Exception ex)
         {
@@ -111,7 +124,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         try
         {
-            PInvoke.UnregisterPowerSettingNotification(_consoleDisplayStateNotificationHandle);
+            PInvoke.UnregisterPowerSettingNotification(consoleDisplayLocal);
         }
         catch (Exception ex)
         {
@@ -120,7 +133,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         try
         {
-            PInvoke.UnregisterPowerSettingNotification(_lidSwitchStateChangeNotificationHandle);
+            PInvoke.UnregisterPowerSettingNotification(lidSwitchLocal);
         }
         catch (Exception ex)
         {
@@ -129,18 +142,12 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         try
         {
-            PInvoke.UnregisterPowerSettingNotification(_powerSavingStateChangeNotificationHandle);
+            PInvoke.UnregisterPowerSettingNotification(powerSavingLocal);
         }
         catch (Exception ex)
         {
             Log.Instance.Warning($"Failed to unregister power saving state notification: {ex.Message}", ex);
         }
-
-        _kbHook = default;
-        _deviceNotificationHandle = default;
-        _consoleDisplayStateNotificationHandle = default;
-        _lidSwitchStateChangeNotificationHandle = default;
-        _powerSavingStateChangeNotificationHandle = default;
 
         try
         {

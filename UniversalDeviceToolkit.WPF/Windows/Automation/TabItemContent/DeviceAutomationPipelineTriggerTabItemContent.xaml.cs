@@ -81,7 +81,9 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             if (_filterDebounceCancellationTokenSource is not null)
                 await _filterDebounceCancellationTokenSource.CancelAsync();
 
+            var oldCts = _filterDebounceCancellationTokenSource;
             _filterDebounceCancellationTokenSource = new();
+            try { oldCts?.Dispose(); } catch { }
 
             await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
 

@@ -437,7 +437,9 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             if (_refreshStateCancellationTokenSource is not null)
                 await _refreshStateCancellationTokenSource.CancelAsync();
 
+            var oldCts = _refreshStateCancellationTokenSource;
             _refreshStateCancellationTokenSource = new();
+            try { oldCts?.Dispose(); } catch { }
 
             _refreshStateTask = RefreshStateAsync(_refreshStateCancellationTokenSource.Token);
         }
@@ -450,7 +452,9 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
             if (_refreshStateCancellationTokenSource is not null)
                 await _refreshStateCancellationTokenSource.CancelAsync();
 
+            var oldCts = _refreshStateCancellationTokenSource;
             _refreshStateCancellationTokenSource = new();
+            try { oldCts?.Dispose(); } catch { }
 
             if (_refreshStateTask is not null)
                 await _refreshStateTask;

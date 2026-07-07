@@ -54,11 +54,13 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
 
         public void Dispose()
         {
-            PInvoke.UnhookWindowsHookEx(_kbHook);
-            PInvoke.UnhookWindowsHookEx(_mouseHook);
-
+            var kbHookLocal = _kbHook;
+            var mouseHookLocal = _mouseHook;
             _kbHook = HHOOK.Null;
             _mouseHook = HHOOK.Null;
+
+            PInvoke.UnhookWindowsHookEx(kbHookLocal);
+            PInvoke.UnhookWindowsHookEx(mouseHookLocal);
 
             ReleaseHandle();
 

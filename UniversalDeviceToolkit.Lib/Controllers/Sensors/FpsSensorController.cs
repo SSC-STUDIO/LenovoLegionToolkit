@@ -72,7 +72,9 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
             if (_isRunning) return Task.CompletedTask;
 
             _isRunning = true;
+            var oldCts = _cancellationTokenSource;
             _cancellationTokenSource = new CancellationTokenSource();
+            try { oldCts?.Dispose(); } catch { }
 
             _ = Task.Run(async () =>
             {

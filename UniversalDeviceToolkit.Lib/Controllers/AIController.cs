@@ -299,7 +299,7 @@ public class AIController(
                     if (powerStateListener is not null)
                         powerStateListener.Changed -= PowerStateListener_Changed;
                     if (gameAutoListener is not null)
-                        gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed).GetAwaiter().GetResult();
+                        Task.Run(async () => await gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed)).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {

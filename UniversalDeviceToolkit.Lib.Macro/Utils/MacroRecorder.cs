@@ -84,9 +84,14 @@ internal class MacroRecorder
                 Log.Instance.Trace($"Failed to unsubscribe from SystemEvents.SessionSwitch: {ex.Message}", ex);
         }
 
+        var kbHookLocal = _kbHook;
+        var mouseHookLocal = _mouseHook;
+        _kbHook = default;
+        _mouseHook = default;
+
         try
         {
-            PInvoke.UnhookWindowsHookEx(_kbHook);
+            PInvoke.UnhookWindowsHookEx(kbHookLocal);
         }
         catch (Exception ex)
         {
@@ -96,16 +101,13 @@ internal class MacroRecorder
 
         try
         {
-            PInvoke.UnhookWindowsHookEx(_mouseHook);
+            PInvoke.UnhookWindowsHookEx(mouseHookLocal);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to unhook mouse hook: {ex.Message}", ex);
         }
-
-        _kbHook = default;
-        _mouseHook = default;
 
         _interrupted = false;
         _timeFromLastEvent = TimeSpan.Zero;
