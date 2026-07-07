@@ -1,27 +1,50 @@
-# UDT and OpenAI programs -- honest take (2026-07-06)
+# UDT and OpenAI programs -- honest take (2026-07-07)
 
 This doc keeps us honest about the "OpenAI Pro 20x" part of the goal and gives a
 ready application to reuse against any real credits/maintainer program.
 
 ## TL;DR
 
-There is no OpenAI program named "Pro 20x", and no GitHub-star threshold unlocks
-any OpenAI tier. "Reach N stars, get free OpenAI Pro" is internet folklore; we
-could not verify a real program matching that description. Be honest about this
-externally -- overstating a rumor would hurt UDT's credibility.
+ChatGPT Pro is a real OpenAI tier (verified 2026-07-07 on chatgpt.com/pricing,
+screenshot at `Docs/_verify_chatgpt_pricing.png`: **Pro starts at US$100/mo**,
+marketed as "best for research and coding" and explicitly lists
+"5x or 20x usage quota" -- so "Pro 20x" is a real, on-page phrase on the Pro
+tier, not a separate grant program and not folklore). No GitHub-star threshold
+unlocks any OpenAI tier: "reach N stars, get free OpenAI Pro" is folklore.
+Free / no-cost access to Pro-tier benefits or to Azure OpenAI comes only
+through the real application programs in the next section (e.g. Microsoft for
+Startups Founders Hub -> Azure OpenAI credits; OpenAI for Startups Converge
+when a cohort is open). State UDT's case there factually; do not repeat an
+unverified "1k stars = Pro" claim externally -- that would hurt UDT's
+credibility. To *use* Pro features without paying, you still have to apply
+through a real program; nothing in the verified Pro pricing auto-grants seats
+for repo traction.
 
-## What OpenAI's tiers actually are (verify on openai.com/pricing before quoting)
+## What OpenAI's tiers actually are (verified 2026-07-07)
 
-- ChatGPT tiers: Free / Plus / Pro / Team / Business / Enterprise.
-- "Pro" is the roughly $200/mo plan. **No tier named "20x" exists in OpenAI's
-  public pricing.**
-- API access is pay-as-you-go, separate from a ChatGPT subscription.
+Verified 2026-07-07 on chatgpt.com/pricing (CN locale; en-US prices shown in
+parallel). Tiers, in pricing-page order:
 
-So the phrase "OpenAI Pro 20x" most likely means one of:
+- Free -- US$0/mo. Limited GPT-5.5 Instant messages/uploads, throttled image
+  gen, limited Deep Research, limited memory/context, limited Codex.
+- Go -- US$8/mo. "Best for long conversations"; more Instant usage, higher
+  message/file caps, longer memory. May include ads.
+- Plus -- US$20/mo. "Best for advanced work"; adds GPT-5.5 Thinking reasoning,
+  deeper image gen, larger Deep Research / agent quotas, more Codex.
+- **Pro -- starts at US$100/mo. "Best for research and coding".** Headline
+  bullet on the tier card is "5x or 20x usage quota" (vs Plus), plus Pro-only
+  GPT-5.5 Pro reasoning, max Codex tasks, unlimited GPT-5.3 and file uploads,
+  unlimited/fastest image gen, max Deep Research / agent / memory / context,
+  and a research-preview track for new features. Subject to anti-abuse limits.
+- Business -- US$20 per user/month on annual (2+ users), US$25 monthly.
+- Enterprise -- contact sales.
 
-- a misremembering of ChatGPT Pro ($200 is roughly a multiple of the $20 Plus plan),
-- a rumored future tier -- treat as rumor until openai.com announces it,
-- a hoped-for "20x rate-limit" product -- not a named SKU today.
+API access is pay-as-you-go, separate from a ChatGPT subscription.
+
+So "OpenAI Pro 20x" is, on the page, the Pro tier's "5x or 20x usage quota"
+headline. It is **not** a grant program, it is **not** unlocked by GitHub stars,
+and it costs at least US$100/mo out of pocket or comes bundled with an
+enterprise/startup-program award.
 
 ## Realistic channels for OpenAI access or credits
 
@@ -155,3 +178,4 @@ Microsoft for Startups Founders Hub -> Azure OpenAI is the highest-probability
 real route to OpenAI access.
 
 Last updated: 2026-07-07
+

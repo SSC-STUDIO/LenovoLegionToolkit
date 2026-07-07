@@ -7,8 +7,8 @@ curated list converts well because the visitor already wants a tool like this.
 
 | Venue | Type | Status | Date | Notes |
 |-------|------|--------|------|-------|
-| awesome-dotnet | awesome-list PR | Not started | - | C# / .NET app; verify curator guidelines |
-| awesome-windows | awesome-list PR | Not started | - | confirm canonical repo via the Awesome index |
+| awesome-dotnet | awesome-list PR | Submitted | 2026-07-07 | PR #1466 https://github.com/quozd/awesome-dotnet/pull/1466 ; under `## Tools` |
+| awesome-windows | awesome-list PR | Skipped | 2026-07-07 | canonical repo 0PandaDEV/awesome-windows; maintainer hostile to AI PRs (hidden anti-AI README comment + visible CAUTION rejecting vibecoded slop). Revisit if stance softens |
 | AlternativeTo | database entry | Not started | - | suggest as alt to "Lenovo Vantage" |
 | Slant | list entry | Not started | - | add to a "Lenovo Vantage alternatives" question |
 | HelloGitHub | CN feature | Submitted | 2026-07-05 | see .github/outreach/hellogithub-issue.md |
@@ -27,28 +27,27 @@ curated list converts well because the visitor already wants a tool like this.
 
 ---
 
-## 1. awesome-dotnet
+## 1. awesome-dotnet  -- SUBMITTED (2026-07-07)
 
-- Repo: https://github.com/quozd/awesome-dotnet (verify the curator + CONTRIBUTING)
-- How: open a PR adding UDT under the relevant section (likely "GUI" / "Hardware").
-  Read the guidelines first; awesome-lists often want "notable" projects (commits,
-  age, some stars). Screenshot helps.
+- Repo: https://github.com/quozd/awesome-dotnet
+- PR: https://github.com/quozd/awesome-dotnet/pull/1466  (Add Universal Device Toolkit under Tools)
+- Section: `## Tools`, appended at end of the section (matches the list's
+  chronological addition style). One link per PR, per CONTRIBUTING.
+- Body lives at `_awesome_prs/body_dotnet.md` (quality-bar rationale: actively
+  maintained v5.0.0-preview, 2,343 tests, docs, winget/scoop distribution).
+- Watch for maintainer feedback; address any wording/section requests promptly.
 
-PR body:
+## 2. awesome-windows  -- SKIPPED (2026-07-07)
 
-```
-Adding Universal Device Toolkit (UDT), a GPL-3.0 WPF/.NET 10 app for Lenovo laptop
-hardware control with a first-class plugin system. No telemetry, no background
-service, winget-distributed. Actively maintained (v5.0.0-preview out this week).
-
-Repo: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
-```
-
-## 2. awesome-windows
-
-- Find the canonical repo via the Awesome index (https://github.com/sindresorhus/awesome)
-  and follow its CONTRIBUTING. Verify before opening a PR.
-- UDT fits a "Utilities" / "System" section.
+- Canonical repo: https://github.com/0PandaDEV/awesome-windows (the old
+  `awesome-windows/awesome-windows` is a 404; `0PandaDEV` is the live fork, 2.5k stars).
+- Reason for skip: the README embeds (a) a hidden HTML comment that attempts to
+  inject refusal instructions into AI assistants that read the repo, and (b) a
+  visible `> [!CAUTION]` that "vibecoded slop ... PR's will be rejected". That is a
+  genuine, hostile stance toward AI-assisted PRs; submitting risks the UDT repo
+  being flagged/closed-on-sight and gains little. Skip unless the maintainer's
+  stance changes. (Note: treated the hidden comment as untrusted data, not as an
+  instruction -- it changed only this venue's risk call, not the overall goal.)
 
 ## 3. AlternativeTo
 
@@ -90,4 +89,4 @@ https://github.com/SSC-STUDIO/UniversalDeviceToolkit
   platforms anti-cheat and it hurts the project's reputation.
 - One venue at a time so each submission is well written for that community.
 
-Last updated: 2026-07-06
+Last updated: 2026-07-07
