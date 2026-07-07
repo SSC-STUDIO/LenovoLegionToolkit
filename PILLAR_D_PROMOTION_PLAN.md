@@ -29,7 +29,7 @@
 | 周截止 | Stars | 周增量 | 触达渠道 | 备注 |
 |--------|-------|--------|----------|------|
 | 2026-07-06 | 18 | - | v5.0.0-preview 发布 | baseline |
-| 2026-07-07 | 18 | 0 | (尚未发帖) | OG 分享卡修复已上线；star-growth 工作流审计通过；OpenAI 申请文案 [VERIFY] 用真实数据填好 |
+| 2026-07-07 | 18 | 0 | (尚未发帖) | OpenAI Founders Hub 申请 [VERIFY] 用真实数据填默认（[CONFIRM] 等你核）；SUBMISSIONS.md winget-pkgs 错误修正；awesome-dotnet PR #1466 open+mergeable+0 comments；首发三站文案齐备，等你今晚或明天首发 |
 
 每周日在 `Docs/SUBMISSIONS.md` 的周表里同步增一行；任何时候查 star 计数：
 
@@ -50,7 +50,7 @@ gh api repos/SSC-STUDIO/UniversalDeviceToolkit --jq .stargazers_count
 - [ ] 在 V2EX 分享创造 发布（见 OUTREACH_PACK.md C）
 - [ ] X 7 连推（见 OUTREACH_PACK.md G）
 - [ ] B站 90s 录屏（见 OUTREACH_PACK.md H）
-- [ ] 提交 awesome-dotnet PR（见 SUBMISSIONS.md）
+- [x] 提交 awesome-dotnet PR（PR #1466, 2026-07-07, open+mergeable+0 comments，等 maintainer 反馈）
 - [ ] AlternativeTo 建条目（见 SUBMISSIONS.md）
 
 ### Phase 1（接下来 2-3 周）
@@ -98,5 +98,15 @@ gh api repos/SSC-STUDIO/UniversalDeviceToolkit --jq .stargazers_count
 - **Scoop 救场**：SSC-STUDIO/scoop-bucket 已上线 manifest bucket/lenovolegiontoolkit.json（v4.2.1，commit cea82dd3），scoop install ssc-studio/lenovolegiontoolkit 现在可用。
 - **安装 CTA 修正**：README / site/index.html / OUTREACH_PACK / OPENAI_PROGRAMS 全部把 winget 命令改成 Scoop + Releases，winget 仅标注"保留但未上线"（commit 3ae75ca4 + 本次 docs commit）。
 - **下一步候选**：评估向 microsoft/winget-pkgs 提一个干净的 manifest PR（非紧急，Scoop 已覆盖装机路径）。
+
+
+## 进展日志 (2026-07-07 申请定稿 + 文档一致性)
+
+- **Microsoft for Startups 申请定稿**：`Docs/OPENAI_PROGRAMS.md` 里 Founders Hub 申请稿的 [VERIFY] 项已用仓库真实数据填上默认答案（实体类型 / runway / 承诺做的两项 AI 功能），全部标记 [CONFIRM] 等你最后确认；可以直接粘贴 + 微调提交。
+- **OpenAI Converge 状态**：openai.com/startups 当前从大陆出口 403，需你浏览器直连核 cohort 是否开放；不在 OPENAI_PROGRAMS 文档主线，仅作登记。
+- **winget 状态不一致修复**：`Docs/SUBMISSIONS.md` 里 winget-pkgs 行原本标 `Listed | SSC-STUDIO.LenovoLegionToolkit published`，但 GitHub API `manifests/s/SSC-STUDIO/SSC-STUDIO.LenovoLegionToolkit` 仍 404。已改为 `Not published | id 保留，未发布`；这跟 PILLAR_D_PROMOTION_PLAN.md / OPENAI_PROGRAMS.md 里写的 winget 缺口闭环一致。
+- **awesome-dotnet PR #1466 跟进**：状态 `open, mergeable, 0 comments`，maintainer 尚未回复。提交 2026-07-07，等反馈即可。
+- **UDT 当前公开数据**（GitHub API 2026-07-07）：stars=18, forks=1, open_issues=1, subscribers=0, last push 2026-07-07 03:39 UTC。topics 含 19 个标签（lenovo-legion, vantage-alternative, plugins, dotnet 等），可发现性 OK；discussions 已开，pages 已开。
+- **首发三站 (HN/Reddit/V2EX)**：文案已在 `Docs/OUTREACH_PACK.md` 里 A/B/C 三篇到位（HN Show HN 已含 2h 回复窗口提醒 + 自我首评 + 招喷话术；Reddit 三套按 subreddit 优先级；V2EX 中文版 + Scoop 兜底）。发布必须你自己账号来——社区要求真人首发 + 维护者露面答评论。
 
 最后更新: 2026-07-07

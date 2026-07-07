@@ -17,7 +17,7 @@ v4.2.1 的变化：
 - 驱动包更新检测在 WMI 不可用时会优雅降级（之前会卡住）
 - 插件扩展页安装/配置/打开/卸载图标在深浅色主题下都能正确显示
 
-插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 LLT 的直接升，设置还在。
+插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 UDT 的直接升，设置还在。
 
 项目：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 偷懒安装：`winget install SSC-STUDIO.LenovoLegionToolkit`

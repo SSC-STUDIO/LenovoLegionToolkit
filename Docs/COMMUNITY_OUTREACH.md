@@ -28,7 +28,7 @@ HelloGitHub 旧条目仍指向上游仓库 → [认领说明](https://hellogithu
 
 后来换 Universal Device Toolkit（UDT，以前叫 Legion Toolkit，现在 SSC-STUDIO 在维护）。日常要用的：性能模式、键盘灯、独显状态、电池养护，都能搞定。不会在后台常驻，也不要联想账号。
 
-插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 LLT 的直接升，设置还在。
+插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 UDT 的直接升，设置还在。
 
 项目：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 偷懒安装：winget install SSC-STUDIO.LenovoLegionToolkit

@@ -13,7 +13,7 @@ curated list converts well because the visitor already wants a tool like this.
 | Slant | list entry | Not started | - | add to a "Lenovo Vantage alternatives" question |
 | HelloGitHub | CN feature | Submitted | 2026-07-05 | see .github/outreach/hellogithub-issue.md |
 | winstall.app | winget mirror | Listed | - | winstall.app/apps/SSC-STUDIO.LenovoLegionToolkit |
-| winget-pkgs | package manager | Listed | - | SSC-STUDIO.LenovoLegionToolkit published |
+| winget-pkgs | package manager | Not published | 2026-07-07 | id reserved (`SSC-STUDIO.LenovoLegionToolkit`); `manifests/s/SSC-STUDIO/SSC-STUDIO.LenovoLegionToolkit` returns 404 as of 2026-07-07 -- use Scoop or Releases installer until a clean PR lands |
 | Microsoft Store | store listing | Not planned | - | optional; GPL-3.0 WPF, big lift |
 | Scoop bucket | package manager | Verify | - | confirm whether a manifest exists |
 
@@ -22,6 +22,7 @@ curated list converts well because the visitor already wants a tool like this.
 | Week ending | Stars | Delta | Notes |
 |-------------|-------|-------|-------|
 | 2026-07-06 | 18 | - | baseline, v5.0.0-preview published |
+| 2026-07-07 | 18 | 0 | OpenAI Founders Hub 申请 [VERIFY] 用真实数据填默认（[CONFIRM] 等你核）；SUBMISSIONS winget-pkgs 错误修正；awesome-dotnet PR #1466 open+mergeable+0 comments；首发三站文案齐备，等你今晚或明天首发 |
 
 (add a row each Sunday; pair with PILLAR_D_PROMOTION_PLAN.md)
 
@@ -89,4 +90,4 @@ https://github.com/SSC-STUDIO/UniversalDeviceToolkit
   platforms anti-cheat and it hurts the project's reputation.
 - One venue at a time so each submission is well written for that community.
 
-Last updated: 2026-07-07
+Last updated: 2026-07-07 (winget-pkgs 行从 Listed 修正为 Not published，附 manifest 目录 404 验证；新增 2026-07-07 周行)

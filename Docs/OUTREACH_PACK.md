@@ -13,7 +13,7 @@ swap, or bot them (GitHub deranks repos that do, and it kills credibility).
 - Install (winget): id `SSC-STUDIO.LenovoLegionToolkit` is reserved but NOT yet published to winget-pkgs -- use Scoop or the installer until it ships (auto-upgrade from old LLT installs once it lands)
 - License: GPL-3.0  Language: C# / WPF  Platform: Windows
 - Latest: v5.0.0-preview.20260706001  Stable: v4.2.1
-- Stars today: 18  Goal: 1,000
+- Stars today: 18 (verified via GitHub API 2026-07-07)  Goal: 1,000
 
 **Reusable one-liners (drop into any post first line):**
 
@@ -427,4 +427,4 @@ milestone post.
 
 ---
 
-Last updated: 2026-07-06  Stars today: 18  Goal: 1,000
+Last updated: 2026-07-07  Stars today: 18 (verified via GitHub API)  Goal: 1,000

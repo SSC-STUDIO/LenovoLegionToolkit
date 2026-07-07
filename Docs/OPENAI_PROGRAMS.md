@@ -84,21 +84,33 @@ without the vendor's telemetry-bearing companion app. It is built around a
 first-class plugin system so device-specific features live in plugins instead of
 bloating the core, and non-Lenovo PCs run a "basic mode" with plugins + themes.
 
-Traction so far: 18 stars, ~200 release-asset downloads across v4.2.1 (144
-installer + 57 zip; Scoop pulls these same GitHub assets; winget id reserved but not yet on winget-pkgs), ~2,343 automated
+Traction so far: 18 stars, 210 release-asset downloads across v4.2.1 (73 Full_Setup + 64 Setup + 39 Full_zip + 18 Online_zip + 10 Online_Setup + 6 SHA256; verified 2026-07-07 via GitHub Releases API; Scoop pulls these same GitHub assets; winget id reserved but not yet on winget-pkgs), ~2,343 automated
 tests, a v5.0.0 plugin overhaul shipped 2026-07-06, active contributor base.
 
-What I'd use OpenAI/Azure OpenAI access for:
-- [ ] A plugin-authoring assistant that generates plugin scaffolds from a natural
-      language spec, lowering the barrier for new device contributors.
-- [ ] Localization help: drafting and reviewing community translations across the
-      25+ supported languages.
-- [ ] Docs/chat: a factual, retrieval-grounded assistant over the repo for new
-      contributors and users.
+What I'd use OpenAI/Azure OpenAI access for (committing to two in the first 3
+months; deferring the third):
+
+1. **Plugin-authoring assistant (PRIMARY).** Azure OpenAI + retrieval over
+   `UniversalDeviceToolkit.Lib.Plugins` source and `Docs/PLUGIN_DEVELOPMENT.md`.
+   Input: a natural-language device spec (e.g. "add a hybrid-mode toggle for
+   Legion Gen 10"). Output: a plugin scaffold (manifest.json, sensor classes,
+   action handlers, a stub test) ready for the contributor to fill in.
+   Measured by: number of new plugins authored via the assistant in the first
+   90 days, and time-to-first-PR for a new device contributor.
+
+2. **Localization assist (SECONDARY).** Azure OpenAI + a glossary pinned from
+   `Docs/PLUGIN_DEVELOPMENT.md` and existing Crowdin translations. Input: a new
+   English string. Output: a draft translation per active language with a
+   confidence flag. Human translator reviews + commits. Measured by: number of
+   languages kept >95% complete at v5.x release, and translator time saved per
+   string.
+
+Deferred: docs/chat, until item 1 is shipping and we know what contributors
+actually ask.
 
 License/outlook: GPL-3.0, no telemetry, no account, no commercial upsell. I'm
-asking for [credits / a Pro seat / API access] with a [N]-month runway to ship the
-first two of the above and measure impact.
+asking for **Azure credits (which include Azure OpenAI Service)** with a
+**[CONFIRM 3]-month runway** to ship the first two and measure impact.
 ```
 
 Pick the bracketed items you'll actually build -- reviewers reject vague asks.
@@ -140,35 +152,42 @@ CI-gated release pipeline and a GitHub Pages landing page.
 - GitHub stars 18, forks 1: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - Releases: v5.0.0-preview (plugin overhaul) shipped 2026-07-06; stable v4.2.1
 - Distribution: Scoop bucket ssc-studio (winget id SSC-STUDIO.LenovoLegionToolkit reserved, not yet on winget-pkgs); v4.2.1 release assets
-  ~200 downloads (144 installer + 57 zip; Scoop pulls these same GitHub assets)
+  210 downloads (73 Full_Setup + 64 Setup + 39 Full_zip + 18 Online_zip + 10 Online_Setup + 6 SHA256; verified 2026-07-07 via Releases API)
 - Localization: 25+ community-translated languages via Crowdin (78+ locales scaffolded)
 - CI: GitHub Actions Ci-tests.yml, automated test suite across the solution
   (2,343 test cases -- 2,323 passing / 20 skipped per v5.0.0-preview release notes)
-- Landing: https://ssc-studio.github.io/UniversalDeviceToolkit/ (live, returned 200 OK)
+- Landing: https://ssc-studio.github.io/UniversalDeviceToolkit/ (live, returned 200 OK + 21,854 B real UDT HTML; re-verified 2026-07-07)
 
-### 3. What the credits would fund (pick the two you will actually ship)
+### 3. What the credits would fund (committing to these two)
 
-- Plugin authoring assistant: given a natural-language device spec, generate a
-  plugin scaffold (manifest, sensors, actions, tests) so a new device contributor
-  can add support in hours instead of days. Built on Azure OpenAI with retrieval
-  over the repo's plugin docs and existing plugins.
-- Localization assist: draft and review community translations across the 25+
-  community-translated languages (78+ locales scaffolded) with a glossary and
-  human-in-the-loop review, keeping community translations shippable at low cost.
+- **Plugin authoring assistant** (primary): given a natural-language device spec,
+  generate a plugin scaffold (manifest, sensors, actions, a stub test) so a new
+  device contributor can add support in hours instead of days. Built on Azure
+  OpenAI with retrieval over the repo's plugin docs and existing plugins.
+- **Localization assist** (secondary): draft and review community translations
+  across the 25+ community-translated languages (78+ locales scaffolded) with a
+  glossary and human-in-the-loop review, keeping community translations shippable
+  at low cost.
 
 ### 4. Runway + measurement
 
 I'm asking for Azure credits (which include Azure OpenAI Service) with a
-[VERIFY 3]-month runway to ship item 1 and agree a usage measurement report up
-front (stars, plugin PRs merged, languages updated). No commercial upsell, no
+[CONFIRM 3]-month runway to ship items 1 and 2 above and agree a usage measurement report up
+front (plugin PRs merged via the assistant, languages kept >95% complete at v5.x). No commercial upsell, no
 account, no telemetry -- the credit goes entirely into the assistant features
 above. Answers to likely questions, up front:
 
-- Entity: [VERIFY: personal / nonprofit / company]
+- Entity: **personal maintainer (individual).** SSC-STUDIO is the maintainer's
+  personal GitHub organization (api.github.com user id 139300395; org membership
+  is implicit through repo ownership). No company name, registered business, or
+  nonprofit registration visible in the repo (LICENSE = GPL-3.0; NOTICE carries
+  no entity). [CONFIRM: replace with company / nonprofit name + jurisdiction if
+  a registered entity exists.]
 - Stage: pre-revenue open-source maintainer, GPL-3.0
-- Built on Microsoft stack: C# / .NET / GitHub Actions / GitHub Pages
+- Built on Microsoft stack: C# / .NET (10) / GitHub Actions (`Ci-tests.yml`) /
+  GitHub Pages (`ssc-studio.github.io/UniversalDeviceToolkit`)
 - AI usage policy: assistant output is reviewed before merge; no user data leaves
-  the maintainer's environment
+  the maintainer's environment; UDT itself collects no user telemetry
 
 ### 5. If "Pro 20x" was a specific program, not this one
 
@@ -177,5 +196,5 @@ exact name and the official page and this draft gets retargeted. Until then,
 Microsoft for Startups Founders Hub -> Azure OpenAI is the highest-probability
 real route to OpenAI access.
 
-Last updated: 2026-07-07
+Last updated: 2026-07-07 (Founders Hub 申请 [VERIFY] 用真实数据填默认；全部 [CONFIRM] 等你最后核；"Pro seat" 占位已替换为 Azure credits; v4.2.1 下载量按 Releases API 校正为 210；landing page 二次复核 200 + 真实 UDT 内容)
 

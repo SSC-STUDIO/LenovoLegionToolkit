@@ -66,6 +66,97 @@ Agents and human maintainers MUST append new entries when solving non-trivial bu
 
 ---
 
+### [2026-07-06] WMI helper extension timeout ceiling violation (UDT-001/002)
+
+- **Symptom / 症状**: WMI helper extensions defaulted to `5000ms` timeout and `WMI.CallInternalAsync` used a `10000ms` timeout, both exceeding the 3000ms ceiling defined in KNOWLEDGE_BASE.md.
+- **Root Cause / 根因**: `ManagementObjectSearcherExtensions.GetAsyncWithTimeout` and `ManagementEventWatcherExtensions.StartAsyncWithTimeout` hardcoded default `timeoutMs = 5000`; `WMI.CallInternalAsync` used `Task.Delay(10000, cts.Token)` to bound `ManagementObject.InvokeMethod`. Callers relying on defaults allowed WMI to block up to 10s.
+- **Fix / 修复**: (1) Lowered both WMI helper extension defaults from `5000` to `2500` ms. **Correction (2026-07-06, pass 6):** this 5000->2500 reduction never landed in the two extension files at the committed HEAD (`git show HEAD:UniversalDeviceToolkit.Lib/Extensions/ManagementObjectSearcherExtensions.cs` and `...ManagementEventWatcherExtensions.cs` still showed `timeoutMs = 5000`); it was actually delivered by [UDT-007] in pass 6, which also fixed a 3-space->4-space indentation regression. Clause (2) below DID land. (2) Added `WmiInvokeTimeoutMs = 2500` constant in `WMI.cs` and replaced the hardcoded `10000` with the constant.
+- **Enforced Rule / 强制规则**: WMI helper extension default timeouts MUST NOT exceed `2500ms`. WMI method invokes MUST use a timeout constant <= `2500ms`.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] AmdOverclockingController synchronous WMI calls blocking UI (UDT-003)
+
+- **Symptom / 症状**: `FetchCommands()` ran synchronous `new ManagementObject(...)` and `WMI.InvokeMethodAndGetValue(...)` without `Task.Run()` or timeout. Called from async `InitializeAsync`, this could stall the UI thread ~5-10s on AMD systems.
+- **Root Cause / 根因**: ZenStates-Core `WMI.InvokeMethodAndGetValue` and `WMI.GetInstanceName` are synchronous NuGet-provided WMI methods. The original `FetchCommands()` invoked them directly on the calling thread with no async wrapping or timeout.
+- **Fix / 修复**: Converted `public void FetchCommands()` to `public async Task FetchCommandsAsync(CancellationToken cancellationToken = default)`. Wrapped both synchronous WMI calls in `Task.Run(...).WaitAsync(TimeSpan.FromMilliseconds(2500), cancellationToken).ConfigureAwait(false)`.
+- **Enforced Rule / 强制规则**: All WMI queries and method invokes -- including those from third-party NuGet packages -- MUST be wrapped in `Task.Run()` with a `CancellationToken` and 2500ms timeout. Lib code MUST use `.ConfigureAwait(false)`.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] Empty catch block swallowing exceptions in Registry teardown (UDT-004)
+
+- **Symptom / 症状**: The `LambdaDisposable` returned by the Win32 registry listener used `try { task.Wait(1000); } catch { }` during teardown, silently discarding all exceptions.
+- **Root Cause / 根因**: A bare `catch { }` discards every exception type with zero tracing, unlike the surrounding listener loop which funnels exceptions through `Log.Instance.Trace(...)`.
+- **Fix / 修复**: Replaced `catch { }` with `catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace("Win32 registry listener dispose wait failed.", ex); }`.
+- **Enforced Rule / 强制规则**: Empty `catch { }` blocks are FORBIDDEN in production code. All catch blocks MUST at minimum trace the exception via `Log.Instance.Trace(...)`.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] SmartFnLockController thread pool flooding / SmartFnLock线程池洪水
+
+- **Symptom / 症状**: Every keypress triggered `Task.Run(...)` to evaluate the Fn-Lock restore state, saturating the thread pool on systems with heavy keyboard input.
+- **Root Cause / 根因**: `SmartFnLockController` unconditionally queued async work for every key event, including non-modifier keys that have no effect on Fn-Lock state.
+- **Fix / 修复**: Added a synchronous filter before `Task.Run(...)`: only modifier key events or those where `_restoreFnLock` is true spawn async work; all other events are handled synchronously without entering the thread pool.
+- **Enforced Rule / 强制规则**: High-frequency event handlers (keyboard, mouse, polling) MUST filter at the synchronous layer before dispatching async work. Only state-changing events should cross the sync/async boundary.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] MacroController WH_KEYBOARD_LL hook without message pump / 宏控制器键盘钩子无消息泵
+
+- **Symptom / 症状**: `WH_KEYBOARD_LL` keyboard hook installed from a background thread had no message pump, causing the hook to silently fail to receive any keyboard events.
+- **Root Cause / 根因**: `SetWindowsHookEx` installs the hook on the calling thread, but `WH_KEYBOARD_LL` requires the owning thread to run a message pump (`GetMessage`/`PeekMessage` loop) to process hook callbacks. The original `Start()` method called `SetWindowsHookEx` from a background thread without setting up a message loop.
+- **Fix / 修复**: Added `IMainThreadDispatcher _mainThreadDispatcher` dependency. `Start()` now dispatches `SetWindowsHookEx` to the UI thread via `_mainThreadDispatcher.Dispatch(...)`, which already runs a WPF message pump. `IMainThreadDispatcher` is registered in the WPF `IoCModule.cs`.
+- **Enforced Rule / 强制规则**: `WH_KEYBOARD_LL` hooks MUST be installed on a thread that owns a message pump (typically the UI thread). Use `IMainThreadDispatcher.Dispatch(...)` to marshal the `SetWindowsHookEx` call to the UI thread. NEVER install `WH_KEYBOARD_LL` on a background thread without a message loop.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+### [2026-07-06] FlaUI admin-gated tests misclassified as failures / 提权门控 FlaUI 测试被误判为失败 (UDT-005)
+
+- **Symptom / 症状**: Three FlaUI main-window tests (`FlaUIMainWindowTests`) hard-failed in a non-admin/non-desktop runner. The shared base `FlaUiTestBase.InitializeAsync()` throws `Xunit.SkipException` on elevation failure, but the methods were annotated `[Fact]`, and a plain `[Fact]` reports a thrown `SkipException` as a failure rather than a skip.
+- **Root Cause / 根因**: `Xunit.SkipException` is only reclassified as a clean skip when the test method carries `[SkippableFact]` / `[SkippableTheory]`. The test project already references `Xunit.SkippableFact`, but these three methods used plain `[Fact]`, unlike their sibling FlaUI classes (`MainWindowSmokeTests`, `MainWindowVisualTests`).
+- **Fix / 修复**: Switched all three methods from `[Fact]` to `[SkippableFact]` so `SkipException` is intercepted as a skip; added `MainWindow!` null-forgiving on two dereference sites to clear the pre-existing `CS8602`. Build => 0 errors / 0 warnings; `dotnet test --filter FlaUI.FlaUIMainWindowTests` => 0 failed / 3 skipped (previously 3 failed). Full suite => 2327 passed / 0 failed / 30 skipped.
+- **Enforced Rule / 强制规则**: Admin/desktop/elevation-gated UI tests MUST use `[SkippableFact]` / `[SkippableTheory]`, never plain `[Fact]`. `Xunit.SkipException` only yields a clean skip under a skippable attribute; a plain `[Fact]` that throws `SkipException` is an unhandled failure.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] Lenovo Legion Toolkit -> Universal Device Toolkit brand migration: separate user-facing name from ABI identifier / 品牌/ABI 名称分离
+
+- **Symptom / 症状**: After rebranding to Universal Device Toolkit, residual legacy-brand literals survived in Lib production code. The FPS self-monitoring blacklist (`FpsSensorController.InitializeBlacklist`) excluded only `"Lenovo Legion Toolkit"`, so the renamed `Universal Device Toolkit` process was counted as a monitored foreground app. The HWiNFO custom-sensor group (`HWiNFOIntegration.CUSTOM_SENSOR_GROUP_NAME`) registered under the old `"Lenovo Legion Toolkit"` registry key. The Plugin Workbench host-resource resolver (`HostResourceLookup.ResolveResourceType`) matched only the legacy WPF assembly name, so it failed to locate host resources under a UDT-named host.
+- **Root Cause / 根因**: The rebrand migrated display metadata (`AppIdentity.DisplayName = "Universal Device Toolkit"`, WPF `<AssemblyName> = "Universal Device Toolkit"`) but left process-name matchers and external-tool registry keys keyed to the old name. Cross-repository ABI identifiers (Lib `<AssemblyName>LenovoLegionToolkit.Lib`, plugin SDK namespaces, `clr-namespace` tokens) were correctly PRESERVED as load contracts; the miss was consumer literals that match the *process name* or *external tool grouping*. `PluginHostContext` / `WpfHostNotifications` already carried dual-name lookup, but the PluginWorkbench tool did not.
+- **Fix / 修复**: (1) Added `"Universal Device Toolkit"` next to the legacy entry in the FPS self-blacklist. (2) Renamed `HWiNFOIntegration.CUSTOM_SENSOR_GROUP_NAME` to `"Universal Device Toolkit"` and added `LEGACY_CUSTOM_SENSOR_GROUP_NAME`; `ClearValues()` now deletes both keys so stale legacy sensors are cleaned (`Registry.Delete` is a no-op if absent). (3) `HostResourceLookup.ResolveResourceType` now resolves the host assembly against both `"Universal Device Toolkit"` (first) and `"Lenovo Legion Toolkit"` (fallback), mirroring `WpfHostNotifications` / `PluginHostContext`. (4) Smoke mock copy migrated. ABI assembly/namespace identifiers intentionally left unchanged. Full main + plugin solution builds => 0 errors / 0 warnings.
+- **Enforced Rule / 强制规则**: See Engineering Principle #12 (Brand/ABI Name Separation). Migrate user-facing process-matchers, registry keys, and external-tool group names; pair each migrated literal with the legacy one for backward compatibility. NEVER rename cross-repo ABI assembly/namespace/clr-namespace identifiers. When renaming a registry key, also delete the legacy key on stop.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
+### [2026-07-06] MacroController hook teardown orphaning WH_KEYBOARD_LL / 宏控制器钩子拆卸致 WH_KEYBOARD_LL 孤儿化 (UDT-006)
+
+- **Symptom / 症状**: A throw from `_recorder.StopRecording()` or `_player.Stop()` inside `MacroController.Stop()` jumped to a bare comment-only `catch { // Ignore }`, skipping `UnhookWindowsHookEx`, while a `finally { _kbHook = default; }` still zeroed the handle. The OS-level `WH_KEYBOARD_LL` hook stayed installed but its handle was lost; the next `Start()` saw `_kbHook == default`, installed a second hook, and every keystroke fired the macro callback chain twice (duplicated macros + system-wide input latency). The orphaned hook could never be removed.
+
+- **Root Cause / 根因**: `Stop()` ran recorder/player teardown in the same `try` as `UnhookWindowsHookEx`, so a teardown throw short-circuited the unhook. The bare comment-only `catch { }` (KB #8 violation) silently swallowed it, and the unconditional `finally` cleared the handle field despite the hook still being installed — the asymmetry versus `Start()'s` dispatcher-guarded install means `_kbHook` was cleared even when the unhook had not run, coupling handle cleanup to teardown success.
+
+- **Fix / 修复**: Reworked `Stop()` to (1) capture and clear the field first (`var hook = _kbHook; _kbHook = default;`) so a concurrent `Start()` cannot double-install; (2) `UnhookWindowsHookEx(hook)` FIRST, isolated in its own `try/catch`; (3) `_recorder.StopRecording()` and `_player.Stop()` each in their own `try/catch`. Every catch traces via `Log.Instance.IsTraceEnabled`-guarded `Log.Instance.Trace(...)` (KB #8, #9). Build => 0 errors / 0 warnings; full `dotnet test` => 2327 + 119 passed / 0 failed.
+
+- **Enforced Rule / 强制规则**: For system-wide Win32 hooks (`WH_KEYBOARD_LL` etc.), clear the handle field BEFORE teardown and unhook FIRST; isolate each teardown step in its own `try/catch` with tracing. NEVER clear a hook handle in a single `finally` whose cleanup also depends on earlier steps succeeding. See Engineering Principle #13.
+
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+### [2026-07-06] Phantom UDT-001 archive fix: WMI extension default timeouts never actually lowered (UDT-007) / UDT-001 幽灵归档记录修复：WMI 扩展默认超时实际从未下调 (UDT-007)
+
+- **Symptom / 症状**: The UDT-001 `**Fixed**` record in `.bugs/4_ARCHIVED.md` claimed both WMI helper extension defaults were lowered from `5000ms` to `2500ms`, but `git show HEAD:...` proved the two extensions still hardcoded `timeoutMs = 5000`; only `WMI.WmiInvokeTimeoutMs` (UDT-002) actually shipped. Seven bare production callers (`WMI.cs:36/70/101/145`, `WMIWrapper.cs:28/78/115`) inherited the unbounded 5000ms default, violating the 2500ms ceiling.
+- **Root Cause / 根因**: The UDT-001 archive `**Fixed**` record diverged from the committed code. The `= 2500` rewrite landed for UDT-002 (`WMI.cs`) and UDT-003 (`AmdOverclockingController.cs`) but never reached `ManagementObjectSearcherExtensions.cs` and `ManagementEventWatcherExtensions.cs`, so the false archive record hid a live ceiling violation for multiple passes.
+- **Fix / 修复**: (1) Lowered all four `timeoutMs = 5000` default arguments to `= 2500` in `ManagementObjectSearcherExtensions` (`GetAsyncWithTimeout`, `GetAsync`) and `ManagementEventWatcherExtensions` (`StartAsyncWithTimeout`, `StartWithTimeout`). (2) Corrected a 3-space to 4-space indentation regression on the four declaration lines. (3) Added a dated `**Correction**` note to the UDT-001 archive record rather than silently rewriting it.
+- **Enforced Rule / 强制规则**: See Engineering Principle #14 (Archive Verification). Bug archive `**Fixed**` records MUST be verified against the actual code state with `rg`/`git show` before a ticket is closed; a phantom-fix must be corrected with a dated note, never silently rewritten.
+- **OS / .NET Version / OS及.NET版本**: Windows 11 24H2, .NET 10
+
+---
+
 ## Adopted Engineering Principles / 已采纳的工程原则
 
 1. **WPF Thread Safety**: Never use `.ConfigureAwait(true)` in Lib/SDK code. UI updates must go through `Dispatcher.InvokeAsync()`. (`CardHeaderControl` is already correct.)
@@ -75,3 +166,20 @@ Agents and human maintainers MUST append new entries when solving non-trivial bu
 5. **Chinese Localization**: Subtitle strings ≤40 chars. Use `\n` for line breaks. Validate in actual card layout.
 6. **Startup Modal Dialogs**: Language selector and similar first-run dialogs must use `ShowDialog()`, not `Show()`.
 7. **Memory Leak Prevention**: Unsubscribe singleton events in `Unloaded`. Dispose `IDisposable` resources. Null out event handlers in `OnDestroy`/`Unloaded`.
+
+8. **Empty Catch Prohibition**: Empty `catch { }` blocks are FORBIDDEN in production code. All catch blocks MUST trace the exception via `Log.Instance.Trace(...)`.
+9. **WH_KEYBOARD_LL Hook Message Pump**: `WH_KEYBOARD_LL` hooks MUST be installed on a thread with a message pump (UI thread). Use `IMainThreadDispatcher.Dispatch(...)` to marshal `SetWindowsHookEx`.
+10. **Thread Pool Flooding Prevention**: High-frequency event handlers (keyboard, mouse, polling) MUST filter at the synchronous layer before dispatching async work to the thread pool.
+
+11. **Admin/Elevation-Gated Tests Use SkippableFact**: Admin/desktop/elevation-gated UI tests MUST use `[SkippableFact]` / `[SkippableTheory]`, never plain `[Fact]`. `Xunit.SkipException` only yields a clean skip under a skippable attribute; a plain `[Fact]` that throws `SkipException` is an unhandled failure.
+12. **Brand/ABI Name Separation**: When rebranding, migrate user-facing strings matched by process name, external-tool registry keys (e.g. HWiNFO sensor groups), and resource-resolver assembly-name lookups, and pair each migrated literal with the legacy one for backward compatibility. Cross-repository ABI identifiers -- assembly names (`LenovoLegionToolkit.Lib`, plugin `<AssemblyName>`), namespaces, and `clr-namespace` tokens -- MUST NOT be renamed to match the brand, because plugin loading depends on them as load contracts. When renaming a registry key, also delete the legacy key on stop (`Registry.Delete` is a no-op if absent).
+13. **Win32 Hook Teardown Ordering**: For system-wide Win32 hooks (`WH_KEYBOARD_LL` etc.), capture and clear the handle field BEFORE teardown (`var hook = _kbHook; _kbHook = default;`), then call the unhook API (`UnhookWindowsHookEx`) FIRST so a throw from recorder/player/sensor teardown can never leave the hook installed. Isolate each teardown step in its own `try/catch` traced via `Log.Instance.IsTraceEnabled`-guarded `Log.Instance.Trace(...)` (KB #8). NEVER clear a hook handle in a single `finally` whose cleanup also depends on earlier steps succeeding — that orphans the hook and lets the next install duplicate callbacks.
+14. **Archive Verification**: Bug archive `**Fixed**` records MUST be verified against the actual code state with `rg`/`git show` before a ticket is closed. When a past `**Fixed**` claim is found to have never landed, add a dated `**Correction**` note to the archive entry; do NOT silently rewrite or delete the false record. This keeps the audit trail honest so a phantom-fix can never hide a live defect.
+
+15. **Theme-Bound Vector/Shape Colors**: All colored shapes (`Ellipse.Fill`, `Border.Background`, `Path.Stroke`, etc.) in XAML MUST bind to `{DynamicResource <brush>}` tokens from `DesignTokens.xaml` (e.g., `StatusSuccessBrush`, `StatusWarningBrush`, `StatusCriticalBrush`), never raw hex literals — raw hex ignores light/dark theme swaps and drifts from the shared chart-keyed color vocabulary. The hardcode-color audit MUST sweep non-text vector/shape properties (`rg -n '(Fill|Background|Stroke|Foreground)="#' **/*.xaml`), not just text properties; a "0 hardcoded UI text" sweep does not cover `Ellipse.Fill`.
+
+16. **Brand/ABI Boundary Audit (Pass-14 Confirmation)**: The pass-14 rebrand audit re-confirmed that the `LenovoLegionToolkit.*` ABI surface is an intentional cross-repo plugin load contract, NOT a stale leftover, and must NOT be renamed: assembly simple-names (`LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins`), `<RootNamespace>`, C# namespaces, `.xaml` `clr-namespace` tokens, plugin `<AssemblyName>` prefixes (`LenovoLegionToolkit.Plugins.*`), the named-pipe contract (`LenovoLegionToolkit-IPC-0`), the trusted GitHub repository owner / legacy repo-id fallback in `UpdateChecker` / `PluginRepositoryService`, and line-1 upstream-sync copyright headers. After passes 4-5 migrated every user-facing surface (78+ `.resx` locales at 0 `LenovoLegionToolkit` hits, dual-name `MainAppBaseNames` smoke-test recognition of BOTH old + new window titles, `AppIdentity.LegacyDisplayName` intentional legacy constant, `ProcessAutoListener` / `FpsSensorController` self-window exclusion blacklists using legacy + new names for backward-compat fallback), the ONLY remaining auditable renamable brand surface was exactly one process-internal Win32 window-class `Caption` string in `NativeLayeredWindow.cs:118` (`LenovoLegionToolkit-NativeLayeredWindow` -> `UniversalDeviceToolkit-NativeLayeredWindow`; safe because the single subclass `NotificationAoTWindow` reuses the fixed caption for `RegisterClassEx` and no `FindWindow`/`FindWindowEx` call keys off the class name). Any future `rg LenovoLegionToolkit` sweep MUST exempt the documented ABI contract sites above, never attempt to rename them. See KB #12 (dual-name migration pairing) and UDT-010 archive entry.
+
+### [2026-07-07] OSDev Tooling: Resource.Designer.cs must be manually updated for new .resx keys (UDT-009)
+
+17. **Resource.Designer.cs Manual Sync (UDT-009)**: The UDT WPF project uses `PublicResXFileCodeGenerator` for `Resources/Resource.resx`, which generates `Resource.Designer.cs` as a committed file that does NOT auto-regenerate during `dotnet build`. When adding a new resource key to `Resource.resx`, the corresponding `public static string` property MUST be manually added to `Resource.Designer.cs` (following the alphabetical-order convention used by the generator: `/// <summary>` doc comment, `public static string <KeyName> { get { return ResourceManager.GetString("<KeyName>", resourceCulture); } }`). Without this manual sync, `dotnet build` succeeds (the .resx has the entry) but the WPF XAML compiler fails with `error MC3011: Cannot find the static member '<KeyName>' on type 'Resource'` because the `{x:Static}` markup extension resolves against the compiled Designer.cs class at XAML compile time. ALWAYS pair a new `.resx` `<data>` entry with a matching Designer.cs property for `dotnet build` to pass. Additionally: `apply_patch` strips one leading space from context lines (the first character is the format marker), so for XAML edits with deep indentation, prefer PowerShell string replacement to preserve exact whitespace.

@@ -1,9 +1,9 @@
-## Welcome to Lenvo Legion Toolkit contributing guide!
+﻿## Welcome to Universal Device Toolkit contributing guide!
 
 ### Other language versions of this contributing guide:
-* [简体中文版开发者指南](CONTRIBUTING_zh-hans.md)
+* [绠€浣撲腑鏂囩増寮€鍙戣€呮寚鍗梋(CONTRIBUTING_zh-hans.md)
 
-Thanks for investing your time in contributing to this project! Giving the growing popularity of LLT, here are a few rules to follow to ensure that your contribution goes smoothly.
+Thanks for investing your time in contributing to this project! Given the growing popularity of UDT, here are a few rules to follow to ensure that your contribution goes smoothly.
 
 <br/>
 
@@ -29,7 +29,7 @@ This is not meant to be a do-it-all type of application. The vision for the proj
 
 **5. Verify your problem before creating an issue**
 
-Make sure that a bug is really a bug in LLT - this isn't a free system troubleshooting forum. If you use modified version of Windows or your Windows is acting funny, that's on you.
+Make sure that a bug is really a bug in UDT - this isn't a free system troubleshooting forum. If you use modified version of Windows or your Windows is acting funny, that's on you.
 
 **6. Describe your problem as best as you can**
 
@@ -37,7 +37,7 @@ Providing good description is key. Fill out all the fields of the form when crea
 
 **7. Give a good title to issues and discussions**
 
-It is a lot easier to browse the list and follow issues and discussions. "Error when using LLT" is not a good title.
+It is a lot easier to browse the list and follow issues and discussions. "Error when using UDT" is not a good title.
 
 **8. Stay on topic**
 
@@ -57,4 +57,4 @@ Pull requests are welcome (of course). Unless you create a very simple and under
 
 <br/>
 
-Once again, thanks for investing your time in helping LLT get better!
+Once again, thanks for investing your time in helping UDT get better!

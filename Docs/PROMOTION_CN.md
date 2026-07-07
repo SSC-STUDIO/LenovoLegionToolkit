@@ -71,7 +71,7 @@ Vantage 我卸了之后靠它管 Fn+Q 和键盘 RGB，不占后台，也不要�
 
 在支持的机型上，Fn+Q 性能模式、Spectrum 键盘灯、Hybrid 独显、电池养护、自定义模式这些日常需求都能覆盖。它**故意不跑独立后台服务**，所以 Fn+Q 同步、宏之类需要让它待在托盘里，别完全退出——这是设计取舍，用之前心里有个数。
 
-后来加了个插件扩展页，网络、Shell、鼠标之类按需装，不必全塞进主程序。老 LLT 用户直接升级，设置和插件会保留。
+后来加了个插件扩展页，网络、Shell、鼠标之类按需装，不必全塞进主程序。老 UDT 用户直接升级，设置和插件会保留。
 
 **下载**：GitHub Releases 或 `winget install SSC-STUDIO.LenovoLegionToolkit`。
 
@@ -95,7 +95,7 @@ PowerShell 里：`winget install SSC-STUDIO.LenovoLegionToolkit`
 
 后来换 Universal Device Toolkit（UDT，以前叫 Legion Toolkit，现在 SSC-STUDIO 在维护）。日常要用的：性能模式、键盘灯、独显状态、电池养护，都能搞定。不会在后台常驻，也不要联想账号。
 
-插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 LLT 的直接升，设置还在。
+插件是按需装的，CPU/GPU/网络那些不想用可以不装。以前装过 UDT 的直接升，设置还在。
 
 - 项目：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - 偷懒安装：`winget install SSC-STUDIO.LenovoLegionToolkit`
