@@ -199,57 +199,57 @@ account -- earn a little karma commenting first.
 
 ## C. V2EX
 
-- **Where:** https://www.v2ex.com/ -- section 分享创�?(Share and Create)
+- **Where:** https://www.v2ex.com/ -- section 鍒嗕韩鍒涢€?(Share and Create)
 - **When:** weekday evening CST (20:00-22:00) for the tech crowd.
 
-**Title:** `[开源] 卸了 Vantage 之后，我在用自己维护的这个工�?-- Universal Device Toolkit`
+**Title:** `[寮€婧怾 鍗镐簡 Vantage 涔嬪悗锛屾垜鍦ㄧ敤鑷繁缁存姢鐨勮繖涓伐鍏?-- Universal Device Toolkit`
 
 **Body:**
 
 ```
-闲聊一下自己做的东西。我是维护者（利益相关，说清楚）�?
-Vantage 的后台服务、登录账号、弹窗实在烦，所以我一直在维护 Universal Device Toolkit（UDT），前身�?Lenovo Legion Toolkit。winget 包名 SSC-STUDIO.LenovoLegionToolkit 是保留的，但还没�?winget-pkgs，暂时用 Scoop 或安装器；以后上了就能原地升级、设置不丢�?
-日常够用的：
-- Fn+Q 性能 / 均衡 / 安静
-- 键盘 RGB + 灯效
-- Hybrid / 独显切换
-- 风扇曲线
-- 电池养护阈�?- 刻意待在托盘（靠它同�?Fn+Q 和宏，这是设计不�?bug，不用这些功能的话可以退出；除此之外不跑后台服务�?
-v5.0.0-preview 今天发了�?- 插件系统重构（热重载、沙箱、依赖解析）
-- 修了全局钩子泄漏（退出后系统不再卡顿�?- 2500+ 单元测试通过
+闂茶亰涓€涓嬭嚜宸卞仛鐨勪笢瑗裤€傛垜鏄淮鎶よ€咃紙鍒╃泭鐩稿叧锛岃娓呮锛夈€?
+Vantage 鐨勫悗鍙版湇鍔°€佺櫥褰曡处鍙枫€佸脊绐楀疄鍦ㄧ儲锛屾墍浠ユ垜涓€鐩村湪缁存姢 Universal Device Toolkit锛圲DT锛夛紝鍓嶈韩鏄?Lenovo Legion Toolkit銆倃inget 鍖呭悕 SSC-STUDIO.LenovoLegionToolkit 鏄繚鐣欑殑锛屼絾杩樻病涓?winget-pkgs锛屾殏鏃剁敤 Scoop 鎴栧畨瑁呭櫒锛涗互鍚庝笂浜嗗氨鑳藉師鍦板崌绾с€佽缃笉涓€?
+鏃ュ父澶熺敤鐨勶細
+- Fn+Q 鎬ц兘 / 鍧囪　 / 瀹夐潤
+- 閿洏 RGB + 鐏晥
+- Hybrid / 鐙樉鍒囨崲
+- 椋庢墖鏇茬嚎
+- 鐢垫睜鍏绘姢闃堝€?- 鍒绘剰寰呭湪鎵樼洏锛堥潬瀹冨悓姝?Fn+Q 鍜屽畯锛岃繖鏄璁′笉鏄?bug锛屼笉鐢ㄨ繖浜涘姛鑳界殑璇濆彲浠ラ€€鍑猴紱闄ゆ涔嬪涓嶈窇鍚庡彴鏈嶅姟锛?
+v5.0.0-preview 浠婂ぉ鍙戜簡锛?- 鎻掍欢绯荤粺閲嶆瀯锛堢儹閲嶈浇銆佹矙绠便€佷緷璧栬В鏋愶級
+- 淇簡鍏ㄥ眬閽╁瓙娉勬紡锛堥€€鍑哄悗绯荤粺涓嶅啀鍗￠】锛?- 2500+ 鍗曞厓娴嬭瘯閫氳繃
 
-不是拯救者有「基础模式」，硬件项少一些，插件和系统工具还能用�?
-安装�?  scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
+涓嶆槸鎷晳鑰呮湁銆屽熀纭€妯″紡銆嶏紝纭欢椤瑰皯涓€浜涳紝鎻掍欢鍜岀郴缁熷伐鍏疯繕鑳界敤銆?
+瀹夎锛?  scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket
   scoop install ssc-studio/lenovolegiontoolkit
-或下载：https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
+鎴栦笅杞斤細https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
 
-项目地址：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
+椤圭洰鍦板潃锛歨ttps://github.com/SSC-STUDIO/UniversalDeviceToolkit
 
-觉得有用的话给个 Star，对开源项目帮助很大。有 bug 或者想支持你的机型，开 issue 告诉我具体型号�?```
+瑙夊緱鏈夌敤鐨勮瘽缁欎釜 Star锛屽寮€婧愰」鐩府鍔╁緢澶с€傛湁 bug 鎴栬€呮兂鏀寔浣犵殑鏈哄瀷锛屽紑 issue 鍛婅瘔鎴戝叿浣撳瀷鍙枫€?```
 
 ---
 
-## D. 掘金 (Juejin) -- long-form
+## D. 鎺橀噾 (Juejin) -- long-form
 
-- **Where:** https://juejin.cn/ -- technical article, tags 开�?Windows .NET
+- **Where:** https://juejin.cn/ -- technical article, tags 寮€婧?Windows .NET
 - **Angle:** a technical teardown ranks better than a soft ad. Lead with the plugin sandbox + the global hook leak post-mortem.
 
-**Title:** `我不想在拯救者上开 Vantage，所以我自己维护了一个开源工具（附插件沙箱与全局钩子泄漏修复）`
+**Title:** `鎴戜笉鎯冲湪鎷晳鑰呬笂寮€ Vantage锛屾墍浠ユ垜鑷繁缁存姢浜嗕竴涓紑婧愬伐鍏凤紙闄勬彃浠舵矙绠变笌鍏ㄥ眬閽╁瓙娉勬紡淇锛塦
 
 **Skeleton (expand to 2000+ words):**
 
 ```
-开头：Vantage 烦在哪（后台服务 + 登录 + 遥测 + 弹窗），卸了之后 Fn+Q/RGB/独显没了怎么办�?中段 1：UDT 是什么，�?Lenovo Legion Toolkit 的关系，为什么重命名、winget 包名保留但还没上 winget-pkgs（暂时用 Scoop）�?中段 2（技术重点）：插件系统怎么做沙箱与依赖解析，热重载遇到的坑。贴 1-2 段关键代码�?中段 3（技术重点）：全局键盘钩子为什么会在退出后让系统卡顿，怎么定位（ETW/Performance
-            Analyzer），最终怎么修的。这是最容易被技术读者认可的部分�?结尾：怎么装（Scoop / 下载链接），招募插件作者和译者，Star 对开源的意义�?配图：Assets/Screenshot_main.png、Screenshot_zh-hans.png、Star History 图�?```
+寮€澶达細Vantage 鐑﹀湪鍝紙鍚庡彴鏈嶅姟 + 鐧诲綍 + 閬ユ祴 + 寮圭獥锛夛紝鍗镐簡涔嬪悗 Fn+Q/RGB/鐙樉娌′簡鎬庝箞鍔炪€?涓 1锛歎DT 鏄粈涔堬紝鍜?Lenovo Legion Toolkit 鐨勫叧绯伙紝涓轰粈涔堥噸鍛藉悕銆亀inget 鍖呭悕淇濈暀浣嗚繕娌′笂 winget-pkgs锛堟殏鏃剁敤 Scoop锛夈€?涓 2锛堟妧鏈噸鐐癸級锛氭彃浠剁郴缁熸€庝箞鍋氭矙绠变笌渚濊禆瑙ｆ瀽锛岀儹閲嶈浇閬囧埌鐨勫潙銆傝创 1-2 娈靛叧閿唬鐮併€?涓 3锛堟妧鏈噸鐐癸級锛氬叏灞€閿洏閽╁瓙涓轰粈涔堜細鍦ㄩ€€鍑哄悗璁╃郴缁熷崱椤匡紝鎬庝箞瀹氫綅锛圗TW/Performance
+            Analyzer锛夛紝鏈€缁堟€庝箞淇殑銆傝繖鏄渶瀹规槗琚妧鏈鑰呰鍙殑閮ㄥ垎銆?缁撳熬锛氭€庝箞瑁咃紙Scoop / 涓嬭浇閾炬帴锛夛紝鎷涘嫙鎻掍欢浣滆€呭拰璇戣€咃紝Star 瀵瑰紑婧愮殑鎰忎箟銆?閰嶅浘锛欰ssets/Screenshot_main.png銆丼creenshot_zh-hans.png銆丼tar History 鍥俱€?```
 
-**注意�?* 掘金有「沸点」可同步短带量；长文首日不要再发�?V2EX 同一内容刷屏，间�?24h�?
+**娉ㄦ剰锛?* 鎺橀噾鏈夈€屾哺鐐广€嶅彲鍚屾鐭甫閲忥紱闀挎枃棣栨棩涓嶈鍐嶅彂鍒?V2EX 鍚屼竴鍐呭鍒峰睆锛岄棿闅?24h銆?
 ---
 
-## E. 少数�?(sspai)
+## E. 灏戞暟娲?(sspai)
 
 - **Where:** https://sspai.com/ -- submit an article
-- **Angle:** tool-oriented / "拯救者不该被 Vantage 绑架". sspai readers respond to "one fewer background process".
-- 长度 1500-2500 字，配截图，结尾�?GitHub + Star�?
+- **Angle:** tool-oriented / "鎷晳鑰呬笉璇ヨ Vantage 缁戞灦". sspai readers respond to "one fewer background process".
+- 闀垮害 1500-2500 瀛楋紝閰嶆埅鍥撅紝缁撳熬缁?GitHub + Star銆?
 ---
 
 ## F. Dev.to -- long-form (EN)
@@ -333,28 +333,28 @@ milestone post.
 
 ---
 
-## H. B�?(Bilibili) -- 90s screencast
+## H. B绔?(Bilibili) -- 90s screencast
 
-- **Where:** 知识�?/ 科技 -> 数码
+- **Where:** 鐭ヨ瘑鍖?/ 绉戞妧 -> 鏁扮爜
 - **Length:** 60-90s. Switch Fn+Q, change RGB, install a plugin, quit and show no hitch.
 
-**口播脚本（中文）�?*
+**鍙ｆ挱鑴氭湰锛堜腑鏂囷級锛?*
 
 ```
-(0-5s) 拯救者上不想再装 Vantage？这个是我维护的开源工�?UDT�?(5-20s) 它没有后台服务、不用登录、也没有遥测。日常的 Fn+Q、键�?RGB、风扇曲线�?        独显切换、电池养护都在�?(20-45s) 重点看插件：像装手机插件一样装 CPU/GPU/网络工具，主程序不会越来越臃肿，
-        而且能热重载、沙箱隔离�?(45-70s) v5.0.0 刚修了个烦人的问题：以前退出应用后系统会卡一下，现在不会了�?(70-90s) Scoop 一条命令装（winget 包名留着但还没上线），链接在简介。觉得有用给�?Star，对开源项目意义重大�?```
+(0-5s) 鎷晳鑰呬笂涓嶆兂鍐嶈 Vantage锛熻繖涓槸鎴戠淮鎶ょ殑寮€婧愬伐鍏?UDT銆?(5-20s) 瀹冩病鏈夊悗鍙版湇鍔°€佷笉鐢ㄧ櫥褰曘€佷篃娌℃湁閬ユ祴銆傛棩甯哥殑 Fn+Q銆侀敭鐩?RGB銆侀鎵囨洸绾裤€?        鐙樉鍒囨崲銆佺數姹犲吇鎶ら兘鍦ㄣ€?(20-45s) 閲嶇偣鐪嬫彃浠讹細鍍忚鎵嬫満鎻掍欢涓€鏍疯 CPU/GPU/缃戠粶宸ュ叿锛屼富绋嬪簭涓嶄細瓒婃潵瓒婅噧鑲匡紝
+        鑰屼笖鑳界儹閲嶈浇銆佹矙绠遍殧绂汇€?(45-70s) v5.0.0 鍒氫慨浜嗕釜鐑︿汉鐨勯棶棰橈細浠ュ墠閫€鍑哄簲鐢ㄥ悗绯荤粺浼氬崱涓€涓嬶紝鐜板湪涓嶄細浜嗐€?(70-90s) Scoop 涓€鏉″懡浠よ锛坵inget 鍖呭悕鐣欑潃浣嗚繕娌′笂绾匡級锛岄摼鎺ュ湪绠€浠嬨€傝寰楁湁鐢ㄧ粰涓?Star锛屽寮€婧愰」鐩剰涔夐噸澶с€?```
 
-**简介区放：** GitHub 链接、Scoop 命令，置顶自己的评论挂链接。封面用
-`Assets/Screenshot_main.png` �?Logo 合成�?
+**绠€浠嬪尯鏀撅細** GitHub 閾炬帴銆丼coop 鍛戒护锛岀疆椤惰嚜宸辩殑璇勮鎸傞摼鎺ャ€傚皝闈㈢敤
+`Assets/Screenshot_main.png` 閰?Logo 鍚堟垚銆?
 ---
 
 ## I. Linux.do / Chiphell / NGA
 
-- **Linux.do:** 科技 / 开�?区，发主题帖，同 V2EX 正文，语气更技术�?- **Chiphell / NGA 笔记本区:** 偏玩家向，强�?RGB / 风扇曲线 / 独显，一句讲�?无遥�?�?- 均遵守：一次性、自报家门维护者、认真回答问题�?
+- **Linux.do:** 绉戞妧 / 寮€婧?鍖猴紝鍙戜富棰樺笘锛屽悓 V2EX 姝ｆ枃锛岃姘旀洿鎶€鏈€?- **Chiphell / NGA 绗旇鏈尯:** 鍋忕帺瀹跺悜锛屽己璋?RGB / 椋庢墖鏇茬嚎 / 鐙樉锛屼竴鍙ヨ娓?鏃犻仴娴?銆?- 鍧囬伒瀹堬細涓€娆℃€с€佽嚜鎶ュ闂ㄧ淮鎶よ€呫€佽鐪熷洖绛旈棶棰樸€?
 ---
 
-## J. 微博 / 小红�?
-- **微博:** 9 图倒序配文，标�?#拯救�? #开�? #Vantage平替#，挂 repo 链接�?- **小红�?** 封面大字"拯救者别再装 Vantage"，内页截图，文末 Scoop 命令 + Star�?
+## J. 寰崥 / 灏忕孩涔?
+- **寰崥:** 9 鍥惧€掑簭閰嶆枃锛屾爣绛?#鎷晳鑰? #寮€婧? #Vantage骞虫浛#锛屾寕 repo 閾炬帴銆?- **灏忕孩涔?** 灏侀潰澶у瓧"鎷晳鑰呭埆鍐嶈 Vantage"锛屽唴椤垫埅鍥撅紝鏂囨湯 Scoop 鍛戒护 + Star銆?
 ---
 
 ## Reply playbook (do this for the first 48h after each post)
@@ -387,16 +387,15 @@ milestone post.
 
 ## Weekly cadence (keep momentum, don't burn out)
 
-- Week 1: HN + 1 subreddit + V2EX + X thread + B�?
-- Week 2: Dev.to + 掘金 + 1 different subreddit + 少数�?
-- Week 3: Linux.do + Chiphell/NGA + 微博 + 微信�?技术群.
+- Week 1: HN + 1 subreddit + V2EX + X thread + B绔?
+- Week 2: Dev.to + 鎺橀噾 + 1 different subreddit + 灏戞暟娲?
+- Week 3: Linux.do + Chiphell/NGA + 寰崥 + 寰俊缇?鎶€鏈兢.
 - Then: 1 release every 2 weeks (even small) to stay in the star-history
   "trending" feed, and cross-post the release note as a short thread.
 - Each Sunday: log the star delta in `Docs/SUBMISSIONS.md` and
   `PILLAR_D_PROMOTION_PLAN.md`.
 
 ---
-
 
 ## Article drafts (ready to publish)
 
@@ -406,6 +405,7 @@ milestone post.
 | Juejin | `Docs/ARTICLES/juejin_article.md` | Draft ready (~1200 words CN) |
 | Reddit r/dotnet | `Docs/ARTICLES/reddit_rdotnet_post.md` | Draft ready |
 | V2EX | `Docs/ARTICLES/v2ex_post.md` | Draft ready |
+| Sspai | `Docs/ARTICLES/sspai_article.md` | Draft ready (~800 words CN) |
 
 All articles reference `Assets/Screenshot_main.png` as cover/attachment.
 
