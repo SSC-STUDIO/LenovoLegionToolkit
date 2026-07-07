@@ -47,6 +47,9 @@ jobs:
       - name: Build main app
         run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
+      - name: Restore visual regression smoke tool
+        run: dotnet restore Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj
+
       - name: Build visual regression smoke tool
         run: dotnet build Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release --no-restore
 
