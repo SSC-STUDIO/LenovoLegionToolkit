@@ -18,7 +18,7 @@
 ## 一、WPF 线程模型与异步并发规范（防闪退核心）
 
 ### 1. 严格划分 `.ConfigureAwait(false)` 的使用边界
-在 .NET 异步编程中，`.ConfigureAwait(false)` 用于指示不需要在调用方的 `SynchronizationContext`（同步上下文）上继续执行，从而减少上下文切换开销并防止死锁。然而在 WPF 应用程序中，滥用该方法是导致程序神秘闪退、无提示崩溃的**头号元凶**。
+在 .NET 异步编程中，`.ConfigureAwait(false)` 用于指示不需要在调用方的 `SynchronizationContext`（同步上下文）上继续执行，从而减少上下文切换开→并防止死锁。然而在 WPF 应用程序中，滥用该方法是导致程序神秘闪退、无提示崩溃的**头号元凶**。
 
 > [!CAUTION]
 > **绝对禁止在 UI 视图层使用 `.ConfigureAwait(false)`！**
@@ -126,7 +126,7 @@ public static async Task<ManagementObjectCollection> GetAsyncWithTimeout(
 ```
 
 #### 规则 B：禁用 WMI 监听系统事件，改用 Win32 API
-对于系统主题（深色/浅色模式）切换、注册表值变化等长期监听任务，**禁止使用 `ManagementEventWatcher`**。改用 Win32 系统的原生的 `PInvoke.RegNotifyChangeKeyValue` 或窗口消息 `WndProc` (WM_SETTINGCHANGE)，内存和 CPU 开销降低 95% 以上，且完全不会阻塞启动。
+对于系统主题（深色/浅色模式）切换、注册表值变化等长期监听任务，**禁止使用 `ManagementEventWatcher`**。改用 Win32 系统的原生的 `PInvoke.RegNotifyChangeKeyValue` 或窗口消息 `WndProc` (WM_SETTINGCHANGE)，内存和 CPU 开→降低 95% 以上，且完全不会阻塞启动。
 
 ---
 

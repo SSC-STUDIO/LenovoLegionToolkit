@@ -52,4 +52,4 @@ godot --headless --editor --path . --quit && godot --headless --path . --scene r
 # 在命令行一键启动贪吃蛇 2026 无限打磨引擎
 powershell -ExecutionPolicy Bypass -File .\llt-7x24-watchdog.ps1
 ```
-智能体将夜以继日地为您拉取代码、拓展 Roguelike 技能池、打磨 AI 对手、跑通无头测试并向全网发帖营销，直至冲破 100+ Star 大关！🚀🐍
+智能体将夜以继日地为您拉取代码、拓展 Roguelike 技能池、打磨 AI 对手、跑通无头测试并向全网发帖营→，直至冲破 100+ Star 大关！🚀🐍

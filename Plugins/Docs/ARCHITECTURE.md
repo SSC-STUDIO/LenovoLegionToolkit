@@ -193,7 +193,7 @@ Load → Start → [Runtime Loop] → Stop → Unload
 ### 运行时性能
 - 避免 `Task.Wait()` 阻塞调用
 - 使用 `ConfigureAwait(false)` 优化异步性能
-- HttpClient单例减少连接开销
+- HttpClient单例减少连接开→
 
 ## 版本管理
 

@@ -38,7 +38,7 @@ flowchart TD
     Start[启动 100 轮宣传片打磨引擎] --> P1[Phase 1: Rounds 1–20<br>共情脚本与 AI 拟真语音合成]
     P1 --> P2[Phase 2: Rounds 21–50<br>高帧率录屏 & Remotion 代码化动效]
     P2 --> P3[Phase 3: Rounds 51–80<br>BGM 音乐卡点剪辑 & SFX 音效渲染]
-    P3 --> P4[Phase 4: Rounds 81–100<br>4K横屏/竖屏多规格导出 & 营销裂变]
+    P3 --> P4[Phase 4: Rounds 81–100<br>4K横屏/竖屏多规格导出 & 营→裂变]
     
     P4 --> Check100{是否已达到第 100 轮<br>且帧帧完美？}
     Check100 -->|否| Refine[提取 A/B 测试反馈<br>定位瑕疵帧与节奏盲区] --> P1
