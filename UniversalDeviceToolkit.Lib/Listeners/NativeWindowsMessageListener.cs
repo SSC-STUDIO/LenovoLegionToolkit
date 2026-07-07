@@ -91,8 +91,6 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
     public Task StopAsync() => _mainThreadDispatcher.DispatchAsync(() =>
     {
-        try
-        {
         var kbHookLocal = _kbHook;
         var deviceNotifLocal = _deviceNotificationHandle;
         var consoleDisplayLocal = _consoleDisplayStateNotificationHandle;
@@ -160,6 +158,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         return Task.CompletedTask;
     });
+
 
     protected override unsafe void WndProc(ref Message m)
     {
