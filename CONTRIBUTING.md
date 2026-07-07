@@ -11,6 +11,17 @@ _Due to large number of issues created, those that do not meet the criteria will
 
 <br/>
 
+
+**Development setup**
+
+1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows)
+2. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
+3. Build: dotnet build -c Release -m:1
+4. Run tests: dotnet test -c Release
+
+The solution has 16 projects. Build sequentially (-m:1) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
+
+<br/>
 **1. Before reporting an issue make yourself familiar with the README**
 
 [README](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/README.md) is regularly updated to include answers to frequently asked questions as well as information about most common issues. Take your time to go through what is there before creating an issue or starting a discussion.
@@ -58,3 +69,4 @@ Pull requests are welcome (of course). Unless you create a very simple and under
 <br/>
 
 Once again, thanks for investing your time in helping UDT get better!
+
