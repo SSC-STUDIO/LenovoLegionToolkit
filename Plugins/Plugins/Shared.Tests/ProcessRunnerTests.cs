@@ -146,15 +146,25 @@ public class ProcessRunnerTests
     }
 
     [Theory]
-    [InlineData("C:\\test&calc.exe")]
-    [InlineData("C:\\test|cmd.exe")]
-    [InlineData("C:\\test;rm.exe")]
-    [InlineData("C:\\test$(whoami).exe")]
+    [InlineData("C:\\test\\..\\calc.exe")]
+    [InlineData("C:\\test\0cmd.exe")]
     public async Task RunProcessAsync_DangerousPathCharacters_ReturnsFailure(string path)
     {
         var result = await _runner.RunProcessAsync(path, "");
         Assert.False(result.Success);
         Assert.Contains("dangerous", result.Error);
+    }
+
+    [Theory]
+    [InlineData("C:\\test&calc.exe")]
+    [InlineData("C:\\test|cmd.exe")]
+    [InlineData("C:\\test;rm.exe")]
+    [InlineData("C:\\test$(whoami).exe")]
+    public async Task RunProcessAsync_NonExistentMetacharacterPath_ReturnsFailure(string path)
+    {
+        var result = await _runner.RunProcessAsync(path, "");
+        Assert.False(result.Success);
+        Assert.Contains("File not found", result.Error);
     }
 
     [Theory]
@@ -338,7 +348,7 @@ public class ProcessRunnerTests
         var loggerMock = new Mock<ILogger>();
         var runner = new ProcessRunner(loggerMock.Object);
 
-        var result = runner.TryRunProcess("C:\\test&malicious.exe", "", out var output);
+        var result = runner.TryRunProcess("C:\\test\\..\\malicious.exe", "", out var output);
 
         Assert.False(result);
         loggerMock.Verify(

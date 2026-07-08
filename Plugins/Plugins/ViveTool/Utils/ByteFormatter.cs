@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
 
@@ -6,8 +6,8 @@ public static class ByteFormatter
 {
     public static string FormatBytes(long bytes)
     {
-        string[] suffix = { "B", "KB", "MB", "GB" };
-        var value = (double)Math.Abs(bytes);
+        string[] suffix = { "B", "KB", "MB", "GB", "TB" };
+        var value = Math.Abs((double)bytes);
         var i = 0;
 
         while (i < suffix.Length - 1 && value >= 1024)
