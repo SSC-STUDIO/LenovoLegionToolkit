@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -632,6 +632,7 @@ private string _currentSearchText = string.Empty;
     {
         _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
         DetachPluginInstallCoordinator();
+        IsVisibleChanged -= PluginExtensionsPage_IsVisibleChanged;
     }
 
     private void AttachPluginInstallCoordinator()
