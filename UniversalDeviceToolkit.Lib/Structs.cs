@@ -768,7 +768,8 @@ public readonly struct SensorData(
     public int MinTemperature { get; }
     public int MaxTemperatureRecord { get; }
 
-    // é£æè½¬é?    public int FanSpeed { get; } = fanSpeed;
+    // é£æè½¬é?
+    public int FanSpeed { get; } = fanSpeed;
     public int MaxFanSpeed { get; } = maxFanSpeed;
     
     public SensorData WithMinMax(double minVolt, double maxVolt, int minTemp, int maxTemp)
@@ -877,7 +878,7 @@ public readonly struct Resolution(int width, int height) : IDisplayName, IEquata
     public int Height { get; } = height;
 
     [JsonIgnore]
-    public string DisplayName => $"{Width} Ã {Height}";
+    public string DisplayName => $"{Width} × {Height}";
 
     public Resolution(Size size) : this(size.Width, size.Height) { }
 
