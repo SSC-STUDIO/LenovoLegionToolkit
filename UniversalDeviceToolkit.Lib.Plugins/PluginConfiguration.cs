@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件配置的默认实现
+/// Default implementation of plugin configuration
 /// </summary>
 public class PluginConfiguration : IPluginConfiguration
 {

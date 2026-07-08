@@ -1,4 +1,4 @@
-// Plugin SDK surface: see SDK_BOUNDARY.md for the full public contract
+﻿// Plugin SDK surface: see SDK_BOUNDARY.md for the full public contract
 // that plugins are allowed to depend on. This file is part of the
 // public SDK; transitions between PluginState values are enforced
 // by PluginLifecycleStateMachine (host-internal) rather than by
@@ -7,94 +7,94 @@
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件状态枚举
+/// Plugin state enumeration
 /// </summary>
 public enum PluginState
 {
     /// <summary>
-    /// 未安装
+    /// Not installed
     /// </summary>
     NotInstalled,
     
     /// <summary>
-    /// 已安装但未启用
+    /// Installed but not enabled
     /// </summary>
     Installed,
     
     /// <summary>
-    /// 已启用（运行中）
+    /// Enabled (running)
     /// </summary>
     Enabled,
     
     /// <summary>
-    /// 已禁用
+    /// Disabled
     /// </summary>
     Disabled,
     
     /// <summary>
-    /// 加载错误
+    /// Load error
     /// </summary>
     Error
 }
 
 /// <summary>
-/// 插件健康状态枚举
+/// Plugin health status enumeration
 /// </summary>
 public enum PluginHealthStatus
 {
     /// <summary>
-    /// 插件正常
+    /// Plugin is healthy
     /// </summary>
     Healthy,
     
     /// <summary>
-    /// 插件有警告
+    /// Plugin has warnings
     /// </summary>
     Warning,
     
     /// <summary>
-    /// 插件有错误
+    /// Plugin has errors
     /// </summary>
     Error,
     
     /// <summary>
-    /// 插件未找到
+    /// Plugin not found
     /// </summary>
     NotFound,
     
     /// <summary>
-    /// 插件依赖缺失
+    /// Plugin dependency missing
     /// </summary>
     MissingDependencies,
     
     /// <summary>
-    /// 插件版本不兼容
+    /// Plugin version incompatible
     /// </summary>
     VersionIncompatible
 }
 
 /// <summary>
-/// 插件状态变更事件参数
+/// Plugin state change event arguments
 /// </summary>
 public class PluginStateChangedEventArgs : global::System.EventArgs
 {
     /// <summary>
-    /// 插件ID
+    /// Plugin ID
     /// </summary>
     public string PluginId { get; }
     
     /// <summary>
-    /// 旧状态
+    /// Previous state
     /// </summary>
     public PluginState OldState { get; }
     
     /// <summary>
-    /// 新状态
+    /// New state
     /// </summary>
     public PluginState NewState { get; }
     
     /// <summary>
-    /// 错误信息（如果有）
+    /// Error message (if any)
     /// </summary>
     public string? ErrorMessage { get; }
 

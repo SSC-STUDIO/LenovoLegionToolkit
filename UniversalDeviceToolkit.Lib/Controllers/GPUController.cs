@@ -13,18 +13,21 @@ using NeoSmart.AsyncLock;
 namespace LenovoLegionToolkit.Lib.Controllers;
 
 /// <summary>
-/// GPU鎺у埗鍣紝鐢ㄤ簬鐩戞帶鍜岀鐞哊VIDIA鐙珛GPU鐘舵€併€?/// </summary>
+/// GPU controller for monitoring and managing NVIDIA discrete GPU state.
+/// </summary>
 /// <remarks>
 /// <para>
-/// 姝ゆ帶鍒跺櫒鎻愪緵浠ヤ笅鍔熻兘锛?/// </para>
+/// This controller provides the following features:
+/// </para>
 /// <list type="bullet">
-///   <item><description>GPU鐘舵€佺洃鎺э紙婵€娲汇€侀潪婵€娲汇€佸凡鍏虫満绛夛級</description></item>
-///   <item><description>GPU杩涚▼绠＄悊</description></item>
-///   <item><description>GPU閲嶅惎鍜岃繘绋嬬粓姝?/description></item>
-///   <item><description>鑷€傚簲鍒锋柊闂撮殧锛堟椿璺冩椂2绉掞紝闈炴椿璺冩椂10绉掞級</description></item>
+///   <item><description>GPU state monitoring (active, inactive, powered off, etc.)</description></item>
+///   <item><description>GPU process management</description></item>
+///   <item><description>GPU restart and process termination</description></item>
+///   <item><description>Adaptive refresh interval (2s when active, 10s when idle)</description></item>
 /// </list>
 /// <para>
-/// 浣跨敤NVAPI涓嶯VIDIA椹卞姩閫氫俊锛岄渶瑕丯VIDIA GPU鏀寔銆?/// </para>
+/// Uses NVAPI for NVIDIA driver communication. Requires NVIDIA GPU support.
+/// </para>
 /// </remarks>
 public class GPUController : IDisposable
 {
@@ -49,11 +52,11 @@ public class GPUController : IDisposable
     private const int StabilizationDelay = 5000;
 
     /// <summary>
-    /// 褰揋PU鐘舵€佸埛鏂版椂瑙﹀彂鐨勪簨浠躲€?    /// </summary>
+    /// Event raised when GPU state is refreshed.
     public event EventHandler<GPUStatus>? Refreshed;
 
     /// <summary>
-    /// 鑾峰彇GPU鐩戞帶鏈嶅姟鏄惁宸插惎鍔ㄣ€?    /// </summary>
+    /// Gets whether the GPU monitoring service is started.
     public bool IsStarted
     {
         get
@@ -64,9 +67,9 @@ public class GPUController : IDisposable
     }
 
     /// <summary>
-    /// 鍒濆鍖朑PUController鐨勬柊瀹炰緥銆?    /// </summary>
-    /// <param name="processManager">GPU杩涚▼绠＄悊鍣ㄣ€?/param>
-    /// <param name="hardwareManager">GPU纭欢绠＄悊鍣ㄣ€?/param>
+    /// Creates a new instance of GPUController.
+    /// <param name="processManager">GPU process manager.</param>
+    /// <param name="hardwareManager">GPU hardware manager.</param>
     public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager, IDelayProvider delayProvider)
     {
         _processManager = processManager;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -274,10 +274,10 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
             if (fileExists)
             {
-                // 文件已存在，将下载按钮切换为安装按钮
-                // 检查当前图标，避免重复切换
+            // File already exists, switch download button to install button
+            // Check current icon to avoid duplicate switching
                 if (_downloadButton.Icon is SymbolIcon { Symbol: SymbolRegular.Play24 })
-                    return; // 已经是安装按钮，无需切换
+                return; // Already install button, no switch needed
 
                 _downloadButton.Click -= DownloadButton_Click;
                 _downloadButton.Click += InstallButton_Click;
@@ -289,10 +289,10 @@ public partial class PackageControl : IProgress<float>, IDisposable
             {
                 // File is not present, keep the button in download mode.
                 if (_downloadButton.Icon is SymbolIcon { Symbol: SymbolRegular.ArrowDownload24 })
-                    return; // 已经是下载按钮，无需切换
+                return; // Already download button, no switch needed
 
                 _downloadButton.Click -= InstallButton_Click;
-                _downloadButton.Click -= DownloadButton_Click; // 先移除，避免重复绑定
+        _downloadButton.Click -= DownloadButton_Click; // Remove first to avoid duplicate binding
                 _downloadButton.Click += DownloadButton_Click;
 
                 _downloadButton.Icon = CreateActionIcon(SymbolRegular.ArrowDownload24);
@@ -582,7 +582,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
     private async Task InstallPackageAsync()
     {
         Status = PackageStatus.Installing;
-        UpdateStatusDisplay(); // 立即更新显示状�?
+        UpdateStatusDisplay(); // Update display state immediately
         try
         {
             // Prefer actual downloaded file path
@@ -650,12 +650,12 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 return;
             }
 
-            // 运行安装程序
+        // Run installer
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = safeInstallerPath,
                 UseShellExecute = true,
-                Verb = "runas" // 以管理员权限运行
+            Verb = "runas" // Run with admin privileges
             };
 
             try
@@ -674,7 +674,7 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallStarted_Title, string.Format(Resource.PackageControl_InstallStarted_Message, _package.FileName), SnackbarType.Success);
 
-                // 如果进程立即退出，认为安装完成
+        // If process exits immediately, consider installation complete
                 if (installProcess != null && installProcess.HasExited)
                     await HandleInstallProcessExitAsync(installProcess);
             }

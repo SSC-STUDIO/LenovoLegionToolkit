@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using LenovoLegionToolkit.Lib.Utils;
@@ -6,36 +6,36 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件路径工具类，提供统一的插件目录发现和管理功能
+/// Plugin path utility class providing unified plugin directory discovery and management
 /// </summary>
 public static class PluginPaths
 {
     private static readonly string AppDataBaseDir = AppContext.BaseDirectory;
     
     /// <summary>
-    /// 插件目录名称
+    /// Plugin directory name
     /// </summary>
     public const string PluginsDirectoryName = "plugins";
     
     /// <summary>
-    /// 插件元数据文件名
+    /// Plugin metadata file name
     /// </summary>
     public const string PluginMetadataFileName = "Plugin.json";
 
     /// <summary>
-    /// 获取插件根目录
+    /// Gets the plugin root directory
     /// </summary>
-    /// <returns>插件根目录路径</returns>
+    /// <returns>Plugin root directory path</returns>
     public static string GetPluginsDirectory()
     {
         return Folders.GetAppDataSubdirectory(PluginsDirectoryName);
     }
 
     /// <summary>
-    /// 获取特定插件的目录
+    /// Gets the directory for a specific plugin
     /// </summary>
-    /// <param name="pluginId">插件ID</param>
-    /// <returns>插件目录路径</returns>
+    /// <param name="pluginId">Plugin ID</param>
+    /// <returns>Plugin directory path</returns>
     public static string GetPluginDirectory(string pluginId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(pluginId);
@@ -43,9 +43,9 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 获取开发环境的插件目录
+    /// Gets plugin directories for development environment
     /// </summary>
-    /// <returns>开发环境插件目录路径列表</returns>
+    /// <returns>List of development environment plugin directory paths</returns>
     public static string[] GetDevelopmentPluginsDirectories()
     {
         return new[]
@@ -58,9 +58,9 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 获取所有可能的插件目录
+    /// Gets all possible plugin directories
     /// </summary>
-    /// <returns>插件目录路径列表</returns>
+    /// <returns>List of plugin directory paths</returns>
     public static string[] GetAllPossiblePluginsDirectories()
     {
         var devDirs = GetDevelopmentPluginsDirectories();
@@ -74,10 +74,10 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 获取插件程序集文件路径
+    /// Gets plugin assembly file paths
     /// </summary>
-    /// <param name="pluginDirectory">插件目录</param>
-    /// <returns>DLL文件路径数组</returns>
+    /// <param name="pluginDirectory">Plugin directory</param>
+    /// <returns>Array of DLL file paths</returns>
     public static string[] GetPluginAssemblyFiles(string pluginDirectory)
     {
         if (!Directory.Exists(pluginDirectory))
@@ -87,10 +87,10 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 获取插件元数据文件路径
+    /// Gets the plugin metadata file path
     /// </summary>
-    /// <param name="pluginDirectory">插件目录</param>
-    /// <returns>元数据文件路径</returns>
+    /// <param name="pluginDirectory">Plugin directory</param>
+    /// <returns>Metadata file path</returns>
     public static string? GetPluginMetadataFilePath(string pluginDirectory)
     {
         var filePath = Path.Combine(pluginDirectory, PluginMetadataFileName);
@@ -98,10 +98,10 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 检查目录是否包含有效插件
+    /// Checks if a directory contains a valid plugin
     /// </summary>
-    /// <param name="directory">目录路径</param>
-    /// <returns>如果包含插件则返回true</returns>
+    /// <param name="directory">Directory path</param>
+    /// <returns>True if the directory contains a plugin</returns>
     public static bool ContainsPlugin(string directory)
     {
         if (!Directory.Exists(directory))
@@ -112,20 +112,20 @@ public static class PluginPaths
     }
 
     /// <summary>
-    /// 获取插件资源目录
+    /// Gets the plugin resources directory
     /// </summary>
-    /// <param name="pluginId">插件ID</param>
-    /// <returns>资源目录路径</returns>
+    /// <param name="pluginId">Plugin ID</param>
+    /// <returns>Resource directory path</returns>
     public static string GetPluginResourcesDirectory(string pluginId)
     {
         return Path.Combine(GetPluginDirectory(pluginId), "Resources");
     }
 
     /// <summary>
-    /// 获取插件配置文件路径
+    /// Gets the plugin configuration file path
     /// </summary>
-    /// <param name="pluginId">插件ID</param>
-    /// <returns>配置文件路径</returns>
+    /// <param name="pluginId">Plugin ID</param>
+    /// <returns>Configuration file path</returns>
     public static string GetPluginConfigFilePath(string pluginId)
     {
         return Path.Combine(GetPluginDirectory(pluginId), "config.json");

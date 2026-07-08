@@ -1,92 +1,92 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
 
 /// <summary>
-/// God Mode控制器接口，用于管理自定义性能模式和风扇曲线。
+/// God Mode controller interface for managing custom performance modes and fan curves.
 /// </summary>
 /// <remarks>
-/// God Mode允许用户自定义CPU/GPU功耗限制、风扇曲线等高级性能参数。
-/// 根据硬件版本不同，实现由GodModeControllerV1或GodModeControllerV2提供。
+/// God Mode allows users to customize CPU/GPU power limits, fan curves, and other advanced performance parameters.
+/// Implementation is provided by GodModeControllerV1 or GodModeControllerV2 depending on hardware version.
 /// </remarks>
 public interface IGodModeController
 {
     /// <summary>
-    /// 当预设变更时触发的事件。
+    /// Event raised when a preset is changed.
     /// </summary>
     /// <remarks>
-    /// 事件参数为新激活的预设ID。
+    /// Event arguments contain the newly activated preset ID.
     /// </remarks>
     event EventHandler<Guid> PresetChanged;
 
     /// <summary>
-    /// 检查是否需要禁用Lenovo Vantage软件。
+    /// Checks whether Lenovo Vantage software needs to be disabled.
     /// </summary>
-    /// <returns>如果需要禁用Vantage则返回true，否则返回false。</returns>
+    /// <returns>Returns true if Vantage needs to be disabled, false otherwise.</returns>
     Task<bool> NeedsVantageDisabledAsync();
 
     /// <summary>
-    /// 检查是否需要禁用Legion Zone软件。
+    /// Checks whether Legion Zone software needs to be disabled.
     /// </summary>
-    /// <returns>如果需要禁用Legion Zone则返回true，否则返回false。</returns>
+    /// <returns>Returns true if Legion Zone needs to be disabled, false otherwise.</returns>
     Task<bool> NeedsLegionZoneDisabledAsync();
 
     /// <summary>
-    /// 获取当前激活的预设ID。
+    /// Gets the currently activated preset ID.
     /// </summary>
-    /// <returns>当前激活预设的唯一标识符。</returns>
+    /// <returns>The unique identifier of the currently activated preset.</returns>
     Task<Guid> GetActivePresetIdAsync();
 
     /// <summary>
-    /// 获取当前激活的预设名称。
+    /// Gets the name of the currently activated preset.
     /// </summary>
-    /// <returns>当前激活预设的名称，如果没有则返回null。</returns>
+    /// <returns>The name of the currently activated preset, or null if none.</returns>
     Task<string?> GetActivePresetNameAsync();
 
     /// <summary>
-    /// 获取当前God Mode状态。
+    /// Gets the current God Mode state.
     /// </summary>
-    /// <returns>包含风扇曲线、功耗限制等参数的GodModeState对象。</returns>
+    /// <returns>A GodModeState object containing fan curve, power limit, and other parameters.</returns>
     Task<GodModeState> GetStateAsync();
 
     /// <summary>
-    /// 设置God Mode状态。
+    /// Sets the God Mode state.
     /// </summary>
-    /// <param name="state">要设置的God Mode状态。</param>
+    /// <param name="state">The God Mode state to set.</param>
     /// <remarks>
-    /// 此方法仅更新内存中的状态，需要调用<see cref="ApplyStateAsync"/>才能应用到硬件。
+    /// This method only updates the in-memory state; call <see cref="ApplyStateAsync"/> to apply to hardware.
     /// </remarks>
     Task SetStateAsync(GodModeState state);
 
     /// <summary>
-    /// 将当前God Mode状态应用到硬件。
+    /// Applies the current God Mode state to hardware.
     /// </summary>
-    /// <returns>表示异步操作的任务。</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     Task ApplyStateAsync();
 
     /// <summary>
-    /// 获取默认风扇表。
+    /// Gets the default fan table.
     /// </summary>
-    /// <returns>包含默认风扇转速曲线的FanTable对象。</returns>
+    /// <returns>A FanTable object containing the default fan speed curve.</returns>
     Task<FanTable> GetDefaultFanTableAsync();
 
     /// <summary>
-    /// 获取最小风扇表。
+    /// Gets the minimum fan table.
     /// </summary>
-    /// <returns>包含最小风扇转速曲线的FanTable对象。</returns>
+    /// <returns>A FanTable object containing the minimum fan speed curve.</returns>
     Task<FanTable> GetMinimumFanTableAsync();
 
     /// <summary>
-    /// 获取其他电源模式的默认设置。
+    /// Gets default settings for other power modes.
     /// </summary>
-    /// <returns>以电源模式状态为键，默认设置为值的字典。</returns>
+    /// <returns>A dictionary mapping power mode states to their default settings.</returns>
     Task<Dictionary<PowerModeState, GodModeDefaults>> GetDefaultsInOtherPowerModesAsync();
 
     /// <summary>
-    /// 恢复指定电源模式的默认设置。
+    /// Restores default settings for the specified power mode.
     /// </summary>
-    /// <param name="state">要恢复默认设置的电源模式。</param>
+    /// <param name="state">The power mode to restore defaults for.</param>
     Task RestoreDefaultsInOtherPowerModeAsync(PowerModeState state);
 }

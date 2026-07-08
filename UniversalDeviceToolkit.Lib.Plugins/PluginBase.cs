@@ -1,9 +1,9 @@
-using LenovoLegionToolkit.Lib.Optimization;
+﻿using LenovoLegionToolkit.Lib.Optimization;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件基类，提供默认实现和配置支持
+/// Plugin base class providing default implementation and configuration support
 /// </summary>
 public abstract class PluginBase : IPlugin
 {
@@ -22,7 +22,7 @@ public abstract class PluginBase : IPlugin
     protected IPluginHostContext HostContext => PluginHostContext.Current;
 
     /// <summary>
-    /// 获取插件配置实例
+    /// Gets the plugin configuration instance
     /// </summary>
     public IPluginConfiguration Configuration
     {
@@ -49,7 +49,7 @@ public abstract class PluginBase : IPlugin
     }
 
     /// <summary>
-    /// 获取功能扩展（如 IPluginPage）
+    /// Gets feature extensions (e.g. IPluginPage)
     /// </summary>
     public virtual object? GetFeatureExtension()
     {
@@ -57,7 +57,7 @@ public abstract class PluginBase : IPlugin
     }
 
     /// <summary>
-    /// 获取设置页面
+    /// Gets the settings page
     /// </summary>
     public virtual object? GetSettingsPage()
     {
@@ -65,7 +65,7 @@ public abstract class PluginBase : IPlugin
     }
 
     /// <summary>
-    /// 获取 Windows 优化分类
+    /// Gets the Windows optimization category
     /// </summary>
     public virtual WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {

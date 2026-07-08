@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ using Wpf.Ui.Controls;
 namespace UniversalDeviceToolkit.WPF.Pages
 {
 /// <summary>
-/// 插件页面包装器，用于承载插件提供的UI页面
+/// Plugin page wrapper for hosting plugin-provided UI pages
 /// </summary>
 public partial class PluginPageWrapper : Page
 {
@@ -41,7 +41,7 @@ public partial class PluginPageWrapper : Page
     }
 
     /// <summary>
-    /// 注册 PageTag 到插件ID的映�?    /// </summary>
+    /// Registers PageTag to plugin ID mapping�?    /// </summary>
     public static void RegisterPluginPageTag(string pageTag, string pluginId)
     {
         PageTagToPluginIdMap[pageTag] = pluginId;
@@ -49,11 +49,11 @@ public partial class PluginPageWrapper : Page
 
     private void PluginPageWrapper_Loaded(object sender, RoutedEventArgs e)
     {
-        // 从导航上下文中获取插件ID
-        // NavigationStore 使用 PageTag 来标识页面，格式�?"plugin:{pluginId}"
+        // Get plugin ID from navigation context
+        // NavigationStore uses PageTag to identify pages, format: "plugin:{pluginId}"
         if (_pluginId == null)
         {
-            // 尝试从父窗口的导航存储中获取当前页面�?PageTag
+            // Try to get the current page from the parent window navigation store via PageTag
             var mainWindow = Application.Current.MainWindow as UniversalDeviceToolkit.WPF.Windows.MainWindow;
             if (mainWindow != null)
             {
@@ -63,12 +63,12 @@ public partial class PluginPageWrapper : Page
                     var pageTag = navigationStore.Current.PageTag;
                     if (pageTag != null)
                     {
-                        // 首先尝试从映射字典中获取
+                        // First try to get from the mapping dictionary
                         if (PageTagToPluginIdMap.TryGetValue(pageTag, out var mappedPluginId))
                         {
                             _pluginId = mappedPluginId;
                         }
-                        // 如果 PageTag 格式�?"plugin:{pluginId}"，直接解�?                        else if (pageTag.StartsWith("plugin:", StringComparison.Ordinal))
+                        // If PageTag format is "plugin:{pluginId}", parse it directly
                         {
                             _pluginId = pageTag.Substring("plugin:".Length);
                         }
@@ -133,10 +133,10 @@ public partial class PluginPageWrapper : Page
                 return;
             }
 
-            // 设置页面标题
+            // Set page title
             Title = pluginPage.PageTitle;
 
-            // 设置页面图标和标题显示
+            // Set page icon and title display
             var pluginHeader = this.FindName("_pluginHeader") as StackPanel;
             if (pluginHeader != null)
             {
@@ -145,7 +145,7 @@ public partial class PluginPageWrapper : Page
                 {
                     pluginHeader.Visibility = Visibility.Visible;
 
-                    // 设置图标
+                    // Set icon
                     var pluginIcon = this.FindName("_pluginIcon") as Wpf.Ui.Controls.SymbolIcon;
                     if (pluginIcon != null && !string.IsNullOrWhiteSpace(pluginPage.PageIcon))
                     {
@@ -166,7 +166,7 @@ public partial class PluginPageWrapper : Page
                         pluginIcon.Visibility = Visibility.Collapsed;
                     }
 
-                    // 设置标题
+                    // Set title
                     var pluginTitle = this.FindName("_pluginTitle") as TextBlock;
                     if (pluginTitle != null)
                     {
@@ -180,7 +180,7 @@ public partial class PluginPageWrapper : Page
                 }
             }
 
-            // 创建插件页面控件
+            // Create plugin page control
             var pluginControl = pluginPage.CreatePage();
 
             // Find the Frame control by name

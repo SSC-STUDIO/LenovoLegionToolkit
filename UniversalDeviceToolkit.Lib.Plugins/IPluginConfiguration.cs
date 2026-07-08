@@ -1,54 +1,54 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件配置接口，用于插件持久化配置
+/// Plugin configuration interface for plugin persistent configuration
 /// </summary>
 public interface IPluginConfiguration
 {
     /// <summary>
-    /// 获取配置值
+    /// Gets a configuration value
     /// </summary>
-    /// <typeparam name="T">值类型</typeparam>
-    /// <param name="key">配置键</param>
-    /// <param name="defaultValue">默认值</param>
-    /// <returns>配置值</returns>
+    /// <typeparam name="T">Value type</typeparam>
+    /// <param name="key">Configuration key</param>
+    /// <param name="defaultValue">Default value</param>
+    /// <returns>The configuration value</returns>
     T GetValue<T>(string key, T defaultValue = default!);
     
     /// <summary>
-    /// 设置配置值
+    /// Sets a configuration value
     /// </summary>
-    /// <typeparam name="T">值类型</typeparam>
-    /// <param name="key">配置键</param>
-    /// <param name="value">配置值</param>
+    /// <typeparam name="T">Value type</typeparam>
+    /// <param name="key">Configuration key</param>
+    /// <param name="value">Configuration value</param>
     void SetValue<T>(string key, T value);
     
     /// <summary>
-    /// 检查配置键是否存在
+    /// Checks if a configuration key exists
     /// </summary>
-    /// <param name="key">配置键</param>
-    /// <returns>是否存在</returns>
+    /// <param name="key">Configuration key</param>
+    /// <returns>True if the key exists</returns>
     bool HasKey(string key);
     
     /// <summary>
-    /// 删除配置键
+    /// Removes a configuration key
     /// </summary>
-    /// <param name="key">配置键</param>
+    /// <param name="key">Configuration key</param>
     void RemoveKey(string key);
     
     /// <summary>
-    /// 保存配置到存储
+    /// Saves configuration to storage
     /// </summary>
     Task SaveAsync();
     
     /// <summary>
-    /// 重新加载配置
+    /// Reloads configuration from storage
     /// </summary>
     Task ReloadAsync();
     
     /// <summary>
-    /// 清除所有配置
+    /// Clears all configuration
     /// </summary>
     void Clear();
 }
