@@ -12,7 +12,6 @@ namespace LenovoLegionToolkit.Lib.Settings;
 public abstract class AbstractSettings<T> where T : class, new()
 {
     protected readonly JsonSerializerOptions JsonSerializerOptions;
-    private readonly string _settingsStorePath;
     private readonly string _fileName;
     private readonly object _lock = new();
     private T? _cachedStore;
@@ -41,10 +40,10 @@ public abstract class AbstractSettings<T> where T : class, new()
         ConfigureJsonSerializerOptions(JsonSerializerOptions);
 
         _fileName = filename;
-        _settingsStorePath = Path.Combine(Folders.AppData, _fileName);
 
-        if (!PathSecurity.IsPathWithinAllowedDirectory(_settingsStorePath, Folders.AppData))
-            throw ExceptionHelper.SettingsPathEscapesAllowedDir(_settingsStorePath);
+        var defaultSettingsPath = Path.Combine(Folders.AppData, _fileName);
+        if (!PathSecurity.IsPathWithinAllowedDirectory(defaultSettingsPath, Folders.AppData))
+            throw ExceptionHelper.SettingsPathEscapesAllowedDir(defaultSettingsPath);
     }
 
     /// <summary>
@@ -52,12 +51,16 @@ public abstract class AbstractSettings<T> where T : class, new()
     /// </summary>
     protected virtual void ConfigureJsonSerializerOptions(JsonSerializerOptions options) { }
 
+    /// <summary>Override the on-disk settings file location (e.g. for tests that need a temp directory).
+    /// Defaults to <c>Path.Combine(Folders.AppData, _fileName)</c>.</summary>
+    protected virtual string SettingsFilePath => Path.Combine(Folders.AppData, _fileName);
+
     public void SynchronizeStore()
     {
         lock (_lock)
         {
             var settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
-            File.WriteAllText(_settingsStorePath, settingsSerialized);
+            File.WriteAllText(SettingsFilePath, settingsSerialized);
             _lastLoadTime = DateTime.UtcNow;
         }
     }
@@ -71,7 +74,7 @@ public abstract class AbstractSettings<T> where T : class, new()
             _lastLoadTime = DateTime.UtcNow;
         }
 
-        await File.WriteAllTextAsync(_settingsStorePath, settingsSerialized).ConfigureAwait(false);
+        await File.WriteAllTextAsync(SettingsFilePath, settingsSerialized).ConfigureAwait(false);
     }
 
     public virtual T? LoadStore()
@@ -84,7 +87,7 @@ public abstract class AbstractSettings<T> where T : class, new()
             T? store = null;
             try
             {
-                var settingsSerialized = File.ReadAllText(_settingsStorePath);
+                var settingsSerialized = File.ReadAllText(SettingsFilePath);
                 store = JsonSerializer.Deserialize<T>(settingsSerialized, JsonSerializerOptions);
 
                 if (store is null)
@@ -125,7 +128,7 @@ public abstract class AbstractSettings<T> where T : class, new()
 
         try
         {
-            var settingsSerialized = await File.ReadAllTextAsync(_settingsStorePath).ConfigureAwait(false);
+            var settingsSerialized = await File.ReadAllTextAsync(SettingsFilePath).ConfigureAwait(false);
             store = JsonSerializer.Deserialize<T>(settingsSerialized, JsonSerializerOptions);
 
             if (store is null)
@@ -170,12 +173,12 @@ public abstract class AbstractSettings<T> where T : class, new()
     {
         try
         {
-            if (!File.Exists(_settingsStorePath))
+            if (!File.Exists(SettingsFilePath))
                 return;
 
             var backupFileName = $"{Path.GetFileNameWithoutExtension(_fileName)}_backup_{DateTime.UtcNow:yyyyMMddHHmmss}{Path.GetExtension(_fileName)}";
             var backupFilePath = Path.Combine(Folders.AppData, backupFileName);
-            File.Copy(_settingsStorePath, backupFilePath);
+            File.Copy(SettingsFilePath, backupFilePath);
         }
         catch (Exception ex)
         {
