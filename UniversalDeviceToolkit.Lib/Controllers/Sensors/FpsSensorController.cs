@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -74,7 +74,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
             _isRunning = true;
             var oldCts = _cancellationTokenSource;
             _cancellationTokenSource = new CancellationTokenSource();
-            try { oldCts?.Dispose(); } catch { }
+            try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(StartMonitoringAsync)}.", ex); }
 
             _ = Task.Run(async () =>
             {
@@ -160,7 +160,8 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                     case 4:
                         return null;
                 }
-                var process = Process.GetProcessById((int)processId);
+
+                var process = Process.GetProcessById((int)processId);
 
                 if (string.IsNullOrEmpty(process.ProcessName) || process.HasExited)
                 {
