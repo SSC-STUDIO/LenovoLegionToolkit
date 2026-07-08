@@ -1,10 +1,10 @@
 # Contributing to UniversalDeviceToolkit-Plugins
 
-Thank you for your interest in contributing! ğŸ‰
+Thank you for your interest in contributing! ??
 
 This guide will help you get started with the Universal Device Toolkit plugin ecosystem.
 
-## ğŸ“‹ Table of Contents
+## ?? Table of Contents
 
 - [Ways to Contribute](#ways-to-contribute)
 - [Development Setup](#development-setup)
@@ -16,31 +16,31 @@ This guide will help you get started with the Universal Device Toolkit plugin ec
 
 ## Ways to Contribute
 
-There are many ways to contribute â€” no contribution is too small!
+There are many ways to contribute ¡ªno contribution is too small!
 
-### ğŸ› Report Bugs
+### ?? Report Bugs
 
 - Use the [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues) page
 - Check if the bug has already been reported
 - Include: OS version, .NET version, steps to reproduce, expected vs actual behavior
 
-### ğŸ’¡ Suggest Features
+### ?? Suggest Features
 
 - Open a [Feature Request](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues/new?labels=enhancement)
 - Describe the use case and why it would be valuable
 
-### ğŸ”§ Submit Code
+### ?? Submit Code
 
 - Fix bugs, implement features, improve documentation
 - Follow the coding standards below
 - Test your changes before submitting
 
-### ğŸ“– Improve Documentation
+### ? Improve Documentation
 
 - Fix typos, clarify wording, add examples
 - Translate to other languages (we currently support English + Chinese)
 
-### ğŸ§© Create a Plugin
+### ??§© Create a Plugin
 
 - Build a new plugin using our SDK
 - Two paths: **Contributor Path** (community plugins) or **Official Store Path** (official plugins)
@@ -128,17 +128,17 @@ Additional requirements:
 
 ```
 Plugins/MyPlugin/
-â”œâ”€â”€ MyPlugin.cs                          # Plugin entry point (implements IPlugin)
-â”œâ”€â”€ MyPluginPlugin.cs                    # Plugin attribute and metadata
-â”œâ”€â”€ MyPluginPage.xaml                    # Feature page UI (optional)
-â”œâ”€â”€ MyPluginPage.xaml.cs                 # Feature page code-behind
-â”œâ”€â”€ MyPluginSettingsControl.xaml         # Settings page UI
-â”œâ”€â”€ MyPluginSettingsControl.xaml.cs      # Settings page code-behind
-â”œâ”€â”€ Resources/
-â”‚   â””â”€â”€ Resource.resx                    # Localized strings
-â”œâ”€â”€ plugin.manifest.json                 # Plugin manifest (authoring)
-â”œâ”€â”€ store-entry.json                     # Store metadata (official only)
-â””â”€â”€ LenovoLegionToolkit.Plugins.MyPlugin.csproj
+©À©¤©¤€ MyPlugin.cs                          # Plugin entry point (implements IPlugin)
+©À©¤©¤€ MyPluginPlugin.cs                    # Plugin attribute and metadata
+©À©¤©¤€ MyPluginPage.xaml                    # Feature page UI (optional)
+©À©¤©¤€ MyPluginPage.xaml.cs                 # Feature page code-behind
+©À©¤©¤€ MyPluginSettingsControl.xaml         # Settings page UI
+©À©¤©¤€ MyPluginSettingsControl.xaml.cs      # Settings page code-behind
+©À©¤©¤€ Resources/
+â”?  ©¸©¤©¤€ Resource.resx                    # Localized strings
+©À©¤©¤€ plugin.manifest.json                 # Plugin manifest (authoring)
+©À©¤©¤€ store-entry.json                     # Store metadata (official only)
+©¸©¤©¤€ LenovoLegionToolkit.Plugins.MyPlugin.csproj
 ```
 
 ### Implementing IPlugin
@@ -175,20 +175,20 @@ public class MyPlugin : IPlugin
 
 ## UI Guidelines
 
-### âœ… Do
+### ??Do
 
-1. **Use DynamicResource for all colors** â€” zero hardcoded brushes:
+1. **Use DynamicResource for all colors** ¡ªzero hardcoded brushes:
    ```xaml
    <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
    ```
 
-2. **Use x:Static for all text** â€” zero hardcoded strings:
+2. **Use x:Static for all text** ¡ªzero hardcoded strings:
    ```xaml
    <TextBlock Text="{x:Static resources:Resource.MyPlugin_Title}" />
    ```
 
-3. **Provide fallback UI** â€” implement `BuildFallbackUi()`:
+3. **Provide fallback UI** ¡ªimplement `BuildFallbackUi()`:
    ```csharp
    public MyPluginPage()
    {
@@ -208,11 +208,11 @@ public class MyPlugin : IPlugin
 
 5. **Use Grid star-sizing** for responsive layouts
 
-### âŒ Don't
+### ??Don't
 
-- Don't hardcode colors (e.g., `Foreground="White"` â€” use DynamicResource instead)
+- Don't hardcode colors (e.g., `Foreground="White"` ¡ªuse DynamicResource instead)
 - Don't hardcode strings in XAML or code-behind
-- Don't skip fallback UI â€” always implement `BuildFallbackUi()`
+- Don't skip fallback UI ¡ªalways implement `BuildFallbackUi()`
 - Don't forget to test in both Light and Dark themes
 
 ## Coding Standards
@@ -222,7 +222,7 @@ public class MyPlugin : IPlugin
 - Follow [Microsoft's C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 - Use **4 spaces** for indentation (no tabs)
 - Use **PascalCase** for public members, **camelCase** for private fields
-- Use **meaningful names** â€” avoid abbreviations
+- Use **meaningful names** ¡ªavoid abbreviations
 - Add XML documentation for public APIs
 
 ### Commit Messages
@@ -279,4 +279,4 @@ Contributors are recognized in:
 - The project README (for plugin authors)
 - The [CHANGELOG.md](CHANGELOG.md)
 
-Thank you for contributing to UniversalDeviceToolkit-Plugins! ğŸš€
+Thank you for contributing to UniversalDeviceToolkit-Plugins! ??
