@@ -433,9 +433,17 @@ public class PluginHotReload : IPluginHotReload, IDisposable
 
                 watcher.Changed += async (sender, e) =>
                 {
-                    if (e.ChangeType == WatcherChangeTypes.Changed)
+                    try
                     {
-                        await OnPluginFileChanged(pluginId, e.FullPath);
+                        if (e.ChangeType == WatcherChangeTypes.Changed)
+                        {
+                            await OnPluginFileChanged(pluginId, e.FullPath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Error during plugin file change for {pluginId}: {ex.Message}");
                     }
                 };
 
