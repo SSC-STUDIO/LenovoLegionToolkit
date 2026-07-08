@@ -4437,3 +4437,25 @@ _Audit log (pass-17777, 2026-07-08, Codex/OpenCode multi-repo batch Phase 2): Re
 - [x] **[PLG-014]** `[i18n / Hardcoded Strings — RESOLVED via locale backfill]` Plugin XAML files previously had hardcoded English strings not extracted to Resource.resx. *Root Cause (revised)*: Full re-scan of all plugin runtime XAML found 0 hardcoded Content/Text literals -- the prior premise described a legacy state already fixed. Every plugin binds text via `x:Static text:*Text.*` (a typed resource wrapper over Resource.resx). The genuine residual gap was *priority-locale coverage*: BatteryHealth lacked `de`/`ja`/`ru` satellite files (only had `en` + `zh-Hans`); the other 4 plugins already had all 4 priority locales. *Resolution (Phase 1b, 2026-07-08, maintainer-authorized)*: Created `Plugins\BatteryHealth\Resources\Resource.de.resx`, `Resource.ja.resx`, `Resource.ru.resx` (45 keys each, full translations), mirroring the simple-resheader format of the existing `Resource.en.resx`/`Resource.zh-Hans.resx`. SDK auto-embeds them as satellite assemblies (no csproj change needed -- `zh-Hans.resx` already worked that way). Coverage now: ALL 5 plugins (BatteryHealth/CustomMouse/NetworkAcceleration/ShellIntegration/ViveTool) carry complete `zh-Hans`/`de`/`ja`/`ru` coverage. *Verification*: `dotnet build` (BatteryHealth) => 0 warnings / 0 errors; `obj\Debug` satellite DLLs emitted for `de`/`en`/`ja`/`ru`/`zh-Hans` (`*.resources.dll`). Ticket CLOSED.
 
 _Resolution log (Phase 1 complete, 2026-07-08): [PLG-015] wired Fluent theme dictionaries (WPF-UI 4.3.0) + replaced 7 hex literals + `White` with DynamicResource tokens in `Tools\PluginCompletionUiTool`; build clean. [PLG-014] closed by backfilling 3 missing locale satellite files for BatteryHealth; all 5 plugins now have full priority-locale coverage; build clean + satellite DLLs emitted. [PLG-016] retracted as false positive (earlier). Net open UI/UX tickets: zero._
+
+---
+
+- [ ] **[PLG-017]** [Thread Safety / UI Freeze] Sync-over-async blocks the WPF Dispatcher in Plugins\ShellIntegration\ShellIntegrationSettingsControl.xaml.cs:295 (handler SyncManagedConfigButton_Click at L293-297). *Root Cause*: The handler is a synchronous private void ...Click that calls Task.Run(async () => await _plugin.SyncManagedConfigurationAsync()).GetAwaiter().GetResult() directly on the UI/Dispatcher thread. Although Task.Run offloads the async work to the ThreadPool (avoiding the classic SynchronizationContext self-deadlock of a bare .Result/.Wait()), .GetAwaiter().GetResult() still **synchronously blocks the Dispatcher pump** until the config sync completes; any synchronous filesystem/registry write inside SyncManagedConfigurationAsync() (ShellIntegrationPlugin.cs:666) can therefore freeze the host WPF window (clock cursor / non-responsive) for the full I/O duration. This violates Pillar B Governance A (async UI handlers must not block the Dispatcher) and is inconsistent with its two sibling handlers in the same file — EnableButton_Click (L233) and DisableButton_Click (L247) — which are both correctly private async void with try-catch. *Suggested Fix*: Convert the handler to sync void with a try-catch guard, mirroring the siblings:
+`csharp
+private async void SyncManagedConfigButton_Click(object sender, RoutedEventArgs e)
+{
+    try
+    {
+        var success = await _plugin.SyncManagedConfigurationAsync().ConfigureAwait(true);
+        RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigSyncCompleted : ShellIntegrationText.StatusManagedConfigSyncFailed, !success);
+    }
+    catch (Exception ex)
+    {
+        RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
+        PluginLog.Trace($"SyncManagedConfigButton_Click error: {ex.Message}", ex);
+    }
+}
+`
+*Verification*: dotnet build (Release) = 0 warnings/0 errors; dotnet test ShellIntegration.Tests green; manual: click "Sync Managed Config" repeatedly — window remains responsive (no clock cursor) during sync.
+
+_Audit log (pass-58100, 2026-07-09, Codex): Reporter-only. UDT: CA=0; hex=0; WMI timeout=clean; sync-block=0. PLG: async-void guards=all except PLG-013 (resolved in 3); hex=ShellIntegrationProfile.cs (config data, N/A); sync-over-async=1 new PLG-017. VSR: unwrap=0 production (all tests); TanStack Virtual=all long lists virtualized; frontend OS-calls=0; readFile=via Rust JSON-RPC w/ budget. **New defects: UDT=0; PLG=1 (PLG-017); VSR=0.** Queues=1 new._
