@@ -73,8 +73,8 @@ public class ViveToolProactiveEdgeCaseTests
     // ByteFormatter boundary coverage
 
     [Theory]
-    [InlineData(long.MaxValue, "GB")]
-    [InlineData(long.MinValue, "GB")]
+    [InlineData(long.MaxValue, "TB")]
+    [InlineData(long.MinValue, "TB")]
     [InlineData(1024L * 1024 * 1024 * 1024, "TB")]
     [InlineData(-1, "-1 B")]
     [InlineData(1023, "1023 B")]
