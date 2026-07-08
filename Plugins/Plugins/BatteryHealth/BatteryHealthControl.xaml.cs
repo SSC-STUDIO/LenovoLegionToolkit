@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,7 +25,17 @@ public partial class BatteryHealthControl : UserControl
         _settingsManager = new SettingsManager<BatteryHealthSettings>("battery-health");
         _service = new BatteryHealthService(_settingsManager);
 
-        Loaded += async (_, _) => await LoadBatteryHealthAsync();
+        Loaded += async (_, _) =>
+        {
+            try
+            {
+                await LoadBatteryHealthAsync();
+            }
+            catch (Exception)
+            {
+                SetStatus(BatteryHealthText.RefreshFailedMessage, true, Wpf.Ui.Controls.SymbolRegular.ErrorCircle24);
+            }
+        };
     }
 
     private async Task LoadBatteryHealthAsync()
