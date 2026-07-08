@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -43,10 +43,14 @@ public class DriverKeyListener(
 
     public async Task StopAsync()
     {
-        if (_cancellationTokenSource is not null)
-            await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
-
+        var cts = _cancellationTokenSource;
         _cancellationTokenSource = null;
+
+        if (cts is not null)
+        {
+            await cts.CancelAsync().ConfigureAwait(false);
+            cts.Dispose();
+        }
 
         if (_listenTask is not null)
             await _listenTask.ConfigureAwait(false);
