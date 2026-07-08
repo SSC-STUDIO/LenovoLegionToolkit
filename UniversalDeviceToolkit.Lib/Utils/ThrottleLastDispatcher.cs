@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
 /// <summary>
-/// 限制执行频率的调度器，在指定的间隔时间内只执行最后一次调用的任务。
+/// ThrottleLastDispatcher - Only executes the last call within a given interval.
+/// When a new task arrives within the interval, the previous task will be cancelled.
 /// </summary>
 public class ThrottleLastDispatcher : IDisposable
 {
@@ -18,11 +19,12 @@ public class ThrottleLastDispatcher : IDisposable
     private readonly IDelayProvider? _delayProvider;
 
     /// <summary>
-    /// 初始化 <see cref="ThrottleLastDispatcher"/> 类的新实例。
-/// </summary>
-    /// <param name="interval">节流的时间间隔。</param>
-    /// <param name="tag">用于日志记录的可选标签。</param>
-    /// <exception cref="ArgumentOutOfRangeException">当间隔时间小于零时抛出。</exception>
+    /// Initializes a new ThrottleLastDispatcher instance.
+    /// </summary>
+    /// <param name="interval">The throttle interval.</param>
+    /// <param name="tag">Optional tag for logging.</param>
+    /// <param name="delayProvider">Optional delay provider for testing.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when interval is negative.</exception>
     public ThrottleLastDispatcher(TimeSpan interval, string? tag = null, IDelayProvider? delayProvider = null)
     {
         if (interval < TimeSpan.Zero)
@@ -34,12 +36,12 @@ public class ThrottleLastDispatcher : IDisposable
     }
 
     /// <summary>
-    /// 调度一个任务。如果在 <see cref="interval"/> 内有新的任务到达，之前的任务将被取消。
+    /// Schedules a task. If a new task arrives within the interval, the previous task will be cancelled.
     /// </summary>
-    /// <param name="task">要执行的任务。</param>
-    /// <returns>表示异步操作的任务。</returns>
-    /// <exception cref="ArgumentNullException">当任务为空时抛出。</exception>
-    /// <exception cref="ObjectDisposedException">当调度器已释放时抛出。</exception>
+    /// <param name="task">The task to execute.</param>
+    /// <returns>A task representing the async operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the task is null.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown when the dispatcher has been disposed.</exception>
     public async Task DispatchAsync(Func<Task> task)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -52,11 +54,7 @@ public class ThrottleLastDispatcher : IDisposable
                 throw new ObjectDisposedException(nameof(ThrottleLastDispatcher));
 
             myVersion = ++_currentVersion;
-            
-            // Cancel previous delay
-            // Signal cancellation to the previous token source but do not dispose it here.
-            // Disposing a CancellationTokenSource while another task is awaiting its token
-            // can cause races on some runtimes. Disposal will be handled by Dispose().
+
             _cancellationTokenSource?.Cancel();
 
             _cancellationTokenSource = new CancellationTokenSource();
