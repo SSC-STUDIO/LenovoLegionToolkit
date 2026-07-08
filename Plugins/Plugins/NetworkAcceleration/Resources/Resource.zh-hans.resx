@@ -343,4 +343,35 @@
   <data name="StatusServiceStarted" xml:space="preserve">
     <value>加速已启动。</value>
   </data>
+  <data name="StepFlushDns" xml:space="preserve">
+    <value>Flush DNS cache</value>
+  </data>
+  <data name="StepResetWinsock" xml:space="preserve">
+    <value>Reset Winsock catalog</value>
+  </data>
+  <data name="StepResetTcpIp" xml:space="preserve">
+    <value>Reset TCP/IP stack</value>
+  </data>
+  <data name="StepSourceRequired" xml:space="preserve">
+    <value>explicitly enabled</value>
+  </data>
+  <data name="StepSourceModeDriven" xml:space="preserve">
+    <value>included by selected mode</value>
+  </data>
+  <data name="OptimizationPlanStepFormat" xml:space="preserve">
+    <value>{0}. {1}  [{3}]
+{2}</value>
+  </data>
+  <data name="NoPlannedOptimizationSteps" xml:space="preserve">
+    <value>No optimization steps are currently planned.</value>
+  </data>
+  <data name="PlannedStepsLabel" xml:space="preserve">
+    <value>Planned Steps</value>
+  </data>
+  <data name="PlannedStepsTitle" xml:space="preserve">
+    <value>Optimization Plan</value>
+  </data>
+  <data name="PlannedStepsDescription" xml:space="preserve">
+    <value>Preview the exact commands quick optimization will run with the current mode and toggles.</value>
+  </data>
 </root>
