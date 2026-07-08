@@ -34,7 +34,7 @@
         <Border
             x:Name="_backgroundBorder"
             Padding="10,4"
-            Background="#CC202020"
+            Background="{DynamicResource ControlFillColorDefaultBrush}" Opacity="0.8"
             CornerRadius="6" />
         <Border
             Padding="10,4"
@@ -84,7 +84,7 @@
                     Height="12"
                     Margin="10,0"
                     VerticalAlignment="Center"
-                    Fill="#555555" />
+                    Fill="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
                 <StackPanel
                     x:Name="_cpuGroup"
@@ -139,7 +139,7 @@
                     Height="12"
                     Margin="10,0"
                     VerticalAlignment="Center"
-                    Fill="#555555" />
+                    Fill="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
                 <StackPanel
                     x:Name="_gpuGroup"
@@ -190,7 +190,7 @@
                     Height="12"
                     Margin="10,0"
                     VerticalAlignment="Center"
-                    Fill="#555555" />
+                    Fill="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
                 <StackPanel
                     x:Name="_memoryGroup"
@@ -219,7 +219,7 @@
                     Height="12"
                     Margin="10,0"
                     VerticalAlignment="Center"
-                    Fill="#555555" />
+                    Fill="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
                 <StackPanel
                     x:Name="_pchGroup"
