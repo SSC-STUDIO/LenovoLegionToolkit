@@ -21,10 +21,10 @@
 
         <Border Grid.Row="0"
                 Padding="12"
-                BorderBrush="#FFD0D0D0"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="8"
-                Background="#FFF8F8F8">
+                Background="{DynamicResource ControlFillColorDefaultBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -135,9 +135,9 @@
                 Margin="0,12,0,12"
                 Padding="10"
                 CornerRadius="6"
-                BorderBrush="#FFD0D0D0"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                Background="White">
+                Background="{DynamicResource ControlFillColorSecondaryBrush}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Status: " FontWeight="SemiBold" />
                 <TextBlock x:Name="StatusTextBlock"
@@ -193,16 +193,16 @@
                 Margin="0,12,0,0"
                 Padding="8"
                 CornerRadius="6"
-                BorderBrush="#FFD0D0D0"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                Background="#FF0D1117">
+                Background="{DynamicResource ControlFillColorSecondaryBrush}">
             <TextBox x:Name="LogTextBox"
                      AutomationProperties.AutomationId="LogTextBox"
                      IsReadOnly="True"
                      FontFamily="Consolas"
                      FontSize="12"
-                     Foreground="#FFE6EDF3"
-                     Background="#FF0D1117"
+                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                     Background="{DynamicResource ControlFillColorSecondaryBrush}"
                      BorderThickness="0"
                      TextWrapping="Wrap"
                      VerticalScrollBarVisibility="Auto"
