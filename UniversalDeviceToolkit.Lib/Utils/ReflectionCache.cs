@@ -5,11 +5,11 @@ using System.Reflection;
 namespace LenovoLegionToolkit.Lib.Utils;
 
 /// <summary>
-/// 反射缓存助手，用于缓存PropertyInfo以减少反射开销。
+/// Reflection cache helper to reduce reflection overhead.
 /// </summary>
 /// <remarks>
-/// 在高频调用的场景下（如传感器数据采集），每次反射获取PropertyInfo都会产生开销。
-/// 此类通过缓存PropertyInfo来优化性能。
+/// In high-frequency call scenarios, each reflection to get PropertyInfo incurs overhead.
+/// This class optimizes performance by caching PropertyInfo.
 /// </remarks>
 public static class ReflectionCache
 {
@@ -17,21 +17,21 @@ public static class ReflectionCache
     private static readonly ConcurrentDictionary<(Type, string), PropertyInfo?> _propertyByNameCache = new();
 
     /// <summary>
-    /// 获取类型的所有公共属性，使用缓存避免重复反射。
+    /// Gets all public properties of a type, using cache to avoid repeated reflection.
     /// </summary>
-    /// <param name="type">要获取属性的类型。</param>
-    /// <returns>属性信息数组。</returns>
+    /// <param name="type">The type to get the property from.</param>
+    /// <returns>Array of PropertyInfo.</returns>
     public static PropertyInfo[] GetCachedProperties(Type type)
     {
         return _propertyCache.GetOrAdd(type, t => t.GetProperties(BindingFlags.Public | BindingFlags.Instance));
     }
 
     /// <summary>
-    /// 获取指定名称的属性，使用缓存避免重复反射。
+    /// Gets a property by name, using cache to avoid repeated reflection.
     /// </summary>
-    /// <param name="type">要获取属性的类型。</param>
-    /// <param name="propertyName">属性名称。</param>
-    /// <returns>属性信息，如果不存在则返回null。</returns>
+    /// <param name="type">The type to get the property from.</param>
+    /// <param name="propertyName">Property name.</param>
+    /// <returns>PropertyInfo, or null if not found.</returns>
     public static PropertyInfo? GetCachedProperty(Type type, string propertyName)
     {
         var key = (type, propertyName);
@@ -48,11 +48,11 @@ public static class ReflectionCache
     }
 
     /// <summary>
-    /// 获取属性值，使用缓存的PropertyInfo。
+    /// Gets a property value using cached PropertyInfo.
     /// </summary>
-    /// <param name="obj">要获取属性值的对象。</param>
-    /// <param name="propertyName">属性名称。</param>
-    /// <returns>属性值，如果获取失败则返回null。</returns>
+    /// <param name="obj">The object to get the property value from.</param>
+    /// <param name="propertyName">Property name.</param>
+    /// <returns>Property value, or null if retrieval fails.</returns>
     public static object? GetCachedPropertyValue(object obj, string propertyName)
     {
         if (obj == null) return null;
@@ -62,7 +62,7 @@ public static class ReflectionCache
     }
 
     /// <summary>
-    /// 清除所有缓存。
+    /// Clears all caches.
     /// </summary>
     public static void ClearCache()
     {
@@ -72,10 +72,10 @@ public static class ReflectionCache
 }
 
 /// <summary>
-/// GPU功耗信息获取的缓存助手。
+/// Cache helper for GPU power information.
 /// </summary>
 /// <remarks>
-/// 用于缓存nvidia-smi调用结果和失败状态，避免频繁调用外部进程。
+/// Caches nvidia-smi call results and failure state to avoid frequent external process calls.
 /// </remarks>
 public class GPUPowerInfoCache
 {
@@ -89,10 +89,10 @@ public class GPUPowerInfoCache
     private readonly TimeSpan _nvidiaSmiRetryInterval;
 
     /// <summary>
-    /// 初始化GPUPowerInfoCache的新实例。
+    /// Initializes a new GPUPowerInfoCache instance.
     /// </summary>
-    /// <param name="cacheDuration">缓存持续时间，默认5秒。</param>
-    /// <param name="nvidiaSmiRetryInterval">nvidia-smi重试间隔，默认30秒。</param>
+    /// <param name="cacheDuration">Cache duration, default 5 seconds.</param>
+    /// <param name="nvidiaSmiRetryInterval">nvidia-smi retry interval, default 30 seconds.</param>
     public GPUPowerInfoCache(TimeSpan? cacheDuration = null, TimeSpan? nvidiaSmiRetryInterval = null)
     {
         _cacheDuration = cacheDuration ?? TimeSpan.FromSeconds(5);
@@ -100,19 +100,19 @@ public class GPUPowerInfoCache
     }
 
     /// <summary>
-    /// 获取缓存的功耗信息。
+    /// Gets cached power information.
     /// </summary>
-    /// <returns>功耗和电压的元组。</returns>
+    /// <returns>Tuple of wattage and voltage.</returns>
     public (int wattage, double voltage) GetCached()
     {
         return (_cachedWattage, _cachedVoltage);
     }
 
     /// <summary>
-    /// 更新缓存。
+    /// Updates the cache.
     /// </summary>
-    /// <param name="wattage">功耗（瓦特）。</param>
-    /// <param name="voltage">电压。</param>
+    /// <param name="wattage">Wattage in watts.</param>
+    /// <param name="voltage">Voltage.</param>
     public void Update(int wattage, double voltage)
     {
         _cachedWattage = wattage;
@@ -121,16 +121,16 @@ public class GPUPowerInfoCache
     }
 
     /// <summary>
-    /// 检查缓存是否有效。
+    /// Checks if the cache is valid.
     /// </summary>
-    /// <returns>如果缓存有效则返回true。</returns>
+    /// <returns>Returns true if the cache is valid.</returns>
     public bool IsCacheValid()
     {
         return _cachedWattage >= 0 && (DateTime.UtcNow - _lastUpdateTime) < _cacheDuration;
     }
 
     /// <summary>
-    /// 标记nvidia-smi调用失败。
+    /// Marks an nvidia-smi call as failed.
     /// </summary>
     public void MarkNvidiaSmiFailed()
     {
@@ -139,9 +139,9 @@ public class GPUPowerInfoCache
     }
 
     /// <summary>
-    /// 检查是否应该尝试nvidia-smi调用。
+    /// Checks whether an nvidia-smi call should be attempted.
     /// </summary>
-    /// <returns>如果应该尝试则返回true。</returns>
+    /// <returns>Returns true if a call should be attempted.</returns>
     public bool ShouldTryNvidiaSmi()
     {
         if (!_nvidiaSmiFailed) return true;
@@ -149,7 +149,7 @@ public class GPUPowerInfoCache
     }
 
     /// <summary>
-    /// 重置nvidia-smi失败状态。
+    /// Resets the nvidia-smi failure state.
     /// </summary>
     public void ResetNvidiaSmiFailed()
     {
