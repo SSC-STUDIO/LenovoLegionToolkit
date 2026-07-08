@@ -2,7 +2,6 @@
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
-using UniversalDeviceToolkit.Lib.Automation;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -405,7 +404,7 @@ public class AdditionalEnumAndModelTests
     [Fact]
     public void StepperValue_WithNullSteps_ShouldWork()
     {
-        var sv = new StepperValue(10, 0, 100, 5, null, 50);
+        var sv = new StepperValue(10, 0, 100, 5, null!, 50);
         sv.Steps.Should().BeNull();
     }
 
@@ -566,5 +565,4 @@ public class AdditionalEnumAndModelTests
 
     #endregion
 }
-
 

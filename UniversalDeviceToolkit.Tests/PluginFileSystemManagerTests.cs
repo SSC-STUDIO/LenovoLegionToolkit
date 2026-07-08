@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Plugins;
 using Xunit;
@@ -120,7 +121,7 @@ public class PluginFileSystemManagerTests
     #region DeleteFileWithRetryAsync Tests
 
     [Fact]
-    public async void DeleteFileWithRetryAsync_NonExistentFile_ShouldReturnTrue()
+    public async Task DeleteFileWithRetryAsync_NonExistentFile_ShouldReturnTrue()
     {
         var manager = new PluginFileSystemManager();
         var result = await manager.DeleteFileWithRetryAsync(@"C:\nonexistent\fake.dll");
@@ -128,7 +129,7 @@ public class PluginFileSystemManagerTests
     }
 
     [Fact]
-    public async void DeleteDirectoryWithRetryAsync_NonExistentDir_ShouldReturnTrue()
+    public async Task DeleteDirectoryWithRetryAsync_NonExistentDir_ShouldReturnTrue()
     {
         var manager = new PluginFileSystemManager();
         var result = await manager.DeleteDirectoryWithRetryAsync(@"C:\nonexistent\fake_dir");

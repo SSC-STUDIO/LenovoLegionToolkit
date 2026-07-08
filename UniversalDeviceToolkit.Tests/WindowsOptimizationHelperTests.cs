@@ -112,7 +112,7 @@ public class WindowsOptimizationHelperTests
     [Fact]
     public void RegistryValueEquals_String_NullValues_ShouldReturnTrue()
     {
-        var result = WindowsOptimizationHelper.RegistryValueEquals(null, null, RegistryValueKind.String);
+        var result = WindowsOptimizationHelper.RegistryValueEquals(null!, null!, RegistryValueKind.String);
         result.Should().BeTrue();
     }
 

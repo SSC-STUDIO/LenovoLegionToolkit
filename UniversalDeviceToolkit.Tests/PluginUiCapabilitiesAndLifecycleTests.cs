@@ -298,7 +298,7 @@ public class PluginUiCapabilitiesAndLifecycleTests
     [Fact]
     public void ReadInstalledManifest_Null_ShouldReturnNull()
     {
-        PluginUiCapabilityResolver.ReadInstalledManifest(null).Should().BeNull();
+        PluginUiCapabilityResolver.ReadInstalledManifest(null!).Should().BeNull();
     }
 
     [Fact]
@@ -326,7 +326,7 @@ public class PluginUiCapabilitiesAndLifecycleTests
     [Fact]
     public void ResolveFromInstalledManifest_Null_ShouldReturnDefault()
     {
-        var caps = PluginUiCapabilityResolver.ResolveFromInstalledManifest(null);
+        var caps = PluginUiCapabilityResolver.ResolveFromInstalledManifest(null!);
         caps.HasAny.Should().BeFalse();
     }
 

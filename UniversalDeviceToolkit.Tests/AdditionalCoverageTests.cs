@@ -437,7 +437,7 @@ public class AdditionalCoverageTests
     [Fact]
     public void StepperValue_NullSteps_ShouldWork()
     {
-        var sv = new StepperValue(10, 0, 100, 1, null, 50);
+        var sv = new StepperValue(10, 0, 100, 1, null!, 50);
         sv.Steps.Should().BeNull();
     }
 

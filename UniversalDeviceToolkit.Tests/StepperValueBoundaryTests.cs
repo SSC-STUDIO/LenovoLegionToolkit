@@ -73,7 +73,7 @@ public class StepperValueBoundaryTests
     [Fact]
     public void ToString_NullSteps_ShouldContainEmptyBrackets()
     {
-        var sv = new StepperValue(10, 0, 100, 5, null, 50);
+        var sv = new StepperValue(10, 0, 100, 5, null!, 50);
         sv.ToString().Should().Contain("[]");
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
@@ -36,7 +37,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void RunAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task RunAutomationStep_IsSupported_ShouldReturnTrue()
     {
         var step = new RunAutomationStep("test", null, null, null);
         (await step.IsSupportedAsync()).Should().BeTrue();
@@ -72,7 +73,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void NotificationAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task NotificationAutomationStep_IsSupported_ShouldReturnTrue()
     {
         var step = new NotificationAutomationStep("test");
         (await step.IsSupportedAsync()).Should().BeTrue();
@@ -88,7 +89,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void NotificationAutomationStep_Run_NullText_ShouldNotThrow()
+    public async Task NotificationAutomationStep_Run_NullText_ShouldNotThrow()
     {
         var step = new NotificationAutomationStep(null);
         var ctx = new AutomationContext();
@@ -116,7 +117,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void PlaySoundAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task PlaySoundAutomationStep_IsSupported_ShouldReturnTrue()
     {
         var step = new PlaySoundAutomationStep("test");
         (await step.IsSupportedAsync()).Should().BeTrue();
@@ -132,7 +133,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void PlaySoundAutomationStep_Run_NullPath_ShouldNotThrow()
+    public async Task PlaySoundAutomationStep_Run_NullPath_ShouldNotThrow()
     {
         var step = new PlaySoundAutomationStep(null);
         var ctx = new AutomationContext();
@@ -153,10 +154,10 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public void DelayAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task DelayAutomationStep_IsSupported_ShouldReturnTrue()
     {
         var step = new DelayAutomationStep(new Delay(1));
-        step.IsSupportedAsync().Result.Should().BeTrue();
+        (await step.IsSupportedAsync()).Should().BeTrue();
     }
 
     [Fact]
@@ -173,7 +174,7 @@ public class AutomationStepModelTests
     #region TurnOnWiFiAutomationStep Tests
 
     [Fact]
-    public async void TurnOnWiFi_IsSupported_ShouldReturnTrue()
+    public async Task TurnOnWiFi_IsSupported_ShouldReturnTrue()
     {
         var step = new TurnOnWiFiAutomationStep();
         (await step.IsSupportedAsync()).Should().BeTrue();
@@ -192,7 +193,7 @@ public class AutomationStepModelTests
     #region TurnOffWiFiAutomationStep Tests
 
     [Fact]
-    public async void TurnOffWiFi_IsSupported_ShouldReturnTrue()
+    public async Task TurnOffWiFi_IsSupported_ShouldReturnTrue()
     {
         var step = new TurnOffWiFiAutomationStep();
         (await step.IsSupportedAsync()).Should().BeTrue();
@@ -226,7 +227,7 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async void QuickActionAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task QuickActionAutomationStep_IsSupported_ShouldReturnTrue()
     {
         var step = new QuickActionAutomationStep(null);
         (await step.IsSupportedAsync()).Should().BeTrue();

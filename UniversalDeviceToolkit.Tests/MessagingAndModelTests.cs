@@ -277,8 +277,6 @@ public class MessagingAndModelTests
     [InlineData(RGBKeyboardBacklightEffect.WaveLTR)]
     [InlineData(RGBKeyboardBacklightEffect.Smooth)]
     [InlineData(RGBKeyboardBacklightEffect.WaveRTL)]
-    [InlineData(RGBKeyboardBacklightEffect.Smooth)]
-    [InlineData(RGBKeyboardBacklightEffect.Static)]
     public void RGBKeyboardBacklightEffect_ShouldBeDefined(RGBKeyboardBacklightEffect value)
     {
         Enum.IsDefined(value).Should().BeTrue();
@@ -290,7 +288,6 @@ public class MessagingAndModelTests
 
     [Theory]
     [InlineData(RGBKeyboardBacklightBrightness.Low)]
-    [InlineData(RGBKeyboardBacklightBrightness.High)]
     [InlineData(RGBKeyboardBacklightBrightness.High)]
     public void RGBKeyboardBacklightBrightness_ShouldBeDefined(RGBKeyboardBacklightBrightness value)
     {
@@ -310,7 +307,6 @@ public class MessagingAndModelTests
     [Theory]
     [InlineData(RGBKeyboardBacklightSpeed.Slowest)]
     [InlineData(RGBKeyboardBacklightSpeed.Slow)]
-    [InlineData(RGBKeyboardBacklightSpeed.Fast)]
     [InlineData(RGBKeyboardBacklightSpeed.Fast)]
     [InlineData(RGBKeyboardBacklightSpeed.Fastest)]
     public void RGBKeyboardBacklightSpeed_ShouldBeDefined(RGBKeyboardBacklightSpeed value)
@@ -351,7 +347,6 @@ public class MessagingAndModelTests
     [InlineData(IGPUModeState.Default)]
     [InlineData(IGPUModeState.Auto)]
     [InlineData(IGPUModeState.IGPUOnly)]
-    [InlineData(IGPUModeState.Default)]
     public void IGPUModeState_ShouldBeDefined(IGPUModeState value)
     {
         Enum.IsDefined(value).Should().BeTrue();
