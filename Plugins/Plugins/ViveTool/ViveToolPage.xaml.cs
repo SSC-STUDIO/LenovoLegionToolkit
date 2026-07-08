@@ -1121,21 +1121,28 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem item)
+        try
         {
-            _selectedStatusFilter = item.Tag is FeatureFlagStatus status ? status : null;
-        }
-        else
-        {
-            _selectedStatusFilter = null;
-        }
+            if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem item)
+            {
+                _selectedStatusFilter = item.Tag is FeatureFlagStatus status ? status : null;
+            }
+            else
+            {
+                _selectedStatusFilter = null;
+            }
 
-        if (!_isFeatureUiReady)
-        {
-            return;
-        }
+            if (!_isFeatureUiReady)
+            {
+                return;
+            }
 
-        await SearchFeaturesAsync();
+            await SearchFeaturesAsync();
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"Error in StatusFilterComboBox_SelectionChanged: {ex.Message}", ex);
+        }
     }
 
     private async void EnableFeatureButton_Click(object sender, RoutedEventArgs e)
