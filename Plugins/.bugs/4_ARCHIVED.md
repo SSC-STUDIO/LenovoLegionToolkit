@@ -36,3 +36,5 @@
 - **Fix**: Added retry-with-backoff (3 attempts, 50ms/100ms delays) wrapping `Configuration.SaveAsync()` in `NetworkAccelerationPlugin.SaveSettingsAsync()`.
 - **Verification**: Full solution: 409/409 pass. Solo: 39/39 pass. Build: 0W/0E.
 - **Rule**: All plugin `SaveSettingsAsync()` methods calling `Configuration.SaveAsync()` MUST wrap in retry-with-backoff. Root fix belongs in host library.
+
+- [x] ~~**[PLG-009]**~~ [Exception Handling] Empty catch blocks in WpfHostNotifications.cs:41,67. **FIXED** (2026-07-08): All catch blocks now log via PluginLog.Trace(). No longer silently swallowing exceptions. Verified: lines 41, 67, 127, 154, 183, 210 all have proper exception logging. No KB rule needed.
