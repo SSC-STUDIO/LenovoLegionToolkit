@@ -13989,3 +13989,33 @@ g): ConfigureAwait(true) in WPF/Lib UI & ViewModels = 0; synchronous ManagementO
 **Build Verification**: Veser tsc: 0 errors. UDT individual projects: 0 errors. Plugins: 0 errors.
 
 _Next new ID reserved: UDT-028._
+
+---
+
+## New Tickets (pass 2026-07-09T05:56:28+08:00, Codex+OpenCode Bug Reporter — IsVisibleChanged event-leak sweep, distinct from UDT-026)
+
+- [ ] **[UDT-027]** [Code Quality / Event Handler Leak] SettingsPage subscribes IsVisibleChanged += SettingsPage_IsVisibleChanged with no unsubscribe in UniversalDeviceToolkit.WPF/Pages/SettingsPage.xaml.cs:L42. *Root Cause*: The page constructor hooks the routed IsVisibleChanged event (L42) and defines the handler (L86), but there is no Unloaded/OnClosed/Dispose/finalizer anywhere in the type (verified: g 'Unloaded|OnClosed|Dispose|~SettingsPage' => 0 hits), so the subscription is never removed. Navigation frames keep the page instance alive across visibility toggles, so the handler stays bound for the page lifetime; the handler itself is a self-closure (	his), so this is currently a single-subscription no-op leak, but it breaks the subscribe/unsubscribe pairing pattern enforced by sibling pages (PluginExtensionsPage uses Unloaded, AbstractRefreshingControl pairs +=/-=). Not a duplicate of UDT-026 (that covered DashboardGroupControl's *child* subscriptions; this is a *self*-subscription on a Page). *Suggested Fix*: Add Unloaded += SettingsPage_Unloaded; in the constructor (next to the += at L42) and a matching handler:
+`csharp
+private void SettingsPage_Unloaded(object sender, RoutedEventArgs e)
+{
+    IsVisibleChanged -= SettingsPage_IsVisibleChanged;
+}
+`
+
+- [ ] **[UDT-028]** [Code Quality / Event Handler Leak] AddAutomationStepWindow subscribes IsVisibleChanged += AddAutomationStepWindow_IsVisibleChanged with no unsubscribe in UniversalDeviceToolkit.WPF/Windows/Automation/AddAutomationStepWindow.xaml.cs:L24. *Root Cause*: The window constructor hooks the event (L24) and defines the handler (L27), but there is no Closed/OnClosed/Dispose handler to detach it (verified: g 'Closed|OnClosed|Dispose' => 0 outside the handler name and CancelButton_Click => Close()). The window can be re-opened/re-created repeatedly from the automation editor (
+ew AddAutomationStepWindow(...) per use); each closed-but-not-detached instance keeps its routed-event subscription until GC, and because IsVisibleChanged is a bubbling routed event on a Window, a lingering handler on a not-yet-collected instance can still observe visibility changes during the GC-grace window, violating the subscribe/unsubscribe pairing pattern. Not a duplicate of UDT-026. *Suggested Fix*: Hook the window Closed event in the constructor and detach there (a top-level Window is single-use; detach on Closed, not Unloaded):
+`csharp
+// In the constructor, after: IsVisibleChanged += AddAutomationStepWindow_IsVisibleChanged;
+Closed += (_, _) => IsVisibleChanged -= AddAutomationStepWindow_IsVisibleChanged;
+`
+
+- [ ] **[UDT-029]** [Code Quality / Event Handler Leak] PluginExtensionsPage subscribes IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged but its Unloaded handler does NOT detach it in UniversalDeviceToolkit.WPF/Pages/PluginExtensionsPage.xaml.cs:L61 (handler PluginExtensionsPage_Unloaded at L631-635 only detaches PluginManager_PluginStateChanged and the install-coordinator). *Root Cause*: The page registers three handlers in the constructor (Loaded, IsVisibleChanged, Unloaded at L60-62) and the Unloaded body (L631 PluginExtensionsPage_Unloaded) detaches only PluginStateChanged (via _pluginManager.PluginStateChanged -= ...) and the plugin-install coordinator; the IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged subscription from L61 is never paired with a -= anywhere (verified: only one IsVisibleChanged reference in the file at the subscription site). If the host navigates the page through Unloaded/reload cycles without recreating the instance, the subscription is left dangling; even with recreation it diverges from the explicit-detach pattern used for the sibling PluginStateChanged handler on the same page. Not a duplicate of UDT-026. *Suggested Fix*: Add the detach to the existing PluginExtensionsPage_Unloaded handler:
+`csharp
+private void PluginExtensionsPage_Unloaded(object sender, RoutedEventArgs e)
+{
+    IsVisibleChanged -= PluginExtensionsPage_IsVisibleChanged;  // <-- add this line
+    _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
+    DetachPluginInstallCoordinator();
+}
+`
+_Dedup note: UDT-022..026 were re-verified present/open; UDT-022/023/024/025 cite line numbers whose containing files were renamed since filing (DriverKeyListener.cs, PluginHotReload.cs, AutomationProcessor.cs, AutomationJsonConverters.cs paths no longer resolve at the recorded locations) — left for the maintenance agent to reconcile, not re-filed here to avoid duplicate-ID collision._
