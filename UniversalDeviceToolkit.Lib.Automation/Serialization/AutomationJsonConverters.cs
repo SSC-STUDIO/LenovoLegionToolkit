@@ -35,7 +35,7 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
 
     static AutomationPipelineTriggerJsonConverter()
     {
-        foreach (var t in typeof(IAutomationPipelineTrigger).Assembly.GetTypes())
+        foreach (var t in typeof(IAutomationPipelineTrigger).Assembly.SafeGetTypes())
         {
             if (!t.IsClass || t.IsAbstract || !typeof(IAutomationPipelineTrigger).IsAssignableFrom(t))
                 continue;
@@ -62,7 +62,7 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
                 if (TypesByDiscriminator.TryGetValue(key, out var mapped))
                     return (IAutomationPipelineTrigger?)JsonSerializer.Deserialize(root.GetRawText(), mapped, options);
 
-                var byName = typeof(IAutomationPipelineTrigger).Assembly.GetTypes()
+                var byName = typeof(IAutomationPipelineTrigger).Assembly.SafeGetTypes()
                     .FirstOrDefault(t => t.IsClass && !t.IsAbstract && typeof(IAutomationPipelineTrigger).IsAssignableFrom(t)
                         && (t.Name == key || t.FullName == key || t.FullName?.EndsWith("." + key, StringComparison.Ordinal) == true));
                 if (byName is not null)
@@ -152,7 +152,7 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
         if (raw.Trim() == "{}")
             return null;
 
-        var candidates = typeof(IAutomationPipelineTrigger).Assembly.GetTypes()
+        var candidates = typeof(IAutomationPipelineTrigger).Assembly.SafeGetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && typeof(IAutomationPipelineTrigger).IsAssignableFrom(t))
             .OrderByDescending(GetBestCtorArity)
             .ThenBy(t => t.FullName, StringComparer.Ordinal);
@@ -188,7 +188,7 @@ internal sealed class AutomationStepJsonConverter : JsonConverter<IAutomationSte
 
     static AutomationStepJsonConverter()
     {
-        foreach (var t in typeof(IAutomationStep).Assembly.GetTypes())
+        foreach (var t in typeof(IAutomationStep).Assembly.SafeGetTypes())
         {
             if (!t.IsClass || t.IsAbstract || !typeof(IAutomationStep).IsAssignableFrom(t))
                 continue;
@@ -215,7 +215,7 @@ internal sealed class AutomationStepJsonConverter : JsonConverter<IAutomationSte
                 if (TypesByDiscriminator.TryGetValue(key, out var mapped))
                     return (IAutomationStep?)JsonSerializer.Deserialize(root.GetRawText(), mapped, options);
 
-                var byName = typeof(IAutomationStep).Assembly.GetTypes()
+                var byName = typeof(IAutomationStep).Assembly.SafeGetTypes()
                     .FirstOrDefault(t => t.IsClass && !t.IsAbstract && typeof(IAutomationStep).IsAssignableFrom(t)
                         && (t.Name == key || t.FullName == key || t.FullName?.EndsWith("." + key, StringComparison.Ordinal) == true));
                 if (byName is not null)
@@ -261,7 +261,7 @@ internal sealed class AutomationStepJsonConverter : JsonConverter<IAutomationSte
 
         var raw = root.GetRawText();
 
-        var ordered = typeof(IAutomationStep).Assembly.GetTypes()
+        var ordered = typeof(IAutomationStep).Assembly.SafeGetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && typeof(IAutomationStep).IsAssignableFrom(t))
             .OrderByDescending(GetBestCtorArity)
             .ThenBy(t => t.FullName, StringComparer.Ordinal);
