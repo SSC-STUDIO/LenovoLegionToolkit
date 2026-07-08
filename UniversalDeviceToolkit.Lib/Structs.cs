@@ -752,14 +752,14 @@ public readonly struct SensorData(
     public int MaxCoreClock { get; } = maxCoreClock;
     public int MemoryClock { get; } = memoryClock;
     public int MaxMemoryClock { get; } = maxMemoryClock;
-    // 温度
+    // æ¸©åº¦
     public int Temperature { get; } = temperature;
     public int MaxTemperature { get; } = maxTemperature;
 
-    // 功耗 (W)
+    // Wattage (W)
     public int Wattage { get; } = wattage;
 
-    // 电压 (V)
+    // Voltage (V)
     public double Voltage { get; } = voltage;
     
     // Min/Max values for tracking
@@ -768,8 +768,7 @@ public readonly struct SensorData(
     public int MinTemperature { get; }
     public int MaxTemperatureRecord { get; }
 
-    // 风扇转速
-    public int FanSpeed { get; } = fanSpeed;
+    // é£æè½¬é?    public int FanSpeed { get; } = fanSpeed;
     public int MaxFanSpeed { get; } = maxFanSpeed;
     
     public SensorData WithMinMax(double minVolt, double maxVolt, int minTemp, int maxTemp)
@@ -878,7 +877,7 @@ public readonly struct Resolution(int width, int height) : IDisplayName, IEquata
     public int Height { get; } = height;
 
     [JsonIgnore]
-    public string DisplayName => $"{Width} × {Height}";
+    public string DisplayName => $"{Width} Ã {Height}";
 
     public Resolution(Size size) : this(size.Width, size.Height) { }
 
