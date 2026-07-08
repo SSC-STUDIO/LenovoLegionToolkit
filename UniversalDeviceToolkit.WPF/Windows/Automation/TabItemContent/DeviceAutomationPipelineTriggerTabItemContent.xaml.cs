@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -83,7 +83,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
             var oldCts = _filterDebounceCancellationTokenSource;
             _filterDebounceCancellationTokenSource = new();
-            try { oldCts?.Dispose(); } catch { }
+            try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(InitializeDevicesAsync)}.", ex); }
 
             await Task.Delay(500, _filterDebounceCancellationTokenSource.Token);
 

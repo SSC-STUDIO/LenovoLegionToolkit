@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -62,7 +62,7 @@ internal class MacroPlayer
 
         var oldCts = _cancellationTokenSource;
         _cancellationTokenSource = new();
-        try { oldCts?.Dispose(); } catch { }
+        try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(PlayAsync)}.", ex); }
         var token = _cancellationTokenSource.Token;
 
         _playTask = Task.Run(async () =>
