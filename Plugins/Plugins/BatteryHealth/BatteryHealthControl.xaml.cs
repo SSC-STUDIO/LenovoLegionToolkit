@@ -164,7 +164,14 @@ public partial class BatteryHealthControl : UserControl
 
     private async void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
-        await LoadBatteryHealthAsync();
+        try
+        {
+            await LoadBatteryHealthAsync();
+        }
+        catch (Exception)
+        {
+            SetStatus(BatteryHealthText.RefreshFailedMessage, true, Wpf.Ui.Controls.SymbolRegular.ErrorCircle24);
+        }
     }
 
     private static Brush ResolveBrush(string resourceKey, Brush fallback)
