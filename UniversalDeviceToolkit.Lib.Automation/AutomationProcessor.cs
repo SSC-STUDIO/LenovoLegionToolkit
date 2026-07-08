@@ -30,6 +30,7 @@ public class AutomationProcessor(
 {
     private readonly AsyncLock _ioLock = new();
     private readonly AsyncLock _runLock = new();
+    private readonly object _ctsLock = new();
 
     private List<AutomationPipeline> _pipelines = [];
     private CancellationTokenSource? _cts;
@@ -182,7 +183,7 @@ public class AutomationProcessor(
         using (await _runLock.LockAsync().ConfigureAwait(false))
         {
             CancellationTokenSource? oldCts;
-            lock (_ioLock)
+            lock (_ctsLock)
             {
                 oldCts = _cts;
                 _cts = new CancellationTokenSource();
@@ -209,7 +210,11 @@ public class AutomationProcessor(
             using (await _ioLock.LockAsync().ConfigureAwait(false))
                 pipelines = _pipelines.ToList();
 
-            var ct = _cts.Token;
+            CancellationToken ct;
+            lock (_ctsLock)
+            {
+                ct = _cts!.Token;
+            }
 
             foreach (var pipeline in pipelines)
             {
@@ -583,7 +588,7 @@ public class AutomationProcessor(
                 sessionLockUnlockListener.Changed -= SessionLockUnlockListener_Changed;
 
                 CancellationTokenSource? ctsToDispose;
-                lock (_ioLock)
+                lock (_ctsLock)
                 {
                     ctsToDispose = _cts;
                     _cts = null;
