@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -454,7 +454,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
 
             var oldCts = _refreshStateCancellationTokenSource;
             _refreshStateCancellationTokenSource = new();
-            try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(OnUnloaded)}.", ex); }
+            try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(StopAnimationAsync)}.", ex); }
 
             if (_refreshStateTask is not null)
                 await _refreshStateTask;
