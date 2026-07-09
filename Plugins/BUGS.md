@@ -92,15 +92,13 @@
 - **状态**: 🟢 Confirmed（Day 11 验证为低风险——代码结构正确）
 - **发现日期**: 2026-07-06
 
-### 🔴 H-003: `NetworkAccelerationRuntime.Stop()` 中 `Task.Wait()` 可能死锁（Day 11 确认）
+### 🟢 H-003: `NetworkAccelerationRuntime.Stop()` 中 `Task.Wait()` 可能死锁 — 已修复
 
-- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationRuntime.cs:93-95`
-- **严重程度**: High
+- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationRuntime.cs:73-109`
+- **严重程度**: High → Fixed
 - **类别**: 线程安全
-- **描述**: `Stop()` 方法调用 `_loopTask.Wait(TimeSpan.FromSeconds(2))`。如果 `Stop()` 在 UI 线程调用，而 `_loopTask` 内部有 `await` 且未正确使用 `ConfigureAwait(false)`，会导致死锁。此外 `Wait()` 阻塞调用线程最多 2 秒。`NetworkAccelerationPlugin.OnShutdown()` 第 93 行调用同步 `Stop()`，增加了此风险。
-- **建议修复**: 将 `Stop()` 改为 `StopAsync()` 返回 `Task`；或在 `Task.Run` 中调用 `Wait()`。
-- **状态**: 🔴 Confirmed（Day 11 验证为真实 bug）
-- **发现日期**: 2026-07-06
+- **描述**: `Stop()` 方法原调用 `_loopTask.Wait(TimeSpan.FromSeconds(2))`。如果 `Stop()` 在 UI 线程调用，而 `_loopTask` 内部有 `await` 且未正确使用 `ConfigureAwait(false)`，会导致死锁。**Hermes fix**: 移除了 `Task.Wait()` 阻塞调用，改为仅同步 `Cancel()` + `Dispose()`，完全消除死锁路径。`StopAsync()` 仍保留用于需要等待 loop 优雅退出的场景。
+- **状态**: 🟢 Fixed（Hermes 移除了 Task.Wait() 调用，Stop() 现在无阻塞）
 
 ### 🟡 M-005: `ProcessRunner` 安全方法实际实现确认（Day 2 更新）
 
@@ -188,25 +186,20 @@
 
 ## 2026-07-06 — Day 3 审查
 
-### 🔴 H-005: `NetworkAccelerationRuntime.Stop()` 同步方法仍暴露 — 可死锁（Day 11 确认）
+### 🟢 H-005: `NetworkAccelerationRuntime.Stop()` 同步方法仍暴露 — 已修复，移除 Task.Wait() 死锁路径
 
-- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationRuntime.cs:71-119`
-- **严重程度**: High
+- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationRuntime.cs:73-109`
+- **严重程度**: High → Fixed
 - **类别**: 线程安全
-- **描述**: Day 1 发现 `Stop()` 调用 `_loopTask.Wait()` 可能死锁。Day 3 确认：虽然已添加 `StopAsync()` 异步方法，但同步 `Stop()` 方法仍然公开可用。`NetworkAccelerationPlugin.OnShutdown()` (第 93 行) 调用了同步 `Stop()`。
-- **建议修复**: 将 `Stop()` 改为 `private`，或标记为 `[Obsolete]`；`OnShutdown` 改为异步或使用 `Task.Run` 包装。
-- **状态**: 🔴 Confirmed（Day 11 验证为真实 bug）
-- **发现日期**: 2026-07-06
+- **描述**: Day 1 发现 `Stop()` 调用 `_loopTask.Wait()` 可能死锁。Day 3 确认：虽然已添加 `StopAsync()` 异步方法，但同步 `Stop()` 方法仍然公开可用。**Hermes fix**: 移除 `Task.Wait()` 阻塞调用，改为仅同步 Cancel() + Dispose()，完全消除死锁风险。`Stop()` 现在以无阻塞方式安全执行。建议所有调用者使用 `StopAsync()`。
 
-### 🟡 M-007: `NetworkAccelerationPlugin` 中 `OnShutdown` 调用同步 `Stop()` 可能死锁
+### 🟢 M-007: `NetworkAccelerationPlugin` 中 `OnShutdown` 调用同步 `Stop()` — 已修复，调用方已改为 StopAsync()
 
-- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationPlugin.cs:93`
-- **严重程度**: Medium
+- **文件**: `Plugins/NetworkAcceleration/NetworkAccelerationPlugin.cs:93-96`
+- **严重程度**: Medium → Fixed
 - **类别**: 线程安全
-- **描述**: `OnShutdown()` 调用 `_runtime.Stop()`（同步版本）。`Stop()` 内部调用 `_loopTask.Wait(TimeSpan.FromSeconds(2))`，如果调用线程是 UI 线程且 `_loopTask` 需要同步上下文，会导致死锁。
-- **建议修复**: `OnShutdown()` 应调用 `_runtime.StopAsync()` 且不等待完成；或在整个插件框架中统一使用异步生命周期方法。
-- **状态**: 🟡 Confirmed（Day 11 验证）
-- **发现日期**: 2026-07-06
+- **描述**: `OnShutdown()` 原调用 `_runtime.Stop()`（同步版本）。**Hermes fix**: 代码已改为 `_ = _runtime.StopAsync()`。且 `Stop()` 方法本身也已移除 `Task.Wait()` 阻塞调用的死锁风险。
+- **状态**: 🟢 Fixed（OnShutdown 已使用 StopAsync fire-and-forget；Stop() 已移除阻塞）
 
 ### 🟢 L-004: `NetworkAccelerationPlugin` 中 `SharedProcessRunner` 是静态共享实例
 
@@ -446,11 +439,11 @@
 
 ## 统计（Day 11 验证后更新）
 
-- 🔴 Confirmed (High): 4
-- 🟡 Confirmed (Medium): 15
+- 🔴 Confirmed (High): 2
+- 🟡 Confirmed (Medium): 14
 - 🟢 Confirmed (Low): 12
+- 🟢 Fixed (已修复): 7
 - ⚪ WontFix (误报): 1
-- 🟢 Fixed (已修复/无需修复): 4
 - **总计**: 36
 
 ## 待深入模块（后续天数）
