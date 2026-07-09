@@ -4,15 +4,12 @@ using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Lib.AutoListeners;
-
 public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArgs>, IDisposable where TEventArgs : EventArgs
 {
     private readonly AsyncLock _startStopLock = new();
 
     private bool _started;
-
     private event EventHandler<TEventArgs>? Changed;
-
     public async Task SubscribeChangedAsync(EventHandler<TEventArgs> eventHandler)
     {
         Changed += eventHandler;
@@ -90,7 +87,6 @@ public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArg
 protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
 
     private bool _disposed = false;
-
     public void Dispose()
     {
         Dispose(true);
@@ -105,7 +101,11 @@ protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
             {
                 try
                 {
-                    _ = StopAsync();
+                    StopAsync().ContinueWith(static (t, _) =>
+                    {
+                        if (t.Exception is not null)
+                            Log.Instance.Error($"Error during AbstractAutoListener disposal", t.Exception);
+                    }, null);
                     Changed = null;
                 }
                 catch (Exception ex)

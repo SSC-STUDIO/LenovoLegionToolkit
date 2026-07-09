@@ -45,17 +45,19 @@
 - **修正日期**: 2026-07-06
 - **验证日期**: 2026-07-06
 
-### 🔴 H-003: Fire-and-Forget 异步调用异常未被观察
+### 🟢 H-003: Fire-and-Forget 异步调用异常未被观察 — FIXED 2026-07-09
 
-- **文件**: `UniversalDeviceToolkit.Lib/Controllers/AIController.cs:96,113,130`, `UniversalDeviceToolkit.Lib/Listeners/AbstractWMIListener.cs:115`
+- **文件**: `UniversalDeviceToolkit.Lib/Controllers/AIController.cs:96,113,130`, `UniversalDeviceToolkit.Lib/Listeners/AbstractWMIListener.cs:115`, `UniversalDeviceToolkit.Lib/AutoListeners/AbstractAutoListener.cs:108`
 - **严重程度**: High
 - **类别**: 正确性 / 可调试性
 - **描述**: `_ = SomeAsyncMethod()` 模式会丢失异常。虽然 .NET 中未观察异常默认不会崩溃进程，但异常信息会完全丢失，导致调试极其困难。
-- **建议修复**: 使用 `Task.Run` 包装并捕获异常，或改用 `await` + 后台队列。
-- **状态**: 🟡 Confirmed
+- **修复方案**:
+  1. **AbstractWMIListener.cs**: `HandlerAsync` 中 `_eventHandlerLock.WaitAsync()` 原在 try-catch 之外——如果信号量等待异常，整个异常被静默丢弃。改为将 `WaitAsync` 移入 try 块，并用 `lockAcquired` 标志保护 `finally` 中的 `Release()`。
+  2. **AbstractAutoListener.cs**: `Dispose` 中 `_ = StopAsync()` 的异步异常被 try-catch 忽略（try-catch 只捕获同步 `Task` 构造异常）。改为使用 `ContinueWith` 观察器记录异步异常。
+  3. **AIController.cs**: 三个 `_ = ..._ChangedAsync()` 的异步方法内部已有 try-catch 记录日志，异常实际不会被丢失。已将 Dispose 中的 `GetAwaiter().GetResult()` 改用带异常观察的异步模式。
+- **状态**: 🟢 Fixed
 - **发现日期**: 2026-07-06
-- **修正日期**: 2026-07-06
-- **修正日期**: 2026-07-06
+- **修正日期**: 2026-07-09
 
 ### ⚪ M-001: `IoCContainer.Resolve<T>()` 缺少线程安全保护 — 误报（Day 验证日）
 
@@ -657,7 +659,7 @@
 
 ### 按验证结果分布
 
-- ✅ **确认真实 (Confirmed)**: 39 (9 High + 23 Medium + 7 Low)
+- ✅ **确认真实 (Confirmed)**: 38 (8 High + 23 Medium + 7 Low)
 - ❌ **误报 (WontFix)**: 11
 - ✅ **已修复**: 1
 
@@ -674,13 +676,13 @@
 ## 统计（Day 11 验证后更新）
 
 - 🔴 Open (High): 0
-- 🔴 Confirmed (High): 9
+- 🔴 Confirmed (High): 8
 - 🟡 Investigating (Medium): 0
 - 🟡 Confirmed (Medium): 22
 - 🟢 Open (Low): 0
 - 🟢 Confirmed (Low): 7
 - ⚪ WontFix (误报/不属于本项目): 11
-- 🟢 Fixed: 2
+- 🟢 Fixed: 3
 - **总计**: 51
 
 ## 待深入模块（后续天数）

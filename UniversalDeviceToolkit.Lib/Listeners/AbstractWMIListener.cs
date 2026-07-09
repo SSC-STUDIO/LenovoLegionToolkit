@@ -18,7 +18,6 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
     public event EventHandler<TEventArgs>? Changed;
 
 
-
     public Task StartAsync()
     {
         if (_isUnsupported)
@@ -85,12 +84,14 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
     protected void RaiseChanged(TValue value) => Changed?.Invoke(this, GetEventArgs(value));
 
-private async Task HandlerAsync(TRawValue properties, CancellationToken cancellationToken = default)
+    private async Task HandlerAsync(TRawValue properties, CancellationToken cancellationToken = default)
     {
-        await _eventHandlerLock.WaitAsync(cancellationToken).ConfigureAwait(false);
-
+        bool lockAcquired = false;
         try
         {
+            await _eventHandlerLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            lockAcquired = true;
+
             var value = GetValue(properties);
 
             if (Log.Instance.IsTraceEnabled)
@@ -101,11 +102,12 @@ private async Task HandlerAsync(TRawValue properties, CancellationToken cancella
         }
         catch (Exception ex)
         {
-            Log.Instance.Error($"Failed to handle event.  [listener={GetType().Name}]", ex);
+            Log.Instance.Error($"Failed to handle event. [listener={GetType().Name}]", ex);
         }
         finally
         {
-            _eventHandlerLock.Release();
+            if (lockAcquired)
+                _eventHandlerLock.Release();
         }
     }
 

@@ -1,7 +1,19 @@
 # Agent Rules (Auto-loaded, do not remove)
 
+## ⚠️ CRITICAL: Windows Shell Compatibility (MANDATORY)
+- This machine runs Windows PowerShell 5.1 which does NOT support `&&` as a command separator
+- NEVER use `&&` to chain commands — each `exec` call = one command only
+- Use `;` as a statement separator if you MUST chain in a single command (PowerShell 5.1 supports `;`)
+- NEVER write `cd DIR && command` — use the working directory parameter or separate commands instead
+- Example WRONG: `cd D:\project && git status`
+- Example RIGHT: Run `git status` as its own command in the target directory
+- This applies to ALL tool calls: git, npm, npx, cargo, etc.
+
 ## Git Workflow
-- After ANY code change: `git add -A && git commit -m "progress: <summary>" && git push`
+- After ANY code change: run these as THREE SEPARATE commands:
+  1. `git add -A`
+  2. `git commit -m "progress: <summary>"`
+  3. `git push`
 - Commit messages: prefix with type (fix/feat/refactor/test/docs/chore)
 - Always pull before push: `git pull --rebase origin main`
 
