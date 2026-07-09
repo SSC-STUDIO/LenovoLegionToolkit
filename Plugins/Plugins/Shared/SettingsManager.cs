@@ -14,7 +14,7 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 /// Provides a standardized interface for saving and loading plugin settings.
 /// </summary>
 /// <typeparam name="T">The type of settings to manage</typeparam>
-public class SettingsManager<T> where T : class, new()
+public class SettingsManager<T> : IDisposable where T : class, new()
 {
     private const string _settingsFileName = "settings.json";
     private const string _settingsFileNameMpck = "settings.mpack";
@@ -394,11 +394,20 @@ public class SettingsManager<T> where T : class, new()
         }
     }
 
+    private bool _disposed;
+
     /// <summary>
     /// Disposes the SettingsManager and flushes any pending debounced save.
     /// </summary>
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
         if (_saveDebounceTimer != null)
         {
             _saveDebounceTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -410,6 +419,8 @@ public class SettingsManager<T> where T : class, new()
                 _pendingSettings = null;
             }
         }
+
+        _semaphore.Dispose();
         GC.SuppressFinalize(this);
     }
 
