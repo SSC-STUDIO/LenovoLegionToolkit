@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
@@ -16,14 +15,28 @@ public static class FeatureMerger
         ArgumentNullException.ThrowIfNull(allFeatures);
         ArgumentNullException.ThrowIfNull(importedFeatures);
 
+        // Build existing-ID sets once (O(n + m)) instead of re-scanning
+        // the full collection for each imported feature (O(n*m)).
+        var existingVisibleIds = new HashSet<int>();
+        foreach (var f in visibleFeatures)
+        {
+            existingVisibleIds.Add(f.Id);
+        }
+
+        var existingAllIds = new HashSet<int>();
+        foreach (var f in allFeatures)
+        {
+            existingAllIds.Add(f.Id);
+        }
+
         foreach (var feature in importedFeatures)
         {
-            if (!visibleFeatures.Any(f => f.Id == feature.Id))
+            if (existingVisibleIds.Add(feature.Id))
             {
                 visibleFeatures.Add(feature);
             }
 
-            if (!allFeatures.Any(f => f.Id == feature.Id))
+            if (existingAllIds.Add(feature.Id))
             {
                 allFeatures.Add(feature);
             }

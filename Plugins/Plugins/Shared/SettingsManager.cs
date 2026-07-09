@@ -324,16 +324,10 @@ public class SettingsManager<T> where T : class, new()
             _lastSavedJson = null;
             _pendingSettings = null;
 
-            if (deleteFile && File.Exists(_settingsFilePath))
+            if (deleteFile)
             {
-                try
-                {
-                    File.Delete(_settingsFilePath);
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Failed to delete settings file");
-                }
+                DeleteIfExists(_settingsFilePath);
+                DeleteIfExists(_settingsFilePathMpck);
             }
         }
     }
@@ -426,6 +420,23 @@ public class SettingsManager<T> where T : class, new()
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to migrate settings from legacy path {LegacyPath} to {SettingsPath}", legacySettingsFilePath, _settingsFilePath);
+        }
+    }
+
+    private static void DeleteIfExists(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        try
+        {
+            File.Delete(path);
+        }
+        catch (Exception)
+        {
+            // Best-effort cleanup — file may be locked by another reader.
         }
     }
 }
