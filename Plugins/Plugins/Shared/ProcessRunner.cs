@@ -33,6 +33,9 @@ public class ProcessRunner
     /// <param name="result">Standard output from the process</param>
     /// <param name="timeoutSeconds">Timeout in seconds (default: 30)</param>
     /// <returns>True if process exited successfully, false otherwise</returns>
+    [Obsolete("Use RunProcessAsync instead — this synchronous overload lacks CancellationToken support and blocks the calling thread. " +
+              "Callers that depend on TryRunProcess should migrate to RunProcessAsync(filePath, arguments, cancellationToken, timeoutSeconds) " +
+              "for proper async cancellation and timeout handling.")]
     public bool TryRunProcess(string filePath, string arguments, out string result, int timeoutSeconds = Constants.DefaultTimeoutSeconds)
     {
         result = string.Empty;

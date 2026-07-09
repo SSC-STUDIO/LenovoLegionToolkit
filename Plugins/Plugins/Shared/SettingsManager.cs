@@ -23,6 +23,10 @@ public class SettingsManager<T> where T : class, new()
         "UniversalDeviceToolkit",
         "plugins");
 
+    private static readonly MessagePackSerializerOptions _messagePackOptions =
+        MessagePackSerializerOptions.Standard
+            .WithResolver(MessagePack.Resolvers.ContractlessStandardResolver.Instance);
+
     private readonly string _settingsFilePath;
     private readonly string _settingsFilePathMpck;
     private readonly string _legacySettingsFilePath;
@@ -117,7 +121,7 @@ public class SettingsManager<T> where T : class, new()
                 if (_useMessagePack)
                 {
                     using var stream = File.OpenRead(_settingsFilePathMpck);
-                    var settings = MessagePackSerializer.Deserialize<T>(stream);
+                    var settings = MessagePackSerializer.Deserialize<T>(stream, _messagePackOptions);
                     return _cachedSettings = settings ?? new T();
                 }
                 else
@@ -168,17 +172,38 @@ public class SettingsManager<T> where T : class, new()
 
             if (_useMessagePack)
             {
-                var bytes = MessagePackSerializer.Serialize(settings);
+                // Serialize once — reuse for both comparison and writing
+                var bytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
+
+                // Memory transaction: skip save if settings unchanged
+                var currentSig = Convert.ToBase64String(bytes);
+                if (_lastSavedJson != null && string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal))
+                {
+                    _logger?.LogTrace("Settings unchanged (MessagePack), skipping async save");
+                    _cachedSettings = settings;
+                    return true;
+                }
+
                 var tempMpckPath = _settingsFilePathMpck + ".tmp";
                 await using (var fileStream = new FileStream(tempMpckPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
                 {
                     await fileStream.WriteAsync(bytes, cancellationToken);
                 }
                 File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
-                _lastSavedJson = Convert.ToBase64String(bytes);
+                _lastSavedJson = currentSig;
             }
             else
             {
+                // Compact form for memory transaction comparison (consistent with Save())
+                var compactJson = JsonSerializer.Serialize(settings);
+                if (_lastSavedJson != null && string.Equals(compactJson, _lastSavedJson, StringComparison.Ordinal))
+                {
+                    _logger?.LogTrace("Settings unchanged, skipping async save");
+                    _cachedSettings = settings;
+                    return true;
+                }
+
+                // Indented form for human-readable file
                 var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
                 {
                     WriteIndented = true
@@ -191,7 +216,7 @@ public class SettingsManager<T> where T : class, new()
                     await fileStream.WriteAsync(jsonBytes, cancellationToken);
                 }
                 File.Move(tempPath, _settingsFilePath, overwrite: true);
-                _lastSavedJson = json;
+                _lastSavedJson = compactJson;
             }
 
             _cachedSettings = settings;
@@ -251,30 +276,47 @@ public class SettingsManager<T> where T : class, new()
                 // Memory transaction: skip save if settings unchanged
                 if (_lastSavedJson != null)
                 {
-                    // Fast path: compare serialized JSON directly
-                    var currentJson = JsonSerializer.Serialize(settings);
-                    if (string.Equals(currentJson, _lastSavedJson, StringComparison.Ordinal))
+                    if (_useMessagePack)
                     {
-                        _logger?.LogTrace("Settings unchanged, skipping save");
-                        return true;
+                        // M-020 fix: compare MessagePack bytes (base64) — not JSON text —
+                        // against the cached base64 signature, otherwise JSON≠base64 always
+                        // mismatches and the skip optimization never triggers for MessagePack.
+                        var currentBytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
+                        var currentSig = Convert.ToBase64String(currentBytes);
+                        if (string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal))
+                        {
+                            _logger?.LogTrace("Settings unchanged (MessagePack), skipping save");
+                            return true;
+                        }
+                        _lastSavedJson = currentSig;
                     }
-                    _lastSavedJson = currentJson; // Update cache
+                    else
+                    {
+                        var currentJson = JsonSerializer.Serialize(settings);
+                        if (string.Equals(currentJson, _lastSavedJson, StringComparison.Ordinal))
+                        {
+                            _logger?.LogTrace("Settings unchanged, skipping save");
+                            return true;
+                        }
+                        _lastSavedJson = currentJson;
+                    }
                 }
                 else
                 {
-                    _lastSavedJson = JsonSerializer.Serialize(settings);
+                    _lastSavedJson = _useMessagePack
+                        ? Convert.ToBase64String(MessagePackSerializer.Serialize(settings, _messagePackOptions))
+                        : JsonSerializer.Serialize(settings);
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
 
-                var tempPath = _settingsFilePath + ".tmp";
                 if (_useMessagePack)
                 {
-                    // MessagePack serialization (binary, faster)
-                    var bytes = MessagePackSerializer.Serialize(settings);
-                    File.WriteAllBytes(tempPath, bytes);
-                    File.Move(tempPath, _settingsFilePathMpck, overwrite: true);
-                    _lastSavedJson = Convert.ToBase64String(bytes); // Cache as base64 for memory transaction
+                    // M-020 fix: use MessagePack temp path (settings.mpack.tmp), not JSON temp path.
+                    var bytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
+                    var tempMpckPath = _settingsFilePathMpck + ".tmp";
+                    File.WriteAllBytes(tempMpckPath, bytes);
+                    File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
                 }
                 else
                 {
@@ -283,7 +325,7 @@ public class SettingsManager<T> where T : class, new()
                     {
                         WriteIndented = true
                     });
-                    _lastSavedJson = json; // Cache for memory transaction
+                    var tempPath = _settingsFilePath + ".tmp";
                     File.WriteAllText(tempPath, json, Encoding.UTF8);
                     File.Move(tempPath, _settingsFilePath, overwrite: true);
                 }

@@ -152,25 +152,26 @@
 
 ## 2026-07-06 — Day 2 审查
 
-### 🟡 M-005: `ProcessRunner.IsDangerousPath` 误报合法文件路径
+### 🟢 M-005: `ProcessRunner.IsDangerousPath` 误报合法文件路径 — 已修复
 
 - **文件**: `Plugins/Shared/ProcessRunner.cs:219-237`
-- **严重程度**: Medium
+- **严重程度**: Medium → Fixed
 - **类别**: 正确性
-- **描述**: `IsDangerousPath` 对文件路径检查 shell 元字符（如 `(`, `)`, `$`, `` ` `` 等）。但合法的 Windows 文件路径可能包含这些字符，例如 `C:\Program Files (x86)\...` 包含 `(` 和 `)`，`C:\$Recycle.Bin` 包含 `$`。这导致合法路径被错误拒绝。
-- **建议修复**: `IsDangerousPath` 应该只检查路径遍历（`..`）和 null 字节，而不检查 shell 元字符。Shell 元字符检查应只应用于 `arguments`，不应应用于 `filePath`（因为 `UseShellExecute = false` 时，文件路径不会被 shell 解析）。
-- **状态**: 🟡 Confirmed（Day 11 验证）
+- **描述**: `IsDangerousPath` 对文件路径检查 shell 元字符（如 `(`, `)`, `$`, `` ` `` 等）。但合法的 Windows 文件路径可能包含这些字符，例如 `C:\\Program Files (x86)\\...` 包含 `(` 和 `)`，`C:\\$Recycle.Bin` 包含 `$`。这导致合法路径被错误拒绝。
+- **修复**: `IsDangerousPath` 已改为只检查路径遍历（`..`）和 null 字节（`\\0`），不再检查 shell 元字符。Shell 元字符检查仅应用于 `arguments`（通过 `ContainsDangerousCharacters`），不应用于 `filePath`（因为 `UseShellExecute = false` 时，文件路径不会被 shell 解析）。
+- **状态**: 🟢 Fixed（代码已实现 — 只检查 `..` 和 `\\0`，代码注释标注 M-005 fix）
 - **发现日期**: 2026-07-06
 
-### 🟡 M-006: `ProcessRunner.TryRunProcess` 同步方法不支持 `CancellationToken`
+### 🟢 M-006: `ProcessRunner.TryRunProcess` 同步方法不支持 `CancellationToken` — 已修复
 
 - **文件**: `Plugins/Shared/ProcessRunner.cs:36-121`
-- **严重程度**: Medium
+- **严重程度**: Medium → Fixed
 - **类别**: 功能完整性
 - **描述**: `TryRunProcess` 是同步方法，使用 `process.WaitForExit(timeout)` 等待进程退出。如果调用线程被阻塞且需要取消，无法中断等待。相比之下，`RunProcessAsync` 支持 `CancellationToken`。
-- **建议修复**: 将 `TryRunProcess` 标记为 `[Obsolete]`，统一使用 `RunProcessAsync`；或为同步方法添加 `CancellationToken` 支持（通过 `process.WaitForExitAsync`）。
-- **状态**: 🟡 Confirmed（Day 11 验证）
+- **修复**: `TryRunProcess` 已标记为 `[Obsolete]`，指导调用方迁移到 `RunProcessAsync(filePath, arguments, cancellationToken, timeoutSeconds)`。所有生产代码调用方（NetworkAccelerationPlugin、ViveToolProcessService）已使用 `RunProcessAsync`。测试中保留旧方法以验证其功能正确性。
+- **状态**: 🟢 Fixed（Hermes — `[Obsolete]` 标记 + 文档导引用 RunProcessAsync）
 - **发现日期**: 2026-07-06
+- **修复日期**: 2026-07-09
 
 ### 🟢 L-003: `HttpClientManager.CreateClientWithTimeout` 每次调用创建新 `HttpClient`
 
@@ -415,14 +416,14 @@
 - **状态**: 🔴 Confirmed（Day 11 验证为真实 bug）
 - **发现日期**: 2026-07-06
 
-### 🟡 M-016: 插件 `SettingsManager<T>` 在多线程下可能返回不一致的设置（Day 11 确认）
+### 🟢 M-016: 插件 `SettingsManager<T>` 在多线程下可能返回不一致的设置 — 已修复
 
 - **文件**: `Plugins/Shared/SettingsManager.cs:228-247`
-- **严重程度**: Medium
+- **严重程度**: Medium → Fixed
 - **类别**: 线程安全
 - **描述**: `Update()` 方法先调用 `Load()`（获取锁），然后释放锁，再调用 `Save()`（重新获取锁）。在 `Load()` 和 `Save()` 之间，其他线程可能修改了设置文件，导致 `Update()` 基于过期数据写入。虽然 `Load()` 和 `Save()` 各自是原子的，但 `Update()` 的 load-update-save 序列不是原子的。
-- **建议修复**: 在 `Update()` 中使用单个 `lock` 块包装 `Load()` + `updateAction()` + `Save()` 全过程。
-- **状态**: 🟡 Confirmed（Day 11 验证为真实问题）
+- **修复**: `Update()` 现在使用单个 `lock (_lock)` 块包装 `Load()` + `updateAction()` + `Save()` 全过程，确保序列原子性。且 `SaveAsync()` 使用独立的 `_semaphore` 保护异步写入路径，与同步 `Save()` 的 `_lock` 互补。
+- **状态**: 🟢 Fixed（代码已实现 — `Update()` 内统一 `lock (_lock)` 包裹 Load+Save）
 - **发现日期**: 2026-07-06
 
 ### 🟢 L-010: 插件 `PluginLog` 配置可能与其他插件冲突
@@ -452,14 +453,55 @@
 
 ---
 
-## 统计（Day 12 更新：H-007 已修复）
+## 2026-07-09 — SettingsManager MessagePack 修复
+
+### 🟢 M-020: `SettingsManager.Save()` MessagePack 路径三个 bug — 已修复
+
+- **文件**: `Plugins/Shared/SettingsManager.cs`
+- **严重程度**: Medium → Fixed
+- **类别**: 正确性 / 性能 / 兼容性
+- **描述**: `SettingsManager<T>.Save()` 在 MessagePack 模式下存在三个 bug:
+  1. **临时文件路径错误**: `Save()` 的 MessagePack 分支使用 `_settingsFilePath + ".tmp"` (JSON 临时路径) 而非 `_settingsFilePathMpck + ".tmp"`，导致写入和移动的文件名不匹配。
+  2. **Memory transaction 对 MessagePack 完全失效**: 比较逻辑使用 `JsonSerializer.Serialize(settings)` (JSON 文本) 与 `_lastSavedJson` (Base64 编码的 MessagePack 字节) 比较，两者永不相等，导致跳过未变更的优化对 MessagePack 模式完全不生效——每次 Save 都触发磁盘写入。
+  3. **MessagePack 默认 Resolver 不支持无属性 POCO**: `MessagePackSerializer.Serialize/Deserialize` 使用默认的 `StandardResolver`，要求类标注 `[MessagePackObject]` / `[Key(n)]`。未标注的 POCO（如 `TestSettings`）序列化抛出异常，`catch` 块静默吞掉并返回 `false`，导致 Save 看似成功但实际未写入任何文件。
+- **修复**:
+  1. MessagePack 临时路径改为 `_settingsFilePathMpck + ".tmp"`。
+  2. Memory transaction 在 MessagePack 模式下使用 `MessagePackSerializer.Serialize(settings, options)` 的 Base64 签名比较，而非 JSON 文本。
+  3. 引入 `ContractlessStandardResolver`（通过 `MessagePackSerializerOptions.Standard.WithResolver(...)`），让 MessagePack 支持任意 POCO 序列化（类似 JSON 行为），所有 `Serialize`/`Deserialize` 调用统一传入 `_messagePackOptions`。
+  4. 修正边缘测试 `SettingsChanged_FiresOnEverySave` — 原测试保存同一对象三次期望事件触发3次，但 Memory Transaction 正确地跳过了未变更保存，故改名并改为每次保存不同内容。
+- **状态**: 🟢 Fixed（构建 0 errors/0 warnings，48/48 SettingsManager 测试通过，含5个新 MessagePack Round-trip/Skip-unchanged 测试）
+- **发现日期**: 2026-07-09
+- **修复日期**: 2026-07-09
+
+---
+
+## 2026-07-09 — SettingsManager SaveAsync 内存事务 + 死代码清理
+
+### 🟢 M-021: `SettingsManager.SaveAsync()` 缺少内存事务优化 — 已修复
+
+- **文件**: `Plugins/Shared/SettingsManager.cs`
+- **严重程度**: Medium → Fixed
+- **类别**: 性能 / 一致性
+- **描述**: `Save()` 在写入前检查 memory transaction（通过 `_lastSavedJson` 对比序列化结果），相同设置时跳过磁盘写入。但 `SaveAsync()` 完全没有这个优化——每次调用都执行序列化 + 写临时文件 + File.Move，即使设置内容完全没变。这导致高频调用 `SaveAsync()` 的场景产生不必要的磁盘 I/O 和序列化开销。此外 `SaveAsync()` 在 JSON 模式下将 `_lastSavedJson` 设为缩进 JSON，而 `Save()` 设为紧凑 JSON，两者交错调用时 memory transaction 永远不命中——不一致导致两个方法对比都不跳过。
+- **修复**:
+  1. `SaveAsync()` 在序列化后增加 memory transaction 检查——对 MessagePack 模式序列化一次复用比较和写入（无需双重序列化），对 JSON 模式用紧凑 JSON 做比较、缩进 JSON 做写入。
+  2. `_lastSavedJson` 现在统一存储紧凑 JSON 签名（`Save()` 和 `SaveAsync()` 一致），交错调用也能正确触发跳过。
+  3. 移除死代码 `_messagePackOptionsIndented`（定义但从未使用的 `MessagePackSerializerOptions` 静态字段）。
+- **测试**: 新增3个异步 memory transaction 测试（JSON skip / MessagePack skip / MessagePack change detect），共 199 测试通过。
+- **状态**: 🟢 Fixed（构建 0 errors/0 warnings，199/199 测试通过）
+- **发现日期**: 2026-07-09
+- **修复日期**: 2026-07-09
+
+---
+
+## 统计（Day 13 更新：M-005/M-006/M-016/M-020/M-021 已修复）
 
 - 🔴 Confirmed (High): 1
-- 🟡 Confirmed (Medium): 13
+- 🟡 Confirmed (Medium): 9
 - 🟢 Confirmed (Low): 12
-- 🟢 Fixed (已修复): 10
+- 🟢 Fixed (已修复): 16
 - ⚪ WontFix (误报): 1
-- **总计**: 37
+- **总计**: 39
 
 ## 待深入模块（后续天数）
 

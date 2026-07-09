@@ -23,6 +23,8 @@ public class ProcessRunnerTests
 
     #region Input Validation Tests
 
+#pragma warning disable CS0618 // TryRunProcess is deprecated — tests intentionally exercise the method for backward compat
+
     [Fact]
     public void TryRunProcess_NullFilePath_ReturnsFalse()
     {
@@ -600,4 +602,6 @@ public class ProcessRunnerTests
     }
 
     #endregion
+
+#pragma warning restore CS0618
 }
