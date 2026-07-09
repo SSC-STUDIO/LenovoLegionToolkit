@@ -70,6 +70,104 @@ public class BatteryHealthSettingsTests
         };
 
         Assert.False(critical < low, $"Expected settings to be invalid: critical ({critical}) >= low ({low})");
+        Assert.False(settings.AreThresholdsValid);
+    }
+
+    [Fact]
+    public void AreThresholdsValid_DefaultSettings_IsTrue()
+    {
+        var settings = new BatteryHealthSettings();
+        Assert.True(settings.AreThresholdsValid);
+    }
+
+    [Theory]
+    [InlineData(80, 60, true)]
+    [InlineData(90, 70, true)]
+    [InlineData(50, 49, true)]
+    [InlineData(80, 80, false)]
+    [InlineData(80, 90, false)]
+    [InlineData(70, 70, false)]
+    [InlineData(-1, 60, false)]
+    [InlineData(101, 60, false)]
+    [InlineData(80, -1, false)]
+    [InlineData(80, 101, false)]
+    public void AreThresholdsValid_VariousCombinations(int low, int critical, bool expected)
+    {
+        var settings = new BatteryHealthSettings
+        {
+            LowHealthThreshold = low,
+            CriticalHealthThreshold = critical
+        };
+
+        Assert.Equal(expected, settings.AreThresholdsValid);
+    }
+
+    [Theory]
+    [InlineData(90, 95, true, 90, 70)]   // Critical > Low -> reposition Critical
+    [InlineData(80, 80, true, 80, 60)]    // Critical == Low -> reposition Critical
+    [InlineData(-5, 60, true, 80, 60)]   // Low out of range -> reset Low, reposition Critical
+    [InlineData(105, 60, true, 80, 60)]  // Low out of range -> reset Low, reposition Critical
+    [InlineData(80, -10, true, 80, 60)]  // Critical out of range -> reset Critical
+    [InlineData(80, 200, true, 80, 60)]   // Critical out of range -> reset Critical
+    [InlineData(80, 60, false, 80, 60)]    // Already valid -> no change, returns false
+    [InlineData(70, 50, false, 70, 50)]    // Already valid different values -> no change
+    public void EnsureValidThresholds_FixesInvalidConfiguration(
+        int initialLow, int initialCritical, bool expectAdjusted,
+        int expectedLow, int expectedCritical)
+    {
+        var settings = new BatteryHealthSettings
+        {
+            LowHealthThreshold = initialLow,
+            CriticalHealthThreshold = initialCritical
+        };
+
+        var adjusted = settings.EnsureValidThresholds();
+        Assert.Equal(expectAdjusted, adjusted);
+        Assert.Equal(expectedLow, settings.LowHealthThreshold);
+        Assert.Equal(expectedCritical, settings.CriticalHealthThreshold);
+        Assert.True(settings.AreThresholdsValid,
+            $"After EnsureValidThresholds, AreThresholdsValid should be true but got Low={settings.LowHealthThreshold}, Critical={settings.CriticalHealthThreshold}");
+    }
+
+    [Fact]
+    public void EnsureValidThresholds_LowAtZero_DoesNotProduceNegativeCritical()
+    {
+        var settings = new BatteryHealthSettings
+        {
+            LowHealthThreshold = 0,
+            CriticalHealthThreshold = 50
+        };
+
+        var adjusted = settings.EnsureValidThresholds();
+
+        Assert.True(adjusted, "Should have adjusted because Critical(50) >= Low(0)");
+        Assert.True(settings.CriticalHealthThreshold >= 0,
+            $"Critical threshold should never go negative, got {settings.CriticalHealthThreshold}");
+        Assert.True(settings.AreThresholdsValid,
+            $"After adjustment, thresholds should be valid: Low={settings.LowHealthThreshold}, Critical={settings.CriticalHealthThreshold}");
+    }
+
+    [Fact]
+    public void EnsureValidThresholds_LowAtBoundary_CriticalStaysInRange()
+    {
+        var settings = new BatteryHealthSettings
+        {
+            LowHealthThreshold = 10,
+            CriticalHealthThreshold = 90
+        };
+
+        settings.EnsureValidThresholds();
+
+        Assert.True(settings.CriticalHealthThreshold >= 0 && settings.CriticalHealthThreshold < settings.LowHealthThreshold);
+        Assert.True(settings.AreThresholdsValid);
+    }
+
+    [Fact]
+    public void EnsureValidThresholds_ConstantDefaults_MatchDefaultConstructor()
+    {
+        var settings = new BatteryHealthSettings();
+        Assert.Equal(BatteryHealthSettings.DefaultLowHealthThreshold, settings.LowHealthThreshold);
+        Assert.Equal(BatteryHealthSettings.DefaultCriticalHealthThreshold, settings.CriticalHealthThreshold);
     }
 
     [Fact]

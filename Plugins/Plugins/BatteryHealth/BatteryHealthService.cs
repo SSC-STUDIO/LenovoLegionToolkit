@@ -125,6 +125,15 @@ public sealed class BatteryHealthService
     {
         var settings = _settingsManager.Load();
 
+        // Guard against misconfigured thresholds. If Critical >= Low or
+        // either is out of [0,100], the Healthy/Warning/Critical cascade
+        // collapses and silently misclassifies all batteries as Healthy.
+        if (settings.EnsureValidThresholds())
+        {
+            PluginLog.Trace($"BatteryHealth: Thresholds were invalid (Low={settings.LowHealthThreshold}, Critical={settings.CriticalHealthThreshold}). Auto-corrected to safe values.");
+            _settingsManager.Save(settings);
+        }
+
         if (report.DesignCapacity <= 0 || report.FullChargeCapacity <= 0)
         {
             return BatteryHealthStatus.Unknown;

@@ -63,7 +63,13 @@ public class ViveToolDownloadService
                 return true;
             }
 
-            if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
+            if (string.IsNullOrEmpty(builtInDir))
+            {
+                PluginLog.Trace("ViveTool: Cannot determine built-in installation directory");
+                return false;
+            }
+
+            if (!Directory.Exists(builtInDir))
             {
                 Directory.CreateDirectory(builtInDir);
             }
@@ -157,22 +163,74 @@ public class ViveToolDownloadService
                     return false;
                 }
 
-                foreach (var stagedFilePath in Directory.GetFiles(stagingDirectory, "*", SearchOption.TopDirectoryOnly))
+                //
+                // Atomic install: swap the staging directory into the final location
+                // in a crash-safe manner. The original approach copied files one by
+                // one with File.Copy — if the process crashed or power was lost
+                // midway through that loop, the built-in directory ended up with an
+                // inconsistent mix of old and new files (e.g. a new ViVeTool.exe
+                // referencing an old Albacore.ViVe.dll), causing silent runtime
+                // failures on the next launch.
+                //
+                // The new strategy:
+                //   1. If the built-in dir exists, rename it to a backup directory.
+                //   2. Move the staging directory into the built-in location.
+                //   3. Verify the new install (IsInstallComplete + hash check).
+                //   4. On success, delete the backup. On failure, roll back.
+                //
+                // Directory.Move is atomic on the same volume (NTFS). Both paths
+                // are under %LocalAppData% so same-volume is the common case. If a
+                // cross-volume move is needed, .NET falls back to copy+delete
+                // internally, which is still safer than per-file copies because the
+                // old install is preserved as a backup until the new one is verified.
+                //
+                var backupDir = builtInDir + $".old_{Guid.NewGuid():N}";
+                var hadExistingInstall = Directory.Exists(builtInDir) &&
+                    Directory.GetFiles(builtInDir, "*", SearchOption.TopDirectoryOnly).Length > 0;
+
+                if (hadExistingInstall)
                 {
-                    var destinationPath = Path.Combine(builtInDir!, Path.GetFileName(stagedFilePath));
-                    File.Copy(stagedFilePath, destinationPath, overwrite: true);
+                    Directory.Move(builtInDir, backupDir);
                 }
 
-                if (!ViveToolPathService.IsInstallComplete(builtInDir))
+                try
                 {
-                    PluginLog.Trace("ViveTool: Built-in install directory is incomplete after extraction");
+                    // Move the verified staging directory into the final location.
+                    Directory.Move(stagingDirectory, builtInDir);
+
+                    if (!ViveToolPathService.IsInstallComplete(builtInDir))
+                    {
+                        PluginLog.Trace("ViveTool: Built-in install directory is incomplete after swap");
+                        RollbackInstallSwap(builtInDir, backupDir, hadExistingInstall);
+                        return false;
+                    }
+
+                    if (!VerifyKnownInstallHashes(builtInDir))
+                    {
+                        PluginLog.Trace("ViveTool: Built-in install directory failed file hash verification");
+                        RollbackInstallSwap(builtInDir, backupDir, hadExistingInstall);
+                        return false;
+                    }
+                }
+                catch (Exception swapEx)
+                {
+                    PluginLog.Trace($"ViveTool: Atomic directory swap failed: {swapEx.Message}", swapEx);
+                    RollbackInstallSwap(builtInDir, backupDir, hadExistingInstall);
                     return false;
                 }
 
-                if (!VerifyKnownInstallHashes(builtInDir))
+                // Success — clean up the old backup if it exists.
+                if (Directory.Exists(backupDir))
                 {
-                    PluginLog.Trace("ViveTool: Built-in install directory failed file hash verification");
-                    return false;
+                    try
+                    {
+                        Directory.Delete(backupDir, recursive: true);
+                    }
+                    catch
+                    {
+                        // Backup cleanup is best-effort; a leftover .old_* directory
+                        // is harmless and will be cleaned up on the next update.
+                    }
                 }
 
                 PluginLog.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
@@ -182,7 +240,7 @@ public class ViveToolDownloadService
             }
             finally
             {
-                // Clean up temporary ZIP file
+                // Clean up temporary ZIP file and any remaining staging/backup directories
                 try
                 {
                     if (File.Exists(tempZipPath))
@@ -486,6 +544,33 @@ public class ViveToolDownloadService
         }
 
         return features;
+    }
+
+    /// <summary>
+    /// Rollback helper for the atomic directory swap. If the new install
+    /// failed verification, restore the old directory and remove the
+    /// incomplete new one so the system is left in a consistent state.
+    /// </summary>
+    private static void RollbackInstallSwap(string builtInDir, string backupDir, bool hadExistingInstall)
+    {
+        try
+        {
+            // Remove the incomplete/bad new install directory if it exists.
+            if (Directory.Exists(builtInDir))
+            {
+                Directory.Delete(builtInDir, recursive: true);
+            }
+
+            // Restore the old install from the backup directory.
+            if (hadExistingInstall && Directory.Exists(backupDir))
+            {
+                Directory.Move(backupDir, builtInDir);
+            }
+        }
+        catch (Exception rollbackEx)
+        {
+            PluginLog.Trace($"ViveTool: Rollback of failed install swap encountered an error: {rollbackEx.Message}", rollbackEx);
+        }
     }
 
     private static bool VerifyKnownInstallHashes(string? directoryPath)
