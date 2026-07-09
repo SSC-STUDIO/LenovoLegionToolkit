@@ -14,4 +14,3 @@
 - [x] **[BUG-2026-07-09-008]** [Thread Safety / Sync-over-async + Non-atomic dispose] BatteryDischargeRateMonitorService.Dispose(bool) (UniversalDeviceToolkit.Lib/Services/BatteryDischargeRateMonitorService.cs:205) blocks the disposing thread via taskToWait?.Wait(TimeSpan.FromSeconds(5)) -- sync-over-async anti-pattern. StopAsync() already uses non-blocking await taskToWait.WaitAsync(...) (line 158), but Dispose breaks parity by blocking. Additionally the if (_disposed) return; at line 195 is a non-atomic check-then-set that allows concurrent double-dispose of the CTS/refresh task (Pillar A). CLAIMED by Codex-Agent-001 at 2026-07-09 22:05 CST -> resolved; see 3_RESOLVED.md.
 NOWHERE (no further confirmed new defect tickets at this time).
 
-- [x] **[BUG-2026-07-09-007]** above -> resolved by Codex-Agent-003 at 2026-07-09 21:40 CST; see 3_RESOLVED.md.
