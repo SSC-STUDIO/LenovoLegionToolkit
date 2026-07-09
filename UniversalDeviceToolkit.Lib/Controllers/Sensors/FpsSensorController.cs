@@ -97,13 +97,21 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                             if (!currentProcess.HasExited)
                             {
                                 await StartProcessMonitoringAsync(currentProcess).ConfigureAwait(false);
-                                lastProcess = currentProcess;
                             }
+                            lastProcess?.Dispose();
+                            lastProcess = currentProcess.HasExited ? null : currentProcess;
                         }
-                        else if (currentProcess == null && _currentMonitoredProcess != null || currentProcess != null && _currentMonitoredProcess != null && currentProcess.Id == _currentMonitoredProcess.Id && _currentMonitoredProcess.HasExited)
+                        else if (_currentMonitoredProcess != null
+                                 && (currentProcess == null
+                                     || (currentProcess.Id == _currentMonitoredProcess.Id && _currentMonitoredProcess.HasExited)))
                         {
                             StopProcessMonitoring();
+                            lastProcess?.Dispose();
                             lastProcess = null;
+                        }
+                        else
+                        {
+                            currentProcess?.Dispose();
                         }
 
                         _monitoringLoopErrorLogged = false;
