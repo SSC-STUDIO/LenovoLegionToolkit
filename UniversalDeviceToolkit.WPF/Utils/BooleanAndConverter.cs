@@ -6,7 +6,7 @@ using System.Windows;
 namespace UniversalDeviceToolkit.WPF.Utils
 {
     /// <summary>
-    /// Implements <see cref="IMultiValueConverter"/> â€” returns <c>true</c> when ALL bound values are <c>true</c>.
+    /// Implements <see cref="IMultiValueConverter"/> ¡ªreturns <c>true</c> when ALL bound values are <c>true</c>.
     /// If the target type is <see cref="Visibility"/>, returns <see cref="Visibility.Visible"/> when all are true,
     /// otherwise <see cref="Visibility.Collapsed"/>.
     /// </summary>
@@ -52,7 +52,7 @@ namespace UniversalDeviceToolkit.WPF.Utils
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException(""ConvertBack is not supported by this one-way converter."");
         }
     }
 }
