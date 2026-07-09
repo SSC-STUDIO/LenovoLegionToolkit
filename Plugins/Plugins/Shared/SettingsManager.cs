@@ -166,6 +166,7 @@ public class SettingsManager<T> where T : class, new()
         }
 
         await _semaphore.WaitAsync(cancellationToken);
+        EventHandler<T>? handler;
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
@@ -221,9 +222,7 @@ public class SettingsManager<T> where T : class, new()
 
             _cachedSettings = settings;
 
-            var handler = SettingsChanged;
-            handler?.Invoke(this, settings);
-            return true;
+            handler = SettingsChanged;
         }
         catch (Exception ex)
         {
@@ -234,6 +233,11 @@ public class SettingsManager<T> where T : class, new()
         {
             _semaphore.Release();
         }
+
+        // Fire SettingsChanged outside the semaphore to avoid deadlock when a subscriber
+        // calls Save/SaveAsync on the same instance (matching the pattern in Save()).
+        handler?.Invoke(this, settings);
+        return true;
     }
 
     /// <summary>
