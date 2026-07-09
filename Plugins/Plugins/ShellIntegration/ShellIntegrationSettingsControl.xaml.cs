@@ -304,10 +304,18 @@ public partial class ShellIntegrationSettingsControl : UserControl
         }
     }
 
-    private void ResetManagedConfigButton_Click(object sender, RoutedEventArgs e)
+    private async void ResetManagedConfigButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = _plugin.ResetManagedConfiguration();
-        RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigResetCompleted : ShellIntegrationText.StatusManagedConfigResetFailed, !success);
+        try
+        {
+            var success = await _plugin.ResetManagedConfigurationAsync().ConfigureAwait(true);
+            RefreshStatus(success ? ShellIntegrationText.StatusManagedConfigResetCompleted : ShellIntegrationText.StatusManagedConfigResetFailed, !success);
+        }
+        catch (Exception ex)
+        {
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
+            PluginLog.Trace($"ResetManagedConfigButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void ExportProfileButton_Click(object sender, RoutedEventArgs e)
@@ -333,24 +341,32 @@ public partial class ShellIntegrationSettingsControl : UserControl
             !success);
     }
 
-    private void ImportProfileButton_Click(object sender, RoutedEventArgs e)
+    private async void ImportProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+        try
         {
-            Title = ShellIntegrationText.ImportProfileButton,
-            Filter = ShellIntegrationText.ProfileFileDialogFilter,
-            FilterIndex = 1
-        };
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = ShellIntegrationText.ImportProfileButton,
+                Filter = ShellIntegrationText.ProfileFileDialogFilter,
+                FilterIndex = 1
+            };
 
-        if (openFileDialog.ShowDialog() != true)
-        {
-            return;
+            if (openFileDialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            var (success, errorMessage) = await _plugin.ImportProfileAsync(openFileDialog.FileName).ConfigureAwait(true);
+            RefreshStatus(
+                success ? ShellIntegrationText.StatusProfileImportCompleted : $"{ShellIntegrationText.StatusProfileImportFailed} {errorMessage}".Trim(),
+                !success);
         }
-
-        var success = _plugin.ImportProfile(openFileDialog.FileName, out var errorMessage);
-        RefreshStatus(
-            success ? ShellIntegrationText.StatusProfileImportCompleted : $"{ShellIntegrationText.StatusProfileImportFailed} {errorMessage}".Trim(),
-            !success);
+        catch (Exception ex)
+        {
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
+            PluginLog.Trace($"ImportProfileButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void ApplyDefaultPresetButton_Click(object sender, RoutedEventArgs e)
@@ -368,9 +384,17 @@ public partial class ShellIntegrationSettingsControl : UserControl
         ApplyPreset(ShellIntegrationPreset.MinimalLight, ShellIntegrationText.StatusPresetAppliedMinimalLight);
     }
 
-    private void ApplyPreset(ShellIntegrationPreset preset, string successMessage)
+    private async void ApplyPreset(ShellIntegrationPreset preset, string successMessage)
     {
-        var success = _plugin.ApplyPreset(preset);
-        RefreshStatus(success ? successMessage : ShellIntegrationText.StatusPresetApplyFailed, !success);
+        try
+        {
+            var success = await _plugin.ApplyPresetAsync(preset).ConfigureAwait(true);
+            RefreshStatus(success ? successMessage : ShellIntegrationText.StatusPresetApplyFailed, !success);
+        }
+        catch (Exception ex)
+        {
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
+            PluginLog.Trace($"ApplyPreset error: {ex.Message}", ex);
+        }
     }
 }

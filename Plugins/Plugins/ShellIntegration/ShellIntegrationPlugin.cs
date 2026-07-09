@@ -298,12 +298,12 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 
-    public bool ResetManagedConfiguration()
+    public async Task<bool> ResetManagedConfigurationAsync()
     {
         try
         {
             _configService.ResetProfile();
-            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
+            return await SyncManagedConfigurationAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -312,12 +312,12 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 
-    public bool ApplyPreset(ShellIntegrationPreset preset)
+    public async Task<bool> ApplyPresetAsync(ShellIntegrationPreset preset)
     {
         try
         {
             _configService.ApplyPreset(preset);
-            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
+            return await SyncManagedConfigurationAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -343,24 +343,22 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 
-    public bool ImportProfile(string filePath, out string? errorMessage)
+    public async Task<(bool Success, string? Error)> ImportProfileAsync(string filePath)
     {
-        errorMessage = null;
-
         try
         {
-            if (!_configService.ImportProfile(filePath, out _, out errorMessage))
+            if (!_configService.ImportProfile(filePath, out _, out var errorMessage))
             {
-                return false;
+                return (false, errorMessage);
             }
 
-            return Task.Run(async () => await SyncManagedConfigurationAsync()).GetAwaiter().GetResult();
+            var synced = await SyncManagedConfigurationAsync().ConfigureAwait(false);
+            return (synced, synced ? null : "Failed to sync managed configuration");
         }
         catch (Exception ex)
         {
             PluginLog.Trace($"ShellIntegration: Failed to import profile: {ex.Message}", ex);
-            errorMessage = ex.Message;
-            return false;
+            return (false, ex.Message);
         }
     }
 

@@ -437,14 +437,29 @@
 
 ---
 
+## 2026-07-09 — ShellIntegration async 修复
+
+### 🟢 M-017: `ShellIntegrationPlugin` 同步-over-异步 UI 冻结 — 已修复
+
+- **文件**: `Plugins/ShellIntegration/ShellIntegrationPlugin.cs:301-365`
+- **严重程度**: Medium → Fixed
+- **类别**: 可用性 / 线程安全
+- **描述**: `ResetManagedConfiguration()`、`ApplyPreset()` 和 `ImportProfile()` 三个方法使用 `Task.Run(async => ...).GetAwaiter().GetResult()` 模式同步阻塞 UI 线程，等待 `SyncManagedConfigurationAsync()` 完成。虽然 `Task.Run` 避免了 SynchronizationContext 死锁，但在 UI 线程上阻塞会导致界面冻结，用户在配置同步期间无法与界面交互。
+- **修复**: 将三个方法改为 `async Task<bool>` / `async Task<(bool, string?)>` 异步方法，直接 `await` 异步操作。对应的 UI 控件处理器（`ResetManagedConfigButton_Click`、`ImportProfileButton_Click`、`ApplyPreset`）转换为 `async void` 并添加 try-catch 保护。
+- **状态**: 🟢 Fixed（构建 0 errors/0 warnings，539/539 测试通过）
+- **发现日期**: 2026-07-09
+- **修复日期**: 2026-07-09
+
+---
+
 ## 统计（Day 11 验证后更新）
 
 - 🔴 Confirmed (High): 2
 - 🟡 Confirmed (Medium): 13
 - 🟢 Confirmed (Low): 12
-- 🟢 Fixed (已修复): 8
+- 🟢 Fixed (已修复): 9
 - ⚪ WontFix (误报): 1
-- **总计**: 36
+- **总计**: 37
 
 ## 待深入模块（后续天数）
 
