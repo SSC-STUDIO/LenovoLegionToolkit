@@ -57,6 +57,28 @@ public class Log : IDisposable
 
     public string LogPath => _folderPath;
 
+#if UDT_TEST_HOOKS
+    internal Log(bool _forTesting)
+    {
+        _folderPath = Path.Combine(Folders.AppData, "logs");
+        Directory.CreateDirectory(_folderPath);
+
+        _levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
+
+        _logger = new LoggerConfiguration()
+            .MinimumLevel.ControlledBy(_levelSwitch)
+            .Enrich.WithProperty("Application", AppIdentity.CompactName)
+            .WriteTo.Async(wt => wt.File(
+                new Serilog.Formatting.Json.JsonFormatter(),
+                Path.Combine(_folderPath, "log-.json"),
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 10,
+                fileSizeLimitBytes: 50 * 1024 * 1024
+            ))
+            .CreateLogger();
+    }
+#endif
+
     private Log()
     {
         _folderPath = Path.Combine(Folders.AppData, "logs");
@@ -289,19 +311,17 @@ public class Log : IDisposable
 
     public async Task ShutdownAsync()
     {
-        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
-            return;
-
-        var logger = _logger;
-        await Task.Run(() => logger.Dispose()).ConfigureAwait(false);
+        // DisposeCore is async-safe and idempotent: only the first caller wins the
+        // CAS, guaranteeing _logger and _emergencyLock are each disposed exactly once
+        // regardless of whether Shutdown, ShutdownAsync, or Dispose fires first.
+        await DisposeCoreAsync().ConfigureAwait(false);
     }
 
     public void Shutdown()
     {
-        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
-            return;
-
-        _logger.Dispose();
+        // Synchronous teardown delegates to the same centralized DisposeCore so the
+        // emergency semaphore handle is freed even when Shutdown runs instead of Dispose.
+        ShutdownAsync().GetAwaiter().GetResult();
     }
 
     private static string FormatSourceContext(string? file, int lineNumber, string? caller)
@@ -343,11 +363,28 @@ public class Log : IDisposable
 
     public void Dispose()
     {
+        // Dispose delegates to the same centralized DisposeCore used by Shutdown /
+        // ShutdownAsync, so a Shutdown-then-Dispose sequence disposes _emergencyLock
+        // exactly once instead of short-circuiting and leaking the native semaphore.
+        ShutdownAsync().GetAwaiter().GetResult();
+        GC.SuppressFinalize(this);
+    }
+
+    private async Task DisposeCoreAsync()
+    {
         if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
-        _logger?.Dispose();
-        _emergencyLock?.Dispose();
-        GC.SuppressFinalize(this);
+        var logger = _logger;
+        var emergencyLock = _emergencyLock;
+
+        // Dispose the Serilog logger off the caller thread to avoid blocking the
+        // UI Dispatcher / unhandled-exception handler on the async sink flush.
+        await Task.Run(() => logger.Dispose()).ConfigureAwait(false);
+
+        // The emergency-lock semaphore is a managed wrapper around a native wait
+        // handle; it must be released exactly once, even when teardown is reached
+        // through Shutdown/ShutdownAsync rather than Dispose.
+        emergencyLock.Dispose();
     }
 }

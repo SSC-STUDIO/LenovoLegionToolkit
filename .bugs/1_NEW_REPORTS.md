@@ -6,5 +6,3 @@
 > HYGIENE: Do NOT append audit-log / no-finding stubs to this file. Only write CONFIRMED new defect tickets here. When you find no defects, write NOWHERE.
 
 ## New Tickets
-
-_No new tickets._

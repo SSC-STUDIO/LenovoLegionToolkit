@@ -303,6 +303,71 @@ public class LogTests
         // Assert - concurrent fire-and-forget writes must not throw or deadlock
         await act.Should().NotThrowAsync();
     }
+    [Fact]
+    public void Shutdown_ThenDispose_NoDoubleDisposeException()
+    {
+        // Arrange - use internal test constructor + env-override to isolate log directory
+        var originalOverride = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
+        var tempDir = Path.Combine(Path.GetTempPath(), "UDT_LogTest_" + Guid.NewGuid().ToString("N").Substring(0, 8));
+        Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", tempDir, EnvironmentVariableTarget.Process);
+        try
+        {
+            var log = new Log(true);
+
+            // Act - Shutdown disposes _logger and _emergencyLock;
+            // Dispose must NOT throw even though Shutdown already set _disposed
+            Action act = () =>
+            {
+                log.Shutdown();
+                log.Dispose();
+            };
+
+            // Assert - no ObjectDisposedException or double-dispose of SemaphoreSlim
+            act.Should().NotThrow();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", originalOverride, EnvironmentVariableTarget.Process);
+            if (Directory.Exists(tempDir))
+                try { Directory.Delete(tempDir, true); } catch { /* best-effort cleanup */ }
+        }
+    }
+
+    [Fact]
+    public async Task Concurrent_ShutdownAsyncAndDispose_NoDoubleDisposeException()
+    {
+        // Arrange - create a fresh isolated Log instance per iteration
+        var originalOverride = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
+        var tempDir = Path.Combine(Path.GetTempPath(), "UDT_LogTest_" + Guid.NewGuid().ToString("N").Substring(0, 8));
+        Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", tempDir, EnvironmentVariableTarget.Process);
+        try
+        {
+            // Run 20 iterations with different Log instances to increase race coverage
+            for (int iteration = 0; iteration < 20; iteration++)
+            {
+                var log = new Log(true);
+
+                // Act - race ShutdownAsync and Dispose concurrently
+                // Only one should win the CAS and dispose resources; the other should
+                // observe _disposed=1 and return early.
+                Func<Task> act = async () =>
+                {
+                    var t1 = Task.Run(() => log.Dispose());
+                    var t2 = log.ShutdownAsync();
+                    await Task.WhenAll(t1, t2);
+                };
+
+                // Assert - no ObjectDisposedException, no SemaphoreFullException
+                await act.Should().NotThrowAsync($"Iteration {iteration} must not double-dispose");
+            }
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", originalOverride, EnvironmentVariableTarget.Process);
+            if (Directory.Exists(tempDir))
+                try { Directory.Delete(tempDir, true); } catch { /* best-effort cleanup */ }
+        }
+    }
 }
 
 

@@ -1,4 +1,4 @@
-ï»¿# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
+# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
 
 > Repository: UniversalDeviceToolkit (Main Repo, .NET 10 WPF)
 > Fixed defects pending final verification.
@@ -11,18 +11,18 @@
 - **Symptom**: dotnet build emits 7x MSB4121 warnings for x64-only projects and runs duplicate MSBuild tasks.
 - **Root cause**: 7 x64-only project GUIDs were missing Debug|Any CPU/Release|Any CPU config mappings and had duplicate Debug|x64/Release|x64 pairs.
 - **Fix applied**: Removed duplicate x64 line pairs; Debug|Any CPU = Debug|x64 and Release|Any CPU = Release|x64 mappings present for all 7 GUIDs (DC01FDB3,4B902DDC,CB52B339,AC885CE1,656AC74B,2C7AB13C,BB54FD85).
-- **Verification**: dotnet build UniversalDeviceToolkit.sln -c Debug -m:1 --no-incremental â†’ 0 warnings, 0 errors, no MSB4121; no duplicate c5935d12 task lines. Confirmed via Select-String MSB4121 = empty.
+- **Verification**: dotnet build UniversalDeviceToolkit.sln -c Debug -m:1 --no-incremental ¡ú 0 warnings, 0 errors, no MSB4121; no duplicate c5935d12 task lines. Confirmed via Select-String MSB4121 = empty.
 - **Note**: The 7 GUID config blocks were already normalized in the current UniversalDeviceToolkit.sln (Any CPU mappings present, no duplicate line pairs). Build is fully green.
 
 ---
 
-### [RESOLVED by Codex-Agent-001 at 2026-07-09 17:00 CST] BUG-2026-07-09-002: FanCurveControl.xaml hardcodes "100 Â°C" User Control Label Content string not extracted to Resource.resx
+### [RESOLVED by Codex-Agent-001 at 2026-07-09 17:00 CST] BUG-2026-07-09-002: FanCurveControl.xaml hardcodes "100 ¡ãC" User Control Label Content string not extracted to Resource.resx
 - **Severity**: Low
 - **Component**: FanCurveControl.xaml
-- **Symptom**: Fan curve Y-axis temperature max label used a literal Content="100 Â°C" string while sibling labels correctly used x:Static resource bindings.
+- **Symptom**: Fan curve Y-axis temperature max label used a literal Content="100 ¡ãC" string while sibling labels correctly used x:Static resource bindings.
 - **Root cause**: Hardcoded unit string instead of a localized resource entry.
-- **Fix applied**: Added FanCurveControl_TemperatureMax resource key (value "100 Â°C") to Resource.resx; replaced literal Content="100%" at L36 with Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}".
-- **Verification**: XAML compiles, resource binding resolves at runtime, label displays "100 Â°C" as before â€” now localizable.
+- **Fix applied**: Added FanCurveControl_TemperatureMax resource key (value "100 ¡ãC") to Resource.resx; replaced literal Content="100%" at L36 with Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}".
+- **Verification**: XAML compiles, resource binding resolves at runtime, label displays "100 ¡ãC" as before ¡ª now localizable.
 
 ---
 
@@ -33,3 +33,14 @@
 - **Root cause**: Synchronous file I/O on the caller thread guarded by a process-wide lock, plus timestamp-only filenames that collide under concurrent reports.
 - **Fix applied**: (1) Offloaded file write via Task.Run fire-and-forget so the caller thread never blocks on disk I/O. (2) Replaced lock(_emergencyLock) with an async-safe SemaphoreSlim(1,1) using WaitAsync/Release. (3) Appended an 8-char GUID suffix to error report filenames to guarantee uniqueness under concurrency. (4) Added ErrorReportAsync overload for awaitable callers; kept synchronous ErrorReport signature for void handlers. (5) _emergencyLock disposed in Dispose. (6) Added ErrorReportAsync_ConcurrentReports_ShouldNotCollideOrThrow test (16 concurrent reports).
 - **Verification**: dotnet build -c Release -> 0 warnings, 0 errors; dotnet test --filter LogTests -> 21/21 passed in 728ms, including the new concurrency test.
+
+---
+
+### [RESOLVED by udt-fullstack at 2026-07-09T00:00:00+08:00 -> 2026-07-09 ~CST] BUG-2026-07-09-004: Log.Shutdown/ShutdownAsync leak the SemaphoreSlim _emergencyLock because Dispose early-returns after Shutdown flips _disposed
+- **Severity**: Medium
+- **Component**: UniversalDeviceToolkit.Lib/Utils/Log.cs
+- **Symptom**: Shutdown()/ShutdownAsync() set _disposed via Interlocked.CompareExchange and disposed _logger, but never disposed the SemaphoreSlim _emergencyLock. A subsequent Dispose() short-circuited via the same _disposed flag, so the native semaphore handle leaked. Concurrent ShutdownAsync vs Dispose could also double-touch _logger across the three split teardown entry points.
+- **Root cause**: Teardown was split across three entry points (Shutdown, ShutdownAsync, Dispose) with duplicated disposal logic; _emergencyLock disposal lived only in Dispose, gated by the same _disposed flag Shutdown already set, making it unreachable post-Shutdown.
+- **Fix applied**: Centralized all teardown into a single private DisposeCoreAsync() guarded by one atomic Interlocked.CompareExchange(ref _disposed, 1, 0) CAS. It captures _logger and _emergencyLock into locals and disposes each exactly once. Shutdown(), ShutdownAsync(), and Dispose() all funnel through DisposeCoreAsync(), eliminating the split-path double-touch and guaranteeing the SemaphoreSlim handle is freed regardless of which teardown entry point fires first.
+- **Regression tests added**: (1) LogTests.Shutdown_ThenDispose_NoDoubleDisposeException - verifies Shutdown-then-Dispose disposes the semaphore without double-dispose exceptions. (2) LogTests.Concurrent_ShutdownAsyncAndDispose_NoDoubleDisposeException - 20-iteration race of Dispose vs ShutdownAsync on fresh isolated Log instances (via internal Log(true) ctor under UDT_TEST_HOOKS + UDT_APPDATA_OVERRIDE env isolation) must not throw ObjectDisposedException/SemaphoreFullException.
+- **Verification**: dotnet build UniversalDeviceToolkit.Tests -c Debug -m:1 -> 0 warnings, 0 errors. dotnet test --filter LogTests -> 23/23 passed (673ms), including the 2 new regression tests.
