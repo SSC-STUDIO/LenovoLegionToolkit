@@ -158,6 +158,27 @@ public class NetworkAccelerationRuntimeTests
     }
 
     [Fact]
+    public void GetRecentSamples_PreservesFifoOrder()
+    {
+        var runtime = CreateRuntime();
+        runtime.Start();
+
+        Thread.Sleep(3500); // Collect ~2-3 samples
+
+        var samples = runtime.GetRecentSamples();
+
+        runtime.Stop();
+
+        // Samples must be in chronological order (oldest first, newest last).
+        for (var i = 1; i < samples.Count; i++)
+        {
+            Assert.True(samples[i].TimestampUtc >= samples[i - 1].TimestampUtc,
+                $"Sample at index {i} (timestamp {samples[i].TimestampUtc:O}) is older than previous " +
+                $"sample (timestamp {samples[i - 1].TimestampUtc:O}) — ring buffer FIFO order violated.");
+        }
+    }
+
+    [Fact]
     public void TryReadTotals_IgnoresFaultedEligibleInterface_WhenAnotherEligibleInterfaceSucceeds()
     {
         var interfaceSnapshots = new[]

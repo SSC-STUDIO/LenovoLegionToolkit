@@ -61,34 +61,52 @@ public sealed class NetworkAccelerationRuntime
         lock (_gate)
         {
             if (_cts != null)
+            {
                 return;
+            }
 
             _cts = new CancellationTokenSource();
             _loopTask = Task.Run(() => RunAsync(_cts.Token));
         }
     }
 
-    /// <summary>
-    /// Stops the runtime. Cancels the loop synchronously and cleans up resources.
-    /// Does not block on the loop task to avoid deadlock (use <see cref="StopAsync"/> for graceful await).
-    /// </summary>
     public void Stop()
     {
         CancellationTokenSource? capturedCts;
+        Task? capturedTask;
 
         lock (_gate)
         {
             capturedCts = _cts;
+            capturedTask = _loopTask;
             _cts = null;
             _loopTask = null;
         }
 
         if (capturedCts == null)
+        {
             return;
+        }
 
         try
         {
             capturedCts.Cancel();
+
+            if (capturedTask != null)
+            {
+                try
+                {
+                    capturedTask.Wait(TimeSpan.FromSeconds(2));
+                }
+                catch (TimeoutException)
+                {
+                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
+                }
+                catch (AggregateException)
+                {
+                    // Expected when the task is cancelled.
+                }
+            }
         }
         catch (OperationCanceledException)
         {
@@ -121,7 +139,9 @@ public sealed class NetworkAccelerationRuntime
         }
 
         if (cts == null)
+        {
             return;
+        }
 
         try
         {
@@ -170,7 +190,9 @@ public sealed class NetworkAccelerationRuntime
     {
         NetworkTotals? previousTotals = null;
         if (TryReadTotals(out var initialTotals))
+        {
             previousTotals = initialTotals;
+        }
 
         var previousTimestamp = DateTime.UtcNow;
 
@@ -180,7 +202,9 @@ public sealed class NetworkAccelerationRuntime
         {
             var now = DateTime.UtcNow;
             if (!TryReadTotals(out var currentTotals))
+            {
                 continue;
+            }
 
             if (previousTotals is null)
             {
@@ -204,7 +228,10 @@ public sealed class NetworkAccelerationRuntime
             lock (_gate)
             {
                 if (_samples.Count >= DefaultHistorySize)
+                {
                     _samples.RemoveAt(0);
+                }
+
                 _samples.Add(sample);
             }
 
@@ -279,10 +306,14 @@ public sealed class NetworkAccelerationRuntime
         foreach (var interfaceSnapshot in interfaceSnapshots)
         {
             if (interfaceSnapshot.Status != OperationalStatus.Up)
+            {
                 continue;
+            }
 
-            if (interfaceSnapshot.InterfaceType == NetworkInterfaceType.Loopback || interfaceSnapshot.InterfaceType == NetworkInterfaceType.Tunnel)
+            if (interfaceSnapshot.InterfaceType is NetworkInterfaceType.Loopback or NetworkInterfaceType.Tunnel)
+            {
                 continue;
+            }
 
             sawEligibleInterface = true;
 
