@@ -191,9 +191,25 @@ public class ProcessRunner
                 var wasCancelled = cancellationToken.IsCancellationRequested;
                 TryTerminateProcess(process);
 
+                // Preserve partial output captured before the timeout/cancellation.
+                // A process that hangs often emits diagnostic messages (error text,
+                // progress info) before becoming unresponsive — discarding that data
+                // makes the failure impossible to diagnose from logs alone.
+                var partialOutput = outputBuilder.ToString();
+                var partialError = errorBuilder.ToString();
+
                 var reason = wasCancelled ? "Process cancelled" : "Process timed out";
-                _logger?.LogError("{Reason}", reason);
-                return ProcessResult.Failure("Process cancelled or timed out");
+                _logger?.LogError("{Reason}. Partial output: {Output}. Partial error: {Error}",
+                    reason,
+                    string.IsNullOrWhiteSpace(partialOutput) ? "(none)" : partialOutput,
+                    string.IsNullOrWhiteSpace(partialError) ? "(none)" : partialError);
+
+                return ProcessResult.Failure(
+                    error: wasCancelled
+                        ? $"Process cancelled. Partial stderr: {partialError}"
+                        : $"Process timed out after {effectiveTimeoutSeconds}s. Partial stderr: {partialError}",
+                    exitCode: -1,
+                    output: partialOutput);
             }
 
             var output = outputBuilder.ToString();

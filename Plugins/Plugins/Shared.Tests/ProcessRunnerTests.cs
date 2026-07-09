@@ -205,7 +205,7 @@ public class ProcessRunnerTests
             timeoutSeconds: 1);
 
         Assert.False(result.Success);
-        Assert.Contains("cancelled or timed out", result.Error);
+        Assert.Contains("timed out", result.Error);
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class ProcessRunnerTests
             cts.Token);
 
         Assert.False(result.Success);
-        Assert.Contains("cancelled or timed out", result.Error);
+        Assert.Contains("cancelled", result.Error);
     }
 
     [Fact]
@@ -235,7 +235,7 @@ public class ProcessRunnerTests
             cts.Token);
 
         Assert.False(result.Success);
-        Assert.Contains("cancelled or timed out", result.Error);
+        Assert.Contains("cancelled", result.Error);
     }
 
     #endregion
@@ -599,6 +599,60 @@ public class ProcessRunnerTests
 
         // Should use default timeout and succeed
         Assert.True(result.Success || !result.Success);
+    }
+
+    [Fact]
+    public async Task RunProcessAsync_Timeout_PreservesPartialOutput()
+    {
+        // Use a batch command: echo a marker line first, then ping (which hangs).
+        // We can't use && (blocked by ContainsDangerousCharacters), so we use a
+        // temp batch file to chain commands safely.
+        var batchPath = Path.Combine(Path.GetTempPath(), $"udt_test_{Guid.NewGuid():N}.bat");
+        await File.WriteAllTextAsync(batchPath, "@echo off\r\necho DiagnosticStart\r\nping 127.0.0.1 -n 30\r\n");
+
+        try
+        {
+            var result = await _runner.RunProcessAsync(
+                batchPath,
+                "",
+                CancellationToken.None,
+                timeoutSeconds: 2);
+
+            Assert.False(result.Success);
+            Assert.Contains("timed out", result.Error);
+            // Partial output should contain the line printed before the hang
+            Assert.Contains("DiagnosticStart", result.Output);
+        }
+        finally
+        {
+            if (File.Exists(batchPath)) File.Delete(batchPath);
+        }
+    }
+
+    [Fact]
+    public async Task RunProcessAsync_Cancellation_PreservesPartialOutput()
+    {
+        var batchPath = Path.Combine(Path.GetTempPath(), $"udt_test_{Guid.NewGuid():N}.bat");
+        await File.WriteAllTextAsync(batchPath, "@echo off\r\necho CancelMarker\r\nping 127.0.0.1 -n 30\r\n");
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromMilliseconds(500));
+
+        try
+        {
+            var result = await _runner.RunProcessAsync(
+                batchPath,
+                "",
+                cts.Token);
+
+            Assert.False(result.Success);
+            Assert.Contains("cancelled", result.Error);
+            Assert.Contains("CancelMarker", result.Output);
+        }
+        finally
+        {
+            if (File.Exists(batchPath)) File.Delete(batchPath);
+        }
     }
 
     #endregion
