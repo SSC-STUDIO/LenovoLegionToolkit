@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Threading;
 
 namespace LenovoLegionToolkit.Plugins.Shared;
 
@@ -27,6 +26,8 @@ public static class HttpClientManager
     /// </summary>
     private static readonly TimeSpan ConnectionIdleTimeout = TimeSpan.FromMinutes(5);
 
+    private static readonly object _sharedLock = new();
+    private static readonly object _downloadLock = new();
     private static volatile HttpClient? _sharedClient;
     private static volatile HttpClient? _downloadClient;
 
@@ -46,20 +47,36 @@ public static class HttpClientManager
     /// This instance should be used for all HTTP requests across plugins.
     /// </summary>
     public static HttpClient GetSharedClient() =>
-        _sharedClient ??= new HttpClient(CreateHandler())
+        _sharedClient ?? GetOrCreateShared();
+
+    private static HttpClient GetOrCreateShared()
+    {
+        lock (_sharedLock)
         {
-            Timeout = TimeSpan.FromSeconds(Constants.DefaultTimeoutSeconds)
-        };
+            return _sharedClient ??= new HttpClient(CreateHandler())
+            {
+                Timeout = TimeSpan.FromSeconds(Constants.DefaultTimeoutSeconds)
+            };
+        }
+    }
 
     /// <summary>
     /// Gets the shared download HttpClient instance.
     /// This instance is cached and should be reused across all download operations.
     /// </summary>
     public static HttpClient GetDownloadClient() =>
-        _downloadClient ??= new HttpClient(CreateHandler())
+        _downloadClient ?? GetOrCreateDownload();
+
+    private static HttpClient GetOrCreateDownload()
+    {
+        lock (_downloadLock)
         {
-            Timeout = TimeSpan.FromSeconds(Constants.DownloadTimeoutSeconds)
-        };
+            return _downloadClient ??= new HttpClient(CreateHandler())
+            {
+                Timeout = TimeSpan.FromSeconds(Constants.DownloadTimeoutSeconds)
+            };
+        }
+    }
 
     /// <summary>
     /// Creates a new HttpClient with custom timeout for specific use cases.
@@ -75,7 +92,7 @@ public static class HttpClientManager
             throw new ArgumentOutOfRangeException(nameof(timeoutSeconds), "Timeout must be positive");
         }
 
-        return new HttpClient
+        return new HttpClient(CreateHandler())
         {
             Timeout = TimeSpan.FromSeconds(timeoutSeconds)
         };
@@ -88,10 +105,18 @@ public static class HttpClientManager
     /// </summary>
     public static void DisposeSharedClient()
     {
-        var oldShared = Interlocked.Exchange(ref _sharedClient, null);
+        HttpClient? oldShared, oldDownload;
+        lock (_sharedLock)
+        {
+            oldShared = _sharedClient;
+            _sharedClient = null;
+        }
+        lock (_downloadLock)
+        {
+            oldDownload = _downloadClient;
+            _downloadClient = null;
+        }
         oldShared?.Dispose();
-
-        var oldDownload = Interlocked.Exchange(ref _downloadClient, null);
         oldDownload?.Dispose();
     }
 }
