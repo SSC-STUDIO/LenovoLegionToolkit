@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -765,187 +764,16 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var currentTemperature = temperatureSensor?.CurrentTemperature ?? -1;
             var maxTemperature = temperatureSensor?.DefaultMaximumTemperature ?? -1;
 
-            // Get GPU Power and Voltage
-            int currentWattage = -1;
-            double currentVoltage = 0;
-            
-            // Fallback: Try method 1: NvAPIWrapper reflection
-            if (currentWattage < 0)
-            {
-                try
-                {
-                    var powerInfoProp = gpu.GetType().GetProperty("PowerInformation");
-                    if (powerInfoProp != null)
-                    {
-                        var powerInfo = powerInfoProp.GetValue(gpu);
-                        if (powerInfo != null)
-                        {
-                            var powerEntriesProp = powerInfo.GetType().GetProperty("PowerEntries");
-                            if (powerEntriesProp != null)
-                            {
-                                var powerEntries = powerEntriesProp.GetValue(powerInfo) as IEnumerable;
-                                if (powerEntries != null)
-                                {
-                                    var firstEntry = powerEntries.Cast<object>().FirstOrDefault();
-                                    if (firstEntry != null)
-                                    {
-                                        var powerProp = firstEntry.GetType().GetProperty("Power");
-                                        if (powerProp != null)
-                                        {
-                                            var powerValue = powerProp.GetValue(firstEntry);
-                                            if (powerValue != null)
-                                            {
-                                                currentWattage = (int)(Convert.ToDouble(powerValue) / 1000.0);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                }
-            }
-            
-            // Try to get voltage via VoltageSensor property
-            try
-            {
-                var voltageSensorProp = gpu.GetType().GetProperty("VoltageSensor");
-                
-                if (voltageSensorProp != null)
-                {
-                    var voltageSensor = voltageSensorProp.GetValue(gpu);
-                    if (voltageSensor != null)
-                    {
-                        var isAvailableProp = voltageSensor.GetType().GetProperty("IsAvailable");
-                        var currentVoltageProp = voltageSensor.GetType().GetProperty("CurrentVoltage");
-                        
-                        if (isAvailableProp != null && currentVoltageProp != null)
-                        {
-                            var isAvailable = isAvailableProp.GetValue(voltageSensor);
-                            if (isAvailable is bool available && available)
-                            {
-                                var voltageValue = currentVoltageProp.GetValue(voltageSensor);
-                                if (voltageValue != null)
-                                {
-                                    // Voltage is typically in millivolts, convert to volts
-                                    if (voltageValue is uint voltageUint)
-                                    {
-                                        currentVoltage = voltageUint / 1000.0;
-                                    }
-                                    else if (voltageValue is int voltageInt)
-                                    {
-                                        currentVoltage = voltageInt / 1000.0;
-                                    }
-                                    else if (voltageValue is float voltageFloat)
-                                    {
-                                        currentVoltage = voltageFloat;
-                                    }
-                                    else if (voltageValue is double voltageDouble)
-                                    {
-                                        currentVoltage = voltageDouble;
-                                    }
-                                    else
-                                    {
-                                        currentVoltage = Convert.ToDouble(voltageValue);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-            }
+            // Get GPU Power and Voltage via helper methods.
+            // GPUInfoHelper centralizes the NvAPIWrapper reflection logic for
+            // power, voltage, and power-topology queries, keeping the duplication
+            // in one place and fixing the previous power-topology bug where the
+            // PCM value was read but never assigned to currentWattage.
+            var currentWattage = GPUInfoHelper.GetWattage(gpu);
+            var currentVoltage = GPUInfoHelper.GetVoltage(gpu);
 
-            // Try to get Wattage via PrivatePowerTopologiesStatusV1 (Reflection)
-            try
-            {
-                // Note: The structure PrivatePowerTopologiesStatusV1 has 'PowerUsageInPCM'.
-                // If NvAPIWrapper exposes PowerTopologyInformation (usually via 'PowerTopology' property on PhysicalGPU)
-                
-                // Let's try 'PowerTopology' property
-                var powerTopologyProp = gpu.GetType().GetProperty("PowerTopology");
-                if (powerTopologyProp != null)
-                {
-                    var powerTopology = powerTopologyProp.GetValue(gpu);
-                    // Check for 'Status' property
-                    var statusProp = powerTopology?.GetType().GetProperty("Status");
-                    if (statusProp != null)
-                    {
-                        var status = statusProp.GetValue(powerTopology);
-                        // PrivatePowerTopologiesStatusV1 exposes 'PowerPolicyStatusEntries' (typo in lib?) or 'Entries'
-                        // The decompiled code showed: public PowerTopologiesStatusEntry[] PowerPolicyStatusEntries { get => ... }
-                        // It seems the property name in wrapper might be 'PowerPolicyStatusEntries' even for Topology status.
-                        
-                        var entriesProp = status?.GetType().GetProperty("PowerPolicyStatusEntries");
-                        if (entriesProp != null)
-                        {
-                            var entries = entriesProp.GetValue(status) as Array;
-                            if (entries != null)
-                            {
-                                foreach (var entry in entries)
-                                {
-                                    if (entry == null) continue;
-                                    
-                                    // entry is PowerTopologiesStatusEntry
-                                    var domainProp = entry.GetType().GetProperty("Domain");
-                                    var usageProp = entry.GetType().GetProperty("PowerUsageInPCM");
-                                    
-                                    if (domainProp != null && usageProp != null)
-                                    {
-                                        var domainValue = domainProp.GetValue(entry);
-                                        if (domainValue != null)
-                                        {
-                                            var domain = domainValue.ToString();
-                                            // Domain is likely an enum PowerTopologyDomain. GPU or Board.
-                                            if (domain == "GPU" || domain == "Board") 
-                                            {
-                                                // PowerUsageInPCM is in milliwatts usually for this struct?
-                                                // Or is it 1/1000 percent? 
-                                                // "PCM" = Per Cent Mille = 1/1000 %.
-                                                // If it is PCM, we need the TDP to calculate Watts.
-                                                
-                                                // However, some sources say for Topology status it might be absolute power in mW.
-                                                // Let's assume mW for now because we don't have TDP readily available in this context easily.
-                                                // Actually, 'PowerUsageInPCM' name suggests percentage.
-                                                // But let's look at the value. If it is e.g. 50000, it is 50%.
-                                                // If it is e.g. 30000, it is 30W? No.
-                                                
-                                                // Let's try to find if there is a 'PowerUsage' property directly in Watts on the entry?
-                                                // The struct only showed PowerUsageInPCM.
-                                                
-                                                // If we can't get Watts, we skip.
-                                                // But user insists on getting power.
-                                                
-                                                // Let's try another property: 'CurrentPower' on PhysicalGPU?
-                                                // No such property in standard wrapper.
-                                                
-                                                // Let's try to interpret PCM as mW? 
-                                                // In some NvAPI contexts, it is mW.
-                                                // Let's store it as mW if > 1000? 
-                                                // If it is %, 100% = 100000.
-                                                // If it is mW, 100W = 100000.
-                                                // It is ambiguous.
-                                                
-                                                // Let's assume it is mW.
-                                                _ = Convert.ToUInt32(usageProp.GetValue(entry));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            catch
-            {
-            }
+            if (currentWattage < 0)
+                currentWattage = GPUInfoHelper.GetWattageFromPowerTopology(gpu);
 
             // Final fallback: nvidia-smi
             if (currentWattage < 0 || currentVoltage == 0)
