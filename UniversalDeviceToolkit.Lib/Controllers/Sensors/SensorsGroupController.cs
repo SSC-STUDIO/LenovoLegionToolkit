@@ -2405,6 +2405,7 @@ public class SensorsGroupController : IDisposable
 
     public void Dispose()
     {
+        StopProducerLoop();
         lock (_hardwareLock) { _computer?.Close(); _computer = null; _hardwareInitialized = false; }
         _initSemaphore.Dispose();
         GC.SuppressFinalize(this);
