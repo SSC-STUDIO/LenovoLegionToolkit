@@ -31,7 +31,7 @@ public class Log : IDisposable
     private readonly LoggingLevelSwitch _levelSwitch;
     private readonly string _folderPath;
     private readonly object _emergencyLock = new();
-    private bool _disposed;
+    private int _disposed;
 
     public bool IsTraceEnabled
     {
@@ -73,8 +73,11 @@ public class Log : IDisposable
 
     public void ErrorReport(string header, Exception ex)
     {
-        var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt");
-        File.AppendAllLines(errorReportPath, [header, Serialize(ex)]);
+        lock (_emergencyLock)
+        {
+            var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt");
+            File.AppendAllLines(errorReportPath, [header, Serialize(ex)]);
+        }
 
         _logger.Error(ex, "{Header}", header);
     }
@@ -218,19 +221,17 @@ public class Log : IDisposable
 
     public async Task ShutdownAsync()
     {
-        if (_disposed)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
-        _disposed = true;
         await Task.Run(() => _logger.Dispose()).ConfigureAwait(false);
     }
 
     public void Shutdown()
     {
-        if (_disposed)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
-        _disposed = true;
         _logger.Dispose();
     }
 
@@ -269,17 +270,13 @@ public class Log : IDisposable
     private static string Serialize(Exception ex) => new StringBuilder()
         .AppendLine("=== Exception ===")
         .AppendLine(ex.ToString())
-        .AppendLine()
-        .AppendLine("=== Exception ===")
-        .AppendLine(ex.ToString())
         .ToString();
 
     public void Dispose()
     {
-        if (_disposed)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
-        _disposed = true;
         _logger?.Dispose();
         GC.SuppressFinalize(this);
     }
