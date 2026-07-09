@@ -1,4 +1,4 @@
-# Knowledge Base — Lessons Learned & Rules (经验知识与规则累积)
+﻿# Knowledge Base — Lessons Learned & Rules (经验知识与规则累积)
 
 This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Plugins project. Every time an AI agent or human developer solves a complex bug, discovers a Windows OS quirk, or optimizes an architecture, they MUST append a structured entry here.
 
@@ -265,3 +265,27 @@ When evaluating UI via FlaUI + WinRT OCR:
   - **DO rename**: User-visible strings (UI text, docs, marketing), WPF `AssemblyName` (the `.dll` filename of the WPF host — `Lenovo Legion Toolkit.dll` → `Universal Device Toolkit.dll`), cross-csproj `<Reference Include="...">` names, `host-release.json` `downloadUrl` / `artifacts.wpf` / `artifacts.package` fields
   - **DO NOT rename**: `LenovoLegionToolkit.Plugins.*` namespaces, `LenovoLegionToolkit-Plugins.sln` filename, `*.csproj` filenames, plugin assembly names, `plugin.manifest.json` `class` field, DLL names, `store.json` `minLLTVersion` JSON property name, `SettingsManager<T>` legacy read paths under `%LocalAppData%\LenovoLegionToolkit\`
 - **.NET/OS Version**: .NET 10, Windows 11 24H2, UniversalDeviceToolkit v4.2.1
+
+---
+
+### [2026-07-09] Unguarded async-void Event Handlers Crash the Host Process (PLG-012)
+- **Symptom / Pitfall**: WPF async-void event handlers (e.g. sync void XxxButton_Click) perform async I/O (plugin loading, file dialogs, process bootstrap) without try-catch. Any unhandled exception propagates to the SynchronizationContext and tears down the whole host WPF process, since async-void cannot be observed by the caller.
+- **Root Cause**: async-void methods do not surface exceptions to the caller; unhandled exceptions reach AppDomain.UnhandledException / TaskScheduler.UnobservedTaskException and crash. PluginWorkbench had 8 unguarded async-void handlers (MainWindow_Loaded, PluginListBox_MouseDoubleClick, LoadSelectedButton_Click, BootstrapHostButton_Click, OpenZipButton_Click, ReloadCurrentButton_Click, ModeToggleButton_Click, ModeComboBox_SelectionChanged).
+- **Enforced Rule (PLG-012)**:
+  - Every sync void WPF event handler MUST wrap its body in 	ry { ... } catch (Exception ex) { <log + inline status> }.
+  - Log via a single AppendLog/PluginLog.Trace sink and surface the failure inline (e.g. StatusTextBlock.Text = "..."); never let exceptions escape async-void.
+  - Preserve state-cleanup side effects outside or in inally (e.g. _suppressModeSelectionChanged = false, button IsEnabled restore in BootstrapHostButton_Click).
+  - Control-flow early-returns (suppress-flag checks) should sit above the try or be returned from inside; the guard must not swallow expected cancellations.
+  - Reference pattern: RunOptimizationActionButton_Click (MainWindow.xaml.cs).
+- **.NET/OS Version**: .NET 10, Windows 11 24H2
+
+---
+
+### [2026-07-09] Missing `using` on HttpResponseMessage Causes Socket Leak (VSR-014)
+- **Symptom / Pitfall**: `ViveToolDownloadService.DownloadViveToolAsync()` calls `httpClient.GetAsync()` with `HttpCompletionOption.ResponseHeadersRead` but stores the result in a plain local (`var response`). When `EnsureSuccessStatusCode()` throws (non-2xx status), the `HttpResponseMessage` is never disposed, and the underlying TCP connection is not returned to the pool — a socket leak that eventually exhausts the connection pool under repeated failures.
+- **Root Cause**: The `using var response` pattern was used consistently in the sibling `ImportFeaturesFromUrlAsync` (line 253) but omitted in `DownloadViveToolAsync` (line 80). The `ResponseHeadersRead` option makes this worse because the content stream has not been fully consumed, so the response cannot be implicitly cleaned up by the GC finalizer in a timely manner.
+- **Enforced Rule**:
+  - EVERY `HttpClient.GetAsync` / `PostAsync` / `SendAsync` call MUST use `using var response = await ...` regardless of whether the content is consumed synchronously or asynchronously.
+  - This rule applies even when the response stream is read and disposed separately via a nested `using` — the `response` itself must still be covered by `using` to guarantee cleanup on the exception path.
+  - Reference: `ImportFeaturesFromUrlAsync` (ViveToolDownloadService.cs) — the correct pattern. The buggy pattern was `var response = await ...; response.EnsureSuccessStatusCode();` without `using`.
+- **.NET/OS Version**: .NET 10, Windows 11 24H2

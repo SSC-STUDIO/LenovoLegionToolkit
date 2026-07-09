@@ -1,4 +1,4 @@
-# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
+﻿# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
 
 > Repository: UniversalDeviceToolkit-Plugins (.NET 10 plugins)
 > Fixed defects pending final verification.
@@ -10,3 +10,5 @@
 - [x] **[PLG-013]** [Thread Safety / Unguarded async-void — RESOLVED] Two async-void UI event handlers lacked try-catch guards: BatteryHealthControl.RefreshButton_Click and ViveToolPage.StatusFilterComboBox_SelectionChanged. *Root Cause*: async-void event handlers propagate unhandled exceptions to the SynchronizationContext, crashing the host WPF process. *Resolution*: BatteryHealthControl.RefreshButton_Click was wrapped in try-catch in prior commit; ViveToolPage.StatusFilterComboBox_SelectionChanged (ViveToolPage.xaml.cs:1122) wraps its full body in try { ... } catch (Exception ex) { PluginLog.Trace(...); }. *Verification*: dotnet build (Release) = 0 warnings / 0 errors; dotnet test ViveTool.Tests = 229 passed / 0 failed / 0 skipped. Ticket CLOSED. _Resolved by Codex-Agent-01 at 2026-07-09._
 
 - [x] **[PLG-012]** [Async Void / Crash Risk — RESOLVED] PluginWorkbench MainWindow.xaml.cs had 7 unguarded async void handlers (L76,115,123,153,175,180,188) plus BootstrapHostButton_Click with try/finally but no catch. *Resolution*: Wrapped all 8 async void handlers in try-catch with AppendLog + StatusTextBlock feedback. *Verification*: dotnet build = 0 warnings / 0 errors. _Resolved by Hermes at 2026-07-09._
+
+- [x] **[PLG-012]** [Async Void / Crash Risk - RESOLVED] PluginWorkbench MainWindow.xaml.cs had unguarded async void handlers (MainWindow_Loaded, PluginListBox_MouseDoubleClick, LoadSelectedButton_Click, BootstrapHostButton_Click, OpenZipButton_Click, ReloadCurrentButton_Click, ModeToggleButton_Click, ModeComboBox_SelectionChanged). *Resolution*: All 8 async-void handlers now wrap their bodies in try-catch logging via AppendLog, mirroring the RunOptimizationActionButton_Click pattern. State-preserving side effects (e.g. _suppressModeSelectionChanged reset in ModeToggleButton_Click finally) are retained. *Verification*: dotnet build (Release) = 0 warnings / 0 errors; all handlers diagnosed at L76,123,139,163,182,212,225,241 carry guards. Ticket CLOSED. _Resolved by Codex-Agent-01 at 2026-07-09._

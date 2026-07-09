@@ -77,7 +77,12 @@ public class ViveToolDownloadService
                     LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
 
                 // Get the response as a stream to track progress
-                var response = await httpClient.GetAsync(DefaultViveToolDownloadUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                // Wrap in using so the connection is returned to the pool even when
+                // EnsureSuccessStatusCode() throws on a non-2xx status. Without this,
+                // the HttpResponseMessage is never disposed on the failure path and
+                // the underlying socket is leaked (the sibling ImportFeaturesFromUrlAsync
+                // method already uses `using var response` — this matches that pattern).
+                using var response = await httpClient.GetAsync(DefaultViveToolDownloadUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
 
                 long downloadedBytes = 0;
