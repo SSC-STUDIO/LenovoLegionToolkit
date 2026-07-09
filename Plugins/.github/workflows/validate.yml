@@ -122,6 +122,11 @@ jobs:
           "plugin_ids=$($selection -join ',')" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Selected plugin ids: $($selection -join ',')"
 
+      - name: Run governance gate
+        shell: pwsh
+        run: |
+          .\Scripts\governance-gate.ps1 -Root .
+
       - name: Prime plugin tooling CLI
         shell: pwsh
         run: |
