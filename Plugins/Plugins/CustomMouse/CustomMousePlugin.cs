@@ -672,16 +672,24 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         RunLifecycleTask(nameof(BackupCurrentCursorSchemeIfNeeded), Configuration.SaveAsync);
     }
 
+    /// <summary>
+    /// Executes a lifecycle task without synchronously blocking the caller's thread.
+    /// Uses fire-and-forget with logging instead of <c>GetAwaiter().GetResult()</c>
+    /// to avoid deadlock when the host calls lifecycle methods on the UI thread.
+    /// </summary>
     private static void RunLifecycleTask(string operationName, Func<Task> action)
     {
-        try
+        _ = Task.Run(async () =>
         {
-            Task.Run(async () => await action().ConfigureAwait(false)).GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
-        }
+            try
+            {
+                await action().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                PluginLog.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
+            }
+        });
     }
 
     private static void RunBackgroundTask(string operationName, Func<Task<bool>> action)
