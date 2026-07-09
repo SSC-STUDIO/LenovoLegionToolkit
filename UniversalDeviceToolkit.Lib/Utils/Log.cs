@@ -30,7 +30,7 @@ public class Log : IDisposable
     private readonly Logger _logger;
     private readonly LoggingLevelSwitch _levelSwitch;
     private readonly string _folderPath;
-    private readonly object _emergencyLock = new();
+    private readonly SemaphoreSlim _emergencyLock = new(1, 1);
     private int _disposed;
 
     private bool IsDisposed => Volatile.Read(ref _disposed) != 0;
@@ -82,13 +82,41 @@ public class Log : IDisposable
         if (IsDisposed)
             return;
 
-        lock (_emergencyLock)
-        {
-            var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt");
-            File.AppendAllLines(errorReportPath, [header, Serialize(ex)]);
-        }
+        _logger.Error(ex, "{Header}", header);
+
+        _ = Task.Run(() => WriteErrorReportAsync(header, ex));
+    }
+
+    public async Task ErrorReportAsync(string header, Exception ex)
+    {
+        if (IsDisposed)
+            return;
 
         _logger.Error(ex, "{Header}", header);
+        await WriteErrorReportAsync(header, ex).ConfigureAwait(false);
+    }
+
+    private async Task WriteErrorReportAsync(string header, Exception ex)
+    {
+        await _emergencyLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (IsDisposed)
+                return;
+
+            var suffix = Guid.NewGuid().ToString("N").AsSpan(0, 8).ToString();
+            var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}_{suffix}.txt");
+            await File.AppendAllLinesAsync(errorReportPath, [header, Serialize(ex)]).ConfigureAwait(false);
+        }
+        catch
+        {
+            // Emergency error reports must never propagate to the caller; a failed
+            // crash-dump write should not throw during unhandled-exception handling.
+        }
+        finally
+        {
+            _emergencyLock.Release();
+        }
     }
 
     public void Error(FormattableString message,
@@ -319,6 +347,7 @@ public class Log : IDisposable
             return;
 
         _logger?.Dispose();
+        _emergencyLock?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

@@ -281,6 +281,28 @@ public class LogTests
         act.Should().NotThrow();
         log.Flush(); // Flush to ensure all logs are written
     }
+
+    [Fact]
+    public async Task ErrorReportAsync_ConcurrentReports_ShouldNotCollideOrThrow()
+    {
+        // Arrange
+        var log = Log.Instance;
+        var exception = new InvalidOperationException("Concurrent report");
+
+        // Act
+        Func<Task> act = async () =>
+        {
+            var tasks = new Task[16];
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                tasks[i] = Task.Run(() => log.ErrorReport($"Concurrent header {Guid.NewGuid():N}", exception));
+            }
+            await Task.WhenAll(tasks);
+        };
+
+        // Assert - concurrent fire-and-forget writes must not throw or deadlock
+        await act.Should().NotThrowAsync();
+    }
 }
 
 
