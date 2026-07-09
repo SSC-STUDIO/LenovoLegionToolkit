@@ -565,6 +565,10 @@ theme
     /// Writes file if content changed without acquiring the static file lock.
     /// Caller must hold _staticFileLock.
     /// (SLI-026: prevents reentrant deadlock when called from EnsureManagedImportBlockUnlocked)
+    /// (SLI-027: uses atomic temp-file + File.Move so a crash mid-write cannot
+    ///  leave the shell config or managed .nss files truncated. The previous
+    ///  File.WriteAllText was non-atomic: if the process or OS flushed partially,
+    ///  settings.nss / theme.nss / language.nss / shell.nss would be corrupt.)
     /// </summary>
     private static void WriteFileIfChangedUnlocked(string path, string content)
     {
@@ -583,7 +587,11 @@ theme
             Directory.CreateDirectory(directory);
         }
 
-        File.WriteAllText(path, content, new UTF8Encoding(false));
+        // Atomic write: temp file + File.Move(overwrite) so a crash cannot
+        // leave a partially-written file at the target path.
+        var tempPath = path + ".tmp";
+        File.WriteAllText(tempPath, content, new UTF8Encoding(false));
+        File.Move(tempPath, path, overwrite: true);
     }
 
     private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)
