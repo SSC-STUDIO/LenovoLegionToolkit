@@ -176,7 +176,10 @@ public sealed class ShellIntegrationConfigService
         {
             Directory.CreateDirectory(LocalProfileRoot);
             var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
-            File.WriteAllText(LocalProfilePath, json, new UTF8Encoding(false));
+            // Atomic write: temp file + File.Move prevents profile corruption on crash
+            var tempPath = LocalProfilePath + ".tmp";
+            File.WriteAllText(tempPath, json, new UTF8Encoding(false));
+            File.Move(tempPath, LocalProfilePath, overwrite: true);
         }
     }
 

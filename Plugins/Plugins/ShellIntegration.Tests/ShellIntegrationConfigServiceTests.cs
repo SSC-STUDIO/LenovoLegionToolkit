@@ -1032,6 +1032,20 @@ public class ShellIntegrationConfigServiceTests
     }
 
     [Fact]
+    public void SaveProfile_DoesNotLeaveTempFile()
+    {
+        var service = CreateService();
+        var profile = ShellIntegrationProfile.CreateDefault();
+        var expectedTempPath = service.LocalProfilePath + ".tmp";
+
+        service.SaveProfile(profile);
+
+        Assert.True(File.Exists(service.LocalProfilePath));
+        Assert.False(File.Exists(expectedTempPath),
+            "Atomic write should not leave a .tmp file behind after successful save.");
+    }
+
+    [Fact]
     public void SaveProfile_OverwritesExistingFile()
     {
         var service = CreateService();
