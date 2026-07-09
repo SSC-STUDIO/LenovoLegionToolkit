@@ -277,38 +277,34 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         {
             try
             {
-                // Memory transaction: skip save if settings unchanged
+                // Pre-serialize once for both comparison and writing.
+                // For MessagePack: serialize to bytes, reuse for signature + write.
+                // For JSON: serialize compact once for comparison; write indented separately.
+                byte[]? mpckBytes = null;
+                string? currentSig = null;
+                if (_useMessagePack)
+                {
+                    mpckBytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
+                    currentSig = Convert.ToBase64String(mpckBytes);
+                }
+
+                // Memory transaction: skip save if settings unchanged.
                 if (_lastSavedJson != null)
                 {
-                    if (_useMessagePack)
+                    var sigForCompare = _useMessagePack
+                        ? currentSig
+                        : JsonSerializer.Serialize(settings);
+                    if (string.Equals(sigForCompare, _lastSavedJson, StringComparison.Ordinal))
                     {
-                        // M-020 fix: compare MessagePack bytes (base64) — not JSON text —
-                        // against the cached base64 signature, otherwise JSON≠base64 always
-                        // mismatches and the skip optimization never triggers for MessagePack.
-                        var currentBytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
-                        var currentSig = Convert.ToBase64String(currentBytes);
-                        if (string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal))
-                        {
-                            _logger?.LogTrace("Settings unchanged (MessagePack), skipping save");
-                            return true;
-                        }
-                        _lastSavedJson = currentSig;
+                        _logger?.LogTrace("Settings unchanged, skipping save ({Mode})", _useMessagePack ? "MessagePack" : "JSON");
+                        return true;
                     }
-                    else
-                    {
-                        var currentJson = JsonSerializer.Serialize(settings);
-                        if (string.Equals(currentJson, _lastSavedJson, StringComparison.Ordinal))
-                        {
-                            _logger?.LogTrace("Settings unchanged, skipping save");
-                            return true;
-                        }
-                        _lastSavedJson = currentJson;
-                    }
+                    _lastSavedJson = sigForCompare;
                 }
                 else
                 {
                     _lastSavedJson = _useMessagePack
-                        ? Convert.ToBase64String(MessagePackSerializer.Serialize(settings, _messagePackOptions))
+                        ? currentSig
                         : JsonSerializer.Serialize(settings);
                 }
 
@@ -316,15 +312,14 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
                 if (_useMessagePack)
                 {
-                    // M-020 fix: use MessagePack temp path (settings.mpack.tmp), not JSON temp path.
-                    var bytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
+                    // Reuse pre-serialized bytes — avoids redundant MessagePackSerializer.Serialize call.
                     var tempMpckPath = _settingsFilePathMpck + ".tmp";
-                    File.WriteAllBytes(tempMpckPath, bytes);
+                    File.WriteAllBytes(tempMpckPath, mpckBytes!);
                     File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
                 }
                 else
                 {
-                    // JSON serialization (text, human-readable)
+                    // JSON serialization (text, human-readable, indented for file)
                     var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
                     {
                         WriteIndented = true
