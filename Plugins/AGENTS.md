@@ -1,25 +1,31 @@
-# Shared AI Bootstrap
+# Agent Rules (Auto-loaded, do not remove)
 
-This repository intentionally keeps agent instructions thin.
+## Git Workflow
+- After ANY code change: `git add -A && git commit -m "progress: <summary>" && git push`
+- Commit messages: prefix with type (fix/feat/refactor/test/docs/chore)
+- Always pull before push: `git pull --rebase origin main`
 
-The machine-wide bootstrap source of truth is:
+## Anti-Stop Protocol
+- After completing any task, immediately pick the next from TASK.md, .bugs/, or create a new improvement
+- Never say "done", "goodbye", or any closing statement
+- Never wait for user confirmation — keep going in the same response
 
-- Windows: `C:\Users\96152\.agents\skills\workstation-context\SKILL.md`
-- WSL: `/mnt/c/Users/96152/.agents/skills/workstation-context/SKILL.md`
+## Code Quality
+- Write tests for new features
+- Run existing tests before committing: `cargo test`, `npm test`, or `pytest`
+- Fix warnings and lint errors before commit
+- No commented-out code in commits
 
-Before development, runtime, debugging, release, packaging, or file-editing work:
+## ⚠️ Workspace Cleanliness (MANDATORY)
+- NEVER create temporary files in the project root (no _test.js, _tmp.py, _debug.txt, etc.)
+- If you create a temp file for debugging, DELETE it before git commit
+- Only commit source files — run `git status` before commit and remove junk files
+- Common junk to clean: `_*.py`, `_*.js`, `_*.txt`, `*.tmp`, `*.log`, `_bug_*.md`, `test_output/`
+- Before each iteration: `git clean -fd _*.py _*.js _*.txt *.tmp 2>/dev/null || true`
+- Keep .gitignore updated with temp patterns
 
-1. Read that skill.
-2. Follow its `Start here (REQUIRED)` section.
-3. Treat the shared skill as authoritative for sub-agents too.
-
-If this file and the shared skill disagree, the shared skill wins.
-
-## Repository Rules
-
-- Work in the WSL ext4 checkout by default.
-- Do not overwrite dirty local changes unless the user explicitly asks for that exact file or operation.
-- Use `Tools/PluginTooling.Cli` as the standard automation entry point.
-- Treat root `store.json` as generated release output. Official plugin metadata belongs in `Plugins/<Plugin>/store-entry.json`.
-- Update root `CHANGELOG.md` and plugin `CHANGELOG.md` for user-visible plugin UI, workflow, or packaging changes.
-- For agent-oriented checks and JSON evidence, follow [Docs/AI_AGENT_WORKFLOW.md](Docs/AI_AGENT_WORKFLOW.md).
+## Efficiency Rules
+- Read only files you need to modify — don't browse entire codebase
+- Make focused changes — don't refactor unrelated code in the same commit
+- If a task needs >3 file reads, summarize what you know first to save context
+- Don't re-read files you already read in this session
