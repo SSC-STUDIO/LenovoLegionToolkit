@@ -47,6 +47,13 @@ public class ViveToolFeatureService : IDisposable
 
     public async Task<bool> EnableFeatureAsync(int featureId)
     {
+        // Validate feature ID (must be positive)
+        if (featureId <= 0)
+        {
+            PluginLog.Trace($"ViveTool: Invalid feature ID {featureId}, must be positive");
+            return false;
+        }
+
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
         {
@@ -73,6 +80,13 @@ public class ViveToolFeatureService : IDisposable
 
     public async Task<bool> DisableFeatureAsync(int featureId)
     {
+        // Validate feature ID (must be positive)
+        if (featureId <= 0)
+        {
+            PluginLog.Trace($"ViveTool: Invalid feature ID {featureId}, must be positive");
+            return false;
+        }
+
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
         {
@@ -444,7 +458,11 @@ public class ViveToolFeatureService : IDisposable
 
     private IEnumerable<FeatureFlagInfo> ParseViveTool34Format(string[] featureSections)
     {
-        for (int i = 1; i < featureSections.Length; i += 2)
+        // Regex.Split interleaves captures between each split segment.
+        // index 0 = before first match, then alternates: [CaptureID][Segment][CaptureID][Segment]...
+        // The body segment is always at i+1. Guard against malformed output that has a dangling
+        // ID with no trailing segment (would otherwise throw IndexOutOfRangeException).
+        for (int i = 1; i + 1 < featureSections.Length; i += 2)
         {
             if (int.TryParse(featureSections[i], out int id))
             {
