@@ -35,17 +35,27 @@ public class GPUProcessManager : IGPUProcessManager
             {
                 if (!process.HasExited)
                 {
-                    // Step 1: Attempt graceful shutdown via WM_CLOSE
-                    process.CloseMainWindow();
+                    // Step 1: Attempt graceful shutdown via WM_CLOSE.
+                    // CloseMainWindow returns false when the process has no
+                    // main window (console apps, background services, etc.).
+                    // In that case there is nothing to wait for — skip the
+                    // graceful-timeout and force-kill immediately to avoid
+                    // wasting up to GracefulShutdownTimeout per headless process.
+                    var closePosted = process.CloseMainWindow();
 
-                    // Step 2: Wait for graceful exit (synchronous wait is acceptable
-                    // here since this runs on a background thread, not the UI thread)
-                    if (!process.WaitForExit((int)GracefulShutdownTimeout.TotalMilliseconds))
+                    if (closePosted)
                     {
-                        // Step 3: Force kill the process tree if graceful shutdown timed out
-                        process.Kill(true);
-                        await process.WaitForExitAsync().ConfigureAwait(false);
+                        // Step 2: Wait for graceful exit (synchronous wait is
+                        // acceptable here since this runs on a background thread,
+                        // not the UI thread)
+                        if (process.WaitForExit((int)GracefulShutdownTimeout.TotalMilliseconds))
+                            continue;
                     }
+
+                    // Step 3: Force kill the process tree if graceful shutdown
+                    // timed out or could not be attempted (no main window)
+                    process.Kill(true);
+                    await process.WaitForExitAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
