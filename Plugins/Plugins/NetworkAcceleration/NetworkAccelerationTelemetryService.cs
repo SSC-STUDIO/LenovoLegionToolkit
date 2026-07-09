@@ -43,7 +43,7 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
 
         foreach (var networkInterface in interfaces)
         {
-            var statistics = networkInterface.GetIPv4Statistics();
+            var statistics = networkInterface.GetIPStatistics();
             var currentCounter = (statistics.BytesReceived, statistics.BytesSent);
             currentCounters[networkInterface.Id] = currentCounter;
             totalReceivedBytes += currentCounter.BytesReceived;
