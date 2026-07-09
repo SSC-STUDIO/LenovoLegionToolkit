@@ -55,10 +55,13 @@ public class ThrottleLastDispatcher : IDisposable
 
             myVersion = ++_currentVersion;
 
-            _cancellationTokenSource?.Cancel();
+            var oldCts = _cancellationTokenSource;
+            oldCts?.Cancel();
 
             _cancellationTokenSource = new CancellationTokenSource();
             cts = _cancellationTokenSource;
+
+            oldCts?.Dispose();
         }
 
         try

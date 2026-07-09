@@ -682,8 +682,23 @@
 - 🟢 Open (Low): 0
 - 🟢 Confirmed (Low): 7
 - ⚪ WontFix (误报/不属于本项目): 11
-- 🟢 Fixed: 3
-- **总计**: 51
+- 🟢 Fixed: 4
+- **总计**: 52（+1 迭代发现）
+
+---
+
+## 迭代修复（后续会话）
+
+### 🟢 M-020: `ThrottleLastDispatcher.DispatchAsync` CancellationTokenSource 资源泄漏 — FIXED
+
+- **文件**: `UniversalDeviceToolkit.Lib/Utils/ThrottleLastDispatcher.cs:55-64`
+- **严重程度**: Medium
+- **类别**: 资源管理
+- **描述**: `DispatchAsync` 每次取消前一个挂起的调用时，仅调用 `_cancellationTokenSource?.Cancel()` 但从不 Dispose 旧的 CTS。`CancellationTokenSource` 内部持有 `ManualResetEventSlim` 的 `SafeWaitHandle`（内核句柄）。在 UI 控件高频使用场景（SpectrumKeyboardBacklight 250ms、PowerModeControl 500ms），反复 rapid-fire dispatch 导致取消的 CTS 仅依赖 GC 终结化释放内核句柄，在终结化前句柄不归还。
+- **修复**: 在锁内先取消并保存旧 CTS 引用，创建新 CTS 后立即 Dispose 旧的 CTS。模式与 `Dispose()` 方法一致（先 Cancel 再 Dispose）。新 CTS 在 Dispose 旧 CTS 之前已赋值到字段和局部变量，无空引用风险。
+- **状态**: 🟢 Fixed
+- **发现日期**: 2026-07-09
+- **修复日期**: 2026-07-09
 
 ## 待深入模块（后续天数）
 
