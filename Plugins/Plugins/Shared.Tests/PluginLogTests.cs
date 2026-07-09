@@ -52,6 +52,51 @@ public class PluginLogTests : IDisposable
     }
 
     [Fact]
+    public void Configure_WithDedicatedErrorSink_ErrorUsesErrorSinkNotTraceSink()
+    {
+        var traceCalls = 0;
+        var errorCalls = 0;
+        PluginLog.Configure(
+            isTraceEnabled: static () => true,
+            trace: (_, _) => traceCalls++,
+            error: (_, _) => errorCalls++);
+
+        PluginLog.Trace("trace-msg");
+        PluginLog.Error("error-msg");
+
+        Assert.Equal(1, traceCalls);
+        Assert.Equal(1, errorCalls);
+    }
+
+    [Fact]
+    public void Error_WithDedicatedErrorSink_AlwaysInvokesErrorSinkRegardlessOfTraceGate()
+    {
+        var errorCalls = 0;
+        PluginLog.Configure(
+            isTraceEnabled: static () => false,
+            trace: (_, _) => { },
+            error: (_, _) => errorCalls++);
+
+        PluginLog.Error("msg");
+        PluginLog.Error("msg", new InvalidOperationException());
+
+        Assert.Equal(2, errorCalls);
+    }
+
+    [Fact]
+    public void Configure_WithoutErrorSink_ErrorFallsBackToTraceSink()
+    {
+        var traceCalls = 0;
+        PluginLog.Configure(
+            isTraceEnabled: static () => false,
+            trace: (_, _) => traceCalls++);
+
+        PluginLog.Error("msg");
+
+        Assert.Equal(1, traceCalls);
+    }
+
+    [Fact]
     public void Trace_WhenTraceGateIsFalse_DoesNotInvokeSink()
     {
         var sinkCalls = 0;
