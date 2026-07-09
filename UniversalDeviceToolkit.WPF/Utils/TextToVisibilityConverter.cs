@@ -18,6 +18,6 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException("ConvertBack is not supported by this one-way converter.");
     }
 }
