@@ -17,6 +17,44 @@ public class ViveToolFeatureService : IDisposable
 {
     private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
 
+    // Pre-compiled regexes for version parsing — avoids allocating new
+    // Regex objects on every TryParseVersionLine call.
+    private static readonly Regex VersionRegex_Comprehensive = new(
+        @"^(?:ViVeTool|ViveTool)\s+v?(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex VersionRegex_VersionKeyword = new(
+        @"^(?:ViVeTool|ViveTool)\s+version[:\s]+(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex VersionRegex_Prefix = new(
+        @"^Version:\s*(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex VersionRegex_VPrefix = new(
+        @"^v(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex VersionRegex_BareVersion = new(
+        @"^(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex[] VersionRegexes =
+    {
+        VersionRegex_Comprehensive, VersionRegex_VersionKeyword,
+        VersionRegex_Prefix, VersionRegex_VPrefix, VersionRegex_BareVersion
+    };
+
+    // Pre-compiled regexes for feature list parsing — avoids recompiling
+    // the same patterns on every ParseFeatureList call.
+    private static readonly Regex FeatureIdSplitRegex = new(
+        @"\[(\d+)\]", RegexOptions.Multiline | RegexOptions.Compiled);
+    private static readonly Regex Format2IdRegex = new(
+        @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex Format2NameRegex = new(
+        @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex Format3Regex = new(
+        @"^(\d+)[:\s]*(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex Format3ParenRegex = new(
+        @"^(.+?)\s*\(([^)]+)\)\s*$", RegexOptions.Compiled);
+    private static readonly Regex StateRegex = new(
+        @"State\s*:\s*(\w+)\s*\(\d+\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     private readonly object _cacheSync = new();
     private readonly SemaphoreSlim _featureLoadGate = new(1, 1);
     private List<FeatureFlagInfo>? _cachedFeatures;
@@ -266,7 +304,6 @@ public class ViveToolFeatureService : IDisposable
     {
         // ViVeTool v0.3.4 exposes only the configured subset through /query.
         var result = await _processService.ExecuteCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
-
         if (Log.Instance.IsTraceEnabled)
         {
             Log.Instance.Trace($"ViveTool: /query command result - Success: {result.Success}");
@@ -400,18 +437,9 @@ public class ViveToolFeatureService : IDisposable
 
     private static string? TryParseVersionLine(string line)
     {
-        var versionRegexes = new[]
+        foreach (var regex in VersionRegexes)
         {
-            @"^(?:ViVeTool|ViveTool)\s+v?(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
-            @"^(?:ViVeTool|ViveTool)\s+version[:\s]+(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
-            @"^Version:\s*(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
-            @"^v(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$",
-            @"^(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$"
-        };
-
-        foreach (var regex in versionRegexes)
-        {
-            var match = Regex.Match(line, regex, RegexOptions.IgnoreCase);
+            var match = regex.Match(line);
             if (match.Success)
             {
                 return match.Groups["version"].Value;
@@ -434,7 +462,7 @@ public class ViveToolFeatureService : IDisposable
 
         // Parse vivetool output formats
         // Check for v0.3.4+ format (starts with [ID])
-        var featureSections = Regex.Split(output, @"\[(\d+)\]", RegexOptions.Multiline);
+        var featureSections = FeatureIdSplitRegex.Split(output);
 
         if (featureSections.Length > 1)
         {
@@ -538,10 +566,10 @@ public class ViveToolFeatureService : IDisposable
 
     private bool TryParseFormat2(string line, ref int id, ref string name, ref FeatureFlagStatus status)
     {
-        var idMatch = Regex.Match(line, @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase);
+        var idMatch = Format2IdRegex.Match(line);
         if (idMatch.Success && int.TryParse(idMatch.Groups[1].Value, out id))
         {
-            var nameMatch = Regex.Match(line, @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase);
+            var nameMatch = Format2NameRegex.Match(line);
             name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
 
             status = ParseStatusFromLine(line);
@@ -552,14 +580,14 @@ public class ViveToolFeatureService : IDisposable
 
     private bool TryParseFormat3(string line, ref int id, ref string name, ref FeatureFlagStatus status)
     {
-        var colonMatch = Regex.Match(line, @"^(\d+)[:\s]*(.*)$", RegexOptions.IgnoreCase);
+        var colonMatch = Format3Regex.Match(line);
         if (colonMatch.Success && int.TryParse(colonMatch.Groups[1].Value, out id))
         {
             var rest = colonMatch.Groups[2].Value.Trim();
             if (!string.IsNullOrWhiteSpace(rest))
             {
                 // Extract name and status from rest
-                var parenMatch = Regex.Match(rest, @"^(.+?)\s*\(([^)]+)\)\s*$");
+                var parenMatch = Format3ParenRegex.Match(rest);
                 if (parenMatch.Success)
                 {
                     name = parenMatch.Groups[1].Value.Trim();
@@ -588,7 +616,7 @@ public class ViveToolFeatureService : IDisposable
 
     private FeatureFlagStatus ParseStateFromSection(string section)
     {
-        var stateMatch = Regex.Match(section, @"State\s*:\s*(\w+)\s*\(\d+\)", RegexOptions.IgnoreCase);
+        var stateMatch = StateRegex.Match(section);
         if (stateMatch.Success)
         {
             string stateStr = stateMatch.Groups[1].Value.Trim();
