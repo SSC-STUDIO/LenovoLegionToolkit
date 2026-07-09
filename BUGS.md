@@ -70,17 +70,16 @@
 - **修正日期**: 2026-07-06
 - **验证日期**: 2026-07-06
 
-### 🟡 M-002: `GPUProcessManager.KillProcess` 强制终止进程树无优雅关闭
+### 🟢 M-002: `GPUProcessManager.KillProcess` 强制终止进程树无优雅关闭 — FIXED
 
-- **文件**: `UniversalDeviceToolkit.Lib/Controllers/GPUProcessManager.cs:45`
+- **文件**: `UniversalDeviceToolkit.Lib/Controllers/GPUProcessManager.cs`
 - **严重程度**: Medium
 - **类别**: 正确性
-- **描述**: `process.Kill(true)` 强制终止整个进程树，可能导致数据丢失或资源未清理。
-- **建议修复**: 先尝试 `CloseMainWindow()` + 等待超时，失败后再强制终止。
-- **状态**: 🟡 Confirmed
+- **描述**: `process.Kill(true)` 直接强制终止整个进程树，可能导致数据丢失或资源未清理。
+- **修复**: 改为三步策略：(1) 调用 `CloseMainWindow()` 发送 WM_CLOSE 请求优雅关闭；(2) 等待 5 秒超时；(3) 超时后才调用 `Kill(true)` 强制终止进程树。这给了进程机会保存状态、释放资源后再退出。
+- **状态**: 🟢 Fixed
 - **发现日期**: 2026-07-06
-- **修正日期**: 2026-07-06
-- **修正日期**: 2026-07-06
+- **修复日期**: 2026-07-09
 
 ### 🟡 M-003: `DevicePackManager` 验证顺序 — 文件系统操作在完整验证之前
 
