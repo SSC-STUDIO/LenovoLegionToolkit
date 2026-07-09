@@ -296,6 +296,23 @@ public static class PathSecurity
         return true;
     }
 
+    // Dynamically resolved system driver directories — avoids hardcoding C:\ drive letter
+    // which breaks validation when Windows is installed on a different drive (D:\, etc.).
+    private static readonly string[] AllowedDriverRoots = InitDriverRoots();
+
+    private static string[] InitDriverRoots()
+    {
+        // Environment.SystemDirectory returns e.g. "C:\Windows\System32" or "D:\Windows\System32"
+        // regardless of which drive Windows is installed on.
+        var systemDir = Environment.SystemDirectory;
+
+        return new[]
+        {
+            Path.Combine(systemDir, "drivers"),     // e.g. C:\Windows\System32\drivers
+            Path.Combine(systemDir, "DriverStore"),  // e.g. C:\Windows\System32\DriverStore
+        };
+    }
+
     /// <summary>
     /// Validates a driver path for safety.
     /// </summary>
@@ -304,21 +321,13 @@ public static class PathSecurity
         if (string.IsNullOrWhiteSpace(driverPath))
             return false;
 
-        // Driver paths should be in system directories
-        var allowedDriverRoots = new[]
-        {
-            @"C:\Windows\System32\drivers",
-            @"C:\Windows\SysWOW64\drivers",
-            @"C:\Windows\System32\DriverStore",
-        };
-
         try
         {
             var fullPath = Path.GetFullPath(driverPath);
 
             // Must start with an allowed driver root
             bool inAllowedLocation = false;
-            foreach (var root in allowedDriverRoots)
+            foreach (var root in AllowedDriverRoots)
             {
                 if (fullPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
                 {

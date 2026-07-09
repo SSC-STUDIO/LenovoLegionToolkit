@@ -552,16 +552,17 @@
 - **发现日期**: 2026-07-06
 - **修正日期**: 2026-07-06
 
-### 🟡 M-020: `PathSecurity.IsValidDriverPath` 硬编码 `C:\` 驱动器字母
+### 🟢 M-020: `PathSecurity.IsValidDriverPath` 硬编码 `C:\\` 驱动器字母 — FIXED 2026-07-09
 
 - **文件**: `UniversalDeviceToolkit.Lib/Utils/PathSecurity.cs:308-313`
 - **严重程度**: Medium
 - **类别**: 正确性
 - **描述**: `IsValidDriverPath` 硬编码了 `C:\Windows\System32\drivers` 和 `C:\Windows\SysWOW64\drivers` 作为允许的驱动路径根。如果 Windows 安装在 `D:\` 或其他驱动器上，所有驱动验证都会失败。此外，`SysWOW64\drivers` 实际上不包含原生的 64-bit 驱动（它们是 `System32\drivers` 的 32-bit 视图），这个路径检查可能是错误的。
 - **建议修复**: 使用 `Environment.GetEnvironmentVariable("SystemRoot")` 或 `Path.Combine(Environment.SystemDirectory, "drivers")` 动态获取系统目录；移除 `SysWOW64` 路径（除非有明确的使用场景）。
-- **状态**: 🔴 Confirmed
+- **状态**: 🟢 Fixed
 - **发现日期**: 2026-07-06
 - **修正日期**: 2026-07-06
+- **修复日期**: 2026-07-09 — 改用 `Environment.SystemDirectory` 动态构建驱动路径，移除硬编码 `C:\` 和无效的 `SysWOW64\drivers` 路径
 
 ### 🟡 M-021: `PathSecurity.IsValidRegistryPath` 允许的注册表根不完全
 
