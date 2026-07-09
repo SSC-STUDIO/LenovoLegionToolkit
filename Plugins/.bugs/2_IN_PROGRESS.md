@@ -5,4 +5,4 @@
 
 ---
 
-- [ ] **[PLG-012]** [CLAIMED by Codex-Agent-02 at 2026-07-09T08:42:49+08:00] [Async Void / Crash Risk] PluginWorkbench MainWindow.xaml.cs has 7 unguarded async void handlers at L76,115,123,153,175,180,188. Handlers perform async I/O (plugin loading, file dialogs) without exception handling; an unhandled exception in async void crashes the process. *Fix*: Wrap each handler body in try-catch logging via AppendLog mirroring the RunOptimizationActionButton_Click pattern.
+_No tickets in progress._

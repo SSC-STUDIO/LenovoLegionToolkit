@@ -75,12 +75,20 @@ public partial class MainWindow : Window
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        try
+        {
         ApplyTheme(CurrentTheme);
         SelectInitialView();
 
         if (!string.IsNullOrWhiteSpace(_launchOptions.PluginId))
         {
             await LoadPluginByIdAsync(_launchOptions.PluginId);
+        }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[startup] Failed to initialize: {ex.Message}");
+            StatusTextBlock.Text = "Startup initialization failed.";
         }
     }
 
@@ -116,12 +124,22 @@ public partial class MainWindow : Window
     {
         if (PluginListBox.SelectedItem is PluginListEntry entry)
         {
+            try
+            {
             await LoadPluginFromBuildEntryAsync(entry);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[plugin] Double-click load failed: {ex.Message}");
+                StatusTextBlock.Text = "Failed to load plugin.";
+            }
         }
     }
 
     private async void LoadSelectedButton_Click(object sender, RoutedEventArgs e)
     {
+        try
+        {
         if (PluginListBox.SelectedItem is not PluginListEntry entry)
         {
             StatusTextBlock.Text = "Select a plugin build output first.";
@@ -129,6 +147,12 @@ public partial class MainWindow : Window
         }
 
         await LoadPluginFromBuildEntryAsync(entry);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[plugin] Load button failed: {ex.Message}");
+            StatusTextBlock.Text = "Failed to load plugin.";
+        }
     }
 
     private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -144,6 +168,11 @@ public partial class MainWindow : Window
             await RunHostBootstrapAsync();
             ApplyTheme(CurrentTheme);
         }
+        catch (Exception ex)
+        {
+            AppendLog($"[bootstrap] Error: {ex.Message}");
+            StatusTextBlock.Text = "Bootstrap failed.";
+        }
         finally
         {
             BootstrapHostButton.IsEnabled = true;
@@ -152,6 +181,8 @@ public partial class MainWindow : Window
 
     private async void OpenZipButton_Click(object sender, RoutedEventArgs e)
     {
+        try
+        {
         var dialog = new OpenFileDialog
         {
             Filter = "ZIP files (*.zip)|*.zip|All files (*.*)|*.*",
@@ -170,19 +201,41 @@ public partial class MainWindow : Window
             dialog.FileName,
             isArchive: true,
             () => PluginWorkbenchSession.LoadFromArchiveAsync(dialog.FileName, CurrentMode));
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[plugin] ZIP open failed: {ex.Message}");
+            StatusTextBlock.Text = "Failed to open ZIP package.";
+        }
     }
 
     private async void ReloadCurrentButton_Click(object sender, RoutedEventArgs e)
     {
+        try
+        {
         await ReloadCurrentAsync();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[plugin] Reload failed: {ex.Message}");
+            StatusTextBlock.Text = "Failed to reload plugin.";
+        }
     }
 
     private async void ModeToggleButton_Click(object sender, RoutedEventArgs e)
     {
+        try
+        {
         _suppressModeSelectionChanged = true;
         ModeComboBox.SelectedIndex = CurrentMode == PluginHostMode.RealRuntime ? 0 : 1;
         _suppressModeSelectionChanged = false;
         await HandleModeSelectionChangedAsync();
+        }
+        catch (Exception ex)
+        {
+            _suppressModeSelectionChanged = false;
+            AppendLog($"[mode] Toggle failed: {ex.Message}");
+        }
     }
 
     private async void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -192,7 +245,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        try
+        {
         await HandleModeSelectionChangedAsync();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[mode] Selection change failed: {ex.Message}");
+        }
     }
 
     private async Task HandleModeSelectionChangedAsync()
