@@ -7,18 +7,46 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 /// <summary>
 /// Manages shared HttpClient instances to prevent socket exhaustion.
 /// Provides singleton HttpClient instances for all plugins to use.
+/// Each shared client uses <see cref="SocketsHttpHandler"/> with
+/// <see cref="SocketsHttpHandler.PooledConnectionLifetime"/> so DNS changes
+/// are periodically re-resolved and stale connections are recycled,
+/// following Microsoft's recommended best practice for modern .NET.
 /// </summary>
 public static class HttpClientManager
 {
+    /// <summary>
+    /// Lifetime after which pooled connections are considered stale and
+    /// will be closed and re-established on the next request, allowing
+    /// DNS changes (load balancer failover, container migration, etc.)
+    /// to be picked up within this window.
+    /// </summary>
+    private static readonly TimeSpan ConnectionLifetime = TimeSpan.FromMinutes(15);
+
+    /// <summary>
+    /// Idle time after which a pooled connection is eligible for recycling.
+    /// </summary>
+    private static readonly TimeSpan ConnectionIdleTimeout = TimeSpan.FromMinutes(5);
+
     private static volatile HttpClient? _sharedClient;
     private static volatile HttpClient? _downloadClient;
+
+    /// <summary>
+    /// Creates a <see cref="SocketsHttpHandler"/> configured with pooled connection
+    /// lifetime and idle timeout so DNS changes are periodically picked up and
+    /// stale connections are recycled automatically.
+    /// </summary>
+    private static SocketsHttpHandler CreateHandler() => new()
+    {
+        PooledConnectionLifetime = ConnectionLifetime,
+        PooledConnectionIdleTimeout = ConnectionIdleTimeout
+    };
 
     /// <summary>
     /// Gets the shared HttpClient instance.
     /// This instance should be used for all HTTP requests across plugins.
     /// </summary>
     public static HttpClient GetSharedClient() =>
-        _sharedClient ??= new HttpClient
+        _sharedClient ??= new HttpClient(CreateHandler())
         {
             Timeout = TimeSpan.FromSeconds(Constants.DefaultTimeoutSeconds)
         };
@@ -28,7 +56,7 @@ public static class HttpClientManager
     /// This instance is cached and should be reused across all download operations.
     /// </summary>
     public static HttpClient GetDownloadClient() =>
-        _downloadClient ??= new HttpClient
+        _downloadClient ??= new HttpClient(CreateHandler())
         {
             Timeout = TimeSpan.FromSeconds(Constants.DownloadTimeoutSeconds)
         };
