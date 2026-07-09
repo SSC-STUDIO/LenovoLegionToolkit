@@ -319,10 +319,28 @@ public class Log : IDisposable
 
     public void Shutdown()
     {
-        // Synchronous teardown delegates to the same centralized DisposeCore so the
-        // emergency semaphore handle is freed even when Shutdown runs instead of Dispose.
-        ShutdownAsync().GetAwaiter().GetResult();
+        // Non-blocking, UI-Dispatcher-safe teardown with a 2s timeout guard.
+        var t = ShutdownAsync();
+        if (t.IsCompletedSuccessfully)
+            return;
+        if (!t.Wait(TimeSpan.FromSeconds(2)))
+        {
+            try { t.ContinueWith(_ => { }, TaskContinuationOptions.ExecuteSynchronously); } catch { }
+        }
     }
+
+    public void Dispose()
+    {
+        // Synchronous IDisposable contract, same timeout-guarded non-blocking strategy.
+        var t = DisposeCoreAsync();
+        if (t.IsCompletedSuccessfully)
+            return;
+        if (!t.Wait(TimeSpan.FromSeconds(2)))
+        {
+            try { t.ContinueWith(_ => { }, TaskContinuationOptions.ExecuteSynchronously); } catch { }
+        }
+    }
+
 
     private static string FormatSourceContext(string? file, int lineNumber, string? caller)
     {
@@ -361,14 +379,6 @@ public class Log : IDisposable
         .AppendLine(ex.ToString())
         .ToString();
 
-    public void Dispose()
-    {
-        // Dispose delegates to the same centralized DisposeCore used by Shutdown /
-        // ShutdownAsync, so a Shutdown-then-Dispose sequence disposes _emergencyLock
-        // exactly once instead of short-circuiting and leaking the native semaphore.
-        ShutdownAsync().GetAwaiter().GetResult();
-        GC.SuppressFinalize(this);
-    }
 
     private async Task DisposeCoreAsync()
     {

@@ -398,7 +398,7 @@ public partial class App
                     Log.Instance.Trace($"Flushing and shutting down log system...");
 
                 Log.Instance.Flush();
-                Log.Instance.Shutdown();
+                await Log.Instance.ShutdownAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -449,7 +449,7 @@ public partial class App
                     Log.Instance.Trace($"Shutdown failed during Application_Exit.", ex);
             }
 
-            try { Log.Instance.Shutdown(); }
+            try { await Log.Instance.ShutdownAsync().ConfigureAwait(false); }
             catch { /* Log shutdown failed - continue with exit */ }
 
             StopMacroControllerSafely();
