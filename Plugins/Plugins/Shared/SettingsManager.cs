@@ -166,18 +166,34 @@ public class SettingsManager<T> where T : class, new()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
 
-            var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
+            if (_useMessagePack)
             {
-                WriteIndented = true
-            });
-
-            var tempPath = _settingsFilePath + ".tmp";
-            await using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
-            {
-                var bytes = Encoding.UTF8.GetBytes(json);
-                await fileStream.WriteAsync(bytes, cancellationToken);
+                var bytes = MessagePackSerializer.Serialize(settings);
+                var tempMpckPath = _settingsFilePathMpck + ".tmp";
+                await using (var fileStream = new FileStream(tempMpckPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                {
+                    await fileStream.WriteAsync(bytes, cancellationToken);
+                }
+                File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
+                _lastSavedJson = Convert.ToBase64String(bytes);
             }
-            File.Move(tempPath, _settingsFilePath, overwrite: true);
+            else
+            {
+                var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                var tempPath = _settingsFilePath + ".tmp";
+                await using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                {
+                    var jsonBytes = Encoding.UTF8.GetBytes(json);
+                    await fileStream.WriteAsync(jsonBytes, cancellationToken);
+                }
+                File.Move(tempPath, _settingsFilePath, overwrite: true);
+                _lastSavedJson = json;
+            }
+
             _cachedSettings = settings;
 
             var handler = SettingsChanged;
@@ -186,7 +202,7 @@ public class SettingsManager<T> where T : class, new()
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Failed to save settings to {FilePath}", _settingsFilePath);
+            _logger?.LogError(ex, "Failed to save settings to {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
             return false;
         }
         finally
