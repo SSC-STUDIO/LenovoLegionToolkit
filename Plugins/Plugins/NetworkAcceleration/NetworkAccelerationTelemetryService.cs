@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
@@ -43,15 +44,32 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
 
         foreach (var networkInterface in interfaces)
         {
-            var statistics = networkInterface.GetIPStatistics();
-            var currentCounter = (statistics.BytesReceived, statistics.BytesSent);
+            long bytesReceived;
+            long bytesSent;
+
+            try
+            {
+                var statistics = networkInterface.GetIPStatistics();
+                bytesReceived = statistics.BytesReceived;
+                bytesSent = statistics.BytesSent;
+            }
+            catch (NetworkInformationException ex)
+            {
+                // A single failing NIC must not crash the entire telemetry snapshot.
+                // NetworkAccelerationRuntime.TryReadTotals already guards per-interface
+                // reads the same way — this mirrors that resilience for the UI telemetry path.
+                PluginLog.Trace($"NetworkAcceleration: Failed to read stats for interface '{networkInterface.Name}': {ex.Message}", ex);
+                continue;
+            }
+
+            var currentCounter = (ReceivedBytes: bytesReceived, SentBytes: bytesSent);
             currentCounters[networkInterface.Id] = currentCounter;
-            totalReceivedBytes += currentCounter.BytesReceived;
-            totalSentBytes += currentCounter.BytesSent;
+            totalReceivedBytes += currentCounter.ReceivedBytes;
+            totalSentBytes += currentCounter.SentBytes;
 
             _lastCounters.TryGetValue(networkInterface.Id, out var previousCounter);
-            var receivedDelta = Math.Max(0, currentCounter.BytesReceived - previousCounter.ReceivedBytes);
-            var sentDelta = Math.Max(0, currentCounter.BytesSent - previousCounter.SentBytes);
+            var receivedDelta = Math.Max(0, currentCounter.ReceivedBytes - previousCounter.ReceivedBytes);
+            var sentDelta = Math.Max(0, currentCounter.SentBytes - previousCounter.SentBytes);
 
             var downloadMbps = _lastTimestamp is null ? 0 : (receivedDelta * 8d) / elapsedSeconds / 1_000_000d;
             var uploadMbps = _lastTimestamp is null ? 0 : (sentDelta * 8d) / elapsedSeconds / 1_000_000d;
@@ -60,8 +78,8 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
                 networkInterface.Name,
                 downloadMbps,
                 uploadMbps,
-                currentCounter.BytesReceived,
-                currentCounter.BytesSent);
+                currentCounter.ReceivedBytes,
+                currentCounter.SentBytes);
 
             if (bestSnapshot is null ||
                 (snapshot.DownloadMbps + snapshot.UploadMbps) > (bestSnapshot.DownloadMbps + bestSnapshot.UploadMbps))
