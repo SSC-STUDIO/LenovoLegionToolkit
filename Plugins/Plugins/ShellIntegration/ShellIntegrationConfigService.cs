@@ -296,7 +296,7 @@ public sealed class ShellIntegrationConfigService
             WriteFileIfChanged(paths.SettingsPath, RenderSettings(normalizedProfile));
             WriteFileIfChanged(paths.ThemePath, RenderTheme(normalizedProfile));
             WriteFileIfChanged(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture));
-            EnsureManagedImportBlock(paths);
+            EnsureManagedImportBlockUnlocked(paths);
         }
 
         return paths;
@@ -528,42 +528,62 @@ theme
     {
         lock (_staticFileLock)
         {
-            var existingContent = File.Exists(paths.ShellConfigPath)
-                ? File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8)
-                : string.Empty;
-
-            var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
-            var directory = Path.GetDirectoryName(paths.ShellConfigPath);
-            if (!string.IsNullOrWhiteSpace(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            WriteFileIfChanged(paths.ShellConfigPath, updated);
+            EnsureManagedImportBlockUnlocked(paths);
         }
+    }
+
+    /// <summary>
+    /// Updates the managed import block in the shell config without acquiring
+    /// the static file lock. Caller must hold _staticFileLock.
+    /// (SLI-026: prevents reentrant deadlock when called from ApplyProfile)
+    /// </summary>
+    private static void EnsureManagedImportBlockUnlocked(ShellManagedConfigPaths paths)
+    {
+        var existingContent = File.Exists(paths.ShellConfigPath)
+            ? File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8)
+            : string.Empty;
+
+        var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
+        var directory = Path.GetDirectoryName(paths.ShellConfigPath);
+        if (!string.IsNullOrWhiteSpace(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        WriteFileIfChangedUnlocked(paths.ShellConfigPath, updated);
     }
 
     private static void WriteFileIfChanged(string path, string content)
     {
         lock (_staticFileLock)
         {
-            var existingContent = File.Exists(path)
-                ? File.ReadAllText(path, Encoding.UTF8)
-                : null;
-
-            if (string.Equals(existingContent, content, StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            var directory = Path.GetDirectoryName(path);
-            if (!string.IsNullOrWhiteSpace(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            File.WriteAllText(path, content, new UTF8Encoding(false));
+            WriteFileIfChangedUnlocked(path, content);
         }
+    }
+
+    /// <summary>
+    /// Writes file if content changed without acquiring the static file lock.
+    /// Caller must hold _staticFileLock.
+    /// (SLI-026: prevents reentrant deadlock when called from EnsureManagedImportBlockUnlocked)
+    /// </summary>
+    private static void WriteFileIfChangedUnlocked(string path, string content)
+    {
+        var existingContent = File.Exists(path)
+            ? File.ReadAllText(path, Encoding.UTF8)
+            : null;
+
+        if (string.Equals(existingContent, content, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrWhiteSpace(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(path, content, new UTF8Encoding(false));
     }
 
     private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)
