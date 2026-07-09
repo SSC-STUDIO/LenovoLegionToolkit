@@ -593,6 +593,9 @@ WARNING: This action will not run correctly, if internal display is off.</value>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU #2</value>
   </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
   <data name="RPM" xml:space="preserve">
     <value>RPM</value>
   </data>

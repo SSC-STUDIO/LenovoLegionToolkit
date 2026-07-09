@@ -36,7 +36,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Right"
                 VerticalContentAlignment="Center"
-                Content="100%"
+                Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <Label
                 Grid.Row="2"
