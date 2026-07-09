@@ -225,14 +225,14 @@
 - **状态**: 🔴 Fixed（Day 12 — RunLifecycleTask 改为 Task.Run(async) 避免 SynchronizationContext 捕获死锁；PLG build 0 errors/0 warnings, 409/409 tests pass）（Day 11 验证为真实 bug）
 - **发现日期**: 2026-07-06
 
-### 🟡 M-008: `ThemeWatcherRuntime.Stop()` 中 `SystemEvents.UserPreferenceChanged` 取消订阅竞态（Day 11 确认）
+### 🟢 M-008: `ThemeWatcherRuntime.Stop()` 中 `SystemEvents.UserPreferenceChanged` 取消订阅竞态 — 已修复
 
 - **文件**: `Plugins/CustomMouse/ThemeWatcherRuntime.cs:35-60`
-- **严重程度**: Medium
+- **严重程度**: Medium → Fixed
 - **类别**: 线程安全
 - **描述**: `Stop()` 在 `lock (_gate)` 外调用 `SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged`。`Start()` 中的订阅在 `lock` 内，但 `Stop()` 中的取消订阅在 `lock` 外。虽然 .NET 中事件 `+=`/`-=` 本身是线程安全的（基于 `Interlocked.CompareExchange`），但订阅和取消订阅不在同一同步块内，逻辑上不一致。可能导致事件处理器在 `Stop()` 返回后仍被调用。
-- **建议修复**: 将 `SystemEvents.UserPreferenceChanged -=` 也移入 `lock` 内；确保订阅和取消订阅在同一个同步块配对。
-- **状态**: 🟡 Confirmed（Day 11 验证为真实问题）
+- **建议修复**: **Hermes fix**: 已将 `SystemEvents.UserPreferenceChanged -=` 移入 `lock (_gate)` 内，确保订阅和取消订阅在同一个同步块配对。移除 `SystemEvents` 内部锁的潜在 ABBA 死锁风险（因 `-=` 内部使用 `Interlocked.CompareExchange` 非阻塞，实际无死锁，但一致性提升）。
+- **状态**: 🟢 Fixed（Day 12 — `-=` 移入 `lock (_gate)` 内，与 `Start()` 的 `+=` 对称）
 - **发现日期**: 2026-07-06
 
 ### 🟢 M-009: `ThemeWatcherRuntime.OnUserPreferenceChanged` 中在 `lock` 内调用 `Timer.Dispose()` — 低风险（Day 11 验证）
@@ -440,9 +440,9 @@
 ## 统计（Day 11 验证后更新）
 
 - 🔴 Confirmed (High): 2
-- 🟡 Confirmed (Medium): 14
+- 🟡 Confirmed (Medium): 13
 - 🟢 Confirmed (Low): 12
-- 🟢 Fixed (已修复): 7
+- 🟢 Fixed (已修复): 8
 - ⚪ WontFix (误报): 1
 - **总计**: 36
 

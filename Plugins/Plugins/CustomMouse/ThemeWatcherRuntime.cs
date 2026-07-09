@@ -45,14 +45,13 @@ public sealed class ThemeWatcherRuntime
             timer = _debounceTimer;
             _cts = null;
             _debounceTimer = null;
+            SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
         }
 
         if (cts == null)
         {
             return;
         }
-
-        SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
 
         try { cts.Cancel(); }
         catch (ObjectDisposedException) { /* ignore — already disposed */ }
