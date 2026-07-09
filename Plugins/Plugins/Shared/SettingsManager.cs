@@ -339,7 +339,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Failed to save settings to {FilePath}", _settingsFilePath);
+                _logger?.LogError(ex, "Failed to save settings to {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
                 return false;
             }
         }
