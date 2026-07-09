@@ -289,3 +289,15 @@ When evaluating UI via FlaUI + WinRT OCR:
   - This rule applies even when the response stream is read and disposed separately via a nested `using` — the `response` itself must still be covered by `using` to guarantee cleanup on the exception path.
   - Reference: `ImportFeaturesFromUrlAsync` (ViveToolDownloadService.cs) — the correct pattern. The buggy pattern was `var response = await ...; response.EnsureSuccessStatusCode();` without `using`.
 - **.NET/OS Version**: .NET 10, Windows 11 24H2
+
+---
+
+### [2026-07-09] Catch-All Exceptions Silently Suppress SDK Diagnostics (H-007)
+- **Symptom / Pitfall**: Plugin SDK `PluginHostContext.ResolveType()` and `CreateHostWindow()` both contained bare `catch { return null; }` blocks that swallowed every exception — including `FileLoadException` (assembly version mismatch), `BadImageFormatException` (corrupt DLL), `SecurityException`, and `TargetInvocationException` (constructor body threw). When the host couldn't resolve a plugin's host bridge or settings window, the entire system silently degraded to "Preview mode" with zero diagnostic output.
+- **Root Cause**: Code assumed any assembly/host-window resolution failure was benign and returned null silently. In practice `FileLoadException` (version policy failure), `SecurityException`, and `BadImageFormatException` are genuine diagnostic issues that developers need visibility into.
+- **Enforced Rule**:
+  - Catch and return null ONLY for *expected* failures (`FileNotFoundException`, `BadImageFormatException` for assemblies; `MissingMethodException` for missing constructors).
+  - For *unexpected* exceptions, `Debug.WriteLine(...)` surfaces the failure in Debug builds (zero-cost in Release). This is the minimum diagnostic requirement for SDK/library code.
+  - Never use bare `catch { }` / `catch { return null; }` in plugin SDK code — always catch a specific type or at minimum `catch (Exception ex)` with diagnostic output.
+  - Reference: `PluginHostContext.ResolveType` and `CreateHostWindow`.
+- **.NET/OS Version**: .NET 10, Windows 11 24H2

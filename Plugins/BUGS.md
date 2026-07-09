@@ -259,14 +259,14 @@
 
 ## 2026-07-06 — Day 5 审查
 
-### 🔴 H-007: `PluginHostContext.ResolveType` 中 catch-all 静默吞掉所有异常（Day 11 确认）
+### 🟢 H-007: `PluginHostContext.ResolveType` 中 catch-all 静默吞掉所有异常（Day 11 确认） — 已修复
 
 - **文件**: `SDK/PluginHostContext.cs:130-132`
-- **严重程度**: High
+- **严重程度**: High → Fixed
 - **类别**: 可调试性
 - **描述**: `ResolveType` 方法在 `Assembly.Load` 时使用 `catch { return null; }` 捕获所有异常并静默返回 null。包括 `FileLoadException`、`BadImageFormatException`、`SecurityException` 等重要异常被忽略。如果插件 SDK 因程序集加载失败而无法解析类型，没有任何日志或错误信息。
 - **建议修复**: 至少记录 `Warning` 级别日志；区分不同类型的异常（如 `FileNotFoundException` vs `FileLoadException`）。
-- **状态**: 🔴 Confirmed（Day 11 验证为真实 bug）
+- **状态**: 🟢 Fixed（Hermes — `ResolveType` 现在区分预期异常 (`FileNotFoundException` / `BadImageFormatException`，静默返回 null) 与意外异常 (`FileLoadException` / `SecurityException` / `ArgumentException` 等，Debug.WriteLine 输出后返回 null)。`CreateHostWindow` 的 catch-all 同样改造。Debug 构建可在 Visual Studio Output 窗口 / dotnet 调试输出中观察到失败原因。构建 0W/0E，539/539 测试通过。）
 - **发现日期**: 2026-07-06
 
 ### 🟡 M-010: SDK `PluginBase` 硬依赖 `LenovoLegionToolkit.Lib` 程序集名称 — ABI 兼容性风险（Day 11 确认）
@@ -452,12 +452,12 @@
 
 ---
 
-## 统计（Day 11 验证后更新）
+## 统计（Day 12 更新：H-007 已修复）
 
-- 🔴 Confirmed (High): 2
+- 🔴 Confirmed (High): 1
 - 🟡 Confirmed (Medium): 13
 - 🟢 Confirmed (Low): 12
-- 🟢 Fixed (已修复): 9
+- 🟢 Fixed (已修复): 10
 - ⚪ WontFix (误报): 1
 - **总计**: 37
 

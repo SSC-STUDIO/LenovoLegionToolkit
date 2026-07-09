@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -82,8 +83,12 @@ public static class PluginHostContext
         {
             return null;
         }
-        catch
+        catch (Exception ex)
         {
+            // Assignable exceptions include TargetInvocationException (constructor body threw),
+            // MemberAccessException, AmbiguousMatchException — these indicate genuine issues that
+            // deserve observability rather than silent failure (BUGS.md H-007).
+            Debug.WriteLine($"[SDK] CreateHostWindow(\"{fullTypeName}\") ctor threw: {ex.GetType().Name}: {ex.Message}");
             return null;
         }
     }
@@ -137,8 +142,17 @@ public static class PluginHostContext
             var assembly = Assembly.Load(new AssemblyName(assemblyName));
             return assembly.GetType(fullTypeName, throwOnError: false, ignoreCase: false);
         }
-        catch
+        catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
         {
+            // Expected: assembly DLL is absent or not a valid managed assembly — silent return.
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // Unexpected: FileLoadException (version mismatch / policy), SecurityException, ArgumentException…
+            // Surface these via Debug.WriteLine so the failure is observable by a developer rather than
+            // silently degrading to "Preview mode". See BUGS.md H-007.
+            Debug.WriteLine($"[SDK] ResolveType(\"{fullTypeName}\", \"{assemblyName}\") failed: {ex.GetType().Name}: {ex.Message}");
             return null;
         }
     }
