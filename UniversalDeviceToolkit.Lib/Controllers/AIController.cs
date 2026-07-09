@@ -299,7 +299,19 @@ public class AIController(
                     if (powerStateListener is not null)
                         powerStateListener.Changed -= PowerStateListener_Changed;
                     if (gameAutoListener is not null)
-                        Task.Run(async () => await gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed)).GetAwaiter().GetResult();
+                    {
+                        // Non-blocking, disposing-thread-safe unsubscription: do not block
+                        // the caller with .GetAwaiter().GetResult() (sync-over-async anti-pattern,
+                        // Pillar A). Fire-and-forget on the threadpool and observe any fault via
+                        // a continuation so we never stall Dispose or leak an unobserved exception.
+                        var unsubTask = Task.Run(async () => await gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed));
+                        if (!unsubTask.IsCompletedSuccessfully && !unsubTask.Wait(TimeSpan.FromSeconds(2)))
+                        {
+                            _ = unsubTask.ContinueWith(
+                                t => { _ = t.Exception; }, // observe fault so it is not unobserved
+                                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

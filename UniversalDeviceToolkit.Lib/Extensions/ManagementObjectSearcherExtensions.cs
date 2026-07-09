@@ -37,6 +37,25 @@ public static class ManagementObjectSearcherExtensions
 
         Log.Instance.Warning($"WMI query timed out after {timeoutMs}ms: {queryString}");
 
+        ObserveOrphanedTask(task, queryString);
+
         throw new TimeoutException($"WMI query timed out after {timeoutMs}ms.");
+    }
+
+    private static void ObserveOrphanedTask(Task<ManagementBaseObject[]> task, string queryString)
+    {
+        _ = task.ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Orphaned WMI query task faulted after timeout. [query={queryString}]", t.Exception);
+            }
+            else if (t.IsCompletedSuccessfully)
+            {
+                foreach (var obj in t.Result)
+                    obj.Dispose();
+            }
+        }, TaskContinuationOptions.None);
     }
 }

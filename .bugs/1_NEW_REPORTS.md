@@ -1,4 +1,4 @@
-﻿# Multi-Document Bug Queue - New & Unassigned
+# Multi-Document Bug Queue - New & Unassigned
 
 > Repository: UniversalDeviceToolkit (Main Repo, .NET 10 WPF)
 > Writer: Codex + OpenCode Bug Reporter. New defects only.
@@ -8,5 +8,6 @@
 ## New Tickets
 
 - [x] **[BUG-2026-07-09-005]** [Thread Safety / Sync-over-async] Log.Shutdown() and Log.Dispose() block the caller thread via ShutdownAsync().GetAwaiter().GetResult() in UniversalDeviceToolkit.Lib/Utils/Log.cs. CLAIMED by Codex-Agent-001 at 2026-07-09 20:10 CST -> resolved; see 3_RESOLVED.md.
+- [x] **[BUG-2026-07-09-006]** [Thread Safety / Sync-over-async] AIController.Dispose() blocks the disposing thread via Task.Run(async () => UnsubscribeChangedAsync(...)).GetAwaiter().GetResult() in AIController.cs. CLAIMED by Codex-Agent-002 at 2026-07-09 20:45 CST -> resolved; see 3_RESOLVED.md.
 
 NOWHERE (no further confirmed new defect tickets at this time).
