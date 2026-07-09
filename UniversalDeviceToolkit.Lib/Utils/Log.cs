@@ -33,20 +33,26 @@ public class Log : IDisposable
     private readonly object _emergencyLock = new();
     private int _disposed;
 
+    private bool IsDisposed => Volatile.Read(ref _disposed) != 0;
+
     public bool IsTraceEnabled
     {
-        get => _levelSwitch.MinimumLevel <= LogEventLevel.Verbose;
+        get => !IsDisposed && _levelSwitch.MinimumLevel <= LogEventLevel.Verbose;
         set
         {
-            if (value)
+            if (value && !IsDisposed)
                 _levelSwitch.MinimumLevel = LogEventLevel.Verbose;
         }
     }
 
     public LogLevel CurrentLogLevel
     {
-        get => MapLevelFromSerilog(_levelSwitch.MinimumLevel);
-        set => _levelSwitch.MinimumLevel = MapLevelToSerilog(value);
+        get => IsDisposed ? LogLevel.Error : MapLevelFromSerilog(_levelSwitch.MinimumLevel);
+        set
+        {
+            if (!IsDisposed)
+                _levelSwitch.MinimumLevel = MapLevelToSerilog(value);
+        }
     }
 
     public string LogPath => _folderPath;
@@ -73,6 +79,9 @@ public class Log : IDisposable
 
     public void ErrorReport(string header, Exception ex)
     {
+        if (IsDisposed)
+            return;
+
         lock (_emergencyLock)
         {
             var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt");
@@ -88,6 +97,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
         var properties = BuildProperties(sourceContext);
         _logger.Write(LogEventLevel.Error, ex, message.ToString(), properties);
@@ -99,6 +111,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
         _logger.Write(LogEventLevel.Error, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
@@ -109,6 +124,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Warning)
             return;
 
@@ -123,11 +141,13 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Warning)
             return;
 
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
-        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
         _logger.Write(LogEventLevel.Warning, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
@@ -137,6 +157,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Info)
             return;
 
@@ -151,6 +174,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Info)
             return;
 
@@ -164,6 +190,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Debug)
             return;
 
@@ -178,6 +207,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (CurrentLogLevel < LogLevel.Debug)
             return;
 
@@ -191,6 +223,9 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (!IsTraceEnabled && CurrentLogLevel < LogLevel.Trace)
             return;
 
@@ -205,18 +240,23 @@ public class Log : IDisposable
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
+        if (IsDisposed)
+            return;
+
         if (!IsTraceEnabled && CurrentLogLevel < LogLevel.Trace)
             return;
 
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
-        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
         _logger.Write(LogEventLevel.Verbose, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Flush()
     {
-        // Serilog's async sink flushes on a timer; Log.CloseAndFlush is called on dispose.
-        // Synchronous flush is best-effort via the LoggingLevelSwitch no-op barrier.
+        // Serilog's async sink flushes on its own timer; there is no
+        // non-destructive synchronous flush on Logger.  Calling Shutdown()
+        // here would permanently disable the singleton, so this is intentionally
+        // a no-op: the AsyncSink's internal block flushes automatically within
+        // its configured period (~5 s).
     }
 
     public async Task ShutdownAsync()
@@ -224,7 +264,8 @@ public class Log : IDisposable
         if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
-        await Task.Run(() => _logger.Dispose()).ConfigureAwait(false);
+        var logger = _logger;
+        await Task.Run(() => logger.Dispose()).ConfigureAwait(false);
     }
 
     public void Shutdown()
