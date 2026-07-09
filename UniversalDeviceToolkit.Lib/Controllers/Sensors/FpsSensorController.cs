@@ -27,7 +27,13 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
             public override string ToString() => $"FPS: {Fps}, Low: {LowFps}, Time: {FrameTime}ms";
         }
 
-        public List<string> Blacklist = new List<string>();
+        private List<string> _blacklist = new List<string>();
+
+        /// <summary>
+        /// Gets the read-only list of blacklisted process names (by process name, case-insensitive).
+        /// Thread-safe: the list is atomically replaced during initialization and never mutated in-place.
+        /// </summary>
+        public IReadOnlyList<string> Blacklist => _blacklist;
 
         private FpsData _currentFpsData = new FpsData();
         private CancellationTokenSource? _cancellationTokenSource;
@@ -58,13 +64,11 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
                 "Universal Device Toolkit"
             };
 
-            foreach (var process in systemProcesses)
-            {
-                if (!Blacklist.Contains(process))
-                {
-                    Blacklist.Add(process);
-                }
-            }
+            // Build and atomically assign a new list — no in-place mutation.
+            // Reference assignment on _blacklist is atomic in .NET, so any
+            // concurrent reader sees the complete list or the previous one.
+            _blacklist = new List<string>(systemProcesses
+                .Distinct(StringComparer.OrdinalIgnoreCase));
         }
 
         public Task StartMonitoringAsync()
@@ -281,7 +285,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
 
         private bool IsProcessBlacklisted(string processName)
         {
-            return Blacklist?.Any(x => string.Equals(processName, x, StringComparison.OrdinalIgnoreCase)) == true;
+            return _blacklist.Any(x => string.Equals(processName, x, StringComparison.OrdinalIgnoreCase));
         }
 
         public void Dispose()

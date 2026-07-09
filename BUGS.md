@@ -418,17 +418,17 @@
 - **修正日期**: 2026-07-06
 - **修正日期**: 2026-07-06
 
-### 🟡 M-015: `FpsSensorController` 中 `Blacklist` 公开可变且非线程安全（Day 11 确认）
+### 🟢 M-015: `FpsSensorController` 中 `Blacklist` 公开可变且非线程安全（已修复）
 
 - **文件**: `UniversalDeviceToolkit.Lib/Controllers/Sensors/FpsSensorController.cs:27`
 - **严重程度**: Medium
 - **类别**: 线程安全
 - **描述**: `Blacklist` 是 `public List<string>`，可从外部修改。但 `IsProcessBlacklisted` 在 `GetForegroundProcess()` 中读取（可能在任意线程），而外部可能在另一线程修改 `Blacklist`。`List<>` 不是线程安全的，并发读写可能导致 `InvalidOperationException`。
 - **建议修复**: 将 `Blacklist` 改为 `IReadOnlyList<string>` 或使用 `ImmutableList<string>`；或在使用时创建副本。
-- **状态**: 🟡 Confirmed（Day 11 验证为真实 bug）
+- **状态**: 🟢 Fixed
 - **发现日期**: 2026-07-06
 - **修正日期**: 2026-07-06
-- **修正日期**: 2026-07-06
+- **修正日期**: 2026-07-09 — 改为 private `_blacklist` + public `IReadOnlyList<string> Blacklist` 属性；`InitializeBlacklist` 原子替换而非就地变异
 
 ### 🟡 L-008: `ManagementObjectSearcherExtensions.GetAsync` 中 `searcher.Get()` 不取消 — 超时实现不彻底（Day 11 确认）
 
@@ -677,11 +677,11 @@
 - 🔴 Open (High): 0
 - 🔴 Confirmed (High): 9
 - 🟡 Investigating (Medium): 0
-- 🟡 Confirmed (Medium): 23
+- 🟡 Confirmed (Medium): 22
 - 🟢 Open (Low): 0
 - 🟢 Confirmed (Low): 7
 - ⚪ WontFix (误报/不属于本项目): 11
-- 🟢 Fixed: 1
+- 🟢 Fixed: 2
 - **总计**: 51
 
 ## 待深入模块（后续天数）
