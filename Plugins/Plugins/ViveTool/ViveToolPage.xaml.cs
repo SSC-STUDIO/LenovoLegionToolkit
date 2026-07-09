@@ -1025,7 +1025,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
                 if (exported)
                 {
-                    WpfHostNotifications.ShowSnackbarError(
+                    WpfHostNotifications.ShowSnackbar(
                         Resource.ViveTool_ExportSuccess,
                         string.Format(Resource.ViveTool_ExportSuccessMessage, featuresToExport.Count, saveFileDialog.FileName));
                 }
@@ -1163,7 +1163,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
 
-                    WpfHostNotifications.ShowSnackbarError(
+                    WpfHostNotifications.ShowSnackbar(
                         Resource.ViveTool_FeatureEnabled,
                         string.Format(Resource.ViveTool_FeatureEnabledMessage, featureId));
                 }
@@ -1199,7 +1199,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     // Refresh the feature status
                     await RefreshFeatureStatusAsync(featureId);
 
-                    WpfHostNotifications.ShowSnackbarError(
+                    WpfHostNotifications.ShowSnackbar(
                         Resource.ViveTool_FeatureDisabled,
                         string.Format(Resource.ViveTool_FeatureDisabledMessage, featureId));
                 }
