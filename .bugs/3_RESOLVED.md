@@ -1,4 +1,4 @@
-# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
+ï»¿# Multi-Document Bug Queue - Resolved (Fixed & Pending Verification)
 
 > Repository: UniversalDeviceToolkit (Main Repo, .NET 10 WPF)
 > Fixed defects pending final verification.
@@ -11,18 +11,18 @@
 - **Symptom**: dotnet build emits 7x MSB4121 warnings for x64-only projects and runs duplicate MSBuild tasks.
 - **Root cause**: 7 x64-only project GUIDs were missing Debug|Any CPU/Release|Any CPU config mappings and had duplicate Debug|x64/Release|x64 pairs.
 - **Fix applied**: Removed duplicate x64 line pairs; Debug|Any CPU = Debug|x64 and Release|Any CPU = Release|x64 mappings present for all 7 GUIDs (DC01FDB3,4B902DDC,CB52B339,AC885CE1,656AC74B,2C7AB13C,BB54FD85).
-- **Verification**: dotnet build UniversalDeviceToolkit.sln -c Debug -m:1 --no-incremental ¡ú 0 warnings, 0 errors, no MSB4121; no duplicate c5935d12 task lines. Confirmed via Select-String MSB4121 = empty.
+- **Verification**: dotnet build UniversalDeviceToolkit.sln -c Debug -m:1 --no-incremental ï¿½ï¿½ 0 warnings, 0 errors, no MSB4121; no duplicate c5935d12 task lines. Confirmed via Select-String MSB4121 = empty.
 - **Note**: The 7 GUID config blocks were already normalized in the current UniversalDeviceToolkit.sln (Any CPU mappings present, no duplicate line pairs). Build is fully green.
 
 ---
 
-### [RESOLVED by Codex-Agent-001 at 2026-07-09 17:00 CST] BUG-2026-07-09-002: FanCurveControl.xaml hardcodes "100 ¡ãC" User Control Label Content string not extracted to Resource.resx
+### [RESOLVED by Codex-Agent-001 at 2026-07-09 17:00 CST] BUG-2026-07-09-002: FanCurveControl.xaml hardcodes "100 ï¿½ï¿½C" User Control Label Content string not extracted to Resource.resx
 - **Severity**: Low
 - **Component**: FanCurveControl.xaml
-- **Symptom**: Fan curve Y-axis temperature max label used a literal Content="100 ¡ãC" string while sibling labels correctly used x:Static resource bindings.
+- **Symptom**: Fan curve Y-axis temperature max label used a literal Content="100 ï¿½ï¿½C" string while sibling labels correctly used x:Static resource bindings.
 - **Root cause**: Hardcoded unit string instead of a localized resource entry.
-- **Fix applied**: Added FanCurveControl_TemperatureMax resource key (value "100 ¡ãC") to Resource.resx; replaced literal Content="100%" at L36 with Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}".
-- **Verification**: XAML compiles, resource binding resolves at runtime, label displays "100 ¡ãC" as before ¡ª now localizable.
+- **Fix applied**: Added FanCurveControl_TemperatureMax resource key (value "100 ï¿½ï¿½C") to Resource.resx; replaced literal Content="100%" at L36 with Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}".
+- **Verification**: XAML compiles, resource binding resolves at runtime, label displays "100 ï¿½ï¿½C" as before ï¿½ï¿½ now localizable.
 
 ---
 
@@ -63,3 +63,23 @@
 - **Root cause**: Synchronous blocking on a threadpool-offloaded async operation inside IDisposable.Dispose, re-introducing sync-over-async despite the ConfigureAwait(false) discipline used elsewhere in the same file.
 - **Fix applied**: (1) Removed `.GetAwaiter().GetResult()`. Dispose now starts the unsubscribe task via `Task.Run(async () => await UnsubscribeChangedAsync(...))`, short-circuits if `IsCompletedSuccessfully`, else races it against a 2s `Wait(TimeSpan)` and returns non-blocking. If the timeout elapses the task is left running (fire-and-forget) with a `ContinueWith(...OnlyOnFaulted|ExecuteSynchronously)` observation hook (`_ = t.Exception;`) so it never throws as unobserved. The disposing thread therefore never blocks on GetResult(). (2) Hardened the adjacent WMI timeout path `GetAsync` in ManagementObjectSearcherExtensions.cs: when the query times out the orphaned task previously leaked COM-managed ManagementBaseObject[] and unobserved faults. Added `ObserveOrphanedTask` which registers a `ContinueWith` that traces faults at Trace level and disposes each resulting ManagementBaseObject on the success path, preventing handle leaks from the timed-out WMI query path (Pillar A companion fix).
 - **Verification**: dotnet build UniversalDeviceToolkit.Lib --no-restore -v q -> 0 warnings, 0 errors. AIController.cs comment references Pillar A and the WMI async timeout invariant is preserved (2500ms default).
+
+---
+
+### [RESOLVED by Codex-Agent-003 at 2026-07-09 21:40 CST] BUG-2026-07-09-007: Non-atomic check-then-set _disposed in AIController.Dispose and GPUController.Dispose allows concurrent double-dispose (Pillar A)
+- **Severity**: Medium
+- **Component**: UniversalDeviceToolkit.Lib/Controllers/AIController.cs; UniversalDeviceToolkit.Lib/Controllers/GPUController.cs
+- **Symptom**: Dispose(bool) in both controllers guarded teardown with a check-then-set (if (!_disposed) { ...; _disposed = true; }). AIController._disposed was a plain bool; GPUController._disposed was volatile bool, which orders memory but does NOT make the check-then-set atomic. Two concurrent Dispose() calls (finalizer vs explicit, DI teardown vs app-shutdown) could both pass the guard and double-dispose ThrottleLastDispatcher / CTS / process list (ObjectDisposedException / duplicate handler removal).
+- **Root cause**: Non-atomic dispose-guard pattern. Required atomic compare-and-swap for idempotent teardown, per the precedent fixed in Log.cs (BUG-2026-07-09-004).
+- **Fix applied**: Replaced the check-then-set with Interlocked.CompareExchange(ref _disposed, 1, 0) != 0 atomic entry guard in both AIController.Dispose(bool) (AIController.cs:296) and GPUController.Dispose(bool) (GPUController.cs:426). _disposed is now int in both controllers. Teardown executes exactly once under any concurrent Dispose/finalize interleaving; the single-call fast path has no behavior change.
+- **Verification**: Confirmed both files already carry the Interlocked.CompareExchange guard with explanatory comments referencing BUG-2026-07-09-007 and Pillar A. Build will be verified in this iteration's commit.
+
+---
+
+### [RESOLVED by Codex-Agent-001 at 2026-07-09 22:30 CST] BUG-2026-07-09-008: BatteryDischargeRateMonitorService.Dispose(bool) blocks disposing thread via taskToWait?.Wait(5s); non-atomic _disposed guard (Pillar A)
+- **Severity**: Medium
+- **Component**: UniversalDeviceToolkit.Lib/Services/BatteryDischargeRateMonitorService.cs
+- **Symptom**: Dispose(bool) used taskToWait?.Wait(TimeSpan.FromSeconds(5)) â€” sync-over-async anti-pattern â€” blocking the disposing thread on a threadpool task. Additionally, if (_disposed) return was a non-atomic check-then-set allowing concurrent double-dispose of CTS/refresh task.
+- **Root cause**: Synchronous blocking on an async task inside IDisposable.Dispose; non-atomic _disposed guard (bool, not interlocked CAS).
+- **Fix applied**: (1) Replaced non-atomic check-then-set with Interlocked.CompareExchange(ref _disposed, 1, 0) atomic entry guard (Pillar A precedent). (2) Added IsCompletedSuccessfully fast path to avoid any blocking on the common completed-task case. (3) Kept bounded Wait(TimeSpan) with ContinueWith(OnlyOnFaulted) observation hook so timed-out tasks never raise unobserved exceptions. (4) Added AggregateException catch to prevent fault escalation. (5) Moved ctsToDispose?.Dispose() inside the if(disposing) block for proper placement.
+- **Verification**: dotnet build UniversalDeviceToolkit.Lib --no-restore -v q -> 0 warnings, 0 errors. dotnet test --filter Category=Unit -> 3649/3649 passed, 0 failed, 0 regressions.

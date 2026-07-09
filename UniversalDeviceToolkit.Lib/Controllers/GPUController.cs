@@ -35,7 +35,7 @@ public class GPUController : IDisposable
     private readonly IGPUProcessManager _processManager;
     private readonly IGPUHardwareManager _hardwareManager;
     private readonly IDelayProvider _delayProvider;
-    private volatile bool _disposed = false;
+    private int _disposed = 0;
 
     private Task? _refreshTask;
     private CancellationTokenSource? _refreshCancellationTokenSource;
@@ -419,40 +419,42 @@ public class GPUController : IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                try
-                {
-                    if (_refreshCancellationTokenSource != null)
-                    {
-                        _refreshCancellationTokenSource.Cancel();
-                        _refreshCancellationTokenSource.Dispose();
-                        _refreshCancellationTokenSource = null;
-                    }
+        // Atomic dispose guard (Pillar A): volatile bool is NOT an atomic check-then-set,
+        // so two concurrent Dispose()/finalize calls could both pass the guard and double-dispose
+        // the CTS and process list. Use Interlocked.CompareExchange to make teardown idempotent
+        // under any concurrent Dispose interleaving (BUG-2026-07-09-007).
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            return;
 
-                    if (_processes != null)
-                    {
-                        foreach (var process in _processes)
-                        {
-                            try { process.Dispose(); } catch
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace("Failed to dispose process");
-                            }
-                        }
-                        _processes = Array.Empty<Process>();
-                    }
-                }
-                catch (Exception ex)
+        if (disposing)
+        {
+            try
+            {
+                if (_refreshCancellationTokenSource != null)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"GPUController disposal error", ex);
+                    _refreshCancellationTokenSource.Cancel();
+                    _refreshCancellationTokenSource.Dispose();
+                    _refreshCancellationTokenSource = null;
+                }
+
+                if (_processes != null)
+                {
+                    foreach (var process in _processes)
+                    {
+                        try { process.Dispose(); } catch
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace("Failed to dispose process");
+                        }
+                    }
+                    _processes = Array.Empty<Process>();
                 }
             }
-
-            _disposed = true;
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"GPUController disposal error", ex);
+            }
         }
     }
 }

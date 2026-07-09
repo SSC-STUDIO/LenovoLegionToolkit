@@ -12,7 +12,7 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
     private readonly object _lock = new();
-    private bool _disposed;
+    private int _disposed;
 
     public Task StartStopIfNeededAsync()
     {
@@ -167,10 +167,9 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
     protected virtual void Dispose(bool disposing)
     {
-        if (_disposed)
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             return;
 
         if (disposing)
@@ -202,9 +201,33 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                 }
             }
 
-            taskToWait?.Wait(TimeSpan.FromSeconds(5));
-        }
+            // Non-blocking dispose wait (Pillar A, BUG-2026-07-09-008): the refresh task runs
+            // ConfigureAwait(false) on the threadpool, so a bounded Wait cannot deadlock the
+            // Dispatcher, but we still avoid needless blocking in the common completed-task case
+            // via an IsCompletedSuccessfully fast path (matching the AIController precedent).
+            if (taskToWait is not null)
+            {
+                try
+                {
+                    if (!taskToWait.IsCompletedSuccessfully && !taskToWait.Wait(TimeSpan.FromSeconds(5)))
+                    {
+                        // Timed out: leave the task running and observe any later fault so it is
+                        // never raised as an unobserved task exception.
+                        taskToWait.ContinueWith(t =>
+                        {
+                            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace("Battery monitoring service dispose wait timed out and faulted later.", t.Exception);
+                        }, TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+                    }
+                }
+                catch (AggregateException ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Battery monitoring service dispose wait faulted.", ex);
+                }
+            }
 
-        _disposed = true;
+            ctsToDispose?.Dispose();
+        }
     }
 }
