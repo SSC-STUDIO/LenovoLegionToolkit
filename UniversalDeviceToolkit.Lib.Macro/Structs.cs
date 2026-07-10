@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.Json.Serialization;
 using UniversalDeviceToolkit.Lib.Macro.Utils.TypeConverters;
 
 namespace UniversalDeviceToolkit.Lib.Macro;
@@ -19,6 +20,7 @@ public readonly struct MacroEvent
 }
 
 [TypeConverter(typeof(MacroIdentifierTypeConverter))]
+[JsonConverter(typeof(MacroIdentifierJsonConverter))]
 public readonly struct MacroIdentifier(MacroSource source, ulong key)
 {
     public MacroSource Source { get; } = source;

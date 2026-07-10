@@ -36,6 +36,7 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\Tools\MainAppPluginUi.Smoke\MainAppPluginUi.Smoke.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
   </ItemGroup>
 
