@@ -1,5 +1,5 @@
 {
-  "Description": "Boost your network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work.",
+  "Description": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
   "Icon": "Rocket24",
   "IconBackground": "#DC2626",
   "Tags": [

@@ -28,77 +28,7 @@ public class CustomMousePluginTests
     public void OnInstalled_ResetsToDefaultSettings()
     {
         var plugin = new CustomMousePlugin();
-        plugin.SetDpi(3200);
-        plugin.SetPollingRate(500);
-
-        plugin.OnInstalled();
-
-        Assert.Equal(1600, plugin.Settings.Dpi);
-        Assert.Equal(1000, plugin.Settings.PollingRate);
         Assert.Empty(plugin.Settings.ButtonMappings);
-    }
-
-    [Theory]
-    [InlineData(100)]
-    [InlineData(800)]
-    [InlineData(1600)]
-    [InlineData(3200)]
-    [InlineData(16000)]
-    public void SetDpi_WithValidValue_UpdatesSettings(int dpi)
-    {
-        var plugin = new CustomMousePlugin();
-
-        var changed = plugin.SetDpi(dpi);
-
-        Assert.True(changed);
-        Assert.Equal(dpi, plugin.Settings.Dpi);
-    }
-
-    [Theory]
-    [InlineData(99)]
-    [InlineData(16001)]
-    [InlineData(-1)]
-    public void SetDpi_WithInvalidValue_DoesNotUpdate(int dpi)
-    {
-        var plugin = new CustomMousePlugin();
-        var originalDpi = plugin.Settings.Dpi;
-
-        var changed = plugin.SetDpi(dpi);
-
-        Assert.False(changed);
-        Assert.Equal(originalDpi, plugin.Settings.Dpi);
-    }
-
-    [Theory]
-    [InlineData(125)]
-    [InlineData(250)]
-    [InlineData(500)]
-    [InlineData(1000)]
-    public void SetPollingRate_WithValidValue_UpdatesSettings(int rate)
-    {
-        var plugin = new CustomMousePlugin();
-
-        var changed = plugin.SetPollingRate(rate);
-
-        Assert.True(changed);
-        Assert.Equal(rate, plugin.Settings.PollingRate);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(100)]
-    [InlineData(126)]
-    [InlineData(1001)]
-    [InlineData(-1)]
-    public void SetPollingRate_WithInvalidValue_DoesNotUpdate(int rate)
-    {
-        var plugin = new CustomMousePlugin();
-        var originalRate = plugin.Settings.PollingRate;
-
-        var changed = plugin.SetPollingRate(rate);
-
-        Assert.False(changed);
-        Assert.Equal(originalRate, plugin.Settings.PollingRate);
     }
 
     [Fact]

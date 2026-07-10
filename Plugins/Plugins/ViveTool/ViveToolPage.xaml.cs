@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -379,7 +379,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Padding = new Thickness(16, 14, 16, 14),
             Margin = new Thickness(0, 0, 0, 16),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = (CornerRadius)FindResource("PluginCornerRadiusCard"),
             BorderThickness = new Thickness(1)
         };
         missingToolPanel.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");
@@ -410,7 +410,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Padding = new Thickness(12, 10, 12, 10),
             Margin = new Thickness(0, 0, 0, 12),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = (CornerRadius)FindResource("PluginCornerRadiusCard"),
             BorderThickness = new Thickness(1)
         };
         toolbarCard.SetResourceReference(Border.BackgroundProperty, "ControlFillColorDefaultBrush");
@@ -443,7 +443,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Padding = new Thickness(16, 14, 16, 14),
             Margin = new Thickness(0, 0, 0, 16),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = (CornerRadius)FindResource("PluginCornerRadiusCard"),
             BorderThickness = new Thickness(1)
         };
         heroCard.SetResourceReference(Border.BackgroundProperty, "ControlFillColorDefaultBrush");
@@ -469,7 +469,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Padding = new Thickness(14, 10, 14, 10),
             Margin = new Thickness(0, 0, 0, 16),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = (CornerRadius)FindResource("PluginCornerRadiusCard"),
             BorderThickness = new Thickness(1)
         };
         warningCard.SetResourceReference(Border.BackgroundProperty, "SystemFillColorCautionBackgroundBrush");

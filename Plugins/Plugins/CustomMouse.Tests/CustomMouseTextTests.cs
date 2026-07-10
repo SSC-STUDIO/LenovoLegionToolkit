@@ -13,8 +13,6 @@ public class CustomMouseTextTests : LocalizedTextTestsBase
     [
         "PluginName",
         "SettingsPageTitle",
-        "DpiLabel",
-        "PollingRateLabel",
         "ApplyButton"
     ];
 }

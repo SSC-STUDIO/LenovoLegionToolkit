@@ -1,5 +1,5 @@
 {
-  "Description": "Seamlessly integrate Universal Device Toolkit into your Windows shell context menu for instant access to power features.",
+  "Description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
   "Icon": "Folder24",
   "IconBackground": "#0F766E",
   "Tags": [

@@ -11,6 +11,10 @@
              AutomationProperties.AutomationId="CustomMouseSettingsRoot">
 
     <UserControl.Resources>
+        <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusControl">12</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusCard">18</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusSurface">20</CornerRadius>
         <Style x:Key="CustomMouseSurfaceStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
@@ -63,7 +67,7 @@
                     <Border Grid.Column="0"
                             Width="42"
                             Height="42"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             Margin="0,0,16,0"
                             Background="{DynamicResource SystemAccentColorPrimaryBrush}">
                         <wpfui:SymbolIcon Symbol="Cursor24"
@@ -87,7 +91,7 @@
                     <Border Grid.Column="2"
                             Padding="9,5"
                             Margin="18,0,0,0"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             VerticalAlignment="Center"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
                         <StackPanel Orientation="Horizontal">
@@ -203,7 +207,7 @@
 
                         <Border Margin="0,18,0,0"
                                 Padding="12,10"
-                                CornerRadius="8"
+                                CornerRadius="{StaticResource PluginCornerRadiusControl}"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                 BorderThickness="1">

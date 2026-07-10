@@ -17,7 +17,7 @@
             <!-- Hero Status Banner -->
             <Border Margin="0,0,0,20"
                     Padding="16,14"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -30,7 +30,7 @@
 
                     <Border Grid.Column="0"
                             Width="40" Height="40"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             Margin="0,0,16,0"
                             Background="{DynamicResource SystemAccentColorPrimaryBrush}">
                         <wpfui:SymbolIcon Symbol="Folder24"
@@ -102,7 +102,7 @@
                 <!-- Left Card: Actions -->
                 <Border Grid.Column="0"
                         Padding="18,16"
-                        CornerRadius="10"
+                        CornerRadius="{StaticResource PluginCornerRadiusCard}"
                         Background="{DynamicResource ControlFillColorDefaultBrush}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1">
@@ -178,7 +178,7 @@
                 <!-- Right Card: Info & Quick Access -->
                 <Border Grid.Column="2"
                         Padding="18,16"
-                        CornerRadius="10"
+                        CornerRadius="{StaticResource PluginCornerRadiusCard}"
                         Background="{DynamicResource ControlFillColorDefaultBrush}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1">
@@ -266,7 +266,7 @@
 
             <!-- Status Bar -->
             <Border Padding="16,12"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">

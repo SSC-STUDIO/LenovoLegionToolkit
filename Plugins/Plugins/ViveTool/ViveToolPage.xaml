@@ -18,6 +18,10 @@
     UseLayoutRounding="True">
 
     <UserControl.Resources>
+        <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusControl">12</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusCard">18</CornerRadius>
+        <CornerRadius x:Key="PluginCornerRadiusSurface">20</CornerRadius>
         <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
@@ -50,7 +54,7 @@
             <!-- Hero Header -->
             <Border Margin="0,0,0,16"
                     Padding="16,14"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -63,7 +67,7 @@
 
                     <Border Grid.Column="0"
                             Width="40" Height="40"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             Margin="0,0,16,0"
                             Background="{DynamicResource SystemAccentColorPrimaryBrush}">
                         <wpfui:SymbolIcon Symbol="Code24"
@@ -110,7 +114,7 @@
             <!-- Warning Banner -->
             <Border Margin="0,0,0,16"
                     Padding="14,10"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1">
@@ -136,7 +140,7 @@
             <!-- Missing Tool Banner -->
             <Border Margin="0,0,0,16"
                     Padding="16,14"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1"
@@ -179,7 +183,7 @@
             <!-- Search & Actions Toolbar -->
             <Border Margin="0,0,0,12"
                     Padding="12,10"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"

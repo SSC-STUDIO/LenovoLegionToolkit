@@ -27,6 +27,7 @@ public sealed class ShellIntegrationConfigService
     private const string ManagedLanguageFileName = "language.nss";
 
     private readonly object _fileLock = new();
+    private readonly Action<string> _openDirectory;
     private static readonly object _staticFileLock = new();
 
     private static readonly IReadOnlyDictionary<string, string[]> LanguageAliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
@@ -40,13 +41,24 @@ public sealed class ShellIntegrationConfigService
         ["uz-latn-uz"] = ["uz"]
     };
 
+    // Pre-compiled regexes for UpsertManagedImportBlock — avoids allocating
+    // new Regex objects on every ApplyProfile / EnsureManagedImportBlock call.
+    // Same pattern applied to ViveToolFeatureService in VT-PERF-001.
+    private static readonly Regex ManagedBlockReplaceRegex = new(
+        $@"{Regex.Escape(ManagedBlockStart)}[\s\S]*?{Regex.Escape(ManagedBlockEnd)}",
+        RegexOptions.Compiled);
+    private static readonly Regex MenuDeclarationRegex = new(
+        @"(?m)^\s*menu\(",
+        RegexOptions.Compiled);
+
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true
     };
 
-    public ShellIntegrationConfigService(string? localProfileRoot = null)
+    public ShellIntegrationConfigService(string? localProfileRoot = null, Action<string>? openDirectory = null)
     {
+        _openDirectory = openDirectory ?? OpenDirectory;
         LocalProfileRoot = localProfileRoot ??
                            Path.Combine(
                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -310,28 +322,29 @@ public sealed class ShellIntegrationConfigService
         try
         {
             Directory.CreateDirectory(target);
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = target,
-                UseShellExecute = true
-            });
+            _openDirectory(target);
         }
         catch
         {
             try
             {
                 Directory.CreateDirectory(LocalProfileRoot);
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = LocalProfileRoot,
-                    UseShellExecute = true
-                });
+                _openDirectory(LocalProfileRoot);
             }
             catch
             {
                 // Ignore if the environment cannot open a folder window.
             }
         }
+    }
+
+    private static void OpenDirectory(string path)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = path,
+            UseShellExecute = true
+        });
     }
 
     public static string RenderSettings(ShellIntegrationProfile profile)
@@ -462,17 +475,16 @@ theme
     {
         var block = BuildManagedImportBlock(importStatements);
 
-        var pattern = $"{Regex.Escape(ManagedBlockStart)}[\\s\\S]*?{Regex.Escape(ManagedBlockEnd)}";
         var cleaned = string.IsNullOrWhiteSpace(existingContent)
             ? string.Empty
-            : Regex.Replace(existingContent, pattern, string.Empty).TrimEnd();
+            : ManagedBlockReplaceRegex.Replace(existingContent, string.Empty).TrimEnd();
 
         if (string.IsNullOrWhiteSpace(cleaned))
         {
             return $"{block}{Environment.NewLine}";
         }
 
-        var menuMatch = Regex.Match(cleaned, @"(?m)^\s*menu\(");
+        var menuMatch = MenuDeclarationRegex.Match(cleaned);
         if (menuMatch.Success)
         {
             var before = cleaned[..menuMatch.Index].TrimEnd();

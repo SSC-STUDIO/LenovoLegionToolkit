@@ -1,6 +1,6 @@
-﻿{
+{
   "Id": "battery-health",
-  "Name": "Battery Health",
+  "Name": "Battery Health (Migrated)",
   "Version": "1.0.0",
   "MinLltVersion": "4.2.1",
   "Author": "SSC-STUDIO",

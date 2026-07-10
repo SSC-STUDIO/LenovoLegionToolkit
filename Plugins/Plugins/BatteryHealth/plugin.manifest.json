@@ -1,7 +1,7 @@
-﻿{
+{
   "schemaVersion": 1,
   "id": "battery-health",
-  "name": "Battery Health",
+  "name": "Battery Health (Migrated)",
   "version": "1.0.0",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
@@ -11,11 +11,11 @@
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
-      "title": "Battery Health"
+      "title": "Battery Health (Migrated)"
     },
     "settingsPage": {
       "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthSettingsPage",
-      "title": "Battery Health Settings"
+      "title": "Battery Health (Migrated) Settings"
     },
     "runtime": null,
     "optimizationActions": []
@@ -30,7 +30,7 @@
     ]
   },
   "store": {
-    "description": "Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit.",
+    "description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
     "icon": "BatteryCharge24",
     "iconBackground": "#16A34A",
     "tags": [

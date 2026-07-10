@@ -16,8 +16,8 @@
 
             <!-- Hero Status Banner -->
             <Border Margin="0,0,0,20"
-                    Padding="16,14"
-                    CornerRadius="10"
+                    Padding="20,18"
+                    CornerRadius="{StaticResource PluginCornerRadiusSurface}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -30,7 +30,7 @@
 
                     <Border Grid.Column="0"
                             Width="40" Height="40"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             Margin="0,0,16,0"
                             Background="{DynamicResource SystemAccentColorPrimaryBrush}">
                         <wpfui:SymbolIcon Symbol="Settings24"
@@ -78,11 +78,9 @@
 
                 <!-- Left Card: Options -->
                 <Border Grid.Column="0"
-                        Padding="18,16"
-                        CornerRadius="10"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
+                        Padding="4,4,16,4"
+                        Background="Transparent"
+                        BorderThickness="0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
                             <wpfui:SymbolIcon Symbol="Options24"
@@ -125,8 +123,8 @@
 
                 <!-- Right Card: Summary -->
                 <Border Grid.Column="2"
-                        Padding="18,16"
-                        CornerRadius="10"
+                        Padding="20,18"
+                        CornerRadius="{StaticResource PluginCornerRadiusSurface}"
                         Background="{DynamicResource ControlFillColorDefaultBrush}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1">
@@ -210,11 +208,9 @@
             </Grid>
 
             <!-- Action Bar -->
-            <Border Padding="16,12"
-                    CornerRadius="10"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
+            <Border Padding="4,14,4,0"
+                    Background="Transparent"
+                    BorderThickness="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

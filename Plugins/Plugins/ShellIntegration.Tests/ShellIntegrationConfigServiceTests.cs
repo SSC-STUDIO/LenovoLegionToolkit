@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -6,9 +7,10 @@ using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
 
-public class ShellIntegrationConfigServiceTests
+public class ShellIntegrationConfigServiceTests : IDisposable
 {
     private readonly string _testDirectory;
+    private readonly List<string> _openedDirectories = [];
 
     public ShellIntegrationConfigServiceTests()
     {
@@ -18,7 +20,17 @@ public class ShellIntegrationConfigServiceTests
 
     private ShellIntegrationConfigService CreateService(string? localProfileRoot = null)
     {
-        return new ShellIntegrationConfigService(localProfileRoot ?? _testDirectory);
+        return new ShellIntegrationConfigService(localProfileRoot ?? _testDirectory, path => _openedDirectories.Add(path));
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_testDirectory))
+            Directory.Delete(_testDirectory, recursive: true);
+
+        var root = Path.GetDirectoryName(_testDirectory);
+        if (root is not null && Directory.Exists(root) && Directory.GetFileSystemEntries(root).Length == 0)
+            Directory.Delete(root);
     }
 
     #region Constructor Tests
@@ -989,10 +1001,10 @@ public class ShellIntegrationConfigServiceTests
         var installDir = Path.Combine(_testDirectory, "shell");
         Directory.CreateDirectory(installDir);
 
-        // This may not actually open a folder in test environment, but should not throw
         service.OpenManagedConfigFolder(installDir);
 
-        Assert.True(true); // Just verify no exception
+        Assert.Single(_openedDirectories);
+        Assert.EndsWith(Path.Combine("managed", "lenovo-legion-toolkit"), _openedDirectories[0]);
     }
 
     [Fact]
@@ -1002,7 +1014,7 @@ public class ShellIntegrationConfigServiceTests
 
         service.OpenManagedConfigFolder(null);
 
-        Assert.True(true); // Should use LocalProfileRoot as fallback
+        Assert.Equal(_testDirectory, Assert.Single(_openedDirectories));
     }
 
     [Fact]
@@ -1013,7 +1025,8 @@ public class ShellIntegrationConfigServiceTests
 
         service.OpenManagedConfigFolder(nonexistent);
 
-        Assert.True(true); // Should fallback gracefully
+        Assert.Single(_openedDirectories);
+        Assert.EndsWith(Path.Combine("managed", "lenovo-legion-toolkit"), _openedDirectories[0]);
     }
 
     #endregion

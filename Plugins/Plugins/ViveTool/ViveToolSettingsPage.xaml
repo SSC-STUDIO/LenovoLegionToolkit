@@ -16,7 +16,7 @@
             <!-- Hero Status Banner -->
             <Border Margin="0,0,0,20"
                     Padding="16,14"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -28,7 +28,7 @@
 
                     <Border Grid.Column="0"
                             Width="40" Height="40"
-                            CornerRadius="8"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
                             Margin="0,0,16,0"
                             Background="{DynamicResource SystemAccentColorPrimaryBrush}">
                         <wpfui:SymbolIcon Symbol="Code24"
@@ -81,7 +81,7 @@
             <!-- Binary Path Card -->
             <Border Margin="0,0,0,20"
                     Padding="18,16"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -130,7 +130,7 @@
             <!-- GitHub & Actions Card -->
             <Border Margin="0,0,0,20"
                     Padding="18,16"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -196,7 +196,7 @@
 
             <!-- Warning Banner -->
             <Border Padding="14,12"
-                    CornerRadius="10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1">

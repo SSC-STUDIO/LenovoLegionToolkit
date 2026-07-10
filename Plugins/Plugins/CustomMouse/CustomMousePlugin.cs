@@ -173,29 +173,6 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         return _themeWatcher.GetCancellationToken();
     }
 
-    public bool SetDpi(int dpi)
-    {
-        if (dpi is < 100 or > 16000)
-        {
-            return false;
-        }
-
-        _settings.Dpi = dpi;
-        return true;
-    }
-
-    public bool SetPollingRate(int rate)
-    {
-        var validRates = new[] { 125, 250, 500, 1000 };
-        if (Array.IndexOf(validRates, rate) < 0)
-        {
-            return false;
-        }
-
-        _settings.PollingRate = rate;
-        return true;
-    }
-
     public bool SetWindowsPointerSpeed(int speed)
     {
         if (speed is < 1 or > 20)
@@ -377,8 +354,6 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public async Task SaveSettingsAsync()
     {
-        Configuration.SetValue(nameof(MouseSettings.Dpi), _settings.Dpi);
-        Configuration.SetValue(nameof(MouseSettings.PollingRate), _settings.PollingRate);
         Configuration.SetValue(nameof(MouseSettings.WindowsPointerSpeed), _settings.WindowsPointerSpeed);
         Configuration.SetValue(nameof(MouseSettings.SwapButtons), _settings.SwapButtons);
         Configuration.SetValue(nameof(MouseSettings.AutoThemeCursorStyle), _settings.AutoThemeCursorStyle);
@@ -403,8 +378,6 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         return new MouseSettings
         {
-            Dpi = Configuration.GetValue(nameof(MouseSettings.Dpi), 1600),
-            PollingRate = Configuration.GetValue(nameof(MouseSettings.PollingRate), 1000),
             WindowsPointerSpeed = Configuration.GetValue(nameof(MouseSettings.WindowsPointerSpeed), 10),
             SwapButtons = Configuration.GetValue(nameof(MouseSettings.SwapButtons), false),
             AutoThemeCursorStyle = Configuration.GetValue(nameof(MouseSettings.AutoThemeCursorStyle), true),
@@ -997,8 +970,6 @@ public enum CursorThemeMode
 
 public class MouseSettings
 {
-    public int Dpi { get; set; } = 1600;
-    public int PollingRate { get; set; } = 1000;
     public int WindowsPointerSpeed { get; set; } = 10;
     public bool SwapButtons { get; set; }
     public bool AutoThemeCursorStyle { get; set; } = true;
@@ -1010,8 +981,6 @@ public class MouseSettings
     {
         return new MouseSettings
         {
-            Dpi = 1600,
-            PollingRate = 1000,
             WindowsPointerSpeed = 10,
             SwapButtons = false,
             AutoThemeCursorStyle = true,

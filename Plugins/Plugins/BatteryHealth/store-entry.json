@@ -1,5 +1,5 @@
 {
-  "Description": "Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit.",
+  "Description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
   "Icon": "BatteryCharge24",
   "IconBackground": "#16A34A",
   "Tags": [

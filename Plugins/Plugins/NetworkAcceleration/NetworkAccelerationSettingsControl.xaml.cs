@@ -66,8 +66,8 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         {
             Margin = new Thickness(0, 0, 0, 18),
             Padding = new Thickness(12, 9, 12, 9),
-            CornerRadius = new CornerRadius(8),
-            BorderThickness = new Thickness(1)
+            CornerRadius = new CornerRadius(12),
+            BorderThickness = new Thickness(0)
         };
         summaryStrip.SetResourceReference(Border.BackgroundProperty, "ControlFillColorSecondaryBrush");
         summaryStrip.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
