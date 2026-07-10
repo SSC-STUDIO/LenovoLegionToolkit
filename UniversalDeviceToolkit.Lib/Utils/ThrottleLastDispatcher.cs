@@ -47,7 +47,7 @@ public class ThrottleLastDispatcher : IDisposable
         ArgumentNullException.ThrowIfNull(task);
 
         long myVersion;
-        CancellationTokenSource cts;
+        CancellationToken token;
         lock (_lock)
         {
             if (_disposed)
@@ -59,7 +59,7 @@ public class ThrottleLastDispatcher : IDisposable
             oldCts?.Cancel();
 
             _cancellationTokenSource = new CancellationTokenSource();
-            cts = _cancellationTokenSource;
+            token = _cancellationTokenSource.Token;
 
             oldCts?.Dispose();
         }
@@ -69,9 +69,9 @@ public class ThrottleLastDispatcher : IDisposable
             if (_interval > TimeSpan.Zero)
             {
                 if (_delayProvider is not null)
-                    await _delayProvider.Delay(_interval, cts.Token).ConfigureAwait(false);
+                    await _delayProvider.Delay(_interval, token).ConfigureAwait(false);
                 else
-                    await Task.Delay(_interval, cts.Token).ConfigureAwait(false);
+                    await Task.Delay(_interval, token).ConfigureAwait(false);
             }
 
             lock (_lock)
