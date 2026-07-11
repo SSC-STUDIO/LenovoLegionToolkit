@@ -597,10 +597,15 @@ findings.md
 plan.md
 progress.md
 task_plan.md
+BUGS.md
 
 # Local AI assistant scratch/report directories (do not publish)
 .claude/
+ai/
 docs/superpowers/
+
+# Personal MCP server config (local paths / proxies)
+.mcp.json
 
 # Playwright CLI test artifacts
 .playwright-cli/
@@ -651,9 +656,15 @@ all_strings.txt
 _work/
 output/
 
+# Local backups / IDE agent session junk (do not publish)
 .backup_async_fix/
+.github-issue-bodies/
 .cursor/
-*.tmp
+agent-transcripts/
 
+# Local publish size benchmarks
+_size_bench_publish/
+
+*.tmp
 *.zip
 build_debug_log.txt
