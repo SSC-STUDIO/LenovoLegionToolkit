@@ -77,7 +77,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
     {
         Optimization,
         Cleanup,
-        DriverDownload
+        DriverDownload,
+        NetworkAcceleration
     }
 
     private PageMode _currentMode = PageMode.Optimization;
@@ -95,6 +96,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             OnPropertyChanged(nameof(ActiveCategories));
             OnPropertyChanged(nameof(IsCleanupMode));
             OnPropertyChanged(nameof(IsDriverDownloadMode));
+            OnPropertyChanged(nameof(IsNetworkAccelerationMode));
 
             // Save the last selected mode
             _applicationSettings.Store.LastWindowsOptimizationPageMode = (int)_currentMode;
@@ -104,6 +106,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 
     public bool IsCleanupMode => CurrentMode == PageMode.Cleanup;
     public bool IsDriverDownloadMode => CurrentMode == PageMode.DriverDownload;
+    public bool IsNetworkAccelerationMode => CurrentMode == PageMode.NetworkAcceleration;
 
     public string ScanCleanupButtonText => T("WindowsOptimizationPage_Scan_Button", "Scan");
     public string PauseAllButtonText => T("WindowsOptimizationPage_PauseAll_Button", "Pause All");

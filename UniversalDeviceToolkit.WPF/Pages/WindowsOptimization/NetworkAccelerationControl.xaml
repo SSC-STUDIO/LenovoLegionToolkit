@@ -1,11 +1,10 @@
-<Page
-    x:Class="UniversalDeviceToolkit.WPF.Pages.NetworkAccelerationPage"
+<UserControl
+    x:Class="UniversalDeviceToolkit.WPF.Pages.WindowsOptimization.NetworkAccelerationControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="{x:Static resources:Resource.NetworkAccelerationPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
     <wpfui:DynamicScrollViewer
@@ -97,4 +96,4 @@
             </Expander>
         </StackPanel>
     </wpfui:DynamicScrollViewer>
-</Page>
+</UserControl>

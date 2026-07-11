@@ -9779,6 +9779,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Network &amp; Acceleration.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_NetworkAcceleration {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_NetworkAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Extensions.
         /// </summary>
         public static string WindowsOptimizationPage_Tab_Extensions {

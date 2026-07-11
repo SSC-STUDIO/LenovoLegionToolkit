@@ -801,7 +801,6 @@ public partial class MainWindow
         SetNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
         SetNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
         SetNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
-        SetNavigationItemVisibility(_networkAccelerationItem, "networkAcceleration", visibilitySettings);
 
         SetNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
     }

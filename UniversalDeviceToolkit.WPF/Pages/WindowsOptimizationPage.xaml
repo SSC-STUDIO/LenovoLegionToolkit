@@ -11,6 +11,7 @@
     RenderOptions.BitmapScalingMode="HighQuality"
     xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:opt="clr-namespace:UniversalDeviceToolkit.WPF.Pages.WindowsOptimization"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -233,6 +234,13 @@
                             GroupName="WindowsOptimizationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
                             Checked="NavButton_Checked" />
+                        <RadioButton
+                            x:Name="_networkAccelerationNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationNetworkAccelerationTabButton"
+                            Style="{StaticResource NavRadioButtonStyle}"
+                            GroupName="WindowsOptimizationNav"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_NetworkAcceleration}"
+                            Checked="NavButton_Checked" />
 
                     </StackPanel>
                 </Border>
@@ -263,6 +271,16 @@
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Right">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
                             <StackPanel.Resources>
                                 <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                                     <Setter Property="MinHeight" Value="36" />
@@ -370,6 +388,9 @@
                             <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -948,6 +969,22 @@
                                     </Grid>
                                         </Grid>
                 </Grid>
+
+                <!-- Content for network acceleration mode -->
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <opt:NetworkAccelerationControl />
+                </Grid>
+
                 <ScrollViewer
                     Grid.Column="1"
                     VerticalScrollBarVisibility="Auto"
@@ -961,6 +998,9 @@
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsCleanupMode}" Value="True">

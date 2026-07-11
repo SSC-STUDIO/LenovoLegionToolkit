@@ -203,15 +203,6 @@
                         PageTag="windowsOptimization"
                         PageType="{x:Type pages:WindowsOptimizationPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" />
-                    <custom:NavigationItem
-                        x:Name="_networkAccelerationItem"
-                        AutomationProperties.AccessKey="N"
-                        AutomationProperties.AutomationId="NetworkAccelerationNavItem"
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_NetworkAcceleration}"
-                        Icon="Globe24"
-                        PageTag="networkAcceleration"
-                        PageType="{x:Type pages:NetworkAccelerationPage}"
-                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_NetworkAcceleration}" />
                 </custom:NavigationStore.Items>
 
                 <custom:NavigationStore.Footer>

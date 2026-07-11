@@ -1,25 +1,26 @@
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Network;
 using UniversalDeviceToolkit.WPF.Resources;
 
-namespace UniversalDeviceToolkit.WPF.Pages;
+namespace UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
-public partial class NetworkAccelerationPage
+public partial class NetworkAccelerationControl : UserControl
 {
     private readonly INetworkAccelerationService _acceleration;
     private readonly INetworkDiagnosticsService _diagnostics;
 
-    public NetworkAccelerationPage()
+    public NetworkAccelerationControl()
     {
         _acceleration = IoCContainer.Resolve<INetworkAccelerationService>();
         _diagnostics = IoCContainer.Resolve<INetworkDiagnosticsService>();
         InitializeComponent();
-        Loaded += NetworkAccelerationPage_Loaded;
+        Loaded += NetworkAccelerationControl_Loaded;
     }
 
-    private void NetworkAccelerationPage_Loaded(object sender, RoutedEventArgs e)
+    private void NetworkAccelerationControl_Loaded(object sender, RoutedEventArgs e)
     {
         RefreshUi();
     }
@@ -32,6 +33,7 @@ public partial class NetworkAccelerationPage
         _portText.Text = $"{Resource.NetworkAccelerationPage_PortLabel}: {config.ListenPort}";
 
         // Phase 1: controls stay disabled until the worker backend is ready.
+        // Default remains OFF — no auto-start of the proxy.
         var canControl = _acceleration.IsBackendReady && config.AccelerationEnabled;
         _startButton.IsEnabled = canControl && !_acceleration.IsRunning;
         _stopButton.IsEnabled = canControl && _acceleration.IsRunning;

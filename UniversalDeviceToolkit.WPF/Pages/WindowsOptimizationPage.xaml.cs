@@ -90,6 +90,9 @@ public partial class WindowsOptimizationPage : Page
             case WindowsOptimizationViewModel.PageMode.DriverDownload:
                 _driverDownloadNavButton.IsChecked = true;
                 break;
+            case WindowsOptimizationViewModel.PageMode.NetworkAcceleration:
+                _networkAccelerationNavButton.IsChecked = true;
+                break;
         }
     }
 
@@ -210,6 +213,10 @@ public partial class WindowsOptimizationPage : Page
         {
             ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.DriverDownload;
             _ = InitializeDriverDownloadPage();
+        }
+        else if (element == _networkAccelerationNavButton)
+        {
+            ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.NetworkAcceleration;
         }
     }
 

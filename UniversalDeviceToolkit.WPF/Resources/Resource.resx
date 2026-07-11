@@ -1327,6 +1327,9 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Driver Download</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Network &amp; Acceleration</value>
+  </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
     <value>Safety Confirmation</value>
   </data>
