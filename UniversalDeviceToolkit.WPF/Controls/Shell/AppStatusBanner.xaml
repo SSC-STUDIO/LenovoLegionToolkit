@@ -11,9 +11,10 @@
         x:Name="RootBorder"
         Margin="12,0,12,6"
         Padding="10,8"
-        Background="{DynamicResource StatusWarningBackgroundBrush}"
-        BorderBrush="Transparent"
-        BorderThickness="0"
+        Background="{DynamicResource NotificationGlassSurfaceBrush}"
+        BorderBrush="{DynamicResource NotificationGlassBorderBrush}"
+        BorderThickness="1"
+        Effect="{DynamicResource NotificationGlassShadowEffect}"
         CornerRadius="{StaticResource CornerRadiusMD}"
         SnapsToDevicePixels="True">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
