@@ -74,7 +74,7 @@
     <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#1AFFFFFF" />
     <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1FFFFFFF" />
     <SolidColorBrush x:Key="ChartBaselineBrush" Color="#38FFFFFF" />
-    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#F02C2C2C" />
+    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#D6202020" />
     <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#36FFFFFF" />
 
     <!-- Gauge Size Tokens -->

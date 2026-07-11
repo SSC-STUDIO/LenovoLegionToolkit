@@ -278,21 +278,20 @@
                        Margin="24,0,0,0" />
             </Border>
 
-            <wpfui:SnackbarPresenter
-                x:Name="_snackbarPresenter"
-                Grid.Column="1"
-                HorizontalAlignment="Center" />
-
         </Grid>
 
         <StackPanel
             x:Name="_statusNotificationStack"
             Grid.Row="1"
             Grid.RowSpan="5"
-            Margin="0,0,18,18"
-            HorizontalAlignment="Right"
+            Margin="18,0,0,18"
+            HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Panel.ZIndex="100">
+            <wpfui:SnackbarPresenter
+                x:Name="_snackbarPresenter"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Left" />
             <shell:AppStatusBanner
                 x:Name="_vantageIndicator"
                 Message="{x:Static resources:Resource.MainWindows_VantageRunning}"

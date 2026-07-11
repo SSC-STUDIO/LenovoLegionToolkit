@@ -126,7 +126,7 @@ public partial class MainWindow
         return new Snackbar(presenter)
         {
             MinWidth = 300,
-            HorizontalAlignment = HorizontalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
             IsCloseButtonEnabled = false,
             Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
             Effect = new System.Windows.Media.Effects.DropShadowEffect

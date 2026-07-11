@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
 
@@ -55,10 +56,24 @@ public partial class AppStatusBanner : UserControl
         {
             Icon.Symbol = SymbolRegular.ArrowSync24;
             Icon.SetResourceReference(Control.ForegroundProperty, "StatusSuccessBrush");
+            ActionArea.Visibility = Visibility.Visible;
             return;
         }
+
         ActionArea.Visibility = Visibility.Collapsed;
         Icon.Symbol = SymbolRegular.Warning24;
         Icon.SetResourceReference(Control.ForegroundProperty, "StatusWarningBrush");
+    }
+
+    private void CloseButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        Visibility = Visibility.Collapsed;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        Visibility = Visibility.Collapsed;
     }
 }

@@ -6,7 +6,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Width="360"
     MaxWidth="360"
-    HorizontalAlignment="Right"
+    HorizontalAlignment="Left"
     Focusable="False"
     Background="Transparent"
     Visibility="Collapsed">
@@ -24,6 +24,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="32" />
                 <ColumnDefinition Width="32" />
             </Grid.ColumnDefinitions>
 
@@ -72,6 +73,23 @@
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Symbol="ChevronRight24" />
             </Border>
+
+            <wpfui:Button
+                x:Name="CloseButton"
+                Grid.Column="3"
+                Width="28"
+                Height="28"
+                Padding="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Appearance="Transparent"
+                AutomationProperties.Name="Close notification"
+                Click="CloseButton_Click"
+                CornerRadius="{StaticResource CornerRadiusCompact}"
+                PreviewMouseLeftButtonDown="CloseButton_PreviewMouseLeftButtonDown"
+                ToolTip="Close">
+                <wpfui:SymbolIcon FontSize="14" Symbol="Dismiss20" />
+            </wpfui:Button>
         </Grid>
     </Border>
 </UserControl>
