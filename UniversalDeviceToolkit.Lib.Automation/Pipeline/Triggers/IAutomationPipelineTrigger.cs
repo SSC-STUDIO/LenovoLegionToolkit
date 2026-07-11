@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
@@ -19,6 +19,7 @@ public interface IAutomationPipelineTrigger
 }
 
 public interface IDisallowDuplicatesAutomationPipelineTrigger : IAutomationPipelineTrigger;
+
 
 public interface ICompositeAutomationPipelineTrigger : IAutomationPipelineTrigger
 {

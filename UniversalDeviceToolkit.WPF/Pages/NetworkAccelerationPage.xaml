@@ -1,0 +1,100 @@
+<Page
+    x:Class="UniversalDeviceToolkit.WPF.Pages.NetworkAccelerationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="{x:Static resources:Resource.NetworkAccelerationPage_Title}"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <wpfui:DynamicScrollViewer
+        AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,24">
+            <TextBlock
+                Margin="0,16,0,8"
+                Focusable="True"
+                Style="{StaticResource AppPageTitleTextBlockStyle}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_Title}" />
+
+            <TextBlock
+                Margin="0,0,0,16"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_Subtitle}"
+                TextWrapping="Wrap" />
+
+            <TextBlock
+                Margin="0,0,0,4"
+                Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusHeading}" />
+            <TextBlock
+                x:Name="_statusText"
+                Margin="0,0,0,16"
+                AutomationProperties.AutomationId="NetworkAccelerationStatusText"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusOff}" />
+
+            <StackPanel Margin="0,0,0,24" Orientation="Horizontal">
+                <wpfui:Button
+                    x:Name="_startButton"
+                    MinWidth="120"
+                    Margin="0,0,8,0"
+                    Appearance="Primary"
+                    AutomationProperties.AutomationId="NetworkAccelerationStartButton"
+                    Click="StartButton_Click"
+                    Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
+                    IsEnabled="False" />
+                <wpfui:Button
+                    x:Name="_stopButton"
+                    MinWidth="120"
+                    AutomationProperties.AutomationId="NetworkAccelerationStopButton"
+                    Click="StopButton_Click"
+                    Content="{x:Static resources:Resource.NetworkAccelerationPage_Stop}"
+                    IsEnabled="False" />
+            </StackPanel>
+
+            <TextBlock
+                Margin="0,0,0,4"
+                Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}" />
+            <TextBlock
+                x:Name="_diagnosticsText"
+                Margin="0,0,0,8"
+                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}"
+                TextWrapping="Wrap" />
+            <wpfui:Button
+                x:Name="_diagnosticsButton"
+                Margin="0,0,0,24"
+                HorizontalAlignment="Left"
+                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsButton"
+                Click="DiagnosticsButton_Click"
+                Content="{x:Static resources:Resource.NetworkAccelerationPage_RunDiagnostics}" />
+
+            <Expander
+                Margin="0,0,0,8"
+                AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander"
+                Header="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}"
+                IsExpanded="False">
+                <StackPanel Margin="0,12,0,0">
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        x:Name="_modeText"
+                        Margin="0,12,0,0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock
+                        x:Name="_portText"
+                        Margin="0,4,0,0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </wpfui:DynamicScrollViewer>
+</Page>

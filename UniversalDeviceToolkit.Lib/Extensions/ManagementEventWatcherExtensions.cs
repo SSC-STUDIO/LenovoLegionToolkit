@@ -34,6 +34,22 @@ public static class ManagementEventWatcherExtensions
         await startTask.ConfigureAwait(false);
     }
 
-    public static void StartWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 2500) =>
-        StartAsyncWithTimeout(watcher, timeoutMs).GetAwaiter().GetResult();
+    public static void StartWithTimeout(this ManagementEventWatcher watcher, int timeoutMs = 2500)
+    {
+        var startTask = Task.Run(() => watcher.Start());
+        if (!startTask.Wait(timeoutMs))
+        {
+            try { watcher.Dispose(); }
+            catch (ManagementException) { }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI event watcher start timed out after {timeoutMs}ms.");
+            throw new TimeoutException($"WMI event watcher start timed out after {timeoutMs}ms.");
+        }
+        if (startTask.IsFaulted)
+        {
+            var ex = startTask.Exception?.InnerException ?? (Exception?)startTask.Exception
+                ?? new InvalidOperationException("WMI event watcher start failed.");
+            global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex).Throw();
+        }
+    }
 }

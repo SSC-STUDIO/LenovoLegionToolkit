@@ -738,6 +738,9 @@ CPU/GPU 性能。
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>系统优化</value>
   </data>
+  <data name="MainWindow_NavigationItem_NetworkAcceleration" xml:space="preserve">
+    <value>网络与加速</value>
+  </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>设置</value>
   </data>
@@ -3877,6 +3880,36 @@ Fn 将会暂时解除锁定。</value>
   <data name="SettingsPage_Osd_Title" xml:space="preserve">
     <value>启用 OSD</value>
   </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>设置备份</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>将应用设置导出或导入为带版本的归档。导入前会先创建回滚备份。</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>设置已导出</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>设置备份已成功保存。</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>导出失败</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>无法导出设置，请查看日志了解详情。</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>设置已导入</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>已从备份恢复设置。若部分值未刷新，请重启应用。</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>导入失败</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>无法导入设置。已保留或从回滚备份恢复先前设置。</value>
+  </data>
   <data name="Watt" xml:space="preserve">
     <value>瓦</value>
   </data>
@@ -3939,5 +3972,47 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
     <value>请等待当前优化操作完成。</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>网络与加速</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>可选的本机加速。默认关闭 — 启动时不会自动开启代理、Hosts 或证书。</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>关闭（默认）</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>诊断</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>运行快速检查。第一阶段仅报告配置；完整连通性测试稍后加入。</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>运行诊断</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>诊断失败</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>高级</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>模式：系统代理、Hosts（UDT 标记块）或仅诊断。工作进程仅监听 127.0.0.1 / ::1，并通过命名管道 IPC 通信。</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>模式</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>监听端口</value>
   </data>
 </root>

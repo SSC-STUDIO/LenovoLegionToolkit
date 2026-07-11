@@ -134,9 +134,9 @@ public static class LocalizationHelper
     }
 
     public static Task SetLanguageAsync(bool interactive = false) =>
-        SetLanguageAsync(interactive, null);
+        SetLanguageAsync(interactive, null, allowOfflineEnglish: false);
 
-    public static async Task SetLanguageAsync(bool interactive, LanguagePackManager? languagePackManager)
+    public static async Task<LanguageGateOutcome> SetLanguageAsync(bool interactive, LanguagePackManager? languagePackManager, bool allowOfflineEnglish = false)
     {
         var savedCultureInfo = await GetLanguageFromFile();
         CultureInfo? cultureInfo = savedCultureInfo;
@@ -146,21 +146,39 @@ public static class LocalizationHelper
         if (showLanguageSelector)
         {
             var preferred = GetPreferredStartupLanguage(savedCultureInfo);
-
-            var window = languagePackManager is null
-                ? new LanguageSelectorWindow(Languages, preferred)
-                : new LanguageSelectorWindow(Languages, preferred, languagePackManager);
+            var manager = languagePackManager ?? new LanguagePackManager(new LenovoLegionToolkit.Lib.ResourcesCatalog.OnlineResourceCatalogClient(new LenovoLegionToolkit.Lib.HttpClientFactory()));
+            var window = new LanguageSelectorWindow(Languages, preferred, manager, allowOfflineEnglish);
             ApplyStartupTheme(window);
             window.ShowDialog();
-            cultureInfo = await window.ShouldContinue;
 
-            if (cultureInfo is not null)
-                await SaveLanguageToFileAsync(cultureInfo);
+            var outcome = await window.GateOutcome;
+            if (outcome == LanguageGateOutcome.Exit)
+                return LanguageGateOutcome.Exit;
+
+            cultureInfo = outcome == LanguageGateOutcome.ContinueEnglish
+                ? DefaultLanguage
+                : window.SelectedCulture ?? DefaultLanguage;
+
+            await SaveLanguageToFileAsync(cultureInfo);
+            ClearTemporaryStartupMainWindow(window);
         }
 
         cultureInfo ??= await GetLanguageAsync();
-
         SetLanguageInternal(cultureInfo);
+        return LanguageGateOutcome.Continue;
+    }
+
+    private static void ClearTemporaryStartupMainWindow(Window languageWindow)
+    {
+        try
+        {
+            if (ReferenceEquals(Application.Current?.MainWindow, languageWindow))
+                Application.Current.MainWindow = null;
+        }
+        catch
+        {
+            // best-effort
+        }
     }
 
     private static bool IsDeviceSetupComplete()

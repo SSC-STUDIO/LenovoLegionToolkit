@@ -203,6 +203,15 @@
                         PageTag="windowsOptimization"
                         PageType="{x:Type pages:WindowsOptimizationPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" />
+                    <custom:NavigationItem
+                        x:Name="_networkAccelerationItem"
+                        AutomationProperties.AccessKey="N"
+                        AutomationProperties.AutomationId="NetworkAccelerationNavItem"
+                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_NetworkAcceleration}"
+                        Icon="Globe24"
+                        PageTag="networkAcceleration"
+                        PageType="{x:Type pages:NetworkAccelerationPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_NetworkAcceleration}" />
                 </custom:NavigationStore.Items>
 
                 <custom:NavigationStore.Footer>
@@ -284,26 +293,29 @@
             x:Name="_statusNotificationStack"
             Grid.Row="1"
             Grid.RowSpan="5"
-            Margin="18,0,0,18"
-            HorizontalAlignment="Left"
+            Margin="0,0,18,18"
+            HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Panel.ZIndex="100">
             <wpfui:SnackbarPresenter
                 x:Name="_snackbarPresenter"
                 Margin="0,0,0,10"
-                HorizontalAlignment="Left" />
+                HorizontalAlignment="Right" />
             <shell:AppStatusBanner
                 x:Name="_vantageIndicator"
+                IsPersistent="True"
                 Message="{x:Static resources:Resource.MainWindows_VantageRunning}"
                 Severity="Warning" />
 
             <shell:AppStatusBanner
                 x:Name="_legionZoneIndicator"
+                IsPersistent="True"
                 Message="{x:Static resources:Resource.MainWindow_LegionZoneRunning}"
                 Severity="Warning" />
 
             <shell:AppStatusBanner
                 x:Name="_fnKeysIndicator"
+                IsPersistent="True"
                 Message="{x:Static resources:Resource.MainWindows_FnKeysRunning}"
                 Severity="Warning" />
 
@@ -311,6 +323,7 @@
                 x:Name="_updateIndicator"
                 Cursor="Hand"
                 Focusable="True"
+                IsPersistent="True"
                 KeyDown="UpdateIndicator_KeyDown"
                 Message="{x:Static resources:Resource.MainWindow_UpdateAvailable}"
                 Severity="Success"

@@ -49,13 +49,11 @@ public partial class GodModeSettingsWindow
             _ => null
         };
 
-        _snackBar = new Snackbar(_snackBarPresenter)
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            IsCloseButtonEnabled = true,
-            Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 },
-            Timeout = TimeSpan.FromSeconds(5)
-        };
+        _snackBar = NotificationToastFactory.Create(_snackBarPresenter, HorizontalAlignment.Center);
+        _snackBar.IsCloseButtonEnabled = true;
+        _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
+        _snackBar.Appearance = ControlAppearance.Danger;
+        _snackBar.Timeout = TimeSpan.FromSeconds(5);
 
         IsVisibleChanged += GodModeSettingsWindow_IsVisibleChanged;
     }

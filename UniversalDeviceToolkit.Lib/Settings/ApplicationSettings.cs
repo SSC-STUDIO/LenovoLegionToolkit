@@ -24,6 +24,12 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ACAdapter { get; set; }
         public bool SmartKey { get; set; }
         public bool AutomationNotification { get; set; } = true;
+
+        /// <summary>
+        /// Optional per-category policies (enable / persist / severity).
+        /// When absent for a key, legacy bool toggles above remain authoritative for enable.
+        /// </summary>
+        public Dictionary<string, NotificationTypePolicy> TypePolicies { get; set; } = NotificationTypePolicyStore.CreateDefaults();
     }
 
     public class ApplicationSettingsStore
@@ -40,7 +46,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool MinimizeOnClose { get; set; }
         public WindowSize? WindowSize { get; set; }
         public bool DontShowNotifications { get; set; }
-        public NotificationPosition NotificationPosition { get; set; } = NotificationPosition.BottomCenter;
+        public NotificationPosition NotificationPosition { get; set; } = NotificationPosition.BottomRight;
         public NotificationDuration NotificationDuration { get; set; } = NotificationDuration.Normal;
         public bool NotificationAlwaysOnTop { get; set; }
         public bool NotificationOnAllScreens { get; set; }
@@ -78,6 +84,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "automation", true },
             { "macro", true },
             { "windowsOptimization", true },
+            { "networkAcceleration", true },
             { "pluginExtensions", true },
 
             { "about", true }
@@ -116,6 +123,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         store.PowerPlans ??= [];
         store.PowerModes ??= [];
         store.Notifications ??= new();
+        store.Notifications.TypePolicies ??= NotificationTypePolicyStore.CreateDefaults();
         store.ExcludedRefreshRates ??= [];
         store.SmartKeySinglePressActionList ??= [];
         store.SmartKeyDoublePressActionList ??= [];

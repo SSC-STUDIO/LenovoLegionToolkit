@@ -103,10 +103,13 @@ public static class SnackbarHelper
 
     private static void SetupSnackbarAppearance(Snackbar snackBar, string title, string? message, SnackbarType type)
     {
+        // Appearance only drives icon accent color; glass surface comes from NotificationToast style.
         snackBar.Appearance = type switch
         {
             SnackbarType.Warning => ControlAppearance.Caution,
             SnackbarType.Error => ControlAppearance.Danger,
+            SnackbarType.Info => ControlAppearance.Info,
+            SnackbarType.Success => ControlAppearance.Success,
             _ => ControlAppearance.Secondary
         };
         snackBar.Icon = type switch
@@ -126,6 +129,9 @@ public static class SnackbarHelper
             SnackbarType.Success => false,
             _ => true
         };
+        System.Windows.Automation.AutomationProperties.SetName(
+            snackBar,
+            string.IsNullOrWhiteSpace(message) ? title : $"{title}. {message}");
     }
 
     private static void SetTitleAndMessage(Snackbar snackBar, string title, string? message)

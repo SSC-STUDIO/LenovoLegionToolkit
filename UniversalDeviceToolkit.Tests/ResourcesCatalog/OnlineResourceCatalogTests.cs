@@ -38,10 +38,13 @@ public sealed class OnlineResourceCatalogTests
                               "languages": [
                                 {
                                   "culture": "zh-hans",
+                                  "parent": "zh",
                                   "displayName": "Chinese (Simplified)",
                                   "url": "https://example.com/resources/3.8.0/languages/zh-hans.zip",
                                   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                                  "size": 1024
+                                  "size": 1024,
+                                  "resourceVersion": "1.0.0",
+                                  "minAppVersion": "3.8.0"
                                 }
                               ],
                               "devicePacks": [
@@ -77,6 +80,9 @@ public sealed class OnlineResourceCatalogTests
         catalog.Downloads.Cli.CrossPlatform.Sha256.Should().HaveLength(64);
         catalog.Languages.Should().ContainSingle(language =>
             language.Culture == "zh-hans" &&
+            language.Parent == "zh" &&
+            language.ResourceVersion == "1.0.0" &&
+            language.MinAppVersion == "3.8.0" &&
             language.Sha256.Length == 64 &&
             language.Size == 1024);
         catalog.DevicePacks.Should().ContainSingle(devicePack =>

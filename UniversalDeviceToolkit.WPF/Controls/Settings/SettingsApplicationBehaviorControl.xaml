@@ -146,6 +146,31 @@
                         Click="OsdToggle_Click" />
                 </Grid>
             </custom:CardAction>
+
+            <custom:CardControl Margin="0,0,0,8">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.SettingsPage_SettingsBackup_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_SettingsBackup_Message}" />
+                </custom:CardControl.Header>
+                <StackPanel
+                    Margin="0,0,0,8"
+                    Orientation="Horizontal">
+                    <wpfui:Button
+                        x:Name="_exportSettingsButton"
+                        MinWidth="120"
+                        Margin="0,0,8,0"
+                        Appearance="Secondary"
+                        Click="ExportSettingsButton_Click"
+                        Content="{x:Static resources:Resource.Export}" />
+                    <wpfui:Button
+                        x:Name="_importSettingsButton"
+                        MinWidth="120"
+                        Appearance="Secondary"
+                        Click="ImportSettingsButton_Click"
+                        Content="{x:Static resources:Resource.Import}" />
+                </StackPanel>
+            </custom:CardControl>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

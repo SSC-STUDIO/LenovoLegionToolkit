@@ -46,6 +46,8 @@ public partial class CreateAutomationPipelineWindow
         new WiFiDisconnectedAutomationPipelineTrigger(),
         new TimeAutomationPipelineTrigger(false, false, TimeExtensions.UtcNow, Enum.GetValues<DayOfWeek>()),
         new PeriodicAutomationPipelineTrigger(TimeSpan.FromMinutes(1)),
+        new HardwareSensorAutomationPipelineTrigger(HardwareSensorMetric.CpuTemperature, HardwareSensorComparison.GreaterThanOrEqual, 90f, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(1)),
+        new BatteryPercentageAutomationPipelineTrigger(BatteryPercentageComparison.BelowOrEqual, 20, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(5), BatteryChargeFilter.Any),
         new OnStartupAutomationPipelineTrigger(),
         new OnResumeAutomationPipelineTrigger()
     ];

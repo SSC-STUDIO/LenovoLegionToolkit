@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Shell;
@@ -26,6 +25,12 @@ public partial class AppStatusBanner : UserControl
         typeof(AppStatusBanner),
         new PropertyMetadata(string.Empty));
 
+    public static readonly DependencyProperty IsPersistentProperty = DependencyProperty.Register(
+        nameof(IsPersistent),
+        typeof(bool),
+        typeof(AppStatusBanner),
+        new PropertyMetadata(true));
+
     public AppStatusBannerSeverity Severity
     {
         get => (AppStatusBannerSeverity)GetValue(SeverityProperty);
@@ -38,10 +43,19 @@ public partial class AppStatusBanner : UserControl
         set => SetValue(MessageProperty, value);
     }
 
+    public bool IsPersistent
+    {
+        get => (bool)GetValue(IsPersistentProperty);
+        set => SetValue(IsPersistentProperty, value);
+    }
+
+    public event RoutedEventHandler? Closed;
+
     public AppStatusBanner()
     {
         InitializeComponent();
         ApplySeverity();
+        IsVisibleChanged += (_, _) => RaiseClosedIfHidden();
     }
 
     private static void OnSeverityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -68,12 +82,27 @@ public partial class AppStatusBanner : UserControl
     private void CloseButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
-        Visibility = Visibility.Collapsed;
+        Hide();
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         e.Handled = true;
+        Hide();
+    }
+
+    public void Hide()
+    {
+        if (Visibility == Visibility.Collapsed)
+            return;
+
         Visibility = Visibility.Collapsed;
+        Closed?.Invoke(this, new RoutedEventArgs());
+    }
+
+    private void RaiseClosedIfHidden()
+    {
+        if (Visibility == Visibility.Collapsed)
+            Closed?.Invoke(this, new RoutedEventArgs());
     }
 }

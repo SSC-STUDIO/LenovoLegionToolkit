@@ -1,0 +1,107 @@
+﻿using System;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text.Json;
+using LenovoLegionToolkit.Lib.Utils;
+
+namespace LenovoLegionToolkit.Lib.Settings;
+
+public sealed class SettingsBackupService
+{
+    public const int CurrentFormatVersion = 1;
+    private const string ManifestName = "udt-settings-backup.json";
+
+    public string Export(string destinationFile)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(destinationFile);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(destinationFile))!);
+        if (File.Exists(destinationFile)) File.Delete(destinationFile);
+
+        using var archive = ZipFile.Open(destinationFile, ZipArchiveMode.Create);
+        var files = Directory.Exists(Folders.AppData)
+            ? Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly).OrderBy(Path.GetFileName)
+            : Enumerable.Empty<string>();
+        foreach (var file in files)
+            archive.CreateEntryFromFile(file, $"settings/{Path.GetFileName(file)}", CompressionLevel.Optimal);
+
+        var entry = archive.CreateEntry(ManifestName);
+        using var writer = new StreamWriter(entry.Open());
+        writer.Write(JsonSerializer.Serialize(new Manifest(CurrentFormatVersion, DateTimeOffset.UtcNow)));
+        return destinationFile;
+    }
+
+    public string Import(string sourceFile)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourceFile);
+        using var archive = ZipFile.OpenRead(sourceFile);
+        var manifestEntry = archive.GetEntry(ManifestName) ?? throw new InvalidDataException("Missing UDT settings backup manifest.");
+        Manifest manifest;
+        using (var reader = new StreamReader(manifestEntry.Open()))
+            manifest = JsonSerializer.Deserialize<Manifest>(reader.ReadToEnd()) ?? throw new InvalidDataException("Invalid UDT settings backup manifest.");
+        if (manifest.FormatVersion > CurrentFormatVersion)
+            throw new NotSupportedException($"Backup format {manifest.FormatVersion} is newer than supported format {CurrentFormatVersion}.");
+
+        var settingsEntries = archive.Entries
+            .Where(entry => entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
+                            && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        foreach (var entry in settingsEntries)
+        {
+            if (!PathSecurity.IsValidFileName(entry.Name))
+                throw new InvalidDataException($"Unsafe settings entry: {entry.FullName}");
+        }
+
+        var backupsDir = Path.Combine(Folders.AppData, "Backups");
+        Directory.CreateDirectory(backupsDir);
+        var rollback = Path.Combine(backupsDir, $"pre-import-{DateTime.UtcNow:yyyyMMdd-HHmmss}.zip");
+        Export(rollback);
+
+        var staging = Path.Combine(backupsDir, $"import-staging-{Guid.NewGuid():N}");
+        try
+        {
+            Directory.CreateDirectory(staging);
+            foreach (var entry in settingsEntries)
+                entry.ExtractToFile(Path.Combine(staging, entry.Name), overwrite: true);
+
+            Directory.CreateDirectory(Folders.AppData);
+            foreach (var file in Directory.EnumerateFiles(staging, "*.json", SearchOption.TopDirectoryOnly))
+                File.Copy(file, Path.Combine(Folders.AppData, Path.GetFileName(file)), overwrite: true);
+
+            return rollback;
+        }
+        catch
+        {
+            Restore(rollback);
+            throw;
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(staging))
+                    Directory.Delete(staging, recursive: true);
+            }
+            catch
+            {
+                // best-effort cleanup
+            }
+        }
+    }
+
+    private static void Restore(string backupFile)
+    {
+        using var archive = ZipFile.OpenRead(backupFile);
+        Directory.CreateDirectory(Folders.AppData);
+        foreach (var entry in archive.Entries.Where(entry =>
+                     entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
+                     && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
+        {
+            if (!PathSecurity.IsValidFileName(entry.Name))
+                continue;
+            entry.ExtractToFile(Path.Combine(Folders.AppData, entry.Name), overwrite: true);
+        }
+    }
+
+    private sealed record Manifest(int FormatVersion, DateTimeOffset CreatedAtUtc);
+}

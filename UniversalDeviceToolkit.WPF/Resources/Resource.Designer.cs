@@ -3852,6 +3852,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Network &amp; acceleration.
+        /// </summary>
+        public static string MainWindow_NavigationItem_NetworkAcceleration {
+            get {
+                return ResourceManager.GetString("MainWindow_NavigationItem_NetworkAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Update available!.
         /// </summary>
         public static string MainWindow_UpdateAvailable {
@@ -11119,6 +11128,62 @@ namespace UniversalDeviceToolkit.WPF.Resources {
             }
         }
         /// <summary>
+        ///   Looks up a localized string similar to Settings backup.
+        /// </summary>
+        public static string SettingsPage_SettingsBackup_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_Title", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Export or import application settings as a versioned archive. Import creates a rollback backup first..
+        /// </summary>
+        public static string SettingsPage_SettingsBackup_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_Message", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ExportSuccess_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ExportSuccess_Title", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ExportSuccess_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ExportSuccess_Message", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ExportError_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ExportError_Title", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ExportError_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ExportError_Message", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ImportSuccess_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ImportSuccess_Title", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ImportSuccess_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ImportSuccess_Message", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ImportError_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ImportError_Title", resourceCulture);
+            }
+        }
+        public static string SettingsPage_SettingsBackup_ImportError_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_SettingsBackup_ImportError_Message", resourceCulture);
+            }
+        }
+        /// <summary>
         ///   Looks up a localized string similar to W.
         /// </summary>
         public static string Watt {
@@ -11147,5 +11212,20 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string LargeFilesWindow_Header_Path { get { return ResourceManager.GetString("LargeFilesWindow_Header_Path", resourceCulture); } }
         public static string LargeFilesWindow_Confirm { get { return ResourceManager.GetString("LargeFilesWindow_Confirm", resourceCulture); } }
         public static string LargeFilesWindow_SelectedFiles { get { return ResourceManager.GetString("LargeFilesWindow_SelectedFiles", resourceCulture); } }
+
+        public static string NetworkAccelerationPage_Title { get { return ResourceManager.GetString("NetworkAccelerationPage_Title", resourceCulture); } }
+        public static string NetworkAccelerationPage_Subtitle { get { return ResourceManager.GetString("NetworkAccelerationPage_Subtitle", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusHeading { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusHeading", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusOff { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusOff", resourceCulture); } }
+        public static string NetworkAccelerationPage_Start { get { return ResourceManager.GetString("NetworkAccelerationPage_Start", resourceCulture); } }
+        public static string NetworkAccelerationPage_Stop { get { return ResourceManager.GetString("NetworkAccelerationPage_Stop", resourceCulture); } }
+        public static string NetworkAccelerationPage_DiagnosticsHeading { get { return ResourceManager.GetString("NetworkAccelerationPage_DiagnosticsHeading", resourceCulture); } }
+        public static string NetworkAccelerationPage_DiagnosticsPlaceholder { get { return ResourceManager.GetString("NetworkAccelerationPage_DiagnosticsPlaceholder", resourceCulture); } }
+        public static string NetworkAccelerationPage_RunDiagnostics { get { return ResourceManager.GetString("NetworkAccelerationPage_RunDiagnostics", resourceCulture); } }
+        public static string NetworkAccelerationPage_DiagnosticsFailed { get { return ResourceManager.GetString("NetworkAccelerationPage_DiagnosticsFailed", resourceCulture); } }
+        public static string NetworkAccelerationPage_AdvancedHeading { get { return ResourceManager.GetString("NetworkAccelerationPage_AdvancedHeading", resourceCulture); } }
+        public static string NetworkAccelerationPage_AdvancedBody { get { return ResourceManager.GetString("NetworkAccelerationPage_AdvancedBody", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeLabel { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeLabel", resourceCulture); } }
+        public static string NetworkAccelerationPage_PortLabel { get { return ResourceManager.GetString("NetworkAccelerationPage_PortLabel", resourceCulture); } }
     }
 }

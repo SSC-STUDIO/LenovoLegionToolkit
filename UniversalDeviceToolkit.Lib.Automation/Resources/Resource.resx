@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -256,5 +256,8 @@
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
     <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="OrAutomationPipelineTrigger_Separator" xml:space="preserve">
+    <value>or</value>
   </data>
 </root>

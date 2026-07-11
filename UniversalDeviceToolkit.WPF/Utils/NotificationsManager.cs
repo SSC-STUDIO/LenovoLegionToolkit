@@ -64,8 +64,15 @@ public class NotificationsManager : IDisposable
             return;
         }
 
+        if (!IsNotificationTypeEnabled(notification.Type))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Notification type {notification.Type} is disabled by policy.");
+            return;
+        }
+
         // Map priority: High (2) -> 0, Normal (1) -> 1, Low (0) -> 2
-        var priorityValue = 2 - (int)notification.Priority;
+        var priorityValue = 2 - (int)ResolveSeverity(notification);
         _queue.Enqueue(notification, priorityValue);
 
         if (_isShowing)
@@ -103,50 +110,7 @@ public class NotificationsManager : IDisposable
             return;
         }
 
-        var allow = notification.Type switch
-        {
-            NotificationType.ACAdapterConnected => _settings.Store.Notifications.ACAdapter,
-            NotificationType.ACAdapterConnectedLowWattage => _settings.Store.Notifications.ACAdapter,
-            NotificationType.ACAdapterDisconnected => _settings.Store.Notifications.ACAdapter,
-            NotificationType.AutomationNotification => _settings.Store.Notifications.AutomationNotification,
-            NotificationType.CapsLockOn => _settings.Store.Notifications.CapsNumLock,
-            NotificationType.CapsLockOff => _settings.Store.Notifications.CapsNumLock,
-            NotificationType.CameraOn => _settings.Store.Notifications.CameraLock,
-            NotificationType.CameraOff => _settings.Store.Notifications.CameraLock,
-            NotificationType.FnLockOn => _settings.Store.Notifications.FnLock,
-            NotificationType.FnLockOff => _settings.Store.Notifications.FnLock,
-            NotificationType.MicrophoneOn => _settings.Store.Notifications.Microphone,
-            NotificationType.MicrophoneOff => _settings.Store.Notifications.Microphone,
-            NotificationType.NumLockOn => _settings.Store.Notifications.CapsNumLock,
-            NotificationType.NumLockOff => _settings.Store.Notifications.CapsNumLock,
-            NotificationType.PanelLogoLightingOn => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.PanelLogoLightingOff => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.PortLightingOn => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.PortLightingOff => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.PowerModeQuiet => _settings.Store.Notifications.PowerMode,
-            NotificationType.PowerModeBalance => _settings.Store.Notifications.PowerMode,
-            NotificationType.PowerModePerformance => _settings.Store.Notifications.PowerMode,
-            NotificationType.PowerModeExtreme => _settings.Store.Notifications.PowerMode,
-            NotificationType.PowerModeGodMode => _settings.Store.Notifications.PowerMode,
-            NotificationType.ITSModeAuto => _settings.Store.Notifications.PowerMode,
-            NotificationType.ITSModeCool => _settings.Store.Notifications.PowerMode,
-            NotificationType.ITSModePerformance => _settings.Store.Notifications.PowerMode,
-            NotificationType.ITSModeGeek => _settings.Store.Notifications.PowerMode,
-            NotificationType.RefreshRate => _settings.Store.Notifications.RefreshRate,
-            NotificationType.RGBKeyboardBacklightOff => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.RGBKeyboardBacklightChanged => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.SmartKeyDoublePress => _settings.Store.Notifications.SmartKey,
-            NotificationType.SmartKeySinglePress => _settings.Store.Notifications.SmartKey,
-            NotificationType.SpectrumBacklightChanged => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.SpectrumBacklightOff => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.SpectrumBacklightPresetChanged => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.TouchpadOn => _settings.Store.Notifications.TouchpadLock,
-            NotificationType.TouchpadOff => _settings.Store.Notifications.TouchpadLock,
-            NotificationType.UpdateAvailable => _settings.Store.Notifications.UpdateAvailable,
-            NotificationType.WhiteKeyboardBacklightOff => _settings.Store.Notifications.KeyboardBacklight,
-            NotificationType.WhiteKeyboardBacklightChanged => _settings.Store.Notifications.KeyboardBacklight,
-            _ => throw new ArgumentException(nameof(notification.Type))
-        };
+        var allow = IsNotificationTypeEnabled(notification.Type);
 
         if (!allow)
         {
@@ -155,6 +119,8 @@ public class NotificationsManager : IDisposable
 
             return;
         }
+
+        // Severity already applied when enqueueing; keep ProcessNotification focused on display.
 
         var symbol = notification.Type switch
         {
@@ -346,6 +312,67 @@ public class NotificationsManager : IDisposable
         }
 
         await tcs.Task;
+    }
+
+    private bool IsNotificationTypeEnabled(NotificationType type)
+    {
+        var (key, legacyEnabled) = ResolveNotificationCategory(type);
+        var policy = NotificationTypePolicyStore.GetOrDefault(
+            _settings.Store.Notifications.TypePolicies,
+            key,
+            legacyEnabled);
+        return policy.Enabled && legacyEnabled;
+    }
+
+    private NotificationPriority ResolveSeverity(NotificationMessage notification)
+    {
+        var (key, legacyEnabled) = ResolveNotificationCategory(notification.Type);
+        var policy = NotificationTypePolicyStore.GetOrDefault(
+            _settings.Store.Notifications.TypePolicies,
+            key,
+            legacyEnabled);
+        return notification.Priority == NotificationPriority.High
+            ? NotificationPriority.High
+            : policy.Severity;
+    }
+
+    private (string Key, bool LegacyEnabled) ResolveNotificationCategory(NotificationType type)
+    {
+        var n = _settings.Store.Notifications;
+        return type switch
+        {
+            NotificationType.ACAdapterConnected or NotificationType.ACAdapterConnectedLowWattage or NotificationType.ACAdapterDisconnected
+                => ("ACAdapter", n.ACAdapter),
+            NotificationType.AutomationNotification
+                => ("AutomationNotification", n.AutomationNotification),
+            NotificationType.CapsLockOn or NotificationType.CapsLockOff or NotificationType.NumLockOn or NotificationType.NumLockOff
+                => ("CapsNumLock", n.CapsNumLock),
+            NotificationType.CameraOn or NotificationType.CameraOff
+                => ("CameraLock", n.CameraLock),
+            NotificationType.FnLockOn or NotificationType.FnLockOff
+                => ("FnLock", n.FnLock),
+            NotificationType.MicrophoneOn or NotificationType.MicrophoneOff
+                => ("Microphone", n.Microphone),
+            NotificationType.PanelLogoLightingOn or NotificationType.PanelLogoLightingOff
+                or NotificationType.PortLightingOn or NotificationType.PortLightingOff
+                or NotificationType.RGBKeyboardBacklightOff or NotificationType.RGBKeyboardBacklightChanged
+                or NotificationType.SpectrumBacklightChanged or NotificationType.SpectrumBacklightOff
+                or NotificationType.SpectrumBacklightPresetChanged
+                or NotificationType.WhiteKeyboardBacklightOff or NotificationType.WhiteKeyboardBacklightChanged
+                => ("KeyboardBacklight", n.KeyboardBacklight),
+            NotificationType.PowerModeQuiet or NotificationType.PowerModeBalance or NotificationType.PowerModePerformance
+                or NotificationType.PowerModeExtreme or NotificationType.PowerModeGodMode
+                or NotificationType.ITSModeAuto or NotificationType.ITSModeCool
+                or NotificationType.ITSModePerformance or NotificationType.ITSModeGeek
+                => ("PowerMode", n.PowerMode),
+            NotificationType.RefreshRate => ("RefreshRate", n.RefreshRate),
+            NotificationType.SmartKeyDoublePress or NotificationType.SmartKeySinglePress
+                => ("SmartKey", n.SmartKey),
+            NotificationType.TouchpadOn or NotificationType.TouchpadOff
+                => ("TouchpadLock", n.TouchpadLock),
+            NotificationType.UpdateAvailable => ("UpdateAvailable", n.UpdateAvailable),
+            _ => throw new ArgumentException(nameof(type))
+        };
     }
 
 private static void UpdateAvailableAction()

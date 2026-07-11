@@ -247,7 +247,9 @@ public partial class AutomationPage
             new TurnOnWiFiAutomationStep(),
             new HybridModeAutomationStep(default),
             new WhiteKeyboardBacklightAutomationStep(default),
-            new WinKeyAutomationStep(default)
+            new WinKeyAutomationStep(default),
+            new ShowMainWindowAutomationStep(),
+            new HideMainWindowAutomationStep()
         };
 
         var supportTasks = steps.Select(async step => new { Step = step, Supported = await step.IsSupportedAsync() });

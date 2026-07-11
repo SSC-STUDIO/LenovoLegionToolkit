@@ -296,6 +296,7 @@ internal static class Program
                      "CardExpander.xaml",
                      "DynamicScrollBar.xaml",
                      "InfoBar.xaml",
+                     "NotificationToast.xaml",
                      "NavigationStore.xaml"
                  })
         {

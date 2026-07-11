@@ -82,7 +82,7 @@
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                CornerRadius="{StaticResource CornerRadiusCompact}"
+                CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="12"
                 MaxHeight="200">
                 <ScrollViewer
@@ -114,33 +114,39 @@
                 HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <wpfui:Button
                     x:Name="_openReportButton"
                     Grid.Column="0"
-                    MinWidth="140"
+                    MinWidth="{StaticResource ButtonMinWidthStandard}"
+                    Height="{StaticResource ButtonHeightStandard}"
                     Appearance="Secondary"
+                    AutomationProperties.Name="{x:Static resources:Resource.CrashReportNotification_OpenReport}"
                     Click="OpenReportButton_Click"
                     Content="{x:Static resources:Resource.CrashReportNotification_OpenReport}" />
 
                 <wpfui:Button
                     x:Name="_deleteReportButton"
                     Grid.Column="2"
-                    MinWidth="140"
+                    MinWidth="{StaticResource ButtonMinWidthStandard}"
+                    Height="{StaticResource ButtonHeightStandard}"
                     Appearance="Secondary"
+                    AutomationProperties.Name="{x:Static resources:Resource.CrashReportNotification_DeleteReport}"
                     Click="DeleteReportButton_Click"
                     Content="{x:Static resources:Resource.CrashReportNotification_DeleteReport}" />
 
                 <wpfui:Button
                     x:Name="_closeButton"
                     Grid.Column="4"
-                    MinWidth="120"
+                    MinWidth="{StaticResource ButtonMinWidthStandard}"
+                    Height="{StaticResource ButtonHeightStandard}"
                     Appearance="Primary"
+                    AutomationProperties.Name="{x:Static resources:Resource.Close}"
                     Click="CloseButton_Click"
                     Content="{x:Static resources:Resource.Close}" />
             </Grid>

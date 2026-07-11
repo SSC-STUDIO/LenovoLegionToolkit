@@ -22,6 +22,9 @@ public sealed class ShippingPayloadGuardTests
         script.Should().Contain("'*.Smoke.*'");
         script.Should().Contain("'*Validation*'");
         script.Should().Contain("'UDT_APPDATA_OVERRIDE'");
+        script.Should().Contain("'x86'");
+        script.Should().Contain("'arm64'");
+        script.Should().Contain("'*.pdb'");
         script.Should().Contain("Test-ContainsBinaryMarker");
         script.Should().Contain("[System.Text.Encoding]::UTF8.GetBytes($Marker)");
         script.Should().Contain("[System.Text.Encoding]::Unicode.GetBytes($Marker)");
@@ -70,6 +73,7 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
         workflow.Should().Contain("ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
+        workflow.Should().Contain("./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
         workflow.Should().Contain("if: ${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}");

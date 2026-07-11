@@ -22,6 +22,7 @@ using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Controls.Shell;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Pages;
 using UniversalDeviceToolkit.WPF.ViewModels;
@@ -34,7 +35,6 @@ using Windows.Win32;
 using Windows.Win32.System.Threading;
 using Wpf.Ui.Controls;
 using Brush = System.Windows.Media.Brush;
-using Color = System.Windows.Media.Color;
 #if !DEBUG
 using System.Reflection;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -50,6 +50,7 @@ public partial class MainWindow
     private const int WmNclbuttonUp = 0x00A2;
     private const int HtClient = 1;
     private const int HtMaxButton = 9;
+    private const int MaxVisibleStatusNotifications = 4;
 
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginManager _pluginManager;
@@ -88,6 +89,7 @@ public partial class MainWindow
 
         InitializeComponent();
         _snackbar = CreateMainSnackbar(_snackbarPresenter);
+        WireStatusNotificationStack();
 
         Closing += MainWindow_Closing;
         Closed += MainWindow_Closed;
@@ -119,27 +121,29 @@ public partial class MainWindow
 
         // Subscribe to plugin state changed events
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+
+        MessagingCenter.Subscribe<MainWindowVisibilityMessage>(this, message =>
+            Dispatcher.Invoke(() => ApplyMainWindowVisibility(message.Action)));
     }
 
-    private static Snackbar CreateMainSnackbar(SnackbarPresenter presenter)
+    private void ApplyMainWindowVisibility(MainWindowVisibilityAction action)
     {
-        return new Snackbar(presenter)
+        switch (action)
         {
-            MinWidth = 300,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            IsCloseButtonEnabled = false,
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
-            Effect = new System.Windows.Media.Effects.DropShadowEffect
-            {
-                BlurRadius = 15,
-                Direction = 270,
-                Opacity = 0.4,
-                ShadowDepth = 3,
-                Color = (Color)Application.Current.FindResource("SnackbarShadowColor")
-            },
-            Content = CreateSnackbarContent()
-        };
+            case MainWindowVisibilityAction.Show:
+                Show();
+                if (WindowState == WindowState.Minimized)
+                    WindowState = WindowState.Normal;
+                Activate();
+                break;
+            case MainWindowVisibilityAction.Hide:
+                SendToTray();
+                break;
+        }
     }
+
+    private static Snackbar CreateMainSnackbar(SnackbarPresenter presenter) =>
+        NotificationToastFactory.Create(presenter);
 
     private void NavigationSplitter_DragDelta(object sender, DragDeltaEventArgs e)
     {
@@ -208,37 +212,6 @@ public partial class MainWindow
     {
         return Application.Current.TryFindResource(key) is double width ? width : fallback;
     }
-    private static StackPanel CreateSnackbarContent()
-    {
-        var snackbarTitle = new TextBlock
-        {
-            Name = "_snackbarTitle",
-            VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 16,
-            FontWeight = FontWeights.Medium,
-            TextWrapping = TextWrapping.WrapWithOverflow
-        };
-        snackbarTitle.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-
-        var snackbarMessage = new TextBlock
-        {
-            Name = "_snackbarMessage",
-            Margin = new Thickness(0, 6, 0, 0),
-            FontSize = 14,
-            TextWrapping = TextWrapping.WrapWithOverflow
-        };
-        snackbarMessage.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
-
-        var panel = new StackPanel
-        {
-            Margin = new Thickness(4),
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        panel.Children.Add(snackbarTitle);
-        panel.Children.Add(snackbarMessage);
-        return panel;
-    }
-
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // When page navigation is complete, update window title to: App Name - Page Title
@@ -577,17 +550,47 @@ public partial class MainWindow
 
     private void VantageDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.BeginInvoke(() => _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() =>
+        {
+            _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            EnforceStatusNotificationLimit();
+        });
     }
 
     private void LegionZoneDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.BeginInvoke(() => _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() =>
+        {
+            _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            EnforceStatusNotificationLimit();
+        });
     }
 
     private void FnKeysDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
     {
-        Dispatcher.BeginInvoke(() => _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed);
+        Dispatcher.BeginInvoke(() =>
+        {
+            _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            EnforceStatusNotificationLimit();
+        });
+    }
+
+    private void WireStatusNotificationStack()
+    {
+        foreach (var banner in _statusNotificationStack.Children.OfType<AppStatusBanner>())
+            banner.IsVisibleChanged += (_, _) => EnforceStatusNotificationLimit();
+    }
+
+    private void EnforceStatusNotificationLimit()
+    {
+        var banners = _statusNotificationStack.Children.OfType<AppStatusBanner>().ToList();
+        var visible = banners.Where(banner => banner.Visibility == Visibility.Visible).ToList();
+        if (visible.Count <= MaxVisibleStatusNotifications)
+            return;
+
+        var overflow = visible.Count - MaxVisibleStatusNotifications;
+        foreach (var banner in visible.Where(banner => !banner.IsPersistent).Take(overflow))
+            banner.Visibility = Visibility.Collapsed;
     }
 
     public async Task CheckForUpdates(bool manualCheck = false)
@@ -622,6 +625,7 @@ public partial class MainWindow
                 _updateIndicator.Message =
                     string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
                 _updateIndicator.Visibility = Visibility.Visible;
+                EnforceStatusNotificationLimit();
 
                 if (WindowState == WindowState.Minimized)
                     MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
@@ -633,6 +637,7 @@ public partial class MainWindow
                 Log.Instance.Trace($"Check for updates failed.", ex);
             
             _updateIndicator.Visibility = Visibility.Collapsed;
+            EnforceStatusNotificationLimit();
         }
     }
 
@@ -796,6 +801,7 @@ public partial class MainWindow
         SetNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
         SetNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
         SetNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
+        SetNavigationItemVisibility(_networkAccelerationItem, "networkAcceleration", visibilitySettings);
 
         SetNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
     }

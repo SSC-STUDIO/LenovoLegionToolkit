@@ -71,6 +71,9 @@ public sealed record OnlineLanguageResource
     [JsonPropertyName("culture")]
     public string Culture { get; init; } = string.Empty;
 
+    [JsonPropertyName("parent")]
+    public string? Parent { get; init; }
+
     [JsonPropertyName("displayName")]
     public string DisplayName { get; init; } = string.Empty;
 
@@ -82,6 +85,12 @@ public sealed record OnlineLanguageResource
 
     [JsonPropertyName("size")]
     public long Size { get; init; }
+
+    [JsonPropertyName("resourceVersion")]
+    public string? ResourceVersion { get; init; }
+
+    [JsonPropertyName("minAppVersion")]
+    public string? MinAppVersion { get; init; }
 }
 
 public sealed record OnlineDevicePackResource

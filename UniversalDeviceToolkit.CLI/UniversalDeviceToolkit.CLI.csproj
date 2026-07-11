@@ -12,11 +12,8 @@
         <NeutralLanguage>en</NeutralLanguage>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>portable</DebugType>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DebugType>embedded</DebugType>
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="System.CommandLine" />

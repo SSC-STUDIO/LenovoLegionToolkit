@@ -792,6 +792,9 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>System optimization</value>
   </data>
+  <data name="MainWindow_NavigationItem_NetworkAcceleration" xml:space="preserve">
+    <value>Network &amp; acceleration</value>
+  </data>
 <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -3946,6 +3949,36 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="SettingsPage_Osd_Title" xml:space="preserve">
     <value>Enable OSD</value>
   </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Settings backup</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Export or import application settings as a versioned archive. Import creates a rollback backup first.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Settings exported</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Settings backup was saved successfully.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Export failed</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Could not export settings. Check the log for details.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Settings imported</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Settings were restored from the backup. Restart the app if some values do not refresh.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Import failed</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Could not import settings. Previous settings were kept or restored from rollback.</value>
+  </data>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
@@ -3984,5 +4017,47 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>Plugin {0} was installed, but it does not expose a user-facing entry point. It may only provide background services or manifest data.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Network &amp; acceleration</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Optional local acceleration. Off by default — never auto-starts proxy, hosts, or certificates on launch.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Off (default)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Diagnostics</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Run a quick check. Phase 1 reports configuration only; full connectivity tests arrive later.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Run diagnostics</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Diagnostics failed</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Modes: System proxy, Hosts (UDT-marked block), or Diagnostics only. Worker listens on 127.0.0.1 / ::1 with named-pipe IPC.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Listen port</value>
   </data>
 </root>

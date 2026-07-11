@@ -162,17 +162,16 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 if (!await InitializeSingleInstanceAsync())
                     return 0;
 
-                // CRITICAL: Show the main window as early as possible so the user
-                // sees UI feedback even when subsequent (network-bound) initialization
-                // is slow. Without this, the process appears to hang over RDP for
-                // several seconds before the first window is presented, which also
-                // ties up the dispatcher and makes the whole session feel frozen.
+                // Language gate runs AFTER single-instance + logging, and BEFORE
+                // IoC / plugins / hardware / MainWindow so first paint is either
+                // the language window or (after gate) the real MainWindow.
+                if (!await RunLanguageGateAsync())
+                    return 0;
+
                 await InitializeIoCAsync();
                 await CreateMainWindowAsync();
                 await ShowMainWindowAsync();
 
-                // Now safe to run the slower operations in the background while
-                // the user can already see and interact with the window.
                 await CheckCompatibilityAsync();
                 await LoadPluginsAsync();
                 await StartBackgroundInitAsync();
@@ -374,16 +373,28 @@ namespace UniversalDeviceToolkit.WPF.Startup
             return true;
         }
 
+        private async Task<bool> RunLanguageGateAsync()
+        {
+            var allowOfflineEnglish = _shouldEnterSafeMode || _flags.SafeStart;
+            var languagePackManager = App.CreateStartupLanguagePackManager(_flags);
+            var outcome = await LocalizationHelper.SetLanguageAsync(true, languagePackManager, allowOfflineEnglish);
+
+            if (outcome == LanguageGateOutcome.Exit)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Language gate exited; shutting down without creating MainWindow.");
+                return false;
+            }
+
+            // Load settings after language is known so theme/render prefs apply to MainWindow.
+            _settings = new ApplicationSettings();
+            return true;
+        }
+
         private async Task CheckCompatibilityAsync()
         {
-            // Set language from local settings only.  We deliberately do NOT pass a
-            // LanguagePackManager here because that would trigger an online catalog
-            // download (GetCatalogAsync) that can block for 30+ seconds over RDP or
-            // slow networks.  The language selector will show the built-in list, and
-            // the language pack manager runs lazily through IoC when first needed.
-            await LocalizationHelper.SetLanguageAsync(true);
-
-            var applicationSettings = new ApplicationSettings();
+            // Language selection already completed in RunLanguageGateAsync before MainWindow.
+            var applicationSettings = _settings ?? new ApplicationSettings();
             _settings = applicationSettings;
 
             try

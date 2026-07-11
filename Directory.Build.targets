@@ -1,7 +1,30 @@
 <Project>
+  <PropertyGroup Condition="'$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release'">
+    <!-- Prefer size over local symbols; CI/Make already pass DebugType=None on publish. -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+    <PublishDocumentationFile>false</PublishDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
   <Target Name="RejectShippingAppPublishWithTestHooks" BeforeTargets="BeforeBuild;SetGenerateManifests;PrepareForPublish">
     <Error
       Condition="'$(_IsPublishing)' == 'true' and '$(IsUdtShippingApp)' == 'true' and '$(EnableUdtTestHooks)' == 'true' and '$(AllowUdtTestHookPublish)' != 'true'"
       Text="Shipping app publish cannot use EnableUdtTestHooks=true. Build the standalone test tools instead, or set AllowUdtTestHookPublish=true only for isolated non-shipping artifacts." />
+  </Target>
+
+  <!-- TraceEvent natives + orphan Crowdin satellites inflate win-x64 shipping output. -->
+  <Target Name="PruneShippingAppFootprint"
+          AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release' and '$(PublishDir)' != ''">
+    <PropertyGroup>
+      <_UdtPruneScript>$(MSBuildThisFileDirectory)Scripts\Prune-ShippingFootprint.ps1</_UdtPruneScript>
+      <!-- Trim trailing slash so PowerShell does not swallow the closing quote. -->
+      <_UdtPublishDirFull>$([System.String]::Copy($([System.IO.Path]::GetFullPath('$(PublishDir)'))).TrimEnd('\'))</_UdtPublishDirFull>
+    </PropertyGroup>
+    <Exec
+      Condition="Exists('$(_UdtPruneScript)') and Exists('$(_UdtPublishDirFull)')"
+      Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(_UdtPruneScript)&quot; -PayloadPath &quot;$(_UdtPublishDirFull)&quot; -AllowedCultures &quot;$(UdtSatelliteResourceLanguages)&quot;" />
   </Target>
 </Project>

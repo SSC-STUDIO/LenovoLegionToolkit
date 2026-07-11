@@ -141,6 +141,12 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
             if (names.Contains("Period"))
                 return JsonSerializer.Deserialize<PeriodicAutomationPipelineTrigger>(raw, options);
 
+            if (names.Contains("Metric") && names.Contains("Threshold"))
+                return JsonSerializer.Deserialize<HardwareSensorAutomationPipelineTrigger>(raw, options);
+
+            if (names.Contains("ChargeFilter") || (names.Contains("Threshold") && names.Contains("Comparison") && !names.Contains("Metric")))
+                return JsonSerializer.Deserialize<BatteryPercentageAutomationPipelineTrigger>(raw, options);
+
             if (names.Contains("IsSunrise") || names.Contains("IsSunset") || names.Contains("Days"))
                 return JsonSerializer.Deserialize<TimeAutomationPipelineTrigger>(raw, options);
         }

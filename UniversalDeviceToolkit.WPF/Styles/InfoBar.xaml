@@ -29,7 +29,7 @@
         <Setter Property="BorderThickness" Value="{StaticResource InfoBarBorderThemeThickness}" />
         <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Border.CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -84,12 +84,18 @@
                                     VerticalAlignment="Top">
                                     <controls:Button
                                         x:Name="CloseButton"
-                                        Padding="4"
+                                        Width="28"
+                                        Height="28"
+                                        Padding="0"
+                                        Appearance="Transparent"
+                                        AutomationProperties.Name="Close"
                                         Background="Transparent"
                                         BorderThickness="0"
                                         Command="{Binding Path=CloseButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Icon="Dismiss24"
-                                        IsEnabled="True" />
+                                        CornerRadius="{StaticResource CornerRadiusCompact}"
+                                        Icon="Dismiss20"
+                                        IsEnabled="True"
+                                        ToolTip="Close" />
                                 </Border>
                             </Grid>
                         </Border>

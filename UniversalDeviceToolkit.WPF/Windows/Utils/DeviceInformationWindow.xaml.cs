@@ -40,13 +40,8 @@ public partial class DeviceInformationWindow
     public DeviceInformationWindow()
     {
         InitializeComponent();
-        _snackBar = new Snackbar(_snackBarPresenter)
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            IsCloseButtonEnabled = false,
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
-            Timeout = TimeSpan.FromSeconds(1)
-        };
+        _snackBar = NotificationToastFactory.Create(_snackBarPresenter, HorizontalAlignment.Center);
+        _snackBar.Timeout = TimeSpan.FromSeconds(1);
     }
 
     private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e)

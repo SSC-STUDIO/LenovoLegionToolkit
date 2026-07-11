@@ -47,6 +47,7 @@ public partial class SensorsControl : IDisposable
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
+    private readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
     private readonly SensorsGroupController? _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
     private readonly IDelayProvider _delayProvider = IoCContainer.Resolve<IDelayProvider>();
     private bool _sensorRuntimeAvailable = true;
@@ -88,6 +89,7 @@ public partial class SensorsControl : IDisposable
     {
         InitializeComponent();
         CacheTextBlockReferences();
+        ApplySensorSectionConfiguration();
         InitializeContextMenu();
         InitializeTrendCharts();
         SetInitialSensorPlaceholders();
@@ -98,6 +100,45 @@ public partial class SensorsControl : IDisposable
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
         SizeChanged += SensorsControl_SizeChanged;
         Unloaded += SensorsControl_Unloaded;
+    }
+
+    private void ApplySensorSectionConfiguration()
+    {
+        var store = _hardwareSensorSettings.Store;
+        var visible = new HashSet<string>(store.VisibleSections ?? [], StringComparer.OrdinalIgnoreCase);
+        var sectionMap = new Dictionary<string, FrameworkElement>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["CPU"] = _cpuSection,
+            ["Battery"] = _batterySectionColumn,
+            ["GPU"] = _gpuSection
+        };
+
+        foreach (var (name, element) in sectionMap)
+            element.Visibility = visible.Contains(name) ? Visibility.Visible : Visibility.Collapsed;
+
+        var order = (store.SectionOrder is { Length: > 0 } ? store.SectionOrder : ["CPU", "Battery", "GPU"])
+            .Where(name => sectionMap.ContainsKey(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var orderedVisible = new List<UIElement>();
+        foreach (var name in order)
+        {
+            if (sectionMap.TryGetValue(name, out var element) && element.Visibility == Visibility.Visible)
+                orderedVisible.Add(element);
+        }
+
+        foreach (var (name, element) in sectionMap)
+        {
+            if (element.Visibility == Visibility.Visible && !orderedVisible.Contains(element))
+                orderedVisible.Add(element);
+        }
+
+        _sensorsGrid.Children.Clear();
+        foreach (var child in orderedVisible)
+            _sensorsGrid.Children.Add(child);
+
+        _sensorsGrid.Columns = Math.Max(1, orderedVisible.Count);
     }
 
     private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)

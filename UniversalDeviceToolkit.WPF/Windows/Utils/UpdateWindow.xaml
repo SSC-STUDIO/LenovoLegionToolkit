@@ -8,10 +8,10 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.UpdateWindow_Title}"
-    MinWidth="800"
-    MinHeight="600"
-    MaxWidth="800"
-    MaxHeight="600"
+    MinWidth="720"
+    MinHeight="520"
+    MaxWidth="720"
+    MaxHeight="560"
     Closing="UpdateWindow_Closing"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -40,48 +40,125 @@
             Grid.Row="0"
             Height="24"
             Margin="12,8,12,8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
             <TextBlock
-                Grid.Column="0"
                 VerticalAlignment="Center"
                 Focusable="True"
-                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
+                Style="{StaticResource AppCaptionTextBlockStyle}"
                 Text="{x:Static resources:Resource.UpdateWindow_Title}" />
-
         </Grid>
 
-        <Grid Grid.Row="1" Margin="16,12,16,12">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Margin="24,8,24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,24"
-                    Focusable="True"
-                    Style="{StaticResource AppPageTitleTextBlockStyle}"
-                    Text="{x:Static resources:Resource.UpdateWindow_WhatsNew}" />
+            <!-- Header: icon + title hierarchy + version chip -->
+            <Grid Grid.Row="0" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
+                <Border
+                    Width="48"
+                    Height="48"
+                    Margin="0,0,16,0"
+                    VerticalAlignment="Top"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusControl}">
+                    <wpfui:SymbolIcon
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Foreground="{DynamicResource StatusInfoBrush}"
+                        Symbol="ArrowCircleUp24" />
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        Focusable="True"
+                        Style="{StaticResource AppSectionTitleTextBlockStyle}"
+                        Text="{x:Static resources:Resource.UpdateWindow_WhatsNew}" />
+
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        Focusable="True"
+                        Style="{StaticResource AppPageDescriptionTextBlockStyle}"
+                        Text="{x:Static resources:Resource.UpdateWindow_Title}" />
+
+                    <WrapPanel Margin="0,10,0,0">
+                        <Border
+                            x:Name="_versionBadge"
+                            Margin="0,0,8,0"
+                            Padding="10,4"
+                            Background="{DynamicResource StatusInfoBackgroundBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Visibility="Collapsed">
+                            <TextBlock
+                                x:Name="_versionBadgeText"
+                                Style="{StaticResource AppHeroBadgeTextBlockStyle}"
+                                Foreground="{DynamicResource StatusInfoBrush}"
+                                VerticalAlignment="Center" />
+                        </Border>
+
+                        <Border
+                            x:Name="_releaseDateBadge"
+                            Padding="10,4"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Visibility="Collapsed">
+                            <TextBlock
+                                x:Name="_releaseDateText"
+                                FontSize="{DynamicResource FontSizeCaption}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                VerticalAlignment="Center" />
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
+            </Grid>
+
+            <!-- Release notes card -->
+            <Border
+                Grid.Row="1"
+                Padding="16,14"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}">
                 <markdig:MarkdownViewer
                     x:Name="_markdownViewer"
-                    Grid.Row="1"
                     Focusable="True"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                     <markdig:MarkdownViewer.Resources>
-                        <Style TargetType="{x:Type TextElement}">
+                        <Style TargetType="{x:Type FlowDocument}">
+                            <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="PagePadding" Value="0" />
+                            <Setter Property="TextAlignment" Value="Left" />
                         </Style>
                         <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0,0,0,10" />
+                            <Setter Property="LineHeight" Value="22" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Style>
+                        <Style TargetType="{x:Type List}">
+                            <Setter Property="Margin" Value="0,0,0,10" />
+                            <Setter Property="Padding" Value="18,0,0,0" />
+                        </Style>
+                        <Style TargetType="{x:Type ListItem}">
+                            <Setter Property="Margin" Value="0,0,0,4" />
+                        </Style>
+                        <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                         </Style>
                         <Style TargetType="{x:Type Span}">
@@ -90,52 +167,96 @@
                         <Style TargetType="{x:Type Run}">
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                         </Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Style>
                         <Style TargetType="{x:Type Hyperlink}">
                             <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                            <Setter Property="TextDecorations" Value="Underline" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.HyperlinkStyleKey}" TargetType="Hyperlink" BasedOn="{StaticResource {x:Type Hyperlink}}" />
+                        <Style x:Key="{x:Static markdig:Styles.CodeStyleKey}" TargetType="{x:Type Run}">
+                            <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.CodeBlockStyleKey}" TargetType="{x:Type Paragraph}">
+                            <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            <Setter Property="Padding" Value="10,8" />
+                            <Setter Property="Margin" Value="0,0,0,12" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="1" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.QuoteBlockStyleKey}" TargetType="{x:Type Section}">
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="3,0,0,0" />
+                            <Setter Property="Padding" Value="12,0,0,0" />
+                            <Setter Property="Margin" Value="0,0,0,10" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.Heading1StyleKey}" TargetType="{x:Type Paragraph}">
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSubsection}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="Margin" Value="0,4,0,8" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.Heading2StyleKey}" TargetType="{x:Type Paragraph}">
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="Margin" Value="0,4,0,8" />
+                        </Style>
+                        <Style x:Key="{x:Static markdig:Styles.Heading3StyleKey}" TargetType="{x:Type Paragraph}">
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+                            <Setter Property="FontWeight" Value="Medium" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="Margin" Value="0,2,0,6" />
                         </Style>
                     </markdig:MarkdownViewer.Resources>
                 </markdig:MarkdownViewer>
+            </Border>
 
+            <!-- Progress + horizontal action bar -->
+            <StackPanel Grid.Row="2" Margin="0,16,0,0">
                 <ProgressBar
                     x:Name="_downloadProgressBar"
-                    Grid.Row="2"
-                    Margin="0,16,0,16"
+                    Height="4"
+                    Margin="0,0,0,12"
                     IsIndeterminate="True"
                     Maximum="1"
                     Minimum="0"
-                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
+                    Visibility="{Binding IsDownloading, Mode=OneWay, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                <wpfui:Button
-                    x:Name="_downloadButton"
-                    Grid.Row="3"
-                    Width="150"
-                    Height="32"
-                    Margin="0,0,0,16"
-                    HorizontalAlignment="Center"
-                    Appearance="Primary"
-                    AutomationProperties.Name="{x:Static resources:Resource.Update}"
-                    Click="DownloadButton_Click"
-                    Content="{x:Static resources:Resource.Update}"
-                    IsEnabled="{Binding HasUpdates, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
+                <Grid HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <wpfui:Button
-                    x:Name="_cancelDownloadButton"
-                    Grid.Row="4"
-                    Width="150"
-                    Height="32"
-                    Margin="0,0,0,16"
-                    HorizontalAlignment="Center"
-                    AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
-                    Click="CancelDownloadButton_Click"
-                    Content="{x:Static resources:Resource.Cancel}"
-                    IsEnabled="{Binding IsDownloading, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                    Visibility="{Binding IsDownloading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
-            </Grid>
+                    <wpfui:Button
+                        x:Name="_cancelDownloadButton"
+                        Grid.Column="0"
+                        MinWidth="{StaticResource ButtonMinWidthStandard}"
+                        Height="{StaticResource ButtonHeightStandard}"
+                        Appearance="Secondary"
+                        AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
+                        Click="CancelDownloadButton_Click"
+                        Content="{x:Static resources:Resource.Cancel}" />
+
+                    <wpfui:Button
+                        x:Name="_downloadButton"
+                        Grid.Column="2"
+                        MinWidth="{StaticResource ButtonMinWidthStandard}"
+                        Height="{StaticResource ButtonHeightStandard}"
+                        Appearance="Primary"
+                        AutomationProperties.Name="{x:Static resources:Resource.Update}"
+                        Click="DownloadButton_Click"
+                        Content="{x:Static resources:Resource.Update}"
+                        IsEnabled="{Binding HasUpdates, Mode=OneWay, RelativeSource={RelativeSource AncestorType=Window}}" />
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </local:BaseWindow>
-

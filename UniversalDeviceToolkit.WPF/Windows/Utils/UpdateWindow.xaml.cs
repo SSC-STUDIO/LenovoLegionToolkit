@@ -44,11 +44,22 @@ public partial class UpdateWindow : IProgress<float>
         try
         {
             var updates = await _updateChecker.GetUpdatesAsync();
+            if (updates.Length == 0)
+                return;
+
+            var latest = updates[0];
+            _versionBadgeText.Text = string.IsNullOrWhiteSpace(latest.TagName)
+                ? $"v{latest.Version}"
+                : latest.TagName;
+            _versionBadge.Visibility = Visibility.Visible;
+
+            _releaseDateText.Text = latest.Date.ToString("D");
+            _releaseDateBadge.Visibility = Visibility.Visible;
 
             var stringBuilder = new StringBuilder();
             foreach (var update in updates)
             {
-                stringBuilder.AppendLine("**" + update.Title + "**   _(" + update.Date.ToString("D") + ")_")
+                stringBuilder.AppendLine("### " + update.Title)
                     .AppendLine()
                     .AppendLine(update.Description)
                     .AppendLine();
@@ -141,11 +152,21 @@ public partial class UpdateWindow : IProgress<float>
         }
     }
 
-    private void CancelDownloadButton_Click(object sender, RoutedEventArgs e) => _downloadCancellationTokenSource?.Cancel();
+    private void CancelDownloadButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (IsDownloading)
+        {
+            _downloadCancellationTokenSource?.Cancel();
+            return;
+        }
+
+        Close();
+    }
 
     private void SetDownloading(bool isDownloading)
     {
         IsDownloading = isDownloading;
+        _downloadButton.IsEnabled = !isDownloading && HasUpdates;
 
         if (!isDownloading)
         {

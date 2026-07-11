@@ -23,13 +23,10 @@
 		<ApplicationManifest>App.manifest</ApplicationManifest>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>
-		<SatelliteResourceLanguages>ar;bg;cs;de;en;el;es;fr;hu;it;ja;lv;nl;nl-nl;pl;pt;pt-br;ro;ru;sk;uk;tr;vi;zh;zh-hans;zh-hant;uz</SatelliteResourceLanguages>
+		<SatelliteResourceLanguages>$(UdtSatelliteResourceLanguages)</SatelliteResourceLanguages>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 	  <DebugType>portable</DebugType>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DebugType>embedded</DebugType>
 	</PropertyGroup>
 	<Target Name="ValidateMainWindowUpdateIndicatorBindings" BeforeTargets="MarkupCompilePass1">
 		<Error

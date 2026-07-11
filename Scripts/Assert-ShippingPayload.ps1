@@ -38,14 +38,17 @@ $forbiddenNamePrefixes = @(
 
 $forbiddenPathSegments = @(
     'Tools',
-    'Tests'
+    'Tests',
+    'x86',
+    'arm64'
 )
 
 $forbiddenNamePatterns = @(
     '*.Tests.*',
     '*.Smoke.*',
     '*Validation*',
-    '*TestHost*'
+    '*TestHost*',
+    '*.pdb'
 )
 
 $forbiddenBinaryMarkers = @(

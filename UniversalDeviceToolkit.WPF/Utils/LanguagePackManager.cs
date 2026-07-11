@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -39,6 +40,35 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         return $"{AppIdentity.ResourcesBaseUrl}/{version}/languages/{NormalizeAssetCultureName(cultureInfo)}.zip";
     }
 
+    public async Task<IReadOnlyList<LanguagePackCatalogEntry>> QueryCatalogAsync(CancellationToken token = default)
+    {
+        try
+        {
+            var catalog = await resourceCatalogClient.GetCatalogAsync(token);
+            return catalog.Languages
+                .Select(ToCatalogEntry)
+                .Where(entry => !string.IsNullOrWhiteSpace(entry.Culture))
+                .ToArray();
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new LanguagePackException(
+                LanguagePackFailureKind.CatalogUnavailable,
+                "Failed to query the online language catalog.",
+                inner: ex);
+        }
+    }
+
+    public Task RepairAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default) =>
+        InstallAsync(cultureInfo, progress, token);
+
+    public Task UpdateAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default) =>
+        InstallAsync(cultureInfo, progress, token);
+
     public async Task InstallAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default)
     {
         if (IsEnglish(cultureInfo))
@@ -49,12 +79,14 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         var tempZipPath = Path.Combine(tempRoot, "language.zip");
         var fallbackZipPath = Path.Combine(tempRoot, "full-portable.zip");
         var extractPath = Path.Combine(tempRoot, "extract");
+        var stagingPath = Path.Combine(tempRoot, "staging");
         var fallbackExtractPath = Path.Combine(tempRoot, "fallback-extract");
 
         try
         {
             Directory.CreateDirectory(tempRoot);
             Directory.CreateDirectory(extractPath);
+            Directory.CreateDirectory(stagingPath);
 
             OnlineResourceCatalog? catalog = null;
             try
@@ -64,33 +96,99 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
                 installProgress.ReportCatalogComplete();
 
                 var languageResource = GetLanguageResource(catalog, cultureInfo);
+                EnsureMinAppVersion(languageResource, cultureInfo);
+
                 await resourceCatalogClient.DownloadAsync(
                     languageResource.Url,
                     tempZipPath,
                     installProgress.CreateDownloadProgress(),
                     token);
                 installProgress.ReportVerifyStarted();
-                await resourceCatalogClient.VerifySha256Async(tempZipPath, languageResource.Sha256, token);
-                installProgress.ReportVerifyComplete();
+                try
+                {
+                    await resourceCatalogClient.VerifySha256Async(tempZipPath, languageResource.Sha256, token);
+                }
+                catch (Exception ex)
+                {
+                    throw new LanguagePackException(
+                        LanguagePackFailureKind.HashMismatch,
+                        $"SHA256 verification failed for language '{cultureInfo.Name}'.",
+                        cultureInfo.Name,
+                        ex);
+                }
 
+                installProgress.ReportVerifyComplete();
                 installProgress.ReportApplyStarted();
-                ExtractZipSafely(tempZipPath, extractPath);
-                CopyLanguageDirectories(extractPath, cultureInfo);
+
+                try
+                {
+                    ExtractZipSafely(tempZipPath, extractPath);
+                }
+                catch (Exception ex) when (ex is not LanguagePackException and not OperationCanceledException)
+                {
+                    throw new LanguagePackException(
+                        LanguagePackFailureKind.CorruptPackage,
+                        $"Language pack zip for '{cultureInfo.Name}' is corrupt or unsafe.",
+                        cultureInfo.Name,
+                        ex);
+                }
+
+                StageLanguageDirectories(extractPath, stagingPath, cultureInfo);
+                ValidateStagedAssemblies(stagingPath, cultureInfo);
+                AtomicApplyStagedDirectories(stagingPath, cultureInfo);
 
                 if (!IsInstalled(cultureInfo))
-                    throw new InvalidDataException($"Language pack for '{cultureInfo.Name}' did not install application UI resources.");
+                    throw new LanguagePackException(
+                        LanguagePackFailureKind.ValidationFailed,
+                        $"Language pack for '{cultureInfo.Name}' did not install application UI resources.",
+                        cultureInfo.Name);
 
                 installProgress.ReportComplete();
+            }
+            catch (OperationCanceledException)
+            {
+                throw new LanguagePackException(
+                    LanguagePackFailureKind.Cancelled,
+                    $"Language pack install for '{cultureInfo.Name}' was cancelled.",
+                    cultureInfo.Name);
+            }
+            catch (LanguagePackException ex) when (
+                ex.Kind is LanguagePackFailureKind.Cancelled
+                    or LanguagePackFailureKind.AppVersionTooOld)
+            {
+                throw;
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Language pack download failed for '{cultureInfo.Name}'. Falling back to full portable package.", ex);
 
-                await InstallFromFullPortableAsync(cultureInfo, catalog, fallbackZipPath, fallbackExtractPath, installProgress, token);
+                try
+                {
+                    await InstallFromFullPortableAsync(cultureInfo, catalog, fallbackZipPath, fallbackExtractPath, stagingPath, installProgress, token);
 
-                if (!IsInstalled(cultureInfo))
-                    throw new InvalidDataException($"Language pack for '{cultureInfo.Name}' could not be installed.", ex);
+                    if (!IsInstalled(cultureInfo))
+                        throw new LanguagePackException(
+                            LanguagePackFailureKind.ValidationFailed,
+                            $"Language pack for '{cultureInfo.Name}' could not be installed.",
+                            cultureInfo.Name,
+                            ex);
+                }
+                catch (LanguagePackException)
+                {
+                    throw;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw new LanguagePackException(
+                        LanguagePackFailureKind.Cancelled,
+                        $"Language pack install for '{cultureInfo.Name}' was cancelled.",
+                        cultureInfo.Name);
+                }
+                catch (Exception fallbackEx)
+                {
+                    throw WrapInstallFailure(cultureInfo, fallbackEx, ex);
+                }
             }
         }
         finally
@@ -164,22 +262,94 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     private static OnlineLanguageResource GetLanguageResource(OnlineResourceCatalog catalog, CultureInfo cultureInfo)
     {
-        var normalizedCulture = NormalizeAssetCultureName(cultureInfo);
+        foreach (var candidate in EnumerateCultureLookupNames(cultureInfo))
+        {
+            var resource = catalog.Languages.FirstOrDefault(language =>
+                language.Culture.Equals(candidate, StringComparison.OrdinalIgnoreCase));
 
-        var resource = catalog.Languages.FirstOrDefault(language =>
-            language.Culture.Equals(normalizedCulture, StringComparison.OrdinalIgnoreCase) ||
-            language.Culture.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
+            if (resource is null)
+            {
+                resource = catalog.Languages.FirstOrDefault(language =>
+                    !string.IsNullOrWhiteSpace(language.Parent) &&
+                    language.Parent.Equals(candidate, StringComparison.OrdinalIgnoreCase) &&
+                    language.Culture.Equals(NormalizeAssetCultureName(cultureInfo), StringComparison.OrdinalIgnoreCase));
+            }
 
-        if (resource is null)
-            throw new InvalidDataException($"Language '{cultureInfo.Name}' is not available in the online resource catalog.");
+            if (resource is null)
+                continue;
 
-        if (string.IsNullOrWhiteSpace(resource.Url))
-            throw new InvalidDataException($"Language '{cultureInfo.Name}' has an empty download URL.");
+            if (string.IsNullOrWhiteSpace(resource.Url))
+                throw new LanguagePackException(LanguagePackFailureKind.DownloadFailed, $"Language '{cultureInfo.Name}' has an empty download URL.", cultureInfo.Name);
+            if (string.IsNullOrWhiteSpace(resource.Sha256))
+                throw new LanguagePackException(LanguagePackFailureKind.HashMismatch, $"Language '{cultureInfo.Name}' is missing SHA256 metadata.", cultureInfo.Name);
+            return resource;
+        }
 
-        if (string.IsNullOrWhiteSpace(resource.Sha256))
-            throw new InvalidDataException($"Language '{cultureInfo.Name}' is missing SHA256 metadata.");
+        throw new LanguagePackException(
+            LanguagePackFailureKind.CultureNotInCatalog,
+            $"Language '{cultureInfo.Name}' is not available in the online resource catalog.",
+            cultureInfo.Name);
+    }
 
-        return resource;
+    private static IEnumerable<string> EnumerateCultureLookupNames(CultureInfo cultureInfo)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var current = cultureInfo;
+        while (current != CultureInfo.InvariantCulture)
+        {
+            if (seen.Add(current.Name))
+                yield return current.Name;
+            if (seen.Add(NormalizeAssetCultureName(current)))
+                yield return NormalizeAssetCultureName(current);
+            current = current.Parent;
+        }
+    }
+
+    private static void EnsureMinAppVersion(OnlineLanguageResource languageResource, CultureInfo cultureInfo)
+    {
+        if (string.IsNullOrWhiteSpace(languageResource.MinAppVersion))
+            return;
+
+        if (!Version.TryParse(languageResource.MinAppVersion, out var minVersion))
+            return;
+
+        if (!Version.TryParse(GetCurrentVersion(), out var appVersion))
+            return;
+
+        if (appVersion < minVersion)
+        {
+            throw new LanguagePackException(
+                LanguagePackFailureKind.AppVersionTooOld,
+                $"Language '{cultureInfo.Name}' requires app version {languageResource.MinAppVersion} or newer.",
+                cultureInfo.Name);
+        }
+    }
+
+    private static LanguagePackCatalogEntry ToCatalogEntry(OnlineLanguageResource resource) =>
+        new(
+            resource.Culture,
+            resource.Parent,
+            resource.Size,
+            resource.Sha256,
+            resource.ResourceVersion,
+            resource.MinAppVersion,
+            resource.Url,
+            resource.DisplayName);
+
+    private static LanguagePackException WrapInstallFailure(CultureInfo cultureInfo, Exception fallbackEx, Exception primaryEx)
+    {
+        var kind = fallbackEx switch
+        {
+            InvalidDataException => LanguagePackFailureKind.CorruptPackage,
+            System.Net.Http.HttpRequestException => LanguagePackFailureKind.DownloadFailed,
+            _ => LanguagePackFailureKind.Unknown
+        };
+
+        return new LanguagePackException(
+            kind,
+            $"Language pack for '{cultureInfo.Name}' could not be installed.",
+            cultureInfo.Name,
+            new AggregateException(primaryEx, fallbackEx));
     }
 
     private async Task InstallFromFullPortableAsync(
@@ -187,6 +357,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         OnlineResourceCatalog? catalog,
         string zipPath,
         string extractPath,
+        string stagingPath,
         InstallProgressReporter installProgress,
         CancellationToken token)
     {
@@ -195,12 +366,15 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         installProgress.ReportCatalogComplete();
 
         if (string.IsNullOrWhiteSpace(fullPortable.Url))
-            throw new InvalidDataException("Full portable fallback has an empty download URL.");
+            throw new LanguagePackException(LanguagePackFailureKind.DownloadFailed, "Full portable fallback has an empty download URL.", cultureInfo.Name);
 
         if (string.IsNullOrWhiteSpace(fullPortable.Sha256))
-            throw new InvalidDataException("Full portable fallback is missing SHA256 metadata.");
+            throw new LanguagePackException(LanguagePackFailureKind.HashMismatch, "Full portable fallback is missing SHA256 metadata.", cultureInfo.Name);
 
         Directory.CreateDirectory(extractPath);
+        TryDeleteDirectory(stagingPath);
+        Directory.CreateDirectory(stagingPath);
+
         await resourceCatalogClient.DownloadAsync(fullPortable.Url, zipPath, installProgress.CreateDownloadProgress(), token);
         installProgress.ReportVerifyStarted();
         await resourceCatalogClient.VerifySha256Async(zipPath, fullPortable.Sha256, token);
@@ -208,7 +382,9 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
         installProgress.ReportApplyStarted();
         ExtractMatchingLanguageDirectories(zipPath, extractPath, cultureInfo);
-        CopyLanguageDirectories(extractPath, cultureInfo);
+        StageLanguageDirectories(extractPath, stagingPath, cultureInfo);
+        ValidateStagedAssemblies(stagingPath, cultureInfo);
+        AtomicApplyStagedDirectories(stagingPath, cultureInfo);
         installProgress.ReportComplete();
     }
 
@@ -306,41 +482,155 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             throw new InvalidDataException($"Full portable package does not contain language resources for '{cultureInfo.Name}'.");
     }
 
-    private static void CopyLanguageDirectories(string extractPath, CultureInfo cultureInfo)
+    private static void StageLanguageDirectories(string extractPath, string stagingRoot, CultureInfo cultureInfo)
     {
         var expectedDirectoryNames = GetResourceDirectoryNames(cultureInfo).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var copied = false;
+        var staged = false;
 
         foreach (var sourceDirectory in Directory.EnumerateDirectories(extractPath, "*", SearchOption.TopDirectoryOnly))
         {
             var directoryName = Path.GetFileName(sourceDirectory);
             if (!expectedDirectoryNames.Contains(directoryName))
             {
-                if (TryCopyNestedCultureDirectories(sourceDirectory, expectedDirectoryNames))
-                    copied = true;
+                if (TryStageNestedCultureDirectories(sourceDirectory, stagingRoot, expectedDirectoryNames))
+                    staged = true;
 
                 continue;
             }
 
-            var destinationDirectory = Path.Combine(ApplicationDirectory, directoryName);
+            var destinationDirectory = Path.Combine(stagingRoot, directoryName);
             CopySatelliteAssemblies(sourceDirectory, destinationDirectory);
-            copied = true;
+            staged = true;
         }
 
         var rootFiles = Directory.EnumerateFiles(extractPath, "*.resources.dll", SearchOption.TopDirectoryOnly).ToArray();
         if (rootFiles.Length > 0)
         {
-            var destinationDirectory = Path.Combine(ApplicationDirectory, GetPrimaryResourceDirectoryName(cultureInfo));
+            var destinationDirectory = Path.Combine(stagingRoot, GetPrimaryResourceDirectoryName(cultureInfo));
             Directory.CreateDirectory(destinationDirectory);
 
             foreach (var file in rootFiles)
                 File.Copy(file, Path.Combine(destinationDirectory, Path.GetFileName(file)), true);
 
-            copied = true;
+            staged = true;
         }
 
-        if (!copied)
-            throw new InvalidDataException("Language pack does not contain resource files.");
+        if (!staged)
+            throw new LanguagePackException(
+                LanguagePackFailureKind.CorruptPackage,
+                "Language pack does not contain resource files.",
+                cultureInfo.Name);
+    }
+
+    private static bool TryStageNestedCultureDirectories(
+        string sourceDirectory,
+        string stagingRoot,
+        System.Collections.Generic.HashSet<string> expectedDirectoryNames)
+    {
+        var staged = false;
+
+        foreach (var nestedDirectory in Directory.EnumerateDirectories(sourceDirectory, "*", SearchOption.TopDirectoryOnly))
+        {
+            var directoryName = Path.GetFileName(nestedDirectory);
+            if (!expectedDirectoryNames.Contains(directoryName))
+                continue;
+
+            var destinationDirectory = Path.Combine(stagingRoot, directoryName);
+            CopySatelliteAssemblies(nestedDirectory, destinationDirectory);
+            staged = true;
+        }
+
+        return staged;
+    }
+
+    private static void ValidateStagedAssemblies(string stagingRoot, CultureInfo cultureInfo)
+    {
+        var hasAssembly = GetResourceDirectoryNames(cultureInfo)
+            .Select(name => Path.Combine(stagingRoot, name))
+            .Any(HasAppResourceAssembly);
+
+        if (!hasAssembly)
+        {
+            throw new LanguagePackException(
+                LanguagePackFailureKind.ValidationFailed,
+                $"Staged language pack for '{cultureInfo.Name}' is missing application satellite assemblies.",
+                cultureInfo.Name);
+        }
+    }
+
+    private static void AtomicApplyStagedDirectories(string stagingRoot, CultureInfo cultureInfo)
+    {
+        foreach (var stagedDirectory in Directory.EnumerateDirectories(stagingRoot, "*", SearchOption.TopDirectoryOnly))
+        {
+            var directoryName = Path.GetFileName(stagedDirectory);
+            var destinationDirectory = Path.Combine(ApplicationDirectory, directoryName);
+            AtomicReplaceDirectory(stagedDirectory, destinationDirectory);
+        }
+    }
+
+    private static void AtomicReplaceDirectory(string sourceDirectory, string destinationDirectory)
+    {
+        var destinationParent = Path.GetDirectoryName(destinationDirectory);
+        if (!string.IsNullOrWhiteSpace(destinationParent))
+            Directory.CreateDirectory(destinationParent);
+
+        var backupDirectory = destinationDirectory + $".bak-{Guid.NewGuid():N}";
+        try
+        {
+            if (Directory.Exists(destinationDirectory))
+                Directory.Move(destinationDirectory, backupDirectory);
+
+            if (Path.GetPathRoot(sourceDirectory)?.Equals(Path.GetPathRoot(destinationDirectory), StringComparison.OrdinalIgnoreCase) == true)
+            {
+                Directory.Move(sourceDirectory, destinationDirectory);
+            }
+            else
+            {
+                CopyDirectoryRecursive(sourceDirectory, destinationDirectory);
+                TryDeleteDirectory(sourceDirectory);
+            }
+
+            TryDeleteDirectory(backupDirectory);
+        }
+        catch (Exception ex)
+        {
+            if (Directory.Exists(backupDirectory) && !Directory.Exists(destinationDirectory))
+            {
+                try { Directory.Move(backupDirectory, destinationDirectory); }
+                catch { /* best-effort restore */ }
+            }
+
+            throw new LanguagePackException(
+                LanguagePackFailureKind.ApplyFailed,
+                $"Failed to atomically apply language directory '{destinationDirectory}'.",
+                inner: ex);
+        }
+    }
+
+    private static void CopyDirectoryRecursive(string sourceDirectory, string destinationDirectory)
+    {
+        Directory.CreateDirectory(destinationDirectory);
+        foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.TopDirectoryOnly))
+            File.Copy(file, Path.Combine(destinationDirectory, Path.GetFileName(file)), true);
+
+        foreach (var nested in Directory.EnumerateDirectories(sourceDirectory, "*", SearchOption.TopDirectoryOnly))
+            CopyDirectoryRecursive(nested, Path.Combine(destinationDirectory, Path.GetFileName(nested)));
+    }
+
+    private static void CopyLanguageDirectories(string extractPath, CultureInfo cultureInfo)
+    {
+        var staging = Path.Combine(Path.GetTempPath(), $"{AssetPrefix}-stage-{Guid.NewGuid():N}");
+        try
+        {
+            Directory.CreateDirectory(staging);
+            StageLanguageDirectories(extractPath, staging, cultureInfo);
+            ValidateStagedAssemblies(staging, cultureInfo);
+            AtomicApplyStagedDirectories(staging, cultureInfo);
+        }
+        finally
+        {
+            TryDeleteDirectory(staging);
+        }
     }
 
     private static bool TryCopyNestedCultureDirectories(string sourceDirectory, System.Collections.Generic.HashSet<string> expectedDirectoryNames)

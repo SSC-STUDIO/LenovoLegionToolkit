@@ -12,6 +12,7 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
+using Microsoft.Win32;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
@@ -31,6 +32,7 @@ public partial class SettingsApplicationBehaviorControl
     private readonly OsdSettings _osdSettings = IoCContainer.Resolve<OsdSettings>();
     private readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
     private readonly HardwareSensorsFeature _hardwareSensorsFeature = IoCContainer.Resolve<HardwareSensorsFeature>();
+    private readonly SettingsBackupService _settingsBackupService = new();
     private bool _isRefreshing;
 
     public SettingsApplicationBehaviorControl()
@@ -357,6 +359,16 @@ public partial class SettingsApplicationBehaviorControl
         if (_isRefreshing || !IsLoaded)
             return;
 
+        if (_hardwareSensorsToggle.IsChecked == true)
+        {
+            var window = new UniversalDeviceToolkit.WPF.Windows.Settings.HardwareSensorSectionsWindow
+            {
+                Owner = Window.GetWindow(this)
+            };
+            window.ShowDialog();
+            return;
+        }
+
         _hardwareSensorsToggle.IsChecked = !(_hardwareSensorsToggle.IsChecked ?? false);
     }
 
@@ -434,6 +446,58 @@ public partial class SettingsApplicationBehaviorControl
             _osdToggle.IsChecked = false;
             _osdSettings.Store.ShowOsd = false;
             _osdSettings.SynchronizeStore();
+        }
+    }
+
+    private async void ExportSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        try
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "UDT settings backup (*.udtbackup)|*.udtbackup",
+                DefaultExt = ".udtbackup",
+                FileName = $"udt-settings-{DateTime.Now:yyyyMMdd-HHmmss}.udtbackup"
+            };
+            if (dialog.ShowDialog() != true)
+                return;
+
+            _settingsBackupService.Export(dialog.FileName);
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_SettingsBackup_ExportSuccess_Title, Resource.SettingsPage_SettingsBackup_ExportSuccess_Message);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Failed to export settings backup.", ex);
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_SettingsBackup_ExportError_Title, Resource.SettingsPage_SettingsBackup_ExportError_Message, SnackbarType.Error);
+        }
+    }
+
+    private async void ImportSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || !IsLoaded)
+            return;
+
+        try
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "UDT settings backup (*.udtbackup)|*.udtbackup",
+                DefaultExt = ".udtbackup",
+                CheckFileExists = true
+            };
+            if (dialog.ShowDialog() != true)
+                return;
+
+            _settingsBackupService.Import(dialog.FileName);
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_SettingsBackup_ImportSuccess_Title, Resource.SettingsPage_SettingsBackup_ImportSuccess_Message);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Failed to import settings backup.", ex);
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_SettingsBackup_ImportError_Title, Resource.SettingsPage_SettingsBackup_ImportError_Message, SnackbarType.Error);
         }
     }
 }

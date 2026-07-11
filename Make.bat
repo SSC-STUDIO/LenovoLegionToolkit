@@ -51,6 +51,9 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
+dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
 CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
@@ -136,6 +139,9 @@ echo   dotnet publish UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolk
 echo.
 echo Building CLI (Debug)...
 dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
+
+echo Building NetworkProxy (Debug)...
+dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
@@ -208,8 +214,12 @@ exit /b 0
 set TARGET_DIR=%~1
 if "%TARGET_DIR%"=="" exit /b 0
 
-if exist "%TARGET_DIR%\x86" rmdir /s /q "%TARGET_DIR%\x86"
-if exist "%TARGET_DIR%\arm64" rmdir /s /q "%TARGET_DIR%\arm64"
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Prune-ShippingFootprint.ps1" -PayloadPath "%TARGET_DIR%" -AllowedCultures "ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant"
+IF %ERRORLEVEL% NEQ 0 (
+    echo Shipping footprint prune failed.
+    set ERROR_COUNT=1
+    exit /b 1
+)
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Assert-ShippingPayload.ps1" -PayloadPath "%TARGET_DIR%"
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1

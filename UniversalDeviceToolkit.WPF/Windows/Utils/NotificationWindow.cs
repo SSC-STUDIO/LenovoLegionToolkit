@@ -31,7 +31,6 @@ public class NotificationWindow : FluentWindow, INotificationWindow
 
     private readonly Border _container = new()
     {
-        CornerRadius = new CornerRadius(8),
         BorderThickness = new Thickness(1),
         Padding = new Thickness(0),
     };
@@ -43,33 +42,44 @@ public class NotificationWindow : FluentWindow, INotificationWindow
             new() { Width = GridLength.Auto, },
             new() { Width = new(1, GridUnitType.Star) },
         },
-        Margin = new(16, 16, 32, 16),
+        Margin = new(10, 10, 16, 10),
+    };
+
+    private readonly Border _iconChrome = new()
+    {
+        Width = 36,
+        Height = 36,
+        Margin = new(0, 0, 10, 0),
+        CornerRadius = new CornerRadius(12),
     };
 
     private readonly SymbolIcon _symbolIcon = new()
     {
-        FontSize = 32,
-        Margin = new(0, 0, 16, 0),
+        FontSize = 18,
+        HorizontalAlignment = HorizontalAlignment.Center,
+        VerticalAlignment = VerticalAlignment.Center,
     };
 
     private readonly SymbolIcon _overlaySymbolIcon = new()
     {
-        FontSize = 32,
-        Margin = new(0, 0, 16, 0),
+        FontSize = 18,
+        HorizontalAlignment = HorizontalAlignment.Center,
+        VerticalAlignment = VerticalAlignment.Center,
     };
 
     private readonly Label _textBlock = new()
     {
-        FontSize = 16,
-        FontWeight = FontWeights.Medium,
+        FontSize = 15,
+        FontWeight = FontWeights.SemiBold,
         VerticalContentAlignment = VerticalAlignment.Center,
     };
 
     private readonly DropShadowEffect _dropShadow = new()
     {
-        BlurRadius = 20,
-        ShadowDepth = 0,
-        Opacity = 0.4,
+        BlurRadius = 24,
+        ShadowDepth = 6,
+        Direction = 270,
+        Opacity = 0.32,
     };
 
     private bool _gettingBitMap;
@@ -165,15 +175,17 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-        var borderPath = GetRoundedRectanglePath(new(0, 0, newWidth, newHeight), 10);
-        var penPath = GetRoundedRectanglePath(new(1, 1, newWidth - 3, newHeight - 3), 10);
+        var borderPath = GetRoundedRectanglePath(new(0, 0, newWidth, newHeight), 18);
+        var penPath = GetRoundedRectanglePath(new(1, 1, newWidth - 3, newHeight - 3), 18);
 
         graphics.SetClip(borderPath);
         graphics.DrawImage(bitmap, 0, 0, newWidth, newHeight);
         graphics.ResetClip();
 
         var appTheme = ApplicationThemeManager.GetAppTheme();
-        var borderColor = appTheme == ApplicationTheme.Dark ? System.Drawing.Color.FromArgb(64, 64, 64) : System.Drawing.Color.FromArgb(200, 200, 200);
+        var borderColor = appTheme == ApplicationTheme.Dark
+            ? System.Drawing.Color.FromArgb(54, 255, 255, 255)
+            : System.Drawing.Color.FromArgb(31, 0, 0, 0);
 
         using var pen = new System.Drawing.Pen(borderColor, 3);
         graphics.DrawPath(pen, penPath);
@@ -199,12 +211,26 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         _mainGrid.FlowDirection = LocalizationHelper.Direction;
         _textBlock.Foreground = (SolidColorBrush)FindResource("TextFillColorPrimaryBrush");
 
-        _container.Background = (SolidColorBrush)FindResource("ApplicationBackgroundBrush");
-        _container.BorderBrush = (SolidColorBrush)FindResource("CardStrokeColorDefaultBrush");
+        _container.CornerRadius = Application.Current.TryFindResource("CornerRadiusCard") is CornerRadius cardRadius
+            ? cardRadius
+            : new CornerRadius(18);
+        _container.Background = (SolidColorBrush)FindResource("NotificationGlassSurfaceBrush");
+        _container.BorderBrush = (SolidColorBrush)FindResource("NotificationGlassBorderBrush");
+        _iconChrome.Background = (SolidColorBrush)FindResource("ControlFillColorSecondaryBrush");
+        _iconChrome.CornerRadius = Application.Current.TryFindResource("CornerRadiusControl") is CornerRadius controlRadius
+            ? controlRadius
+            : new CornerRadius(12);
 
-        var appTheme = ApplicationThemeManager.GetAppTheme();
-        _dropShadow.Color = appTheme == ApplicationTheme.Dark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
-        _container.Effect = _dropShadow;
+        if (Application.Current.TryFindResource("NotificationGlassShadowEffect") is DropShadowEffect glassShadow)
+        {
+            _container.Effect = glassShadow.Clone();
+        }
+        else
+        {
+            var appTheme = ApplicationThemeManager.GetAppTheme();
+            _dropShadow.Color = appTheme == ApplicationTheme.Dark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
+            _container.Effect = _dropShadow;
+        }
     }
 
     private void InitializePosition(Rect workArea, uint dpiX, uint dpiY, NotificationPosition position)
@@ -217,7 +243,7 @@ public class NotificationWindow : FluentWindow, INotificationWindow
 
         // Add padding for shadow
         const int SHADOW_PADDING = 20;
-        Width = MaxWidth = MinWidth = Math.Max(_container.DesiredSize.Width, 300) + (SHADOW_PADDING * 2);
+            Width = MaxWidth = MinWidth = Math.Max(_container.DesiredSize.Width, 360) + (SHADOW_PADDING * 2);
         Height = MaxHeight = MinHeight = _container.DesiredSize.Height + (SHADOW_PADDING * 2);
 
         double nativeLeft = 0;
@@ -287,19 +313,26 @@ public class NotificationWindow : FluentWindow, INotificationWindow
     {
         _symbolIcon.Symbol = symbol;
         _textBlock.Content = text;
-
-        Grid.SetColumn(_symbolIcon, 0);
-        Grid.SetColumn(_textBlock, 1);
-
-        _mainGrid.Children.Add(_symbolIcon);
-        _mainGrid.Children.Add(_textBlock);
+        System.Windows.Automation.AutomationProperties.SetName(this, text);
 
         if (overlaySymbol.HasValue)
         {
             _overlaySymbolIcon.Symbol = overlaySymbol.Value;
-            Grid.SetColumn(_overlaySymbolIcon, 0);
-            _mainGrid.Children.Add(_overlaySymbolIcon);
+            var overlayHost = new Grid();
+            overlayHost.Children.Add(_symbolIcon);
+            overlayHost.Children.Add(_overlaySymbolIcon);
+            _iconChrome.Child = overlayHost;
         }
+        else
+        {
+            _iconChrome.Child = _symbolIcon;
+        }
+
+        Grid.SetColumn(_iconChrome, 0);
+        Grid.SetColumn(_textBlock, 1);
+
+        _mainGrid.Children.Add(_iconChrome);
+        _mainGrid.Children.Add(_textBlock);
 
         symbolTransform?.Invoke(_symbolIcon);
 

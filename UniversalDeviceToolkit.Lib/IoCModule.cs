@@ -16,6 +16,7 @@ using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
+using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
@@ -178,5 +179,11 @@ public class IoCModule : Module
             c.Resolve<PowerModeFeature>())).SingleInstance();
         builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
+
+        // Network acceleration (Phase 1 stubs — default off, no auto-start)
+        builder.Register<NetworkAccelerationSettings>().SingleInstance();
+        builder.Register<NetworkAccelerationService>().As<INetworkAccelerationService>().SingleInstance();
+        builder.Register<NetworkDiagnosticsService>().As<INetworkDiagnosticsService>().SingleInstance();
+        builder.Register<NetworkStateRecoveryService>().As<INetworkStateRecoveryService>().SingleInstance();
     }
 }

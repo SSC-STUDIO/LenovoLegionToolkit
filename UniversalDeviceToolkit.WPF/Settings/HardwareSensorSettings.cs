@@ -1,4 +1,4 @@
-using LenovoLegionToolkit.Lib.Settings;
+﻿using LenovoLegionToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Settings;
 
@@ -9,6 +9,8 @@ public class HardwareSensorSettings() : AbstractSettings<HardwareSensorSettings.
         public bool SelectedGpuIsIgpu { get; set; }
         public bool ShowCpuAverageFrequency { get; set; }
         public bool DisplayMemoryInGigabytes { get; set; }
+        public string[] VisibleSections { get; set; } = ["CPU", "Battery", "GPU"];
+        public string[] SectionOrder { get; set; } = ["CPU", "Battery", "GPU"];
     }
 
     protected override HardwareSensorSettingsStore Default => new();

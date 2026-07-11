@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features.Hybrid;
+using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Settings;
 
 namespace LenovoLegionToolkit.Lib.Utils;
@@ -104,8 +105,10 @@ public sealed class HardwareStateRecoveryService
     }
 
     /// <summary>
-    /// Removes the args.txt passthrough file and clears persisted proxy
-    /// switches from the user-facing startup configuration.
+    /// Removes the args.txt passthrough proxy switches, then restores system
+    /// proxy / UDT hosts / PAC from the last network snapshot when present
+    /// (<see cref="INetworkStateRecoveryService"/>). Idempotent with an empty
+    /// or missing snapshot.
     /// </summary>
     public bool TryResetNetwork(out string report)
     {
@@ -144,6 +147,22 @@ public sealed class HardwareStateRecoveryService
             success = false;
             sb.AppendLine($"args.txt: failure ({ex.GetType().Name}: {ex.Message}).");
             TryTrace($"HardwareStateRecoveryService: args.txt reset failed.", ex);
+        }
+
+        sb.AppendLine();
+        try
+        {
+            var recovery = _impl.TryResolve(typeof(INetworkStateRecoveryService)) as INetworkStateRecoveryService
+                           ?? new NetworkStateRecoveryService();
+            var ok = recovery.TryRestoreFromSnapshot(out var recoveryReport);
+            success &= ok;
+            sb.AppendLine(recoveryReport.TrimEnd());
+        }
+        catch (Exception ex)
+        {
+            success = false;
+            sb.AppendLine($"snapshot restore: failure ({ex.GetType().Name}: {ex.Message}).");
+            TryTrace("HardwareStateRecoveryService: snapshot restore failed.", ex);
         }
 
         sb.AppendLine(SectionSeparator);

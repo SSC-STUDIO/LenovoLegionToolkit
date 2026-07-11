@@ -7,11 +7,11 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static utils:AppDisplayName.Value}"
     Width="450"
-    Height="245"
+    Height="300"
     MinWidth="450"
-    MinHeight="245"
-    MaxWidth="450"
-    MaxHeight="245"
+    MinHeight="300"
+    MaxWidth="520"
+    MaxHeight="320"
     Closed="LanguageSelectorWindow_OnClosed"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -106,11 +106,34 @@
 
                 <wpfui:Button
                     x:Name="_okButton"
-                    Grid.Column="0"
                     MinWidth="120"
                     Appearance="Primary"
                     Click="OK_Click"
                     Content="{x:Static resources:Resource.Continue}" />
+
+                <StackPanel
+                    x:Name="_failureActionsPanel"
+                    Orientation="Horizontal"
+                    Visibility="Collapsed">
+                    <wpfui:Button
+                        x:Name="_retryButton"
+                        MinWidth="88"
+                        Margin="0,0,8,0"
+                        Appearance="Primary"
+                        Click="Retry_Click"
+                        Content="Retry" />
+                    <wpfui:Button
+                        x:Name="_continueEnglishButton"
+                        MinWidth="140"
+                        Margin="0,0,8,0"
+                        Click="ContinueEnglish_Click"
+                        Content="Continue in English" />
+                    <wpfui:Button
+                        x:Name="_exitButton"
+                        MinWidth="88"
+                        Click="Exit_Click"
+                        Content="{x:Static resources:Resource.Exit}" />
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

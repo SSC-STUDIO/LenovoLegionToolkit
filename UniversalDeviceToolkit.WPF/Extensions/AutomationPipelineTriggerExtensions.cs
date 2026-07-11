@@ -25,6 +25,9 @@ public static class AutomationPipelineTriggerExtensions
         IWiFiConnectedPipelineTrigger => SymbolRegular.Wifi124,
         IWiFiDisconnectedPipelineTrigger => SymbolRegular.WifiOff24,
         IPeriodicAutomationPipelineTrigger => SymbolRegular.ArrowRepeatAll24,
+        HardwareSensorAutomationPipelineTrigger => SymbolRegular.DataUsage24,
+        BatteryPercentageAutomationPipelineTrigger => SymbolRegular.Battery024,
+        ICompositeAutomationPipelineTrigger => SymbolRegular.Flow20,
         _ => throw new ArgumentException($"Unsupported trigger {trigger.GetType().Name}")
     };
 }

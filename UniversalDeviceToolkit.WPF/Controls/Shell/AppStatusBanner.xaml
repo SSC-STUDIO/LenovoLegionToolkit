@@ -6,10 +6,11 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Width="360"
     MaxWidth="360"
-    HorizontalAlignment="Left"
+    HorizontalAlignment="Right"
     Focusable="False"
     Background="Transparent"
-    Visibility="Collapsed">
+    Visibility="Collapsed"
+    AutomationProperties.Name="{Binding Message, RelativeSource={RelativeSource Self}}">
     <Border
         x:Name="RootBorder"
         Margin="0,0,0,10"
@@ -31,7 +32,7 @@
             <Border
                 Width="36"
                 Height="36"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 CornerRadius="{StaticResource CornerRadiusControl}">
