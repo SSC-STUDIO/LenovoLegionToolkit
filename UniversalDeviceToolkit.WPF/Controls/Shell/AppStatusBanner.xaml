@@ -4,35 +4,74 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shell="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Shell"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Width="360"
+    MaxWidth="360"
+    HorizontalAlignment="Right"
     Focusable="False"
     Background="Transparent"
     Visibility="Collapsed">
     <Border
         x:Name="RootBorder"
-        Margin="12,0,12,6"
-        Padding="10,8"
+        Margin="0,0,0,10"
+        Padding="10"
         Background="{DynamicResource NotificationGlassSurfaceBrush}"
         BorderBrush="{DynamicResource NotificationGlassBorderBrush}"
         BorderThickness="1"
+        CornerRadius="{StaticResource CornerRadiusCard}"
         Effect="{DynamicResource NotificationGlassShadowEffect}"
-        CornerRadius="{StaticResource CornerRadiusMD}"
         SnapsToDevicePixels="True">
-        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <wpfui:SymbolIcon
-                x:Name="Icon"
-                Margin="0,0,8,0"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Width="36"
+                Height="36"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Foreground="{DynamicResource StatusWarningBrush}"
-                Symbol="Warning24" />
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                CornerRadius="{StaticResource CornerRadiusControl}">
+                <wpfui:SymbolIcon
+                    x:Name="Icon"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource StatusWarningBrush}"
+                    Symbol="Warning24" />
+            </Border>
+
             <TextBlock
                 x:Name="MessageText"
+                Grid.Column="1"
+                Margin="10,0,8,0"
                 VerticalAlignment="Center"
                 Focusable="True"
+                FontWeight="SemiBold"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                 Style="{StaticResource AppBodyTextBlockStyle}"
                 Text="{Binding Message, RelativeSource={RelativeSource AncestorType=shell:AppStatusBanner}}"
                 TextTrimming="CharacterEllipsis"
-                TextWrapping="NoWrap" />
-        </StackPanel>
+                TextWrapping="Wrap" />
+
+            <Border
+                x:Name="ActionArea"
+                Grid.Column="2"
+                Width="28"
+                Height="28"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                CornerRadius="{StaticResource CornerRadiusCompact}"
+                Visibility="Collapsed">
+                <wpfui:SymbolIcon
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Symbol="ChevronRight24" />
+            </Border>
+        </Grid>
     </Border>
 </UserControl>

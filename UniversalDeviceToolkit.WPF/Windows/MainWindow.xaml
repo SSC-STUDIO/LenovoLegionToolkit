@@ -285,33 +285,38 @@
 
         </Grid>
 
-        <shell:AppStatusBanner
-            x:Name="_vantageIndicator"
-            Grid.Row="2"
-            Message="{x:Static resources:Resource.MainWindows_VantageRunning}"
-            Severity="Warning" />
+        <StackPanel
+            x:Name="_statusNotificationStack"
+            Grid.Row="1"
+            Grid.RowSpan="5"
+            Margin="0,0,18,18"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Panel.ZIndex="100">
+            <shell:AppStatusBanner
+                x:Name="_vantageIndicator"
+                Message="{x:Static resources:Resource.MainWindows_VantageRunning}"
+                Severity="Warning" />
 
-        <shell:AppStatusBanner
-            x:Name="_legionZoneIndicator"
-            Grid.Row="3"
-            Message="{x:Static resources:Resource.MainWindow_LegionZoneRunning}"
-            Severity="Warning" />
+            <shell:AppStatusBanner
+                x:Name="_legionZoneIndicator"
+                Message="{x:Static resources:Resource.MainWindow_LegionZoneRunning}"
+                Severity="Warning" />
 
-        <shell:AppStatusBanner
-            x:Name="_fnKeysIndicator"
-            Grid.Row="4"
-            Message="{x:Static resources:Resource.MainWindows_FnKeysRunning}"
-            Severity="Warning" />
+            <shell:AppStatusBanner
+                x:Name="_fnKeysIndicator"
+                Message="{x:Static resources:Resource.MainWindows_FnKeysRunning}"
+                Severity="Warning" />
 
-        <shell:AppStatusBanner
-            x:Name="_updateIndicator"
-            Grid.Row="5"
-            Cursor="Hand"
-            Focusable="True"
-            KeyDown="UpdateIndicator_KeyDown"
-            Message="{x:Static resources:Resource.MainWindow_UpdateAvailable}"
-            Severity="Success"
-            ToolTip="{x:Static resources:Resource.MainWindow_UpdateAvailable}" />
+            <shell:AppStatusBanner
+                x:Name="_updateIndicator"
+                Cursor="Hand"
+                Focusable="True"
+                KeyDown="UpdateIndicator_KeyDown"
+                Message="{x:Static resources:Resource.MainWindow_UpdateAvailable}"
+                Severity="Success"
+                ToolTip="{x:Static resources:Resource.MainWindow_UpdateAvailable}" />
+        </StackPanel>
 
     </Grid>
 </local:BaseWindow>

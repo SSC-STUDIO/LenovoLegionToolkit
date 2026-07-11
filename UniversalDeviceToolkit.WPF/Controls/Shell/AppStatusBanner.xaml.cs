@@ -57,6 +57,7 @@ public partial class AppStatusBanner : UserControl
             Icon.SetResourceReference(Control.ForegroundProperty, "StatusSuccessBrush");
             return;
         }
+        ActionArea.Visibility = Visibility.Collapsed;
         Icon.Symbol = SymbolRegular.Warning24;
         Icon.SetResourceReference(Control.ForegroundProperty, "StatusWarningBrush");
     }

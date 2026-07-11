@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -501,8 +502,30 @@ namespace UniversalDeviceToolkit.WPF.Startup
 
         private async Task LoadPluginsAsync()
         {
+            if (_shouldEnterSafeMode)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Safe-start active; skipping plugin discovery and loading.");
+                return;
+            }
+
+            if (!HasInstalledPlugins())
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
+                return;
+            }
+
             await App.InitializePluginsAsync();
             LocalizationHelper.SetPluginResourceCultures();
+        }
+
+        private static bool HasInstalledPlugins()
+        {
+            return PluginPaths.GetAllPossiblePluginsDirectories()
+                .Where(Directory.Exists)
+                .SelectMany(path => Directory.EnumerateDirectories(path))
+                .Any(PluginPaths.ContainsPlugin);
         }
 
         private Task CreateMainWindowAsync()

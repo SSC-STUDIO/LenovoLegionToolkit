@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -169,10 +170,38 @@ public partial class MainWindow
             return;
         }
 
-        var targetWidth = shouldExpand ? expandedWidth : collapsedWidth;
-        _navigationStore.Width = targetWidth;
-        _navigationStore.MinWidth = targetWidth;
-        _navigationStore.MaxWidth = targetWidth;
+        AnimateNavigationWidth(shouldExpand ? expandedWidth : collapsedWidth);
+    }
+
+    private void AnimateNavigationWidth(double targetWidth)
+    {
+        var from = _navigationStore.ActualWidth > 0 ? _navigationStore.ActualWidth : targetWidth;
+        if (Math.Abs(from - targetWidth) < 0.5)
+            return;
+
+        var animation = new DoubleAnimation
+        {
+            From = from,
+            To = targetWidth,
+            Duration = Application.Current.TryFindResource("AnimationDurationMedium") is Duration duration
+                ? duration
+                : new Duration(TimeSpan.FromMilliseconds(220)),
+            EasingFunction = Application.Current.TryFindResource("AnimationEasingCubicOut") as IEasingFunction,
+            FillBehavior = FillBehavior.Stop
+        };
+        animation.Completed += (_, _) =>
+        {
+            _navigationStore.BeginAnimation(WidthProperty, null);
+            _navigationStore.BeginAnimation(MinWidthProperty, null);
+            _navigationStore.BeginAnimation(MaxWidthProperty, null);
+            _navigationStore.Width = targetWidth;
+            _navigationStore.MinWidth = targetWidth;
+            _navigationStore.MaxWidth = targetWidth;
+        };
+
+        _navigationStore.BeginAnimation(WidthProperty, animation);
+        _navigationStore.BeginAnimation(MinWidthProperty, animation.Clone());
+        _navigationStore.BeginAnimation(MaxWidthProperty, animation.Clone());
     }
 
     private static double GetNavigationWidthResource(string key, double fallback)

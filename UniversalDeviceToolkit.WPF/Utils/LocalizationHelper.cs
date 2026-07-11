@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -313,6 +314,7 @@ public static class LocalizationHelper
         Resource.Culture = cultureInfo;
         LenovoLegionToolkit.Lib.Resources.Resource.Culture = cultureInfo;
         UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = cultureInfo;
+        UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = cultureInfo;
         
         // Set plugin resource cultures
         SetPluginResourceCultures(cultureInfo);
@@ -333,34 +335,26 @@ public static class LocalizationHelper
         {
             defaultCultureInfo ??= Resource.Culture ?? CultureInfo.CurrentUICulture;
 
-            // Iterate through all loaded assemblies to find plugin Resource classes
-            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                try
+                foreach (var resourceType in GetPluginResourceTypes(assembly))
                 {
-                    var assemblyName = assembly.GetName().Name;
-                    if (assemblyName != null && assemblyName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+                    try
                     {
-                        // Try both default namespace placements used by plugin resource designers.
-                        var resourceType = assembly.GetType($"{assemblyName}.Resource")
-                                           ?? assembly.GetType($"{assemblyName}.Resources.Resource");
-                        if (resourceType != null)
-                        {
-                            var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                            if (cultureProperty != null)
-                            {
-                                cultureProperty.SetValue(null, defaultCultureInfo);
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Set resource culture for plugin: {assemblyName} = {defaultCultureInfo.Name}");
-                            }
-                        }
+                        var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        var resourceManagerProperty = resourceType.GetProperty("ResourceManager", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        if (cultureProperty?.PropertyType != typeof(CultureInfo) || resourceManagerProperty?.PropertyType != typeof(ResourceManager))
+                            continue;
+
+                        cultureProperty.SetValue(null, defaultCultureInfo);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Set resource culture for plugin resource: {resourceType.FullName} = {defaultCultureInfo.Name}");
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Continue with other assemblies if one fails
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to set resource culture for assembly: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to set plugin resource culture for {resourceType.FullName}: {ex.Message}");
+                    }
                 }
             }
         }
@@ -380,6 +374,32 @@ public static class LocalizationHelper
         }
     }
 
+    private static Type[] GetPluginResourceTypes(System.Reflection.Assembly assembly)
+    {
+        try
+        {
+            return FilterPluginResourceTypes(assembly.GetTypes());
+        }
+        catch (System.Reflection.ReflectionTypeLoadException ex)
+        {
+            return FilterPluginResourceTypes(ex.Types.Where(type => type is not null).Cast<Type>());
+        }
+        catch
+        {
+            return Array.Empty<Type>();
+        }
+    }
+
+    private static Type[] FilterPluginResourceTypes(IEnumerable<Type> types) =>
+        types.Where(type =>
+                type.Name == "Resource" &&
+                (type.Namespace?.EndsWith(".Resources", StringComparison.Ordinal) == true ||
+                 type.FullName?.EndsWith(".Resource", StringComparison.Ordinal) == true) &&
+                type.Assembly != typeof(Resource).Assembly &&
+                type.Assembly != typeof(LenovoLegionToolkit.Lib.Resources.Resource).Assembly &&
+                type.Assembly != typeof(UniversalDeviceToolkit.Lib.Automation.Resources.Resource).Assembly &&
+                type.Assembly != typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly)
+            .ToArray();
     private static unsafe string? GetSystemShortDateFormat()
     {
         var ptr = IntPtr.Zero;
