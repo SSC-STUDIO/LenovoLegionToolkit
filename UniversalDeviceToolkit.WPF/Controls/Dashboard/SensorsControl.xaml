@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
     x:Class="UniversalDeviceToolkit.WPF.Controls.Dashboard.SensorsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,8 +19,7 @@
         <Style x:Key="SensorSectionStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="6,0" />
             <Setter Property="MinWidth" Value="0" />
-        </Style>
-        <Style x:Key="SensorHeaderModelStyle" TargetType="TextBlock" BasedOn="{StaticResource AppCaptionTextBlockStyle}">
+        </Style>        <Style x:Key="SensorHeaderModelStyle" TargetType="TextBlock" BasedOn="{StaticResource AppCaptionTextBlockStyle}">
             <Setter Property="Margin" Value="8,1,0,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -40,12 +39,32 @@
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
         <Style x:Key="MetricProgressBarStyle" TargetType="ProgressBar">
-            <Setter Property="Height" Value="5" />
+            <Setter Property="Height" Value="6" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />
-            <Setter Property="Margin" Value="6,0,6,0" />
+            <Setter Property="Margin" Value="8,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Maximum" Value="100" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid Height="{TemplateBinding Height}" SnapsToDevicePixels="True">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="3" />
+                            <Grid x:Name="PART_Track" ClipToBounds="True">
+                                <Border
+                                    x:Name="PART_Indicator"
+                                    HorizontalAlignment="Left"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="3" />
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="LegendTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppSmallBodyTextBlockStyle}">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -60,7 +79,9 @@
             <Setter Property="Margin" Value="0,14,0,0" />
             <Setter Property="Height" Value="76" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ChartSurfaceBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="ClipToBounds" Value="True" />
         </Style>
 
@@ -151,6 +172,7 @@
             x:Name="_sensorsCard"
             AutomationProperties.AutomationId="DashboardSensorsCard"
             Background="{DynamicResource AppSurfaceCardBrush}"
+            CornerRadius="{StaticResource CornerRadiusCard}"
             Focusable="False"
             PreviewMouseLeftButtonDown="CardControl_PreviewMouseLeftButtonDown">
         <wpfui:CardControl.Header>
@@ -497,7 +519,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Column="0" Margin="0,0,8,0" Maximum="100" Height="6">
+                            <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Column="0" Margin="0,0,8,0" Maximum="100" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
                             <TextBlock x:Name="_gpuMemoryClockText" Grid.Column="1" Text="-" />

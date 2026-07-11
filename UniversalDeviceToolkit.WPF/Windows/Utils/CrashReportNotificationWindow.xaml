@@ -1,4 +1,4 @@
-<wpfui:FluentWindow
+﻿<wpfui:FluentWindow
     x:Class="UniversalDeviceToolkit.WPF.Windows.Utils.CrashReportNotificationWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -82,7 +82,7 @@
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                CornerRadius="6"
+                CornerRadius="{StaticResource CornerRadiusCompact}"
                 Padding="12"
                 MaxHeight="200">
                 <ScrollViewer

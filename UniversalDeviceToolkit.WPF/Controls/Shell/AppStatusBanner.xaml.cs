@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
@@ -53,13 +53,10 @@ public partial class AppStatusBanner : UserControl
     {
         if (Severity == AppStatusBannerSeverity.Success)
         {
-            RootBorder.SetResourceReference(Border.BackgroundProperty, "StatusSuccessBackgroundBrush");
             Icon.Symbol = SymbolRegular.ArrowSync24;
             Icon.SetResourceReference(Control.ForegroundProperty, "StatusSuccessBrush");
             return;
         }
-
-        RootBorder.SetResourceReference(Border.BackgroundProperty, "StatusWarningBackgroundBrush");
         Icon.Symbol = SymbolRegular.Warning24;
         Icon.SetResourceReference(Control.ForegroundProperty, "StatusWarningBrush");
     }

@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="UniversalDeviceToolkit.WPF.Pages.WindowsOptimizationPage"
     x:Name="PageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -39,7 +39,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="8,8,0,0"
+                            CornerRadius="{StaticResource CornerRadiusSurfaceTop}"
                             Padding="{TemplateBinding Padding}"
                             Margin="{TemplateBinding Margin}">
                             <ContentPresenter
@@ -911,7 +911,7 @@
                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1"
-                                            CornerRadius="8"
+                                            CornerRadius="{StaticResource CornerRadiusControl}"
                                             Visibility="Collapsed">
                                             <StackPanel
                                                 MaxWidth="520"
@@ -1045,7 +1045,7 @@
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="ListViewItem">
-                                                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                            <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CornerRadiusControl}">
                                                                 <ContentPresenter Margin="12" />
                                                             </Border>
                                                         </ControlTemplate>
@@ -1370,7 +1370,7 @@
                                                 Margin="0,0,0,8"
                                                 Padding="12"
                                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                                CornerRadius="8">
+                                                CornerRadius="{StaticResource CornerRadiusControl}">
                                                         <StackPanel>
                                                             <TextBlock
                                                                 FontWeight="Medium"

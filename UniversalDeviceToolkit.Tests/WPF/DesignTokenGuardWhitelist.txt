@@ -1,0 +1,15 @@
+﻿# Design token guard whitelist
+#
+# Each line is a .NET regular expression (RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)
+# that, when matched against a XAML file path (forward-slash relative to the repo root),
+# suppresses design-token guard violations in that file.
+#
+# Lines beginning with '#' and blank lines are ignored.
+#
+# Use this file ONLY for files that legitimately must contain literal values that
+# the guard cannot distinguish from magic numbers (e.g. icon resources, font glyphs,
+# third-party control templates that cannot be touched).
+#
+# Examples:
+#   UniversalDeviceToolkit\.WPF/Styles/Charts\.xaml$
+#   UniversalDeviceToolkit\.WPF/Assets/.*\.xaml$

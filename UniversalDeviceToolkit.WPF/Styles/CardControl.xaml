@@ -1,11 +1,14 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom">
 
     <!--  ReSharper disable Xaml.StaticResourceNotResolved  -->
 
-    <Style BasedOn="{StaticResource DefaultUiCardControlStyle}" TargetType="{x:Type custom:CardControl}" />
+    <Style BasedOn="{StaticResource DefaultUiCardControlStyle}" TargetType="{x:Type custom:CardControl}">
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
 
     <!--  ReSharper restore Xaml.StaticResourceNotResolved  -->
 

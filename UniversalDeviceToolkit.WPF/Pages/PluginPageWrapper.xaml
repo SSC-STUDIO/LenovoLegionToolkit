@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="UniversalDeviceToolkit.WPF.Pages.PluginPageWrapper"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -43,7 +43,7 @@
             x:Name="_emptyStateBorder"
             AutomationProperties.AutomationId="PluginPageEmptyState"
             Grid.Row="1"
-            CornerRadius="8"
+            CornerRadius="{StaticResource CornerRadiusControl}"
             Padding="24"
             Background="{DynamicResource ControlFillColorSecondaryBrush}"
             Visibility="Collapsed">

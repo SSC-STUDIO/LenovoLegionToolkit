@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Effects;
 using LenovoLegionToolkit.Lib.Settings;
@@ -15,7 +15,7 @@ internal static class ShellChromeHelper
             return;
         }
 
-        if (Application.Current.TryFindResource("ElevationShadowLowEffect") is DropShadowEffect effect)
+        if (Application.Current.TryFindResource("ContentSurfaceDividerShadowEffect") is DropShadowEffect effect)
             contentSurface.Effect = effect;
     }
 }

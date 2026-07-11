@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
@@ -29,7 +29,13 @@ public class ThemeManager
         "TextFillColorSecondaryBrush",
         "AppSurfaceBackgroundBrush",
         "AppSurfaceCardBrush",
-        "AppNavigationBackgroundBrush"
+        "AppNavigationBackgroundBrush",
+        "ChartSurfaceBrush",
+        "ChartSurfaceBorderBrush",
+        "ChartGridlineBrush",
+        "ChartBaselineBrush",
+        "NotificationGlassSurfaceBrush",
+        "NotificationGlassBorderBrush"
     ];
 
     private readonly ApplicationSettings _settings;
@@ -202,6 +208,12 @@ public class ThemeManager
         SetBrush("AppSurfaceBackgroundBrush", surfaceBackground);
         SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
         SetBrush("AppNavigationBackgroundBrush", surfaceBackground);
+        SetBrush("ChartSurfaceBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(26, 26, 26), isDark ? 0.035 : 0.025);
+        SetBrush("ChartSurfaceBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), 0.08);
+        SetBrush("ChartGridlineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.10 : 0.09);
+        SetBrush("ChartBaselineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.16);
+        SetBrush("NotificationGlassSurfaceBrush", isDark ? Color.FromRgb(44, 44, 44) : Color.FromRgb(252, 252, 252), isDark ? 0.96 : 0.97);
+        SetBrush("NotificationGlassBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.12);
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
@@ -171,6 +171,26 @@ public class TrendChartControl : FrameworkElement
         InvalidateVisual();
     }
 
+    public static readonly DependencyProperty GridlineBrushProperty = DependencyProperty.Register(
+        nameof(GridlineBrush), typeof(Brush), typeof(TrendChartControl),
+        new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public Brush GridlineBrush
+    {
+        get => (Brush)GetValue(GridlineBrushProperty);
+        set => SetValue(GridlineBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty BaselineBrushProperty = DependencyProperty.Register(
+        nameof(BaselineBrush), typeof(Brush), typeof(TrendChartControl),
+        new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public Brush BaselineBrush
+    {
+        get => (Brush)GetValue(BaselineBrushProperty);
+        set => SetValue(BaselineBrushProperty, value);
+    }
+
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
@@ -180,7 +200,7 @@ public class TrendChartControl : FrameworkElement
         if (width <= 1 || height <= 1)
             return;
 
-        DrawGridlines(dc, width, height);
+        DrawGridlines(dc, width, height, GridlineBrush, BaselineBrush);
 
         foreach (var series in _orderedSeries)
             DrawSeries(dc, series, width, height);
@@ -190,10 +210,9 @@ public class TrendChartControl : FrameworkElement
     /// Faint horizontal guide lines (25/50/75%) plus a slightly stronger baseline so an empty
     /// chart still reads as a chart surface and filled series stay easy to gauge by eye.
     /// </summary>
-    private static void DrawGridlines(DrawingContext dc, double width, double height)
+    private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
     {
-        var grid = new Pen(new SolidColorBrush(Color.FromArgb(16, 255, 255, 255)), 1);
-        grid.Freeze();
+        var grid = new Pen(gridlineBrush, 1);
 
         for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
         {
@@ -201,8 +220,7 @@ public class TrendChartControl : FrameworkElement
             dc.DrawLine(grid, new Point(0, y), new Point(width, y));
         }
 
-        var baseline = new Pen(new SolidColorBrush(Color.FromArgb(34, 255, 255, 255)), 1);
-        baseline.Freeze();
+        var baseline = new Pen(baselineBrush, 1);
         dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
     }
 

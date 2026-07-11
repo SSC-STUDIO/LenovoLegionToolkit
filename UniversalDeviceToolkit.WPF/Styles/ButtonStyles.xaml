@@ -1,10 +1,13 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!-- Apply the canonical keyboard focus ring to all WPF-UI buttons. -->
     <Style BasedOn="{StaticResource {x:Type wpfui:Button}}" TargetType="wpfui:Button">
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeightCompact}" />
+        <Setter Property="Padding" Value="14,6" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <Style.Triggers>
             <Trigger Property="IsPressed" Value="True">
@@ -18,7 +21,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthCompact}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 
     <!-- Standard Button Style -->
@@ -26,7 +29,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 
     <!-- Primary Button Style -->
@@ -35,7 +38,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
@@ -46,7 +49,7 @@
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthLarge}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeSubsection}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 
 </ResourceDictionary>

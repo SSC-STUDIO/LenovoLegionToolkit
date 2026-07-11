@@ -1,7 +1,13 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:charts="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Charts">
+
+    <Style TargetType="{x:Type charts:TrendChartControl}">
+        <Setter Property="GridlineBrush" Value="{DynamicResource ChartGridlineBrush}" />
+        <Setter Property="BaselineBrush" Value="{DynamicResource ChartBaselineBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
 
     <!-- Default template for the self-drawn radial gauge. -->
     <Style TargetType="{x:Type charts:RadialGaugeControl}">
