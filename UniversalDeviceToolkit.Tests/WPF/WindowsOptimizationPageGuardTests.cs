@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using FluentAssertions;
 using Xunit;
 
@@ -25,7 +25,11 @@ public sealed class WindowsOptimizationPageGuardTests
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-        return File.ReadAllText(Path.Combine([root, .. pathParts]));
+var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null && !Directory.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.WPF")))
+            directory = directory.Parent;
+
+        directory.Should().NotBeNull("the test must run from inside the repository tree");
+        return File.ReadAllText(Path.Combine([directory!.FullName, .. pathParts]));
     }
 }
