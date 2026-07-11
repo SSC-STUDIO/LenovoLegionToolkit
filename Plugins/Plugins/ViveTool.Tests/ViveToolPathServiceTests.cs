@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -295,6 +295,37 @@ public class ViveToolPathServiceTests
     public void ViveToolExeName_IsCorrect()
     {
         Assert.Equal("ViVeTool.exe", ViveToolPathService.ViveToolExeName);
+    }
+
+    [Fact]
+    public async Task SaveAsync_LeavesNoTempFile_AndProducesValidJson()
+    {
+        var settings = GetSettings(new ViveToolPathService());
+        await settings.LoadAsync();
+
+        // Set a known value and save
+        settings.ViveToolPath = "C:\\test\\ViVeTool.exe";
+        await settings.SaveAsync();
+
+        // Get the settings file path via reflection (static readonly)
+        var settingsFilePath = (string)typeof(LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
+            .GetField("SettingsFilePath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
+            .GetValue(null)!;
+
+        // Verify no .tmp file left behind
+        Assert.False(File.Exists(settingsFilePath + ".tmp"),
+            "Temp file should not exist after atomic save completes");
+
+        // Verify settings file is valid JSON
+        Assert.True(File.Exists(settingsFilePath));
+        var json = await File.ReadAllTextAsync(settingsFilePath);
+        var doc = System.Text.Json.JsonDocument.Parse(json);
+        Assert.True(doc.RootElement.TryGetProperty("ViveToolPath", out var pathProp));
+        Assert.Equal("C:\\test\\ViVeTool.exe", pathProp.GetString());
+
+        // Restore original state
+        settings.ViveToolPath = null;
+        await settings.SaveAsync();
     }
 
     private static LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService service)

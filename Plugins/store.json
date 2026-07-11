@@ -1,9 +1,9 @@
-{
+﻿{
   "lastUpdated": "2026-07-11T00:00:00.0000000\u002B00:00",
   "plugins": [
     {
       "id": "battery-health",
-      "name": "Battery Health (Migrated)",
+      "name": "Battery Health (Legacy)",
       "description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
       "author": "SSC-STUDIO",
       "version": "1.0.0",
@@ -58,7 +58,8 @@
         "diagnostics",
         "power"
       ],
-      "status": "Migrated"
+      "status": "Legacy",
+      "removalVersion": "5.0.0"
     },
     {
       "id": "custom-mouse",
@@ -120,8 +121,8 @@
     },
     {
       "id": "network-acceleration",
-      "name": "Network Acceleration (Migrated)",
-      "description": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+      "name": "Network Acceleration (Legacy)",
+      "description": "Retained as a legacy package only. Network diagnostic and selective proxy acceleration features are not currently bundled in Universal Device Toolkit. No active support; use only to migrate existing settings.",
       "author": "SSC-STUDIO",
       "version": "1.2.0",
       "minLLTVersion": "4.2.1",
@@ -176,7 +177,9 @@
         "acceleration",
         "performance"
       ],
-      "status": "Migrated"
+      "status": "Legacy",
+      "removalVersion": "5.0.0",
+      "internalMigrationOnly": true
     },
     {
       "id": "shell-integration",

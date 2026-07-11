@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -173,7 +173,9 @@ public class ViveToolSettings
             }
 
             var json = JsonSerializer.Serialize(dataToSave, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(SettingsFilePath, json);
+            var tempPath = SettingsFilePath + ".tmp";
+            await File.WriteAllTextAsync(tempPath, json);
+            File.Move(tempPath, SettingsFilePath, overwrite: true);
         }
         catch (Exception ex)
         {
