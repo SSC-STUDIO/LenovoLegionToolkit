@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -452,6 +452,15 @@ CPU/GPU 性能。
   </data>
   <data name="DiscreteGPUControl_Title" xml:space="preserve">
     <value>独立显卡</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>ITS 模式</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>智能温控方案</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>当前系统未安装 ITS 运行库。</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>更改内置屏幕亮度。
@@ -1894,6 +1903,9 @@ ImController 可能
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
     <value>时间</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>（时:分）</value>
   </data>
   <data name="ToggleHybridModeControl_Message" xml:space="preserve">
     <value>混合模式允许在核显与独显之间切换。

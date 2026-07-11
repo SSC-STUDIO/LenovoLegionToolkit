@@ -2303,6 +2303,32 @@ namespace UniversalDeviceToolkit.WPF.Resources {
                 return ResourceManager.GetString("DiscreteGPUControl_Title", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Intelligent Thermal Solution.
+        /// </summary>
+        public static string DashboardITSModeControl_Subtitle {
+            get {
+                return ResourceManager.GetString("DashboardITSModeControl_Subtitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ITS runtime is unavailable on this system..
+        /// </summary>
+        public static string DashboardITSModeControl_RuntimeUnavailable {
+            get {
+                return ResourceManager.GetString("DashboardITSModeControl_RuntimeUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ITS Mode.
+        /// </summary>
+        public static string DashboardITSModeControl_Title {
+            get {
+                return ResourceManager.GetString("DashboardITSModeControl_Title", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to Change display brightness of the built-in display.  WARNING: This action will....
@@ -8707,6 +8733,14 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string TimeAutomationPipelineTriggerTabItemContent_Time {
             get {
                 return ResourceManager.GetString("TimeAutomationPipelineTriggerTabItemContent_Time", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to (HH:MM).
+        /// </summary>
+        public static string TimeAutomationPipelineTriggerTabItemContent_HHMMHint {
+            get {
+                return ResourceManager.GetString("TimeAutomationPipelineTriggerTabItemContent_HHMMHint", resourceCulture);
             }
         }
 

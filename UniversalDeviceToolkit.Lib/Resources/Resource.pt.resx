@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -687,7 +687,7 @@
     <value>Não é possível gravar a variável {0} no UEFI</value>
   </data>
   <data name="Exception_CommandExitedNonZero" xml:space="preserve">
-    <value>Command exited with non-zero code {0}. Output: {1}</value>
+    <value>Command '{0}' failed with exit code {1}. {2}</value>
   </data>
 
   <data name="Exception_WmiFeatureUnavailable" xml:space="preserve">
@@ -853,7 +853,7 @@
     <value>Optimization action with identifier {0} was not found.</value>
   </data>
   <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
-    <value>Rollback is not available for this optimization action.</value>
+    <value>Optimization action cannot be reverted: {0}</value>
   </data>
 
 

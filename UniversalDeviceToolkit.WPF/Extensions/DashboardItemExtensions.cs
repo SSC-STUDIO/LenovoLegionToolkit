@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -68,7 +68,7 @@ public static class DashboardItemExtensions
         DashboardItem.FnLock => Resource.FnLockControl_Title,
         DashboardItem.WinKeyLock => Resource.WinKeyControl_Title,
         DashboardItem.WhiteKeyboardBacklight => Resource.WhiteKeyboardBacklightControl_Title,
-        DashboardItem.ItsMode => "ITS Mode",
+        DashboardItem.ItsMode => Resource.DashboardITSModeControl_Title,
         _ => throw new InvalidOperationException($"Invalid DashboardItem {dashboardItem}"),
     };
 
@@ -108,8 +108,8 @@ file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<I
     public DashboardITSModeControl()
     {
         Icon = SymbolRegular.Gauge24;
-        Title = "ITS Mode";
-        Subtitle = "Intelligent Thermal Solution";
+        Title = Resource.DashboardITSModeControl_Title;
+        Subtitle = Resource.DashboardITSModeControl_Subtitle;
     }
 
     protected override string ComboBoxItemDisplayName(ITSMode value) => value.GetDisplayName();
@@ -128,7 +128,7 @@ file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<I
             }
             catch (DllNotFoundException)
             {
-                await MessageBoxHelper.ShowAsync(this, "ITS Mode", "ITS runtime is unavailable on this system.", Resource.OK);
+                await MessageBoxHelper.ShowAsync(this, Resource.DashboardITSModeControl_Title, Resource.DashboardITSModeControl_RuntimeUnavailable, Resource.OK);
             }
         }
 
