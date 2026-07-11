@@ -178,10 +178,15 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
                 // Memory transaction: skip save if settings unchanged
                 var currentSig = Convert.ToBase64String(bytes);
-                if (_lastSavedJson != null && string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal))
+                bool skip;
+                lock (_lock)
+                {
+                    skip = _lastSavedJson != null && string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal);
+                }
+                if (skip)
                 {
                     _logger?.LogTrace("Settings unchanged (MessagePack), skipping async save");
-                    _cachedSettings = settings;
+                    lock (_lock) { _cachedSettings = settings; }
                     return true;
                 }
 
@@ -191,16 +196,25 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                     await fileStream.WriteAsync(bytes, cancellationToken);
                 }
                 File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
-                _lastSavedJson = currentSig;
+                lock (_lock)
+                {
+                    _lastSavedJson = currentSig;
+                    _cachedSettings = settings;
+                }
             }
             else
             {
                 // Compact form for memory transaction comparison (consistent with Save())
                 var compactJson = JsonSerializer.Serialize(settings);
-                if (_lastSavedJson != null && string.Equals(compactJson, _lastSavedJson, StringComparison.Ordinal))
+                bool skip;
+                lock (_lock)
+                {
+                    skip = _lastSavedJson != null && string.Equals(compactJson, _lastSavedJson, StringComparison.Ordinal);
+                }
+                if (skip)
                 {
                     _logger?.LogTrace("Settings unchanged, skipping async save");
-                    _cachedSettings = settings;
+                    lock (_lock) { _cachedSettings = settings; }
                     return true;
                 }
 
@@ -217,10 +231,12 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                     await fileStream.WriteAsync(jsonBytes, cancellationToken);
                 }
                 File.Move(tempPath, _settingsFilePath, overwrite: true);
-                _lastSavedJson = compactJson;
+                lock (_lock)
+                {
+                    _lastSavedJson = compactJson;
+                    _cachedSettings = settings;
+                }
             }
-
-            _cachedSettings = settings;
 
             handler = SettingsChanged;
         }
@@ -263,6 +279,8 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
     /// <summary>
     /// Saves settings to file.
+    /// Uses _semaphore (not _lock) for file-write mutual exclusion with SaveAsync.
+    /// Memory transaction state (_lastSavedJson, _cachedSettings) is protected by _lock.
     /// </summary>
     public bool Save(T settings)
     {
@@ -273,19 +291,27 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         }
 
         EventHandler<T>? handler;
+
+        // Phase 1: memory transaction under _lock (re-entrant with Update/Load)
+        byte[]? mpckBytes = null;
+        string? indentedJson = null;
         lock (_lock)
         {
             try
             {
                 // Pre-serialize once for both comparison and writing.
-                // For MessagePack: serialize to bytes, reuse for signature + write.
-                // For JSON: serialize compact once for comparison; write indented separately.
-                byte[]? mpckBytes = null;
                 string? currentSig = null;
                 if (_useMessagePack)
                 {
                     mpckBytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
                     currentSig = Convert.ToBase64String(mpckBytes);
+                }
+                else
+                {
+                    indentedJson = JsonSerializer.Serialize(settings, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
                 }
 
                 // Memory transaction: skip save if settings unchanged.
@@ -309,36 +335,50 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
-
-                if (_useMessagePack)
-                {
-                    // Reuse pre-serialized bytes — avoids redundant MessagePackSerializer.Serialize call.
-                    var tempMpckPath = _settingsFilePathMpck + ".tmp";
-                    File.WriteAllBytes(tempMpckPath, mpckBytes!);
-                    File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
-                }
-                else
-                {
-                    // JSON serialization (text, human-readable, indented for file)
-                    var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    });
-                    var tempPath = _settingsFilePath + ".tmp";
-                    File.WriteAllText(tempPath, json, Encoding.UTF8);
-                    File.Move(tempPath, _settingsFilePath, overwrite: true);
-                }
-                _cachedSettings = settings;
-
-                handler = SettingsChanged;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Failed to save settings to {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
+                _logger?.LogError(ex, "Failed to prepare settings for save to {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
                 return false;
             }
         }
 
+        // Phase 2: file write under _semaphore — mutually exclusive with SaveAsync
+        _semaphore.Wait();
+        try
+        {
+            if (_useMessagePack)
+            {
+                var tempMpckPath = _settingsFilePathMpck + ".tmp";
+                File.WriteAllBytes(tempMpckPath, mpckBytes!);
+                File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
+            }
+            else
+            {
+                var tempPath = _settingsFilePath + ".tmp";
+                File.WriteAllText(tempPath, indentedJson!, Encoding.UTF8);
+                File.Move(tempPath, _settingsFilePath, overwrite: true);
+            }
+
+            lock (_lock)
+            {
+                _cachedSettings = settings;
+            }
+
+            handler = SettingsChanged;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to save settings to {FilePath}", _useMessagePack ? _settingsFilePathMpck : _settingsFilePath);
+            return false;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+
+        // Fire SettingsChanged outside the semaphore to avoid deadlock when a subscriber
+        // calls Save/SaveAsync on the same instance (matching the pattern in SaveAsync).
         handler?.Invoke(this, settings);
         return true;
     }

@@ -318,5 +318,53 @@ public class SettingsManagerEdgeCaseTests : IDisposable
         Assert.Equal(200, loaded.Value);
     }
 
+    [Fact]
+    public async Task Save_ConcurrentWithSaveAsync_NoCorruption()
+    {
+        var manager = CreateManager("concurrent-save");
+        var jsonPath = SettingsPath("concurrent-save");
+        var exceptions = new System.Collections.Generic.List<Exception>();
+
+        // Interleave 10 synchronous saves and 10 asynchronous saves on the same instance
+        var tasks = new Task[10];
+        for (int i = 0; i < 10; i++)
+        {
+            int index = i;
+            // Alternate: even = Save (sync), odd = SaveAsync
+            if (index % 2 == 0)
+            {
+                tasks[index] = Task.Run(() =>
+                {
+                    try
+                    {
+                        manager.Save(new TestSettings { Name = $"sync-{index}", Value = index, Enabled = true });
+                    }
+                    catch (Exception ex) { lock (exceptions) { exceptions.Add(ex); } }
+                });
+            }
+            else
+            {
+                tasks[index] = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await manager.SaveAsync(new TestSettings { Name = $"async-{index}", Value = index, Enabled = false });
+                    }
+                    catch (Exception ex) { lock (exceptions) { exceptions.Add(ex); } }
+                });
+            }
+        }
+
+        await Task.WhenAll(tasks);
+        Assert.Empty(exceptions);
+
+        // Verify the file is valid JSON and deserializable (not corrupted)
+        Assert.True(File.Exists(jsonPath));
+        var json = await File.ReadAllTextAsync(jsonPath);
+        var deserialized = System.Text.Json.JsonSerializer.Deserialize<TestSettings>(json);
+        Assert.NotNull(deserialized);
+        Assert.True(deserialized!.Value >= 0 && deserialized.Value < 10);
+    }
+
     #endregion
 }
