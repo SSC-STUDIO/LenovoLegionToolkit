@@ -17,9 +17,9 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
 [Plugin(
     id: "shell-integration",
-    name: "Shell Integration",
+    name: "Nilesoft Shell Manager",
     version: "1.0.12",
-    description: "Integrate Universal Device Toolkit with Windows shell context menu",
+    description: "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
     Icon = "Folder24"

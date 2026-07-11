@@ -10,9 +10,9 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
 [Plugin(
     id: "network-acceleration",
-    name: "Network Acceleration",
+    name: "Network Acceleration (Migrated)",
     version: "1.2.0",
-    description: "Real-time network acceleration and optimization features",
+    description: "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
     Icon = "Rocket24"

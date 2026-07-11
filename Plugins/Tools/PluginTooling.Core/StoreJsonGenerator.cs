@@ -72,6 +72,7 @@ public sealed class StoreJsonGenerator
                 IconBackground = storeMetadata.IconBackground,
                 Dependencies = storeMetadata.Dependencies.ToList(),
                 Tags = storeMetadata.Tags.ToList(),
+                Status = ResolveLifecycleStatus(plugin),
             };
 
             var hasExistingEntry = existingEntries.TryGetValue(plugin.Manifest.Id, out var existingEntry);
@@ -192,6 +193,7 @@ public sealed class StoreJsonGenerator
             IconBackground = entry.IconBackground,
             Dependencies = entry.Dependencies.ToList(),
             Tags = entry.Tags.ToList(),
+            Status = entry.Status,
         };
     }
 
@@ -213,6 +215,28 @@ public sealed class StoreJsonGenerator
                string.Equals(left.Icon, right.Icon, StringComparison.Ordinal) &&
                string.Equals(left.IconBackground, right.IconBackground, StringComparison.Ordinal) &&
                left.Dependencies.SequenceEqual(right.Dependencies, StringComparer.Ordinal) &&
-               left.Tags.SequenceEqual(right.Tags, StringComparer.Ordinal);
+               left.Tags.SequenceEqual(right.Tags, StringComparer.Ordinal) &&
+               string.Equals(left.Status, right.Status, StringComparison.Ordinal);
+    }
+
+    private static string ResolveLifecycleStatus(PluginContext plugin)
+    {
+        var explicitLifecycle = plugin.UnifiedManifest.Lifecycle;
+        if (!string.IsNullOrWhiteSpace(explicitLifecycle) &&
+            !string.Equals(explicitLifecycle, PluginLifecycleStatus.Active, StringComparison.OrdinalIgnoreCase))
+        {
+            return explicitLifecycle;
+        }
+
+        var manifestName = plugin.Manifest.Name ?? string.Empty;
+        var description = plugin.UnifiedManifest.Store?.Description ?? string.Empty;
+
+        if (manifestName.Contains("(Migrated)", StringComparison.OrdinalIgnoreCase) ||
+            description.StartsWith("Deprecated:", StringComparison.OrdinalIgnoreCase))
+        {
+            return PluginLifecycleStatus.Migrated;
+        }
+
+        return PluginLifecycleStatus.Active;
     }
 }

@@ -8,6 +8,7 @@
     "isSystemPlugin":  false,
     "repository":  "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
     "issues":  "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
+    "lifecycle":  "Active",
     "contributes":  {
                         "featurePage":  null,
                         "settingsPage":  {

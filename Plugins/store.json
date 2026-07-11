@@ -1,18 +1,18 @@
 {
-  "lastUpdated": "2026-07-07T04:00:35.5230961\u002B00:00",
+  "lastUpdated": "2026-07-11T00:00:00.0000000\u002B00:00",
   "plugins": [
     {
       "id": "battery-health",
-      "name": "Battery Health",
-      "description": "Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit.",
-      "author": "EliuaK_Csy",
+      "name": "Battery Health (Migrated)",
+      "description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+      "author": "SSC-STUDIO",
       "version": "1.0.0",
       "minLLTVersion": "4.2.1",
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/battery-health-v1.0.0/battery-health-v1.0.0.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/battery-health-v1.0.0",
-      "fileSize": 0,
-      "releaseDate": "2026-07-07T04:00:35.5230961\u002B00:00",
+      "fileSize": 2990144,
+      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -57,12 +57,13 @@
         "monitoring",
         "diagnostics",
         "power"
-      ]
+      ],
+      "status": "Migrated"
     },
     {
       "id": "custom-mouse",
-      "name": "Custom Mouse",
-      "description": "Personalize your mouse experience with theme-aware cursor styles, DPI profiles, and seamless Windows integration.",
+      "name": "Cursor & Pointer",
+      "description": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
       "author": "SSC-STUDIO",
       "version": "1.0.16",
       "minLLTVersion": "4.2.1",
@@ -70,7 +71,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.16",
       "fileSize": 0,
-      "releaseDate": "2026-07-07T04:00:35.5230961\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -112,16 +113,15 @@
       "tags": [
         "mouse",
         "customization",
-        "gaming",
         "cursor",
-        "dpi",
         "productivity"
-      ]
+      ],
+      "status": "Active"
     },
     {
       "id": "network-acceleration",
-      "name": "Network Acceleration",
-      "description": "Boost your network performance with real-time telemetry, adaptive acceleration presets, and one-click optimizations for gaming and work.",
+      "name": "Network Acceleration (Migrated)",
+      "description": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
       "author": "SSC-STUDIO",
       "version": "1.2.0",
       "minLLTVersion": "4.2.1",
@@ -129,7 +129,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.2.0/network-acceleration-v1.2.0.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.2.0",
       "fileSize": 0,
-      "releaseDate": "2026-07-07T04:00:35.5230961\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -175,12 +175,13 @@
         "telemetry",
         "acceleration",
         "performance"
-      ]
+      ],
+      "status": "Migrated"
     },
     {
       "id": "shell-integration",
-      "name": "Shell Integration",
-      "description": "Seamlessly integrate Universal Device Toolkit into your Windows shell context menu for instant access to power features.",
+      "name": "Nilesoft Shell Manager",
+      "description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
       "author": "SSC-STUDIO",
       "version": "1.0.12",
       "minLLTVersion": "4.2.1",
@@ -188,7 +189,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.12/shell-integration-v1.0.12.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.12",
       "fileSize": 0,
-      "releaseDate": "2026-07-07T04:00:35.5230961\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -234,7 +235,8 @@
         "context-menu",
         "productivity",
         "windows"
-      ]
+      ],
+      "status": "Active"
     },
     {
       "id": "vive-tool",
@@ -247,7 +249,7 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.2/vive-tool-v1.2.2.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.2",
       "fileSize": 0,
-      "releaseDate": "2026-07-07T04:00:35.5230961\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -293,7 +295,8 @@
         "customization",
         "tweaks",
         "insider"
-      ]
+      ],
+      "status": "Active"
     }
   ]
 }

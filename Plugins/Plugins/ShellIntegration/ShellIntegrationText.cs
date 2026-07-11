@@ -5,9 +5,9 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
 public static class ShellIntegrationText
 {
-    public static string PluginName => T(nameof(PluginName), "Shell Integration");
-    public static string PluginDescription => T(nameof(PluginDescription), "Integrate Universal Device Toolkit with Windows shell context menu.");
-    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Shell Integration");
+public static string PluginName => T(nameof(PluginName), "Nilesoft Shell Manager");
+    public static string PluginDescription => T(nameof(PluginDescription), "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.");
+    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Nilesoft Shell Manager");
     public static string Subtitle => T(nameof(Subtitle), "Manage Nilesoft Shell registration and open style editor.");
     public static string OverviewTitle => T(nameof(OverviewTitle), "Shell Integration Overview");
     public static string OverviewDescription => T(nameof(OverviewDescription), "Check registration state, installation path, and jump straight into the packaged Shell tools.");

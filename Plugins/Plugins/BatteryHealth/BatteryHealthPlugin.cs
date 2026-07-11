@@ -5,9 +5,9 @@ namespace LenovoLegionToolkit.Plugins.BatteryHealth;
 
 [Plugin(
     id: "battery-health",
-    name: "Battery Health",
+    name: "Battery Health (Migrated)",
     version: "1.0.0",
-    description: "Monitor battery health and cycle count",
+    description: "Deprecated: battery health monitoring is now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.15",
     Icon = "BatteryCharge24"

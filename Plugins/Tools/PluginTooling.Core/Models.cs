@@ -77,6 +77,9 @@ public sealed class UnifiedPluginManifest
 
     [JsonPropertyName("store")]
     public PluginStoreMetadata Store { get; set; } = new();
+
+    [JsonPropertyName("lifecycle")]
+    public string Lifecycle { get; set; } = PluginLifecycleStatus.Active;
 }
 
 public sealed class PluginContributions
@@ -248,6 +251,16 @@ public sealed class StorePluginEntry
 
     [JsonPropertyName("tags")]
     public List<string> Tags { get; set; } = [];
+
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = PluginLifecycleStatus.Active;
+}
+
+public static class PluginLifecycleStatus
+{
+    public const string Active = "Active";
+    public const string Deprecated = "Deprecated";
+    public const string Migrated = "Migrated";
 }
 
 public sealed class ValidationRequest

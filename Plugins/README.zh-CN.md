@@ -21,10 +21,11 @@ Free. Open-source. No ads. No telemetry. Just better Windows.
 
 | # | 插件 | 版本 | 说明 | 安装 |
 |---|--------|---------|-------------|---------|
-| 🔥 | **网络加速** | v1.2.0 | 实时网络流量监控 + 双标签页界面。跟踪速度、峰值流量，一键应用游戏优化预设 | `network-acceleration` |
-| 🖱️ | **自定义鼠标** | v1.0.16 | 主题感知光标样式、DPI 配置、Windows 指针速度管理。自动适配浅色/深色模式 | `custom-mouse` |
+| 🔋 | **电池健康（已迁移）** | v1.0.0 | 已弃用：电池健康监控和提醒现已内置于 Universal Device Toolkit。仅保留用于旧版用户的设置迁移 | `battery-health` |
+| 🔥 | **网络加速（已迁移）** | v1.2.0 | 已弃用：网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。仅保留用于旧版用户的设置迁移 | `network-acceleration` |
+| 🖱️ | **光标与指针** | v1.0.16 | 主题感知光标样式、Windows 指针速度、按键交换以及安全的光标备份与还原。自动适配浅色/深色模式 | `custom-mouse` |
 | 🔧 | **ViVeTool** | v1.2.2 | 从 GUI 解锁 Windows 隐藏功能标志。无需命令行 — 浏览、搜索、启用、禁用功能 | `vive-tool` |
-| 🐚 | **Shell 集成** | v1.0.12 | 右键菜单集成。从 Windows 资源管理器任何位置即时访问电源功能 | `shell-integration` |
+| 🐚 | **Nilesoft Shell 管理器** | v1.0.12 | 在 Universal Device Toolkit 中管理 Nilesoft Shell 的注册及 UDT 管理的配置。需要单独安装 Nilesoft Shell | `shell-integration` |
 
 > **想要更多插件？** 查看 [插件商店](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/store.json) 或 [自己构建](#作者工作流)！
 
@@ -51,15 +52,16 @@ Free. Open-source. No ads. No telemetry. Just better Windows.
 
 ## 🎯 功能亮点
 
-### 网络加速
-- 实时下载/上传流量监控，美观的仪表盘
-- 游戏、流媒体、工作的自适应加速预设
-- 一键网络优化
-- 峰值流量监控和活跃适配器检测
+### 电池健康（已迁移）
+**已弃用** — 电池健康监控和提醒现已内置于 Universal Device Toolkit。此插件仅为从旧版本升级的用户保留设置迁移，新用户应使用内置的电池健康功能。
 
-### 自定义鼠标
+### 网络加速（已迁移）
+**已弃用** — 网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。此插件仅为从旧版本升级的用户保留设置迁移，新用户应使用内置的网络诊断功能。
+
+### 光标与指针
 - 主题感知光标样式（随 Windows 深色/浅色模式自动切换）
-- 每个应用程序的 DPI 配置
+- Windows 指针速度与按键交换控制
+- 安全的光标备份与还原
 - 通过优化面板无缝集成 Windows
 
 ### ViVeTool
@@ -68,10 +70,10 @@ Free. Open-source. No ads. No telemetry. Just better Windows.
 - 带搜索和过滤的干净表格 UI
 - 安全默认 — 切换不会破坏任何东西
 
-### Shell 集成
-- 将 Universal Device Toolkit 操作添加到 Windows 右键菜单
-- 快速访问电源计划、RGB 控制、风扇配置
-- 最小占用，无后台服务
+### Nilesoft Shell 管理器
+- 在 Universal Device Toolkit 中直接管理 Nilesoft Shell 注册
+- 应用或回滚由 UDT 管理的配置项
+- 需要单独安装 Nilesoft Shell
 
 ---
 

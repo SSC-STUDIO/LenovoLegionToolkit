@@ -8,6 +8,7 @@
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
+  "lifecycle": "Migrated",
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationControl",
