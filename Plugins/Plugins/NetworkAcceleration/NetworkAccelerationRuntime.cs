@@ -150,19 +150,18 @@ public sealed class NetworkAccelerationRuntime
             {
                 try
                 {
-                    await loopTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+                    await loopTask.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 }
                 catch (TimeoutException)
                 {
                     // Loop task didn't complete within timeout - log but don't block shutdown
                     PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
                 }
+                catch (OperationCanceledException)
+                {
+                    // Internal CTS cancelled - expected during shutdown
+                }
             }
-        }
-        catch (OperationCanceledException)
-        {
-            // Cancellation is expected - propagate to caller
-            throw;
         }
         catch
         {
@@ -172,6 +171,9 @@ public sealed class NetworkAccelerationRuntime
         {
             cts.Dispose();
         }
+
+        // Propagate external cancellation after internal cleanup completes
+        cancellationToken.ThrowIfCancellationRequested();
     }
 
     /// <summary>

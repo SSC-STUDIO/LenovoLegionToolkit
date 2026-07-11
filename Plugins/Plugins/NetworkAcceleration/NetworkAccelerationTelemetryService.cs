@@ -18,9 +18,12 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
 {
     private readonly Dictionary<string, (long ReceivedBytes, long SentBytes)> _lastCounters = new(StringComparer.OrdinalIgnoreCase);
     private DateTimeOffset? _lastTimestamp;
+    private readonly object _lock = new();
 
     public NetworkAccelerationTelemetrySnapshot Capture()
     {
+        lock (_lock)
+        {
         var now = DateTimeOffset.UtcNow;
         var interfaces = NetworkInterface.GetAllNetworkInterfaces()
             .Where(networkInterface =>
@@ -105,11 +108,15 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
             TotalReceivedBytes = totalReceivedBytes,
             TotalSentBytes = totalSentBytes
         };
+        }
     }
 
     public void Dispose()
     {
-        _lastCounters.Clear();
-        _lastTimestamp = null;
+        lock (_lock)
+        {
+            _lastCounters.Clear();
+            _lastTimestamp = null;
+        }
     }
 }
