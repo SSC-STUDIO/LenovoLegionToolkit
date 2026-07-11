@@ -17,7 +17,7 @@
         <StackPanel
             x:Name="_content"
             Orientation="Vertical"
-            Visibility="{Binding IsGpuContentReady, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
+            Visibility="{Binding IsGpuContentReady, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}">
             <Grid HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -31,21 +31,21 @@
                     Width="12"
                     Height="12"
                     Fill="{DynamicResource StatusSuccessBrush}"
-                    Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
+                    Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusInactiveIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
                     Fill="{DynamicResource StatusWarningBrush}"
-                    Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
+                    Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
                 <Ellipse
                     x:Name="_discreteGPUStatusPoweredOffIndicator"
                     Grid.Column="0"
                     Width="12"
                     Height="12"
                     Fill="{DynamicResource TextFillColorTertiaryBrush}"
-                    Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" />
+                    Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
                 <TextBlock
                     x:Name="_discreteGPUStatusDescription"
                     Grid.Column="1"
@@ -74,7 +74,7 @@
                 Appearance="Primary"
                 AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}"
                 Click="DeactivateGPUButton_Click"
-                IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowOnDisabled="True">
                 <wpfui:Button.Content>
