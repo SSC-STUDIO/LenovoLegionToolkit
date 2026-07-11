@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
@@ -45,7 +46,9 @@ namespace UniversalDeviceToolkit.WPF.Windows
 public partial class MainWindow
 {
     private const int WmNchittest = 0x0084;
+    private const int WmNclbuttonUp = 0x00A2;
     private const int HtClient = 1;
+    private const int HtMaxButton = 9;
 
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginManager _pluginManager;
@@ -58,6 +61,7 @@ public partial class MainWindow
     private TrayHelper? _trayHelper;
     private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
     private readonly Snackbar _snackbar;
+    private double _navigationSplitterWidth;
 
     public bool TrayTooltipEnabled { get; set; } = true;
     public bool SuppressClosingEventHandler { get; set; }
@@ -136,6 +140,45 @@ public partial class MainWindow
         };
     }
 
+    private void NavigationSplitter_DragDelta(object sender, DragDeltaEventArgs e)
+    {
+        var collapsedWidth = GetNavigationWidthResource("NavigationWidthCollapsed", 70);
+        var expandedWidth = GetNavigationWidthResource("NavigationWidthExpanded", 220);
+        var currentWidth = _navigationSplitterWidth > 0 ? _navigationSplitterWidth : _navigationStore.ActualWidth;
+        _navigationSplitterWidth = Math.Clamp(currentWidth + e.HorizontalChange, collapsedWidth, expandedWidth);
+
+        _navigationStore.BeginAnimation(WidthProperty, null);
+        _navigationStore.BeginAnimation(MinWidthProperty, null);
+        _navigationStore.BeginAnimation(MaxWidthProperty, null);
+        _navigationStore.Width = _navigationSplitterWidth;
+        _navigationStore.MinWidth = _navigationSplitterWidth;
+        _navigationStore.MaxWidth = _navigationSplitterWidth;
+    }
+
+    private void NavigationSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        var collapsedWidth = GetNavigationWidthResource("NavigationWidthCollapsed", 70);
+        var expandedWidth = GetNavigationWidthResource("NavigationWidthExpanded", 220);
+        var threshold = collapsedWidth + ((expandedWidth - collapsedWidth) / 2);
+        var shouldExpand = (_navigationSplitterWidth > 0 ? _navigationSplitterWidth : _navigationStore.ActualWidth) >= threshold;
+        _navigationSplitterWidth = 0;
+
+        if (_navigationStore.IsExpanded != shouldExpand)
+        {
+            _navigationStore.IsExpanded = shouldExpand;
+            return;
+        }
+
+        var targetWidth = shouldExpand ? expandedWidth : collapsedWidth;
+        _navigationStore.Width = targetWidth;
+        _navigationStore.MinWidth = targetWidth;
+        _navigationStore.MaxWidth = targetWidth;
+    }
+
+    private static double GetNavigationWidthResource(string key, double fallback)
+    {
+        return Application.Current.TryFindResource(key) is double width ? width : fallback;
+    }
     private static StackPanel CreateSnackbarContent()
     {
         var snackbarTitle = new TextBlock
@@ -390,6 +433,24 @@ public partial class MainWindow
         _ = CheckForUpdates();
     }
 
+    private void MainTitleBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not TitleBar titleBar || e.ChangedButton != MouseButton.Left)
+            return;
+
+        var point = e.GetPosition(titleBar);
+        var maximizeButtonLeft = titleBar.ActualWidth - 96;
+        var maximizeButtonRight = titleBar.ActualWidth - 48;
+
+        if (point.X < maximizeButtonLeft || point.X >= maximizeButtonRight)
+            return;
+
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal
+            : WindowState.Maximized;
+        e.Handled = true;
+    }
+
     private void OpenLogIndicator_Click(object sender, RoutedEventArgs e)
     {
         e.Handled = true;
@@ -629,6 +690,15 @@ public partial class MainWindow
 
     private IntPtr MainWindowHwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
+        if (msg == WmNclbuttonUp && wParam.ToInt32() == HtMaxButton)
+        {
+            WindowState = WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
+            handled = true;
+            return IntPtr.Zero;
+        }
+
         if (msg != WmNchittest)
             return IntPtr.Zero;
 
