@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +11,9 @@ namespace UniversalDeviceToolkit.WPF;
 public class Flags
 {
     public const string DisableUpdateCheckerSwitch = "--disable-update-checker";
+    public const string SafeStartSwitch = "--safe-start";
+    public const string ResetHardwareStateSwitch = "--reset-hardware-state";
+    public const string ResetNetworkStateSwitch = "--reset-network-state";
 
     public bool IsTraceEnabled { get; }
     public bool Minimized { get; }
@@ -25,6 +28,9 @@ public class Flags
     public string? ProxyPassword { get; }
     public bool ProxyAllowAllCerts { get; }
     public bool DisableUpdateChecker { get; }
+    public bool SafeStart { get; }
+    public bool ResetHardwareState { get; }
+    public bool ResetNetworkState { get; }
 
     public Flags(IEnumerable<string> startupArgs)
     {
@@ -43,6 +49,9 @@ public class Flags
         ProxyPassword = StringValue(args, "--proxy-password");
         ProxyAllowAllCerts = BoolValue(args, "--proxy-allow-all-certs");
         DisableUpdateChecker = BoolValue(args, DisableUpdateCheckerSwitch);
+        SafeStart = BoolValue(args, SafeStartSwitch);
+        ResetHardwareState = BoolValue(args, ResetHardwareStateSwitch);
+        ResetNetworkState = BoolValue(args, ResetNetworkStateSwitch);
     }
 
     private static string[] LoadExternalArgs()
@@ -92,5 +101,8 @@ public class Flags
         $" {nameof(ProxyUsername)}: {ProxyUsername}," +
         $" {nameof(ProxyPassword)}: [REDACTED]," +
         $" {nameof(ProxyAllowAllCerts)}: {ProxyAllowAllCerts}," +
-        $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}";
+        $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}," +
+        $" {nameof(SafeStart)}: {SafeStart}," +
+        $" {nameof(ResetHardwareState)}: {ResetHardwareState}," +
+        $" {nameof(ResetNetworkState)}: {ResetNetworkState}";
 }

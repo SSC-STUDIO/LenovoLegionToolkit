@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +20,8 @@ using LenovoLegionToolkit.Lib.Features.PanelLogo;
 using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.Messaging;
+using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
@@ -36,6 +38,10 @@ using UniversalDeviceToolkit.WPF.Windows;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
 using WinFormsApp = System.Windows.Forms.Application;
 using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
+using SafeStartupHealthGuard = LenovoLegionToolkit.Lib.Utils.StartupHealthGuard;
+using SafeStartupStep = LenovoLegionToolkit.Lib.Utils.StartupStep;
+using SafeStartupRunner = LenovoLegionToolkit.Lib.Utils.StartupInitializationRunner;
+using SafeStartupResult = LenovoLegionToolkit.Lib.Utils.StartupInitializationResult;
 
 namespace UniversalDeviceToolkit.WPF.Startup
 {
@@ -53,10 +59,17 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
         }
 
+        private static readonly string SafeStartBootNotificationMessage =
+            "Last startup encountered repeated failures — switched to safe-start this run.";
+
         private readonly App _app;
         private readonly StartupEventArgs _startupEventArgs;
         private readonly Flags _flags;
         private ApplicationSettings? _settings;
+        private SafeStartupHealthGuard? _startupHealthGuard;
+        private HardwareStateRecoveryService? _hardwareStateRecoveryService;
+        private bool _shouldEnterSafeMode;
+        private IReadOnlyList<string> _skippedStartupSteps = Array.Empty<string>();
 
         public StartupOrchestrator(App app, StartupEventArgs startupEventArgs)
         {
@@ -64,6 +77,29 @@ namespace UniversalDeviceToolkit.WPF.Startup
             _startupEventArgs = startupEventArgs ?? throw new ArgumentNullException(nameof(startupEventArgs));
             _flags = new Flags(startupEventArgs.Args);
         }
+
+        /// <summary>
+        /// Returns the <see cref="LenovoLegionToolkit.Lib.Utils.StartupHealthGuard"/> instance created by
+        /// <see cref="RunAsync"/> so background work (such as
+        /// <c>App.StartBackgroundInitialization</c>) can route through the same
+        /// timeout + failure-tracking machinery as the foreground steps.
+        /// </summary>
+        public SafeStartupHealthGuard? HealthGuard => _startupHealthGuard;
+
+        /// <summary>
+        /// Returns true when the orchestrator decided to honor either an
+        /// explicit <c>--safe-start</c> switch or a persisted "previous run
+        /// was unhealthy" signal. Callers use this to short-circuit optional
+        /// background work.
+        /// </summary>
+        public bool ShouldEnterSafeMode => _shouldEnterSafeMode;
+
+        /// <summary>
+        /// Names of startup steps the orchestrator skipped because safe-start
+        /// mode was active. Useful for diagnostics surfaces (toasts / log
+        /// banners).
+        /// </summary>
+        public IReadOnlyList<string> SkippedSteps => _skippedStartupSteps;
 
         public (Func<Task>[] initializationSteps, Func<Task>[] serviceStartSteps) GetBackgroundInitializationSteps()
         {
@@ -116,7 +152,11 @@ namespace UniversalDeviceToolkit.WPF.Startup
         {
             try
             {
+                RunStartupResetSwitchesIfRequested(_flags);
+
                 await InitializeBootstrappingAsync();
+
+                DetermineAndApplySafeStartMode();
 
                 if (!await InitializeSingleInstanceAsync())
                     return 0;
@@ -137,6 +177,8 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 await StartBackgroundInitAsync();
                 await InitializeOsdAsync();
 
+                PersistStartupHealthOutcome();
+
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Start up complete");
 
@@ -148,8 +190,149 @@ namespace UniversalDeviceToolkit.WPF.Startup
             }
             catch (Exception ex)
             {
+                PersistStartupHealthOutcome(ex);
                 Log.Instance.Error($"Startup critical failure: {ex.Message}", ex);
                 return 1;
+            }
+        }
+
+        private void RunStartupResetSwitchesIfRequested(Flags flags)
+        {
+            if (!flags.ResetHardwareState && !flags.ResetNetworkState)
+                return;
+
+            try
+            {
+                _hardwareStateRecoveryService ??= new HardwareStateRecoveryService();
+
+                if (flags.ResetHardwareState)
+                {
+                    var ok = _hardwareStateRecoveryService.TryResetHardware(out var hwReport);
+                    WriteResetReport(hwReport, "Hardware state reset result.");
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"--reset-hardware-state: ok={ok}; report={Environment.NewLine}{hwReport}");
+                }
+
+                if (flags.ResetNetworkState)
+                {
+                    var ok = _hardwareStateRecoveryService.TryResetNetwork(out var networkReport);
+                    WriteResetReport(networkReport, "Network state reset result.");
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"--reset-network-state: ok={ok}; report={Environment.NewLine}{networkReport}");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Hardware / network reset unhandled exception.", ex);
+                try { Console.Error.WriteLine($"Hardware / network reset failed: {ex.GetType().Name}: {ex.Message}"); }
+                catch { /* Console sink failure must not abort startup */ }
+            }
+        }
+
+        private void DetermineAndApplySafeStartMode()
+        {
+            _startupHealthGuard ??= new SafeStartupHealthGuard();
+            var persistedFailureCount = SafeStartupHealthGuard.ReadPersistedConsecutiveFailureCount();
+            var persistedShouldEnterSafeMode = persistedFailureCount >= SafeStartupHealthGuard.DefaultConsecutiveFailureThreshold;
+
+            _shouldEnterSafeMode = _flags.SafeStart || persistedShouldEnterSafeMode;
+
+            if (_flags.SafeStart)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("SafeStart mode requested via --safe-start switch; non-critical initialization steps will be skipped.");
+                Log.Instance.Info("SafeStart mode requested: skipping non-critical initialization steps.");
+            }
+            else if (persistedShouldEnterSafeMode)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace(
+                        $"Last run reported {persistedFailureCount} consecutive failures (threshold {SafeStartupHealthGuard.DefaultConsecutiveFailureThreshold}); auto-engaging safe-start this run.");
+
+                Log.Instance.Info(
+                    $"SafeStart mode auto-engaged: previous run reported {persistedFailureCount} consecutive failures.");
+
+                try
+                {
+                    _startupHealthGuard.MarkShouldEnterSafeMode();
+
+                    if (Application.Current?.Dispatcher is { } dispatcher && !dispatcher.CheckAccess())
+                    {
+                        dispatcher.BeginInvoke(new Action(PublishSafeStartBootNotification));
+                    }
+                    else
+                    {
+                        PublishSafeStartBootNotification();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to publish safe-start notification: {ex.Message}", ex);
+                }
+            }
+
+            try
+            {
+                _startupHealthGuard.ResetFailureCount();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Resetting health guard on startup failed: {ex.Message}", ex);
+            }
+        }
+
+        private void PublishSafeStartBootNotification()
+        {
+            try
+            {
+                MessagingCenter.Publish(new NotificationMessage(
+                    NotificationType.UpdateAvailable,
+                    NotificationPriority.High,
+                    SafeStartBootNotificationMessage));
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Publish NotificationMessage failed: {ex.Message}", ex);
+            }
+        }
+
+        private void PersistStartupHealthOutcome(Exception? failure = null)
+        {
+            try
+            {
+                var guard = _startupHealthGuard;
+                if (guard is null)
+                    return;
+
+                if (failure is not null)
+                {
+                    SafeStartupHealthGuard.WritePersistedState(SafeStartupHealthGuard.DefaultConsecutiveFailureThreshold, shouldEnterSafeMode: true);
+                    return;
+                }
+
+                SafeStartupHealthGuard.WritePersistedState(0, shouldEnterSafeMode: false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to persist startup-health outcome: {ex.Message}", ex);
+            }
+        }
+
+        private static void WriteResetReport(string report, string heading)
+        {
+            try
+            {
+                Console.Error.WriteLine(heading);
+                Console.Error.WriteLine(report);
+            }
+            catch
+            {
+                /* Console sink unavailable - intentionally swallowed. */
             }
         }
 

@@ -1,0 +1,178 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
+using LenovoLegionToolkit.Lib.Utils;
+using Xunit;
+
+namespace UniversalDeviceToolkit.Tests.Utils;
+
+[Trait("Category", TestCategories.Unit)]
+public class StartupInitializationRunnerTests
+{
+    [Fact]
+    public async Task RunAsync_AllStepsSucceed_SuccessTrueNoFailedSteps()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { });
+        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => { });
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        result.FailedSteps.Should().BeEmpty();
+        result.EnteredSafeMode.Should().BeFalse();
+        result.SkippedSteps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RunAsync_NonCriticalFailure_ContinuesAndRecordsFailure()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { });
+        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => throw new InvalidOperationException("b-fail"),
+            isCritical: false);
+        runner.RegisterStep("c", TimeSpan.FromSeconds(1), () => { });
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        result.FailedSteps.Should().ContainSingle().Which.Should().Be("b");
+        result.SkippedSteps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RunAsync_CriticalFailure_ShortCircuitsRun()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        var afterRan = false;
+
+        runner.RegisterStep("first", TimeSpan.FromSeconds(1),
+            () => throw new InvalidOperationException("first-fail"),
+            isCritical: true);
+        runner.RegisterStep("after", TimeSpan.FromSeconds(1), () => afterRan = true);
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeFalse();
+        result.FailedSteps.Should().ContainSingle().Which.Should().Be("first");
+        afterRan.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task RunAsync_SafeStart_True_SkipsNonCriticalSteps()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard, safeStart: true);
+
+        var nonCriticalRan = false;
+
+        runner.RegisterStep("critical", TimeSpan.FromSeconds(1), () => { }, isCritical: true);
+        runner.RegisterStep("optional", TimeSpan.FromSeconds(1),
+            () => nonCriticalRan = true,
+            isCritical: false);
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        result.EnteredSafeMode.Should().BeTrue();
+        result.SkippedSteps.Should().ContainSingle().Which.Should().Be("optional");
+        nonCriticalRan.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task RunAsync_SafeStart_False_RunsAllSteps()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard, safeStart: false);
+
+        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { }, isCritical: false);
+        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => { }, isCritical: true);
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        result.EnteredSafeMode.Should().BeFalse();
+        result.SkippedSteps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RunAsync_EmptyRunner_ReturnsSuccessAndNoSteps()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        result.FailedSteps.Should().BeEmpty();
+        result.SkippedSteps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RunAsync_AsyncStepsExecuteInOrder()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        var observed = new List<string>();
+
+        runner.RegisterStep("a", TimeSpan.FromSeconds(1),
+            () => observed.Add("a-sync"));
+        runner.RegisterStep("b", TimeSpan.FromSeconds(1), async () =>
+        {
+            await Task.Yield();
+            observed.Add("b-async");
+        });
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        observed.Should().Contain("a-sync");
+        observed.Should().Contain("b-async");
+    }
+
+    [Fact]
+    public async Task RunAsync_PropagatesFailureCountToGuard()
+    {
+        var guard = new StartupHealthGuard(consecutiveFailureThreshold: 2);
+        var runner = new StartupInitializationRunner(guard);
+
+        runner.RegisterStep("a", TimeSpan.FromSeconds(1),
+            () => throw new InvalidOperationException("a-fail"),
+            isCritical: false);
+        runner.RegisterStep("b", TimeSpan.FromSeconds(1),
+            () => throw new InvalidOperationException("b-fail"),
+            isCritical: false);
+
+        var result = await runner.RunAsync();
+
+        result.Success.Should().BeTrue();
+        guard.ConsecutiveFailureCount.Should().Be(2);
+        guard.ShouldEnterSafeMode.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task RunAsync_HonorsCancellationToken()
+    {
+        var guard = new StartupHealthGuard();
+        var runner = new StartupInitializationRunner(guard);
+
+        runner.RegisterStep("never", TimeSpan.FromSeconds(5),
+            () => Thread.Sleep(TimeSpan.FromSeconds(5)));
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        var act = async () => await runner.RunAsync(cts.Token);
+
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+}
