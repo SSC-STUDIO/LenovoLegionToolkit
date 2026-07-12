@@ -170,7 +170,7 @@ public class NetworkAccelerationPluginTests
     }
 
     [Fact]
-    public void GetOptimizationPlan_StreamingMode_AddsTcpResetEvenWhenToggleOff()
+    public void GetOptimizationPlan_StreamingMode_DoesNotAddTcpResetWhenToggleOff()
     {
         var settings = new NetworkAccelerationSettings
         {
@@ -182,7 +182,7 @@ public class NetworkAccelerationPluginTests
         var plan = NetworkAccelerationPlugin.GetOptimizationPlan(settings);
 
         Assert.Contains(plan.Steps, step => step.Key == "FlushDns");
-        Assert.Contains(plan.Steps, step => step.Key == "ResetTcpIp" && !step.Required);
+        Assert.DoesNotContain(plan.Steps, step => step.Key == "ResetTcpIp");
         Assert.DoesNotContain(plan.Steps, step => step.Key == "ResetWinsock");
     }
 }
