@@ -516,7 +516,7 @@ Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-
 Official plugins are published from [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins). The online catalog currently includes:
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
-- **Network Acceleration**: Network tuning with feature and settings pages
+- **Network Acceleration (Legacy)**: Migrated into built-in **System Optimization → Network & acceleration**; store offline, migration-only
 - **Shell Integration**: Context menu and shell styling (system plugin)
 - **ViVeTool**: Manage Windows feature flags and experimental features
 
@@ -817,6 +817,8 @@ Additional documentation is available in the `Docs/` directory:
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | System architecture, components, and data flow |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | Build, test, deployment, and release procedures |
 | [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | Plugin SDK and implementation guide |
+| [LanguagePacks.md](Docs/LanguagePacks.md) | Online language pack catalog protocol and lifecycle |
+| [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | Built-in network & acceleration module |
 | [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | Release and social promotion copy (English) |
 | [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | Release and social promotion copy (Chinese) |
 | [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | Community posting playbook and submission tracker |
@@ -831,6 +833,8 @@ Captured at **1300×850** logical window size via `Tools/VisualRegression.Smoke`
 |------|-------------|
 | `Assets/Screenshot_main.png` | Main application interface (English, Dark theme) |
 | `Assets/Screenshot_zh-hans.png` | Chinese localization interface (Dark theme) |
+
+Refresh procedure (keep 1300×850 logical size): see [DEPLOYMENT.md](Docs/DEPLOYMENT.md#readme-screenshots). Brand binaries are unified under repo-root [`Assets/`](Assets/README.md).
 
 ### Troubleshooting
 

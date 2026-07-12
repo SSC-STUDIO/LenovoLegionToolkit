@@ -141,32 +141,30 @@ Regenerate repository README screenshots on an interactive Windows desktop sessi
 | Expected pixel size | Logical size × Windows display scale (1300×850 at 100% DPI; ~1625×1063 at 125% DPI) |
 | README display width | 700 px (`width="700"` in README markdown) |
 
+<a id="readme-screenshots"></a>
+
 All README screenshots must use the same window size and capture method so aspect ratio and UI density stay consistent.
+Brand binaries (icons/logos) live only under repo-root [`Assets/`](../Assets/README.md).
 
 ```powershell
-dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release
+# Build x64 Release (primary output layout)
+dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj -c Release -p:Platform=x64
 
-dotnet run --project Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release -- `
-  --repo-root . `
-  --output-dir Build/readme-screenshots-en `
-  --configuration Release `
-  --theme Dark `
-  --readme-screenshots
+# Preferred: MainAppPluginUi smoke (captures main shell)
+$appDir = "UniversalDeviceToolkit.WPF/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64"
+dotnet exec Tools/MainAppPluginUi.Smoke/bin/x64/Release/net10.0-windows10.0.26100.0/MainAppPluginUi.Smoke.dll `
+  --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
+  --screenshots always --screenshot-dir Build/readme-screenshots-en --disable-animations
 
-Copy-Item Build/readme-screenshots-en/current/*dashboard*.png Assets/Screenshot_main.png -Force
+# Promote the main-shell home capture
+Copy-Item Build/readme-screenshots-en/*main-shell-home*.png Assets/Screenshot_main.png -Force
 
-dotnet run --project Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release -- `
-  --repo-root . `
-  --output-dir Build/readme-screenshots-zh `
-  --configuration Release `
-  --theme Dark `
-  --lang zh-hans `
-  --readme-screenshots
-
-Copy-Item Build/readme-screenshots-zh/current/*dashboard*.png Assets/Screenshot_zh-hans.png -Force
+# Chinese UI: seed AppData lang=zh-hans, launch Release, capture window (or use VisualRegression.Smoke --lang zh-hans)
+# VisualRegression.Smoke expects bin/Release/.../win-x64 (junction from bin/x64/Release if needed).
 ```
 
 Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
+Last refreshed: 2026-07-12 (`Screenshot_main.png` 1300×850 home; `Screenshot_zh-hans.png` zh-hans UI).
 
 ### Manual Testing Checklist
 

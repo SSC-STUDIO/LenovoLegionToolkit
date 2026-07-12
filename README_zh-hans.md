@@ -2,7 +2,9 @@
 
 # Universal Device Toolkit
 
-[![Build](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Build.yml)
+[![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
+[![GitHub release](https://img.shields.io/github/v/release/SSC-STUDIO/UniversalDeviceToolkit?color=blue)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 > **开源 · 不用账号 · 不碰遥测**
@@ -40,24 +42,47 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 本软件不运行后台服务，内存与 CPU 占用低，不收集用户信息，仅适用于 Windows。
 
+### 功能一览
 
-<img src="Assets/Screenshot_zh-hans.png" width="700" />
+| 功能 | 说明 |
+|:---|:---|
+| 🔥 **性能与功耗** | Fn+Q 性能模式、自定义模式风扇曲线、CPU/GPU 功耗上限 |
+| 🌈 **RGB 与灯效** | Spectrum 逐键、四区 RGB、白光键盘、启动 Logo |
+| 🎮 **显卡控制** | 独显开关、MUX、超频、关闭独显 |
+| 🔌 **电池养护** | 保养模式、充电阈值（60%/80%） |
+| ⚡ **自动化与宏** | 插电、启动应用、合盖、定时等触发 |
+| 🖥️ **传感器** | CPU/GPU 温度、风扇转速、频率监测 |
+| 🔧 **插件扩展** | CPU/GPU 工具、内置网络与加速、Shell、鼠标指针等 |
+| 🌍 **78+ 语言** | 完整本地化 + 社区翻译 |
+| 📦 **无臃肿** | 无后台服务、低内存、无遥测、无账号 |
+
+<details>
+<summary>更多截图</summary>
+
+| 英文界面（深色） | 简体中文界面（深色） |
+|---|---|
+| ![Main](Assets/Screenshot_main.png) | ![Chinese](Assets/Screenshot_zh-hans.png) |
+
+</details>
+
+<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_zh-hans.png" width="700" alt="UDT 主界面（简体中文）" /></a>
 
 &nbsp;
 
 # 目录
   - [为什么选择 UDT？](#为什么选择-udt)
+  - [功能一览](#功能一览)
   - [免责声明](#免责声明)
   - [下载](#下载)
   - [兼容性](#兼容性)
   - [功能介绍](#功能介绍)
-  - [赞助](#赞助)
-  - [贡献者](#贡献者)
+  - [插件系统](#插件系统)
   - [FAQ](#faq)
-  - [如何开启记录Log](#如何开启记录Log)
+  - [如何开启记录 Log](#如何开启记录-log)
   - [本地化翻译](#本地化翻译)
   - [文档索引](#文档索引)
   - [贡献此项目](#贡献此项目)
+  - [截图说明](#截图说明)
 
 ## 免责声明
 
@@ -72,8 +97,12 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
 
+> [!NOTE]
+> **双发布轨道。** 稳定版：v4.2.1（Releases / Scoop 默认）。预览版：v5.0.0-preview（插件热重载与沙箱等）。稳定用户请继续使用 v4.2.1，直至 5.x 正式版。
+> **winget 说明：** 包 ID `SSC-STUDIO.LenovoLegionToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败。请先使用 Releases 或 Scoop。
+
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。**当前稳定版：v4.2.1**（v4.1.0 为更名后首个稳定版）。请始终安装最新版本；4.x 保留旧 Lenovo Legion Toolkit 原地升级兼容。
-- **winget**：`winget install SSC-STUDIO.LenovoLegionToolkit`。`PackageIdentifier` 暂时保留 `SSC-STUDIO.LenovoLegionToolkit`，保证旧版可原地升级。
+- ~~**winget**（待上架）~~：标识已预留，提交 winget-pkgs 后才会可用。
 - **Scoop**：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`。manifest 名称暂时保留 `lenovolegiontoolkit`。
 - **校验文件**：每个 Release 附带 `SHA256.txt`，建议下载前校验。
 
@@ -459,7 +488,7 @@ UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 官方插件发布自 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)。在线目录当前包括：
 
 - **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
-- **Network Acceleration（网络加速）**：网络调优，含功能页与设置页
+- **Network Acceleration（网络加速，旧版）**：已迁移到主程序「系统优化 → 网络与加速」；商店下架，仅保留设置迁移
 - **Shell Integration（Shell 集成）**：右键菜单与 Shell 样式（系统插件）
 - **ViVeTool**：管理 Windows 功能标志与实验性功能
 
@@ -755,14 +784,50 @@ crowdin download --config crowdin.yml
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | 系统架构、组件与数据流 |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
 | [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
+| [LanguagePacks.md](Docs/LanguagePacks.md) | 语言包目录协议与生命周期 |
+| [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | 内置网络与加速模块 |
 | [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |
 | [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | 发布与社区宣发文案（英文） |
 | [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | 社区发帖手册与提交记录 |
 | [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
 
+### 截图说明
+
+逻辑窗口尺寸 **1300×850**，由 `Tools/VisualRegression.Smoke` 捕获（像素尺寸随 DPI 缩放）。README 中以宽度 700 显示。
+
+| 文件 | 说明 |
+|------|------|
+| `Assets/Screenshot_main.png` | 主界面（英文，深色主题） |
+| `Assets/Screenshot_zh-hans.png` | 主界面（简体中文，深色主题） |
+
+刷新步骤见 [DEPLOYMENT.md](Docs/DEPLOYMENT.md#readme-screenshots)。
+
+### 故障排查
+
+- **无法启动？** 检查 [.NET 10 桌面运行时](#在安装-net-依赖时出现问题)
+- **功能不可用？** 见 [兼容性](#兼容性)
+- **需要日志？** 见 [如何开启记录 Log](#如何开启记录-log)
+- **仍需帮助？** 提交 [GitHub Issue](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
+
 ## 致谢
 
 特别感谢 Lenovo Legion Toolkit 原作者 Bartosz Cichecki 的开创性工作，为本项目提供了重要启发。
 
-**万分感谢！**
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit&Date)
+
+<div align="center">
+
+### ⭐ 帮我们冲向 1,000 stars！ ⭐
+
+如果 UDT 让你的拯救者（或任意 Windows PC）更清爽——Fn+Q、RGB、独显、插件、没有 Vantage 臃肿——请点个 star。每一颗星都帮助项目成长。
+
+[![Star this repo](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social&label=Star%20UDT)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
+
+**欢迎贡献！** 请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+</div>

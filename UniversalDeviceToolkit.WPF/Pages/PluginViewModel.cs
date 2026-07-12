@@ -542,7 +542,7 @@ public string PluginId
         {
             get
             {
-                // Do not surface capability chips (设置/快速打开/优化) on plugin cards.
+                // Do not surface capability chips (settings / quick open / optimize) on plugin cards.
                 if (!IsInstalling)
                     return string.Empty;
 
