@@ -498,15 +498,22 @@ public class SettingsManager<T> : IDisposable where T : class, new()
     /// </summary>
     private void OnSaveDebounceTimerElapsed(object? state)
     {
+        T? settingsToSave;
         lock (_lock)
         {
-            if (_pendingSettings != null)
+            if (_pendingSettings == null)
             {
-                var settings = _pendingSettings;
-                _pendingSettings = null;
-                Save(settings);
+                return;
             }
+
+            settingsToSave = _pendingSettings;
+            _pendingSettings = null;
         }
+
+        // Save outside _lock to avoid lock-order inversion with SaveAsync:
+        // Timer holds _lock → Save() acquires _semaphore (Phase 2),
+        // while SaveAsync holds _semaphore → tries _lock at line 234.
+        Save(settingsToSave);
     }
 
     /// <summary>

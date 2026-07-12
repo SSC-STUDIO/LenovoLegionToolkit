@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
@@ -474,5 +475,46 @@ public class SettingsManagerEdgeCaseTests : IDisposable
         }
 
         Assert.False(File.Exists(tempMpPath), "No MessagePack temp file should remain after lock release.");
+    }
+
+    [Fact]
+    public async Task SaveWithDebounce_ConcurrentWithSaveAsync_DoesNotDeadlock()
+    {
+        // Regression test for lock-order inversion in OnSaveDebounceTimerElapsed.
+        // Before the fix, the debounce timer callback called Save() while
+        // holding _lock. Save() Phase 2 acquires _semaphore. If SaveAsync()
+        // concurrently holds _semaphore and tries to acquire _lock, both
+        // threads block forever (AB-BA deadlock).
+        var manager = new SettingsManager<TestSettings>(
+            "debounce-deadlock", null, _testDir,
+            enableDebounce: true, debounceDelayMs: 50);
+
+        var settings = new TestSettings { Name = "debounce", Value = 1, Enabled = true };
+
+        // Queue a debounced save — will fire after ~50ms.
+        Assert.True(manager.SaveWithDebounce(settings));
+
+        // Concurrently call SaveAsync, which acquires _semaphore then tries _lock.
+        // If the timer fires while holding _lock, this deadlocks pre-fix.
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        var saveAsyncTask = Task.Run(async () =>
+        {
+            return await manager.SaveAsync(
+                new TestSettings { Name = "async", Value = 2, Enabled = false },
+                cts.Token);
+        }, cts.Token);
+
+        var timeoutTask = Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
+        var completed = await Task.WhenAny(
+            Task.WhenAll(saveAsyncTask),
+            timeoutTask);
+
+        Assert.False(cts.IsCancellationRequested,
+            "Debounce + SaveAsync deadlocked — 5 second timeout exceeded.");
+        Assert.True(timeoutTask.IsCompleted == false,
+            "Tasks should complete before timeout, not deadlock.");
+
+        // Both saves must succeed.
+        Assert.True(await saveAsyncTask, "SaveAsync should have succeeded.");
     }
 }
