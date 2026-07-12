@@ -328,6 +328,44 @@ public class ViveToolPathServiceTests
         await settings.SaveAsync();
     }
 
+    [Fact]
+    public async Task SaveAsync_WhenFileMoveFails_CleansUpTempFile()
+    {
+        var settings = GetSettings(new ViveToolPathService());
+        await settings.LoadAsync();
+
+        // Ensure the settings file exists so we can lock it
+        settings.ViveToolPath = "C:\\test\\ViVeTool.exe";
+        await settings.SaveAsync();
+
+        var settingsFilePath = (string)typeof(LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
+            .GetField("SettingsFilePath", BindingFlags.NonPublic | BindingFlags.Static)!
+            .GetValue(null)!;
+
+        // Lock the target file so File.Move(overwrite: true) throws
+        using (var lockStream = new FileStream(settingsFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+        {
+            try
+            {
+                // This should fail at File.Move because the target is locked
+                settings.ViveToolPath = "C:\\test2\\ViVeTool.exe";
+                await settings.SaveAsync();
+            }
+            catch
+            {
+                // SaveAsync swallows exceptions internally — if it throws, catch it
+            }
+        }
+
+        // The .tmp file must be cleaned up even though File.Move failed
+        Assert.False(File.Exists(settingsFilePath + ".tmp"),
+            "Temp file should not exist after SaveAsync with locked target file");
+
+        // Restore original state
+        settings.ViveToolPath = null;
+        await settings.SaveAsync();
+    }
+
     private static LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService service)
     {
         return (LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)SettingsField.GetValue(service)!;

@@ -179,6 +179,10 @@ public class ViveToolSettings
         }
         catch (Exception ex)
         {
+            // Clean up orphaned temp file if File.Move failed (target locked, I/O error, etc.)
+            var tempPath = SettingsFilePath + ".tmp";
+            try { if (File.Exists(tempPath)) File.Delete(tempPath); }
+            catch (Exception cleanupEx) { PluginLog.Trace($"Failed to clean up temp file: {cleanupEx.Message}", cleanupEx); }
             PluginLog.Trace($"Error saving settings: {ex.Message}", ex);
         }
     }
