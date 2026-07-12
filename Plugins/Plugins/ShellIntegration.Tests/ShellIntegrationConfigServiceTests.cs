@@ -139,6 +139,31 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     #region SaveProfile Tests
 
     [Fact]
+    public void SaveProfile_WhenFileMoveFails_CleansUpTempFile()
+    {
+        var service = CreateService();
+        var profile = ShellIntegrationProfile.CreateDefault();
+        service.SaveProfile(profile);
+
+        var targetPath = service.LocalProfilePath;
+        var tempPath = targetPath + ".tmp";
+
+        using (var lockStream = new FileStream(targetPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+        {
+            try
+            {
+                service.SaveProfile(profile);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Expected: File.Move fails because target is locked
+            }
+        }
+
+        Assert.False(File.Exists(tempPath), "Temp file should be cleaned up after File.Move failure.");
+    }
+
+    [Fact]
     public void SaveProfile_CreatesDirectory()
     {
         var newPath = Path.Combine(_testDirectory, "subdir", Guid.NewGuid().ToString("N"));

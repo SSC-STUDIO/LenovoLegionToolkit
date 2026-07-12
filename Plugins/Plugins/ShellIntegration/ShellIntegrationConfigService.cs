@@ -190,8 +190,16 @@ public sealed class ShellIntegrationConfigService
             var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
             // Atomic write: temp file + File.Move prevents profile corruption on crash
             var tempPath = LocalProfilePath + ".tmp";
-            File.WriteAllText(tempPath, json, new UTF8Encoding(false));
-            File.Move(tempPath, LocalProfilePath, overwrite: true);
+            try
+            {
+                File.WriteAllText(tempPath, json, new UTF8Encoding(false));
+                File.Move(tempPath, LocalProfilePath, overwrite: true);
+            }
+            catch
+            {
+                DeleteIfExists(tempPath);
+                throw;
+            }
         }
     }
 
@@ -602,8 +610,22 @@ theme
         // Atomic write: temp file + File.Move(overwrite) so a crash cannot
         // leave a partially-written file at the target path.
         var tempPath = path + ".tmp";
-        File.WriteAllText(tempPath, content, new UTF8Encoding(false));
-        File.Move(tempPath, path, overwrite: true);
+        try
+        {
+            File.WriteAllText(tempPath, content, new UTF8Encoding(false));
+            File.Move(tempPath, path, overwrite: true);
+        }
+        catch
+        {
+            DeleteIfExists(tempPath);
+            throw;
+        }
+    }
+
+    private static void DeleteIfExists(string path)
+    {
+        try { if (File.Exists(path)) File.Delete(path); }
+        catch (IOException) { /* best-effort cleanup */ }
     }
 
     private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)
