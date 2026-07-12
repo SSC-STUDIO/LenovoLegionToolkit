@@ -367,4 +367,49 @@ public class SettingsManagerEdgeCaseTests : IDisposable
     }
 
     #endregion
+
+    [Fact]
+    public async Task Update_ConcurrentWithSaveAsync_DoesNotDeadlock()
+    {
+        var manager = CreateManager("update-deadlock-test");
+        var settingsPath = SettingsPath("update-deadlock-test");
+
+        // Seed with initial settings so Load() inside Update has cached data
+        manager.Save(new TestSettings { Name = "initial", Value = 0, Enabled = true });
+
+        using var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(10));
+        var gate = new System.Threading.ManualResetEventSlim(false);
+
+        // Thread A: repeatedly calls Update while Thread B holds the semaphore via SaveAsync.
+        // Before the fix, Update held _lock while calling Save, which tried to acquire _semaphore.
+        // If SaveAsync already held _semaphore and was waiting for _lock (inside its Phase 2
+        // cache update), both threads would deadlock.
+        var updateTask = Task.Run(() =>
+        {
+            gate.Wait(cts.Token);
+            return manager.Update(s =>
+            {
+                s.Name = "updated";
+                s.Value = 42;
+            });
+        }, cts.Token);
+
+        var saveAsyncTask = Task.Run(async () =>
+        {
+            gate.Set();
+            return await manager.SaveAsync(new TestSettings { Name = "async", Value = 99, Enabled = false });
+        }, cts.Token);
+
+        var timeoutTask = Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
+        var allDone = await Task.WhenAny(
+            Task.WhenAll(updateTask, saveAsyncTask),
+            timeoutTask);
+
+        Assert.False(cts.IsCancellationRequested,
+            "Update + SaveAsync deadlocked — 5 second timeout exceeded.");
+        Assert.True(timeoutTask.IsCompleted == false,
+            "Tasks should complete before timeout.");
+        Assert.True(await updateTask, "Update should have succeeded.");
+        Assert.True(await saveAsyncTask, "SaveAsync should have succeeded.");
+    }
 }

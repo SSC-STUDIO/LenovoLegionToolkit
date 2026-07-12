@@ -394,13 +394,13 @@ public class SettingsManager<T> : IDisposable where T : class, new()
             return false;
         }
 
+        T settings;
         lock (_lock)
         {
             try
             {
-                var settings = Load();
+                settings = Load();
                 updateAction(settings);
-                return Save(settings);
             }
             catch (Exception ex)
             {
@@ -408,6 +408,8 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                 return false;
             }
         }
+
+        return Save(settings);
     }
 
     /// <summary>
