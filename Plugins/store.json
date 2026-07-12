@@ -1,90 +1,7 @@
 {
-  "lastUpdated": "2026-07-11T00:00:00.0000000\u002B00:00",
+  "lastUpdated": "2026-07-12T00:00:00.0000000+00:00",
+  "storeVersion": "1.1.0",
   "plugins": [
-    {
-      "id": "battery-health",
-      "name": "Battery Health (Legacy)",
-      "description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
-      "localizedNames": {
-        "default": "Battery Health (Legacy)",
-        "zh-Hans": "电池健康（旧版）"
-      },
-      "localizedDescriptions": {
-        "default": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
-        "zh-Hans": "已弃用：电池健康监控和提醒现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
-      },
-      "localizedTags": {
-        "default": [
-          "battery",
-          "health",
-          "monitoring",
-          "diagnostics",
-          "power"
-        ],
-        "zh-Hans": [
-          "电池",
-          "健康",
-          "监控",
-          "诊断",
-          "电源"
-        ]
-      },
-      "author": "SSC-STUDIO",
-      "version": "1.0.0",
-      "minLLTVersion": "4.2.1",
-      "isSystemPlugin": false,
-      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/battery-health-v1.0.0/battery-health-v1.0.0.zip",
-      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/battery-health-v1.0.0",
-      "fileSize": 2990144,
-      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
-      "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-      "supportedLanguages": [
-        "ar",
-        "bg",
-        "bs",
-        "ca",
-        "cs",
-        "de",
-        "el",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "ja",
-        "ko",
-        "lv",
-        "nl",
-        "nl-NL",
-        "no",
-        "pl",
-        "pt",
-        "pt-BR",
-        "ro",
-        "ru",
-        "sk",
-        "tr",
-        "uk",
-        "uz",
-        "uz-Latn-UZ",
-        "vi",
-        "zh",
-        "zh-Hans",
-        "zh-Hant"
-      ],
-      "icon": "BatteryCharge24",
-      "iconBackground": "#16A34A",
-      "dependencies": [],
-      "tags": [
-        "battery",
-        "health",
-        "monitoring",
-        "diagnostics",
-        "power"
-      ],
-      "status": "Offline",
-      "removalVersion": "5.0.0"
-    },
     {
       "id": "custom-mouse",
       "name": "Cursor & Pointer",
@@ -98,18 +15,8 @@
         "zh-Hans": "通过随主题变化的光标样式、Windows 指针速度、按键交换以及安全的光标备份与还原，个性化你的鼠标体验。"
       },
       "localizedTags": {
-        "default": [
-          "mouse",
-          "customization",
-          "cursor",
-          "productivity"
-        ],
-        "zh-Hans": [
-          "鼠标",
-          "自定义",
-          "光标",
-          "生产力"
-        ]
+        "default": [ "mouse", "customization", "cursor", "productivity" ],
+        "zh-Hans": [ "鼠标", "自定义", "光标", "生产力" ]
       },
       "author": "SSC-STUDIO",
       "version": "1.0.16",
@@ -118,140 +25,14 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.16",
       "fileSize": 0,
-      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-      "supportedLanguages": [
-        "ar",
-        "bg",
-        "bs",
-        "ca",
-        "cs",
-        "de",
-        "el",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "ja",
-        "ko",
-        "lv",
-        "nl",
-        "nl-NL",
-        "no",
-        "pl",
-        "pt",
-        "pt-BR",
-        "ro",
-        "ru",
-        "sk",
-        "tr",
-        "uk",
-        "uz",
-        "uz-Latn-UZ",
-        "vi",
-        "zh",
-        "zh-Hans",
-        "zh-Hant"
-      ],
+      "supportedLanguages": [ "en", "zh", "zh-Hans", "zh-Hant", "de", "fr", "es", "ja", "ko", "ru", "pt-BR" ],
       "icon": "Pen24",
       "iconBackground": "#2563EB",
       "dependencies": [],
-      "tags": [
-        "mouse",
-        "customization",
-        "cursor",
-        "productivity"
-      ],
+      "tags": [ "mouse", "customization", "cursor", "productivity" ],
       "status": "Active"
-    },
-    {
-      "id": "network-acceleration",
-      "name": "Network Acceleration (Legacy)",
-      "description": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
-      "localizedNames": {
-        "default": "Network Acceleration (Legacy)",
-        "zh-Hans": "网络加速（旧版）"
-      },
-      "localizedDescriptions": {
-        "default": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
-        "zh-Hans": "已弃用：网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
-      },
-      "localizedTags": {
-        "default": [
-          "network",
-          "optimization",
-          "gaming",
-          "telemetry",
-          "acceleration",
-          "performance"
-        ],
-        "zh-Hans": [
-          "网络",
-          "优化",
-          "游戏",
-          "遥测",
-          "加速",
-          "性能"
-        ]
-      },
-      "author": "SSC-STUDIO",
-      "version": "1.2.0",
-      "minLLTVersion": "4.2.1",
-      "isSystemPlugin": false,
-      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.2.0/network-acceleration-v1.2.0.zip",
-      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.2.0",
-      "fileSize": 0,
-      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
-      "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-      "supportedLanguages": [
-        "ar",
-        "bg",
-        "bs",
-        "ca",
-        "cs",
-        "de",
-        "el",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "ja",
-        "ko",
-        "lv",
-        "nl",
-        "nl-NL",
-        "no",
-        "pl",
-        "pt",
-        "pt-BR",
-        "ro",
-        "ru",
-        "sk",
-        "tr",
-        "uk",
-        "uz",
-        "uz-Latn-UZ",
-        "vi",
-        "zh",
-        "zh-Hans",
-        "zh-Hant"
-      ],
-      "icon": "Rocket24",
-      "iconBackground": "#DC2626",
-      "dependencies": [],
-      "tags": [
-        "network",
-        "optimization",
-        "gaming",
-        "telemetry",
-        "acceleration",
-        "performance"
-      ],
-      "status": "Offline",
-      "removalVersion": "5.0.0",
-      "internalMigrationOnly": true
     },
     {
       "id": "shell-integration",
@@ -266,22 +47,8 @@
         "zh-Hans": "管理 Nilesoft Shell 注册及其由 UDT 管理的配置。需要已安装 Nilesoft Shell。"
       },
       "localizedTags": {
-        "default": [
-          "system",
-          "shell",
-          "integration",
-          "context-menu",
-          "productivity",
-          "windows"
-        ],
-        "zh-Hans": [
-          "系统",
-          "Shell",
-          "集成",
-          "右键菜单",
-          "生产力",
-          "Windows"
-        ]
+        "default": [ "system", "shell", "integration", "context-menu", "windows" ],
+        "zh-Hans": [ "系统", "Shell", "集成", "右键菜单", "Windows" ]
       },
       "author": "SSC-STUDIO",
       "version": "1.0.12",
@@ -290,84 +57,30 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.12/shell-integration-v1.0.12.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.12",
       "fileSize": 0,
-      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-      "supportedLanguages": [
-        "ar",
-        "bg",
-        "bs",
-        "ca",
-        "cs",
-        "de",
-        "el",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "ja",
-        "ko",
-        "lv",
-        "nl",
-        "nl-NL",
-        "no",
-        "pl",
-        "pt",
-        "pt-BR",
-        "ro",
-        "ru",
-        "sk",
-        "tr",
-        "uk",
-        "uz",
-        "uz-Latn-UZ",
-        "vi",
-        "zh",
-        "zh-Hans",
-        "zh-Hant"
-      ],
+      "supportedLanguages": [ "en", "zh", "zh-Hans", "zh-Hant", "de", "fr", "es", "ja", "ko", "ru", "pt-BR" ],
       "icon": "Folder24",
       "iconBackground": "#0F766E",
       "dependencies": [],
-      "tags": [
-        "system",
-        "shell",
-        "integration",
-        "context-menu",
-        "productivity",
-        "windows"
-      ],
+      "tags": [ "system", "shell", "integration", "context-menu", "windows" ],
       "status": "Active"
     },
     {
       "id": "vive-tool",
       "name": "ViVeTool",
-      "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+      "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
       "localizedNames": {
         "default": "ViVeTool",
         "zh-Hans": "ViVeTool"
       },
       "localizedDescriptions": {
-        "default": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
-        "zh-Hans": "使用 ViVeTool 解锁隐藏的 Windows 功能并自定义系统 \u2014 终极 Windows 功能标志管理器。"
+        "default": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
+        "zh-Hans": "使用 ViVeTool 解锁隐藏的 Windows 功能并自定义系统 — 终极 Windows 功能标志管理器。"
       },
       "localizedTags": {
-        "default": [
-          "windows",
-          "feature-flags",
-          "vivetool",
-          "customization",
-          "tweaks",
-          "insider"
-        ],
-        "zh-Hans": [
-          "Windows",
-          "功能标志",
-          "ViVeTool",
-          "自定义",
-          "调整",
-          "预览体验"
-        ]
+        "default": [ "windows", "feature-flags", "vivetool", "customization", "tweaks" ],
+        "zh-Hans": [ "Windows", "功能标志", "ViVeTool", "自定义", "调整" ]
       },
       "author": "SSC-STUDIO",
       "version": "1.2.2",
@@ -376,53 +89,13 @@
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.2/vive-tool-v1.2.2.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.2",
       "fileSize": 0,
-      "releaseDate": "2026-07-11T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-11T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-      "supportedLanguages": [
-        "ar",
-        "bg",
-        "bs",
-        "ca",
-        "cs",
-        "de",
-        "el",
-        "en",
-        "es",
-        "fr",
-        "hu",
-        "it",
-        "ja",
-        "ko",
-        "lv",
-        "nl",
-        "nl-NL",
-        "no",
-        "pl",
-        "pt",
-        "pt-BR",
-        "ro",
-        "ru",
-        "sk",
-        "tr",
-        "uk",
-        "uz",
-        "uz-Latn-UZ",
-        "vi",
-        "zh",
-        "zh-Hans",
-        "zh-Hant"
-      ],
+      "supportedLanguages": [ "en", "zh", "zh-Hans", "zh-Hant", "de", "fr", "es", "ja", "ko", "ru", "pt-BR" ],
       "icon": "Code24",
       "iconBackground": "#7C3AED",
       "dependencies": [],
-      "tags": [
-        "windows",
-        "feature-flags",
-        "vivetool",
-        "customization",
-        "tweaks",
-        "insider"
-      ],
+      "tags": [ "windows", "feature-flags", "vivetool", "customization", "tweaks" ],
       "status": "Active"
     }
   ]

@@ -6,278 +6,201 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="720"
-             d:DesignWidth="920"
+             d:DesignHeight="640"
+             d:DesignWidth="720"
              AutomationProperties.AutomationId="ShellIntegrationSettingsRoot">
 
+    <!-- Compact single-column layout: no dual cards / hero banners. -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="0">
+        <StackPanel Margin="0,0,4,12">
 
-            <!-- Hero Status Banner -->
-            <Border Margin="0,0,0,20"
-                    Padding="16,14"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <wpfui:SymbolIcon x:Name="_statusIcon"
+                              Symbol="CheckmarkCircle24"
+                              FontSize="1"
+                              Width="0"
+                              Height="0"
+                              Visibility="Collapsed" />
 
-                    <Border Grid.Column="0"
-                            Width="40" Height="40"
-                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
-                            Margin="0,0,16,0"
-                            Background="{DynamicResource SystemAccentColorPrimaryBrush}">
-                        <wpfui:SymbolIcon Symbol="Folder24"
-                                          FontSize="20"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-                    </Border>
+            <TextBlock Text="{x:Static text:ShellIntegrationText.ActionsTitle}"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Margin="0,4,0,10"
+                       Text="{x:Static text:ShellIntegrationText.ActionsDescription}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <WrapPanel VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
-                                <TextBlock Text="{x:Static text:ShellIntegrationText.RegistrationLabel}"
-                                           FontSize="12"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="_registrationValueTextBlock"
-                                           AutomationProperties.AutomationId="ShellIntegrationRegistrationText"
-                                           Margin="6,0,0,0"
-                                           FontSize="12"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                            </StackPanel>
+            <WrapPanel Margin="0,0,0,12">
+                <StackPanel Orientation="Horizontal" Margin="0,0,16,6">
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.RegistrationLabel}"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_registrationValueTextBlock"
+                               AutomationProperties.AutomationId="ShellIntegrationRegistrationText"
+                               Margin="6,0,0,0"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,16,6">
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.VersionLabel}"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_versionValueTextBlock"
+                               AutomationProperties.AutomationId="ShellIntegrationVersionText"
+                               Margin="6,0,0,0"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.ConfigLabel}"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_configValueTextBlock"
+                               AutomationProperties.AutomationId="ShellIntegrationConfigText"
+                               Margin="6,0,0,0"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="280"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                </StackPanel>
+            </WrapPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
-                                <TextBlock Text="{x:Static text:ShellIntegrationText.VersionLabel}"
-                                           FontSize="12"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="_versionValueTextBlock"
-                                           AutomationProperties.AutomationId="ShellIntegrationVersionText"
-                                           Margin="6,0,0,0"
-                                           FontSize="12"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                            </StackPanel>
+            <WrapPanel Margin="0,0,0,14">
+                <wpfui:Button x:Name="_enableButton"
+                              Content="{x:Static text:ShellIntegrationText.EnableButton}"
+                              AutomationProperties.AutomationId="EnableButton"
+                              Appearance="Primary"
+                              Icon="Checkmark24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="EnableButton_Click" />
+                <wpfui:Button x:Name="_disableButton"
+                              Content="{x:Static text:ShellIntegrationText.DisableButton}"
+                              AutomationProperties.AutomationId="DisableButton"
+                              Icon="Dismiss24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="DisableButton_Click" />
+                <wpfui:Button x:Name="_openStyleSettingsButton"
+                              Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
+                              AutomationProperties.AutomationId="OpenStyleSettingsButton"
+                              Icon="PaintBrush24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="OpenStyleButton_Click" />
+                <wpfui:Button x:Name="_syncManagedConfigButton"
+                              Content="{x:Static text:ShellIntegrationText.SyncManagedConfigButton}"
+                              AutomationProperties.AutomationId="SyncManagedConfigButton"
+                              Icon="ArrowClockwise24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="SyncManagedConfigButton_Click" />
+                <wpfui:Button x:Name="_resetManagedConfigButton"
+                              Content="{x:Static text:ShellIntegrationText.ResetManagedConfigButton}"
+                              AutomationProperties.AutomationId="ResetManagedConfigButton"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ResetManagedConfigButton_Click" />
+                <wpfui:Button x:Name="_exportProfileButton"
+                              Content="{x:Static text:ShellIntegrationText.ExportProfileButton}"
+                              AutomationProperties.AutomationId="ExportProfileButton"
+                              Icon="ArrowExport24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ExportProfileButton_Click" />
+                <wpfui:Button x:Name="_importProfileButton"
+                              Content="{x:Static text:ShellIntegrationText.ImportProfileButton}"
+                              AutomationProperties.AutomationId="ImportProfileButton"
+                              Icon="ArrowImport24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ImportProfileButton_Click" />
+            </WrapPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,18,4">
-                                <TextBlock Text="{x:Static text:ShellIntegrationText.ConfigLabel}"
-                                           FontSize="12"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="_configValueTextBlock"
-                                           AutomationProperties.AutomationId="ShellIntegrationConfigText"
-                                           Margin="6,0,0,0"
-                                           FontSize="12"
-                                           FontWeight="SemiBold"
-                                           TextTrimming="CharacterEllipsis"
-                                           MaxWidth="200"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                            </StackPanel>
-                        </WrapPanel>
-                    </StackPanel>
+            <Separator Margin="0,0,0,12" />
 
-                    <wpfui:SymbolIcon x:Name="_statusIcon"
-                                      Grid.Column="2"
-                                      Symbol="CheckmarkCircle24"
-                                      FontSize="18"
-                                      VerticalAlignment="Center"
-                                      Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
-                </Grid>
-            </Border>
+            <TextBlock Text="{x:Static text:ShellIntegrationText.PathLabel}"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock x:Name="_pathValueTextBlock"
+                       AutomationProperties.AutomationId="ShellIntegrationPathText"
+                       Margin="0,4,0,8"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Margin="0,0,0,10"
+                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+            <WrapPanel Margin="0,0,0,14">
+                <wpfui:Button x:Name="_openShellFolderButton"
+                              Content="{x:Static text:ShellIntegrationText.OpenShellFolderButton}"
+                              AutomationProperties.AutomationId="OpenShellFolderButton"
+                              Icon="FolderOpen24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="OpenShellFolderButton_Click" />
+                <wpfui:Button x:Name="_openConfigButton"
+                              Content="{x:Static text:ShellIntegrationText.OpenConfigButton}"
+                              AutomationProperties.AutomationId="OpenConfigButton"
+                              Icon="Document24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="OpenConfigButton_Click" />
+                <wpfui:Button x:Name="_openManagedConfigButton"
+                              Content="{x:Static text:ShellIntegrationText.OpenManagedConfigButton}"
+                              AutomationProperties.AutomationId="OpenManagedConfigButton"
+                              Icon="FolderOpen24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="OpenManagedConfigButton_Click" />
+            </WrapPanel>
 
-            <!-- Main Content Cards -->
-            <Grid Margin="0,0,0,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <TextBlock Text="{x:Static text:ShellIntegrationText.PresetsTitle}"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="{x:Static text:ShellIntegrationText.PresetsDescription}"
+                       Margin="0,4,0,8"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <WrapPanel Margin="0,0,0,12">
+                <wpfui:Button x:Name="_applyDefaultPresetButton"
+                              Content="{x:Static text:ShellIntegrationText.PresetDefaultButton}"
+                              AutomationProperties.AutomationId="ApplyDefaultPresetButton"
+                              Icon="ArrowClockwise24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ApplyDefaultPresetButton_Click" />
+                <wpfui:Button x:Name="_applyCompactDarkPresetButton"
+                              Content="{x:Static text:ShellIntegrationText.PresetCompactDarkButton}"
+                              AutomationProperties.AutomationId="ApplyCompactDarkPresetButton"
+                              Icon="PaintBrush24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ApplyCompactDarkPresetButton_Click" />
+                <wpfui:Button x:Name="_applyMinimalLightPresetButton"
+                              Content="{x:Static text:ShellIntegrationText.PresetMinimalLightButton}"
+                              AutomationProperties.AutomationId="ApplyMinimalLightPresetButton"
+                              Icon="Document24"
+                              Margin="0,0,8,8"
+                              Padding="10,6"
+                              Click="ApplyMinimalLightPresetButton_Click" />
+            </WrapPanel>
 
-                <!-- Left Card: Actions -->
-                <Border Grid.Column="0"
-                        Padding="18,16"
-                        CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <wpfui:SymbolIcon Symbol="Rocket24"
-                                              FontSize="18"
-                                              Margin="0,0,10,0"
-                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.ActionsTitle}"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-
-                        <TextBlock Margin="0,0,0,18"
-                                   Text="{x:Static text:ShellIntegrationText.ActionsDescription}"
-                                   TextWrapping="Wrap"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                        <wpfui:Button x:Name="_enableButton"
-                                      Content="{x:Static text:ShellIntegrationText.EnableButton}"
-                                      AutomationProperties.AutomationId="EnableButton"
-                                      HorizontalAlignment="Stretch"
-                                      Appearance="Primary"
-                                      Icon="Checkmark24"
-                                      Margin="0,0,0,8"
-                                      Click="EnableButton_Click" />
-                        <wpfui:Button x:Name="_disableButton"
-                                      Content="{x:Static text:ShellIntegrationText.DisableButton}"
-                                      AutomationProperties.AutomationId="DisableButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="Dismiss24"
-                                      Margin="0,0,0,8"
-                                      Click="DisableButton_Click" />
-                        <wpfui:Button x:Name="_openStyleSettingsButton"
-                                      Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
-                                      AutomationProperties.AutomationId="OpenStyleSettingsButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="PaintBrush24"
-                                      Margin="0,0,0,8"
-                                      Click="OpenStyleButton_Click" />
-                        <wpfui:Button x:Name="_syncManagedConfigButton"
-                                      Content="{x:Static text:ShellIntegrationText.SyncManagedConfigButton}"
-                                      AutomationProperties.AutomationId="SyncManagedConfigButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="ArrowClockwise24"
-                                      Margin="0,0,0,8"
-                                      Click="SyncManagedConfigButton_Click" />
-                        <wpfui:Button x:Name="_resetManagedConfigButton"
-                                      Content="{x:Static text:ShellIntegrationText.ResetManagedConfigButton}"
-                                      AutomationProperties.AutomationId="ResetManagedConfigButton"
-                                      Margin="0,0,0,8"
-                                      HorizontalAlignment="Stretch"
-                                      Click="ResetManagedConfigButton_Click" />
-                        <wpfui:Button x:Name="_exportProfileButton"
-                                      Content="{x:Static text:ShellIntegrationText.ExportProfileButton}"
-                                      AutomationProperties.AutomationId="ExportProfileButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="ArrowExport24"
-                                      Margin="0,0,0,8"
-                                      Click="ExportProfileButton_Click" />
-                        <wpfui:Button x:Name="_importProfileButton"
-                                      Content="{x:Static text:ShellIntegrationText.ImportProfileButton}"
-                                      AutomationProperties.AutomationId="ImportProfileButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="ArrowImport24"
-                                      Click="ImportProfileButton_Click" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Right Card: Info & Quick Access -->
-                <Border Grid.Column="2"
-                        Padding="18,16"
-                        CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <wpfui:SymbolIcon Symbol="Info24"
-                                              FontSize="18"
-                                              Margin="0,0,10,0"
-                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.PathLabel}"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-
-                        <TextBlock x:Name="_pathValueTextBlock"
-                                   AutomationProperties.AutomationId="ShellIntegrationPathText"
-                                   Margin="0,0,0,16"
-                                   TextWrapping="Wrap"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                        <TextBlock Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
-                                   TextWrapping="Wrap"
-                                   FontSize="12"
-                                   Margin="0,0,0,18"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-
-                        <wpfui:Button x:Name="_openShellFolderButton"
-                                      Content="{x:Static text:ShellIntegrationText.OpenShellFolderButton}"
-                                      AutomationProperties.AutomationId="OpenShellFolderButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="FolderOpen24"
-                                      Margin="0,0,0,8"
-                                      Click="OpenShellFolderButton_Click" />
-                        <wpfui:Button x:Name="_openConfigButton"
-                                      Content="{x:Static text:ShellIntegrationText.OpenConfigButton}"
-                                      AutomationProperties.AutomationId="OpenConfigButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="Document24"
-                                      Margin="0,0,0,8"
-                                      Click="OpenConfigButton_Click" />
-                        <wpfui:Button x:Name="_openManagedConfigButton"
-                                      Content="{x:Static text:ShellIntegrationText.OpenManagedConfigButton}"
-                                      AutomationProperties.AutomationId="OpenManagedConfigButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="FolderOpen24"
-                                      Click="OpenManagedConfigButton_Click" />
-
-                        <Separator Margin="0,16,0,16" />
-
-                        <TextBlock Text="{x:Static text:ShellIntegrationText.PresetsTitle}"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock Text="{x:Static text:ShellIntegrationText.PresetsDescription}"
-                                   Margin="0,6,0,14"
-                                   TextWrapping="Wrap"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                        <wpfui:Button x:Name="_applyDefaultPresetButton"
-                                      Content="{x:Static text:ShellIntegrationText.PresetDefaultButton}"
-                                      AutomationProperties.AutomationId="ApplyDefaultPresetButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="ArrowClockwise24"
-                                      Margin="0,0,0,8"
-                                      Click="ApplyDefaultPresetButton_Click" />
-                        <wpfui:Button x:Name="_applyCompactDarkPresetButton"
-                                      Content="{x:Static text:ShellIntegrationText.PresetCompactDarkButton}"
-                                      AutomationProperties.AutomationId="ApplyCompactDarkPresetButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="PaintBrush24"
-                                      Margin="0,0,0,8"
-                                      Click="ApplyCompactDarkPresetButton_Click" />
-                        <wpfui:Button x:Name="_applyMinimalLightPresetButton"
-                                      Content="{x:Static text:ShellIntegrationText.PresetMinimalLightButton}"
-                                      AutomationProperties.AutomationId="ApplyMinimalLightPresetButton"
-                                      HorizontalAlignment="Stretch"
-                                      Icon="Document24"
-                                      Click="ApplyMinimalLightPresetButton_Click" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Status Bar -->
-            <Border Padding="16,12"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <TextBlock x:Name="_statusTextBlock"
-                           AutomationProperties.AutomationId="ShellIntegration_StatusText"
-                           TextWrapping="Wrap"
-                           FontSize="12"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            </Border>
-
+            <TextBlock x:Name="_statusTextBlock"
+                       AutomationProperties.AutomationId="ShellIntegration_StatusText"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         </StackPanel>
     </ScrollViewer>
-
 </UserControl>

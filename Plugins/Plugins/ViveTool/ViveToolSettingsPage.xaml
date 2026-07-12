@@ -6,219 +6,130 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="760"
-             d:DesignWidth="920"
+             d:DesignHeight="560"
+             d:DesignWidth="720"
              AutomationProperties.AutomationId="ViveToolSettingsRoot">
+
+    <!-- Compact host-settings style: no hero banner / multi-card stack. -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="0">
+        <StackPanel Margin="0,0,4,12">
 
-            <!-- Hero Status Banner -->
-            <Border Margin="0,0,0,20"
-                    Padding="16,14"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+            <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_ViveToolStatus}"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Grid Margin="0,6,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <wpfui:SymbolIcon x:Name="_statusIcon"
+                                  Symbol="CheckmarkCircle24"
+                                  FontSize="16"
+                                  Margin="0,2,8,0"
+                                  VerticalAlignment="Top"
+                                  Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
+                <TextBlock x:Name="_statusTextBlock"
+                           Grid.Column="1"
+                           AutomationProperties.AutomationId="ViveToolSettingsStatusText"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </Grid>
 
-                    <Border Grid.Column="0"
-                            Width="40" Height="40"
-                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
-                            Margin="0,0,16,0"
-                            Background="{DynamicResource SystemAccentColorPrimaryBrush}">
-                        <wpfui:SymbolIcon Symbol="Code24"
-                                          FontSize="20"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-                    </Border>
+            <StackPanel x:Name="_downloadProgressGrid"
+                        AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressPanel"
+                        Margin="0,0,0,12"
+                        Visibility="Collapsed">
+                <ProgressBar x:Name="_downloadProgressBar"
+                             AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressBar"
+                             Height="6"
+                             Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                             BorderThickness="0"
+                             Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+                             HorizontalAlignment="Stretch" />
+                <TextBlock x:Name="_downloadProgressText"
+                           AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressText"
+                           Margin="0,6,0,0"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
 
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <wpfui:SymbolIcon x:Name="_statusIcon"
-                                              Symbol="CheckmarkCircle24"
-                                              FontSize="16"
-                                              Margin="0,0,8,0"
-                                              VerticalAlignment="Top"
-                                              Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
-                            <TextBlock x:Name="_statusTextBlock"
-                                       Grid.Column="1"
-                                       AutomationProperties.AutomationId="ViveToolSettingsStatusText"
-                                       TextWrapping="Wrap"
-                                       FontSize="12"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        </Grid>
-                        <StackPanel x:Name="_downloadProgressGrid"
-                                    AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressPanel"
-                                    Margin="0,10,0,0"
-                                    Visibility="Collapsed">
-                            <ProgressBar x:Name="_downloadProgressBar"
-                                         AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressBar"
-                                         Height="6"
-                                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                         BorderThickness="0"
-                                         Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
-                                         HorizontalAlignment="Stretch" />
-                            <TextBlock x:Name="_downloadProgressText"
-                                       AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressText"
-                                       Margin="0,6,0,0"
-                                       FontSize="11"
-                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                        </StackPanel>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <WrapPanel Margin="0,0,0,14">
+                <wpfui:Button x:Name="_downloadViveToolButton"
+                              AutomationProperties.AutomationId="ViveToolSettingsDownloadButton"
+                              Content="{x:Static pluginRes:Resource.ViveTool_Download}"
+                              Appearance="Primary"
+                              Icon="ArrowDownload24"
+                              Click="DownloadViveToolButton_Click"
+                              Margin="0,0,8,8"
+                              Padding="10,6" />
+                <wpfui:Button x:Name="_gitHubButton"
+                              AutomationProperties.AutomationId="ViveToolSettingsGitHubButton"
+                              Content="{x:Static pluginRes:Resource.ViveTool_GitHub}"
+                              Icon="Open24"
+                              Click="GitHubButton_Click"
+                              Margin="0,0,8,8"
+                              Padding="10,6" />
+                <wpfui:Button x:Name="_refreshStatusButton"
+                              AutomationProperties.AutomationId="ViveToolSettingsRefreshStatusButton"
+                              Content="{x:Static pluginRes:Resource.ViveTool_Refresh}"
+                              Icon="ArrowClockwise24"
+                              Click="RefreshStatusButton_Click"
+                              Margin="0,0,8,8"
+                              Padding="10,6" />
+                <wpfui:Button x:Name="_importConfigButton"
+                              AutomationProperties.AutomationId="ViveToolSettingsImportConfigButton"
+                              Content="{x:Static pluginRes:Resource.ViveTool_ImportConfig}"
+                              Icon="ArrowImport24"
+                              Click="ImportConfigButton_Click"
+                              Margin="0,0,8,8"
+                              Padding="10,6" />
+            </WrapPanel>
 
-            <!-- Binary Path Card -->
-            <Border Margin="0,0,0,20"
-                    Padding="18,16"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <wpfui:SymbolIcon Symbol="FolderOpen24"
-                                          FontSize="18"
-                                          Margin="0,0,10,0"
-                                          Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                        <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    </StackPanel>
+            <Separator Margin="0,0,0,12" />
 
-                    <TextBlock Margin="0,0,0,12"
-                               Text="{x:Static pluginRes:Resource.ViveTool_PathDescription}"
-                               TextWrapping="Wrap"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Margin="0,4,0,8"
+                       Text="{x:Static pluginRes:Resource.ViveTool_PathDescription}"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <wpfui:TextBox Grid.Column="0"
+                               x:Name="_viveToolPathTextBox"
+                               AutomationProperties.AutomationId="ViveToolSettingsPathTextBox"
+                               PlaceholderText="{x:Static pluginRes:Resource.ViveTool_PathPlaceholder}"
+                               IsReadOnly="True" />
+                <wpfui:Button Grid.Column="2"
+                              x:Name="_browseViveToolButton"
+                              AutomationProperties.AutomationId="ViveToolSettingsBrowseButton"
+                              Content="{x:Static pluginRes:Resource.ViveTool_Browse}"
+                              Icon="FolderOpen24"
+                              Click="BrowseViveToolButton_Click"
+                              Padding="12,6"
+                              VerticalAlignment="Center" />
+            </Grid>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <wpfui:TextBox Grid.Column="0"
-                                       x:Name="_viveToolPathTextBox"
-                                       AutomationProperties.AutomationId="ViveToolSettingsPathTextBox"
-                                       PlaceholderText="{x:Static pluginRes:Resource.ViveTool_PathPlaceholder}"
-                                       Margin="0,0,8,0"
-                                       IsReadOnly="True" />
-                        <wpfui:Button Grid.Column="1"
-                                      x:Name="_browseViveToolButton"
-                                      AutomationProperties.AutomationId="ViveToolSettingsBrowseButton"
-                                      Content="{x:Static pluginRes:Resource.ViveTool_Browse}"
-                                      Icon="FolderOpen24"
-                                      Click="BrowseViveToolButton_Click"
-                                      Padding="12,6"
-                                      VerticalAlignment="Center" />
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- GitHub & Actions Card -->
-            <Border Margin="0,0,0,20"
-                    Padding="18,16"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" Margin="0,0,24,0">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <wpfui:SymbolIcon Symbol="Open24"
-                                              FontSize="18"
-                                              Margin="0,0,10,0"
-                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
-                            <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_GitHub}"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                        <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_ImportDescription}"
-                                   TextWrapping="Wrap"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <wpfui:Button x:Name="_downloadViveToolButton"
-                                      AutomationProperties.AutomationId="ViveToolSettingsDownloadButton"
-                                      Content="{x:Static pluginRes:Resource.ViveTool_Download}"
-                                      Appearance="Primary"
-                                      Icon="ArrowDownload24"
-                                      Click="DownloadViveToolButton_Click"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="12,6"
-                                      Margin="0,0,0,8" />
-                        <wpfui:Button x:Name="_gitHubButton"
-                                      AutomationProperties.AutomationId="ViveToolSettingsGitHubButton"
-                                      Content="{x:Static pluginRes:Resource.ViveTool_GitHub}"
-                                      Icon="Open24"
-                                      Click="GitHubButton_Click"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="12,6"
-                                      Margin="0,0,0,8" />
-                        <wpfui:Button x:Name="_refreshStatusButton"
-                                      AutomationProperties.AutomationId="ViveToolSettingsRefreshStatusButton"
-                                      Content="{x:Static pluginRes:Resource.ViveTool_Refresh}"
-                                      Icon="ArrowClockwise24"
-                                      Click="RefreshStatusButton_Click"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="12,6"
-                                      Margin="0,0,0,8" />
-                        <wpfui:Button x:Name="_importConfigButton"
-                                      AutomationProperties.AutomationId="ViveToolSettingsImportConfigButton"
-                                      Content="{x:Static pluginRes:Resource.ViveTool_ImportConfig}"
-                                      Icon="ArrowImport24"
-                                      Click="ImportConfigButton_Click"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="12,6" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <!-- Warning Banner -->
-            <Border Padding="14,12"
-                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
+            <Border Padding="10,8"
+                    CornerRadius="6"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <wpfui:SymbolIcon Symbol="Warning24"
-                                      FontSize="18"
-                                      Margin="0,1,12,0"
-                                      VerticalAlignment="Top"
-                                      Foreground="{DynamicResource SystemFillColorCautionBrush}" />
-                    <TextBlock Grid.Column="1"
-                               Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
-                               TextWrapping="Wrap"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                </Grid>
+                <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </Border>
-
         </StackPanel>
     </ScrollViewer>
 </UserControl>

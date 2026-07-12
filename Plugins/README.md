@@ -55,11 +55,11 @@
 
 | # | Plugin | Version | Description | Install |
 |---|--------|---------|-------------|---------|
-| ?? | **Battery Health** | v1.0.0 | Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit. | `battery-health` |
-| ðŸŒ | **Network Acceleration** | v1.2.0 | Real-time network telemetry with a redesigned dual-tab UI. Track speeds, peak traffic, and apply gaming presets with one click. | `network-acceleration` |
-| ??? **Custom Mouse** | v1.0.16 | Theme-aware cursor styles, DPI profiles, and seamless Windows pointer speed management. Auto-adapts to Light/Dark mode. | `custom-mouse` |
-| ðŸ”§ | **ViVeTool** | v1.2.2 | Unlock hidden Windows feature flags from a searchable GUI. No command-line needed ¡ªbrowse, search, enable, and disable features safely. | `vive-tool` |
-| ðŸ”— | **Shell Integration** | v1.0.12 | Right-click context menu integration. Instant access to power features from anywhere in Windows Explorer. | `shell-integration` |
+| â€” | ~~Battery Health~~ / ~~Network Acceleration~~ | â€” | **Delisted from store** â€” features are built into Universal Device Toolkit. Source kept for migration only, not offered in marketplace. | â€” |
+| ðŸŒ | **Network Acceleration (Migrated)** | v1.2.0 | Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. Retained only for settings migration. | `network-acceleration` |
+| ??? **Cursor & Pointer** | v1.0.16 | Theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore. Auto-adapts to Light/Dark mode. | `custom-mouse` |
+| ðŸ”§ | **ViVeTool** | v1.2.2 | Unlock hidden Windows feature flags from a searchable GUI. No command-line needed ï¿½ï¿½browse, search, enable, and disable features safely. | `vive-tool` |
+| ðŸ”— | **Nilesoft Shell Manager** | v1.0.12 | Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed. | `shell-integration` |
 
 > **Looking for more plugins?** Check the [plugin store](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/store.json) or [build your own](#author-workflow).
 
@@ -68,11 +68,11 @@
 ## Quick Install
 
 1. Open **Universal Device Toolkit**
-2. Navigate to **Plugins** ¡ú**Browse Store**
+2. Navigate to **Plugins** ï¿½ï¿½**Browse Store**
 3. Click **Install** on any plugin
 4. Restart the application
 
-That's it ¡ªno manual downloads, no complex setup.
+That's it ï¿½ï¿½no manual downloads, no complex setup.
 
 ---
 
@@ -82,7 +82,7 @@ That's it ¡ªno manual downloads, no complex setup.
 No paywalls, no premium tiers, no ads. Every line of code is on GitHub under the MIT License. Audit it, fork it, contribute back.
 
 ### ??? Native Windows 11 Look & Feel
-Built with .NET 10 and WPF-UI 4.3.0, these plugins use real Fluent Design tokens. They adapt to your Windows theme automatically ¡ªno "light mode only" or "dark mode broken" bugs.
+Built with .NET 10 and WPF-UI 4.3.0, these plugins use real Fluent Design tokens. They adapt to your Windows theme automatically ï¿½ï¿½no "light mode only" or "dark mode broken" bugs.
 
 ### ?? Extensible by Design
 The plugin SDK is clean and well-documented. Want a plugin that does X? Fork the repo, run `init`, and you're building in 2 minutes. The included PluginWorkbench lets you preview plugins without launching the full host app.
@@ -97,21 +97,16 @@ Every official plugin ships with unit tests, visual smoke tests (Light + Dark th
 
 ## Feature Highlights
 
-### Battery Health
-- Live battery health, design capacity, and cycle count
-- Wear estimates: full design vs current capacity
-- Clean dashboard with Light/Dark theme support
-- One-click refresh, zero background services
+### Battery Health (Migrated)
+**Deprecated** â€” battery health monitoring and alerts are now built into Universal Device Toolkit. This plugin is retained only for users upgrading from earlier releases; new users should use the built-in battery health feature.
 
-### Network Acceleration
-- Real-time download/upload telemetry with a beautiful dashboard
-- Adaptive acceleration presets for gaming, streaming, and work
-- One-click network optimization
-- Peak traffic monitoring and active adapter detection
+### Network Acceleration (Migrated)
+**Deprecated** â€” network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This plugin is retained only for users upgrading from earlier releases; new users should use the built-in network diagnostics feature.
 
-### Custom Mouse
+### Cursor & Pointer
 - Theme-aware cursor styles (auto-switch with Windows Dark/Light mode)
-- Per-application DPI profiles
+- Windows pointer speed and button-swapping controls
+- Safe cursor backup and restore
 - Seamless Windows integration via the optimization panel
 
 ### ViVeTool
@@ -120,10 +115,10 @@ Every official plugin ships with unit tests, visual smoke tests (Light + Dark th
 - Clean table UI with search and filtering
 - Safe defaults â€”nothing breaks on toggle
 
-### Shell Integration
-- Add Universal Device Toolkit actions to the Windows right-click context menu
-- Quick access to power plans, RGB control, and fan profiles
-- Minimal footprint, no background services
+### Nilesoft Shell Manager
+- Manage Nilesoft Shell registration directly from Universal Device Toolkit
+- Apply or roll back UDT-managed configuration entries
+- Requires Nilesoft Shell to be installed separately
 
 ---
 
@@ -163,7 +158,7 @@ This repository includes a complete plugin authoring toolchain:
 
 ---
 
-## PluginWorkbench ¡ªStandalone Preview
+## PluginWorkbench ï¿½ï¿½Standalone Preview
 
 Don't want to launch the full host app? Use **PluginWorkbench**:
 
@@ -188,11 +183,11 @@ Features:
 ```
 UniversalDeviceToolkit-Plugins/
 â”œâ”€â”€ Plugins/              # Official plugin projects
-â”? â”œâ”€â”€ BatteryHealth/
-â”? â”œâ”€â”€ CustomMouse/
-â”? â”œâ”€â”€ NetworkAcceleration/
-â”? â”œâ”€â”€ ShellIntegration/
-â”? â””â”€â”€ ViveTool/
+ï¿½? â”œâ”€â”€ BatteryHealth/
+ï¿½? â”œâ”€â”€ CustomMouse/
+ï¿½? â”œâ”€â”€ NetworkAcceleration/
+ï¿½? â”œâ”€â”€ ShellIntegration/
+ï¿½? â””â”€â”€ ViveTool/
 â”œâ”€â”€ SDK/                  # Plugin SDK (interfaces & helpers)
 â”œâ”€â”€ Dependencies/         # Shared dependencies
 â”œâ”€â”€ Tools/                # PluginWorkbench + PluginTooling.CLI
@@ -220,18 +215,18 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Plugin Development Gui
 
 ## Documentation
 
-- [Quick Start](./Docs/PLUGIN_QUICKSTART.md) ¡ªGet your first plugin running in 5 minutes
-- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) ¡ªDeep dive into the plugin API
-- [Architecture](./Docs/ARCHITECTURE.md) ¡ªSystem design and dependency map
-- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) ¡ªAutomation-friendly workflow docs
-- [Coding Standards](./Docs/CODING_STANDARDS.md) ¡ªNaming, patterns, and forbidden anti-patterns
-- [Changelog](./CHANGELOG.md) ¡ªRelease history
+- [Quick Start](./Docs/PLUGIN_QUICKSTART.md) ï¿½ï¿½Get your first plugin running in 5 minutes
+- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) ï¿½ï¿½Deep dive into the plugin API
+- [Architecture](./Docs/ARCHITECTURE.md) ï¿½ï¿½System design and dependency map
+- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) ï¿½ï¿½Automation-friendly workflow docs
+- [Coding Standards](./Docs/CODING_STANDARDS.md) ï¿½ï¿½Naming, patterns, and forbidden anti-patterns
+- [Changelog](./CHANGELOG.md) ï¿½ï¿½Release history
 
 ---
 
-## â­?Star History
+## ï¿½?Star History
 
-If you find this project useful, please consider giving it a â­?It helps us reach more developers and grow the plugin ecosystem.
+If you find this project useful, please consider giving it a ï¿½?It helps us reach more developers and grow the plugin ecosystem.
 
 [![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)
 
