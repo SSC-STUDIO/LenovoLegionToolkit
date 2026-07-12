@@ -3887,4 +3887,232 @@
   <data name="Watt" xml:space="preserve">
     <value>Вт</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Не вдалося зберегти</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Не вдалося зберегти конвеєри автоматизації. Спробуйте ще раз.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Не вдалося перемкнути автоматичні конвеєри</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Не вдалося перемкнути автоматичні конвеєри. Спробуйте ще раз.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Не вдалося додати ручний конвеєр</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Не вдалося додати ручний конвеєр. Спробуйте ще раз.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>Режим ITS</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>Середовище виконання ITS недоступне в цій системі.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Відкрити теку журналів</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Мережа та прискорення</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Цифра 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Цифра 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Цифра 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Цифра 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Цифра 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Цифра 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Цифра 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Цифра 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Цифра 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Цифра 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Резервна копія параметрів</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Експорт або імпорт параметрів програми у вигляді версіонованого архіву. Під час імпорту спочатку створюється резервна копія для відкату.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Параметри експортовано</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Резервну копію параметрів успішно збережено.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Помилка експорту</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Не вдалося експортувати параметри. Подробиці див. у журналі.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Параметри імпортовано</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Параметри відновлено з резервної копії. Перезапустіть програму, якщо деякі значення не оновилися.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Помилка імпорту</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Не вдалося імпортувати параметри. Попередні параметри збережено або відновлено з відкату.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Мережа та прискорення</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Необов’язкове локальне прискорення. Типово вимк. — проксі, hosts і сертифікати ніколи не запускаються автоматично під час старту.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Стан</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Вимк. (типово)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Запустити</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Зупинити</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Діагностика</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Швидка перевірка конфігурації, порту прослуховування loopback і зведення шлюзу. Діагностика виконується лише за запитом.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Запустити діагностику</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Діагностика не вдалася</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Додатково</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Режими: System proxy, Hosts (блокування з міткою UDT) або лише діагностика. Worker слухає 127.0.0.1 / ::1 через named-pipe IPC.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Режим</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Порт прослуховування</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Дозволити прискорення (лише ручний запуск)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Примусово відновити стан мережі</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Не вдалося запустити мережеве прискорення. Переконайтеся, що worker встановлено, і спробуйте «Примусово відновити стан мережі».</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Відновлення завершено з попередженнями:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Групи доменів</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: увімкнено {1}/{2}, доменів: {3} (вбудовані Steam/GitHub, типово вимк. — за потреби змініть розширену конфігурацію).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Працює ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>Зупинено ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>Бінарний файл worker не знайдено — зберіть/встановіть UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Лише діагностика (без змін системної мережі)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Розділи датчиків</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Видимі розділи</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Порядок розділів</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Вгору</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Вниз</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Порівняння</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Поріг %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Фільтр заряджання</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Тривалість (с)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Пауза (с)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Метрика</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Поріг</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Закрити сповіщення</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Продовжити англійською</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+</root>

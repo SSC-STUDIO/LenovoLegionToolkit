@@ -971,4 +971,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Patrón personalizado</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Estático</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Respirar</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Onda</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Arcoíris</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteorito</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ondulación</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Destello</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Degradado</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Onda arcoíris</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Arcoíris en espiral</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Desactivado (predeterminado)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>No se encontró el binario del worker — compile/instale UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Solo diagnósticos (sin cambios en la red del sistema)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>En ejecución ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Detenido ({0})</value>
+  </data>
 </root>

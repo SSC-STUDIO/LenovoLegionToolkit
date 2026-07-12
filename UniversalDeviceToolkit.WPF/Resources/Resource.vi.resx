@@ -3890,4 +3890,232 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Không thể lưu</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Không thể lưu pipeline tự động hóa. Vui lòng thử lại.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Không thể chuyển pipeline tự động</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Không thể bật/tắt pipeline tự động. Vui lòng thử lại.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Không thể thêm pipeline thủ công</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Không thể thêm pipeline thủ công. Vui lòng thử lại.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>Chế độ ITS</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>Runtime ITS không khả dụng trên hệ thống này.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Mở thư mục nhật ký</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Nhật ký</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Mạng &amp; tăng tốc</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Số 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Số 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Số 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Số 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Số 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Số 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Số 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Số 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Số 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Số 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Sao lưu cài đặt</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Xuất hoặc nhập cài đặt ứng dụng dưới dạng kho lưu trữ có phiên bản. Việc nhập sẽ tạo bản sao lưu rollback trước.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Đã xuất cài đặt</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Bản sao lưu cài đặt đã được lưu thành công.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Xuất thất bại</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Không thể xuất cài đặt. Kiểm tra nhật ký để biết chi tiết.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Đã nhập cài đặt</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Cài đặt đã được khôi phục từ bản sao lưu. Khởi động lại ứng dụng nếu một số giá trị chưa cập nhật.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Nhập thất bại</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Không thể nhập cài đặt. Cài đặt trước đó được giữ hoặc đã khôi phục từ bản rollback.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Mạng &amp; tăng tốc</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Tăng tốc cục bộ tùy chọn. Mặc định tắt — không tự khởi động proxy, hosts hay chứng chỉ khi mở ứng dụng.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Tắt (mặc định)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Bắt đầu</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Dừng</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Chẩn đoán</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Kiểm tra nhanh cấu hình, cổng lắng nghe loopback và tóm tắt gateway. Chẩn đoán chỉ chạy khi bạn yêu cầu.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Chạy chẩn đoán</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Chẩn đoán thất bại</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Nâng cao</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Chế độ: Proxy hệ thống, Hosts (khối đánh dấu UDT) hoặc chỉ chẩn đoán. Worker lắng nghe trên 127.0.0.1 / ::1 với IPC named-pipe.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Chế độ</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Cổng lắng nghe</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Cho phép tăng tốc (chỉ khởi động thủ công)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Buộc khôi phục trạng thái mạng</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Không thể khởi động tăng tốc mạng. Kiểm tra worker đã được cài đặt và thử Buộc khôi phục trạng thái mạng.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Khôi phục xong nhưng có cảnh báo:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Nhóm miền</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: {1}/{2} bật, {3} miền (Steam/GitHub tích hợp, mặc định tắt — chỉnh cấu hình nâng cao nếu cần).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Đang chạy ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>Đã dừng ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>Không tìm thấy binary worker — hãy build/cài UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Chỉ chẩn đoán (không thay đổi mạng hệ thống)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Phần cảm biến</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Phần hiển thị</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Thứ tự phần</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Di chuyển lên</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Di chuyển xuống</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>So sánh</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Ngưỡng %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Bộ lọc sạc</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Thời lượng (giây)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Thời gian chờ (giây)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Chỉ số</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Ngưỡng</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Đóng thông báo</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Thử lại</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Tiếp tục bằng tiếng Anh</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+</root>

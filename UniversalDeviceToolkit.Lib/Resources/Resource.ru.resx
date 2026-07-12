@@ -873,4 +873,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Свой узор</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Синхронизация Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Статичный</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Дыхание</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Волна</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Радуга</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Метеор</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Рябь</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Искры</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Градиент</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Радужная волна</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Спиральная радуга</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Выкл. (по умолчанию)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Бинарный файл worker не найден — соберите/установите UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Только диагностика (без изменений системной сети)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Работает ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Остановлено ({0})</value>
+  </data>
 </root>

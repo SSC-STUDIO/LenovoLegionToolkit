@@ -202,4 +202,13 @@
     <value>Please wait for the current optimization to finish.</value>
   </data>
 
+  <data name="OrAutomationPipelineTrigger_Separator" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="BatteryPercentageAutomationPipelineTrigger_DisplayName_Format" xml:space="preserve">
+    <value>Battery {0} {1}% ({2})</value>
+  </data>
+  <data name="HardwareSensorAutomationPipelineTrigger_DisplayName_Format" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
 </root>

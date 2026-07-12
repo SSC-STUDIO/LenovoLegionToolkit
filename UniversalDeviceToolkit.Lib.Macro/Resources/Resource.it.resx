@@ -61,4 +61,34 @@
   </data>
 
 
+  <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
+    <value>SPOSTA</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelDown_Title" xml:space="preserve">
+    <value>ROTELLA GIÙ</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelUp_Title" xml:space="preserve">
+    <value>ROTELLA SU</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelLeft_Title" xml:space="preserve">
+    <value>ROTELLA SX</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelRight_Title" xml:space="preserve">
+    <value>ROTELLA DX</value>
+  </data>
+  <data name="MacroEventControl_MouseXButton_Title" xml:space="preserve">
+    <value>XPULSANTE{0}</value>
+  </data>
+  <data name="MacroEventControl_MouseLButton_Title" xml:space="preserve">
+    <value>PULS. SX</value>
+  </data>
+  <data name="MacroEventControl_MouseRButton_Title" xml:space="preserve">
+    <value>PULS. DX</value>
+  </data>
+  <data name="MacroEventControl_MouseMButton_Title" xml:space="preserve">
+    <value>PULS. CENTRO</value>
+  </data>
+  <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
+    <value>PULSANTE{0}</value>
+  </data>
 </root>

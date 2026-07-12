@@ -10046,6 +10046,11 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_StartFailed { get { return ResourceManager.GetString("NetworkAccelerationPage_StartFailed", resourceCulture); } }
         public static string NetworkAccelerationPage_RestorePartial { get { return ResourceManager.GetString("NetworkAccelerationPage_RestorePartial", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsLabel { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsLabel", resourceCulture); } }
+        public static string NetworkAccelerationPage_DomainGroupsSummary { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsSummary", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusRunning { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusRunning", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusStopped { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusStopped", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusWorkerMissing { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusWorkerMissing", resourceCulture); } }
+        public static string NetworkAccelerationPage_StatusDiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusDiagnosticsOnly", resourceCulture); } }
         public static string WindowsOptimization_Category_NilesoftShell_Title { get { return ResourceManager.GetString("WindowsOptimization_Category_NilesoftShell_Title", resourceCulture); } }
         public static string WindowsOptimization_Category_NilesoftShell_Description { get { return ResourceManager.GetString("WindowsOptimization_Category_NilesoftShell_Description", resourceCulture); } }
         public static string WindowsOptimization_Action_NilesoftShell_Enable_Title { get { return ResourceManager.GetString("WindowsOptimization_Action_NilesoftShell_Enable_Title", resourceCulture); } }

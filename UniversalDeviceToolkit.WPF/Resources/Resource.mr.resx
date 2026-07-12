@@ -3859,4 +3859,232 @@
   <data name="PluginExtensionsPage_InstalledButNoEntryMessage" xml:space="preserve">
     <value>प्लगइन {0} इंस्टॉल केला गया, परंतु हे उपयोगकर्ता-सामने प्रवेश बिंदु उजागर नाही करता। हे केवल पृष्ठभूमि सेवाएँ या मैनिफेस्ट डेटा प्रदान कर सकता आहे।</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Could not save</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Failed to save automation pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Could not toggle automatic pipelines</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Failed to toggle automatic pipelines. Please try again.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Could not add manual pipeline</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Failed to add manual pipeline. Please try again.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>ITS Mode</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>ITS runtime is unavailable on this system.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Open logs folder</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Network &amp; Acceleration</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Number 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Number 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Number 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Number 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Number 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Number 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Number 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Number 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Number 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Number 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Settings backup</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Export or import application settings as a versioned archive. Import creates a rollback backup first.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Settings exported</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Settings backup was saved successfully.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Export failed</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Could not export settings. Check the log for details.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Settings imported</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Settings were restored from the backup. Restart the app if some values do not refresh.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Import failed</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Could not import settings. Previous settings were kept or restored from rollback.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Network &amp; acceleration</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Optional local acceleration. Off by default — never auto-starts proxy, hosts, or certificates on launch.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Off (default)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Diagnostics</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Run a quick check for configuration, loopback listen port, and gateway summary. Diagnostics only run when you request them.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Run diagnostics</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Diagnostics failed</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Modes: System proxy, Hosts (UDT-marked block), or Diagnostics only. Worker listens on 127.0.0.1 / ::1 with named-pipe IPC.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Listen port</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Allow acceleration (manual start only)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Force restore network state</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Failed to start network acceleration. Check that the worker is installed and try Force restore network state.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Restore finished with warnings:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Domain groups</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: {1}/{2} enabled, {3} domains (Steam/GitHub built-in, off by default — edit advanced config if needed).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Running ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>Stopped ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics only (no system network changes)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Sensor sections</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Visible sections</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Section order</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Comparison</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Threshold %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Charge filter</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Duration (s)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Cooldown (s)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Metric</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Threshold</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Close notification</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Continue in English</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+</root>

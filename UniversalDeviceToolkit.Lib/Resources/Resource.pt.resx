@@ -873,4 +873,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Padrão personalizado</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Estático</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Respirar</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Onda</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Arco-íris</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteoro</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ondulação</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Brilho</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradiente</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Onda arco-íris</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Arco-íris em espiral</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Desligado (predefinição)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Binário do worker não encontrado — compile/instale UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Apenas diagnósticos (sem alterações à rede do sistema)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Em execução ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Parado ({0})</value>
+  </data>
 </root>

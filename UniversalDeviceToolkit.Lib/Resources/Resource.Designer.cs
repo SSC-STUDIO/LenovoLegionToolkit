@@ -2246,5 +2246,35 @@ namespace LenovoLegionToolkit.Lib.Resources {
                 return ResourceManager.GetString("Resolution_DisplayName_Format", resourceCulture);
             }
         }
+
+        public static string NetworkAcceleration_Status_Off {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Status_Off", resourceCulture);
+            }
+        }
+
+        public static string NetworkAcceleration_Status_WorkerMissing {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Status_WorkerMissing", resourceCulture);
+            }
+        }
+
+        public static string NetworkAcceleration_Status_DiagnosticsOnly {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Status_DiagnosticsOnly", resourceCulture);
+            }
+        }
+
+        public static string NetworkAcceleration_Status_Running {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Status_Running", resourceCulture);
+            }
+        }
+
+        public static string NetworkAcceleration_Status_Stopped {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Status_Stopped", resourceCulture);
+            }
+        }
     }
 }

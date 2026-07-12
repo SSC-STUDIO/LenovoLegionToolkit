@@ -857,4 +857,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>カスタム パターン</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>オーロラ同期</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>スタティック</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>呼吸</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>ウェーブ</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>レインボー</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>メテオ</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>リップル</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>スパークル</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>グラデーション</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>レインボー ウェーブ</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>スパイラル レインボー</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>オフ（既定）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>ワーカー実行ファイルが見つかりません — UniversalDeviceToolkit.NetworkProxy.exe をビルド/インストールしてください</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>診断のみ（システム ネットワークは変更しません）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>実行中 ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>停止 ({0})</value>
+  </data>
 </root>

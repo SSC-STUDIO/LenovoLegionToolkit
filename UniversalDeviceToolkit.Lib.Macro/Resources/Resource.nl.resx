@@ -65,4 +65,34 @@
   </data>
 
 
+  <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
+    <value>BEWEGEN</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelDown_Title" xml:space="preserve">
+    <value>WIEL OMLAAG</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelUp_Title" xml:space="preserve">
+    <value>WIEL OMHOOG</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelLeft_Title" xml:space="preserve">
+    <value>WIEL LINKS</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelRight_Title" xml:space="preserve">
+    <value>WIEL RECHTS</value>
+  </data>
+  <data name="MacroEventControl_MouseXButton_Title" xml:space="preserve">
+    <value>X-KNOP{0}</value>
+  </data>
+  <data name="MacroEventControl_MouseLButton_Title" xml:space="preserve">
+    <value>L-KNOP</value>
+  </data>
+  <data name="MacroEventControl_MouseRButton_Title" xml:space="preserve">
+    <value>R-KNOP</value>
+  </data>
+  <data name="MacroEventControl_MouseMButton_Title" xml:space="preserve">
+    <value>M-KNOP</value>
+  </data>
+  <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
+    <value>KNOP{0}</value>
+  </data>
 </root>

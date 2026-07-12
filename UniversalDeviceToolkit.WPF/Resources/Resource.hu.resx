@@ -3889,4 +3889,232 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Nem sikerült menteni</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Nem sikerült menteni az automatizálási folyamatokat. Próbálja újra.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Nem sikerült átkapcsolni az automatikus folyamatokat</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Nem sikerült átkapcsolni az automatikus folyamatokat. Próbálja újra.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Nem sikerült hozzáadni a kézi folyamatot</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Nem sikerült hozzáadni a kézi folyamatot. Próbálja újra.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>ITS mód</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>Az ITS futtatókörnyezet nem érhető el ezen a rendszeren.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Naplómappa megnyitása</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Napló</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Hálózat és gyorsítás</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>0-ás szám</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>1-es szám</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>2-es szám</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>3-as szám</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>4-es szám</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>5-ös szám</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>6-os szám</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>7-es szám</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>8-as szám</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>9-es szám</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Beállítások biztonsági mentése</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Alkalmazásbeállítások exportálása vagy importálása verziózott archívumként. Az import először rollback biztonsági mentést készít.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Beállítások exportálva</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>A beállítások biztonsági mentése sikeresen mentve.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Az exportálás sikertelen</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Nem sikerült exportálni a beállításokat. Részletek a naplóban.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Beállítások importálva</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>A beállítások visszaállítva a biztonsági mentésből. Indítsa újra az alkalmazást, ha egyes értékek nem frissülnek.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Az importálás sikertelen</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Nem sikerült importálni a beállításokat. Az előző beállítások megmaradtak, vagy visszaálltak a rollbackből.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Hálózat és gyorsítás</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Opcionális helyi gyorsítás. Alapból ki — proxy, hosts és tanúsítványok soha nem indulnak automatikusan indításkor.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Ki (alapértelmezett)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Indítás</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Leállítás</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Diagnosztika</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Gyors ellenőrzés a konfigurációról, a loopback figyelőportról és az átjáró összefoglalóról. A diagnosztika csak kérésre fut.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Diagnosztika futtatása</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>A diagnosztika sikertelen</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Speciális</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Módok: System proxy, Hosts (UDT-jelölt blokkolás) vagy csak diagnosztika. A worker a 127.0.0.1 / ::1 címen figyel named-pipe IPC-vel.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Mód</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Figyelőport</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Gyorsítás engedélyezése (csak kézi indítás)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Hálózati állapot kényszerített visszaállítása</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Nem sikerült elindítani a hálózati gyorsítást. Ellenőrizze, hogy a worker telepítve van, majd próbálja a hálózati állapot kényszerített visszaállítását.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>A visszaállítás figyelmeztetésekkel fejeződött be:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Doméncsoportok</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: {1}/{2} engedélyezve, {3} domén (beépített Steam/GitHub, alapból ki — szükség esetén szerkessze a speciális konfigurációt).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Fut ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>Leállítva ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>A worker bináris nem található — építse/telepítse: UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Csak diagnosztika (nincs rendszerszintű hálózati módosítás)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Érzékelő szakaszok</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Látható szakaszok</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Szakaszok sorrendje</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Fel</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Le</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Összehasonlítás</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Küszöb %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Töltési szűrő</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Időtartam (mp)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Várakozás (mp)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Metrika</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Küszöb</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Értesítés bezárása</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Bezárás</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Újra</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Folytatás angolul</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+</root>

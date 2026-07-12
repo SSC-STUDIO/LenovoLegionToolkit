@@ -975,4 +975,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Vlastní vzor</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Synchronizace Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statický</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Dýchání</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Vlna</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Duha</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Vlnění</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Jiskry</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradient</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Duhová vlna</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spirálová duha</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Vyp. (výchozí)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Binární soubor worker nebyl nalezen — sestavte/nainstalujte UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Pouze diagnostika (bez změn systémové sítě)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Běží ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Zastaveno ({0})</value>
+  </data>
 </root>

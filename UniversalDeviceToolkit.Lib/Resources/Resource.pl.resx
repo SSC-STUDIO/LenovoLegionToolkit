@@ -971,4 +971,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Własny wzór</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Synchronizacja Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statyczny</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Oddychanie</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Fala</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Tęcza</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Fale</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Iskry</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradient</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Fala tęczy</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spiralna tęcza</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Wył. (domyślnie)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Nie znaleziono pliku binarnego workera — zbuduj/zainstaluj UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Tylko diagnostyka (bez zmian sieci systemowej)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Działa ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Zatrzymano ({0})</value>
+  </data>
 </root>

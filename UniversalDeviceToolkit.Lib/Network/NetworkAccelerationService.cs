@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Network;
@@ -48,17 +49,17 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
         get
         {
             if (!Config.AccelerationEnabled || Config.Mode == NetworkAccelerationMode.Off)
-                return "Off (default)";
+                return Resource.NetworkAcceleration_Status_Off;
 
             if (!IsBackendReady)
-                return "Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe";
+                return Resource.NetworkAcceleration_Status_WorkerMissing;
 
             if (Config.Mode == NetworkAccelerationMode.DiagnosticsOnly)
-                return "Diagnostics only (no system network changes)";
+                return Resource.NetworkAcceleration_Status_DiagnosticsOnly;
 
             return IsRunning
-                ? $"Running ({Config.Mode}) loopback:{Config.ListenPort}"
-                : $"Stopped ({Config.Mode})";
+                ? string.Format(Resource.NetworkAcceleration_Status_Running, Config.Mode, Config.ListenPort)
+                : string.Format(Resource.NetworkAcceleration_Status_Stopped, Config.Mode);
         }
     }
 

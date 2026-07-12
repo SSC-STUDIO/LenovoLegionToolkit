@@ -1065,4 +1065,19 @@
   <data name="Resolution_DisplayName_Format" xml:space="preserve">
     <value>{0} × {1}</value>
   </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Off (default)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics only (no system network changes)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Running ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Stopped ({0})</value>
+  </data>
 </root>

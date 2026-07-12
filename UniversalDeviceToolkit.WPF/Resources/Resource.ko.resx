@@ -3876,4 +3876,232 @@
   <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
     <value>앱의 비주얼 스타일 사전 설정을 선택하세요. 테마 모드와 강조 색상은 그 위에 계속 적용됩니다.</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>저장할 수 없음</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>자동화 파이프라인을 저장하지 못했습니다. 다시 시도하세요.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>자동 파이프라인을 전환할 수 없음</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>자동 파이프라인을 전환하지 못했습니다. 다시 시도하세요.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>수동 파이프라인을 추가할 수 없음</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>수동 파이프라인을 추가하지 못했습니다. 다시 시도하세요.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>ITS 모드</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>이 시스템에서는 ITS 런타임을 사용할 수 없습니다.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>로그 폴더 열기</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>로그</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>네트워크 및 가속</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>숫자 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>숫자 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>숫자 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>숫자 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>숫자 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>숫자 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>숫자 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>숫자 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>숫자 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>숫자 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>설정 백업</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>애플리케이션 설정을 버전 관리 아카이브로 내보내거나 가져옵니다. 가져오기 전에 롤백 백업이 생성됩니다.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>설정 내보냄</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>설정 백업이 성공적으로 저장되었습니다.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>내보내기 실패</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>설정을 내보내지 못했습니다. 자세한 내용은 로그를 확인하세요.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>설정 가져옴</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>백업에서 설정을 복원했습니다. 일부 값이 갱신되지 않으면 앱을 다시 시작하세요.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>가져오기 실패</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>설정을 가져오지 못했습니다. 이전 설정이 유지되었거나 롤백에서 복원되었습니다.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>네트워크 및 가속</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>선택적 로컬 가속. 기본 꺼짐 — 시작 시 프록시, hosts, 인증서를 자동으로 시작하지 않습니다.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>상태</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>꺼짐(기본)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>시작</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>중지</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>진단</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>구성, 루프백 수신 포트, 게이트웨이 요약을 빠르게 확인합니다. 진단은 요청할 때만 실행됩니다.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>진단 실행</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>진단 실패</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>고급</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>모드: 시스템 프록시, Hosts(UDT 표시 블록) 또는 진단 전용. 워커는 127.0.0.1 / ::1에서 수신하며 named-pipe IPC를 사용합니다.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>모드</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>수신 포트</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>가속 허용(수동 시작만)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>네트워크 상태 강제 복원</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>네트워크 가속을 시작하지 못했습니다. 워커가 설치되어 있는지 확인하고 네트워크 상태 강제 복원을 시도하세요.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>복원이 완료되었으나 경고가 있습니다:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>도메인 그룹</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: {1}/{2} 사용, {3}개 도메인(Steam/GitHub 내장, 기본 꺼짐 — 필요 시 고급 설정 편집).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>실행 중 ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>중지됨 ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>워커 바이너리를 찾을 수 없음 — UniversalDeviceToolkit.NetworkProxy.exe를 빌드/설치하세요</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>진단 전용(시스템 네트워크 변경 없음)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>센서 섹션</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>표시 섹션</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>섹션 순서</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>위로 이동</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>아래로 이동</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>비교</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>임계값 %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>충전 필터</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>지속 시간 (초)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>쿨다운 (초)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>지표</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>임계값</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>알림 닫기</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>다시 시도</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>영어로 계속</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>저장</value>
+  </data>
+</root>

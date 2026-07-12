@@ -610,4 +610,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>自定义图案</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>极光同步</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>静态</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>呼吸</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>波浪</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>彩虹</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>流星</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>涟漪</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>闪烁</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>渐变</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>彩虹波浪</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>螺旋彩虹</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>关闭（默认）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>未找到工作进程 — 请构建/安装 UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>仅诊断（不更改系统网络）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>运行中 ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>已停止 ({0})</value>
+  </data>
 </root>

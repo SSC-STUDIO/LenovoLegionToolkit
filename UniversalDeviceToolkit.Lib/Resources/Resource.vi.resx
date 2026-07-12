@@ -610,4 +610,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Mẫu tùy chỉnh</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Đồng bộ cực quang</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Tĩnh</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Thở</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Sóng</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Cầu vồng</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Sao băng</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Gợn sóng</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Lấp lánh</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Chuyển màu</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Sóng cầu vồng</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Cầu vồng xoắn</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Tắt (mặc định)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Không tìm thấy binary worker — hãy build/cài UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Chỉ chẩn đoán (không thay đổi mạng hệ thống)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Đang chạy ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Đã dừng ({0})</value>
+  </data>
 </root>

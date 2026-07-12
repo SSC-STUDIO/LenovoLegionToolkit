@@ -340,4 +340,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>نمط مخصص</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>مزامنة Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>ثابت</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>تنفس</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>موجة</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>قوس قزح</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>نيزك</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>تموّج</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>تألق</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>تدرج</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>موجة قوس قزح</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>قوس قزح حلزوني</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>إيقاف (افتراضي)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>لم يُعثر على ملف worker الثنائي — ابنِ/ثبّت UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>التشخيص فقط (بدون تغييرات على شبكة النظام)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>قيد التشغيل ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>متوقف ({0})</value>
+  </data>
 </root>

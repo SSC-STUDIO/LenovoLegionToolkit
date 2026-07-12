@@ -174,4 +174,13 @@
 <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
 <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
 <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
-<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OrAutomationPipelineTrigger_Separator" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="BatteryPercentageAutomationPipelineTrigger_DisplayName_Format" xml:space="preserve">
+    <value>Battery {0} {1}% ({2})</value>
+  </data>
+  <data name="HardwareSensorAutomationPipelineTrigger_DisplayName_Format" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
+</root>

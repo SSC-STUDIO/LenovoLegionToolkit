@@ -65,4 +65,34 @@
   </data>
 
 
+  <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
+    <value>MOVER</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelDown_Title" xml:space="preserve">
+    <value>RUEDA ABAJO</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelUp_Title" xml:space="preserve">
+    <value>RUEDA ARRIBA</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelLeft_Title" xml:space="preserve">
+    <value>RUEDA IZQ.</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelRight_Title" xml:space="preserve">
+    <value>RUEDA DER.</value>
+  </data>
+  <data name="MacroEventControl_MouseXButton_Title" xml:space="preserve">
+    <value>XBOTÓN{0}</value>
+  </data>
+  <data name="MacroEventControl_MouseLButton_Title" xml:space="preserve">
+    <value>BOT. IZQ.</value>
+  </data>
+  <data name="MacroEventControl_MouseRButton_Title" xml:space="preserve">
+    <value>BOT. DER.</value>
+  </data>
+  <data name="MacroEventControl_MouseMButton_Title" xml:space="preserve">
+    <value>BOT. MED.</value>
+  </data>
+  <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
+    <value>BOTÓN{0}</value>
+  </data>
 </root>

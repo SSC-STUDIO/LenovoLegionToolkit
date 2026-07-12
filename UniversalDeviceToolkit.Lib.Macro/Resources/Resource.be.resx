@@ -64,4 +64,34 @@
   </data>
 
 
+  <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
+    <value>MOVE</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelDown_Title" xml:space="preserve">
+    <value>WHEEL DOWN</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelUp_Title" xml:space="preserve">
+    <value>WHEEL UP</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelLeft_Title" xml:space="preserve">
+    <value>WHEEL LEFT</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelRight_Title" xml:space="preserve">
+    <value>WHEEL RIGHT</value>
+  </data>
+  <data name="MacroEventControl_MouseXButton_Title" xml:space="preserve">
+    <value>XBUTTON{0}</value>
+  </data>
+  <data name="MacroEventControl_MouseLButton_Title" xml:space="preserve">
+    <value>LBUTTON</value>
+  </data>
+  <data name="MacroEventControl_MouseRButton_Title" xml:space="preserve">
+    <value>RBUTTON</value>
+  </data>
+  <data name="MacroEventControl_MouseMButton_Title" xml:space="preserve">
+    <value>MBUTTON</value>
+  </data>
+  <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
+    <value>BUTTON{0}</value>
+  </data>
 </root>

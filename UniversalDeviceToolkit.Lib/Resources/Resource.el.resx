@@ -338,4 +338,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Προσαρμοσμένο μοτίβο</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Συγχρονισμός Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Στατικό</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Αναπνοή</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Κύμα</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Ουράνιο τόξο</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Μετέωρο</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Κυματισμός</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Σπινθήρες</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Διαβάθμιση</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Κύμα ουράνιου τόξου</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Σπειροειδές ουράνιο τόξο</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Ανενεργό (προεπιλογή)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Δεν βρέθηκε το δυαδικό worker — δημιουργήστε/εγκαταστήστε το UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Μόνο διαγνωστικά (χωρίς αλλαγές συστήματος δικτύου)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Εκτελείται ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Διακόπηκε ({0})</value>
+  </data>
 </root>

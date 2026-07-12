@@ -995,4 +995,64 @@
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Custom Pattern</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Static</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Breathe</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Wave</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Rainbow</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ripple</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Sparkle</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradient</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Rainbow Wave</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spiral Rainbow</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Off (default)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics only (no system network changes)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Running ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Stopped ({0})</value>
+  </data>
 </root>

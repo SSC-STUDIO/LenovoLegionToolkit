@@ -3888,4 +3888,232 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="Watt" xml:space="preserve">
     <value>Vt</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell kontekst menyusi roʻyxatga olish va integratsiyasini boshqarish.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shellni yoqish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell Windows kontekst menyusi ishlovchisi sifatida roʻyxatga olinadi.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shellni oʻchirish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Nilesoft Shell roʻyxatdan chiqariladi va standart kontekst menyusi tiklanadi.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Oʻzgarish tasdiqlanmadi. Administrator huquqlari talab qilinishi mumkin.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Joriy optimallashtirish tugashini kuting.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell kontekst menyusi roʻyxatga olish va integratsiyasini boshqarish.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shellni yoqish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell Windows kontekst menyusi ishlovchisi sifatida roʻyxatga olinadi.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shellni oʻchirish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Nilesoft Shell roʻyxatdan chiqariladi va standart kontekst menyusi tiklanadi.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Oʻzgarish tasdiqlanmadi. Administrator huquqlari talab qilinishi mumkin.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Joriy optimallashtirish tugashini kuting.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Saqlab bo‘lmadi</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Avtomatlashtirish quvurlarini saqlab bo‘lmadi. Qayta urinib ko‘ring.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Avtomatik quvurlarni almashtirib bo‘lmadi</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Avtomatik quvurlarni almashtirib bo‘lmadi. Qayta urinib ko‘ring.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Qo‘lda quvur qo‘shib bo‘lmadi</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Qo‘lda quvur qo‘shib bo‘lmadi. Qayta urinib ko‘ring.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>ITS rejimi</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>ITS ishga tushirish muhiti ushbu tizimda mavjud emas.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Jurnallar jildini ochish</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Jurnal</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Tarmoq va tezlashtirish</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Raqam 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Raqam 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Raqam 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Raqam 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Raqam 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Raqam 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Raqam 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Raqam 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Raqam 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Raqam 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Sozlamalar zaxirasi</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Ilova sozlamalarini versiyali arxiv sifatida eksport yoki import qiling. Import avval rollback zaxirasini yaratadi.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Sozlamalar eksport qilindi</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Sozlamalar zaxirasi muvaffaqiyatli saqlandi.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Eksport muvaffaqiyatsiz</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Sozlamalarni eksport qilib bo‘lmadi. Tafsilotlar uchun jurnalni tekshiring.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Sozlamalar import qilindi</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Sozlamalar zaxiradan tiklandi. Ba’zi qiymatlar yangilanmasa, ilovani qayta ishga tushiring.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Import muvaffaqiyatsiz</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Sozlamalarni import qilib bo‘lmadi. Oldingi sozlamalar saqlangan yoki rollback dan tiklangan.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Tarmoq va tezlashtirish</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Ixtiyoriy mahalliy tezlashtirish. Sukut bo‘yicha o‘chiq — proksi, hosts va sertifikatlar ishga tushishda hech qachon avtomatik ishga tushmaydi.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Holat</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>O‘chiq (sukut)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Boshlash</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>To‘xtatish</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Diagnostika</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Konfiguratsiya, loopback tinglash porti va shlyuz xulosasi uchun tez tekshiruv. Diagnostika faqat so‘rov bo‘yicha ishlaydi.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Diagnostikani ishga tushirish</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Diagnostika muvaffaqiyatsiz</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Kengaytirilgan</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Rejimlar: System proxy, Hosts (UDT belgilangan blok) yoki faqat diagnostika. Worker 127.0.0.1 / ::1 da named-pipe IPC orqali tinglaydi.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Rejim</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Tinglash porti</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Tezlashtirishga ruxsat (faqat qo‘lda ishga tushirish)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Tarmoq holatini majburiy tiklash</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Tarmoq tezlashtirishni ishga tushirib bo‘lmadi. Worker o‘rnatilganligini tekshiring va tarmoq holatini majburiy tiklashni sinab ko‘ring.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Tiklash ogohlantirishlar bilan yakunlandi:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Domen guruhlari</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: {1}/{2} yoqilgan, {3} domen (o‘rnatilgan Steam/GitHub, sukut bo‘yicha o‘chiq — kerak bo‘lsa kengaytirilgan konfiguratsiyani tahrirlang).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Ishlamoqda ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>To‘xtatildi ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>Worker ikkilik fayli topilmadi — UniversalDeviceToolkit.NetworkProxy.exe ni yig‘ing/o‘rnating</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Faqat diagnostika (tizim tarmog‘iga o‘zgarish yo‘q)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Sensor bo‘limlari</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Ko‘rinadigan bo‘limlar</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Bo‘limlar tartibi</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Yuqoriga</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Pastga</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Taqqoslash</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Chegara %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Quvvatlash filtri</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Davomiylik (s)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Kutish (s)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Metrika</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Chegara</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Bildirishnomani yopish</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Yopish</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Qayta urinish</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Ingliz tilida davom etish</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Saqlash</value>
+  </data>
+</root>

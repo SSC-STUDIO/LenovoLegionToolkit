@@ -594,4 +594,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Model personalizat</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Sincronizare Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Static</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Respirație</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Undă</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Curcubeu</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ondulație</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Scântei</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradient</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Undă curcubeu</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Curcubeu spiralat</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Oprit (implicit)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Binarul worker nu a fost găsit — construiți/instalați UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Doar diagnostice (fără modificări ale rețelei de sistem)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Rulează ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Oprit ({0})</value>
+  </data>
 </root>

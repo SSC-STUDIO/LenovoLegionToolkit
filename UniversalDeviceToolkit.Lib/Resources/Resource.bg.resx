@@ -975,4 +975,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Персонализиран модел</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Синхронизация Aurora</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Статичен</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Дишане</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Вълна</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Дъга</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Метеор</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Вълни</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Искри</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Градиент</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Дъгова вълна</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Спирална дъга</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Изкл. (по подразбиране)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Двоичният файл на worker не е намерен — компилирайте/инсталирайте UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Само диагностика (без промени в системната мрежа)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Работи ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Спряно ({0})</value>
+  </data>
 </root>

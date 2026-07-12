@@ -976,4 +976,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Egyéni minta</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora szinkron</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statikus</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Légzés</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Hullám</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Szivárvány</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Fodrozódás</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Szikrázás</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Átmenet</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Szivárványhullám</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spirális szivárvány</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Ki (alapértelmezett)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>A worker bináris nem található — építse/telepítse: UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Csak diagnosztika (nincs rendszerszintű hálózati módosítás)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Fut ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Leállítva ({0})</value>
+  </data>
 </root>

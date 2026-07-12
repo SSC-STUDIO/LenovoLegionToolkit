@@ -53,9 +53,12 @@ public partial class NetworkAccelerationControl : UserControl
             var groups = config.DomainGroups ?? [];
             var enabledCount = groups.Count(g => g.Enabled);
             var domainCount = groups.Where(g => g.Enabled).SelectMany(g => g.Domains ?? []).Count();
-            _domainGroupsText.Text =
-                $"{Resource.NetworkAccelerationPage_DomainGroupsLabel}: {enabledCount}/{groups.Count} enabled, {domainCount} domains " +
-                $"(Steam/GitHub built-in, off by default — edit in advanced config file if needed).";
+            _domainGroupsText.Text = string.Format(
+                Resource.NetworkAccelerationPage_DomainGroupsSummary,
+                Resource.NetworkAccelerationPage_DomainGroupsLabel,
+                enabledCount,
+                groups.Count,
+                domainCount);
 
             // User may enable + start only when worker binary exists.
             // Diagnostics always allowed.

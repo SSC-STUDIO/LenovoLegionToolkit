@@ -975,4 +975,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Pielāgots raksts</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora sinhronizācija</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statisks</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Elpošana</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Vilnis</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Varavīksne</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteors</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Viļņošanās</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Dzirksteles</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradients</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Varavīksnes vilnis</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spirālveida varavīksne</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Izsl. (noklusējums)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Worker binārais fails nav atrasts — izveidojiet/instalējiet UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Tikai diagnostika (bez sistēmas tīkla izmaiņām)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Darbojas ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Apturēts ({0})</value>
+  </data>
 </root>

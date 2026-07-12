@@ -4033,6 +4033,21 @@ Fn 将会暂时解除锁定。</value>
   <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
     <value>域名组</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}：已启用 {1}/{2}，{3} 个域名（内置 Steam/GitHub，默认关闭 — 可在高级配置中编辑）。</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>运行中（{0}）回环:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>已停止（{0}）</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>未找到辅助进程 — 请构建/安装 UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>仅诊断（不修改系统网络）</value>
+  </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>无法保存</value>
   </data>

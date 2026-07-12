@@ -3890,4 +3890,232 @@
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data></root>
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η αποθήκευση</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>Αποτυχία αποθήκευσης διοχετεύσεων αυτοματισμού. Δοκιμάστε ξανά.</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η εναλλαγή αυτόματων διοχετεύσεων</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>Αποτυχία εναλλαγής αυτόματων διοχετεύσεων. Δοκιμάστε ξανά.</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η προσθήκη μη αυτόματης διοχέτευσης</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>Αποτυχία προσθήκης μη αυτόματης διοχέτευσης. Δοκιμάστε ξανά.</value>
+  </data>
+  <data name="Color_Hex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="DashboardITSModeControl_Title" xml:space="preserve">
+    <value>Λειτουργία ITS</value>
+  </data>
+  <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
+    <value>Intelligent Thermal Solution</value>
+  </data>
+  <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
+    <value>Το περιβάλλον εκτέλεσης ITS δεν είναι διαθέσιμο σε αυτό το σύστημα.</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>Άνοιγμα φακέλου αρχείων καταγραφής</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>Αρχείο καταγραφής</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
+    <value>Δίκτυο και επιτάχυνση</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_HHMMHint" xml:space="preserve">
+    <value>(HH:MM)</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>Αριθμός 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>Αριθμός 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>Αριθμός 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>Αριθμός 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>Αριθμός 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>Αριθμός 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>Αριθμός 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>Αριθμός 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>Αριθμός 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>Αριθμός 9</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Title" xml:space="preserve">
+    <value>Αντίγραφο ασφαλείας ρυθμίσεων</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_Message" xml:space="preserve">
+    <value>Εξαγωγή ή εισαγωγή ρυθμίσεων εφαρμογής ως αρχείο με έκδοση. Η εισαγωγή δημιουργεί πρώτα αντίγραφο ασφαλείας για rollback.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Title" xml:space="preserve">
+    <value>Οι ρυθμίσεις εξήχθησαν</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportSuccess_Message" xml:space="preserve">
+    <value>Το αντίγραφο ασφαλείας ρυθμίσεων αποθηκεύτηκε με επιτυχία.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Title" xml:space="preserve">
+    <value>Η εξαγωγή απέτυχε</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ExportError_Message" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η εξαγωγή ρυθμίσεων. Ελέγξτε το αρχείο καταγραφής για λεπτομέρειες.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Title" xml:space="preserve">
+    <value>Οι ρυθμίσεις εισήχθησαν</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportSuccess_Message" xml:space="preserve">
+    <value>Οι ρυθμίσεις επαναφέρθηκαν από το αντίγραφο ασφαλείας. Επανεκκινήστε την εφαρμογή αν ορισμένες τιμές δεν ανανεωθούν.</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Title" xml:space="preserve">
+    <value>Η εισαγωγή απέτυχε</value>
+  </data>
+  <data name="SettingsPage_SettingsBackup_ImportError_Message" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η εισαγωγή ρυθμίσεων. Διατηρήθηκαν ή επαναφέρθηκαν οι προηγούμενες ρυθμίσεις από rollback.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Title" xml:space="preserve">
+    <value>Δίκτυο και επιτάχυνση</value>
+  </data>
+  <data name="NetworkAccelerationPage_Subtitle" xml:space="preserve">
+    <value>Προαιρετική τοπική επιτάχυνση. Απενεργοποιημένη από προεπιλογή — το proxy, τα hosts και τα πιστοποιητικά δεν ξεκινούν ποτέ αυτόματα κατά την εκκίνηση.</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
+    <value>Ανενεργό (προεπιλογή)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Start" xml:space="preserve">
+    <value>Έναρξη</value>
+  </data>
+  <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
+    <value>Διακοπή</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
+    <value>Διαγνωστικά</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
+    <value>Γρήγορος έλεγχος διαμόρφωσης, θύρας ακρόασης loopback και σύνοψης πύλης. Τα διαγνωστικά εκτελούνται μόνο κατόπιν αιτήματος.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
+    <value>Εκτέλεση διαγνωστικών</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsFailed" xml:space="preserve">
+    <value>Τα διαγνωστικά απέτυχαν</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedHeading" xml:space="preserve">
+    <value>Για προχωρημένους</value>
+  </data>
+  <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
+    <value>Λειτουργίες: System proxy, Hosts (αποκλεισμός με σήμανση UDT) ή μόνο διαγνωστικά. Το worker ακούει στο 127.0.0.1 / ::1 μέσω named-pipe IPC.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
+    <value>Λειτουργία</value>
+  </data>
+  <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
+    <value>Θύρα ακρόασης</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Να επιτρέπεται η επιτάχυνση (μόνο χειροκίνητη εκκίνηση)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Αναγκαστική επαναφορά κατάστασης δικτύου</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Αποτυχία έναρξης επιτάχυνσης δικτύου. Ελέγξτε ότι το worker είναι εγκατεστημένο και δοκιμάστε αναγκαστική επαναφορά κατάστασης δικτύου.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Η επαναφορά ολοκληρώθηκε με προειδοποιήσεις:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Ομάδες τομέων</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
+    <value>{0}: ενεργοποιημένα {1}/{2}, τομείς: {3} (ενσωματωμένα Steam/GitHub, απενεργοποιημένα από προεπιλογή — επεξεργαστείτε τη σύνθετη διαμόρφωση αν χρειάζεται).</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
+    <value>Εκτελείται ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusStopped" xml:space="preserve">
+    <value>Διακόπηκε ({0})</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusWorkerMissing" xml:space="preserve">
+    <value>Δεν βρέθηκε το δυαδικό worker — δημιουργήστε/εγκαταστήστε το UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAccelerationPage_StatusDiagnosticsOnly" xml:space="preserve">
+    <value>Μόνο διαγνωστικά (χωρίς αλλαγές συστήματος δικτύου)</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Ενότητες αισθητήρων</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Ορατές ενότητες</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Σειρά ενοτήτων</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Μετακίνηση επάνω</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Μετακίνηση κάτω</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Σύγκριση</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Όριο %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Φίλτρο φόρτισης</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Διάρκεια (δ)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Αναμονή (δ)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Μετρική</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Όριο</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Κλείσιμο ειδοποίησης</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Επανάληψη</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Συνέχεια στα Αγγλικά</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Αποθήκευση</value>
+  </data>
+</root>

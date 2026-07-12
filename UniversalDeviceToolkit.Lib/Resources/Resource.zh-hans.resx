@@ -1021,4 +1021,19 @@
   <data name="Resolution_DisplayName_Format" xml:space="preserve">
     <value>{0} × {1}</value>
   </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>关闭（默认）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>未找到工作进程 — 请构建/安装 UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>仅诊断（不更改系统网络）</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>运行中 ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>已停止 ({0})</value>
+  </data>
 </root>

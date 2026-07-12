@@ -973,4 +973,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Aangepast patroon</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statisch</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Ademen</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Golf</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Regenboog</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteoor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Rimpeling</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Fonkeling</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Verloop</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Regenbooggolf</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spiraalregenboog</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Uit (standaard)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Worker-binairbestand niet gevonden — bouw/installeer UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Alleen diagnostiek (geen systeemnetwerkwijzigingen)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>Actief ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Gestopt ({0})</value>
+  </data>
 </root>

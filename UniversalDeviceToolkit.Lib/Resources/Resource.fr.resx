@@ -971,4 +971,64 @@
 <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
     <value>Separator Color</value>
   </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Motif personnalisé</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Statique</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Respiration</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Vague</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Arc-en-ciel</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Météore</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ondulation</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Étincelle</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Dégradé</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Vague arc-en-ciel</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Arc-en-ciel spiralé</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Off" xml:space="preserve">
+    <value>Désactivé (par défaut)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_WorkerMissing" xml:space="preserve">
+    <value>Binaire du worker introuvable — compilez/installez UniversalDeviceToolkit.NetworkProxy.exe</value>
+  </data>
+  <data name="NetworkAcceleration_Status_DiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics uniquement (aucune modification du réseau système)</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Running" xml:space="preserve">
+    <value>En cours ({0}) loopback:{1}</value>
+  </data>
+  <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
+    <value>Arrêté ({0})</value>
+  </data>
 </root>
