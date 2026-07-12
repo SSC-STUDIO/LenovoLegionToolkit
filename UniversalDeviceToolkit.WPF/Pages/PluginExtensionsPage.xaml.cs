@@ -354,9 +354,15 @@ private string _currentSearchText = string.Empty;
         {
             var searchLower = _currentSearchText.ToLowerInvariant();
             filteredPlugins = filteredPlugins.Where(p =>
-                p.Name.ToLowerInvariant().Contains(searchLower) ||
-                p.Description.ToLowerInvariant().Contains(searchLower) ||
-                p.Id.ToLowerInvariant().Contains(searchLower));
+            {
+                var manifest = ResolvePluginManifestForDisplay(p);
+                var metadata = CreatePluginDisplayMetadata(p, manifest);
+                var culture = Resource.Culture ?? CultureInfo.CurrentUICulture;
+                return metadata.GetDisplayName(culture).ToLowerInvariant().Contains(searchLower) ||
+                       metadata.GetDisplayDescription(culture).ToLowerInvariant().Contains(searchLower) ||
+                       p.Id.ToLowerInvariant().Contains(searchLower) ||
+                       metadata.GetDisplayTags(culture).Any(tag => tag.ToLowerInvariant().Contains(searchLower));
+            });
         }
 
         UpdatePluginsList(filteredPlugins.ToList());
@@ -443,12 +449,14 @@ private string _currentSearchText = string.Empty;
                     isLocal = onlinePlugin == null;
                 }
 
-                var manifestMetadata = updatePlugin ?? onlinePlugin ?? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath);
+                var installedManifest = isInstalled ? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath) : null;
+                var manifestMetadata = installedManifest ?? updatePlugin ?? onlinePlugin;
                 var resolvedPlugin = EnsureRegisteredPluginForUi(plugin.Id, isInstalled) ?? plugin;
                 var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled, plugin.Id, manifestMetadata);
                 var supportsExecutableEntryPoint = isInstalled && TryResolvePluginExecutable(plugin.Id, out _, out _);
                 var localizedName = GetPluginLocalizedName(plugin, manifestMetadata);
                 var localizedDescription = GetPluginLocalizedDescription(plugin, manifestMetadata);
+                var localizedTags = GetPluginLocalizedTags(plugin, manifestMetadata);
                 var detailedDescription = GetPluginDetailedDescription(manifestMetadata);
                 var usageGuide = GetPluginUsageGuide(manifestMetadata);
 
@@ -474,6 +482,7 @@ private string _currentSearchText = string.Empty;
                     // Update existing ViewModel
                     existingViewModel.Name = localizedName;
                     existingViewModel.Description = localizedDescription;
+                    existingViewModel.Tags = localizedTags;
                     existingViewModel.IsInstalled = isInstalled;
                     existingViewModel.SetUpdateAvailable(updateAvailable);
                     existingViewModel.Version = $"v{version}";
@@ -504,6 +513,7 @@ private string _currentSearchText = string.Empty;
                     var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal);
                     pluginViewModel.Name = localizedName;
                     pluginViewModel.Description = localizedDescription;
+                    pluginViewModel.Tags = localizedTags;
                     pluginViewModel.Location = location;
                     pluginViewModel.NewVersion = newVersion;
                     pluginViewModel.ReleaseDate = releaseDate;
@@ -821,10 +831,13 @@ private string _currentSearchText = string.Empty;
         };
         var random = new Random(name.GetHashCode());
         var backgroundColor = darkColors[Math.Abs(random.Next()) % darkColors.Count];
+        var cornerRadius = Application.Current?.TryFindResource("CornerRadiusControl") is CornerRadius cr
+            ? cr
+            : new CornerRadius(12);
         var border = new Border
         {
             Background = backgroundColor,
-            CornerRadius = new CornerRadius(12),
+            CornerRadius = cornerRadius,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch
         };
@@ -1637,10 +1650,10 @@ private string _currentSearchText = string.Empty;
         if (plugin is not null)
             return GetPluginLocalizedName(plugin, manifest);
 
-        var manifestName = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
-        return !string.IsNullOrWhiteSpace(manifestName)
-            ? RemovePluginSuffix(manifestName)
-            : pluginId;
+        if (manifest is not null)
+            return GetPluginLocalizedName(new PluginManifestAdapter(manifest), manifest);
+
+        return pluginId;
     }
 
     private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
@@ -2403,13 +2416,78 @@ private string _currentSearchText = string.Empty;
 #endif
     }
 
+    private PluginManifest? ResolvePluginManifestForDisplay(IPlugin plugin)
+    {
+        if (plugin is PluginManifestAdapter adapter)
+            return adapter.Manifest;
+
+        return ResolvePluginManifestMetadata(plugin.Id);
+    }
+
+    private static PluginMetadata CreatePluginDisplayMetadata(IPlugin plugin, PluginManifest? manifest)
+    {
+        var fallbackName = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
+        var fallbackDescription = ResolvePluginManifestText(manifest, static localization => localization.Description, manifest?.Description ?? manifest?.Store?.Description);
+
+        return new PluginMetadata
+        {
+            Id = plugin.Id,
+            Name = string.IsNullOrWhiteSpace(fallbackName) ? plugin.Name : fallbackName,
+            Description = string.IsNullOrWhiteSpace(fallbackDescription) ? plugin.Description : fallbackDescription,
+            Icon = plugin.Icon,
+            IsSystemPlugin = plugin.IsSystemPlugin,
+            Dependencies = plugin.Dependencies,
+            Tags = manifest?.Tags ?? manifest?.Store?.Tags,
+            LocalizedNames = MergeLocalizedStrings(manifest?.Store?.LocalizedNames, manifest?.LocalizedNames),
+            LocalizedDescriptions = MergeLocalizedStrings(manifest?.Store?.LocalizedDescriptions, manifest?.LocalizedDescriptions),
+            LocalizedTags = MergeLocalizedTags(manifest?.Store?.LocalizedTags, manifest?.LocalizedTags)
+        };
+    }
+
+    private static IReadOnlyDictionary<string, string>? MergeLocalizedStrings(
+        Dictionary<string, string>? secondary,
+        Dictionary<string, string>? primary)
+    {
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (secondary is not null)
+        {
+            foreach (var pair in secondary)
+                result[pair.Key] = pair.Value;
+        }
+
+        if (primary is not null)
+        {
+            foreach (var pair in primary)
+                result[pair.Key] = pair.Value;
+        }
+
+        return result.Count == 0 ? null : result;
+    }
+
+    private static IReadOnlyDictionary<string, IReadOnlyList<string>>? MergeLocalizedTags(
+        Dictionary<string, string[]>? secondary,
+        Dictionary<string, string[]>? primary)
+    {
+        var result = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
+        if (secondary is not null)
+        {
+            foreach (var pair in secondary)
+                result[pair.Key] = pair.Value;
+        }
+
+        if (primary is not null)
+        {
+            foreach (var pair in primary)
+                result[pair.Key] = pair.Value;
+        }
+
+        return result.Count == 0 ? null : result;
+    }
+
     private string GetPluginLocalizedName(IPlugin plugin, PluginManifest? manifest)
     {
-        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.Name, manifest?.Name);
-        if (!string.IsNullOrWhiteSpace(manifestValue))
-            return RemovePluginSuffix(manifestValue);
-
-        return RemovePluginSuffix(plugin.Name);
+        var metadata = CreatePluginDisplayMetadata(plugin, manifest);
+        return RemovePluginSuffix(metadata.GetDisplayName(Resource.Culture ?? CultureInfo.CurrentUICulture));
     }
 
     private async Task<string?> AnalyzeAndFixPluginStructureAsync(string extractDir)
@@ -2548,11 +2626,14 @@ private string _currentSearchText = string.Empty;
 
 private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? manifest)
     {
-        var manifestValue = ResolvePluginManifestText(manifest, static localization => localization.Description, manifest?.Description ?? manifest?.Store?.Description);
-        if (!string.IsNullOrWhiteSpace(manifestValue))
-            return manifestValue;
+        var metadata = CreatePluginDisplayMetadata(plugin, manifest);
+        return metadata.GetDisplayDescription(Resource.Culture ?? CultureInfo.CurrentUICulture);
+    }
 
-        return plugin.Description;
+    private IReadOnlyList<string> GetPluginLocalizedTags(IPlugin plugin, PluginManifest? manifest)
+    {
+        var metadata = CreatePluginDisplayMetadata(plugin, manifest);
+        return metadata.GetDisplayTags(Resource.Culture ?? CultureInfo.CurrentUICulture);
     }
 
     private string GetPluginDetailedDescription(PluginManifest? manifest)

@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Automation.Resources;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 
@@ -25,7 +26,7 @@ public sealed class HardwareSensorAutomationPipelineTrigger(
     public float Threshold { get; } = threshold;
     public TimeSpan Duration { get; } = duration < TimeSpan.Zero ? TimeSpan.Zero : duration;
     public TimeSpan Cooldown { get; } = cooldown < TimeSpan.Zero ? TimeSpan.Zero : cooldown;
-    public string DisplayName => $"{Metric} {Comparison} {Threshold}";
+    public string DisplayName => string.Format(Resource.HardwareSensorAutomationPipelineTrigger_DisplayName_Format, Metric, Comparison, Threshold);
 
     public Task<bool> IsMatchingEvent(IAutomationEvent automationEvent) => IsMatchingState();
 

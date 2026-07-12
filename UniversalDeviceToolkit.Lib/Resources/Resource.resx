@@ -17,15 +17,6 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
                 
     There are any number of "resheader" rows that contain simple 
     name/value pairs.
@@ -1023,28 +1014,55 @@
     <value>Update package integrity check failed. Expected SHA256: {0}, Computed: {1}</value>
     <comment>Exception message format for update SHA256 hash mismatch</comment>
   </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Nilesoft Shell</value>
-  </data>
-  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
-  </data>
-  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
-  </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
     <value>The change could not be verified. Administrator privileges may be required.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
     <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="LampEffect_CustomPattern" xml:space="preserve">
+    <value>Custom Pattern</value>
+  </data>
+  <data name="LampEffect_AuroraSync" xml:space="preserve">
+    <value>Aurora Sync</value>
+  </data>
+  <data name="LampEffect_Static" xml:space="preserve">
+    <value>Static</value>
+  </data>
+  <data name="LampEffect_Breathe" xml:space="preserve">
+    <value>Breathe</value>
+  </data>
+  <data name="LampEffect_Wave" xml:space="preserve">
+    <value>Wave</value>
+  </data>
+  <data name="LampEffect_Rainbow" xml:space="preserve">
+    <value>Rainbow</value>
+  </data>
+  <data name="LampEffect_Meteor" xml:space="preserve">
+    <value>Meteor</value>
+  </data>
+  <data name="LampEffect_Ripple" xml:space="preserve">
+    <value>Ripple</value>
+  </data>
+  <data name="LampEffect_Sparkle" xml:space="preserve">
+    <value>Sparkle</value>
+  </data>
+  <data name="LampEffect_Gradient" xml:space="preserve">
+    <value>Gradient</value>
+  </data>
+  <data name="LampEffect_RainbowWave" xml:space="preserve">
+    <value>Rainbow Wave</value>
+  </data>
+  <data name="LampEffect_SpiralRainbow" xml:space="preserve">
+    <value>Spiral Rainbow</value>
+  </data>
+  <data name="DpiScale_DisplayName_Format" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="RefreshRate_DisplayName_Format" xml:space="preserve">
+    <value>{0} Hz</value>
+  </data>
+  <data name="Resolution_DisplayName_Format" xml:space="preserve">
+    <value>{0} × {1}</value>
   </data>
 </root>

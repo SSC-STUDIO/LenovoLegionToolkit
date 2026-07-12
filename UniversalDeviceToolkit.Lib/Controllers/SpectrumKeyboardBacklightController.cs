@@ -86,7 +86,10 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     or SpecialKey.SpectrumPreset5
                     or SpecialKey.SpectrumPreset6:
                     {
-                        await StartAuroraIfNeededAsync().ConfigureAwait(false);
+                        // LED / aurora feedback must not block the key event path.
+                        await Listeners.SpecialKeyLedIsolation.RunLedFeedbackAsync(
+                            $"spectrum-preset-{e.SpecialKey}",
+                            () => StartAuroraIfNeededAsync()).ConfigureAwait(false);
                         break;
                     }
             }

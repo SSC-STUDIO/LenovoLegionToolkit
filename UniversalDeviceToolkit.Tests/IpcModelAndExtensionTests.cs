@@ -29,6 +29,10 @@ public class IpcModelAndExtensionTests
     [InlineData(IpcRequest.OperationType.SetSpectrumProfile)]
     [InlineData(IpcRequest.OperationType.GetRGBPreset)]
     [InlineData(IpcRequest.OperationType.SetRGBPreset)]
+    [InlineData(IpcRequest.OperationType.GetNetworkAccelerationStatus)]
+    [InlineData(IpcRequest.OperationType.StartNetworkAcceleration)]
+    [InlineData(IpcRequest.OperationType.StopNetworkAcceleration)]
+    [InlineData(IpcRequest.OperationType.RunNetworkDiagnostics)]
     public void IpcRequestOperationType_ShouldBeDefined(IpcRequest.OperationType value)
     {
         Enum.IsDefined(value).Should().BeTrue();

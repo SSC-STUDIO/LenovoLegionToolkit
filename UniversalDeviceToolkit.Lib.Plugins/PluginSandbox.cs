@@ -8,6 +8,7 @@ using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -30,7 +31,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     public bool CreateSandbox(string pluginId, string assemblyPath, SandboxConfiguration configuration)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
-            throw new ArgumentException("Plugin ID cannot be null or empty", nameof(pluginId));
+            throw new ArgumentException(Resource.Plugin_Error_Sandbox_InvalidPluginId, nameof(pluginId));
 
         if (!File.Exists(assemblyPath))
         {
@@ -187,7 +188,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
+                    ErrorMessage = string.Format(Resource.Plugin_Error_Sandbox_NotFound, pluginId),
                     WasBlocked = false
                 };
             }
@@ -203,7 +204,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = "Resource limit exceeded",
+                    ErrorMessage = Resource.Plugin_Error_Sandbox_ResourceLimit,
                     WasBlocked = true
                 };
             }
@@ -233,7 +234,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = $"Sandbox violation: {ex.Message}",
+                    ErrorMessage = string.Format(Resource.Plugin_Error_Sandbox_Violation, ex.Message),
                     WasBlocked = true
                 };
             }
@@ -258,7 +259,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = $"Sandbox not found for plugin: {pluginId}",
+                    ErrorMessage = string.Format(Resource.Plugin_Error_Sandbox_NotFound, pluginId),
                     WasBlocked = false
                 };
             }
@@ -274,7 +275,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = "Resource limit exceeded",
+                    ErrorMessage = Resource.Plugin_Error_Sandbox_ResourceLimit,
                     WasBlocked = true
                 };
             }
@@ -298,7 +299,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             return new SandboxOperationResult
             {
                 Success = false,
-                ErrorMessage = "Operation timed out",
+                ErrorMessage = Resource.Plugin_Error_Sandbox_OperationTimeout,
                 WasBlocked = true
             };
         }
@@ -313,7 +314,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return new SandboxOperationResult
                 {
                     Success = false,
-                    ErrorMessage = $"Sandbox violation: {ex.Message}",
+                    ErrorMessage = string.Format(Resource.Plugin_Error_Sandbox_Violation, ex.Message),
                     WasBlocked = true
                 };
             }

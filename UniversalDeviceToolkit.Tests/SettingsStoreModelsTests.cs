@@ -26,7 +26,7 @@ public class SettingsStoreModelsTests
         store.AnimationsEnabled.Should().BeTrue();
         store.AnimationSpeed.Should().Be(2.0);
         store.NavigationPaneExpanded.Should().BeTrue();
-        store.NotificationPosition.Should().Be(NotificationPosition.BottomCenter);
+        store.NotificationPosition.Should().Be(NotificationPosition.BottomRight);
         store.NotificationDuration.Should().Be(NotificationDuration.Normal);
         store.PowerPlans.Should().NotBeNull();
         store.PowerModes.Should().NotBeNull();

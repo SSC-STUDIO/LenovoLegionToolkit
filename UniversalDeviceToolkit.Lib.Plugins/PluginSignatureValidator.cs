@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -87,14 +88,14 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin signature validation disabled. Skipping validation for {dllPath}");
 
-                return new PluginSignatureResult(PluginSignatureStatus.Valid, "Validation disabled");
+                return new PluginSignatureResult(PluginSignatureStatus.Valid, Resource.Plugin_Error_Signature_Disabled);
             }
 
             // Check if file exists
             if (!File.Exists(dllPath))
             {
                 return new PluginSignatureResult(PluginSignatureStatus.ValidationError,
-                    $"Plugin file not found: {dllPath}");
+                    string.Format(Resource.Plugin_Error_Signature_FileNotFound, dllPath));
             }
 
             // Try to extract the Authenticode signature certificate
@@ -117,7 +118,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                         Log.Instance.Trace($"Plugin {dllPath} is not signed, but matches a trusted online package hash.");
 
                     return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        "Plugin is not signed. Allowed because it matches a trusted online package hash.")
+                        Resource.Plugin_Error_Signature_NotSigned_TrustedPackage)
                     { IsAllowedByPolicy = true };
                 }
 
@@ -128,14 +129,14 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                         Log.Instance.Trace($"Plugin {dllPath} is not signed. Allowing unsigned plugins (development mode).");
 
                     return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        "Plugin is not signed. Allowed per policy.")
+                        Resource.Plugin_Error_Signature_NotSigned_AllowUnsigned)
                     { IsAllowedByPolicy = true };
                 }
 
                 Log.Instance.Warning($"Plugin {dllPath} is not signed: {ex.Message}", ex);
 
                 return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                    "Plugin is not signed. Signature required per policy.");
+                    Resource.Plugin_Error_Signature_NotSigned_Required);
             }
 
             // Validate the certificate
@@ -153,7 +154,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             Log.Instance.Warning($"Error validating plugin signature for {dllPath}: {ex.Message}", ex);
 
             return new PluginSignatureResult(PluginSignatureStatus.ValidationError,
-                $"Validation error: {ex.Message}");
+                string.Format(Resource.Plugin_Error_Signature_ValidationFailed, ex.Message));
         }
     }
 
@@ -169,7 +170,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             if (expirationDate < DateTime.UtcNow)
             {
                 return new PluginSignatureResult(PluginSignatureStatus.Expired,
-                    $"Certificate expired on {expirationDate:O}")
+                    string.Format(Resource.Plugin_Error_Signature_Expired, expirationDate.ToString("O")))
                 {
                     Certificate = certificate,
                     Issuer = certificate.Issuer,
@@ -181,7 +182,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             if (certificate.NotBefore > DateTime.UtcNow)
             {
                 return new PluginSignatureResult(PluginSignatureStatus.Invalid,
-                    $"Certificate not valid until {certificate.NotBefore:O}")
+                    string.Format(Resource.Plugin_Error_Signature_NotYetValid, certificate.NotBefore.ToString("O")))
                 {
                     Certificate = certificate,
                     Issuer = certificate.Issuer,
@@ -206,7 +207,9 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                     chainErrors.Add($"{chainStatus.Status}: {chainStatus.StatusInformation}");
                 }
 
-                var errorMessage = $"Certificate chain validation failed: {string.Join("; ", chainErrors)}";
+                var errorMessage = string.Format(
+                    Resource.Plugin_Error_Signature_ChainFailed,
+                    string.Join("; ", chainErrors));
 
                 // Check if the error is due to untrusted root
                 var hasUntrustedRoot = chain.ChainStatus.Any(s => s.Status == X509ChainStatusFlags.UntrustedRoot);
@@ -218,7 +221,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                         Log.Instance.Trace($"Plugin {dllPath} has untrusted root certificate but test certificates are allowed.");
 
                     return new PluginSignatureResult(PluginSignatureStatus.Valid,
-                        "Certificate chain validation passed (test certificate allowed)")
+                        Resource.Plugin_Error_Signature_TestCertificate)
                     {
                         Certificate = certificate,
                         Issuer = certificate.Issuer,
@@ -247,7 +250,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             Log.Instance.Warning($"Error validating certificate for {dllPath}: {ex.Message}", ex);
 
             return new PluginSignatureResult(PluginSignatureStatus.ValidationError,
-                $"Certificate validation error: {ex.Message}");
+                string.Format(Resource.Plugin_Error_Signature_CertificateError, ex.Message));
         }
     }
 }

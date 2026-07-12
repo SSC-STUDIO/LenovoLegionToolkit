@@ -6,6 +6,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:Double x:Key="NotificationToastWidth">360</sys:Double>
@@ -54,22 +55,16 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Border
+                                <ContentPresenter
                                     x:Name="IconChrome"
-                                    Width="36"
-                                    Height="36"
+                                    Width="28"
+                                    Height="28"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                    CornerRadius="{StaticResource CornerRadiusControl}">
-                                    <ContentPresenter
-                                        x:Name="CardIcon"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Content="{TemplateBinding Icon}"
-                                        TextElement.FontSize="18"
-                                        TextElement.Foreground="{TemplateBinding Foreground}" />
-                                </Border>
+                                    HorizontalAlignment="Center"
+                                    Content="{TemplateBinding Icon}"
+                                    TextElement.FontSize="20"
+                                    TextElement.Foreground="{TemplateBinding Foreground}" />
 
                                 <Grid Grid.Column="1" VerticalAlignment="Center">
                                     <Grid.RowDefinitions>
@@ -118,11 +113,11 @@
                                     Padding="0"
                                     VerticalAlignment="Center"
                                     Appearance="Transparent"
-                                    AutomationProperties.Name="Close notification"
+                                    AutomationProperties.Name="{x:Static resources:Resource.CloseNotification_AutomationName}"
                                     Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                     CornerRadius="{StaticResource CornerRadiusCompact}"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    ToolTip="Close">
+                                    ToolTip="{x:Static resources:Resource.Close_Tooltip}">
                                     <controls:Button.Icon>
                                         <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
                                     </controls:Button.Icon>

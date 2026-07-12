@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -16,7 +16,7 @@
     <value>联想拯救者工具箱</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>版本</value>
+    <value>构建</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
     <value>在 GitHub 上查看最新版本</value>
@@ -3737,7 +3737,7 @@ Fn 将会暂时解除锁定。</value>
     <value>不透明度</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>分隔线颜色</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>数值颜色</value>
@@ -3998,7 +3998,7 @@ Fn 将会暂时解除锁定。</value>
     <value>诊断</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
-    <value>运行快速检查。第一阶段仅报告配置；完整连通性测试稍后加入。</value>
+    <value>运行快速检查：配置、本机监听端口与网关摘要。仅在你主动请求时执行诊断。</value>
   </data>
   <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
     <value>运行诊断</value>
@@ -4017,5 +4017,128 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
     <value>监听端口</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>允许加速（仅手动启动）</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>强制恢复网络状态</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>无法启动网络加速。请确认辅助进程已安装，并尝试“强制恢复网络状态”。</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>恢复完成，但存在警告：</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>域名组</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+    <value>无法保存</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Message" xml:space="preserve">
+    <value>保存自动化流水线失败。请重试。</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Title" xml:space="preserve">
+    <value>无法切换自动化流水线</value>
+  </data>
+  <data name="AutomationPage_EnableAutomaticPipelines_Error_Message" xml:space="preserve">
+    <value>切换自动化流水线失败。请重试。</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Title" xml:space="preserve">
+    <value>无法添加手动流水线</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Error_Message" xml:space="preserve">
+    <value>添加手动流水线失败。请重试。</value>
+  </data>
+  <data name="FanCurveControl_TemperatureMax" xml:space="preserve">
+    <value>100 °C</value>
+  </data>
+  <data name="MainWindow_OpenLogsTooltip" xml:space="preserve">
+    <value>打开日志文件夹</value>
+  </data>
+  <data name="MainWindow_LogIndicatorLabel" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="MacroPage_Number0" xml:space="preserve">
+    <value>数字 0</value>
+  </data>
+  <data name="MacroPage_Number1" xml:space="preserve">
+    <value>数字 1</value>
+  </data>
+  <data name="MacroPage_Number2" xml:space="preserve">
+    <value>数字 2</value>
+  </data>
+  <data name="MacroPage_Number3" xml:space="preserve">
+    <value>数字 3</value>
+  </data>
+  <data name="MacroPage_Number4" xml:space="preserve">
+    <value>数字 4</value>
+  </data>
+  <data name="MacroPage_Number5" xml:space="preserve">
+    <value>数字 5</value>
+  </data>
+  <data name="MacroPage_Number6" xml:space="preserve">
+    <value>数字 6</value>
+  </data>
+  <data name="MacroPage_Number7" xml:space="preserve">
+    <value>数字 7</value>
+  </data>
+  <data name="MacroPage_Number8" xml:space="preserve">
+    <value>数字 8</value>
+  </data>
+  <data name="MacroPage_Number9" xml:space="preserve">
+    <value>数字 9</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>传感器分区</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>可见分区</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>分区排序</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>比较方式</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>阈值 %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>充电筛选</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>持续时间 (秒)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>冷却时间 (秒)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>指标</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>阈值</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>关闭通知</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>以英文继续</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>保存</value>
   </data>
 </root>

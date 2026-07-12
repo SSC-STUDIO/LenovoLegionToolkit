@@ -121,13 +121,13 @@
                         Margin="0,0,8,0"
                         Appearance="Primary"
                         Click="Retry_Click"
-                        Content="Retry" />
+                        Content="{x:Static resources:Resource.LanguageSelector_RetryButton}" />
                     <wpfui:Button
                         x:Name="_continueEnglishButton"
                         MinWidth="140"
                         Margin="0,0,8,0"
                         Click="ContinueEnglish_Click"
-                        Content="Continue in English" />
+                        Content="{x:Static resources:Resource.LanguageSelector_ContinueInEnglishButton}" />
                     <wpfui:Button
                         x:Name="_exitButton"
                         MinWidth="88"

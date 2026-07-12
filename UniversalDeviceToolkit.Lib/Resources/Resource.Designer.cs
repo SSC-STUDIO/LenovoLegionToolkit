@@ -2111,5 +2111,140 @@ namespace LenovoLegionToolkit.Lib.Resources {
                 return ResourceManager.GetString("Exception_UpdateSHA256Mismatch", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Pattern.
+        /// </summary>
+        public static string LampEffect_CustomPattern {
+            get {
+                return ResourceManager.GetString("LampEffect_CustomPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aurora Sync.
+        /// </summary>
+        public static string LampEffect_AuroraSync {
+            get {
+                return ResourceManager.GetString("LampEffect_AuroraSync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static.
+        /// </summary>
+        public static string LampEffect_Static {
+            get {
+                return ResourceManager.GetString("LampEffect_Static", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Breathe.
+        /// </summary>
+        public static string LampEffect_Breathe {
+            get {
+                return ResourceManager.GetString("LampEffect_Breathe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wave.
+        /// </summary>
+        public static string LampEffect_Wave {
+            get {
+                return ResourceManager.GetString("LampEffect_Wave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rainbow.
+        /// </summary>
+        public static string LampEffect_Rainbow {
+            get {
+                return ResourceManager.GetString("LampEffect_Rainbow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteor.
+        /// </summary>
+        public static string LampEffect_Meteor {
+            get {
+                return ResourceManager.GetString("LampEffect_Meteor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ripple.
+        /// </summary>
+        public static string LampEffect_Ripple {
+            get {
+                return ResourceManager.GetString("LampEffect_Ripple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sparkle.
+        /// </summary>
+        public static string LampEffect_Sparkle {
+            get {
+                return ResourceManager.GetString("LampEffect_Sparkle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gradient.
+        /// </summary>
+        public static string LampEffect_Gradient {
+            get {
+                return ResourceManager.GetString("LampEffect_Gradient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rainbow Wave.
+        /// </summary>
+        public static string LampEffect_RainbowWave {
+            get {
+                return ResourceManager.GetString("LampEffect_RainbowWave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spiral Rainbow.
+        /// </summary>
+        public static string LampEffect_SpiralRainbow {
+            get {
+                return ResourceManager.GetString("LampEffect_SpiralRainbow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}%.
+        /// </summary>
+        public static string DpiScale_DisplayName_Format {
+            get {
+                return ResourceManager.GetString("DpiScale_DisplayName_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Hz.
+        /// </summary>
+        public static string RefreshRate_DisplayName_Format {
+            get {
+                return ResourceManager.GetString("RefreshRate_DisplayName_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} × {1}.
+        /// </summary>
+        public static string Resolution_DisplayName_Format {
+            get {
+                return ResourceManager.GetString("Resolution_DisplayName_Format", resourceCulture);
+            }
+        }
     }
 }

@@ -101,6 +101,39 @@ public class NetworkAccelerationConfigDefaultsTests
         config.ListenPort.Should().Be(NetworkAccelerationDefaults.DefaultListenPort);
         config.ShowInNavigation.Should().BeTrue();
     }
+
+    [Fact]
+    public void CreateDefault_IncludesBuiltinDomainGroupsDisabled()
+    {
+        var config = NetworkAccelerationConfig.CreateDefault();
+        config.DomainGroups.Should().NotBeEmpty();
+        config.DomainGroups.Should().Contain(g => g.Id == "steam");
+        config.DomainGroups.Should().Contain(g => g.Id == "github");
+        config.DomainGroups.Should().OnlyContain(g => !g.Enabled);
+        config.DomainGroups.First(g => g.Id == "steam").Domains.Should().Contain("steamcommunity.com");
+        config.DomainGroups.First(g => g.Id == "github").Domains.Should().Contain("github.com");
+    }
+}
+
+public class DomainMatcherTests
+{
+    [Theory]
+    [InlineData("github.com", "github.com", true)]
+    [InlineData("api.github.com", "github.com", true)]
+    [InlineData("notgithub.com", "github.com", false)]
+    [InlineData("steamcommunity.com", "steampowered.com", false)]
+    [InlineData("cdn.steamstatic.com", "steamstatic.com", true)]
+    public void Matches_HostAgainstRule(string host, string rule, bool expected)
+    {
+        DomainMatcher.Matches(host, rule).Should().Be(expected);
+    }
+
+    [Fact]
+    public void MatchesAny_WhenOneRuleMatches()
+    {
+        DomainMatcher.MatchesAny("api.github.com", ["steamcommunity.com", "github.com"]).Should().BeTrue();
+        DomainMatcher.MatchesAny("example.com", ["github.com", "steamcommunity.com"]).Should().BeFalse();
+    }
 }
 
 public class NetworkProxySessionTokenTests
@@ -200,5 +233,70 @@ public class NetworkStateRecoveryServiceTests
         var ok = service.TryResetNetwork(out var report);
         ok.Should().BeTrue();
         report.Should().Contain("Network state");
+    }
+
+    [Fact]
+    public async Task CaptureAndRestore_SystemProxy_RoundTrips()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "udt-net-recovery-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+
+        try
+        {
+            var hosts = "127.0.0.1 localhost\n# other\n";
+            SystemProxySnapshot? proxy = new SystemProxySnapshot
+            {
+                Enabled = true,
+                Server = "proxy.example:8080",
+                Override = "localhost",
+                AutoConfigUrl = null
+            };
+
+            var service = new NetworkStateRecoveryService(
+                dir,
+                () => hosts,
+                content => hosts = content,
+                () => proxy,
+                value => proxy = value);
+
+            var snapshot = await service.CaptureSnapshotAsync();
+            snapshot.SystemProxy.Should().NotBeNull();
+            snapshot.SystemProxy!.Server.Should().Be("proxy.example:8080");
+
+            // Simulate UDT applying loopback proxy
+            proxy = new SystemProxySnapshot
+            {
+                Enabled = true,
+                Server = "127.0.0.1:34123",
+                Override = "localhost",
+                AutoConfigUrl = null
+            };
+
+            // Also inject a UDT hosts block as if acceleration was running
+            hosts = HostsMarkedBlock.Upsert(hosts, ["127.0.0.1 steamcommunity.com"]);
+
+            service.TryRestoreFromSnapshot(out var report).Should().BeTrue();
+            report.Should().Contain("Result: OK");
+            proxy!.Server.Should().Be("proxy.example:8080");
+            proxy.Enabled.Should().BeTrue();
+            hosts.Should().NotContain(HostsMarkedBlock.BeginMarker);
+            hosts.Should().Contain("127.0.0.1 localhost");
+        }
+        finally
+        {
+            try { Directory.Delete(dir, recursive: true); } catch { /* ignore */ }
+        }
+    }
+}
+
+public class PacDomainMatchingIntegrationTests
+{
+    [Fact]
+    public void Generate_WithSteamDomains_MatchesExpectedHostsInPac()
+    {
+        var steam = BuiltinDomainGroups.CreateDefaults().First(g => g.Id == "steam");
+        var pac = PacFileGenerator.Generate(34123, steam.Domains);
+        pac.Should().Contain("steamcommunity.com");
+        DomainMatcher.Matches("store.steampowered.com", "steampowered.com").Should().BeTrue();
     }
 }

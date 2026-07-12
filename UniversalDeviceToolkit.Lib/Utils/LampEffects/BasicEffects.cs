@@ -6,12 +6,13 @@
 using System;
 using Windows.Devices.Lights;
 using Windows.UI;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils.LampEffects;
 
 public class StaticEffect : BaseLampEffect
 {
-    public override string Name => "Static";
+    public override string Name => Resource.LampEffect_Static;
 
     public StaticEffect(Color color)
     {
@@ -26,7 +27,7 @@ public class StaticEffect : BaseLampEffect
 
 public class BreatheEffect : BaseLampEffect
 {
-    public override string Name => "Breathe";
+    public override string Name => Resource.LampEffect_Breathe;
 
     public BreatheEffect(Color color, double period = 3.0)
     {
@@ -54,7 +55,7 @@ public class BreatheEffect : BaseLampEffect
 
 public class WaveEffect : BaseLampEffect
 {
-    public override string Name => "Wave";
+    public override string Name => Resource.LampEffect_Wave;
 
     public WaveEffect(Color color1, Color color2, double period = 2.0, WaveDirection direction = WaveDirection.LeftToRight)
     {
@@ -100,7 +101,7 @@ public enum WaveDirection
 
 public class RainbowEffect : BaseLampEffect
 {
-    public override string Name => "Rainbow";
+    public override string Name => Resource.LampEffect_Rainbow;
 
     public RainbowEffect(double period = 5.0, bool spatial = true)
     {

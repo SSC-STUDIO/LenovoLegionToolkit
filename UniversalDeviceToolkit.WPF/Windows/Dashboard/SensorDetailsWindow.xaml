@@ -4,13 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dashboard="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Dashboard"
     xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
-    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Width="1160"
-    Height="720"
-    MinWidth="980"
-    MinHeight="560"
+    Width="1080"
+    Height="640"
+    MinWidth="900"
+    MinHeight="520"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Loaded="SensorDetailsWindow_Loaded"
     ShowInTaskbar="False"
@@ -21,7 +20,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
@@ -33,7 +31,7 @@
         <Grid
             Grid.Row="0"
             Height="24"
-            Margin="12,8,12,8">
+            Margin="12,8,48,8">
             <TextBlock
                 x:Name="_titleText"
                 VerticalAlignment="Center"
@@ -48,13 +46,5 @@
             VerticalScrollBarVisibility="Auto">
             <dashboard:SensorsControl x:Name="_sensors" />
         </wpfui:DynamicScrollViewer>
-
-        <Grid Grid.Row="2" Margin="12,0,12,12">
-            <wpfui:Button
-                MinWidth="100"
-                HorizontalAlignment="Right"
-                Click="CloseButton_Click"
-                Content="{x:Static resources:Resource.Close}" />
-        </Grid>
     </Grid>
 </local:BaseWindow>

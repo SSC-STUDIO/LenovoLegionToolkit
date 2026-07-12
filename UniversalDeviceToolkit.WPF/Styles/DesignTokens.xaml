@@ -11,7 +11,19 @@
     <Thickness x:Key="SpacingXL">32</Thickness>
     <Thickness x:Key="ContentPaddingPage">24</Thickness>
 
-    <!-- Corner Radius Tokens -->
+    <!--
+      Corner radius scale (UI modernization):
+        Compact / badge / color swatch : 8
+        Button / input / list item     : 12
+        Card / settings group / plugin : 18
+        Dialog / main content surface  : 20
+        Capsule / status pill          : 999
+      Micro chart tracks may use ProgressBar (3). Avoid literal radii in views.
+    -->
+    <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusProgressBar">3</CornerRadius>
+    <!-- Compact-scale micro chrome (badges, chips). Prefer Compact over Small in new XAML. -->
+    <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusControl">12</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCard">18</CornerRadius>
@@ -19,6 +31,8 @@
     <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSurfaceTop">20,20,0,0</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSurfaceBottom">0,0,20,20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardTop">18,18,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardBottom">0,0,18,18</CornerRadius>
 
     <!-- Compatibility aliases for existing views. -->
     <CornerRadius x:Key="CornerRadiusSM">8</CornerRadius>
@@ -74,8 +88,8 @@
     <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#1AFFFFFF" />
     <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1FFFFFFF" />
     <SolidColorBrush x:Key="ChartBaselineBrush" Color="#38FFFFFF" />
-    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#D6202020" />
-    <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#36FFFFFF" />
+    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#A6202020" />
+    <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48FFFFFF" />
 
     <!-- Gauge Size Tokens -->
     <sys:Double x:Key="GaugeSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">88</sys:Double>
@@ -110,7 +124,7 @@
 
     <!-- ===== Focus / Accessibility Tokens ===== -->
     <sys:Double x:Key="FocusStrokeThickness" xmlns:sys="clr-namespace:System;assembly=mscorlib">2</sys:Double>
-    <sys:Double x:Key="FocusVisualCornerRadius" xmlns:sys="clr-namespace:System;assembly=mscorlib">6</sys:Double>
+    <sys:Double x:Key="FocusVisualCornerRadius" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
     <Thickness x:Key="FocusVisualMargin">-2</Thickness>
 
     <!-- Canonical keyboard focus ring. Referenced across the app (NavigationStore,

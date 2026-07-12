@@ -50,7 +50,7 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         Width = 36,
         Height = 36,
         Margin = new(0, 0, 10, 0),
-        CornerRadius = new CornerRadius(12),
+        CornerRadius = ResolveCornerRadius("CornerRadiusControl", 12),
     };
 
     private readonly SymbolIcon _symbolIcon = new()
@@ -211,15 +211,11 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         _mainGrid.FlowDirection = LocalizationHelper.Direction;
         _textBlock.Foreground = (SolidColorBrush)FindResource("TextFillColorPrimaryBrush");
 
-        _container.CornerRadius = Application.Current.TryFindResource("CornerRadiusCard") is CornerRadius cardRadius
-            ? cardRadius
-            : new CornerRadius(18);
+        _container.CornerRadius = ResolveCornerRadius("CornerRadiusCard", 18);
         _container.Background = (SolidColorBrush)FindResource("NotificationGlassSurfaceBrush");
         _container.BorderBrush = (SolidColorBrush)FindResource("NotificationGlassBorderBrush");
         _iconChrome.Background = (SolidColorBrush)FindResource("ControlFillColorSecondaryBrush");
-        _iconChrome.CornerRadius = Application.Current.TryFindResource("CornerRadiusControl") is CornerRadius controlRadius
-            ? controlRadius
-            : new CornerRadius(12);
+        _iconChrome.CornerRadius = ResolveCornerRadius("CornerRadiusControl", 12);
 
         if (Application.Current.TryFindResource("NotificationGlassShadowEffect") is DropShadowEffect glassShadow)
         {
@@ -339,6 +335,13 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         _container.Child = _mainGrid;
         _container.Margin = new Thickness(20); // Shadow space
         Content = _container;
+    }
+
+    private static CornerRadius ResolveCornerRadius(string resourceKey, double fallback)
+    {
+        if (Application.Current?.TryFindResource(resourceKey) is CornerRadius radius)
+            return radius;
+        return new CornerRadius(fallback);
     }
 
     private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius)

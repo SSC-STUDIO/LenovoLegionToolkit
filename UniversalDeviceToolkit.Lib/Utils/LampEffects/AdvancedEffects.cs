@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using Windows.Devices.Lights;
 using Windows.UI;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils.LampEffects;
 
 public class MeteorEffect : BaseLampEffect
 {
-    public override string Name => "Meteor";
+    public override string Name => Resource.LampEffect_Meteor;
     private readonly Random _random = new();
     public MeteorEffect(Color color, int meteorCount = 5, double speed = 0.5)
     {
@@ -99,7 +100,7 @@ public class MeteorEffect : BaseLampEffect
 
 public class RippleEffect : BaseLampEffect
 {
-    public override string Name => "Ripple";
+    public override string Name => Resource.LampEffect_Ripple;
     private readonly Random _random = new();
 
     public RippleEffect(Color color, double period = 1.5, int rippleCount = 3)
@@ -170,7 +171,7 @@ public class RippleEffect : BaseLampEffect
 
 public class SparkleEffect : BaseLampEffect
 {
-    public override string Name => "Sparkle";
+    public override string Name => Resource.LampEffect_Sparkle;
     private readonly Random _random = new();
 
     public SparkleEffect(Color color, double density = 0.1)
@@ -220,7 +221,7 @@ public class SparkleEffect : BaseLampEffect
 
 public class GradientEffect : BaseLampEffect
 {
-    public override string Name => "Gradient";
+    public override string Name => Resource.LampEffect_Gradient;
 
     public GradientEffect(Color[] colors, GradientDirection direction = GradientDirection.LeftToRight, bool animated = false, double period = 5.0)
     {
@@ -273,7 +274,7 @@ public enum GradientDirection
 
 public class RainbowWaveEffect : BaseLampEffect
 {
-    public override string Name => "Rainbow Wave";
+    public override string Name => Resource.LampEffect_RainbowWave;
 
     public RainbowWaveEffect(double speed = 1.0, double scale = 2.0, GradientDirection direction = GradientDirection.LeftToRight)
     {
@@ -306,7 +307,7 @@ public class RainbowWaveEffect : BaseLampEffect
 
 public class SpiralRainbowEffect : BaseLampEffect
 {
-    public override string Name => "Spiral Rainbow";
+    public override string Name => Resource.LampEffect_SpiralRainbow;
 
     public SpiralRainbowEffect(double speed = 1.0, double spiralDensity = 5.0)
     {

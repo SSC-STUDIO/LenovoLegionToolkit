@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -169,7 +170,7 @@ public class PluginRepositoryService : IDisposable
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to deserialize plugin store response");
 
-                throw new InvalidDataException("Failed to deserialize plugin store response.");
+                throw new InvalidDataException(Resource.Plugin_Error_Repository_Deserialize);
             }
 
             // Filter out already installed plugins or show their status
@@ -224,7 +225,10 @@ public class PluginRepositoryService : IDisposable
             var versionChecker = new VersionChecker();
             if (!versionChecker.IsCompatible(manifest.MinimumHostVersion))
             {
-                var compatibilityMessage = $"Plugin {manifest.Id} requires Universal Device Toolkit {manifest.MinimumHostVersion} or newer.";
+                var compatibilityMessage = string.Format(
+                    Resource.Plugin_Error_Repository_HostIncompatible,
+                    manifest.Id,
+                    manifest.MinimumHostVersion);
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace(compatibilityMessage);
 
@@ -239,7 +243,7 @@ public class PluginRepositoryService : IDisposable
             var downloadResult = await DownloadPluginAsync(manifest, tempFilePath).ConfigureAwait(false);
             if (!downloadResult.Success)
             {
-                DownloadFailed?.Invoke(this, $"Failed to download {manifest.Id}");
+                DownloadFailed?.Invoke(this, string.Format(Resource.Plugin_Error_Repository_DownloadFailed, manifest.Id));
                 return false;
             }
 
@@ -271,7 +275,7 @@ public class PluginRepositoryService : IDisposable
 
                 if (!IsInstalledPluginUsable(manifest))
                 {
-                    var error = $"Plugin {manifest.Id} was installed to disk but could not be loaded by the host.";
+                    var error = string.Format(Resource.Plugin_Error_Repository_NotLoadable, manifest.Id);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace(error);
 
@@ -915,7 +919,7 @@ public class PluginRepositoryService : IDisposable
             {
                 var destinationPath = Path.GetFullPath(Path.Combine(extractRoot, entry.FullName));
                 if (!destinationPath.StartsWith(extractRoot, StringComparison.OrdinalIgnoreCase))
-                    throw new UnauthorizedAccessException($"Zip entry '{entry.FullName}' attempts path traversal.");
+                    throw new UnauthorizedAccessException(string.Format(Resource.Plugin_Error_Repository_PathTraversal, entry.FullName));
 
                 if (string.IsNullOrEmpty(entry.Name))
                 {
@@ -1202,6 +1206,9 @@ public class PluginRepositoryService : IDisposable
         merged.IsSystemPlugin = merged.IsSystemPlugin || storeManifest.IsSystemPlugin;
         merged.Dependencies ??= storeManifest.Dependencies?.ToArray();
         merged.Tags ??= storeManifest.Tags?.ToArray();
+        merged.LocalizedNames = MergeLocalizedStrings(merged.LocalizedNames, storeManifest.LocalizedNames);
+        merged.LocalizedDescriptions = MergeLocalizedStrings(merged.LocalizedDescriptions, storeManifest.LocalizedDescriptions);
+        merged.LocalizedTags = MergeLocalizedTags(merged.LocalizedTags, storeManifest.LocalizedTags);
         merged.Store ??= CloneStore(storeManifest.Store);
         merged.Localizations ??= CloneLocalizations(storeManifest.Localizations);
         merged.Contributes = MergeContributions(merged.Contributes, storeManifest.Contributes);
@@ -1346,7 +1353,7 @@ public class PluginRepositoryService : IDisposable
             return cachedStoreJson;
         }
 
-        throw new HttpRequestException("Failed to fetch plugin store metadata from all known URLs.", lastException);
+        throw new HttpRequestException(Resource.Plugin_Error_Repository_FetchFailed, lastException);
     }
 
     private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest)
@@ -1887,6 +1894,9 @@ public class PluginRepositoryService : IDisposable
             Details = manifest.Details,
             UsageGuide = manifest.UsageGuide,
             Localizations = CloneLocalizations(manifest.Localizations),
+            LocalizedNames = CloneLocalizedStrings(manifest.LocalizedNames),
+            LocalizedDescriptions = CloneLocalizedStrings(manifest.LocalizedDescriptions),
+            LocalizedTags = CloneLocalizedTags(manifest.LocalizedTags),
             Store = CloneStore(manifest.Store),
             Contributes = CloneContributions(manifest.Contributes),
             Icon = manifest.Icon,
@@ -1912,7 +1922,11 @@ public class PluginRepositoryService : IDisposable
                 Description = store.Description,
                 Details = store.Details,
                 UsageGuide = store.UsageGuide,
-                Localizations = CloneLocalizations(store.Localizations)
+                Localizations = CloneLocalizations(store.Localizations),
+                LocalizedNames = CloneLocalizedStrings(store.LocalizedNames),
+                LocalizedDescriptions = CloneLocalizedStrings(store.LocalizedDescriptions),
+                LocalizedTags = CloneLocalizedTags(store.LocalizedTags),
+                Tags = store.Tags?.ToArray()
             };
 
     private static Dictionary<string, PluginManifestLocalization>? CloneLocalizations(
@@ -1929,6 +1943,44 @@ public class PluginRepositoryService : IDisposable
                     UsageGuide = pair.Value.UsageGuide
                 },
                 StringComparer.OrdinalIgnoreCase);
+
+    private static Dictionary<string, string>? CloneLocalizedStrings(Dictionary<string, string>? localized) =>
+        localized is null
+            ? null
+            : localized.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+
+    private static Dictionary<string, string[]>? CloneLocalizedTags(Dictionary<string, string[]>? localized) =>
+        localized is null
+            ? null
+            : localized.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+    private static Dictionary<string, string>? MergeLocalizedStrings(
+        Dictionary<string, string>? primary,
+        Dictionary<string, string>? secondary)
+    {
+        var merged = CloneLocalizedStrings(primary) ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (secondary is not null)
+        {
+            foreach (var pair in secondary)
+                merged.TryAdd(pair.Key, pair.Value);
+        }
+
+        return merged.Count == 0 ? null : merged;
+    }
+
+    private static Dictionary<string, string[]>? MergeLocalizedTags(
+        Dictionary<string, string[]>? primary,
+        Dictionary<string, string[]>? secondary)
+    {
+        var merged = CloneLocalizedTags(primary) ?? new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+        if (secondary is not null)
+        {
+            foreach (var pair in secondary)
+                merged.TryAdd(pair.Key, pair.Value.ToArray());
+        }
+
+        return merged.Count == 0 ? null : merged;
+    }
 
     private static PluginManifestContributions? CloneContributions(PluginManifestContributions? contributes) =>
         contributes is null

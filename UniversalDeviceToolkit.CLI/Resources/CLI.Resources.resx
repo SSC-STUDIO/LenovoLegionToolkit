@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="CLI_Header_RootCommandDescription" xml:space="preserve">
+    <value>Utility that controls Universal Device Toolkit from command line.
+
+Universal Device Toolkit must be running in the background and CLI setting must be turned on for this utility to work.</value>
+  </data>
+
+  <data name="CLI_Command_Status_Description" xml:space="preserve">
+    <value>Show running app status and startup-related switches</value>
+  </data>
+
+  <data name="CLI_Command_QuickAction_Description" xml:space="preserve">
+    <value>Run Quick Action</value>
+  </data>
+  <data name="CLI_Argument_QaName_Description" xml:space="preserve">
+    <value>Name of the Quick Action</value>
+  </data>
+  <data name="CLI_Option_QaList_Description" xml:space="preserve">
+    <value>List available Quick Actions</value>
+  </data>
+  <data name="CLI_Error_QaNameOrList_Required" xml:space="preserve">
+    <value>{0} or --list should be specified</value>
+  </data>
+
+  <data name="CLI_Command_Feature_Description" xml:space="preserve">
+    <value>Control features</value>
+  </data>
+  <data name="CLI_Command_GetFeature_Description" xml:space="preserve">
+    <value>Get value of a feature</value>
+  </data>
+  <data name="CLI_Command_SetFeature_Description" xml:space="preserve">
+    <value>Set value of a feature</value>
+  </data>
+  <data name="CLI_Option_FeatureList_Description" xml:space="preserve">
+    <value>List available features</value>
+  </data>
+  <data name="CLI_Argument_FeatureName_Description" xml:space="preserve">
+    <value>Name of the feature</value>
+  </data>
+  <data name="CLI_Argument_FeatureValue_Description" xml:space="preserve">
+    <value>Value of the feature</value>
+  </data>
+  <data name="CLI_Option_FeatureValueList_Description" xml:space="preserve">
+    <value>List available feature values</value>
+  </data>
+  <data name="CLI_Error_FeatureSubcommandOrList_Required" xml:space="preserve">
+    <value>{0}, {1} or --list should be specified</value>
+  </data>
+  <data name="CLI_Error_FeatureNameOrList_Required" xml:space="preserve">
+    <value>{0} or --list should be specified</value>
+  </data>
+
+  <data name="CLI_Command_Spectrum_Description" xml:space="preserve">
+    <value>Control Spectrum backlight</value>
+  </data>
+  <data name="CLI_Command_SpectrumProfile_Description" xml:space="preserve">
+    <value>Control Spectrum backlight profile</value>
+  </data>
+  <data name="CLI_Command_SpectrumBrightness_Description" xml:space="preserve">
+    <value>Control Spectrum brightness</value>
+  </data>
+  <data name="CLI_Command_GetSpectrumProfile_Description" xml:space="preserve">
+    <value>Get current Spectrum profile</value>
+  </data>
+  <data name="CLI_Command_SetSpectrumProfile_Description" xml:space="preserve">
+    <value>Set current Spectrum profile</value>
+  </data>
+  <data name="CLI_Command_GetSpectrumBrightness_Description" xml:space="preserve">
+    <value>Get current Spectrum brightness</value>
+  </data>
+  <data name="CLI_Command_SetSpectrumBrightness_Description" xml:space="preserve">
+    <value>Set current Spectrum brightness</value>
+  </data>
+  <data name="CLI_Argument_SpectrumProfile_Description" xml:space="preserve">
+    <value>Profile to set</value>
+  </data>
+  <data name="CLI_Argument_SpectrumBrightness_Description" xml:space="preserve">
+    <value>Brightness to set</value>
+  </data>
+
+  <data name="CLI_Command_RGB_Description" xml:space="preserve">
+    <value>Control RGB backlight preset</value>
+  </data>
+  <data name="CLI_Command_GetRGB_Description" xml:space="preserve">
+    <value>Get current RGB preset</value>
+  </data>
+  <data name="CLI_Command_SetRGB_Description" xml:space="preserve">
+    <value>Set current RGB preset</value>
+  </data>
+  <data name="CLI_Argument_RGBPreset_Description" xml:space="preserve">
+    <value>Preset to set</value>
+  </data>
+
+  <data name="CLI_Command_Shell_Description" xml:space="preserve">
+    <value>Manage shell context menu extension (Nilesoft Shell)</value>
+  </data>
+  <data name="CLI_Option_ShellStatus_Description" xml:space="preserve">
+    <value>Check current registration status</value>
+  </data>
+  <data name="CLI_Option_ShellInstall_Description" xml:space="preserve">
+    <value>Install Nilesoft Shell</value>
+  </data>
+  <data name="CLI_Option_ShellUninstall_Description" xml:space="preserve">
+    <value>Uninstall Nilesoft Shell</value>
+  </data>
+  <data name="CLI_Option_ShellInstallStatus_Description" xml:space="preserve">
+    <value>Check current installation status</value>
+  </data>
+  <data name="CLI_Shell_RegisteredYes" xml:space="preserve">
+    <value>Shell is registered</value>
+  </data>
+  <data name="CLI_Shell_RegisteredNo" xml:space="preserve">
+    <value>Shell is not registered</value>
+  </data>
+  <data name="CLI_Shell_InstalledYes" xml:space="preserve">
+    <value>Shell is installed</value>
+  </data>
+  <data name="CLI_Shell_InstalledNo" xml:space="preserve">
+    <value>Shell is not installed</value>
+  </data>
+  <data name="CLI_Shell_InstallInitiated" xml:space="preserve">
+    <value>Shell installation initiated</value>
+  </data>
+  <data name="CLI_Shell_UninstallInitiated" xml:space="preserve">
+    <value>Shell uninstallation initiated</value>
+  </data>
+  <data name="CLI_Shell_NoAction_Hint" xml:space="preserve">
+    <value>Please specify an action:</value>
+  </data>
+  <data name="CLI_Shell_NoAction_Status" xml:space="preserve">
+    <value>  --status (-s): Check current registration status</value>
+  </data>
+  <data name="CLI_Shell_NoAction_Install" xml:space="preserve">
+    <value>  --install (-i): Install Nilesoft Shell</value>
+  </data>
+  <data name="CLI_Shell_NoAction_Uninstall" xml:space="preserve">
+    <value>  --uninstall (-x): Uninstall Nilesoft Shell</value>
+  </data>
+  <data name="CLI_Shell_NoAction_InstallStatus" xml:space="preserve">
+    <value>  --install-status (-is): Check current installation status</value>
+  </data>
+  <data name="CLI_Error_ShellOnlyOneAction" xml:space="preserve">
+    <value>Please specify only one action at a time</value>
+  </data>
+  <data name="CLI_Error_ShellAtLeastOneAction" xml:space="preserve">
+    <value>At least one action option should be specified</value>
+  </data>
+
+  <data name="CLI_Command_Network_Description" xml:space="preserve">
+    <value>Manage network acceleration</value>
+  </data>
+  <data name="CLI_Option_NetworkStatus_Description" xml:space="preserve">
+    <value>Show network acceleration status</value>
+  </data>
+  <data name="CLI_Option_NetworkStart_Description" xml:space="preserve">
+    <value>Start network acceleration explicitly</value>
+  </data>
+  <data name="CLI_Option_NetworkStop_Description" xml:space="preserve">
+    <value>Stop network acceleration and restore state</value>
+  </data>
+  <data name="CLI_Option_NetworkDiagnostics_Description" xml:space="preserve">
+    <value>Run network diagnostics without changing system state</value>
+  </data>
+  <data name="CLI_Error_NetworkOnlyOneAction" xml:space="preserve">
+    <value>Please specify only one network action at a time</value>
+  </data>
+  <data name="CLI_Error_NetworkAtLeastOneAction" xml:space="preserve">
+    <value>At least one network action option should be specified</value>
+  </data>
+
+  <data name="CLI_IpcError_ConnectFailed" xml:space="preserve">
+    <value>Failed to connect. Make sure that Universal Device Toolkit is running in background and CLI is enabled in Settings.</value>
+  </data>
+  <data name="CLI_IpcError_MissingReturnMessage" xml:space="preserve">
+    <value>Missing return message</value>
+  </data>
+  <data name="CLI_IpcError_AuthChallengeFailed" xml:space="preserve">
+    <value>Failed to receive authentication challenge</value>
+  </data>
+  <data name="CLI_IpcError_UnknownFailure" xml:space="preserve">
+    <value>Unknown failure</value>
+  </data>
+
+  <data name="CLI_Loading_ListFeatures" xml:space="preserve">
+    <value>Loading features</value>
+  </data>
+  <data name="CLI_Loading_ListFeatureValues" xml:space="preserve">
+    <value>Loading values</value>
+  </data>
+  <data name="CLI_Loading_ListQuickActions" xml:space="preserve">
+    <value>Loading quick actions</value>
+  </data>
+  <data name="CLI_Loading_GetFeatureValue" xml:space="preserve">
+    <value>Reading feature</value>
+  </data>
+  <data name="CLI_Loading_SetFeatureValue" xml:space="preserve">
+    <value>Applying feature</value>
+  </data>
+  <data name="CLI_Loading_GetSpectrumProfile" xml:space="preserve">
+    <value>Reading Spectrum profile</value>
+  </data>
+  <data name="CLI_Loading_SetSpectrumProfile" xml:space="preserve">
+    <value>Applying Spectrum profile</value>
+  </data>
+  <data name="CLI_Loading_GetSpectrumBrightness" xml:space="preserve">
+    <value>Reading Spectrum brightness</value>
+  </data>
+  <data name="CLI_Loading_SetSpectrumBrightness" xml:space="preserve">
+    <value>Applying Spectrum brightness</value>
+  </data>
+  <data name="CLI_Loading_GetRGBPreset" xml:space="preserve">
+    <value>Reading RGB preset</value>
+  </data>
+  <data name="CLI_Loading_SetRGBPreset" xml:space="preserve">
+    <value>Applying RGB preset</value>
+  </data>
+  <data name="CLI_Loading_QuickAction" xml:space="preserve">
+    <value>Running quick action</value>
+  </data>
+  <data name="CLI_Loading_IsShellRegistered" xml:space="preserve">
+    <value>Checking shell registration</value>
+  </data>
+  <data name="CLI_Loading_IsShellInstalled" xml:space="preserve">
+    <value>Checking shell installation</value>
+  </data>
+  <data name="CLI_Loading_InstallShell" xml:space="preserve">
+    <value>Starting shell installation</value>
+  </data>
+  <data name="CLI_Loading_UninstallShell" xml:space="preserve">
+    <value>Starting shell uninstallation</value>
+  </data>
+  <data name="CLI_Loading_GetAppStatus" xml:space="preserve">
+    <value>Checking app status</value>
+  </data>
+  <data name="CLI_Loading_GetNetworkAccelerationStatus" xml:space="preserve">
+    <value>Checking network acceleration</value>
+  </data>
+  <data name="CLI_Loading_StartNetworkAcceleration" xml:space="preserve">
+    <value>Starting network acceleration</value>
+  </data>
+  <data name="CLI_Loading_StopNetworkAcceleration" xml:space="preserve">
+    <value>Stopping network acceleration</value>
+  </data>
+  <data name="CLI_Loading_RunNetworkDiagnostics" xml:space="preserve">
+    <value>Running network diagnostics</value>
+  </data>
+  <data name="CLI_Loading_Default" xml:space="preserve">
+    <value>Waiting for Universal Device Toolkit</value>
+  </data>
+</root>

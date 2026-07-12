@@ -17,7 +17,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static async Task<string> ListQuickActionsAsync()
@@ -28,7 +28,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static Task RunQuickActionAsync(string name)
@@ -50,7 +50,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static async Task<string> ListFeatureValuesAsync(string name)
@@ -62,7 +62,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static Task SetFeatureValueAsync(string name, string value)
@@ -86,7 +86,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static async Task<string> GetSpectrumProfileAsync()
@@ -97,7 +97,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static Task SetSpectrumProfileAsync(string value)
@@ -119,7 +119,7 @@ public static class IpcClient
         };
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-               ?? throw new IpcException("Missing return message");
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
 
     public static Task SetSpectrumBrightnessAsync(string value)
@@ -134,67 +134,36 @@ public static class IpcClient
     }
 
     public static async Task<string> GetRGBPresetAsync()
-
     {
-
         var req = new IpcRequest
-
         {
-
             Operation = IpcRequest.OperationType.GetRGBPreset
-
         };
-
-
 
         return await SendRequestAsync(req).ConfigureAwait(false)
-
-               ?? throw new IpcException("Missing return message");
-
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
     }
-
-
 
     public static Task SetRGBPresetAsync(string value)
-
     {
-
         var req = new IpcRequest
-
         {
-
             Operation = IpcRequest.OperationType.SetRGBPreset,
-
             Value = value
-
         };
-
-
 
         return SendRequestAsync(req);
-
     }
 
-
-
     public static async Task<bool> IsShellRegisteredAsync()
-
     {
-
         var req = new IpcRequest
-
         {
-
             Operation = IpcRequest.OperationType.IsShellRegistered
-
         };
 
-
-
         var result = await SendRequestAsync(req).ConfigureAwait(false);
-
         return result?.ToLowerInvariant() == "true";
-
     }
 
     public static async Task<bool> IsShellInstalledAsync()
@@ -228,6 +197,50 @@ public static class IpcClient
         return SendRequestAsync(req);
     }
 
+    public static async Task<string> GetNetworkAccelerationStatusAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.GetNetworkAccelerationStatus
+        };
+
+        return await SendRequestAsync(req).ConfigureAwait(false)
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
+    }
+
+    public static async Task<string> StartNetworkAccelerationAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.StartNetworkAcceleration
+        };
+
+        return await SendRequestAsync(req).ConfigureAwait(false)
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
+    }
+
+    public static async Task<string> StopNetworkAccelerationAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.StopNetworkAcceleration
+        };
+
+        return await SendRequestAsync(req).ConfigureAwait(false)
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
+    }
+
+    public static async Task<string> RunNetworkDiagnosticsAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.RunNetworkDiagnostics
+        };
+
+        return await SendRequestAsync(req).ConfigureAwait(false)
+               ?? throw new IpcException(Strings.Get("CLI_IpcError_MissingReturnMessage", "Missing return message"));
+    }
+
     private static async Task<string?> SendRequestAsync(IpcRequest req)
     {
         using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req));
@@ -237,7 +250,7 @@ public static class IpcClient
 
         var challengeResponse = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
         if (challengeResponse is null || !challengeResponse.Success || challengeResponse.Message is null)
-            throw new IpcException("Failed to receive authentication challenge");
+            throw new IpcException(Strings.Get("CLI_IpcError_AuthChallengeFailed", "Failed to receive authentication challenge"));
 
         var challenge = Convert.FromHexString(challengeResponse.Message);
         req.AuthToken = ComputeAuthToken(challenge);
@@ -246,7 +259,7 @@ public static class IpcClient
         var res = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
 
         if (res is null || !res.Success)
-            throw new IpcException(res?.Message ?? "Unknown failure");
+            throw new IpcException(res?.Message ?? Strings.Get("CLI_IpcError_UnknownFailure", "Unknown failure"));
 
         return res.Message;
     }
@@ -254,27 +267,49 @@ public static class IpcClient
     private static string ComputeAuthToken(byte[] challenge) => Convert.ToHexString(challenge);
 
     private static string GetLoadingMessage(IpcRequest req)
-        => req.Operation switch
+    {
+        var (key, fallback) = req.Operation switch
         {
-            IpcRequest.OperationType.ListFeatures => "Loading features",
-            IpcRequest.OperationType.ListFeatureValues => $"Loading values{FormatTarget(req.Name)}",
-            IpcRequest.OperationType.ListQuickActions => "Loading quick actions",
-            IpcRequest.OperationType.GetFeatureValue => $"Reading feature{FormatTarget(req.Name)}",
-            IpcRequest.OperationType.SetFeatureValue => $"Applying feature{FormatTarget(req.Name)}",
-            IpcRequest.OperationType.GetSpectrumProfile => "Reading Spectrum profile",
-            IpcRequest.OperationType.SetSpectrumProfile => "Applying Spectrum profile",
-            IpcRequest.OperationType.GetSpectrumBrightness => "Reading Spectrum brightness",
-            IpcRequest.OperationType.SetSpectrumBrightness => "Applying Spectrum brightness",
-            IpcRequest.OperationType.GetRGBPreset => "Reading RGB preset",
-            IpcRequest.OperationType.SetRGBPreset => "Applying RGB preset",
-            IpcRequest.OperationType.QuickAction => $"Running quick action{FormatTarget(req.Name)}",
-            IpcRequest.OperationType.IsShellRegistered => "Checking shell registration",
-            IpcRequest.OperationType.IsShellInstalled => "Checking shell installation",
-            IpcRequest.OperationType.InstallShell => "Starting shell installation",
-            IpcRequest.OperationType.UninstallShell => "Starting shell uninstallation",
-            IpcRequest.OperationType.GetAppStatus => "Checking app status",
-            _ => "Waiting for Universal Device Toolkit"
+            IpcRequest.OperationType.ListFeatures =>
+                ("CLI_Loading_ListFeatures", "Loading features"),
+            IpcRequest.OperationType.ListFeatureValues =>
+                ("CLI_Loading_ListFeatureValues", "Loading values"),
+            IpcRequest.OperationType.ListQuickActions =>
+                ("CLI_Loading_ListQuickActions", "Loading quick actions"),
+            IpcRequest.OperationType.GetFeatureValue =>
+                ("CLI_Loading_GetFeatureValue", "Reading feature"),
+            IpcRequest.OperationType.SetFeatureValue =>
+                ("CLI_Loading_SetFeatureValue", "Applying feature"),
+            IpcRequest.OperationType.GetSpectrumProfile =>
+                ("CLI_Loading_GetSpectrumProfile", "Reading Spectrum profile"),
+            IpcRequest.OperationType.SetSpectrumProfile =>
+                ("CLI_Loading_SetSpectrumProfile", "Applying Spectrum profile"),
+            IpcRequest.OperationType.GetSpectrumBrightness =>
+                ("CLI_Loading_GetSpectrumBrightness", "Reading Spectrum brightness"),
+            IpcRequest.OperationType.SetSpectrumBrightness =>
+                ("CLI_Loading_SetSpectrumBrightness", "Applying Spectrum brightness"),
+            IpcRequest.OperationType.GetRGBPreset =>
+                ("CLI_Loading_GetRGBPreset", "Reading RGB preset"),
+            IpcRequest.OperationType.SetRGBPreset =>
+                ("CLI_Loading_SetRGBPreset", "Applying RGB preset"),
+            IpcRequest.OperationType.QuickAction =>
+                ("CLI_Loading_QuickAction", "Running quick action"),
+            IpcRequest.OperationType.IsShellRegistered =>
+                ("CLI_Loading_IsShellRegistered", "Checking shell registration"),
+            IpcRequest.OperationType.IsShellInstalled =>
+                ("CLI_Loading_IsShellInstalled", "Checking shell installation"),
+            IpcRequest.OperationType.InstallShell =>
+                ("CLI_Loading_InstallShell", "Starting shell installation"),
+            IpcRequest.OperationType.UninstallShell =>
+                ("CLI_Loading_UninstallShell", "Starting shell uninstallation"),
+            IpcRequest.OperationType.GetAppStatus =>
+                ("CLI_Loading_GetAppStatus", "Checking app status"),
+            _ =>
+                ("CLI_Loading_Default", "Waiting for Universal Device Toolkit")
         };
+
+        return $"{Strings.Get(key, fallback)}{FormatTarget(req.Name)}";
+    }
 
     private static string FormatTarget(string? value)
         => string.IsNullOrWhiteSpace(value) ? string.Empty : $" '{value}'";

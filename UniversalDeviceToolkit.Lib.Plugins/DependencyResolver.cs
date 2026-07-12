@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -25,7 +26,9 @@ public class DependencyResolver : IDependencyResolver
             {
                 result.Success = false;
                 result.CircularDependencies = circularDeps;
-                result.ErrorMessage = $"Circular dependencies detected: {string.Join(", ", circularDeps.Select(c => string.Join(" -> ", c)))}";
+                result.ErrorMessage = string.Format(
+                    Resource.Plugin_Error_DependencyResolution_Circular,
+                    string.Join(", ", circularDeps.Select(c => string.Join(" -> ", c))));
                 return result;
             }
 
@@ -68,7 +71,9 @@ public class DependencyResolver : IDependencyResolver
                 // This shouldn't happen if circular detection worked, but just in case
                 var unresolved = plugins.Keys.Except(loadOrder).ToList();
                 result.Success = false;
-                result.ErrorMessage = $"Could not resolve dependencies for: {string.Join(", ", unresolved)}";
+                result.ErrorMessage = string.Format(
+                    Resource.Plugin_Error_DependencyResolution_Unresolved,
+                    string.Join(", ", unresolved));
                 return result;
             }
 
@@ -78,7 +83,9 @@ public class DependencyResolver : IDependencyResolver
             {
                 result.Success = false;
                 result.VersionConflicts = versionConflicts;
-                result.ErrorMessage = $"Version conflicts detected for: {string.Join(", ", versionConflicts.Select(v => v.PluginId))}";
+                result.ErrorMessage = string.Format(
+                    Resource.Plugin_Error_DependencyResolution_VersionConflict,
+                    string.Join(", ", versionConflicts.Select(v => v.PluginId)));
                 return result;
             }
 
@@ -97,7 +104,9 @@ public class DependencyResolver : IDependencyResolver
             Log.Instance.Warning($"Dependency resolution failed: {ex.Message}", ex);
 
             result.Success = false;
-            result.ErrorMessage = $"Dependency resolution error: {ex.Message}";
+            result.ErrorMessage = string.Format(
+                Resource.Plugin_Error_DependencyResolution_Failed,
+                ex.Message);
             return result;
         }
     }

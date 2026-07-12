@@ -17,10 +17,19 @@ public interface INetworkAccelerationService
 
     Task SaveConfigAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Phase 1 stub: does not spawn the worker or mutate system state.</summary>
+    /// <summary>
+    /// Starts the NetworkProxy worker and applies system proxy / Hosts only when the user
+    /// has enabled acceleration. Never called automatically on app launch.
+    /// </summary>
     Task<bool> StartAsync(CancellationToken cancellationToken = default);
 
     Task StopAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// On next launch after a crash: if UDT left system proxy/hosts dirty, restore from snapshot.
+    /// Does not re-start acceleration. Safe to call always; no-op when clean.
+    /// </summary>
+    Task EnsureCleanSystemStateOnStartupAsync(CancellationToken cancellationToken = default);
 }
 
 public interface INetworkDiagnosticsService

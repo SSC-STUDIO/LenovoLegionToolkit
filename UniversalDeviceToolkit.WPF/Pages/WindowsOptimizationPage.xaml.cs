@@ -21,6 +21,7 @@ using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
 using Wpf.Ui.Controls;
+using CardExpander = UniversalDeviceToolkit.WPF.Controls.Custom.CardExpander;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
@@ -170,12 +171,12 @@ public partial class WindowsOptimizationPage : Page
         }, DispatcherPriority.Background);
     }
 
-    private Expander? FindCategoryExpander(OptimizationCategoryViewModel categoryVm)
+    private CardExpander? FindCategoryExpander(OptimizationCategoryViewModel categoryVm)
     {
         if (_categoriesList == null)
             return null;
 
-        return EnumerateVisualDescendants<Expander>(_categoriesList)
+        return EnumerateVisualDescendants<CardExpander>(_categoriesList)
             .FirstOrDefault(expander => ReferenceEquals(expander.DataContext, categoryVm));
     }
 

@@ -51,9 +51,15 @@ public class SensorsControllerV4(GPUController gpuController) : AbstractSensorsC
         return value < 1 ? -1 : value;
     }
 
-    protected override Task<int> GetCpuCurrentFanSpeedAsync() => WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed);
+    protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
+        ReadFanSpeedWithFallbackAsync(
+            () => WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed),
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedAsync(CPU_FAN_ID));
 
-    protected override Task<int> GetGpuCurrentFanSpeedAsync() => WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed);
+    protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
+        ReadFanSpeedWithFallbackAsync(
+            () => WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed),
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedAsync(GPU_FAN_ID));
 
     protected override Task<int> GetCpuMaxFanSpeedAsync() => WMI.LenovoFanMethod.GetCurrentFanMaxSpeedAsync(CPU_SENSOR_ID, CPU_FAN_ID);
 

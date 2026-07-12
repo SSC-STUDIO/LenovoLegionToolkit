@@ -37,7 +37,14 @@ public sealed class NetworkAccelerationConfig
     /// <summary>When true, the WPF navigation entry is shown. Acceleration still defaults off.</summary>
     public bool ShowInNavigation { get; set; } = true;
 
-    public static NetworkAccelerationConfig CreateDefault() => new();
+    public static NetworkAccelerationConfig CreateDefault() => new()
+    {
+        AccelerationEnabled = false,
+        Mode = NetworkAccelerationMode.Off,
+        ListenPort = NetworkAccelerationDefaults.DefaultListenPort,
+        DomainGroups = BuiltinDomainGroups.CreateDefaults(),
+        ShowInNavigation = true
+    };
 }
 
 public sealed class NetworkDomainGroup

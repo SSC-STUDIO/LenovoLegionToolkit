@@ -81,11 +81,15 @@ internal static class RenderingCompatibilityHelper
     {
         window.WindowStyle = WindowStyle.None;
 
+        // WindowChrome corner is OS chrome (not app card chrome). Keep small for DWM.
+        var chromeRadius = System.Windows.Application.Current?.TryFindResource("CornerRadiusProgressBar") is CornerRadius token
+            ? token
+            : new CornerRadius(3);
         WindowChrome.SetWindowChrome(window,
             new WindowChrome
             {
                 CaptionHeight = 1,
-                CornerRadius = new CornerRadius(4),
+                CornerRadius = chromeRadius,
                 GlassFrameThickness = new Thickness(0),
                 ResizeBorderThickness = window.ResizeMode == ResizeMode.NoResize ? new Thickness(0) : new Thickness(4),
                 UseAeroCaptionButtons = false

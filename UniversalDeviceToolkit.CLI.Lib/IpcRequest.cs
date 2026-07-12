@@ -22,6 +22,10 @@ public class IpcRequest
         InstallShell,
         UninstallShell,
         GetAppStatus,
+        GetNetworkAccelerationStatus,
+        StartNetworkAcceleration,
+        StopNetworkAcceleration,
+        RunNetworkDiagnostics,
     }
 
     public OperationType? Operation { get; init; }

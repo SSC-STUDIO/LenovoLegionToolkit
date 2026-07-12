@@ -212,8 +212,8 @@ public class ThemeManager
         SetBrush("ChartSurfaceBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), 0.08);
         SetBrush("ChartGridlineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.10 : 0.09);
         SetBrush("ChartBaselineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.16);
-        SetBrush("NotificationGlassSurfaceBrush", isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(252, 252, 252), isDark ? 0.84 : 0.88);
-        SetBrush("NotificationGlassBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.12);
+        SetBrush("NotificationGlassSurfaceBrush", isDark ? Color.FromRgb(28, 28, 28) : Color.FromRgb(252, 252, 252), isDark ? 0.62 : 0.72);
+        SetBrush("NotificationGlassBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.22 : 0.14);
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)

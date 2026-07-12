@@ -21,7 +21,7 @@ public sealed class StartupWindowsGuardTests
         contentGridEnd.Should().BeGreaterThan(contentGridStart);
         var contentRows = xaml[contentGridStart..contentGridEnd];
 
-        xaml.Should().Contain("Height=\"245\"");
+        xaml.Should().Contain("Height=\"300\"");
         contentRows.Should().NotContain("Height=\"*\" />");
         xaml.Should().Contain("HorizontalAlignment=\"Right\"");
         xaml.Should().Contain("Content=\"{x:Static resources:Resource.Continue}\"");

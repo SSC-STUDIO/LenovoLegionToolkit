@@ -99,7 +99,16 @@ public partial class SensorsControl : IDisposable
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
         SizeChanged += SensorsControl_SizeChanged;
+        Loaded += SensorsControl_Loaded;
         Unloaded += SensorsControl_Unloaded;
+    }
+
+    private void SensorsControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        // First measure can be 0/narrow during page construction; re-apply once the
+        // control is in the visual tree so trend charts are not stuck in Compact hide.
+        var width = ActualWidth > 1 ? ActualWidth : 1200;
+        ApplySensorSummaryLayout(width, force: true);
     }
 
     private void ApplySensorSectionConfiguration()
@@ -145,6 +154,7 @@ public partial class SensorsControl : IDisposable
     {
         IsVisibleChanged -= SensorsControl_IsVisibleChanged;
         SizeChanged -= SensorsControl_SizeChanged;
+        Loaded -= SensorsControl_Loaded;
         Unloaded -= SensorsControl_Unloaded;
         Dispose();
     }
@@ -200,6 +210,10 @@ public partial class SensorsControl : IDisposable
         if (!e.WidthChanged)
             return;
 
+        // Ignore transient zero/near-zero measures that would falsely enter Compact.
+        if (e.NewSize.Width <= 1)
+            return;
+
         ApplySensorSummaryLayout(e.NewSize.Width);
     }
 
@@ -211,10 +225,14 @@ public partial class SensorsControl : IDisposable
 
     internal static SensorSummaryLayoutMode GetSensorSummaryLayoutMode(double width)
     {
+        // Unmeasured / invalid widths must not collapse to Compact (hides charts).
+        if (width <= 1)
+            return SensorSummaryLayoutMode.Standard;
+
         if (width >= 1500)
             return SensorSummaryLayoutMode.Wide;
 
-        if (width >= 1050)
+        if (width >= 900)
             return SensorSummaryLayoutMode.Standard;
 
         return SensorSummaryLayoutMode.Compact;
@@ -223,7 +241,7 @@ public partial class SensorsControl : IDisposable
     internal static bool CanShowSensorDetailsForWidth(double width) =>
         GetSensorSummaryLayoutMode(width) == SensorSummaryLayoutMode.Wide;
 
-    private void ApplySensorSummaryLayout(double width)
+    private void ApplySensorSummaryLayout(double width, bool force = false)
     {
         if (_sensorsGrid is not null && _sensorsGrid.Columns != 3)
             _sensorsGrid.Columns = 3;
@@ -237,22 +255,25 @@ public partial class SensorsControl : IDisposable
 
         ApplySkeletonSummaryLayout(isCompact, isWide);
 
-        if (mode == _sensorSummaryLayoutMode)
+        if (!force && mode == _sensorSummaryLayoutMode)
             return;
 
         _sensorSummaryLayoutMode = mode;
 
+        // Model names can stay compact-only to save space.
         SetVisibility("_cpuModelName", !isCompact);
         SetVisibility("_batteryModelName", !isCompact);
         SetVisibility("_gpuModelName", !isCompact);
 
-        SetVisibility("_cpuLegend", !isCompact);
-        SetVisibility("_batteryLegend", !isCompact);
-        SetVisibility("_gpuLegend", !isCompact);
-
-        SetVisibility("_cpuTrendPanel", !isCompact);
-        SetVisibility("_batteryTrendPanel", !isCompact);
-        SetVisibility("_gpuTrendPanel", !isCompact);
+        // Trend charts + legends always stay visible. Hiding them in Compact caused
+        // "missing on first open, appear after page switches" when the first measure
+        // was narrow and later measures recovered to Standard/Wide.
+        SetVisibility("_cpuLegend", true);
+        SetVisibility("_batteryLegend", true);
+        SetVisibility("_gpuLegend", true);
+        SetVisibility("_cpuTrendPanel", true);
+        SetVisibility("_batteryTrendPanel", true);
+        SetVisibility("_gpuTrendPanel", true);
 
         ApplySummaryGaugeSize(_cpuGauge, isCompact);
         ApplySummaryGaugeSize(_batteryGauge, isCompact);
@@ -282,13 +303,13 @@ public partial class SensorsControl : IDisposable
         SetVisibility("_skeletonBatterySubtitle", !isCompact);
         SetVisibility("_skeletonGpuSubtitle", !isCompact);
 
-        SetVisibility("_skeletonCpuLegend", !isCompact);
-        SetVisibility("_skeletonBatteryLegend", !isCompact);
-        SetVisibility("_skeletonGpuLegend", !isCompact);
-
-        SetVisibility("_skeletonCpuTrendPanel", !isCompact);
-        SetVisibility("_skeletonBatteryTrendPanel", !isCompact);
-        SetVisibility("_skeletonGpuTrendPanel", !isCompact);
+        // Keep skeleton trend placeholders visible so first paint matches live layout.
+        SetVisibility("_skeletonCpuLegend", true);
+        SetVisibility("_skeletonBatteryLegend", true);
+        SetVisibility("_skeletonGpuLegend", true);
+        SetVisibility("_skeletonCpuTrendPanel", true);
+        SetVisibility("_skeletonBatteryTrendPanel", true);
+        SetVisibility("_skeletonGpuTrendPanel", true);
 
         ApplySummaryGaugeSize(_skeletonCpuGauge, isCompact);
         ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact);
@@ -496,6 +517,8 @@ public partial class SensorsControl : IDisposable
         {
             if (IsVisible)
             {
+                var width = ActualWidth > 1 ? ActualWidth : 1200;
+                ApplySensorSummaryLayout(width, force: true);
                 Refresh();
                 RefreshBattery();
                 return;

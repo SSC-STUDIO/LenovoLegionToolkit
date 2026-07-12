@@ -323,22 +323,29 @@ public static class LocalizationHelper
 
     private static void SetLanguageInternal(CultureInfo cultureInfo)
     {
+        // Format numbers/dates in invariant-friendly English culture; UI strings use UI culture.
         Thread.CurrentThread.CurrentCulture = new CultureInfo("en");
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
 
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
         CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-        Resource.Culture = cultureInfo;
-        LenovoLegionToolkit.Lib.Resources.Resource.Culture = cultureInfo;
-        UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = cultureInfo;
-        UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = cultureInfo;
-        
-        // Set plugin resource cultures
+        ApplyCoreResourceCultures(cultureInfo);
         SetPluginResourceCultures(cultureInfo);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Applied culture: {cultureInfo.Name}");
+    }
+
+    /// <summary>
+    /// Propagates UI culture to main app + core libraries. Safe to call after delayed plugin load.
+    /// </summary>
+    public static void ApplyCoreResourceCultures(CultureInfo cultureInfo)
+    {
+        Resource.Culture = cultureInfo;
+        LenovoLegionToolkit.Lib.Resources.Resource.Culture = cultureInfo;
+        UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = cultureInfo;
+        UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = cultureInfo;
     }
 
     /// <summary>
@@ -409,15 +416,53 @@ public static class LocalizationHelper
     }
 
     private static Type[] FilterPluginResourceTypes(IEnumerable<Type> types) =>
-        types.Where(type =>
-                type.Name == "Resource" &&
-                (type.Namespace?.EndsWith(".Resources", StringComparison.Ordinal) == true ||
-                 type.FullName?.EndsWith(".Resource", StringComparison.Ordinal) == true) &&
-                type.Assembly != typeof(Resource).Assembly &&
-                type.Assembly != typeof(LenovoLegionToolkit.Lib.Resources.Resource).Assembly &&
-                type.Assembly != typeof(UniversalDeviceToolkit.Lib.Automation.Resources.Resource).Assembly &&
-                type.Assembly != typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly)
+        types.Where(IsPluginResourceType)
             .ToArray();
+
+    /// <summary>
+    /// Recognizes generated satellite resource types in plugin assemblies.
+    /// Supports both <c>*.Resources.Resource</c> and <c>*.Resource</c> naming.
+    /// </summary>
+    internal static bool IsPluginResourceType(Type type)
+    {
+        if (type is null || type.IsAbstract || type.IsInterface)
+            return false;
+
+        if (type.Assembly == typeof(Resource).Assembly ||
+            type.Assembly == typeof(LenovoLegionToolkit.Lib.Resources.Resource).Assembly ||
+            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Automation.Resources.Resource).Assembly ||
+            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly)
+            return false;
+
+        var cultureProperty = type.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+        var resourceManagerProperty = type.GetProperty("ResourceManager", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+        if (cultureProperty?.PropertyType != typeof(CultureInfo) ||
+            resourceManagerProperty?.PropertyType != typeof(ResourceManager))
+            return false;
+
+        // Classic Designer class name "Resource" under a *.Resources namespace.
+        if ((type.Name is "Resource" or "Resources") &&
+            (type.Namespace?.EndsWith(".Resources", StringComparison.Ordinal) == true ||
+             type.FullName?.Contains(".Resources.", StringComparison.Ordinal) == true ||
+             type.FullName?.EndsWith(".Resource", StringComparison.Ordinal) == true))
+            return true;
+
+        // Plugin assemblies may live under LenovoLegionToolkit.Plugins.* or UniversalDeviceToolkit.Plugins.*
+        var assemblyName = type.Assembly.GetName().Name ?? string.Empty;
+        if (assemblyName.Contains("Plugins", StringComparison.OrdinalIgnoreCase) &&
+            type.Name is "Resource" or "Resources")
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Fallback chain for UI strings: exact culture → parents → English.
+    /// Never falls through to Chinese cultures unless the requested culture is Chinese.
+    /// </summary>
+    internal static IEnumerable<CultureInfo> EnumerateCultureFallbackChainPublic(CultureInfo cultureInfo) =>
+        EnumerateCultureFallbackChain(cultureInfo);
+
     private static unsafe string? GetSystemShortDateFormat()
     {
         var ptr = IntPtr.Zero;
@@ -454,11 +499,18 @@ public static class LocalizationHelper
 
     private static CultureInfo[] EnumerateCultureFallbackChain(CultureInfo cultureInfo)
     {
-        var fallbackChain = new System.Collections.Generic.List<CultureInfo>();
+        var fallbackChain = new List<CultureInfo>();
+        var requestedIsChinese = IsChineseCulture(cultureInfo);
         var current = cultureInfo;
 
         while (current != CultureInfo.InvariantCulture)
         {
+            if (!requestedIsChinese && IsChineseCulture(current))
+            {
+                current = current.Parent;
+                continue;
+            }
+
             if (!fallbackChain.Any(existing => existing.Name.Equals(current.Name, StringComparison.OrdinalIgnoreCase)))
                 fallbackChain.Add(current);
 
@@ -469,5 +521,14 @@ public static class LocalizationHelper
             fallbackChain.Add(DefaultLanguage);
 
         return fallbackChain.ToArray();
+    }
+
+    internal static bool IsChineseCulture(CultureInfo cultureInfo)
+    {
+        if (cultureInfo is null || cultureInfo == CultureInfo.InvariantCulture)
+            return false;
+
+        var name = cultureInfo.Name;
+        return name.StartsWith("zh", StringComparison.OrdinalIgnoreCase);
     }
 }

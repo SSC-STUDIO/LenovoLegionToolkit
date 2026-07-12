@@ -38,6 +38,7 @@ namespace UniversalDeviceToolkit.WPF.Pages
         private string _author = string.Empty;
         private string _detailedDescription = string.Empty;
         private string _usageGuide = string.Empty;
+        private IReadOnlyList<string> _tags = Array.Empty<string>();
         private bool _isDetailsExpanded;
 
         public string NewVersion
@@ -140,6 +141,23 @@ namespace UniversalDeviceToolkit.WPF.Pages
         }
 
         public bool HasUsageGuide => !string.IsNullOrWhiteSpace(_usageGuide);
+
+        public IReadOnlyList<string> Tags
+        {
+            get => _tags;
+            set
+            {
+                value ??= Array.Empty<string>();
+                if (!_tags.SequenceEqual(value))
+                {
+                    _tags = value.ToArray();
+                    OnPropertyChanged(nameof(Tags));
+                    OnPropertyChanged(nameof(HasTags));
+                }
+            }
+        }
+
+        public bool HasTags => _tags.Count > 0;
 
         public bool IsDetailsExpanded
         {
@@ -474,6 +492,7 @@ public string PluginId
                     OnPropertyChanged(nameof(SupportsOpenAction));
                     OnPropertyChanged(nameof(CapabilitySummary));
                     OnPropertyChanged(nameof(SecondaryLineText));
+                    OnPropertyChanged(nameof(ShouldShowSecondaryLine));
                     OnPropertyChanged(nameof(IsInstallProgressIndeterminate));
                     OnPropertyChanged(nameof(ShouldShowDeterminateInstallFill));
                     OnPropertyChanged(nameof(ShouldShowIndeterminateInstallFill));
@@ -495,6 +514,7 @@ public string PluginId
                     _installProgress = value;
                     OnPropertyChanged(nameof(InstallProgress));
                     OnPropertyChanged(nameof(SecondaryLineText));
+                    OnPropertyChanged(nameof(ShouldShowSecondaryLine));
                     OnPropertyChanged(nameof(IsInstallProgressIndeterminate));
                     OnPropertyChanged(nameof(ShouldShowDeterminateInstallFill));
                     OnPropertyChanged(nameof(ShouldShowIndeterminateInstallFill));
@@ -512,6 +532,7 @@ public string PluginId
                     _installStatusText = value;
                     OnPropertyChanged(nameof(InstallStatusText));
                     OnPropertyChanged(nameof(SecondaryLineText));
+                    OnPropertyChanged(nameof(ShouldShowSecondaryLine));
                     OnPropertyChanged(nameof(StatusText));
                 }
             }
@@ -521,8 +542,9 @@ public string PluginId
         {
             get
             {
+                // Do not surface capability chips (设置/快速打开/优化) on plugin cards.
                 if (!IsInstalling)
-                    return CapabilitySummary;
+                    return string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(InstallStatusText))
                 {
@@ -534,6 +556,8 @@ public string PluginId
                 return Resource.PluginExtensionsPage_PreparingDownload;
             }
         }
+
+        public bool ShouldShowSecondaryLine => !string.IsNullOrWhiteSpace(SecondaryLineText);
 
         public bool IsInstallProgressIndeterminate => IsInstalling && InstallProgress <= 0;
 

@@ -42,8 +42,18 @@ public partial class AboutPage
     {
         InitializeComponent();
 
-        _version.Text += $" {VersionText}";
-        _build.Text += $" {BuildText}";
+        _version.Text = $"{Resource.AboutPage_Version} {VersionText}".Trim();
+        var build = BuildText;
+        if (string.IsNullOrWhiteSpace(build))
+        {
+            _build.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            _build.Text = $"{Resource.AboutPage_Build} {build}".Trim();
+            _build.Visibility = Visibility.Visible;
+        }
+
         _copyright.Text = CopyrightText;
 
         _translationCredit.Visibility = Resource.Culture.Equals(new CultureInfo("en")) ? Visibility.Collapsed : Visibility.Visible;

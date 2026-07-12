@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -59,9 +59,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Universal Device Toolkit</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Build</value>
   </data>
@@ -104,9 +101,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>Always on USB</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Universal Device Toolkit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Apply</value>
@@ -265,87 +259,14 @@ Only actions that match current state will run.</value>
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>Connected, not charging</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Current temperature of the battery.</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Battery temperature</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Current battery capacity.</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Current capacity</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Number of charge/discharge cycles.</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Cycle count</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Battery capacity as designed.</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Design capacity</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Rate at which battery is charged (+), or discharged (-).</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Discharge rate</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Estimated time remaining: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Estimating time...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>First use date</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>When was the battery first used.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Battery capacity when fully charged.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Full charge capacity</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Low wattage charger connected</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>When was the battery manufactured.</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Manufacture date</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Time since laptop was last connected to AC power.
-This time might not be accurate, if laptop was charged when sleeping or off.</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>On battery since</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Battery</value>
@@ -383,9 +304,6 @@ Switching modes may require restart.</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>GPU Working Mode</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Quick Actions</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>Continue</value>
@@ -725,39 +643,6 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="Import" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>This device is not compatible with Universal Device Toolkit.</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Your device may be missing required system components (LenovoGameZoneData).</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>If you click "OK" to continue:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- The software will run in restricted mode</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Some features will be disabled (Dashboard, Automation, Macros)</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Other basic features will still be available</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Device Information:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Vendor:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Machine Type:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Click "OK" to continue, or "Cancel" to exit.</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>No compatible keyboards found</value>
   </data>
@@ -776,9 +661,6 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Battery</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
@@ -786,14 +668,8 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Keyboard</value>
   </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Downloads</value>
-  </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>System optimization</value>
-  </data>
-  <data name="MainWindow_NavigationItem_NetworkAcceleration" xml:space="preserve">
-    <value>Network &amp; acceleration</value>
   </data>
 <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
@@ -809,9 +685,6 @@ WARNING: This action will not run correctly if the internal display is off.</val
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Keyboard navigation item</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Battery navigation item</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Automation navigation item</value>
@@ -1111,12 +984,6 @@ Performance mode can also be changed with Fn+Q.</value>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
     <value>Check the selected source and network connection, then scan again.</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Network error occurred. Retrying automatically...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Retrying to fetch driver packages...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Cleanup Info</value>
   </data>
@@ -1164,9 +1031,6 @@ Performance mode can also be changed with Fn+Q.</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Speed</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
@@ -1231,12 +1095,6 @@ Make sure that your script runs correctly first.</value>
   <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
     <value>Accent color</value>
   </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Customize language, temperature unit, theme and accent color.</value>
-  </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Autorun</value>
   </data>
@@ -1270,32 +1128,11 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>System optimization</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Cleanup failed.</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
     <value>These actions modify system services and files. Administrator privileges may be required.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>Select recommended</value>
@@ -1321,32 +1158,11 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Cleanup</value>
   </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
-  </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Driver Download</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_NetworkAcceleration" xml:space="preserve">
     <value>Network &amp; Acceleration</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Safety Confirmation</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>System cleanup will permanently delete temporary files and cache. While usually safe, it is recommended to ensure you have backups of important data. Do you want to continue?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Extensions</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Manage system optimization extensions and tools</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>No Extensions Available</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Install extensions from the Plugin Extensions page to enhance system optimization functionality.</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Coming Soon</value>
@@ -1356,9 +1172,6 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimization</value>
-  </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
     <value>Custom cleanup rules</value>
@@ -1384,44 +1197,11 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
     <value>Include subfolders</value>
   </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
-  </data>
-<data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Loading plugins...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
-  </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
     <value>Registry MRU/history cleanup</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
     <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
-  </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
     <value>Custom cleanup rule</value>
@@ -1447,21 +1227,8 @@ Restart is recommended after changing this option.</value>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
     <value>Please enter at least one file extension.</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorer &amp; interface</value>
-  </data>
-
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Tune taskbar, File Explorer and user interface behaviour.</value>
@@ -1495,12 +1262,6 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>Unregister Nilesoft Shell and restore the default context menu.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Cache Cleanup</value>
@@ -1561,12 +1322,6 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
     <value>Turn off cloud content suggestions and recommendation banners.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>Optimise multimedia scheduling</value>
@@ -1699,12 +1454,6 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
     <value>Empty Windows and user temporary directories.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
     <value>Empty Recycle Bin</value>
@@ -2040,9 +1789,6 @@ Logging will be enabled automatically, if you choose to continue.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>Check out project page on GitHub for more information.</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Logs folder</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>Machine Type</value>
@@ -2724,9 +2470,6 @@ Supported formats are: {1}.</value>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
     <value>Custom boot logo set.</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
-  </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
     <value>Copy current network name</value>
   </data>
@@ -2759,9 +2502,6 @@ Supported formats are: {1}.</value>
   </data>
 <data name="PackageControl_Install" xml:space="preserve">
     <value>Install</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Installation failed</value>
@@ -2926,9 +2666,6 @@ Supported formats are: {1}.</value>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
     <value>Record</value>
   </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Stop recording</value>
-  </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
     <value>Don't repeat</value>
   </data>
@@ -3079,17 +2816,8 @@ Supported formats are: {1}.</value>
   <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
     <value>e.g., UniversalDeviceToolkit</value>
   </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
-  </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Something went wrong</value>
-  </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
     <value>Play sound</value>
@@ -3140,36 +2868,8 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Running: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
-  </data>
   <data name="Compact" xml:space="preserve">
     <value>Compact view</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System Beautification</value>
-  </data>
-
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance and behavior.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Effects</value>
-  </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Customize visual effects.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Transparency</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
 
@@ -3178,12 +2878,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
 <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Executing {0}%</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>Show hidden downloads</value>
@@ -3248,12 +2942,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>Checking plugin availability...</value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} plugin update(s) are ready to install.</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} additional plugin(s) are available in the current feed.</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>Waiting for plugin metadata to load.</value>
   </data>
@@ -3271,9 +2959,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
     <value>Up to date</value>
-  </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -3293,10 +2978,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Installed</value>
-  </data>
-
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Cannot Uninstall</value>
   </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>Plugin Settings</value>
@@ -3324,9 +3005,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Author: {0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Plugin configuration interface format is incorrect.</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>Error loading plugin settings: {0}</value>
@@ -3358,12 +3036,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>Open</value>
   </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Language:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Use Application Default</value>
-  </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Found {0} plugins</value>
   </data>
@@ -3393,12 +3065,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>Importing plugins...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Importing {0}...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Processing {0}...</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Plugin installed successfully</value>
@@ -3445,20 +3111,11 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Plugin will be permanently deleted</value>
   </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Plugin will be permanently deleted. This action cannot be undone.</value>
-  </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>Update Failed</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>Plugin update failed, please check network connection and try again later.</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>Update Successful</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Plugin has been successfully updated</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>Updating Plugin</value>
@@ -3472,44 +3129,14 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Run Plugin</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>Plugin started</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>Plugin Uninstalled</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Plugin will be deleted when the program closes.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Deletion Failed</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Error occurred while deleting plugin</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>Configuration Failed</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Plugin is installed but not loaded. Please try restarting the application.</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>No Configuration</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Plugin does not have any configuration options.</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Configuration Not Supported</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Plugin does not support configuration.</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Plugin States Reset</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>All plugin installation states have been cleared</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>Bulk Update Complete</value>
@@ -3523,17 +3150,8 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>Local</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>New Version Available</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>Version:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Release Date:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>What's New:</value>
   </data>
   <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
     <value>Details</value>
@@ -3619,15 +3237,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_InstallQueued" xml:space="preserve">
     <value>Waiting to install (another plugin is downloading)...</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>No tools available. Please add tools in tools folder in application directory.</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Tools will appear here once they are available in the tools directory.</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Model</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Power Usage</value>
   </data>
@@ -3639,12 +3248,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>Rate</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Min Rate</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Max Rate</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>Cycles</value>
@@ -3660,9 +3263,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>Date</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>Core / Memory Clock</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>Core Voltage</value>
@@ -3681,9 +3281,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
     <value>Double-click to show or hide detailed sensor information.</value>
-  </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>Loading...</value>
   </data>
   <data name="SensorsControl_NotAvailable" xml:space="preserve">
     <value>N/A</value>
@@ -3931,9 +3528,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="Percent" xml:space="preserve">
     <value>%</value>
   </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>Board Temperature</value>
-  </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>Motherboard</value>
   </data>
@@ -4043,7 +3637,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Diagnostics</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
-    <value>Run a quick check. Phase 1 reports configuration only; full connectivity tests arrive later.</value>
+    <value>Run a quick check for configuration, loopback listen port, and gateway summary. Diagnostics only run when you request them.</value>
   </data>
   <data name="NetworkAccelerationPage_RunDiagnostics" xml:space="preserve">
     <value>Run diagnostics</value>
@@ -4062,5 +3656,71 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_PortLabel" xml:space="preserve">
     <value>Listen port</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableLabel" xml:space="preserve">
+    <value>Allow acceleration (manual start only)</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreNetwork" xml:space="preserve">
+    <value>Force restore network state</value>
+  </data>
+  <data name="NetworkAccelerationPage_StartFailed" xml:space="preserve">
+    <value>Failed to start network acceleration. Check that the worker is installed and try Force restore network state.</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestorePartial" xml:space="preserve">
+    <value>Restore finished with warnings:</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
+    <value>Domain groups</value>
+  </data>
+  <data name="HardwareSensorSectionsWindow_Title" xml:space="preserve">
+    <value>Sensor sections</value>
+  </data>
+  <data name="SensorSections_Visible_Title" xml:space="preserve">
+    <value>Visible sections</value>
+  </data>
+  <data name="SensorSections_Order_Title" xml:space="preserve">
+    <value>Section order</value>
+  </data>
+  <data name="SensorSections_MoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="SensorSections_MoveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="AutomationTrigger_Comparison" xml:space="preserve">
+    <value>Comparison</value>
+  </data>
+  <data name="AutomationTrigger_Threshold_Percent" xml:space="preserve">
+    <value>Threshold %</value>
+  </data>
+  <data name="AutomationTrigger_ChargeFilter" xml:space="preserve">
+    <value>Charge filter</value>
+  </data>
+  <data name="AutomationTrigger_Duration" xml:space="preserve">
+    <value>Duration (s)</value>
+  </data>
+  <data name="AutomationTrigger_Cooldown" xml:space="preserve">
+    <value>Cooldown (s)</value>
+  </data>
+  <data name="AutomationTrigger_Metric" xml:space="preserve">
+    <value>Metric</value>
+  </data>
+  <data name="AutomationTrigger_Threshold" xml:space="preserve">
+    <value>Threshold</value>
+  </data>
+  <data name="CloseNotification_AutomationName" xml:space="preserve">
+    <value>Close notification</value>
+  </data>
+  <data name="Close_Tooltip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="LanguageSelector_RetryButton" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="LanguageSelector_ContinueInEnglishButton" xml:space="preserve">
+    <value>Continue in English</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

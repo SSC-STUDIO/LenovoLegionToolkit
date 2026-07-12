@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -17,7 +18,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 VerticalAlignment="Center"
-                Text="Metric" />
+                Text="{x:Static resources:Resource.AutomationTrigger_Metric}" />
             <ComboBox
                 x:Name="_metricComboBox"
                 Grid.Column="1"
@@ -32,7 +33,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 VerticalAlignment="Center"
-                Text="Comparison" />
+                Text="{x:Static resources:Resource.AutomationTrigger_Comparison}" />
             <ComboBox
                 x:Name="_comparisonComboBox"
                 Grid.Column="1"
@@ -47,7 +48,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 VerticalAlignment="Center"
-                Text="Threshold" />
+                Text="{x:Static resources:Resource.AutomationTrigger_Threshold}" />
             <ui:NumberBox
                 x:Name="_thresholdBox"
                 Grid.Column="1"
@@ -64,7 +65,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 VerticalAlignment="Center"
-                Text="Duration (s)" />
+                Text="{x:Static resources:Resource.AutomationTrigger_Duration}" />
             <ui:NumberBox
                 x:Name="_durationSecondsBox"
                 Grid.Column="1"
@@ -81,7 +82,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 VerticalAlignment="Center"
-                Text="Cooldown (s)" />
+                Text="{x:Static resources:Resource.AutomationTrigger_Cooldown}" />
             <ui:NumberBox
                 x:Name="_cooldownSecondsBox"
                 Grid.Column="1"

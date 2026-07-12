@@ -1,18 +1,32 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Messaging;
+using LenovoLegionToolkit.Lib.Messaging.Messages;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Services;
 
-public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = null) : IDisposable
+public class BatteryDischargeRateMonitorService : IDisposable
 {
-    private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
+    private readonly IDelayProvider _delayProvider;
+    private readonly BatteryHealthAlertSettings _healthAlertSettings;
+
+    public BatteryDischargeRateMonitorService(
+        BatteryHealthAlertSettings healthAlertSettings,
+        IDelayProvider? delayProvider = null)
+    {
+        _healthAlertSettings = healthAlertSettings ?? new BatteryHealthAlertSettings();
+        _delayProvider = delayProvider ?? new DefaultDelayProvider();
+    }
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
     private readonly object _lock = new();
     private int _disposed;
+    private DateTime _lastHealthNotifyUtc = DateTime.MinValue;
+    private string? _lastHealthNotifyKey;
 
     public Task StartStopIfNeededAsync()
     {
@@ -64,6 +78,7 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
                         }
 
                         Battery.SetMinMaxDischargeRate();
+                        EvaluateHealthAlerts();
 
                         await _delayProvider.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
                     }
@@ -160,6 +175,67 @@ public class BatteryDischargeRateMonitorService(IDelayProvider? delayProvider = 
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Battery monitoring service stopped");
+    }
+
+    /// <summary>
+    /// Evaluates design/full-charge health against configured thresholds using the same
+    /// Battery information path as the rest of the app (no extra WMI).
+    /// </summary>
+    private void EvaluateHealthAlerts()
+    {
+        try
+        {
+            var store = _healthAlertSettings.Store;
+            store.Normalize();
+            if (!store.AlertsEnabled)
+                return;
+
+            var info = Battery.GetBatteryInformation();
+            var health = info.BatteryHealth;
+            if (health <= 0)
+                return;
+
+            string? key = null;
+            string? message = null;
+            var priority = NotificationPriority.Normal;
+
+            if (health < store.CriticalHealthThreshold)
+            {
+                key = "critical";
+                priority = NotificationPriority.High;
+                message = $"Battery health critical: {health:0.#}% (threshold {store.CriticalHealthThreshold}%).";
+            }
+            else if (health < store.LowHealthThreshold)
+            {
+                key = "low";
+                message = $"Battery health low: {health:0.#}% (threshold {store.LowHealthThreshold}%).";
+            }
+
+            if (store.TemperatureThresholdC > 0 && info.BatteryTemperatureC is { } tempC && tempC >= store.TemperatureThresholdC)
+            {
+                key = "temp";
+                priority = NotificationPriority.High;
+                message = $"Battery temperature high: {tempC:0.#} °C (threshold {store.TemperatureThresholdC:0.#} °C).";
+            }
+
+            if (key is null || message is null)
+                return;
+
+            // Cooldown: at most one notification per key every 6 hours.
+            var now = DateTime.UtcNow;
+            if (string.Equals(_lastHealthNotifyKey, key, StringComparison.Ordinal)
+                && now - _lastHealthNotifyUtc < TimeSpan.FromHours(6))
+                return;
+
+            _lastHealthNotifyKey = key;
+            _lastHealthNotifyUtc = now;
+            MessagingCenter.Publish(new NotificationMessage(NotificationType.AutomationNotification, priority, message));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Battery health alert evaluation failed.", ex);
+        }
     }
 
     public void Dispose()

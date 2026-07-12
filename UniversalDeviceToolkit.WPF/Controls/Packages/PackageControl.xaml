@@ -33,7 +33,7 @@
         <Style x:Key="PackageStateBadgeStyle" TargetType="Border">
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Padding" Value="8,3" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />

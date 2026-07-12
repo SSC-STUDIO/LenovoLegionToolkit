@@ -53,13 +53,13 @@
                         <Grid Height="{TemplateBinding Height}" SnapsToDevicePixels="True">
                             <Border
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="3" />
+                                CornerRadius="{StaticResource CornerRadiusProgressBar}" />
                             <Grid x:Name="PART_Track" ClipToBounds="True">
                                 <Border
                                     x:Name="PART_Indicator"
                                     HorizontalAlignment="Left"
                                     Background="{TemplateBinding Foreground}"
-                                    CornerRadius="3" />
+                                    CornerRadius="{StaticResource CornerRadiusProgressBar}" />
                             </Grid>
                         </Grid>
                     </ControlTemplate>
@@ -88,14 +88,14 @@
         <Style x:Key="SkeletonTitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="20" />
             <Setter Property="Width" Value="96" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Margin" Value="0,4,0,14" />
         </Style>
         <Style x:Key="SkeletonSubtitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="12" />
             <Setter Property="Width" Value="120" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="8,1,0,0" />
@@ -103,14 +103,14 @@
         <Style x:Key="SkeletonGaugeStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Width" Value="80" />
             <Setter Property="Height" Value="80" />
-            <Setter Property="CornerRadius" Value="40" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonLabelBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="12" />
             <Setter Property="Width" Value="60" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -118,12 +118,12 @@
             <Setter Property="Height" Value="6" />
             <Setter Property="Margin" Value="6,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusProgressBar}" />
         </Style>
         <Style x:Key="SkeletonValueBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="12" />
             <Setter Property="Width" Value="48" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -133,19 +133,19 @@
         <Style x:Key="SkeletonTrendBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="60" />
             <Setter Property="Margin" Value="8" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
         </Style>
         <Style x:Key="SkeletonLegendDotStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonLegendTextStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="10" />
             <Setter Property="Width" Value="56" />
             <Setter Property="Margin" Value="4,0,14,0" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>

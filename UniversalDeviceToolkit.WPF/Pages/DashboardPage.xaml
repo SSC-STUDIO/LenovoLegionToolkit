@@ -19,13 +19,15 @@
     <Page.Resources>
         <Style x:Key="DashboardSkeletonCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
             <Setter Property="Margin" Value="0,0,16,16" />
-            <Setter Property="Padding" Value="18" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="MinHeight" Value="72" />
         </Style>
 
         <Style x:Key="DashboardSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
 
         <Style x:Key="DashboardListSkeletonCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonListItemCardStyle}">
             <Setter Property="Margin" Value="0,0,16,8" />
+            <Setter Property="MinHeight" Value="72" />
         </Style>
     </Page.Resources>
 

@@ -127,6 +127,13 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 > **Note on winget:** the package id `SSC-STUDIO.LenovoLegionToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
+
+#### Language packs (Full vs Online) & privacy
+
+- **Full** ships many satellite languages offline. **Online** ships English by default and downloads optional language packs only when you choose them (startup language window or Settings).
+- Offline / `--safe-start` / no network: the app continues in English — it does **not** phone home for language packs unless you start an install.
+- Catalog downloads use HTTPS (or your configured catalog URL). Packages are verified with **SHA-256** before install. No account, no telemetry.
+- Corporate proxy: set system proxy as usual, or point `UDT_RESOURCE_CATALOG_URL` at an internal catalog mirror for air-gapped installs. See `Docs/LanguagePacks.md`.
  - ~~**winget** (pending)~~: the `PackageIdentifier` `SSC-STUDIO.LenovoLegionToolkit` is reserved for in-place upgrade from the legacy Lenovo Legion Toolkit, but the manifest has not been submitted to microsoft/winget-pkgs yet -- `winget install` will fail until it ships. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.

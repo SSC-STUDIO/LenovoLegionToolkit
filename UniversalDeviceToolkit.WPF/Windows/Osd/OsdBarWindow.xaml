@@ -35,12 +35,12 @@
             x:Name="_backgroundBorder"
             Padding="10,4"
             Background="{DynamicResource ControlFillColorDefaultBrush}" Opacity="0.8"
-            CornerRadius="6" />
+            CornerRadius="{StaticResource CornerRadiusSmall}" />
         <Border
             Padding="10,4"
             Background="Transparent"
             ClipToBounds="True"
-            CornerRadius="6">
+            CornerRadius="{StaticResource CornerRadiusSmall}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

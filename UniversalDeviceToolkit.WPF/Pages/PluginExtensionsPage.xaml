@@ -421,7 +421,27 @@
                                             </WrapPanel>
 
                                             <TextBlock Text="{Binding SecondaryLineText}"
-                                                       Style="{StaticResource PluginCardSecondaryLineStyle}" />
+                                                       Style="{StaticResource PluginCardSecondaryLineStyle}"
+                                                       Visibility="{Binding ShouldShowSecondaryLine, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                            <ItemsControl ItemsSource="{Binding Tags}"
+                                                          Margin="0,6,0,0"
+                                                          Visibility="{Binding HasTags, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Style="{StaticResource PluginStatusBadgeStyle}">
+                                                            <TextBlock Text="{Binding}"
+                                                                       FontSize="11"
+                                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </StackPanel>
 
                                     <StackPanel Grid.Column="2"

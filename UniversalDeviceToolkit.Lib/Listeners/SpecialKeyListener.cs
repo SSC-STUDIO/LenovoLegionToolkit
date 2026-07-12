@@ -211,13 +211,30 @@ public class SpecialKeyListener(
 
     private static void NotifySpectrumBacklight(SpectrumKeyboardBacklightBrightness value)
     {
-        var type = value is SpectrumKeyboardBacklightBrightness.Off
-            ? NotificationType.SpectrumBacklightOff
-            : NotificationType.SpectrumBacklightChanged;
-        MessagingCenter.Publish(new NotificationMessage(type, value));
+        // LED/toast feedback is isolated: failures must not prevent key handling upstream.
+        SpecialKeyLedIsolation.RunLedFeedback($"spectrum-backlight-{value}", () =>
+        {
+            var type = value is SpectrumKeyboardBacklightBrightness.Off
+                ? NotificationType.SpectrumBacklightOff
+                : NotificationType.SpectrumBacklightChanged;
+            MessagingCenter.Publish(new NotificationMessage(type, value));
+        });
     }
 
-    private static void NotifySpectrumPreset(int value) => MessagingCenter.Publish(new NotificationMessage(NotificationType.SpectrumBacklightPresetChanged, value));
+    private static void NotifySpectrumPreset(int value) =>
+        SpecialKeyLedIsolation.RunLedFeedback($"spectrum-preset-{value}",
+            () => MessagingCenter.Publish(new NotificationMessage(NotificationType.SpectrumBacklightPresetChanged, value)));
+
+    private static void NotifyWhiteBacklight(WhiteKeyboardBacklightState value)
+    {
+        SpecialKeyLedIsolation.RunLedFeedback($"white-backlight-{value}", () =>
+        {
+            var type = value is WhiteKeyboardBacklightState.Off
+                ? NotificationType.WhiteKeyboardBacklightOff
+                : NotificationType.WhiteKeyboardBacklightChanged;
+            MessagingCenter.Publish(new NotificationMessage(type, value));
+        });
+    }
 
     private async Task ToggleMicrophoneAsync()
     {
@@ -239,12 +256,4 @@ public class SpecialKeyListener(
     }
 
     private static void OpenAirplaneModeSettings() => AirplaneMode.Open();
-
-    private static void NotifyWhiteBacklight(WhiteKeyboardBacklightState value)
-    {
-        var type = value is WhiteKeyboardBacklightState.Off
-            ? NotificationType.WhiteKeyboardBacklightOff
-            : NotificationType.WhiteKeyboardBacklightChanged;
-        MessagingCenter.Publish(new NotificationMessage(type, value));
-    }
 }

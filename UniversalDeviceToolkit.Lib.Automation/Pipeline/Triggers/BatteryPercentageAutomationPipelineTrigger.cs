@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Automation.Resources;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 
@@ -36,7 +37,7 @@ public sealed class BatteryPercentageAutomationPipelineTrigger(
     public TimeSpan Cooldown { get; } = cooldown < TimeSpan.Zero ? TimeSpan.Zero : cooldown;
     public BatteryChargeFilter ChargeFilter { get; } = chargeFilter;
 
-    public string DisplayName => $"Battery {Comparison} {Threshold}% ({ChargeFilter})";
+    public string DisplayName => string.Format(Resource.BatteryPercentageAutomationPipelineTrigger_DisplayName_Format, Comparison, Threshold, ChargeFilter);
 
     public Task<bool> IsMatchingEvent(IAutomationEvent automationEvent) => IsMatchingState();
 

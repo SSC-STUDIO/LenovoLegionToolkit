@@ -70,45 +70,80 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Matches CardControl / CardExpander surface chrome (padding, radius, stroke). -->
     <Style x:Key="AppSkeletonCardStyle" TargetType="Border">
-        <Setter Property="Padding" Value="16" />
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
         <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
+    <!-- Collapsed CardExpander / feature list rows (Automation, Dashboard, Macro...). -->
     <Style x:Key="AppSkeletonListItemCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
         <Setter Property="Margin" Value="0,0,0,8" />
-        <Setter Property="Padding" Value="12" />
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
     </Style>
 
+    <!-- SymbolIcon 24px peers used by CardHeader accessory / pipeline icons. -->
     <Style x:Key="AppSkeletonListItemIconStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-        <Setter Property="Width" Value="18" />
-        <Setter Property="Height" Value="18" />
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
-        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,12,0" />
     </Style>
 
+    <!-- ~FontSizeBody / Medium title line. -->
     <Style x:Key="AppSkeletonListItemSingleLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-        <Setter Property="Height" Value="12" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="120" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="AppSkeletonListItemPrimaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-        <Setter Property="Height" Value="14" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="140" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
+    <!-- Subtitle under CardHeaderControl title (Margin 0,4,0,0 in live control). -->
     <Style x:Key="AppSkeletonListItemSecondaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-        <Setter Property="Height" Value="10" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="MinWidth" Value="96" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+
+    <!-- Toggle-on-the-right CardControl (e.g. Automation enable switch). -->
+    <Style x:Key="AppSkeletonToggleCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
+        <Setter Property="Margin" Value="0,0,0,24" />
+        <Setter Property="MinHeight" Value="88" />
+        <Setter Property="Padding" Value="16,16" />
+    </Style>
+
+    <Style x:Key="AppSkeletonToggleSwitchStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
+
+    <!-- Multi-line package / dense content rows. -->
+    <Style x:Key="AppSkeletonDenseListItemCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonListItemCardStyle}">
+        <Setter Property="MinHeight" Value="108" />
+        <Setter Property="Padding" Value="16" />
     </Style>
 
 </ResourceDictionary>

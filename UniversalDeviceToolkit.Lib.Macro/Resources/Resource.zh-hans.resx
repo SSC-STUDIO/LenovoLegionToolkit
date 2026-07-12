@@ -46,21 +46,51 @@
 		<value>鼠标</value>
 	</data>
 <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
-<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
-<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>
+<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>管理 Nilesoft Shell 右键菜单的注册和集成。</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>启用 Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>将 Nilesoft Shell 注册为 Windows 右键菜单处理器。</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>禁用 Nilesoft Shell</value></data>
+<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>取消注册 Nilesoft Shell 并恢复默认右键菜单。</value></data>
+<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>无法验证更改。可能需要管理员权限。</value></data>
+<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>请等待当前优化完成。</value></data>
   <data name="Exception_CommandExitedNonZero" xml:space="preserve">
-    <value>Command exited with non-zero code {0}. Output: {1}</value>
+    <value>命令以非零代码 {0} 退出。输出：{1}</value>
   </data>
   <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
-    <value>Optimization action with identifier {0} was not found.</value>
+    <value>未找到标识符为 {0} 的优化操作。</value>
   </data>
   <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
-    <value>Rollback is not available for this optimization action.</value>
+    <value>此优化操作无法回滚。</value>
+  </data>
+  <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
+    <value>移动</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelDown_Title" xml:space="preserve">
+    <value>滚轮下滚</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelUp_Title" xml:space="preserve">
+    <value>滚轮上滚</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelLeft_Title" xml:space="preserve">
+    <value>滚轮左滚</value>
+  </data>
+  <data name="MacroEventControl_MouseWheelRight_Title" xml:space="preserve">
+    <value>滚轮右滚</value>
+  </data>
+  <data name="MacroEventControl_MouseXButton_Title" xml:space="preserve">
+    <value>X 键 {0}</value>
+  </data>
+  <data name="MacroEventControl_MouseLButton_Title" xml:space="preserve">
+    <value>左键</value>
+  </data>
+  <data name="MacroEventControl_MouseRButton_Title" xml:space="preserve">
+    <value>右键</value>
+  </data>
+  <data name="MacroEventControl_MouseMButton_Title" xml:space="preserve">
+    <value>中键</value>
+  </data>
+  <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
+    <value>按键 {0}</value>
   </data>
 
 

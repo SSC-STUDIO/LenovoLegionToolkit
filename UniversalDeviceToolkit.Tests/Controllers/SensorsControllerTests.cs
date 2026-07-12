@@ -267,12 +267,14 @@ public class GenericSensorsControllerTests : UnitTestBase
                 _cpuCoreClock,
                 _cpuWattage,
                 _cpuVoltage,
+                -1,
                 _gpuUtilization,
                 _gpuTemperature,
                 _gpuCoreClock,
                 _gpuMemoryClock,
                 _gpuWattage,
-                _gpuVoltage));
+                _gpuVoltage,
+                -1));
     }
 
     private sealed class CpuWattageFallbackSensorsController(

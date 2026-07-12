@@ -22,10 +22,10 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
 
     private readonly string _pipeName;
     private readonly string _sessionToken;
-    private readonly NetworkProxyHostStub _host;
+    private readonly INetworkProxyHost _host;
     private string _rulesJson = "[]";
 
-    public NetworkProxyIpcServer(string pipeName, string sessionToken, NetworkProxyHostStub host)
+    public NetworkProxyIpcServer(string pipeName, string sessionToken, INetworkProxyHost host)
     {
         _pipeName = string.IsNullOrWhiteSpace(pipeName)
             ? NetworkAccelerationDefaults.DefaultPipeName

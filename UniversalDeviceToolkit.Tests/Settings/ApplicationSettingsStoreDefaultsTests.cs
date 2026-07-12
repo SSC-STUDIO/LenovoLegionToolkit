@@ -73,11 +73,11 @@ public class ApplicationSettingsStoreDefaultsTests
     }
 
     [Fact]
-    public void NotificationPosition_ShouldDefaultToBottomCenter()
+    public void NotificationPosition_ShouldDefaultToBottomRight()
     {
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        store.NotificationPosition.Should().Be(NotificationPosition.BottomCenter);
+        store.NotificationPosition.Should().Be(NotificationPosition.BottomRight);
     }
 
     [Fact]

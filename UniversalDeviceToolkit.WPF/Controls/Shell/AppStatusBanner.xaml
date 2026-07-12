@@ -2,6 +2,7 @@
     x:Class="UniversalDeviceToolkit.WPF.Controls.Shell.AppStatusBanner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:shell="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Shell"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Width="360"
@@ -29,20 +30,15 @@
                 <ColumnDefinition Width="32" />
             </Grid.ColumnDefinitions>
 
-            <Border
-                Width="36"
-                Height="36"
-                HorizontalAlignment="Right"
+            <wpfui:SymbolIcon
+                x:Name="Icon"
+                Width="28"
+                Height="28"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                CornerRadius="{StaticResource CornerRadiusControl}">
-                <wpfui:SymbolIcon
-                    x:Name="Icon"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource StatusWarningBrush}"
-                    Symbol="Warning24" />
-            </Border>
+                FontSize="20"
+                Foreground="{DynamicResource StatusWarningBrush}"
+                Symbol="Warning24" />
 
             <TextBlock
                 x:Name="MessageText"
@@ -84,11 +80,11 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Appearance="Transparent"
-                AutomationProperties.Name="Close notification"
+                AutomationProperties.Name="{x:Static resources:Resource.CloseNotification_AutomationName}"
                 Click="CloseButton_Click"
                 CornerRadius="{StaticResource CornerRadiusCompact}"
                 PreviewMouseLeftButtonDown="CloseButton_PreviewMouseLeftButtonDown"
-                ToolTip="Close">
+                ToolTip="{x:Static resources:Resource.Close_Tooltip}">
                 <wpfui:SymbolIcon FontSize="14" Symbol="Dismiss20" />
             </wpfui:Button>
         </Grid>

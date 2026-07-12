@@ -90,7 +90,7 @@
         </Style>
         <Style TargetType="Border" x:Key="CardContainerStyle">
             <Setter Property="Padding" Value="{StaticResource SpacingMD}" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -128,7 +128,7 @@
         </Style>
         <Style x:Key="DriverSourcePanelStyle" TargetType="Border">
             <Setter Property="Padding" Value="14,12" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -145,7 +145,7 @@
         </Style>
         <Style x:Key="DriverToolbarPanelStyle" TargetType="Border">
             <Setter Property="Padding" Value="12" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -402,11 +402,11 @@
                         VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Expander
+                                <custom:CardExpander
                                     AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationCategory_{0}}"
                                     IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
                                     Margin="0,0,0,8">
-                                    <Expander.Header>
+                                    <custom:CardExpander.Header>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -445,7 +445,7 @@
                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                 Text="{Binding SelectionSummary}" />
                                         </Grid>
-                                    </Expander.Header>
+                                    </custom:CardExpander.Header>
                                     <ItemsControl
                                         ItemsSource="{Binding Actions}"
                                         Margin="12,8,0,0"
@@ -458,7 +458,7 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                                                    </Grid.ColumnDefinitions>
                                                     <CheckBox
                                                         Grid.Column="0"
                                                         AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationAction_{0}}"
@@ -481,7 +481,7 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </Expander>
+                                </custom:CardExpander>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -932,7 +932,7 @@
                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1"
-                                            CornerRadius="{StaticResource CornerRadiusControl}"
+                                            CornerRadius="{StaticResource CornerRadiusCard}"
                                             Visibility="Collapsed">
                                             <StackPanel
                                                 MaxWidth="520"
@@ -1027,7 +1027,6 @@
                             <Style x:Key="RightColumnCardStyle" TargetType="Border" BasedOn="{StaticResource CardContainerStyle}">
                                 <Setter Property="Margin" Value="0,0,0,16" />
                                 <Setter Property="Padding" Value="20" />
-                                <Setter Property="CornerRadius" Value="8" />
                             </Style>
                             <Style x:Key="RightColumnCleanupCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
                                 <Setter Property="Visibility" Value="Collapsed" />

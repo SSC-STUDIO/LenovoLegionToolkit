@@ -7,12 +7,13 @@ using System;
 using Windows.Devices.Lights;
 using Color = Windows.UI.Color;
 using System.Collections.Generic;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils.LampEffects;
 
 public class AuroraSyncEffect : ILampEffect
 {
-    public string Name => "Aurora Sync";
+    public string Name => Resource.LampEffect_AuroraSync;
     public Dictionary<string, object> Parameters { get; } = new();
 
     private RGBColor[,]? _screenColors;

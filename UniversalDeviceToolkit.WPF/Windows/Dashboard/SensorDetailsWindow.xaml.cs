@@ -26,8 +26,13 @@ public partial class SensorDetailsWindow
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
-        MaxHeight = Math.Max(560, SystemParameters.WorkArea.Height - 72);
+        // Fit typical desktop work areas without leaving large empty chrome.
+        var work = SystemParameters.WorkArea;
+        MaxWidth = Math.Max(900, work.Width - 48);
+        MaxHeight = Math.Max(520, work.Height - 64);
+        if (Width > MaxWidth)
+            Width = MaxWidth;
+        if (Height > MaxHeight)
+            Height = MaxHeight;
     }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 }

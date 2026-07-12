@@ -32,16 +32,17 @@
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 
-    <!-- Primary Button Style -->
+    <!-- Primary Button Style (height 36 = standard primary) -->
     <Style x:Key="AppButtonPrimary" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
         <Setter Property="Appearance" Value="Primary" />
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
-        <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
+        <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
     </Style>
 
     <!-- Large Button Style -->

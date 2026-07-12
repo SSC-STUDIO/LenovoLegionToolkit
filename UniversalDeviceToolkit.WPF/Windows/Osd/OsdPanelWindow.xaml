@@ -26,7 +26,7 @@
         Padding="15"
         Background="Transparent"
         ClipToBounds="True"
-        CornerRadius="12">
+        CornerRadius="{StaticResource CornerRadiusControl}">
         <StackPanel>
             <StackPanel x:Name="_sensorsPanel">
 

@@ -23,12 +23,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         int CpuCoreClock,
         int CpuWattage,
         double CpuVoltage,
+        int CpuFanSpeed,
         int GpuUtilization,
         int GpuTemperature,
         int GpuCoreClock,
         int GpuMemoryClock,
         int GpuWattage,
-        double GpuVoltage);
+        double GpuVoltage,
+        int GpuFanSpeed);
 
     protected readonly struct GPUInfo(
         int utilization,
@@ -234,7 +236,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         double cpuVoltage = 0;
         int cpuWattage = -1;
 
-        if (cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0)
+        if (cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0 || cpuCurrentFanSpeed <= 0)
         {
             var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
             if (libreHardwareMonitorReadings is { } readings)
@@ -245,6 +247,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     cpuCoreClock = readings.CpuCoreClock;
                 if (cpuCurrentTemperature < 0 && readings.CpuTemperature > 0)
                     cpuCurrentTemperature = readings.CpuTemperature;
+                if (cpuCurrentFanSpeed <= 0 && readings.CpuFanSpeed > 0)
+                    cpuCurrentFanSpeed = readings.CpuFanSpeed;
             }
         }
 
@@ -291,7 +295,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || (detailed && (gpuVoltage <= 0 || gpuWattage < 0)))
+        if (gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || gpuCurrentFanSpeed <= 0 || (detailed && (gpuVoltage <= 0 || gpuWattage < 0)))
         {
             var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
             if (libreHardwareMonitorReadings is { } readings)
@@ -304,12 +308,19 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     gpuMemoryClock = readings.GpuMemoryClock;
                 if (gpuCurrentTemperature < 0 && readings.GpuTemperature > 0)
                     gpuCurrentTemperature = readings.GpuTemperature;
+                if (gpuCurrentFanSpeed <= 0 && readings.GpuFanSpeed > 0)
+                    gpuCurrentFanSpeed = readings.GpuFanSpeed;
                 if (detailed && gpuWattage < 0 && readings.GpuWattage > 0)
                     gpuWattage = readings.GpuWattage;
                 if (detailed && gpuVoltage <= 0 && readings.GpuVoltage > 0)
                     gpuVoltage = readings.GpuVoltage;
             }
         }
+
+        if (cpuMaxFanSpeed <= 0 && cpuCurrentFanSpeed > 0)
+            cpuMaxFanSpeed = Math.Max(cpuCurrentFanSpeed, 5500);
+        if (gpuMaxFanSpeed <= 0 && gpuCurrentFanSpeed > 0)
+            gpuMaxFanSpeed = Math.Max(gpuCurrentFanSpeed, 5500);
 
         if (gpuMaxCoreClock < 0 && gpuCoreClock >= 0)
             gpuMaxCoreClock = gpuCoreClock;
@@ -422,12 +433,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuCoreClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetCpuVoltageAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetCpuFanSpeedAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuUsageAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuTemperatureAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuCoreClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuMemoryClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuPowerAsync().ConfigureAwait(false)),
-                NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false)));
+                NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuFanSpeedAsync().ConfigureAwait(false)));
         }
         catch
         {
@@ -440,6 +453,40 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     private static int NormalizeLibreHardwareMonitorPositiveMetric(float value) =>
         value > 0 ? (int)Math.Round(value) : -1;
+
+    /// <summary>
+    /// Capability fan IDs often report 0 on newer Legion firmware even while fans spin.
+    /// Prefer a positive capability reading, otherwise fall back to Fan_GetCurrentFanSpeed.
+    /// </summary>
+    protected static async Task<int> ReadFanSpeedWithFallbackAsync(
+        Func<Task<int>> primaryAsync,
+        Func<Task<int>> fallbackAsync)
+    {
+        var primary = -1;
+        try
+        {
+            primary = await primaryAsync().ConfigureAwait(false);
+            if (primary > 0)
+                return primary;
+        }
+        catch
+        {
+            // try fallback below
+        }
+
+        try
+        {
+            var fallback = await fallbackAsync().ConfigureAwait(false);
+            if (fallback > 0)
+                return fallback;
+            // Keep a successful zero from either source (fans may be parked).
+            return primary >= 0 ? primary : fallback;
+        }
+        catch
+        {
+            return primary;
+        }
+    }
 
     private static double NormalizeLibreHardwareMonitorVoltage(float value) =>
         value > 0 ? Math.Round(value, 3) : 0;

@@ -105,8 +105,8 @@ public sealed class HardwareStateRecoveryService
     }
 
     /// <summary>
-    /// Removes the args.txt passthrough proxy switches, then restores system
-    /// proxy / UDT hosts / PAC from the last network snapshot when present
+    /// Removes the args.txt passthrough proxy switches, stops running network acceleration,
+    /// then restores system proxy / UDT hosts / PAC from the last network snapshot when present
     /// (<see cref="INetworkStateRecoveryService"/>). Idempotent with an empty
     /// or missing snapshot.
     /// </summary>
@@ -116,6 +116,26 @@ public sealed class HardwareStateRecoveryService
         var sb = new StringBuilder();
         sb.AppendLine("Network state reset report");
         sb.AppendLine(SectionSeparator);
+
+        try
+        {
+            var networkService = _impl.TryResolve(typeof(INetworkAccelerationService)) as INetworkAccelerationService;
+            if (networkService is { IsRunning: true })
+            {
+                networkService.StopAsync().GetAwaiter().GetResult();
+                sb.AppendLine("network-acceleration: stopped running service.");
+            }
+            else
+            {
+                sb.AppendLine("network-acceleration: no running service to stop.");
+            }
+        }
+        catch (Exception ex)
+        {
+            success = false;
+            sb.AppendLine($"network-acceleration: failure ({ex.GetType().Name}: {ex.Message}).");
+            TryTrace("HardwareStateRecoveryService: network acceleration stop failed.", ex);
+        }
 
         try
         {

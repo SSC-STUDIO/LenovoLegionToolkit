@@ -2,6 +2,8 @@
 
 UDT Online ships an English-only host. Non-English UI is delivered as culture satellite packs from the online resource catalog.
 
+**Program plan (lifecycle + startup gate + acceptance):** `Docs/OnlineLanguageAndUpstreamAbsorptionPlan.md`
+
 ## Catalog protocol
 
 Catalog URL defaults to `AppIdentity.StableResourceCatalogUrl` (override with `UDT_RESOURCE_CATALOG_URL`).

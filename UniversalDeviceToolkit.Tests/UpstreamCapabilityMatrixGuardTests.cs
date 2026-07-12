@@ -21,8 +21,44 @@ public sealed class UpstreamCapabilityMatrixGuardTests
     public void BrandAssets_ShouldContainRequiredVariants()
     {
         var root = FindRoot();
-        foreach (var path in new[] { "Assets/Brand/udt-hub.svg", "Assets/Brand/udt-hub-dark.svg", "Assets/Brand/udt-hub-light.svg", "Assets/Brand/tray-dark.png", "Assets/Brand/tray-light.png", "UniversalDeviceToolkit.WPF/Assets/Icon.ico" })
+        foreach (var path in new[]
+                 {
+                     "Assets/Brand/udt-symbol.svg",
+                     "Assets/Brand/udt-symbol-dark.svg",
+                     "Assets/Brand/udt-symbol-light.svg",
+                     "Assets/Brand/tray-dark.png",
+                     "Assets/Brand/tray-light.png",
+                     "Assets/Logo.png",
+                     "Assets/og-preview.png",
+                     "UniversalDeviceToolkit.WPF/Assets/Icon.ico"
+                 })
             File.Exists(Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar))).Should().BeTrue(path);
+    }
+
+    [Fact]
+    public void BrandAssets_InstallerAndSite_ReferenceCanonicalIcons()
+    {
+        var root = FindRoot();
+        var iss = File.ReadAllText(Path.Combine(root, "MakeInstaller.iss"));
+        iss.Should().Contain("SetupIconFile=UniversalDeviceToolkit.WPF\\Assets\\Icon.ico");
+        iss.Should().Contain("UninstallDisplayIcon={app}\\{#MyAppExeName}");
+
+        var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));
+        site.Should().Contain("og-preview.png");
+
+        var readme = File.ReadAllText(Path.Combine(root, "README.md"));
+        readme.Should().Contain("Assets/Logo.png");
+    }
+
+    [Fact]
+    public void BrandAssets_ShouldNotRetainAlternateConcepts()
+    {
+        var root = FindRoot();
+        var brandDirectory = Path.Combine(root, "Assets", "Brand");
+        Directory.GetDirectories(brandDirectory).Should().BeEmpty();
+        Directory.GetFiles(brandDirectory, "*.svg")
+            .Select(Path.GetFileName)
+            .Should().BeEquivalentTo("udt-symbol.svg", "udt-symbol-dark.svg", "udt-symbol-light.svg");
     }
 
     private static string FindRoot()

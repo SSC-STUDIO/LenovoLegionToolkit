@@ -1,0 +1,41 @@
+{
+  "note": "Local planning stubs only. Published store.json lives in UniversalDeviceToolkit-Plugins.",
+  "lastUpdated": "2026-07-11",
+  "plugins": [
+    {
+      "id": "network-acceleration",
+      "name": "Network Acceleration (Legacy)",
+      "status": "Offline",
+      "internalMigrationOnly": true,
+      "removalVersion": "5.0.0",
+      "migrationTarget": "built-in:NetworkAccelerationPage",
+      "description": "Deprecated. Use built-in Network & acceleration (default off)."
+    },
+    {
+      "id": "battery-health",
+      "name": "Battery Health (Legacy)",
+      "status": "Offline",
+      "internalMigrationOnly": true,
+      "migrationTarget": "built-in:Battery/Sensors thresholds",
+      "description": "Deprecated. Thresholds merge into main battery UI (in progress)."
+    },
+    {
+      "id": "custom-mouse",
+      "name": "Cursor & Pointer",
+      "status": "Active",
+      "renameFrom": "Custom Mouse",
+      "description": "Cursor & Pointer: pointer speed, button swap, light/dark cursors, theme follow, backup/restore. Fake DPI/polling UI removed."
+    },
+    {
+      "id": "shell-integration",
+      "name": "Nilesoft Shell Manager",
+      "status": "Active"
+    },
+    {
+      "id": "vive-tool",
+      "name": "ViVeTool",
+      "status": "Active",
+      "riskNote": "Changing Windows feature flags can break updates, apps, and stability. Use at your own risk; create a restore point first."
+    }
+  ]
+}

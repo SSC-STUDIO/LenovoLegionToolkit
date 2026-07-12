@@ -53,7 +53,29 @@
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
 		<ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" />
+		<!-- Build worker beside the app; do not load it as a managed reference. -->
+		<ProjectReference Include="..\UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj">
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+		</ProjectReference>
 	</ItemGroup>
+	<!-- Copy NetworkProxy exe next to the main app so the launcher can find it. -->
+	<Target Name="CopyNetworkProxyWorker" AfterTargets="Build">
+		<PropertyGroup>
+			<_NetworkProxyOutDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\UniversalDeviceToolkit.NetworkProxy\bin\$(Platform)\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\'))</_NetworkProxyOutDir>
+		</PropertyGroup>
+		<ItemGroup>
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.exe"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.exe')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.dll"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.dll')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.deps.json"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.deps.json')" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_NetworkProxyFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_NetworkProxyFiles)' != ''" />
+	</Target>
 	<ItemGroup>
 		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
 		         Link="LenovoLegionToolkit.Plugins.SDK.dll"

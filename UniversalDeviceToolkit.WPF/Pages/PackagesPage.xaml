@@ -215,51 +215,51 @@
                     <StackPanel
                         Margin="0,0,16,12"
                         AutomationProperties.AutomationId="PackagesLoadingSkeleton">
-                        <Border Style="{StaticResource AppSkeletonListItemCardStyle}" MinHeight="108">
+                        <Border Style="{StaticResource AppSkeletonDenseListItemCardStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="18" Height="18" Margin="0,2,14,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
                                 <Border Grid.Column="1" Width="40" Height="40" Margin="0,0,14,0" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                <StackPanel Grid.Column="2">
-                                    <Border Width="240" Height="14" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                    <Border Width="180" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
-                                    <Border Height="10" Margin="0,12,96,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <Border Width="240" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                    <Border Width="180" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    <Border Height="12" Margin="0,10,96,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Style="{StaticResource AppSkeletonListItemCardStyle}" MinHeight="108">
+                        <Border Style="{StaticResource AppSkeletonDenseListItemCardStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="18" Height="18" Margin="0,2,14,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
                                 <Border Grid.Column="1" Width="40" Height="40" Margin="0,0,14,0" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                <StackPanel Grid.Column="2">
-                                    <Border Width="210" Height="14" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                    <Border Width="150" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
-                                    <Border Height="10" Margin="0,12,120,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <Border Width="210" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                    <Border Width="150" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    <Border Height="12" Margin="0,10,120,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Style="{StaticResource AppSkeletonListItemCardStyle}" MinHeight="108">
+                        <Border Style="{StaticResource AppSkeletonDenseListItemCardStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="18" Height="18" Margin="0,2,14,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
                                 <Border Grid.Column="1" Width="40" Height="40" Margin="0,0,14,0" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                <StackPanel Grid.Column="2">
-                                    <Border Width="196" Height="14" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
-                                    <Border Width="128" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
-                                    <Border Height="10" Margin="0,12,80,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <Border Width="196" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                    <Border Width="128" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    <Border Height="12" Margin="0,10,80,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
                                 </StackPanel>
                             </Grid>
                         </Border>

@@ -627,6 +627,18 @@ public partial class App
 
             await StopPluginsAsync().ConfigureAwait(false);
 
+            // Stop network acceleration worker and restore system proxy/hosts before other services.
+            try
+            {
+                if (TryGetCachedService<LenovoLegionToolkit.Lib.Network.INetworkAccelerationService>() is { } networkAcceleration)
+                    await networkAcceleration.StopAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping network acceleration during shutdown: {ex.Message}");
+            }
+
             var stopServicesTask = Task.WhenAll(
                 StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
                 StopServiceAsync<RGBKeyboardBacklightController>(controller => controller.SetLightControlOwnerAsync(false), "RGB keyboard controller"),

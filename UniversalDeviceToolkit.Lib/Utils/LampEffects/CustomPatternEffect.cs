@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Windows.Devices.Lights;
 using Windows.UI;
+using LenovoLegionToolkit.Lib.Resources;
 
 namespace LenovoLegionToolkit.Lib.Utils.LampEffects;
 
@@ -14,7 +15,7 @@ public class CustomPatternEffect : ILampEffect
 {
     private readonly Dictionary<int, Color> _colors = new();
 
-    public string Name => "Custom Pattern";
+    public string Name => Resource.LampEffect_CustomPattern;
     public Dictionary<string, object> Parameters { get; } = new();
 
     public Color GetColorForLamp(int lampIndex, double time, LampInfo lampInfo, int totalLamps)

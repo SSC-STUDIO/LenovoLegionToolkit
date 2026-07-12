@@ -178,7 +178,7 @@
                             <Setter TargetName="ExpandedLayout" Property="Visibility" Value="Visible" />
                             <Setter TargetName="ExpandedLayout" Property="Opacity" Value="1" />
                             <Setter TargetName="MainBorder" Property="Padding" Value="8,0,10,0" />
-                            <Setter TargetName="MainBorder" Property="CornerRadius" Value="4" />
+                            <Setter TargetName="MainBorder" Property="CornerRadius" Value="{StaticResource CornerRadiusCompact}" />
                             <Setter TargetName="MainBorder" Property="BorderThickness" Value="1" />
                             <Setter Property="MinWidth" Value="0" />
                             <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />

@@ -19,6 +19,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
+using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.System;
@@ -34,7 +35,10 @@ public class IpcServer(
     RGBKeyboardBacklightController rgbKeyboardBacklightController,
     IntegrationsSettings settings,
     UpdateChecker updateChecker,
-    UpdateCheckSettings updateCheckSettings
+    UpdateCheckSettings updateCheckSettings,
+    INetworkAccelerationService networkAccelerationService,
+    INetworkDiagnosticsService networkDiagnosticsService,
+    INetworkStateRecoveryService networkStateRecoveryService
     )
 {
 
@@ -289,6 +293,14 @@ public class IpcServer(
                 return new IpcResponse { Success = true };
             case IpcRequest.OperationType.GetAppStatus:
                 return new IpcResponse { Success = true, Message = BuildAppStatus() };
+            case IpcRequest.OperationType.GetNetworkAccelerationStatus:
+                return new IpcResponse { Success = true, Message = BuildNetworkAccelerationStatus() };
+            case IpcRequest.OperationType.StartNetworkAcceleration:
+                return new IpcResponse { Success = true, Message = await StartNetworkAccelerationAsync().ConfigureAwait(false) };
+            case IpcRequest.OperationType.StopNetworkAcceleration:
+                return new IpcResponse { Success = true, Message = await StopNetworkAccelerationAsync().ConfigureAwait(false) };
+            case IpcRequest.OperationType.RunNetworkDiagnostics:
+                return new IpcResponse { Success = true, Message = await RunNetworkDiagnosticsAsync().ConfigureAwait(false) };
             default:
                 throw new IpcException("Invalid request");
         }
@@ -313,6 +325,39 @@ public class IpcServer(
             "CLI IPC: enabled",
             $"Update checker: {updateStatus}",
             $"Update repository: {repositoryOwner}/{repositoryName}");
+    }
+
+    private string BuildNetworkAccelerationStatus()
+    {
+        var config = networkAccelerationService.Config;
+        return string.Join(Environment.NewLine,
+            "Network acceleration status",
+            $"State: {networkAccelerationService.StatusText}",
+            $"Running: {networkAccelerationService.IsRunning}",
+            $"Backend ready: {networkAccelerationService.IsBackendReady}",
+            $"Mode: {config.Mode}",
+            $"Port: {config.ListenPort}",
+            $"Snapshot: {networkStateRecoveryService.SnapshotPath}");
+    }
+
+    private async Task<string> StartNetworkAccelerationAsync()
+    {
+        var started = await networkAccelerationService.StartAsync().ConfigureAwait(false);
+        return started
+            ? BuildNetworkAccelerationStatus()
+            : "Network acceleration failed to start. System network state was not left enabled.";
+    }
+
+    private async Task<string> StopNetworkAccelerationAsync()
+    {
+        await networkAccelerationService.StopAsync().ConfigureAwait(false);
+        return BuildNetworkAccelerationStatus();
+    }
+
+    private async Task<string> RunNetworkDiagnosticsAsync()
+    {
+        var report = await networkDiagnosticsService.RunQuickCheckAsync().ConfigureAwait(false);
+        return report.Summary;
     }
 
     private async Task<string> ListQuickActionsAsync()

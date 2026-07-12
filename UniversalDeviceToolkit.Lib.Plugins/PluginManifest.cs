@@ -85,6 +85,15 @@ public class PluginManifest
 
     [JsonPropertyName("isSystemPlugin")]
     public bool IsSystemPlugin { get; set; }
+
+    [JsonPropertyName("localizedNames")]
+    public Dictionary<string, string>? LocalizedNames { get; set; }
+
+    [JsonPropertyName("localizedDescriptions")]
+    public Dictionary<string, string>? LocalizedDescriptions { get; set; }
+
+    [JsonPropertyName("localizedTags")]
+    public Dictionary<string, string[]>? LocalizedTags { get; set; }
 }
 
 public class PluginManifestStore
@@ -100,6 +109,18 @@ public class PluginManifestStore
 
     [JsonPropertyName("localizations")]
     public Dictionary<string, PluginManifestLocalization>? Localizations { get; set; }
+
+    [JsonPropertyName("localizedNames")]
+    public Dictionary<string, string>? LocalizedNames { get; set; }
+
+    [JsonPropertyName("localizedDescriptions")]
+    public Dictionary<string, string>? LocalizedDescriptions { get; set; }
+
+    [JsonPropertyName("localizedTags")]
+    public Dictionary<string, string[]>? LocalizedTags { get; set; }
+
+    [JsonPropertyName("tags")]
+    public string[]? Tags { get; set; }
 }
 
 public class PluginManifestLocalization

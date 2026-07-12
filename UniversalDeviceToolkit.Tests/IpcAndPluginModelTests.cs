@@ -59,15 +59,19 @@ public class IpcAndPluginModelTests
     [InlineData(IpcRequest.OperationType.InstallShell)]
     [InlineData(IpcRequest.OperationType.UninstallShell)]
     [InlineData(IpcRequest.OperationType.GetAppStatus)]
+    [InlineData(IpcRequest.OperationType.GetNetworkAccelerationStatus)]
+    [InlineData(IpcRequest.OperationType.StartNetworkAcceleration)]
+    [InlineData(IpcRequest.OperationType.StopNetworkAcceleration)]
+    [InlineData(IpcRequest.OperationType.RunNetworkDiagnostics)]
     public void IpcRequest_OperationType_AllValues_ShouldBeDefined(IpcRequest.OperationType op)
     {
         Enum.IsDefined(op).Should().BeTrue();
     }
 
     [Fact]
-    public void IpcRequest_OperationType_Has18Values()
+    public void IpcRequest_OperationType_Has22Values()
     {
-        Enum.GetValues<IpcRequest.OperationType>().Should().HaveCount(18);
+        Enum.GetValues<IpcRequest.OperationType>().Should().HaveCount(22);
     }
 
     #endregion

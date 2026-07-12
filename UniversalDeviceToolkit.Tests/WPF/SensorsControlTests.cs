@@ -181,8 +181,11 @@ public class SensorsControlTests
     }
 
     [Theory]
-    [InlineData(1049, "Compact")]
-    [InlineData(1050, "Standard")]
+    [InlineData(0, "Standard")]
+    [InlineData(1, "Standard")]
+    [InlineData(899, "Compact")]
+    [InlineData(900, "Standard")]
+    [InlineData(1049, "Standard")]
     [InlineData(1499, "Standard")]
     [InlineData(1500, "Wide")]
     public void GetSensorSummaryLayoutMode_ShouldAdaptCardDensityWithoutChangingColumns(
@@ -193,8 +196,8 @@ public class SensorsControlTests
     }
 
     [Theory]
-    [InlineData(1049, false)]
-    [InlineData(1050, false)]
+    [InlineData(899, false)]
+    [InlineData(900, false)]
     [InlineData(1499, false)]
     [InlineData(1500, true)]
     public void CanShowSensorDetailsForWidth_ShouldOnlyAllowDetailsOnWideLayouts(double width, bool expected)

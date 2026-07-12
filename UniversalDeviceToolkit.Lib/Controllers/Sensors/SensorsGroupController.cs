@@ -520,6 +520,9 @@ public class SensorsGroupController : IDisposable
     private ISensor? _cpuTempSensor;
     private ISensor? _cpuUsageSensor;
     private ISensor? _cpuCoreVoltageSensor;
+    private ISensor? _cpuFanSensor;
+    private ISensor? _gpuFanSensor;
+    private List<ISensor> _allFanSensors = [];
     private ISensor? _gpuUsageSensor;
     private ISensor? _gpuTempSensor;
     private ISensor? _gpuClockSensor;
@@ -646,6 +649,8 @@ public class SensorsGroupController : IDisposable
 
     private float _snapshotCpuTemp = INVALID_VALUE_FLOAT;
     private float _snapshotCpuUsage = INVALID_VALUE_FLOAT;
+    private float _snapshotCpuFan = INVALID_VALUE_FLOAT;
+    private float _snapshotGpuFan = INVALID_VALUE_FLOAT;
     private float _snapshotCpuPower = INVALID_VALUE_FLOAT;
     private float _snapshotCpuCoresPower = INVALID_VALUE_FLOAT;
     private float _snapshotCpuMemoryPower = INVALID_VALUE_FLOAT;
@@ -742,6 +747,8 @@ public class SensorsGroupController : IDisposable
         _cpuTempSensor = null;
         _cpuUsageSensor = null;
         _cpuCoreVoltageSensor = null;
+        _cpuFanSensor = null;
+        _gpuFanSensor = null;
         _gpuUsageSensor = null;
         _gpuTempSensor = null;
         _gpuClockSensor = null;
@@ -975,12 +982,33 @@ public class SensorsGroupController : IDisposable
             if (temp != null) _storageTempSensors.Add(temp);
         }
 
+        var fanSensors = _hardware
+            .Where(h => h.Sensors is not null)
+            .SelectMany(h => h.Sensors!)
+            .Where(s => s.SensorType == SensorType.Fan)
+            .ToList();
+        _allFanSensors = fanSensors;
+
+        if (mainGpu?.Sensors is not null)
+        {
+            _gpuFanSensor = SelectGpuFanSensor(mainGpu.Sensors);
+        }
+
+        _cpuFanSensor = SelectCpuFanSensor(fanSensors);
+        _gpuFanSensor ??= SelectGpuFanSensor(fanSensors);
+        _cpuFanSensor ??= fanSensors
+            .Where(s => s.Value is > 0)
+            .OrderByDescending(s => s.Value)
+            .FirstOrDefault();
+
         if (Log.Instance.IsTraceEnabled)
         {
             var hardwareSummary = string.Join(", ", _hardware.Select(h => $"{h.HardwareType}:{h.Name}"));
             Log.Instance.Trace($"LibreHardwareMonitor hardware summary: [{hardwareSummary}]");
             Log.Instance.Trace($"LibreHardwareMonitor CPU temperature sensor: {(_cpuTempSensor is null ? "not found" : _cpuTempSensor.Name)}");
             Log.Instance.Trace($"LibreHardwareMonitor CPU package power sensor: {(_cpuPackagePowerSensor is null ? "not found" : _cpuPackagePowerSensor.Name)}");
+            Log.Instance.Trace($"LibreHardwareMonitor CPU fan sensor: {(_cpuFanSensor is null ? "not found" : _cpuFanSensor.Name)}");
+            Log.Instance.Trace($"LibreHardwareMonitor GPU fan sensor: {(_gpuFanSensor is null ? "not found" : _gpuFanSensor.Name)}");
         }
     }
 
@@ -1466,6 +1494,101 @@ public class SensorsGroupController : IDisposable
     internal static string? SelectGpuPcieTxThroughputSensorName(IEnumerable<string> sensorNames) =>
         SelectPreferredSensorName(sensorNames, GPU_PCIE_TX_THROUGHPUT_SENSOR_PREFERENCES);
 
+    private static ISensor? SelectCpuFanSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Fan)
+            .ToArray();
+        if (candidates.Length == 0)
+            return null;
+
+        return candidates
+            .OrderByDescending(sensor => ScoreCpuFanName(sensor.Name))
+            .ThenByDescending(sensor => sensor.Value ?? 0f)
+            .FirstOrDefault(sensor => ScoreCpuFanName(sensor.Name) > 0);
+    }
+
+    private static ISensor? SelectGpuFanSensor(IEnumerable<ISensor> sensors)
+    {
+        var candidates = sensors
+            .Where(sensor => sensor.SensorType == SensorType.Fan)
+            .ToArray();
+        if (candidates.Length == 0)
+            return null;
+
+        return candidates
+            .OrderByDescending(sensor => ScoreGpuFanName(sensor.Name))
+            .ThenByDescending(sensor => sensor.Value ?? 0f)
+            .FirstOrDefault(sensor => ScoreGpuFanName(sensor.Name) > 0);
+    }
+
+    private static int ScoreCpuFanName(string name)
+    {
+        if (name.Contains("CPU", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Processor", StringComparison.OrdinalIgnoreCase))
+            return 300;
+        if (name.Contains("Fan #1", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Fan 1", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("SYS", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("System", StringComparison.OrdinalIgnoreCase))
+            return 200;
+        if (name.Contains("GPU", StringComparison.OrdinalIgnoreCase))
+            return 0;
+        return 100;
+    }
+
+    private static int ScoreGpuFanName(string name)
+    {
+        if (name.Contains("GPU", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Graphics", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Video", StringComparison.OrdinalIgnoreCase))
+            return 300;
+        if (name.Contains("Fan #2", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Fan 2", StringComparison.OrdinalIgnoreCase))
+            return 150;
+        return 0;
+    }
+
+    private float ResolveFanSnapshot(ISensor? preferred, bool preferGpu)
+    {
+        var preferredValue = preferred?.Value;
+        if (preferredValue is > 0)
+        {
+            if (preferGpu)
+                _gpuFanSensor = preferred;
+            else
+                _cpuFanSensor = preferred;
+            return preferredValue.Value;
+        }
+
+        Func<string, int> score = preferGpu ? ScoreGpuFanName : ScoreCpuFanName;
+        var best = _allFanSensors
+            .Where(sensor => sensor.SensorType == SensorType.Fan && sensor.Value is > 0)
+            .OrderByDescending(sensor => score(sensor.Name))
+            .ThenByDescending(sensor => sensor.Value ?? 0f)
+            .FirstOrDefault(sensor => score(sensor.Name) > 0)
+            ?? _allFanSensors
+                .Where(sensor => sensor.SensorType == SensorType.Fan && sensor.Value is > 0)
+                .OrderByDescending(sensor => sensor.Value ?? 0f)
+                .FirstOrDefault();
+
+        var bestValue = best?.Value;
+        if (bestValue is > 0)
+        {
+            if (preferGpu)
+                _gpuFanSensor = best;
+            else
+                _cpuFanSensor = best;
+            return bestValue.Value;
+        }
+
+        // Explicit zero is still useful when fans are parked.
+        if (preferredValue is >= 0)
+            return preferredValue.Value;
+
+        return INVALID_VALUE_FLOAT;
+    }
+
     private static ISensor? SelectGpuUsageSensor(IEnumerable<ISensor> sensors)
     {
         var candidates = sensors
@@ -1861,6 +1984,16 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotCpuUsage);
     }
 
+    public Task<float> GetCpuFanSpeedAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotCpuFan);
+    }
+
+    public Task<float> GetGpuFanSpeedAsync()
+    {
+        lock (_dataLock) return Task.FromResult(_snapshotGpuFan);
+    }
+
     public Task<float> GetGpuUsageAsync()
     {
         lock (_dataLock) return Task.FromResult(_snapshotGpuUsage);
@@ -2121,6 +2254,10 @@ public class SensorsGroupController : IDisposable
                         _snapshotCpuTemp = _cpuTempSensor?.Value ?? INVALID_VALUE_FLOAT;
                         _snapshotCpuUsage = _cpuUsageSensor?.Value ?? INVALID_VALUE_FLOAT;
                         _snapshotCpuVoltage = _cpuCoreVoltageSensor?.Value ?? INVALID_VALUE_FLOAT;
+                        // Prefer the selected sensors, but re-pick any positive fan reading if
+                        // the cached sensor is missing/zero (common after GPU sleep or LHM remap).
+                        _snapshotCpuFan = ResolveFanSnapshot(_cpuFanSensor, preferGpu: false);
+                        _snapshotGpuFan = ResolveFanSnapshot(_gpuFanSensor, preferGpu: true);
 
                         if (_cpuCoreClockSensors.Count > 0)
                         {

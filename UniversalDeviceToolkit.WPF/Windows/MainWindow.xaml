@@ -23,8 +23,9 @@
             BasedOn="{StaticResource {x:Type wpfui:Button}}"
             TargetType="{x:Type wpfui:Button}">
             <Setter Property="MinWidth" Value="48" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Padding" Value="8,0" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
             <Setter Property="FontSize" Value="{DynamicResource FontSizeTitleBarDeviceInfo}" />
             <Setter Property="FontWeight" Value="Bold" />
@@ -148,7 +149,8 @@
             Background="{DynamicResource AppNavigationBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="12" />
+                <!-- Hit-test only; the continuous chrome edge is the content surface left border. -->
+                <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -236,43 +238,36 @@
 
             </custom:NavigationStore>
 
+            <!-- Resize grip only (no free-floating vertical stroke). -->
             <primitives:Thumb
                 x:Name="_navigationSplitter"
                 Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Width="10"
+                HorizontalAlignment="Left"
                 Margin="0,0,0,12"
                 Cursor="SizeWE"
+                Panel.ZIndex="2"
                 DragCompleted="NavigationSplitter_DragCompleted"
                 DragDelta="NavigationSplitter_DragDelta">
                 <primitives:Thumb.Template>
                     <ControlTemplate TargetType="{x:Type primitives:Thumb}">
-                        <Grid Background="Transparent">
-                            <Border
-                                x:Name="SplitterLine"
-                                Width="1"
-                                HorizontalAlignment="Center"
-                                Background="{DynamicResource DividerStrokeColorDefaultBrush}"
-                                CornerRadius="1"
-                                Opacity="0.55" />
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="SplitterLine" Property="Opacity" Value="0.85" />
-                            </Trigger>
-                            <Trigger Property="IsDragging" Value="True">
-                                <Setter TargetName="SplitterLine" Property="Opacity" Value="1" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                        <Border Background="Transparent" />
                     </ControlTemplate>
                 </primitives:Thumb.Template>
             </primitives:Thumb>
 
+            <!-- Left + top borders share CornerRadiusSurfaceTop so the vertical edge and
+                 top edge meet as one continuous stroke through the rounded corner. -->
             <Border
                 x:Name="_contentSurfaceBorder"
                 Grid.Column="2"
                 Background="{DynamicResource AppSurfaceBackgroundBrush}"
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
-                BorderThickness="0,1,0,0"
-                CornerRadius="{StaticResource CornerRadiusSurfaceTop}">
+                BorderThickness="1,1,0,0"
+                ClipToBounds="True"
+                CornerRadius="{StaticResource CornerRadiusSurfaceTop}"
+                SnapsToDevicePixels="True">
                 <Frame Name="_rootFrame"
                        AutomationProperties.AutomationId="MainRootFrame"
                        Margin="24,0,0,0" />

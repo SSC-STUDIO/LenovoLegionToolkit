@@ -828,7 +828,7 @@ public readonly struct DpiScale(int scale) : IDisplayName, IEquatable<DpiScale>
     public int Scale { get; } = scale;
 
     [JsonIgnore]
-    public string DisplayName => $"{Scale}%";
+    public string DisplayName => string.Format(Resource.DpiScale_DisplayName_Format, Scale);
 
     #region Equality
 
@@ -851,7 +851,7 @@ public readonly struct RefreshRate(int frequency) : IDisplayName, IEquatable<Ref
     public int Frequency { get; } = frequency;
 
     [JsonIgnore]
-    public string DisplayName => $"{Frequency} Hz";
+    public string DisplayName => string.Format(Resource.RefreshRate_DisplayName_Format, Frequency);
 
     public override string ToString() => $"{Frequency}Hz";
 
@@ -878,7 +878,7 @@ public readonly struct Resolution(int width, int height) : IDisplayName, IEquata
     public int Height { get; } = height;
 
     [JsonIgnore]
-    public string DisplayName => $"{Width} × {Height}";
+    public string DisplayName => string.Format(Resource.Resolution_DisplayName_Format, Width, Height);
 
     public Resolution(Size size) : this(size.Width, size.Height) { }
 

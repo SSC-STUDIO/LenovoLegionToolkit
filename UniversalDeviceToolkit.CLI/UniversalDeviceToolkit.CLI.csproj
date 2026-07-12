@@ -10,7 +10,7 @@
         <AssemblyName>llt</AssemblyName>
         <Platforms>x64</Platforms>
         <NeutralLanguage>en</NeutralLanguage>
-        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <SatelliteResourceLanguages>en;zh-Hans</SatelliteResourceLanguages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>portable</DebugType>

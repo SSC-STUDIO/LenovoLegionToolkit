@@ -22,6 +22,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/AnimationTokens.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Animations.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/ControlStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Typography.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Loading.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Badge.xaml" />

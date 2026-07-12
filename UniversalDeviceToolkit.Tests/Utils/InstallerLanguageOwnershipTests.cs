@@ -34,14 +34,14 @@ public class InstallerLanguageOwnershipTests
         var localizationHelper = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Utils", "LocalizationHelper.cs");
         var languageWindow = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "LanguageSelectorWindow.xaml.cs");
 
-        appStartup.Should().Contain("LocalizationHelper.SetLanguageAsync(true)");
+        appStartup.Should().Contain("SetLanguageAsync(true");
         localizationHelper.Should().Contain("showLanguageSelector = interactive && (savedCultureInfo is null || !deviceSetupExists)");
         localizationHelper.Should().Contain("new LanguageSelectorWindow(Languages");
         localizationHelper.Should().Contain("LanguagePackManager? languagePackManager");
         languageWindow.Should().Contain("EnsureLanguageInstalledAsync");
         languageWindow.Should().Contain("_languagePackManager.InstallAsync");
         languageWindow.Should().Contain("_fallbackLanguage");
-        languageWindow.Should().Contain("TrySetResult(_fallbackLanguage)");
+        languageWindow.Should().Contain("Complete(LanguageGateOutcome.ContinueEnglish, _fallbackLanguage)");
     }
 
     [Fact]

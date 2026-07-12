@@ -23,6 +23,7 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
+using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
@@ -169,6 +170,11 @@ namespace UniversalDeviceToolkit.WPF.Startup
                     return 0;
 
                 await InitializeIoCAsync();
+
+                // Heal leftover UDT proxy/hosts from a previous crash. Never auto-start acceleration.
+                // Safe-start also runs this (diagnostics + restore only).
+                await RunNetworkStartupRecoveryAsync().ConfigureAwait(false);
+
                 await CreateMainWindowAsync();
                 await ShowMainWindowAsync();
 
@@ -333,6 +339,24 @@ namespace UniversalDeviceToolkit.WPF.Startup
             catch
             {
                 /* Console sink unavailable - intentionally swallowed. */
+            }
+        }
+
+        /// <summary>
+        /// Restores system proxy / UDT hosts / orphaned NetworkProxy workers if a previous
+        /// session left incomplete mutations. Does not re-enable or start acceleration.
+        /// </summary>
+        private static async Task RunNetworkStartupRecoveryAsync()
+        {
+            try
+            {
+                var network = IoCContainer.Resolve<INetworkAccelerationService>();
+                await network.EnsureCleanSystemStateOnStartupAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network startup recovery failed: {ex.Message}", ex);
             }
         }
 

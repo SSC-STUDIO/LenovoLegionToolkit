@@ -406,5 +406,23 @@ namespace UniversalDeviceToolkit.Lib.Automation.Resources {
                 return ResourceManager.GetString("OrAutomationPipelineTrigger_Separator", resourceCulture) ?? "or";
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battery {0} {1}% ({2}).
+        /// </summary>
+        public static string BatteryPercentageAutomationPipelineTrigger_DisplayName_Format {
+            get {
+                return ResourceManager.GetString("BatteryPercentageAutomationPipelineTrigger_DisplayName_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} {2}.
+        /// </summary>
+        public static string HardwareSensorAutomationPipelineTrigger_DisplayName_Format {
+            get {
+                return ResourceManager.GetString("HardwareSensorAutomationPipelineTrigger_DisplayName_Format", resourceCulture);
+            }
+        }
     }
 }

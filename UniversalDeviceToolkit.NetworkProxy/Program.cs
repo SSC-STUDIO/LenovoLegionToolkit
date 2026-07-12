@@ -4,7 +4,7 @@ using UniversalDeviceToolkit.NetworkProxy.Ipc;
 namespace UniversalDeviceToolkit.NetworkProxy;
 
 /// <summary>
-/// Isolated network-acceleration worker. Phase 1: IPC + localhost host stub only.
+/// Isolated network-acceleration worker. Loopback HTTP/CONNECT proxy + named-pipe IPC.
 /// Does not auto-enable proxy/hosts/certs; the GUI must send an explicit Start.
 /// Inspired by Watt Toolkit behavior; independent implementation (non-GPL).
 /// </summary>
@@ -23,8 +23,9 @@ internal static class Program
         var pipeName = NetworkProxyIpcServer.ResolvePipeName(args);
         var listenPort = NetworkProxyIpcServer.ResolveListenPort(args);
 
-        var hostStub = new NetworkProxyHostStub(listenPort);
-        await using var ipc = new NetworkProxyIpcServer(pipeName, sessionToken, hostStub);
+        // Real loopback proxy (CONNECT tunnel, no MITM). Stub remains available for unit tests.
+        await using INetworkProxyHost host = new LocalHttpProxyHost(listenPort);
+        await using var ipc = new NetworkProxyIpcServer(pipeName, sessionToken, host);
 
         Console.WriteLine(
             $"UDT NetworkProxy worker ready. pipe={pipeName} bind=127.0.0.1/::1 port={listenPort} (idle until Start)");
@@ -46,7 +47,8 @@ internal static class Program
         }
         finally
         {
-            await hostStub.StopAsync().ConfigureAwait(false);
+            try { await host.StopAsync().ConfigureAwait(false); }
+            catch { /* best-effort */ }
         }
     }
 }
