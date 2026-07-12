@@ -29,8 +29,9 @@ public sealed class UpstreamCapabilityMatrixGuardTests
                      "Assets/Brand/tray-dark.png",
                      "Assets/Brand/tray-light.png",
                      "Assets/Logo.png",
-                     "Assets/og-preview.png",
-                     "UniversalDeviceToolkit.WPF/Assets/Icon.ico"
+                     "Assets/Icon.ico",
+                     "Assets/Default_exe.png",
+                     "Assets/og-preview.png"
                  })
             File.Exists(Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar))).Should().BeTrue(path);
     }
@@ -40,7 +41,7 @@ public sealed class UpstreamCapabilityMatrixGuardTests
     {
         var root = FindRoot();
         var iss = File.ReadAllText(Path.Combine(root, "MakeInstaller.iss"));
-        iss.Should().Contain("SetupIconFile=UniversalDeviceToolkit.WPF\\Assets\\Icon.ico");
+        iss.Should().Contain("SetupIconFile=Assets\\Icon.ico");
         iss.Should().Contain("UninstallDisplayIcon={app}\\{#MyAppExeName}");
 
         var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));

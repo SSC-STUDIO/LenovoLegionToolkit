@@ -46,8 +46,8 @@ Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 UninstallDisplayIcon={app}\{#MyAppExeName}
-; Canonical Trace brand ICO (same asset as UniversalDeviceToolkit.WPF/Assets/Icon.ico).
-SetupIconFile=UniversalDeviceToolkit.WPF\Assets\Icon.ico
+; Canonical Trace brand ICO (repo-root Assets — single source of truth).
+SetupIconFile=Assets\Icon.ico
 OutputDir=BuildInstaller
 ArchitecturesInstallIn64BitMode=x64compatible
 

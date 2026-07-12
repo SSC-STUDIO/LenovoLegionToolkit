@@ -170,6 +170,7 @@ Rules:
 ### Phase D — Brand & packaging consistency (P1)
 
 - [x] Icon path audit (installer SetupIconFile, tray AssetResources.icon, README Logo, OG preview)  
+- [x] Unified brand binaries under repo-root `Assets/` (WPF links; no second copy under WPF/Assets)  
 - [x] Full/Online language pack offline behavior documented in README + LanguagePacks  
 
 

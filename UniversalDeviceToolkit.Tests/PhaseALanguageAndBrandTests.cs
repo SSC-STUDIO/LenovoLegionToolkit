@@ -61,6 +61,8 @@ public sealed class PhaseALanguageAndBrandTests
         var requiredFiles = new[]
         {
             "Assets/Logo.png",
+            "Assets/Icon.ico",
+            "Assets/Default_exe.png",
             "Assets/og-preview.png",
             "Assets/Brand/udt-symbol.svg",
             "Assets/Brand/udt-symbol-dark.svg",
@@ -68,7 +70,6 @@ public sealed class PhaseALanguageAndBrandTests
             "Assets/Brand/tray-dark.png",
             "Assets/Brand/tray-light.png",
             "Assets/Brand/icon-256.png",
-            "UniversalDeviceToolkit.WPF/Assets/Icon.ico",
             "site/index.html"
         };
 
@@ -100,16 +101,20 @@ public sealed class PhaseALanguageAndBrandTests
     {
         var root = FindRoot();
         new FileInfo(Path.Combine(root, "Assets", "og-preview.png")).Length.Should().BeGreaterThan(1024);
-        new FileInfo(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Assets", "Icon.ico")).Length.Should().BeGreaterThan(1024);
+        new FileInfo(Path.Combine(root, "Assets", "Icon.ico")).Length.Should().BeGreaterThan(1024);
         new FileInfo(Path.Combine(root, "Assets", "Logo.png")).Length.Should().BeGreaterThan(1024);
     }
 
     [Fact]
-    public void Csproj_ApplicationIcon_PointsAtCanonicalIco()
+    public void Csproj_ApplicationIcon_PointsAtCanonicalRootAssets()
     {
         var root = FindRoot();
         var csproj = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj"));
-        csproj.Should().Contain("Assets/Icon.ico");
+        csproj.Should().Contain(@"..\Assets\Icon.ico");
+        csproj.Should().Contain(@"Link=""Assets\Icon.ico""");
+        // WPF project must not keep a second physical copy under WPF/Assets for brand binaries.
+        File.Exists(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Assets", "Icon.ico")).Should().BeFalse();
+        File.Exists(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Assets", "Logo.png")).Should().BeFalse();
     }
 
     private static string FindRoot()

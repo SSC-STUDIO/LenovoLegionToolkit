@@ -5,7 +5,8 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
-		<ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
+		<!-- Canonical brand icons live in repo-root Assets/ (single source of truth). -->
+		<ApplicationIcon>..\Assets\Icon.ico</ApplicationIcon>
 		<AssemblyName>Universal Device Toolkit</AssemblyName>
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<Nullable>enable</Nullable>
@@ -95,14 +96,10 @@
 		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\Icon.ico" />
-		<None Remove="Assets\Default_exe.png" />
-
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Assets\Default_exe.png" />
-		<Resource Include="Assets\Icon.ico" />
-
+		<!-- Pack URIs stay pack://.../Assets/... via Link; files are not duplicated under WPF/Assets. -->
+		<Resource Include="..\Assets\Default_exe.png" Link="Assets\Default_exe.png" />
+		<Resource Include="..\Assets\Icon.ico" Link="Assets\Icon.ico" />
+		<Resource Include="..\Assets\Logo.png" Link="Assets\Logo.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Assets\AssetResources.Designer.cs">
