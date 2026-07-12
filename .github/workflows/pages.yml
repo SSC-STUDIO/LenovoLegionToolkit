@@ -1,4 +1,4 @@
-﻿name: Deploy Pages
+name: Deploy Pages
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Copy assets into site
         shell: pwsh
         run: |
