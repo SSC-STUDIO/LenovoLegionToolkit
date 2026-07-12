@@ -9,11 +9,11 @@ public static class BatteryHealthText
 {
     public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
 
-    public static string PluginName => T(nameof(PluginName), "Battery Health (Migrated)");
+    public static string PluginName => T(nameof(PluginName), "Battery Health (Legacy)");
     public static string PluginDescription => T(nameof(PluginDescription), "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.");
-    public static string FeaturePageTitle => T(nameof(FeaturePageTitle), "Battery Health (Migrated)");
+    public static string FeaturePageTitle => T(nameof(FeaturePageTitle), "Battery Health (Legacy)");
     public static string FeaturePageDescription => T(nameof(FeaturePageDescription), "Deprecated: track battery wear, cycle count, and capacity degradation. Built-in battery health is now part of Universal Device Toolkit.");
-    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Battery Health (Migrated) Settings");
+    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Battery Health (Legacy) Settings");
     public static string SettingsPageSubtitle => T(nameof(SettingsPageSubtitle), "Configure monitoring thresholds and notifications for battery health.");
     public static string OverviewTitle => T(nameof(OverviewTitle), "Battery Health Overview");
     public static string OverviewDescription => T(nameof(OverviewDescription), "Real-time battery diagnostics powered by WMI.");

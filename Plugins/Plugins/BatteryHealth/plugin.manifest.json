@@ -1,7 +1,31 @@
 {
   "schemaVersion": 1,
   "id": "battery-health",
-  "name": "Battery Health (Migrated)",
+  "name": "Battery Health (Legacy)",
+  "localizedNames": {
+    "default": "Battery Health (Legacy)",
+    "zh-Hans": "电池健康（旧版）"
+  },
+  "localizedDescriptions": {
+    "default": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+    "zh-Hans": "已弃用：电池健康监控和提醒现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
+  },
+  "localizedTags": {
+    "default": [
+      "battery",
+      "health",
+      "monitoring",
+      "diagnostics",
+      "power"
+    ],
+    "zh-Hans": [
+      "电池",
+      "健康",
+      "监控",
+      "诊断",
+      "电源"
+    ]
+  },
   "version": "1.0.0",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
@@ -12,11 +36,11 @@
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
-      "title": "Battery Health (Migrated)"
+      "title": "Battery Health (Legacy)"
     },
     "settingsPage": {
       "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthSettingsPage",
-      "title": "Battery Health (Migrated) Settings"
+      "title": "Battery Health (Legacy) Settings"
     },
     "runtime": null,
     "optimizationActions": []
@@ -43,38 +67,11 @@
     ],
     "dependencies": [],
     "supportedLanguages": [
-      "ar",
-      "bg",
-      "bs",
-      "ca",
-      "cs",
-      "de",
-      "el",
       "en",
-      "es",
-      "fr",
-      "hu",
-      "it",
-      "ja",
-      "ko",
-      "lv",
-      "nl",
-      "nl-NL",
-      "no",
-      "pl",
-      "pt",
-      "pt-BR",
-      "ro",
-      "ru",
-      "sk",
-      "tr",
-      "uk",
-      "uz",
-      "uz-Latn-UZ",
-      "vi",
-      "zh",
       "zh-Hans",
-      "zh-Hant"
+      "de",
+      "ja",
+      "ru"
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   }

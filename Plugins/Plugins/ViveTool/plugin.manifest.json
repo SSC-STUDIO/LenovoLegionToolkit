@@ -2,6 +2,32 @@
   "schemaVersion": 1,
   "id": "vive-tool",
   "name": "ViVeTool",
+  "localizedNames": {
+    "default": "ViVeTool",
+    "zh-Hans": "ViVeTool"
+  },
+  "localizedDescriptions": {
+    "default": "Manage Windows feature flags using ViVeTool. Enable or disable experimental Windows features.",
+    "zh-Hans": "使用 ViVeTool 管理 Windows 功能标志。启用或禁用实验性 Windows 功能。"
+  },
+  "localizedTags": {
+    "default": [
+      "windows",
+      "feature-flags",
+      "vivetool",
+      "customization",
+      "tweaks",
+      "insider"
+    ],
+    "zh-Hans": [
+      "Windows",
+      "功能标志",
+      "ViVeTool",
+      "自定义",
+      "调整",
+      "预览体验"
+    ]
+  },
   "version": "1.2.2",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
@@ -31,7 +57,7 @@
     ]
   },
   "store": {
-    "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+    "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
     "icon": "Code24",
     "iconBackground": "#7C3AED",
     "tags": [

@@ -10,7 +10,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
 [Plugin(
     id: "network-acceleration",
-    name: "Network Acceleration (Migrated)",
+    name: "Network Acceleration (Legacy)",
     version: "1.2.0",
     description: "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
     author: "SSC-STUDIO",
@@ -76,18 +76,11 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public void OnAppStarted()
     {
-        _runtime.Start();
-
-        bool autoOptimize;
-        lock (_settingsLock)
-        {
-            autoOptimize = _settings.AutoOptimizeOnStartup;
-        }
-
-        if (autoOptimize)
-        {
-            RunBackgroundTask(nameof(OnAppStarted), () => RunQuickOptimizationAsync(GetRuntimeCancellationToken()));
-        }
+        // Phase 1 consolidation: do not auto-start continuous sampling or network
+        // mutations. Acceleration defaults off in the built-in UDT feature.
+        // Legacy AutoOptimizeOnStartup is intentionally ignored.
+        PluginLog.Trace(
+            "NetworkAccelerationPlugin: OnAppStarted — continuous sampling and auto-optimize disabled (migrating to built-in).");
     }
 
     public override void OnShutdown()
@@ -158,14 +151,16 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             new("FlushDns", "ipconfig.exe", "/flushdns", true)
         };
 
-        if (settings.ResetWinsockOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Gaming)
+        // Never imply Winsock/IP reset from legacy Gaming/Streaming mode names.
+        // Only explicit user toggles would add these steps — and LoadSettings forces them off.
+        if (settings.ResetWinsockOnOptimize)
         {
-            steps.Add(new("ResetWinsock", "netsh.exe", "winsock reset", settings.ResetWinsockOnOptimize));
+            steps.Add(new("ResetWinsock", "netsh.exe", "winsock reset", true));
         }
 
-        if (settings.ResetTcpIpOnOptimize || settings.PreferredMode == NetworkAccelerationMode.Streaming)
+        if (settings.ResetTcpIpOnOptimize)
         {
-            steps.Add(new("ResetTcpIp", "netsh.exe", "int ip reset", settings.ResetTcpIpOnOptimize));
+            steps.Add(new("ResetTcpIp", "netsh.exe", "int ip reset", true));
         }
 
         return new NetworkOptimizationPlan(settings.PreferredMode, steps);
@@ -247,12 +242,14 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             mode = NetworkAccelerationMode.Balanced;
         }
 
+        // Migration: force-disable destructive auto network mutations. Prefer built-in Network page.
+        // Do not honor legacy defaults that reset Winsock/TCP-IP as "acceleration".
         return new NetworkAccelerationSettings
         {
             PreferredMode = mode,
-            AutoOptimizeOnStartup = Configuration.GetValue(nameof(NetworkAccelerationSettings.AutoOptimizeOnStartup), false),
-            ResetWinsockOnOptimize = Configuration.GetValue(nameof(NetworkAccelerationSettings.ResetWinsockOnOptimize), true),
-            ResetTcpIpOnOptimize = Configuration.GetValue(nameof(NetworkAccelerationSettings.ResetTcpIpOnOptimize), false),
+            AutoOptimizeOnStartup = false,
+            ResetWinsockOnOptimize = false,
+            ResetTcpIpOnOptimize = false,
         };
     }
 

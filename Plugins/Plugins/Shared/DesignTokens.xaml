@@ -1,0 +1,24 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      Fallback design tokens for plugin standalone tests / workbench when the host
+      DesignTokens dictionary is not available. Values must match UDT host:
+      Compact 8 / Control 12 / Card 18 / Surface 20 / Round 999.
+    -->
+    <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusProgressBar">3</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusControl">12</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCard">18</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurface">20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSM">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMD">12</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLG">18</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusXL">20</CornerRadius>
+
+    <sys:Double x:Key="ButtonHeightCompact" xmlns:sys="clr-namespace:System;assembly=mscorlib">32</sys:Double>
+    <sys:Double x:Key="ButtonHeightStandard" xmlns:sys="clr-namespace:System;assembly=mscorlib">36</sys:Double>
+</ResourceDictionary>

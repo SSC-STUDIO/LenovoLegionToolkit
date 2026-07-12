@@ -16,7 +16,7 @@ This guide will help you get started with the Universal Device Toolkit plugin ec
 
 ## Ways to Contribute
 
-There are many ways to contribute ¡ªno contribution is too small!
+There are many ways to contribute ï¿½ï¿½no contribution is too small!
 
 ### ?? Report Bugs
 
@@ -40,7 +40,7 @@ There are many ways to contribute ¡ªno contribution is too small!
 - Fix typos, clarify wording, add examples
 - Translate to other languages (we currently support English + Chinese)
 
-### ??§© Create a Plugin
+### ??ï¿½ï¿½ Create a Plugin
 
 - Build a new plugin using our SDK
 - Two paths: **Contributor Path** (community plugins) or **Official Store Path** (official plugins)
@@ -128,17 +128,17 @@ Additional requirements:
 
 ```
 Plugins/MyPlugin/
-©À©¤©¤€ MyPlugin.cs                          # Plugin entry point (implements IPlugin)
-©À©¤©¤€ MyPluginPlugin.cs                    # Plugin attribute and metadata
-©À©¤©¤€ MyPluginPage.xaml                    # Feature page UI (optional)
-©À©¤©¤€ MyPluginPage.xaml.cs                 # Feature page code-behind
-©À©¤©¤€ MyPluginSettingsControl.xaml         # Settings page UI
-©À©¤©¤€ MyPluginSettingsControl.xaml.cs      # Settings page code-behind
-©À©¤©¤€ Resources/
-â”?  ©¸©¤©¤€ Resource.resx                    # Localized strings
-©À©¤©¤€ plugin.manifest.json                 # Plugin manifest (authoring)
-©À©¤©¤€ store-entry.json                     # Store metadata (official only)
-©¸©¤©¤€ LenovoLegionToolkit.Plugins.MyPlugin.csproj
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPlugin.cs                          # Plugin entry point (implements IPlugin)
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPluginPlugin.cs                    # Plugin attribute and metadata
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPluginPage.xaml                    # Feature page UI (optional)
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPluginPage.xaml.cs                 # Feature page code-behind
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPluginSettingsControl.xaml         # Settings page UI
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MyPluginSettingsControl.xaml.cs      # Settings page code-behind
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Resources/
+ï¿½?  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Resource.resx                    # Localized strings
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ plugin.manifest.json                 # Plugin manifest (authoring)
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ store-entry.json                     # Store metadata (official only)
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ LenovoLegionToolkit.Plugins.MyPlugin.csproj
 ```
 
 ### Implementing IPlugin
@@ -177,18 +177,18 @@ public class MyPlugin : IPlugin
 
 ### ??Do
 
-1. **Use DynamicResource for all colors** ¡ªzero hardcoded brushes:
+1. **Use DynamicResource for all colors** ï¿½ï¿½zero hardcoded brushes:
    ```xaml
    <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
    ```
 
-2. **Use x:Static for all text** ¡ªzero hardcoded strings:
+2. **Use x:Static for all text** ï¿½ï¿½zero hardcoded strings:
    ```xaml
    <TextBlock Text="{x:Static resources:Resource.MyPlugin_Title}" />
    ```
 
-3. **Provide fallback UI** ¡ªimplement `BuildFallbackUi()`:
+3. **Provide fallback UI** ï¿½ï¿½implement `BuildFallbackUi()`:
    ```csharp
    public MyPluginPage()
    {
@@ -210,9 +210,9 @@ public class MyPlugin : IPlugin
 
 ### ??Don't
 
-- Don't hardcode colors (e.g., `Foreground="White"` ¡ªuse DynamicResource instead)
+- Don't hardcode colors (e.g., `Foreground="White"` ï¿½ï¿½use DynamicResource instead)
 - Don't hardcode strings in XAML or code-behind
-- Don't skip fallback UI ¡ªalways implement `BuildFallbackUi()`
+- Don't skip fallback UI ï¿½ï¿½always implement `BuildFallbackUi()`
 - Don't forget to test in both Light and Dark themes
 
 ## Coding Standards
@@ -222,7 +222,7 @@ public class MyPlugin : IPlugin
 - Follow [Microsoft's C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 - Use **4 spaces** for indentation (no tabs)
 - Use **PascalCase** for public members, **camelCase** for private fields
-- Use **meaningful names** ¡ªavoid abbreviations
+- Use **meaningful names** ï¿½ï¿½avoid abbreviations
 - Add XML documentation for public APIs
 
 ### Commit Messages

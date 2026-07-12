@@ -35,7 +35,7 @@
     <value>Warning</value>
   </data>
   <data name="ViveTool_WarningMessage" xml:space="preserve">
-    <value>Modifying Windows feature flags can affect system stability. Use with caution. Some changes may require a system restart to take effect.</value>
+    <value>High risk: changing Windows feature flags can break Windows Update, apps, drivers, and system stability. Create a restore point first. Prefer documented Feature IDs only. Some changes require a reboot and may be irreversible without a backup.</value>
   </data>
   <data name="ViveTool_ViveToolStatus" xml:space="preserve">
     <value>ViVeTool Status</value>

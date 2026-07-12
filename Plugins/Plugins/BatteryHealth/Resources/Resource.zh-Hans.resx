@@ -12,11 +12,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 </resheader>
-  <data name="PluginName" xml:space="preserve"><value>电池健康</value></data>
-  <data name="PluginDescription" xml:space="preserve"><value>为通用设备工具箱监控电池健康度、循环次数和容量损耗。</value></data>
-  <data name="FeaturePageTitle" xml:space="preserve"><value>电池健康</value></data>
-  <data name="FeaturePageDescription" xml:space="preserve"><value>实时追踪电池损耗、循环次数和容量衰减。</value></data>
-  <data name="SettingsPageTitle" xml:space="preserve"><value>电池健康设置</value></data>
+  <data name="PluginName" xml:space="preserve"><value>电池健康（旧版）</value></data>
+  <data name="PluginDescription" xml:space="preserve"><value>已弃用：电池健康监控和提醒现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。</value></data>
+  <data name="FeaturePageTitle" xml:space="preserve"><value>电池健康（旧版）</value></data>
+  <data name="FeaturePageDescription" xml:space="preserve"><value>已弃用：电池损耗、循环次数和容量衰减追踪现已由 Universal Device Toolkit 内置功能提供。</value></data>
+  <data name="SettingsPageTitle" xml:space="preserve"><value>电池健康（旧版）设置</value></data>
   <data name="SettingsPageSubtitle" xml:space="preserve"><value>配置电池健康的监控阈值和通知。</value></data>
   <data name="OverviewTitle" xml:space="preserve"><value>电池健康概览</value></data>
   <data name="OverviewDescription" xml:space="preserve"><value>由 WMI 驱动的实时电池诊断。</value></data>

@@ -1,7 +1,33 @@
 {
   "schemaVersion": 1,
   "id": "network-acceleration",
-  "name": "Network Acceleration (Migrated)",
+  "name": "Network Acceleration (Legacy)",
+  "localizedNames": {
+    "default": "Network Acceleration (Legacy)",
+    "zh-Hans": "网络加速（旧版）"
+  },
+  "localizedDescriptions": {
+    "default": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+    "zh-Hans": "已弃用：网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
+  },
+  "localizedTags": {
+    "default": [
+      "network",
+      "optimization",
+      "gaming",
+      "telemetry",
+      "acceleration",
+      "performance"
+    ],
+    "zh-Hans": [
+      "网络",
+      "优化",
+      "游戏",
+      "遥测",
+      "加速",
+      "性能"
+    ]
+  },
   "version": "1.2.0",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
@@ -12,11 +38,11 @@
   "contributes": {
     "featurePage": {
       "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationControl",
-      "title": "Network Acceleration (Migrated)"
+      "title": "Network Acceleration (Legacy)"
     },
     "settingsPage": {
       "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsControl",
-      "title": "Network Acceleration (Migrated) Settings"
+      "title": "Network Acceleration (Legacy) Settings"
     },
     "runtime": {
       "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationRuntime"

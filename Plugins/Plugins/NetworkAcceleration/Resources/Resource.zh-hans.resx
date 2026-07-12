@@ -104,7 +104,7 @@
     <value>{0:0.0} Mbps</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>网络加速</value>
+    <value>网络加速（旧版）</value>
   </data>
   <data name="FeatureOverviewTitle" xml:space="preserve">
     <value>实时流量概览</value>
@@ -113,10 +113,10 @@
     <value>在一个界面里查看当前吞吐、活动适配器状态，并执行快速网络恢复操作。</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>实时网络加速与优化功能。</value>
+    <value>已弃用：网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。</value>
   </data>
   <data name="PluginName" xml:space="preserve">
-    <value>网络加速</value>
+    <value>网络加速（旧版）</value>
   </data>
   <data name="PreferredModeTitle" xml:space="preserve">
     <value>首选模式</value>
@@ -149,7 +149,7 @@
     <value>选择快速优化运行时要包含的恢复动作。</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
-    <value>网络设置</value>
+    <value>网络加速（旧版）设置</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
     <value>网络加速设置已保存。</value>

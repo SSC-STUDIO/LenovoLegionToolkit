@@ -5,9 +5,9 @@ namespace LenovoLegionToolkit.Plugins.BatteryHealth;
 
 [Plugin(
     id: "battery-health",
-    name: "Battery Health (Migrated)",
+    name: "Battery Health (Legacy)",
     version: "1.0.0",
-    description: "Deprecated: battery health monitoring is now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+    description: "Deprecated: health/temperature thresholds now use the main app battery monitor (battery_health_alerts.json). This legacy plugin is retained only for settings migration.",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.15",
     Icon = "BatteryCharge24"

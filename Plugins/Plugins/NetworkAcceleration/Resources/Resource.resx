@@ -126,7 +126,7 @@
     <value>{0:0.0} Mbps</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>Network Acceleration</value>
+    <value>Network Acceleration (Legacy)</value>
   </data>
   <data name="FeatureOverviewTitle" xml:space="preserve">
     <value>Traffic Overview</value>
@@ -135,10 +135,10 @@
     <value>Monitor live throughput, active adapter status, and quick recovery actions in one place.</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>Real-time network acceleration and optimization features.</value>
+    <value>Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.</value>
   </data>
   <data name="PluginName" xml:space="preserve">
-    <value>Network Acceleration</value>
+    <value>Network Acceleration (Legacy)</value>
   </data>
   <data name="PreferredModeTitle" xml:space="preserve">
     <value>Preferred Mode</value>
@@ -171,7 +171,7 @@
     <value>Choose which recovery actions will be included when quick optimization runs.</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Network Settings</value>
+    <value>Network Acceleration (Legacy) Settings</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
     <value>Network acceleration settings saved.</value>

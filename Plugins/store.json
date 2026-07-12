@@ -1,10 +1,34 @@
-﻿{
+{
   "lastUpdated": "2026-07-11T00:00:00.0000000\u002B00:00",
   "plugins": [
     {
       "id": "battery-health",
       "name": "Battery Health (Legacy)",
       "description": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+      "localizedNames": {
+        "default": "Battery Health (Legacy)",
+        "zh-Hans": "电池健康（旧版）"
+      },
+      "localizedDescriptions": {
+        "default": "Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+        "zh-Hans": "已弃用：电池健康监控和提醒现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
+      },
+      "localizedTags": {
+        "default": [
+          "battery",
+          "health",
+          "monitoring",
+          "diagnostics",
+          "power"
+        ],
+        "zh-Hans": [
+          "电池",
+          "健康",
+          "监控",
+          "诊断",
+          "电源"
+        ]
+      },
       "author": "SSC-STUDIO",
       "version": "1.0.0",
       "minLLTVersion": "4.2.1",
@@ -58,13 +82,35 @@
         "diagnostics",
         "power"
       ],
-      "status": "Legacy",
+      "status": "Offline",
       "removalVersion": "5.0.0"
     },
     {
       "id": "custom-mouse",
       "name": "Cursor & Pointer",
       "description": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
+      "localizedNames": {
+        "default": "Cursor & Pointer",
+        "zh-Hans": "光标与指针"
+      },
+      "localizedDescriptions": {
+        "default": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
+        "zh-Hans": "通过随主题变化的光标样式、Windows 指针速度、按键交换以及安全的光标备份与还原，个性化你的鼠标体验。"
+      },
+      "localizedTags": {
+        "default": [
+          "mouse",
+          "customization",
+          "cursor",
+          "productivity"
+        ],
+        "zh-Hans": [
+          "鼠标",
+          "自定义",
+          "光标",
+          "生产力"
+        ]
+      },
       "author": "SSC-STUDIO",
       "version": "1.0.16",
       "minLLTVersion": "4.2.1",
@@ -122,7 +168,33 @@
     {
       "id": "network-acceleration",
       "name": "Network Acceleration (Legacy)",
-      "description": "Retained as a legacy package only. Network diagnostic and selective proxy acceleration features are not currently bundled in Universal Device Toolkit. No active support; use only to migrate existing settings.",
+      "description": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+      "localizedNames": {
+        "default": "Network Acceleration (Legacy)",
+        "zh-Hans": "网络加速（旧版）"
+      },
+      "localizedDescriptions": {
+        "default": "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
+        "zh-Hans": "已弃用：网络诊断和选择性代理加速现已内置于 Universal Device Toolkit。此旧版插件仅保留用于设置迁移。"
+      },
+      "localizedTags": {
+        "default": [
+          "network",
+          "optimization",
+          "gaming",
+          "telemetry",
+          "acceleration",
+          "performance"
+        ],
+        "zh-Hans": [
+          "网络",
+          "优化",
+          "游戏",
+          "遥测",
+          "加速",
+          "性能"
+        ]
+      },
       "author": "SSC-STUDIO",
       "version": "1.2.0",
       "minLLTVersion": "4.2.1",
@@ -177,7 +249,7 @@
         "acceleration",
         "performance"
       ],
-      "status": "Legacy",
+      "status": "Offline",
       "removalVersion": "5.0.0",
       "internalMigrationOnly": true
     },
@@ -185,6 +257,32 @@
       "id": "shell-integration",
       "name": "Nilesoft Shell Manager",
       "description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
+      "localizedNames": {
+        "default": "Nilesoft Shell Manager",
+        "zh-Hans": "Nilesoft Shell 管理器"
+      },
+      "localizedDescriptions": {
+        "default": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
+        "zh-Hans": "管理 Nilesoft Shell 注册及其由 UDT 管理的配置。需要已安装 Nilesoft Shell。"
+      },
+      "localizedTags": {
+        "default": [
+          "system",
+          "shell",
+          "integration",
+          "context-menu",
+          "productivity",
+          "windows"
+        ],
+        "zh-Hans": [
+          "系统",
+          "Shell",
+          "集成",
+          "右键菜单",
+          "生产力",
+          "Windows"
+        ]
+      },
       "author": "SSC-STUDIO",
       "version": "1.0.12",
       "minLLTVersion": "4.2.1",
@@ -245,6 +343,32 @@
       "id": "vive-tool",
       "name": "ViVeTool",
       "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+      "localizedNames": {
+        "default": "ViVeTool",
+        "zh-Hans": "ViVeTool"
+      },
+      "localizedDescriptions": {
+        "default": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+        "zh-Hans": "使用 ViVeTool 解锁隐藏的 Windows 功能并自定义系统 \u2014 终极 Windows 功能标志管理器。"
+      },
+      "localizedTags": {
+        "default": [
+          "windows",
+          "feature-flags",
+          "vivetool",
+          "customization",
+          "tweaks",
+          "insider"
+        ],
+        "zh-Hans": [
+          "Windows",
+          "功能标志",
+          "ViVeTool",
+          "自定义",
+          "调整",
+          "预览体验"
+        ]
+      },
       "author": "SSC-STUDIO",
       "version": "1.2.2",
       "minLLTVersion": "4.2.1",

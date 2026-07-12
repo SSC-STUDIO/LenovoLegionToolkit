@@ -9,23 +9,16 @@ public static class CustomMouseText
 {
     public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
 
-    public static string PluginName => "Cursor & Pointer";
+    public static string PluginName => Resources.Resource.PluginName;
     public static string PluginDescription => T(nameof(PluginDescription), "Customize mouse cursor style behavior and mouse settings.");
     public static string SettingsPageTitle => "Cursor & Pointer";
-    public static string DpiLabel => T(nameof(DpiLabel), "DPI");
-    public static string PollingRateLabel => T(nameof(PollingRateLabel), "Polling Rate");
     public static string ProfileStatusLabel => T(nameof(ProfileStatusLabel), "Profile State");
     public static string ProfileReady => T(nameof(ProfileReady), "Ready to apply");
-    public static string CurrentDpiLabel => T(nameof(CurrentDpiLabel), "Current DPI");
-    public static string CurrentPollingLabel => T(nameof(CurrentPollingLabel), "Current Polling");
     public static string ApplyButton => T(nameof(ApplyButton), "Apply");
     public static string ResetButton => T(nameof(ResetButton), "Reset");
     public static string QuickActionsTitle => T(nameof(QuickActionsTitle), "Quick Actions");
     public static string QuickActionsDescription => T(nameof(QuickActionsDescription), "Apply or reset your mouse profile settings.");
     public static string StatusResetDefaults => T(nameof(StatusResetDefaults), "Mouse profile reset to defaults.");
-    public static string StatusInvalidDpi => T(nameof(StatusInvalidDpi), "Invalid DPI value.");
-    public static string StatusSelectValidPolling => T(nameof(StatusSelectValidPolling), "Please select a valid polling rate.");
-    public static string StatusInvalidPolling => T(nameof(StatusInvalidPolling), "Invalid polling rate.");
     public static string StatusProfileSaved => T(nameof(StatusProfileSaved), "Mouse profile saved.");
     public static string SettingsSubtitle => T(nameof(SettingsSubtitle), "Apply pointer speed and button layout to the active Windows profile.");
     public static string SettingsOverviewTitle => T(nameof(SettingsOverviewTitle), "Current Windows Mouse State");

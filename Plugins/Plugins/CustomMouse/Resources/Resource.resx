@@ -83,7 +83,7 @@
     <value>Customize mouse cursor style behavior and mouse settings.</value>
   </data>
   <data name="PluginName" xml:space="preserve">
-    <value>Custom Mouse</value>
+    <value>Cursor &amp; Pointer</value>
   </data>
   <data name="PointerSpeedLabel" xml:space="preserve">
     <value>Windows Pointer Speed</value>

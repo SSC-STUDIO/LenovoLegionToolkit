@@ -35,7 +35,6 @@ public partial class NetworkAccelerationControl : UserControl
     public NetworkAccelerationControl(NetworkAccelerationPlugin plugin)
     {
         _plugin = plugin;
-        _telemetryTimer.Tick += TelemetryTimer_Tick;
 
         WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         LoadSavedSettings();
@@ -56,7 +55,9 @@ public partial class NetworkAccelerationControl : UserControl
         SynchronizeRuntimeState();
         UpdateSessionPresentation();
 
-        SetStatus(NetworkAccelerationText.MonitoringStatus, false);
+        SetStatus(
+            "Legacy plugin: use built-in System Optimization → Network & acceleration. Continuous sampling and auto network resets are disabled.",
+            false);
     }
 
     private void BuildFallbackUi()
@@ -719,11 +720,10 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        _telemetryTimer.Tick -= TelemetryTimer_Tick;
-        _telemetryTimer.Tick += TelemetryTimer_Tick;
         SynchronizeRuntimeState();
+        // One-shot sample only when the page is visible; continuous timer is stopped for legacy plugin.
+        _telemetryTimer.Stop();
         RefreshTelemetry();
-        _telemetryTimer.Start();
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)

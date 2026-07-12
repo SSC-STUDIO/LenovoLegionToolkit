@@ -12,11 +12,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PluginName" xml:space="preserve"><value>Battery Health</value></data>
-  <data name="PluginDescription" xml:space="preserve"><value>Monitor battery health, cycle count, and capacity wear for your Universal Device Toolkit.</value></data>
-  <data name="FeaturePageTitle" xml:space="preserve"><value>Battery Health</value></data>
-  <data name="FeaturePageDescription" xml:space="preserve"><value>Track battery wear, cycle count, and capacity degradation in real time.</value></data>
-  <data name="SettingsPageTitle" xml:space="preserve"><value>Battery Health Settings</value></data>
+  <data name="PluginName" xml:space="preserve"><value>Battery Health (Legacy)</value></data>
+  <data name="PluginDescription" xml:space="preserve"><value>Deprecated: battery health monitoring and alerts are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.</value></data>
+  <data name="FeaturePageTitle" xml:space="preserve"><value>Battery Health (Legacy)</value></data>
+  <data name="FeaturePageDescription" xml:space="preserve"><value>Deprecated: track battery wear, cycle count, and capacity degradation. Built-in battery health is now part of Universal Device Toolkit.</value></data>
+  <data name="SettingsPageTitle" xml:space="preserve"><value>Battery Health (Legacy) Settings</value></data>
   <data name="SettingsPageSubtitle" xml:space="preserve"><value>Configure monitoring thresholds and notifications for battery health.</value></data>
   <data name="OverviewTitle" xml:space="preserve"><value>Battery Health Overview</value></data>
   <data name="OverviewDescription" xml:space="preserve"><value>Real-time battery diagnostics powered by WMI.</value></data>

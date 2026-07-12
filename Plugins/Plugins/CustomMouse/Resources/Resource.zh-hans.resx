@@ -77,7 +77,7 @@
     <value>自定义鼠标光标样式行为与鼠标设置。</value>
   </data>
   <data name="PluginName" xml:space="preserve">
-    <value>自定义鼠标</value>
+    <value>光标与指针</value>
   </data>
   <data name="PointerSpeedLabel" xml:space="preserve">
     <value>Windows 指针速度</value>

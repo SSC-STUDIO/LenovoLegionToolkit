@@ -7,9 +7,9 @@ public static class NetworkAccelerationText
 {
     public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
 
-    public static string PluginName => T(nameof(PluginName), "Network Acceleration (Migrated)");
+    public static string PluginName => T(nameof(PluginName), "Network Acceleration (Legacy)");
     public static string PluginDescription => T(nameof(PluginDescription), "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.");
-    public static string PageTitle => T(nameof(PageTitle), "Network Acceleration (Migrated)");
+    public static string PageTitle => T(nameof(PageTitle), "Network Acceleration (Legacy)");
     public static string HeroBadgeTitle => T(nameof(HeroBadgeTitle), "Traffic Pulse");
     public static string FeatureOverviewTitle => T(nameof(FeatureOverviewTitle), "Traffic Overview");
     public static string FeatureOverviewDescription => T(nameof(FeatureOverviewDescription), "Monitor live throughput, active adapter status, and quick recovery actions in one place.");
