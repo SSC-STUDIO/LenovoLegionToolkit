@@ -10047,6 +10047,12 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_RestorePartial { get { return ResourceManager.GetString("NetworkAccelerationPage_RestorePartial", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsLabel { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsLabel", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsSummary { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsSummary", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeHint { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeHint", resourceCulture); } }
+        public static string NetworkAccelerationPage_DomainGroupsHint { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsHint", resourceCulture); } }
+        public static string NetworkAccelerationPage_DomainGroupsFootnote { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsFootnote", resourceCulture); } }
+        public static string NetworkAccelerationPage_Mode_SystemProxy { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_SystemProxy", resourceCulture); } }
+        public static string NetworkAccelerationPage_Mode_Hosts { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_Hosts", resourceCulture); } }
+        public static string NetworkAccelerationPage_Mode_DiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_DiagnosticsOnly", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusRunning { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusRunning", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusStopped { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusStopped", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusWorkerMissing { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusWorkerMissing", resourceCulture); } }

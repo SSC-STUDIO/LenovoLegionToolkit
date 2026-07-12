@@ -94,6 +94,36 @@ public class PluginManifest
 
     [JsonPropertyName("localizedTags")]
     public Dictionary<string, string[]>? LocalizedTags { get; set; }
+
+    /// <summary>
+    /// Store lifecycle: <c>Active</c> (default), <c>Offline</c>, <c>Removed</c>.
+    /// Offline/Removed entries are hidden from the in-app marketplace.
+    /// </summary>
+    [JsonPropertyName("status")]
+    public string? Status { get; set; }
+
+    /// <summary>
+    /// When true, the package is migration-only and must not be offered for install.
+    /// </summary>
+    [JsonPropertyName("internalMigrationOnly")]
+    public bool InternalMigrationOnly { get; set; }
+
+    /// <summary>True when this catalog entry should appear in the store UI.</summary>
+    [JsonIgnore]
+    public bool IsListedInStore
+    {
+        get
+        {
+            if (InternalMigrationOnly)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(Status))
+                return true;
+
+            return Status.Equals("Active", StringComparison.OrdinalIgnoreCase)
+                   || Status.Equals("Online", StringComparison.OrdinalIgnoreCase);
+        }
+    }
 }
 
 public class PluginManifestStore

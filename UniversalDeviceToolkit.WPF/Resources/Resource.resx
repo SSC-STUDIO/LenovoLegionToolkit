@@ -2903,6 +2903,21 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>Preparing device setup...</value>
   </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>Device setup</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>Skip for now</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>Confirm saves this choice and continues. Skip for now keeps basic mode and shows this once more next launch.</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>Confirm applies this pack profile. Skip for now continues without confirming (you can finish later). This does not restart Windows.</value>
+  </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Not connected</value>
   </data>
@@ -3674,6 +3689,24 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
     <value>{0}: {1}/{2} enabled, {3} domains (Steam/GitHub built-in, off by default — edit advanced config if needed).</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>Choose how acceleration is applied. Off is controlled by the master switch above.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>Only enabled groups are rewritten by PAC / Hosts. All groups stay off by default.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>Static audited lists only — no remote rule download. Re-start acceleration after changing groups.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>System proxy (PAC / local proxy)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Hosts rewrite (UDT-marked block)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics only (no system changes)</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Running ({0}) loopback:{1}</value>

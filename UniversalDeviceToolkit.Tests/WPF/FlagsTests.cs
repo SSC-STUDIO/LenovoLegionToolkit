@@ -20,6 +20,22 @@ public sealed class FlagsTests
     }
 
     [Fact]
+    public void Constructor_ParsesResetHardwareAndProcessorMinFlags()
+    {
+        var flags = new Flags(
+        [
+            "--reset-hardware-state",
+            "--restore-processor-min-state",
+            "--safe-start"
+        ]);
+
+        flags.ResetHardwareState.Should().BeTrue();
+        flags.RestoreProcessorMinState.Should().BeTrue();
+        flags.SafeStart.Should().BeTrue();
+        flags.ResetNetworkState.Should().BeFalse();
+    }
+
+    [Fact]
     public void StringValue_WithEqualsSeparatedProxyArgument_ReturnsValue()
     {
         var result = Flags.StringValue(["--proxy-username=codex"], "--proxy-username");

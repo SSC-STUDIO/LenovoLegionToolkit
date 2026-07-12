@@ -180,8 +180,6 @@ namespace UniversalDeviceToolkit.WPF.Startup
         {
             try
             {
-                RunStartupResetSwitchesIfRequested(_flags);
-
                 await InitializeBootstrappingAsync();
 
                 DetermineAndApplySafeStartMode();
@@ -196,6 +194,10 @@ namespace UniversalDeviceToolkit.WPF.Startup
                     return 0;
 
                 await InitializeIoCAsync();
+
+                // Hardware/network reset needs IoC-resolved controllers (God Mode → Balance,
+                // fan curves, lighting, etc.). Runs after IoC, before background init.
+                RunStartupResetSwitchesIfRequested(_flags);
 
                 // Heal leftover UDT proxy/hosts from a previous crash. Never auto-start acceleration.
                 // Safe-start also runs this (diagnostics + restore only).
@@ -239,10 +241,16 @@ namespace UniversalDeviceToolkit.WPF.Startup
 
                 if (flags.ResetHardwareState)
                 {
-                    var ok = _hardwareStateRecoveryService.TryResetHardware(out var hwReport);
+                    // Optional: --restore-processor-min-state also edits the active
+                    // Windows power plan's minimum processor state (AC+DC). Off by default.
+                    var ok = _hardwareStateRecoveryService.TryResetHardware(
+                        out var hwReport,
+                        restoreProcessorMinState: flags.RestoreProcessorMinState);
                     WriteResetReport(hwReport, "Hardware state reset result.");
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"--reset-hardware-state: ok={ok}; report={Environment.NewLine}{hwReport}");
+                        Log.Instance.Trace(
+                            $"--reset-hardware-state: ok={ok}; restoreProcessorMin={flags.RestoreProcessorMinState}; " +
+                            $"report={Environment.NewLine}{hwReport}");
                 }
 
                 if (flags.ResetNetworkState)
@@ -756,10 +764,31 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 {
                     if (await feature.IsSupportedAsync())
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Ensuring god mode state is applied...");
+                        // P1: refuse out-of-range God Mode presets (backup + skip hardware write).
+                        var godModeSettings = IoCContainer.TryResolve<GodModeSettings>();
+                        var recovery = new HardwareStateRecoveryService();
+                        var godModeValid = HardwareConfigRangeValidator.TryValidateOrBackupGodMode(
+                            godModeSettings,
+                            filename => recovery.TryBackupFile(filename, out _),
+                            msg =>
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace(msg);
+                                else
+                                    Log.Instance.Warning(msg);
+                            });
 
-                        await feature.EnsureGodModeStateIsAppliedAsync();
+                        if (godModeValid)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Ensuring god mode state is applied...");
+
+                            await feature.EnsureGodModeStateIsAppliedAsync();
+                        }
+                        else if (Log.Instance.IsTraceEnabled)
+                        {
+                            Log.Instance.Trace("Skipping EnsureGodModeStateIsAppliedAsync due to invalid God Mode range.");
+                        }
 
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Ensuring correct power plan is set...");
@@ -866,6 +895,30 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 {
                     if (await controller.IsSupportedAsync())
                     {
+                        // P1: refuse out-of-range GPU OC (backup + disable + skip hardware write).
+                        var gpuSettings = IoCContainer.TryResolve<GPUOverclockSettings>();
+                        var recovery = new HardwareStateRecoveryService();
+                        var gpuValid = HardwareConfigRangeValidator.TryValidateOrBackupGpuOverclock(
+                            controller,
+                            gpuSettings,
+                            maxCoreDeltaMhz: GPUOverclockController.GetMaxCoreDeltaMhz(),
+                            maxMemoryDeltaMhz: HardwareConfigRangeValidator.DefaultMaxGpuMemoryDeltaMhz,
+                            tryBackupFile: filename => recovery.TryBackupFile(filename, out _),
+                            log: msg =>
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace(msg);
+                                else
+                                    Log.Instance.Warning(msg);
+                            });
+
+                        if (!gpuValid)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace("Skipping EnsureOverclockIsAppliedAsync due to invalid GPU OC range.");
+                            return;
+                        }
+
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Ensuring GPU overclock is applied...");
 
@@ -918,6 +971,26 @@ namespace UniversalDeviceToolkit.WPF.Startup
                     {
                         if (await powerMode.GetStateAsync() != PowerModeState.GodMode)
                             return;
+                    }
+
+                    // P1: refuse out-of-range fan curves (backup + clear + skip hardware write).
+                    var recovery = new HardwareStateRecoveryService();
+                    var fansValid = HardwareConfigRangeValidator.TryValidateOrBackupFanCurves(
+                        fanSettings,
+                        filename => recovery.TryBackupFile(filename, out _),
+                        msg =>
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace(msg);
+                            else
+                                Log.Instance.Warning(msg);
+                        });
+
+                    if (!fansValid)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Skipping fan curve apply due to invalid range.");
+                        return;
                     }
 
                     if (fanSettings.Store.Entries.Count == 0)

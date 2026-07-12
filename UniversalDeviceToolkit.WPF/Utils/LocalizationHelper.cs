@@ -307,11 +307,16 @@ public static class LocalizationHelper
     {
         try
         {
-            var name = await File.ReadAllTextAsync(LanguagePath);
+            var name = (await File.ReadAllTextAsync(LanguagePath)).Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
             var cultureInfo = new CultureInfo(name);
-            if (!Languages.Contains(cultureInfo))
-                throw new InvalidOperationException("Unknown language");
-            return cultureInfo;
+            // Prefer exact / case-insensitive match against supported list (Contains uses object equality).
+            var matched = ResolveSupportedLanguage(cultureInfo);
+            if (matched is null)
+                throw new InvalidOperationException($"Unknown language '{name}'");
+            return matched;
         }
         catch
         {
@@ -319,13 +324,52 @@ public static class LocalizationHelper
         }
     }
 
+    /// <summary>
+    /// Maps free-form culture names (e.g. en-US, zh-CN) onto the Languages table.
+    /// </summary>
+    internal static CultureInfo? ResolveSupportedLanguage(CultureInfo cultureInfo)
+    {
+        if (cultureInfo is null)
+            return null;
+
+        var exact = Languages.FirstOrDefault(language =>
+            language.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
+        if (exact is not null)
+            return exact;
+
+        // English variants always map to built-in "en".
+        if (cultureInfo.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
+            return DefaultLanguage;
+
+        if (cultureInfo.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
+        {
+            var traditional = cultureInfo.Name.Contains("Hant", StringComparison.OrdinalIgnoreCase)
+                              || cultureInfo.Name.Contains("TW", StringComparison.OrdinalIgnoreCase)
+                              || cultureInfo.Name.Contains("HK", StringComparison.OrdinalIgnoreCase)
+                              || cultureInfo.Name.Contains("MO", StringComparison.OrdinalIgnoreCase);
+            return Languages.FirstOrDefault(l =>
+                l.Name.Equals(traditional ? "zh-hant" : "zh-hans", StringComparison.OrdinalIgnoreCase));
+        }
+
+        var parentMatch = Languages.FirstOrDefault(language =>
+            language.Name.Equals(cultureInfo.Parent.Name, StringComparison.OrdinalIgnoreCase));
+        if (parentMatch is not null)
+            return parentMatch;
+
+        return Languages.FirstOrDefault(language =>
+            language.TwoLetterISOLanguageName.Equals(cultureInfo.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+    }
+
     private static Task SaveLanguageToFileAsync(CultureInfo cultureInfo) => File.WriteAllTextAsync(LanguagePath, cultureInfo.Name);
 
     private static void SetLanguageInternal(CultureInfo cultureInfo)
     {
+        cultureInfo = ResolveSupportedLanguage(cultureInfo) ?? DefaultLanguage;
+
         // Format numbers/dates in invariant-friendly English culture; UI strings use UI culture.
-        Thread.CurrentThread.CurrentCulture = new CultureInfo("en");
-        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
+        var english = new CultureInfo("en");
+        Thread.CurrentThread.CurrentCulture = english;
+        CultureInfo.DefaultThreadCurrentCulture = english;
 
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
         CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
@@ -334,7 +378,7 @@ public static class LocalizationHelper
         SetPluginResourceCultures(cultureInfo);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Applied culture: {cultureInfo.Name}");
+            Log.Instance.Trace($"Applied culture: {cultureInfo.Name} (UI={CultureInfo.CurrentUICulture.Name})");
     }
 
     /// <summary>

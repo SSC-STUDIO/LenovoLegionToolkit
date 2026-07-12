@@ -219,6 +219,7 @@
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}" />
 
                     <custom:NavigationItem
+                        x:Name="_settingsItem"
                         AutomationProperties.AccessKey="S"
                         AutomationProperties.AutomationId="SettingsNavItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"

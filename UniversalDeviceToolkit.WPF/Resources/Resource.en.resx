@@ -3108,6 +3108,21 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>Preparing device setup...</value>
   </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>Device setup</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>Skip for now</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>Confirm saves this choice and continues. Skip for now keeps basic mode and shows this once more next launch.</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>Confirm applies this pack profile. Skip for now continues without confirming (you can finish later). This does not restart Windows.</value>
+  </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Not connected</value>
   </data>

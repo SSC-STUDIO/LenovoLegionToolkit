@@ -41,11 +41,28 @@ public class HardwareStateRecoveryServiceTests : IDisposable
         var ok = service.TryResetHardware(out var report);
 
         ok.Should().BeTrue();
+        report.Should().Contain("god-mode-to-balance").And.Contain("skipped (component not initialized)");
         report.Should().Contain("rgb-keyboard-backlight").And.Contain("skipped (component not initialized)");
         report.Should().Contain("spectrum-keyboard-backlight").And.Contain("skipped (component not initialized)");
         report.Should().Contain("WhiteKeyboardLenovoLightingBacklightFeature").And.Contain("skipped");
         report.Should().Contain("PortsBacklightFeature").And.Contain("skipped");
         report.Should().Contain("experimental-gpu-working-mode").And.Contain("skipped");
+        report.Should().Contain("processor-min-state").And.Contain("skipped (optional");
+    }
+
+    [Fact]
+    public void TryResetHardware_WithRestoreProcessorMin_MentionsActivePlanMutation()
+    {
+        var console = new StringWriter();
+        var impl = new HardwareStateRecoveryImplementation(_ => null, s => console.Write(s));
+        var service = new HardwareStateRecoveryService(impl);
+
+        // May succeed or partially fail depending on Win32 power APIs; must not throw.
+        _ = service.TryResetHardware(out var report, restoreProcessorMinState: true);
+
+        report.Should().Contain("god-mode-to-balance");
+        report.Should().Contain("processor-min-state");
+        report.Should().NotContain("skipped (optional");
     }
 
     [Fact]

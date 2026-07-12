@@ -3,22 +3,27 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
+    <!--
+      Compact settings-style layout (matches SettingsAppearanceControl):
+      flat CardControl sections, no nested hero banners / metric grids.
+      Behavior inspired by Watt Toolkit; no GPL code copied.
+    -->
     <wpfui:DynamicScrollViewer
         AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,24">
             <TextBlock
-                Margin="0,16,0,8"
+                Margin="0,16,0,4"
                 Focusable="True"
                 Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.NetworkAccelerationPage_Title}" />
-
             <TextBlock
                 Margin="0,0,0,16"
                 Focusable="True"
@@ -26,80 +31,130 @@
                 Text="{x:Static resources:Resource.NetworkAccelerationPage_Subtitle}"
                 TextWrapping="Wrap" />
 
-            <!-- Connection status (single surface, no nested cards) -->
-            <TextBlock
-                Margin="0,0,0,4"
-                Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusHeading}" />
-            <TextBlock
-                x:Name="_statusText"
-                Margin="0,0,0,12"
-                AutomationProperties.AutomationId="NetworkAccelerationStatusText"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusOff}"
-                TextWrapping="Wrap" />
-
-            <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
-                <CheckBox
-                    x:Name="_enableToggle"
-                    Margin="0,0,16,0"
-                    VerticalAlignment="Center"
-                    AutomationProperties.AutomationId="NetworkAccelerationEnableToggle"
-                    Click="EnableToggle_Click"
-                    Content="{x:Static resources:Resource.NetworkAccelerationPage_EnableLabel}" />
-            </StackPanel>
-
-            <StackPanel Margin="0,0,0,24" Orientation="Horizontal">
-                <wpfui:Button
-                    x:Name="_startButton"
-                    MinWidth="120"
-                    Margin="0,0,8,0"
-                    Appearance="Primary"
-                    AutomationProperties.AutomationId="NetworkAccelerationStartButton"
-                    Click="StartButton_Click"
-                    Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
-                    IsEnabled="False" />
-                <wpfui:Button
-                    x:Name="_stopButton"
-                    MinWidth="120"
-                    Margin="0,0,8,0"
-                    AutomationProperties.AutomationId="NetworkAccelerationStopButton"
-                    Click="StopButton_Click"
-                    Content="{x:Static resources:Resource.NetworkAccelerationPage_Stop}"
-                    IsEnabled="False" />
-                <wpfui:Button
-                    x:Name="_restoreButton"
-                    MinWidth="160"
-                    AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
-                    Click="RestoreButton_Click"
-                    Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
-            </StackPanel>
-
-            <TextBlock
-                x:Name="_domainGroupsText"
-                Margin="0,0,0,16"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                TextWrapping="Wrap" />
-
-            <!-- Diagnostics: only when page visible / user starts -->
-            <TextBlock
-                Margin="0,0,0,4"
-                Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}" />
-            <TextBlock
-                x:Name="_diagnosticsText"
+            <!-- Status + master switch -->
+            <custom:CardControl
                 Margin="0,0,0,8"
-                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}"
-                TextWrapping="Wrap" />
-            <wpfui:Button
-                x:Name="_diagnosticsButton"
-                Margin="0,0,0,24"
-                HorizontalAlignment="Left"
-                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsButton"
-                Click="DiagnosticsButton_Click"
-                Content="{x:Static resources:Resource.NetworkAccelerationPage_RunDiagnostics}" />
+                Icon="Rocket24"
+                AutomationProperties.AutomationId="NetworkAccelerationStatusCard">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.NetworkAccelerationPage_StatusHeading}"
+                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_EnableLabel}" />
+                </custom:CardControl.Header>
+                <StackPanel>
+                    <TextBlock
+                        x:Name="_statusText"
+                        Margin="0,0,0,10"
+                        AutomationProperties.AutomationId="NetworkAccelerationStatusText"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusOff}"
+                        TextWrapping="Wrap" />
+                    <CheckBox
+                        x:Name="_enableToggle"
+                        Margin="0,0,0,12"
+                        VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="NetworkAccelerationEnableToggle"
+                        Click="EnableToggle_Click"
+                        Content="{x:Static resources:Resource.NetworkAccelerationPage_EnableLabel}" />
+                    <WrapPanel>
+                        <wpfui:Button
+                            x:Name="_startButton"
+                            MinWidth="110"
+                            Margin="0,0,8,8"
+                            Appearance="Primary"
+                            AutomationProperties.AutomationId="NetworkAccelerationStartButton"
+                            Click="StartButton_Click"
+                            Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
+                            IsEnabled="False" />
+                        <wpfui:Button
+                            x:Name="_stopButton"
+                            MinWidth="110"
+                            Margin="0,0,8,8"
+                            AutomationProperties.AutomationId="NetworkAccelerationStopButton"
+                            Click="StopButton_Click"
+                            Content="{x:Static resources:Resource.NetworkAccelerationPage_Stop}"
+                            IsEnabled="False" />
+                        <wpfui:Button
+                            x:Name="_restoreButton"
+                            MinWidth="140"
+                            Margin="0,0,8,8"
+                            AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
+                            Click="RestoreButton_Click"
+                            Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
+                    </WrapPanel>
+                </StackPanel>
+            </custom:CardControl>
+
+            <!-- Mode (System proxy / Hosts / Diagnostics) -->
+            <custom:CardControl
+                Margin="0,0,0,8"
+                Icon="Settings24"
+                AutomationProperties.AutomationId="NetworkAccelerationModeCard">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
+                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_ModeHint}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_modeComboBox"
+                    MinWidth="220"
+                    HorizontalAlignment="Left"
+                    AutomationProperties.AutomationId="NetworkAccelerationModeComboBox"
+                    SelectionChanged="ModeComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <!-- Domain groups (Steam / GitHub / Custom) -->
+            <custom:CardControl
+                Margin="0,0,0,8"
+                Icon="Globe24"
+                AutomationProperties.AutomationId="NetworkAccelerationDomainsCard">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsLabel}"
+                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
+                </custom:CardControl.Header>
+                <StackPanel>
+                    <TextBlock
+                        x:Name="_domainGroupsText"
+                        Margin="0,0,0,10"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap" />
+                    <StackPanel x:Name="_domainGroupsPanel" />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                        Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsFootnote}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </custom:CardControl>
+
+            <!-- Diagnostics -->
+            <custom:CardControl
+                Margin="0,0,0,8"
+                Icon="Pulse24"
+                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsCard">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}"
+                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}" />
+                </custom:CardControl.Header>
+                <StackPanel>
+                    <TextBlock
+                        x:Name="_diagnosticsText"
+                        Margin="0,0,0,10"
+                        AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}"
+                        TextWrapping="Wrap" />
+                    <wpfui:Button
+                        x:Name="_diagnosticsButton"
+                        HorizontalAlignment="Left"
+                        AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsButton"
+                        Click="DiagnosticsButton_Click"
+                        Content="{x:Static resources:Resource.NetworkAccelerationPage_RunDiagnostics}" />
+                </StackPanel>
+            </custom:CardControl>
 
             <custom:CardExpander
                 Margin="0,0,0,8"

@@ -14,6 +14,13 @@ public class Flags
     public const string SafeStartSwitch = "--safe-start";
     public const string ResetHardwareStateSwitch = "--reset-hardware-state";
     public const string ResetNetworkStateSwitch = "--reset-network-state";
+    /// <summary>
+    /// Optional companion to <see cref="ResetHardwareStateSwitch"/>. When set,
+    /// recovery also writes Processor power management "Minimum processor state"
+    /// on the <em>currently active</em> Windows power plan (AC+DC). This does
+    /// modify the user's active plan; leave unset to avoid plan edits.
+    /// </summary>
+    public const string RestoreProcessorMinStateSwitch = "--restore-processor-min-state";
 
     public bool IsTraceEnabled { get; }
     public bool Minimized { get; }
@@ -31,6 +38,11 @@ public class Flags
     public bool SafeStart { get; }
     public bool ResetHardwareState { get; }
     public bool ResetNetworkState { get; }
+    /// <summary>
+    /// When true with <see cref="ResetHardwareState"/>, also restore processor
+    /// min state on the active Windows power plan (see switch docs).
+    /// </summary>
+    public bool RestoreProcessorMinState { get; }
 
     public Flags(IEnumerable<string> startupArgs)
     {
@@ -52,6 +64,7 @@ public class Flags
         SafeStart = BoolValue(args, SafeStartSwitch);
         ResetHardwareState = BoolValue(args, ResetHardwareStateSwitch);
         ResetNetworkState = BoolValue(args, ResetNetworkStateSwitch);
+        RestoreProcessorMinState = BoolValue(args, RestoreProcessorMinStateSwitch);
     }
 
     private static string[] LoadExternalArgs()
@@ -104,5 +117,6 @@ public class Flags
         $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}," +
         $" {nameof(SafeStart)}: {SafeStart}," +
         $" {nameof(ResetHardwareState)}: {ResetHardwareState}," +
-        $" {nameof(ResetNetworkState)}: {ResetNetworkState}";
+        $" {nameof(ResetNetworkState)}: {ResetNetworkState}," +
+        $" {nameof(RestoreProcessorMinState)}: {RestoreProcessorMinState}";
 }

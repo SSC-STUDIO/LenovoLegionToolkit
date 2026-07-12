@@ -173,18 +173,20 @@ public class PluginRepositoryService : IDisposable
                 throw new InvalidDataException(Resource.Plugin_Error_Repository_Deserialize);
             }
 
-            // Filter out already installed plugins or show their status
-            var plugins = storeResponse.Plugins.Select(manifest =>
-            {
-                // Use the download URL from store.json if available, otherwise generate one
-                if (string.IsNullOrEmpty(manifest.DownloadUrl))
+            // Delist Offline / migration-only / Removed packages from the marketplace UI.
+            var plugins = storeResponse.Plugins
+                .Where(manifest => manifest.IsListedInStore)
+                .Select(manifest =>
                 {
-                    manifest.DownloadUrl = GetPluginDownloadUrl(manifest);
-                }
-                return manifest;
-            }).ToList();
+                    // Use the download URL from store.json if available, otherwise generate one
+                    if (string.IsNullOrEmpty(manifest.DownloadUrl))
+                    {
+                        manifest.DownloadUrl = GetPluginDownloadUrl(manifest);
+                    }
+                    return manifest;
+                }).ToList();
 
-            Log.Instance.Info($"Found {plugins.Count} plugins in store");
+            Log.Instance.Info($"Found {plugins.Count} listed plugins in store");
 
             CacheAvailablePlugins(plugins);
             return ClonePluginManifestList(plugins);

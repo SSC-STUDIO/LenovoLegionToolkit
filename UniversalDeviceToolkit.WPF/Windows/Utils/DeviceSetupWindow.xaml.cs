@@ -26,6 +26,10 @@ public partial class DeviceSetupWindow
 
         InitializeComponent();
 
+        // Title: device setup (not hybrid-mode "restart later").
+        _titleText.Text = T("DeviceSetupWindow_Title", "Device setup");
+        Title = _titleText.Text;
+
         _vendorText.Text = string.IsNullOrWhiteSpace(machineInformation.Vendor) ? Resource.Unnamed : machineInformation.Vendor;
         _modelText.Text = string.IsNullOrWhiteSpace(machineInformation.Model) ? Resource.Unnamed : machineInformation.Model;
         _machineTypeText.Text = string.IsNullOrWhiteSpace(machineInformation.MachineType) ? Resource.Unnamed : machineInformation.MachineType;
@@ -34,18 +38,28 @@ public partial class DeviceSetupWindow
         {
             _summaryText.Text = T(
                 "DeviceSetupWindow_BasicModeSummary",
-                "This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.");
+                "This device will start in basic mode. Hardware-specific controls stay hidden until a matching device pack is available.");
             _packText.Text = T("DeviceSetupWindow_BasicModePack", "Device pack: Basic mode");
+            _hintText.Text = T(
+                "DeviceSetupWindow_BasicModeHint",
+                "Confirm saves this choice and continues. Skip for now keeps basic mode and shows this once more next launch.");
         }
         else
         {
             _summaryText.Text = T(
                 "DeviceSetupWindow_MatchingPackSummary",
-                "Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.");
+                "Universal Device Toolkit found a matching device pack for this machine. Confirm so hardware features can use that pack.");
             _packText.Text = string.Format(
                 T("DeviceSetupWindow_DevicePackFormat", "Device pack: {0}"),
                 recommendedPack.DisplayName);
+            _hintText.Text = T(
+                "DeviceSetupWindow_MatchingPackHint",
+                "Confirm applies this pack profile. Skip for now continues without confirming (you can finish later from settings). This does not restart Windows.");
         }
+
+        // Explicit labels — never reuse RestartLater / RestartNow (those are for OS reboot prompts).
+        _skipButton.Content = T("DeviceSetupWindow_SkipButton", "Skip for now");
+        _confirmButton.Content = T("DeviceSetupWindow_ConfirmButton", "Confirm");
     }
 
     private void DeviceSetupWindow_OnClosed(object? sender, EventArgs e) =>

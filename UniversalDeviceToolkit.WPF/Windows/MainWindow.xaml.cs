@@ -264,15 +264,40 @@ public partial class MainWindow
             if (item.PageTag != null)
                 InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
         }
-        
-        // Set the plugin extensions navigation item text
-        if (_pluginExtensionsItem != null)
-        {
-            _pluginExtensionsItem.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", Resource.Culture);
-        }
+
+        // Re-apply sidebar labels from the active UI culture. x:Static can freeze
+        // the wrong satellite (e.g. Chinese OS default) if culture was applied late.
+        RefreshNavigationLabels();
 
         _ = UpdateHardwareDependentNavigationAsync();
         _ = InitializeTrayAsync();
+    }
+
+    /// <summary>
+    /// Sets built-in navigation item Content/ToolTip from the current
+    /// <see cref="Resource.Culture"/> so English mode never keeps Chinese sidebar text.
+    /// </summary>
+    internal void RefreshNavigationLabels()
+    {
+        var culture = Resource.Culture ?? System.Globalization.CultureInfo.CurrentUICulture;
+
+        void Set(NavigationItem? item, string key, string englishFallback)
+        {
+            if (item is null)
+                return;
+            var text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, englishFallback, culture);
+            item.Content = text;
+            item.ToolTip = text;
+        }
+
+        Set(_dashboardItem, "MainWindow_NavigationItem_Dashboard", "Dashboard");
+        Set(_keyboardItem, "MainWindow_NavigationItem_Keyboard", "Keyboard");
+        Set(_automationItem, "MainWindow_NavigationItem_Actions", "Actions");
+        Set(_macroItem, "MainWindow_NavigationItem_Macro", "Macro");
+        Set(_windowsOptimizationItem, "MainWindow_NavigationItem_WindowsOptimization", "System optimization");
+        Set(_pluginExtensionsItem, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions");
+        Set(_settingsItem, "MainWindow_NavigationItem_Settings", "Settings");
+        Set(_aboutItem, "MainWindow_NavigationItem_About", "About");
     }
 
     private async Task UpdateHardwareDependentNavigationAsync()

@@ -59,6 +59,30 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.EnabledFeatures.Should().Contain("lenovo-hardware-controls");
     }
 
+    [Theory]
+    [InlineData("83GS", "LOQ 15IRX9", "lenovo-loq")]
+    [InlineData("83E1", "Legion Go", "lenovo-legion-go")]
+    [InlineData("83N0", "Legion Go S", "lenovo-legion-go")]
+    public void Evaluate_WhenRecentLenovoGamingMatches_ShouldEnableHardwarePack(
+        string machineType,
+        string model,
+        string expectedPackId)
+    {
+        var machineInformation = new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = machineType,
+            Model = model
+        };
+
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be(expectedPackId);
+        availability.EnabledFeatures.Should().Contain("lenovo-hardware-controls");
+    }
+
     [Fact]
     public void Evaluate_WhenNonLenovoDevice_ShouldUseBasicMode()
     {

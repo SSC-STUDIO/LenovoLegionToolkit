@@ -51,10 +51,10 @@
 
             <StackPanel Grid.Row="0" Grid.Column="1">
                 <TextBlock
-                    Margin="0,0,0,12"
+                    x:Name="_titleText"
+                    Margin="0,0,0,8"
                     Focusable="True"
                     FontWeight="SemiBold"
-                    Text="{x:Static utils:AppDisplayName.Value}"
                     TextWrapping="Wrap" />
 
                 <TextBlock
@@ -84,9 +84,15 @@
 
                 <TextBlock
                     x:Name="_packText"
-                    Margin="0,0,0,12"
+                    Margin="0,0,0,8"
                     Focusable="True"
                     FontWeight="Medium"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    x:Name="_hintText"
+                    Margin="0,0,0,12"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap" />
 
                 <TextBlock
@@ -108,20 +114,19 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <!-- Labels set in code-behind so we never reuse RestartLater (hybrid-mode restart). -->
                 <wpfui:Button
                     x:Name="_skipButton"
                     Grid.Column="0"
                     MinWidth="120"
                     Appearance="Secondary"
-                    Click="Skip_Click"
-                    Content="{x:Static resources:Resource.RestartLater}" />
+                    Click="Skip_Click" />
                 <wpfui:Button
                     x:Name="_confirmButton"
                     Grid.Column="2"
                     MinWidth="120"
                     Appearance="Primary"
-                    Click="Confirm_Click"
-                    Content="{x:Static resources:Resource.Continue}" />
+                    Click="Confirm_Click" />
             </Grid>
         </Grid>
     </Grid>

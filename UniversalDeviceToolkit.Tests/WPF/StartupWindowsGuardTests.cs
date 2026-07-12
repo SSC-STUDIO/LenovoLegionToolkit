@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -31,6 +33,7 @@ public sealed class StartupWindowsGuardTests
     public void DeviceSetupWindow_ShouldLocalizeStartupText()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "DeviceSetupWindow.xaml.cs");
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "DeviceSetupWindow.xaml");
         var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh.resx");
         var zhHansResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
 
@@ -38,15 +41,19 @@ public sealed class StartupWindowsGuardTests
         source.Should().Contain("DeviceSetupWindow_MatchingPackSummary");
         source.Should().Contain("DeviceSetupWindow_DevicePackFormat");
         source.Should().Contain("DeviceSetupWindow_Preparing");
-        source.Should().NotContain("_summaryText.Text = \"Universal Device Toolkit detected");
-        source.Should().NotContain("_packText.Text = \"Device pack:");
-        source.Should().NotContain("_statusText.Text = \"Preparing device setup");
+        source.Should().Contain("DeviceSetupWindow_SkipButton");
+        source.Should().Contain("DeviceSetupWindow_ConfirmButton");
+        source.Should().Contain("DeviceSetupWindow_Title");
+        // Must not misuse hybrid-mode restart labels on this window.
+        xaml.Should().NotContain("Resource.RestartLater");
+        xaml.Should().NotContain("Resource.RestartNow");
 
         zhResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
         zhResources.Should().Contain("<value>设备包：{0}</value>");
         zhHansResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
         zhHansResources.Should().Contain("<value>设备包：{0}</value>");
-        zhHansResources.Should().Contain("检测到匹配的设备包");
+        zhHansResources.Should().Contain("DeviceSetupWindow_SkipButton");
+        zhHansResources.Should().Contain("暂时跳过");
         zhHansResources.Should().NotContain("detected a matching device pack");
     }
 
@@ -66,9 +73,48 @@ public sealed class StartupWindowsGuardTests
             "fallback",
             culture);
 
-        summary.Should().Contain("检测到匹配的设备包");
+        summary.Should().NotBe("fallback");
         summary.Should().NotContain("detected a matching device pack");
         packFormat.Should().Be("设备包：{0}");
+
+        var skip = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "DeviceSetupWindow_SkipButton",
+            "fallback",
+            culture);
+        skip.Should().Be("暂时跳过");
+    }
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("en-US")]
+    [InlineData("en-GB")]
+    public void ResolveSupportedLanguage_EnglishVariants_MapToEn(string name)
+    {
+        var resolved = LocalizationHelper.ResolveSupportedLanguage(new CultureInfo(name));
+        resolved.Should().NotBeNull();
+        resolved!.Name.Should().Be("en");
+    }
+
+    [Fact]
+    public void GetStringOrEnglish_EnglishCulture_NavigationItemsAreEnglish()
+    {
+        var culture = new CultureInfo("en");
+        var dashboard = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "MainWindow_NavigationItem_Dashboard",
+            "Dashboard",
+            culture);
+        var settings = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "MainWindow_NavigationItem_Settings",
+            "Settings",
+            culture);
+
+        dashboard.Should().Be("Dashboard");
+        settings.Should().Be("Settings");
+        dashboard.Should().NotMatchRegex(@"[\u4e00-\u9fff]");
+        settings.Should().NotMatchRegex(@"[\u4e00-\u9fff]");
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)

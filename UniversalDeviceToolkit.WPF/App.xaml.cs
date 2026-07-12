@@ -265,45 +265,43 @@ public partial class App
         var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
 
         var (initializationSteps, serviceStartSteps) = _orchestrator?.GetBackgroundInitializationSteps() ?? ([], []);
+        // Prefer the orchestrator's guard so consecutive-failure tracking is shared.
+        var healthGuard = _orchestrator?.HealthGuard ?? new StartupHealthGuard();
 
         _backgroundInitializationTask = Task.Run(async () =>
         {
             var totalSw = System.Diagnostics.Stopwatch.StartNew();
             var completedCleanly = false;
+            // incomplete marker: set before any hardware work; cleared only on clean success.
             StartupHealthGuard.MarkHardwareInitInProgress();
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Hardware / WMI / EC steps run strictly serially to avoid driver thrash,
-                // high concurrent WMI load, and post-start system lag.
-                foreach (var step in initializationSteps)
+                // Hardware / WMI / EC steps run strictly serially via StartupInitializationRunner
+                // to avoid driver thrash, concurrent WMI load, and post-start system lag.
+                // Steps are non-critical so one failure does not abort the rest of the pass.
+                // (Safe-start already filtered the list to read-only probes only.)
+                var runner = new StartupInitializationRunner(healthGuard, safeStart: false);
+                for (var i = 0; i < initializationSteps.Length; i++)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    try
-                    {
-                        await step().ConfigureAwait(false);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Isolate failures so one bad controller cannot block the rest.
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Background hardware init step failed after {stepSw.ElapsedMilliseconds}ms.", ex);
-                    }
+                    var step = initializationSteps[i];
+                    var stepName = $"bg-hw-{i}";
+                    runner.RegisterStep(stepName, TimeSpan.FromSeconds(45), step, isCritical: false);
+                }
 
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Background hardware init step finished in {stepSw.ElapsedMilliseconds}ms.");
+                var hwResult = await runner.RunAsync(cancellationToken).ConfigureAwait(false);
+                if (Log.Instance.IsTraceEnabled)
+                {
+                    Log.Instance.Trace(
+                        $"Background hardware init via StartupInitializationRunner: success={hwResult.Success}, " +
+                        $"failed=[{string.Join(", ", hwResult.FailedSteps)}], elapsed={totalSw.ElapsedMilliseconds}ms.");
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
 
-                // Independent background services: limited parallelism (not unbounded WhenAll).
+                // Independent background services: limited parallelism via SemaphoreSlim(2).
                 const int maxServiceConcurrency = 2;
                 await RunWithLimitedConcurrencyAsync(serviceStartSteps, maxServiceConcurrency, cancellationToken)
                     .ConfigureAwait(false);

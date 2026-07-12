@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.Hybrid;
 using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Settings;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.System.Power;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
@@ -66,15 +71,49 @@ public sealed class HardwareStateRecoveryService
     private const string SectionSeparator = "----------------------------------------";
 
     /// <summary>
+    /// Default minimum processor state (%) written when
+    /// <paramref name="restoreProcessorMinState"/> is true. Matches a
+    /// conservative Balanced-plan style floor (not 0%, which can break boost).
+    /// </summary>
+    public const uint DefaultProcessorMinStatePercent = 5;
+
+    /// <summary>
+    /// Processor power management subgroup GUID (GUID_PROCESSOR_SETTINGS_SUBGROUP).
+    /// </summary>
+    public static readonly Guid ProcessorSettingsSubgroupGuid =
+        new("54533251-82be-4824-96c1-47b60b740d00");
+
+    /// <summary>
+    /// Minimum processor state setting GUID (PROCTHROTTLEMIN).
+    /// </summary>
+    public static readonly Guid ProcessorThrottleMinGuid =
+        new("893dee8e-2bef-41e0-89c6-b55d0929964c");
+
+    /// <summary>
     /// Resets every hardware-related feature the app owns back to its factory
     /// state. Never throws; collects results in <paramref name="report"/>.
+    /// Always attempts God Mode → Balance when the power mode feature is available.
     /// </summary>
-    public bool TryResetHardware(out string report)
+    public bool TryResetHardware(out string report) =>
+        TryResetHardware(out report, restoreProcessorMinState: false);
+
+    /// <summary>
+    /// Resets hardware state. When <paramref name="restoreProcessorMinState"/> is
+    /// true, also writes minimum processor state on the <em>currently active</em>
+    /// Windows power plan (AC + DC). That path intentionally edits the user's
+    /// active plan — leave false unless the operator explicitly requested
+    /// <c>--restore-processor-min-state</c>.
+    /// </summary>
+    public bool TryResetHardware(out string report, bool restoreProcessorMinState)
     {
         var success = true;
         var sb = new StringBuilder();
         sb.AppendLine("Hardware state reset report");
         sb.AppendLine(SectionSeparator);
+
+        // P1: exit God Mode first so subsequent resets run under Balance.
+        success &= TryExitGodModeToBalance(sb);
+        sb.AppendLine();
 
         success &= TryResetRgbKeyboard(sb);
         sb.AppendLine();
@@ -96,6 +135,19 @@ public sealed class HardwareStateRecoveryService
 
         success &= TryResetBalanceMode(sb);
         sb.AppendLine();
+
+        if (restoreProcessorMinState)
+        {
+            success &= TryRestoreProcessorMinState(sb, DefaultProcessorMinStatePercent);
+            sb.AppendLine();
+        }
+        else
+        {
+            sb.AppendLine(
+                "[processor-min-state] skipped (optional; pass restoreProcessorMinState=true / " +
+                "--restore-processor-min-state to edit the active Windows power plan).");
+            sb.AppendLine();
+        }
 
         sb.AppendLine(SectionSeparator);
         sb.AppendLine(success ? "Result: OK" : "Result: PARTIAL (see skipped entries above)");
@@ -267,6 +319,112 @@ public sealed class HardwareStateRecoveryService
         var ext = Path.GetExtension(filename);
         var stem = Path.GetFileName(filename);
         return Path.Combine(folder, $"{stem}.bak.{timestamp}");
+    }
+
+    /// <summary>
+    /// Switches Legion power mode from God Mode to Balance when the feature is
+    /// available and currently in God Mode. Best-effort; missing components skip.
+    /// </summary>
+    private bool TryExitGodModeToBalance(StringBuilder sb)
+    {
+        sb.Append("[god-mode-to-balance] ");
+        try
+        {
+            if (_impl.TryResolve(typeof(PowerModeFeature)) is not PowerModeFeature powerMode)
+            {
+                sb.AppendLine("skipped (component not initialized).");
+                return true;
+            }
+
+            var state = powerMode.GetStateAsync().GetAwaiter().GetResult();
+            if (state != PowerModeState.GodMode)
+            {
+                sb.AppendLine($"already not God Mode (current={state}).");
+                return true;
+            }
+
+            powerMode.SetStateAsync(PowerModeState.Balance).GetAwaiter().GetResult();
+            sb.AppendLine("exited God Mode → Balance.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sb.AppendLine($"failure ({ex.GetType().Name}: {ex.Message}).");
+            TryTrace("HardwareStateRecoveryService: God Mode → Balance failed.", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Writes processor minimum state (%) on the active Windows power plan for
+    /// both AC and DC. Explicitly mutates the user's active plan.
+    /// </summary>
+    private bool TryRestoreProcessorMinState(StringBuilder sb, uint percent)
+    {
+        sb.Append("[processor-min-state] ");
+        try
+        {
+            percent = Math.Min(100u, percent);
+
+            unsafe
+            {
+                if (PInvoke.PowerGetActiveScheme(null, out var schemePtr) != WIN32_ERROR.ERROR_SUCCESS
+                    || schemePtr is null)
+                {
+                    sb.AppendLine("failure (PowerGetActiveScheme).");
+                    return false;
+                }
+
+                try
+                {
+                    var scheme = *schemePtr;
+                    // PowerWrite* returns WIN32 status as uint (0 = ERROR_SUCCESS).
+                    var ac = PInvoke.PowerWriteACValueIndex(
+                        NullSafeHandle.Null,
+                        scheme,
+                        ProcessorSettingsSubgroupGuid,
+                        ProcessorThrottleMinGuid,
+                        percent);
+                    var dc = PInvoke.PowerWriteDCValueIndex(
+                        NullSafeHandle.Null,
+                        scheme,
+                        ProcessorSettingsSubgroupGuid,
+                        ProcessorThrottleMinGuid,
+                        percent);
+
+                    if (ac != 0 || dc != 0)
+                    {
+                        sb.AppendLine($"failure (PowerWriteAC/DC ValueIndex ac={ac}, dc={dc}).");
+                        return false;
+                    }
+
+                    // Re-activate so the new index takes effect immediately.
+                    var activate = PInvoke.PowerSetActiveScheme(null, scheme);
+                    if (activate != WIN32_ERROR.ERROR_SUCCESS)
+                    {
+                        sb.AppendLine(
+                            $"wrote min={percent}% but PowerSetActiveScheme failed ({activate}); " +
+                            "values may apply on next plan switch.");
+                        return false;
+                    }
+
+                    sb.AppendLine(
+                        $"set minimum processor state to {percent}% on active plan {scheme} (AC+DC). " +
+                        "NOTE: this modified the user's currently active Windows power plan.");
+                    return true;
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal((IntPtr)schemePtr);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            sb.AppendLine($"failure ({ex.GetType().Name}: {ex.Message}).");
+            TryTrace("HardwareStateRecoveryService: processor min state restore failed.", ex);
+            return false;
+        }
     }
 
     private bool TryResetRgbKeyboard(StringBuilder sb)

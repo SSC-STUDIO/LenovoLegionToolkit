@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -3142,6 +3142,21 @@ Fn 将会暂时解除锁定。</value>
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在准备设备设置...</value>
   </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>设备设置</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>暂时跳过</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>点「确认」会保存当前选择并继续。点「暂时跳过」会以基础模式进入，下次启动可能再次提示。不会重启 Windows。</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>点「确认」将使用匹配的设备包配置硬件功能。点「暂时跳过」可先进入应用（可稍后完成）。不会重启 Windows。</value>
+  </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>未连接</value>
   </data>
@@ -4035,6 +4050,24 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
     <value>{0}：已启用 {1}/{2}，{3} 个域名（内置 Steam/GitHub，默认关闭 — 可在高级配置中编辑）。</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>选择加速应用方式。总开关关闭时不会修改系统网络。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>仅启用的域名组会进入 PAC / Hosts。默认全部关闭。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>仅使用内置静态名单，不下载远程规则。更改域名组后请重新启动加速。</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>系统代理（PAC / 本地代理）</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Hosts 改写（UDT 标记块）</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>仅诊断（不改系统）</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>运行中（{0}）回环:{1}</value>

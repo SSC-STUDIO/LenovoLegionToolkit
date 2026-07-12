@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -3585,6 +3585,21 @@
   </data>
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在準備裝置設定...</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>裝置設定</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>暫時略過</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>點「確認」會儲存目前選擇並繼續。點「暫時略過」會以基本模式進入，下次啟動可能再次提示。不會重新啟動 Windows。</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>點「確認」將使用相符的裝置套件設定硬體功能。點「暫時略過」可先進入應用程式。不會重新啟動 Windows。</value>
   </data>
   <data name="GB" xml:space="preserve">
     <value>GB</value>

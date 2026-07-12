@@ -65,6 +65,9 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 | System proxy / PAC apply on user Start | Done |
 | Hosts mode (marked block, best-effort elevation) | Done |
 | WPF page (enable, start/stop, restore, diagnostics) | Done |
+| Mode selector (SystemProxy / Hosts / DiagnosticsOnly) | Done |
+| Domain group toggles (Steam / GitHub / Custom) | Done |
+| Compact CardControl layout (matches Settings) | Done |
 | Built-in Steam/GitHub domain groups (off by default) | Done |
 | YARP MITM / DPAPI CA UI | Optional follow-up |
 | Continuous background sampling when page hidden | **Not used** (by design) |
@@ -74,8 +77,8 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 Official plugins live in [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins).
 See `Docs/PluginConsolidation.md`.
 
-- **Network Acceleration** plugin: legacy / migration-only, store Offline.
-- **Battery Health** plugin: legacy; thresholds merge into main battery/sensors.
+- **Network Acceleration** plugin: **delisted** from store; migration source only.
+- **Battery Health** plugin: **delisted** from store; thresholds live in main battery/sensors.
 - **Custom Mouse** → **Cursor & Pointer**.
 - **Shell Integration** → **Nilesoft Shell Manager**.
 - **ViVeTool**: keep with risk copy.
