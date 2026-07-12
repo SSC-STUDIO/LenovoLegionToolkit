@@ -371,6 +371,12 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             {
                 await System.Threading.Tasks.Task.Delay(50 * (attempt + 1)).ConfigureAwait(false);
             }
+            catch (UnauthorizedAccessException) when (attempt < maxRetries - 1)
+            {
+                // File.Move(overwrite: true) throws UnauthorizedAccessException (not IOException)
+                // when the destination file is locked by another process or antivirus.
+                await System.Threading.Tasks.Task.Delay(50 * (attempt + 1)).ConfigureAwait(false);
+            }
         }
     }
 

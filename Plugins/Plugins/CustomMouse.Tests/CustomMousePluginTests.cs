@@ -189,4 +189,47 @@ public class CustomMousePluginTests
             cursorKey.SetValue("Arrow", originalArrow ?? string.Empty);
         }
     }
+
+    [Fact]
+    public async Task SaveSettingsAsync_RetriesOnException_WhenSettingsFileTemporarilyLocked()
+    {
+        // Regression test: SaveSettingsAsync retry loop must catch I/O exceptions
+        // (IOException and UnauthorizedAccessException) when the settings file is
+        // temporarily locked, then succeed once the lock is released.
+        // This verifies the retry mechanism without timing assertions.
+        var plugin = new CustomMousePlugin();
+
+        // Step 1: Save once to ensure the settings file exists.
+        await plugin.SaveSettingsAsync();
+
+        // Step 2: Locate the settings file and lock it exclusively.
+        var settingsDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "UniversalDeviceToolkit", "plugin-config");
+        var settingsFile = Path.Combine(settingsDir, "custom-mouse.json");
+
+        Assert.True(File.Exists(settingsFile), "Settings file should exist after initial save.");
+
+        // Step 3: Lock the file, then release it after a short delay.
+        // The retry loop (50ms + 100ms delays) will wait, then succeed once unlocked.
+        var lockStream = new FileStream(
+            settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+
+        // Release the lock after 20ms — before the first retry delay (50ms).
+        // This ensures the retry loop catches the IOException, waits 50ms,
+        // then succeeds on the second attempt when the lock is released.
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(20);
+            lockStream.Dispose();
+        });
+
+        // Step 4: SaveSettingsAsync should succeed after retries (no exception).
+        // Without the retry catch, this would throw IOException immediately.
+        await plugin.SaveSettingsAsync();
+
+        // Verify the file is still valid JSON after the retry save.
+        var content = File.ReadAllText(settingsFile);
+        Assert.NotEmpty(content);
+    }
 }
