@@ -386,6 +386,64 @@ public class StartupHealthGuard
         }
     }
 
+    private static string GetHardwareInitInProgressPath()
+    {
+        try
+        {
+            return Path.Combine(Folders.AppData, "hardware_init_in_progress.flag");
+        }
+        catch
+        {
+            return Path.Combine(Path.GetTempPath(), "hardware_init_in_progress.flag");
+        }
+    }
+
+    /// <summary>
+    /// Marks that hardware background initialization has started. Cleared on success.
+    /// If present on next launch, treat previous run as interrupted and enter safe-start.
+    /// </summary>
+    public static void MarkHardwareInitInProgress()
+    {
+        try
+        {
+            File.WriteAllText(GetHardwareInitInProgressPath(), DateTimeOffset.UtcNow.ToString("O"));
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException and not StackOverflowException)
+        {
+            try { global::Serilog.Log.Logger.Warning(ex, "{Message}", "Failed to write hardware-init in-progress flag."); }
+            catch { /* never throw */ }
+        }
+    }
+
+    /// <summary>Clears the incomplete hardware-init marker after a successful pass.</summary>
+    public static void ClearHardwareInitInProgress()
+    {
+        try
+        {
+            var path = GetHardwareInitInProgressPath();
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException and not StackOverflowException)
+        {
+            try { global::Serilog.Log.Logger.Warning(ex, "{Message}", "Failed to clear hardware-init in-progress flag."); }
+            catch { /* never throw */ }
+        }
+    }
+
+    /// <summary>True when the previous process died mid hardware initialization.</summary>
+    public static bool IsHardwareInitInProgressMarkerPresent()
+    {
+        try
+        {
+            return File.Exists(GetHardwareInitInProgressPath());
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private void RegisterSuccessLocked(string name)
     {
         int previous;

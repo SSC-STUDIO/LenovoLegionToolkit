@@ -70,15 +70,10 @@ public class BatteryDischargeRateMonitorService : IDisposable
                     {
                         iterationCount++;
 
-                        if (iterationCount > 1000)
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Battery monitoring service exceeded safe iteration limit ({iterationCount})");
-                            break;
-                        }
-
+                        // Discharge min/max sampling stays frequent; health alerts are cheaper to throttle.
                         Battery.SetMinMaxDischargeRate();
-                        EvaluateHealthAlerts();
+                        if (iterationCount == 1 || iterationCount % 20 == 0)
+                            EvaluateHealthAlerts();
 
                         await _delayProvider.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
                     }
@@ -91,7 +86,15 @@ public class BatteryDischargeRateMonitorService : IDisposable
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Battery monitoring service failed at iteration {iterationCount}", ex);
 
-                        break;
+                        // Brief backoff then continue — do not permanently stop the service on a single fault.
+                        try
+                        {
+                            await _delayProvider.Delay(TimeSpan.FromSeconds(10), token).ConfigureAwait(false);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            break;
+                        }
                     }
                 }
             }, token);

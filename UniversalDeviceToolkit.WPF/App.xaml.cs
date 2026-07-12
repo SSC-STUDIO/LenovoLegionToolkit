@@ -268,26 +268,45 @@ public partial class App
 
         _backgroundInitializationTask = Task.Run(async () =>
         {
+            var totalSw = System.Diagnostics.Stopwatch.StartNew();
+            var completedCleanly = false;
+            StartupHealthGuard.MarkHardwareInitInProgress();
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
+                // Hardware / WMI / EC steps run strictly serially to avoid driver thrash,
+                // high concurrent WMI load, and post-start system lag.
+                foreach (var step in initializationSteps)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await step().ConfigureAwait(false);
-                })).ToArray();
-                await Task.WhenAll(initializationTasks).ConfigureAwait(false);
+                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
+                    try
+                    {
+                        await step().ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Isolate failures so one bad controller cannot block the rest.
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Background hardware init step failed after {stepSw.ElapsedMilliseconds}ms.", ex);
+                    }
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Background hardware init step finished in {stepSw.ElapsedMilliseconds}ms.");
+                }
 
                 cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
 
-                var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await step().ConfigureAwait(false);
-                })).ToArray();
-                await Task.WhenAll(serviceStartTasks).ConfigureAwait(false);
+                // Independent background services: limited parallelism (not unbounded WhenAll).
+                const int maxServiceConcurrency = 2;
+                await RunWithLimitedConcurrencyAsync(serviceStartSteps, maxServiceConcurrency, cancellationToken)
+                    .ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -295,18 +314,24 @@ public partial class App
                 Autorun.Validate();
 #endif
 
+                completedCleanly = true;
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Background initialization completed.");
+                    Log.Instance.Trace($"Background initialization completed in {totalSw.ElapsedMilliseconds}ms.");
             }
             catch (OperationCanceledException)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Background initialization was cancelled.");
+                    Log.Instance.Trace($"Background initialization was cancelled after {totalSw.ElapsedMilliseconds}ms.");
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Background initialization failed.", ex);
+                    Log.Instance.Trace($"Background initialization failed after {totalSw.ElapsedMilliseconds}ms.", ex);
+            }
+            finally
+            {
+                if (completedCleanly)
+                    StartupHealthGuard.ClearHardwareInitInProgress();
             }
         }, cancellationToken);
 
@@ -315,6 +340,59 @@ public partial class App
             if (t.IsFaulted && Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Background initialization task completed faulted and was observed.", t.Exception);
         }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Runs async work items with a fixed concurrency cap (default 2) to limit
+    /// simultaneous WMI/network/service startup without serializing everything.
+    /// </summary>
+    private static async Task RunWithLimitedConcurrencyAsync(
+        IReadOnlyList<Func<Task>> steps,
+        int maxConcurrency,
+        CancellationToken cancellationToken)
+    {
+        if (steps.Count == 0)
+            return;
+
+        maxConcurrency = Math.Max(1, maxConcurrency);
+        using var gate = new System.Threading.SemaphoreSlim(maxConcurrency, maxConcurrency);
+        var tasks = new Task[steps.Count];
+
+        for (var i = 0; i < steps.Count; i++)
+        {
+            var step = steps[i];
+            tasks[i] = Task.Run(async () =>
+            {
+                await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await step().ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Background service start step failed.", ex);
+                }
+                finally
+                {
+                    gate.Release();
+                }
+            }, cancellationToken);
+        }
+
+        try
+        {
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
     }
 
     private async Task AwaitBackgroundInitializationAsync()

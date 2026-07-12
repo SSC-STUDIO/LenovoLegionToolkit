@@ -124,6 +124,32 @@ namespace UniversalDeviceToolkit.WPF.Startup
             var amdOverclockingController = IoCContainer.Resolve<AmdOverclockingController>();
             var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
 
+            // Safe-start: only light read-only probes. Never re-apply God Mode / OC / fans / Hybrid / automation.
+            if (_shouldEnterSafeMode)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Safe-start: skipping hardware re-apply and third-party integrations.");
+
+                Func<Task>[] safeBg =
+                [
+                    () => LogSoftwareStatusAsync(vantageDisabler, legionZoneDisabler, fnKeysDisabler),
+                    () => InitSensorsGroupControllerFeatureAsync(applicationSettings, sensorsGroupController)
+                ];
+                // IPC still useful for CLI diagnostics; skip AI / HWiNFO / battery sample loops under safe-start.
+                Func<Task>[] safePost =
+                [
+                    () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync()
+                ];
+                _skippedStartupSteps =
+                [
+                    "lamp-array", "power-mode", "its-mode", "battery-feature", "rgb-keyboard",
+                    "spectrum-keyboard", "gpu-overclock", "hybrid-mode", "fan-manager",
+                    "amd-overclock", "automation-processor", "ai-controller", "hwinfo", "battery-monitor"
+                ];
+                return (safeBg, safePost);
+            }
+
+            // Full path: App runs these serially (hardware) then with limited concurrency (services).
             Func<Task>[] bgSteps =
             [
                 () => LogSoftwareStatusAsync(vantageDisabler, legionZoneDisabler, fnKeysDisabler),
@@ -241,8 +267,18 @@ namespace UniversalDeviceToolkit.WPF.Startup
             _startupHealthGuard ??= new SafeStartupHealthGuard();
             var persistedFailureCount = SafeStartupHealthGuard.ReadPersistedConsecutiveFailureCount();
             var persistedShouldEnterSafeMode = persistedFailureCount >= SafeStartupHealthGuard.DefaultConsecutiveFailureThreshold;
+            var interruptedHardwareInit = SafeStartupHealthGuard.IsHardwareInitInProgressMarkerPresent();
 
-            _shouldEnterSafeMode = _flags.SafeStart || persistedShouldEnterSafeMode;
+            _shouldEnterSafeMode = _flags.SafeStart || persistedShouldEnterSafeMode || interruptedHardwareInit;
+
+            if (interruptedHardwareInit)
+            {
+                // Consume the marker so we do not loop forever in safe-start after one good run.
+                SafeStartupHealthGuard.ClearHardwareInitInProgress();
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Previous run left hardware_init_in_progress.flag; entering safe-start.");
+                Log.Instance.Info("SafeStart mode auto-engaged: previous hardware initialization was interrupted.");
+            }
 
             if (_flags.SafeStart)
             {
@@ -541,6 +577,14 @@ namespace UniversalDeviceToolkit.WPF.Startup
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("Safe-start active; skipping plugin discovery and loading.");
+                return;
+            }
+
+            var applicationSettings = _settings ?? IoCContainer.Resolve<ApplicationSettings>();
+            if (!applicationSettings.Store.ExtensionsEnabled)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Extensions disabled in settings; skipping plugin directory scan.");
                 return;
             }
 
