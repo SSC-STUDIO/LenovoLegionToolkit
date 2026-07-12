@@ -412,4 +412,67 @@ public class SettingsManagerEdgeCaseTests : IDisposable
         Assert.True(await updateTask, "Update should have succeeded.");
         Assert.True(await saveAsyncTask, "SaveAsync should have succeeded.");
     }
+
+    [Fact]
+    public void Save_WhenFileMoveFails_CleansUpTempFile()
+    {
+        var manager = CreateManager("tmp-cleanup-json");
+        var settings = new TestSettings { Name = "cleanup", Value = 1 };
+
+        // First save succeeds — creates the target file.
+        Assert.True(manager.Save(settings));
+
+        var jsonPath = SettingsPath("tmp-cleanup-json");
+        var tempPath = jsonPath + ".tmp";
+        Assert.False(File.Exists(tempPath), "No temp file should exist after successful save.");
+
+        // Lock the target file so File.Move fails with an IOException.
+        // The temp file is written before Move, so it will be left behind
+        // without the cleanup fix.
+        using (var lockStream = new FileStream(
+            jsonPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+        {
+            // Change settings so the memory-transaction skip doesn't fire.
+            var changed = new TestSettings { Name = "changed", Value = 2 };
+            var result = manager.Save(changed);
+
+            // Save should fail because File.Move can't overwrite the locked target.
+            Assert.False(result, "Save should fail when target file is locked.");
+
+            // The temp file should have been cleaned up by the catch block.
+            Assert.False(File.Exists(tempPath),
+                "Temp file should be cleaned up after File.Move failure, not orphaned.");
+        }
+
+        // After the lock is released, verify no temp file leaked.
+        Assert.False(File.Exists(tempPath), "No temp file should remain after lock release.");
+    }
+
+    [Fact]
+    public void Save_MessagePack_WhenFileMoveFails_CleansUpTempFile()
+    {
+        var manager = new SettingsManager<TestSettings>("tmp-cleanup-mp", null, _testDir, useMessagePack: true);
+        var settings = new TestSettings { Name = "cleanup-mp", Value = 10 };
+
+        // First save succeeds.
+        Assert.True(manager.Save(settings));
+
+        var mpPath = Path.Combine(_testDir, "tmp-cleanup-mp", "settings.mpack");
+        var tempMpPath = mpPath + ".tmp";
+        Assert.False(File.Exists(tempMpPath), "No temp file should exist after successful MessagePack save.");
+
+        // Lock the target file so File.Move fails.
+        using (var lockStream = new FileStream(
+            mpPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+        {
+            var changed = new TestSettings { Name = "changed-mp", Value = 20 };
+            var result = manager.Save(changed);
+
+            Assert.False(result, "MessagePack Save should fail when target file is locked.");
+            Assert.False(File.Exists(tempMpPath),
+                "MessagePack temp file should be cleaned up after File.Move failure, not orphaned.");
+        }
+
+        Assert.False(File.Exists(tempMpPath), "No MessagePack temp file should remain after lock release.");
+    }
 }

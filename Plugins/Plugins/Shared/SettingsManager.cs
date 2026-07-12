@@ -191,11 +191,19 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                 }
 
                 var tempMpckPath = _settingsFilePathMpck + ".tmp";
-                await using (var fileStream = new FileStream(tempMpckPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                try
                 {
-                    await fileStream.WriteAsync(bytes, cancellationToken);
+                    await using (var fileStream = new FileStream(tempMpckPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                    {
+                        await fileStream.WriteAsync(bytes, cancellationToken);
+                    }
+                    File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
                 }
-                File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
+                catch
+                {
+                    CleanupTempFile(tempMpckPath);
+                    throw;
+                }
                 lock (_lock)
                 {
                     _lastSavedJson = currentSig;
@@ -225,12 +233,20 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                 });
 
                 var tempPath = _settingsFilePath + ".tmp";
-                await using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                try
                 {
-                    var jsonBytes = Encoding.UTF8.GetBytes(json);
-                    await fileStream.WriteAsync(jsonBytes, cancellationToken);
+                    await using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+                    {
+                        var jsonBytes = Encoding.UTF8.GetBytes(json);
+                        await fileStream.WriteAsync(jsonBytes, cancellationToken);
+                    }
+                    File.Move(tempPath, _settingsFilePath, overwrite: true);
                 }
-                File.Move(tempPath, _settingsFilePath, overwrite: true);
+                catch
+                {
+                    CleanupTempFile(tempPath);
+                    throw;
+                }
                 lock (_lock)
                 {
                     _lastSavedJson = compactJson;
@@ -350,14 +366,30 @@ public class SettingsManager<T> : IDisposable where T : class, new()
             if (_useMessagePack)
             {
                 var tempMpckPath = _settingsFilePathMpck + ".tmp";
-                File.WriteAllBytes(tempMpckPath, mpckBytes!);
-                File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
+                try
+                {
+                    File.WriteAllBytes(tempMpckPath, mpckBytes!);
+                    File.Move(tempMpckPath, _settingsFilePathMpck, overwrite: true);
+                }
+                catch
+                {
+                    CleanupTempFile(tempMpckPath);
+                    throw;
+                }
             }
             else
             {
                 var tempPath = _settingsFilePath + ".tmp";
-                File.WriteAllText(tempPath, indentedJson!, Encoding.UTF8);
-                File.Move(tempPath, _settingsFilePath, overwrite: true);
+                try
+                {
+                    File.WriteAllText(tempPath, indentedJson!, Encoding.UTF8);
+                    File.Move(tempPath, _settingsFilePath, overwrite: true);
+                }
+                catch
+                {
+                    CleanupTempFile(tempPath);
+                    throw;
+                }
             }
 
             lock (_lock)
@@ -547,6 +579,23 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         catch (Exception)
         {
             // Best-effort cleanup — file may be locked by another reader.
+        }
+    }
+
+    /// <summary>
+    /// Removes an orphaned temp file left behind when a save operation fails
+    /// (cancellation, I/O error, or File.Move failure). Best-effort: a locked
+    /// temp file is logged but does not propagate.
+    /// </summary>
+    private void CleanupTempFile(string tempPath)
+    {
+        try
+        {
+            DeleteIfExists(tempPath);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning(ex, "Failed to clean up temp file {TempPath}", tempPath);
         }
     }
 }
